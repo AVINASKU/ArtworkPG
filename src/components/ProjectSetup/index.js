@@ -8,6 +8,8 @@ import "./index.scss";
 function ProjectSetup() {
   const items = [{ label: "My Projects" }, { label: "Project Setup" }];
 
+  console.log("rajan singh")
+
   return (
     <div className="content-layout">
       <div className="actions">
