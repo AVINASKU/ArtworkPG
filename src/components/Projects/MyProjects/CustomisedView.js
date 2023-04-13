@@ -19,7 +19,7 @@ export default function CustomisedView({
   const [selectedCategories, setSelectedCategories] = useState([]);
 
   useEffect(() => {
-    // console.log("project name", projectColumnName);
+    console.log("project name", projectColumnName);
     setSelectedCategories(projectColumnName);
   }, [projectColumnName, selectedCategories, setSelectedCategories]);
 
