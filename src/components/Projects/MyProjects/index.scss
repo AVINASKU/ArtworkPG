@@ -1,3 +1,7 @@
+$width100: 100%;
+$fontWeight500: 500;
+$fontWeight400: 400;
+
 .content-layout {
   display: flex;
   flex-direction: column;
@@ -7,7 +11,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width: 100%;
+    width: $width100;
     align-items: center;
 
     .action-buttons {
@@ -19,7 +23,7 @@
     }
   }
   .tabular-view {
-    width: 100%;
+    width: $width100;
     display: block;
     padding: 0 0 0;
     .card {
@@ -34,7 +38,7 @@
 }
 .p-datatable > .p-datatable-wrapper {
   overflow: scroll;
-  width: 100%;
+  width: $width100;
   height: 540px;
 }
 .font-bold{
@@ -58,7 +62,7 @@ margin: 8px;
 }
 
 .ml-2{
-  font-weight:400;
+  font-weight:$fontWeight400;
   font-size: 14px;
   line-height: 17px;
 
@@ -71,14 +75,25 @@ margin: 8px;
   width: 11px;
   height: 16px;
 }
+.resetToPgDefault {
+  width: 164px;
+  height: 32px;
+  padding: 10px 18px;
+  margin: 0 10px 0 21.82px !important;
+  border-radius: 15px;
+  background-color: #ACACAC !important;
+  font-weight: $fontWeight500;
+  line-height: 96%;
+  vertical-align: top;
+}
 .p-datatable-table {
-  line-height: 14.63px;
+  line-height: 15px;
 }
 .p-column-title {
-  font-weight: 500;
+  font-weight: $fontWeight500;
 }
 .p-datatable-tbody {
-  font-weight: 400;
+  font-weight: $fontWeight400;
 }
 .header-icons {
   cursor: pointer;
@@ -87,5 +102,10 @@ margin: 8px;
   color: #003DA5;
   width: 18px;
   height: 18px;
+}
+// Filter and Save buttons disabled
+img[disabled] {
+  opacity:0.5;
+  pointer-events: none;
 }
 // ProjectList Styles End

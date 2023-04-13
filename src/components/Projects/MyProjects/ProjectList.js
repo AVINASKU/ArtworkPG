@@ -44,7 +44,7 @@ const ProjectList = (props) => {
     toast.current.show({
       severity: "success",
       summary: "Success",
-      detail: "Message Content",
+      detail: "Saved Successfully",
       life: 3000,
     });
   };
@@ -62,7 +62,6 @@ const ProjectList = (props) => {
   };
 
   useEffect(() => {
-    console.log('Branch testing gopal/sprint2/myprojects');
     setLoading(true);
     (async () => {
       try {
@@ -134,17 +133,17 @@ const ProjectList = (props) => {
   const projectNameHeader = (options) => {
     return (
       <div>
-          <img
-            src={filter}
-            alt="Column Filter"
-            onClick={(e) => {
-              op.current.toggle(e);
+        <img
+          src={filter}
+          alt="Column Filter"
+          onClick={(e) => {
+            op.current.toggle(e);
 
-              setSelectedColumnName(options);
-            }}
-            className="columnFilterIcon"
-            // className="pi pi-align-justify"
-          />
+            setSelectedColumnName(options);
+          }}
+          className="columnFilterIcon"
+          // className="pi pi-align-justify"
+        />
         {options}
       </div>
     );
