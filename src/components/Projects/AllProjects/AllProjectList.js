@@ -6,7 +6,6 @@ import ConfirmationPopUp from "../ConfirmationPopUp";
 import { Toast } from "primereact/toast";
 import { FilterMatchMode } from "primereact/api";
 import ProjectListHeader from "../MyProjects/ProjectListHeader";
-import { Button } from "primereact/button";
 import { Tag } from 'primereact/tag';
 
 
@@ -83,9 +82,14 @@ const AllProjectList = (props) => {
         //   JSON.stringify(columnNamesAllProjects)
         // );
 
-        if (ProjectData.length) {
+        let filteredPegaDataJson = localStorage.getItem("allProjectColumnWiseFilterData");
+          const filteredPegaData = JSON.parse(filteredPegaDataJson);
+
+        if (filteredPegaData && filteredPegaData.length) {
+          setFilters(filteredPegaData);
+          setSelectedCities(filteredPegaData);
           setPegaData(ProjectData);
-        }
+        } else setPegaData(ProjectData);
 
         // according to pathname we need to call api and store column name in local storage
 
@@ -164,7 +168,6 @@ const AllProjectList = (props) => {
     );
   };
   const fullKitReadinessBody = (options, rowData) => {
-    console.log("options", rowData.field);
     let field = rowData.field;
 
     return (
@@ -254,6 +257,7 @@ const AllProjectList = (props) => {
   };
 
   const saveSettings = () => {
+    localStorage.setItem("allProjectColumnWiseFilterData", JSON.stringify(filters));
     localStorage.setItem("allProjectFrozenData", JSON.stringify(frozenCoulmns));
     localStorage.setItem("allProjectSortingData", JSON.stringify(sortData));
     localStorage.setItem(
@@ -275,6 +279,7 @@ const AllProjectList = (props) => {
   };
 
   const clearFilter = () => {
+      localStorage.setItem("allProjectColumnWiseFilterData", JSON.stringify({}));
     localStorage.setItem("allProjectSortingData", JSON.stringify({}));
     localStorage.setItem("allProjectFrozenData", JSON.stringify({}));
     setSelectedCities([]);
