@@ -93,34 +93,29 @@ table {
       background-color: #fff !important;
       // border: 0 !important;
       border-width: 1px 2px 3px 4px;
-    border: 1px solid gray !important;
-    &:nth-child(1){
-      border-left: none !important;
+      border: 0.5px solid #acacac !important;
+      &:nth-child(1) {
+        border-left: none !important;
+      }
+      &:last-child {
+        border-left: none !important;
+        // margin: 10px;
+      }
     }
-    &:last-child{
-      border-left: none !important;
-      // margin: 10px;
 
+    th.p-filter-column .p-column-filter .p-fluid {
+      min-width: 100px;
+      border-radius: 140px;
     }
-  }
-    
-    
-  th.p-filter-column .p-column-filter .p-fluid{
-    min-width: 100px;
-    border-radius: 140px;
-  }
-  
-  
   }
   tr:nth-child(even) > td {
-// background:lightcyan !important;
-// background: linear-gradient(to right, transparent 49.5%, black 49.5%, black 50.5%, transparent 50.5%) !important;
-  background: #fafcff !important;
-  // background-color: blue;
-
+    // background:lightcyan !important;
+    // background: linear-gradient(to right, transparent 49.5%, black 49.5%, black 50.5%, transparent 50.5%) !important;
+    background: #fafcff !important;
+    // background-color: blue;
   }
 
-  .p-datatable .p-datatable-tbody > tr{
+  .p-datatable .p-datatable-tbody > tr {
     line-height: 50px !important;
     // background-color: #003da5 !important;
     // color: aqua !important;
@@ -129,19 +124,19 @@ table {
     // height: 50px !important;
   }
 
-
   td,
   .p-datatable .p-datatable-tbody > tr > td {
     // background-color: #003da5;
-    border-bottom: 1px solid #acacac !important;
-    border-top: 1px solid #acacac !important;
-    font-size: 10px;
+    // border-bottom: 0.5px solid #ACACAC !important;
+    // border-top: 0.5px solid #ACACAC !important;
+    // font-size: 10px;
     // line-height: 20px;
+    border: 0.5px solid #acacac !important;
     color: #595959;
     text-align: center;
     background: #ffffff !important;
     padding: 10px !important;
-    border-width: 1px;
+    border-width: 0.5px;
     // border: 2px solid gray !important;
     // margin-top: 2px !important;
     // margin-bottom: 2px !important;
@@ -155,23 +150,22 @@ table {
     //   // border-left: 1px solid coral !important;
     //   border-collapse: collapse;
     // }
-    &:first-child{
+    &:first-child {
       border-left: none !important;
     }
     &:last-child {
-      border-right: none  !important;
+      border-right: none !important;
       // border-top-right-radius: 14px;
       // border-bottom-right-radius: 14px;
       // background-color: #003da5;
       // border-right: 1px solid #acacac !important;
     }
-    &:after{
+    &:after {
       border-right: 2px solid black !important;
       height: 40px !important;
       // background-color:  #003da5 !important;
     }
   }
- 
 }
 // .p-datatable .p-datatable-tbody > tr  td:nth-child(odd) {
 // background-color: red !important;
@@ -185,7 +179,6 @@ table {
   // width:max-content  !important;
 }
 
-p-column-filter-row{
+p-column-filter-row {
   background-color: aqua !important;
 }
-

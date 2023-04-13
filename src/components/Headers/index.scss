@@ -11,18 +11,19 @@
     justify-content: space-between;
   }
   h1 {
-    font-size: 20px;
-    line-height: 24px;
+    font-size: 16px;
+    line-height: 19.5px;
     color: #003da5;
-    font-weight: bold;
+    font-weight: 500;
   }
   .user-date-time {
     display: flex;
     justify-content: space-around;
     p {
-      padding: 0 15px 0 15px;
+      padding: 0 12px;
       color: #acacac;
-      font-size: 16px;
+      font-size: 14px;
+      line-height: 17px;
       &:first-child {
         padding-left: 0;
         border-right: 1px solid #acacac;
@@ -33,19 +34,27 @@
   .user-profile {
     display: flex;
     align-items: center;
+    .notificaitons {
+      width: 18.01px;
+      height: 18.99px;
+      cursor: pointer;
+    }
+    .userProfile {
+      width: 43.01px;
+      height: 43px;
+    }
     p {
       display: flex;
       flex-direction: column;
       text-align: left;
-      padding: 0 20px;
-      font-size: 16px;
-      color: #595959;
+      padding: 0 21.99px;
+      font-size: 14px;
       font-weight: 500;
-      line-height: 1.2;
+      color: #acacac;
+      line-height: 17px;
       margin: 10px 0;
       span {
         font-size: 12px;
-        color: #acacac;
       }
     }
   }

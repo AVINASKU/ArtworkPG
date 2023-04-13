@@ -32,42 +32,6 @@ const ConfirmationPopUp = ({
     return (
       <div>
         <div
-          style={{ padding: "5px", cursor: "pointer" }}
-          onClick={onSort(selectedColumnName, "desc")}
-        >
-          {" "}
-          Sort z to a
-        </div>
-        <div
-          style={{ padding: "5px", cursor: "pointer" }}
-          onClick={onSort(selectedColumnName, "asc")}
-        >
-          {" "}
-          Sort a to z
-        </div>
-        <div
-          style={{ padding: "5px", cursor: "pointer" }}
-          onClick={() => {
-            addFrozenColumns(selectedColumnName);
-            setProjectFrozen(!ProjectFrozen);
-          }}
-        >
-          {" "}
-          Frozen{" "}
-        </div>
-        <div style={{ padding: "5px", cursor: "pointer" }}>
-          <MultiSelect
-            value={selectedCities}
-            onChange={(e) => onGlobalFilterChange(e)}
-            options={multiselectOptions(selectedColumnName)}
-            optionLabel={selectedColumnName}
-            filter
-            placeholder="Select "
-            maxSelectedLabels={3}
-            className="p-column-filter"
-          />
-        </div>
-        <div
           style={{ padding: 3, cursor: "pointer" }}
           onClick={() => {
             let jsonFrozenItem = localStorage.getItem("frozenData");
@@ -110,6 +74,42 @@ const ConfirmationPopUp = ({
           }}
         >
           Clear all filter
+        </div>
+        <div
+          style={{ padding: "5px", cursor: "pointer" }}
+          onClick={onSort(selectedColumnName, "desc")}
+        >
+          {" "}
+          Sort z to a
+        </div>
+        <div
+          style={{ padding: "5px", cursor: "pointer" }}
+          onClick={onSort(selectedColumnName, "asc")}
+        >
+          {" "}
+          Sort a to z
+        </div>
+        <div
+          style={{ padding: "5px", cursor: "pointer" }}
+          onClick={() => {
+            addFrozenColumns(selectedColumnName);
+            setProjectFrozen(!ProjectFrozen);
+          }}
+        >
+          {" "}
+          Frozen{" "}
+        </div>
+        <div style={{ padding: "5px", cursor: "pointer" }}>
+          <MultiSelect
+            value={selectedCities}
+            onChange={(e) => onGlobalFilterChange(e)}
+            options={multiselectOptions(selectedColumnName)}
+            optionLabel={selectedColumnName}
+            filter
+            placeholder="Select "
+            maxSelectedLabels={3}
+            className="p-column-filter"
+          />
         </div>
       </div>
     );
