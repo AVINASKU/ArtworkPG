@@ -62,7 +62,7 @@ const ProjectList = (props) => {
   };
 
   useEffect(() => {
-    console.log('Branch testing');
+    console.log('Branch testing gopal/sprint2/myprojects');
     setLoading(true);
     (async () => {
       try {
