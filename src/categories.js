@@ -144,7 +144,7 @@ export const designScope = [
   { label: "New Print Feasibility", value: "PF" },
   { label: "Ink Qualification", value: "IQ" },
   { label: "CICs", value: "CICs" },
-  { label: "POA's", value: "POAs" },
+  // { label: "POA's", value: "POAs" },
 ];
 
 export const scaleList = [

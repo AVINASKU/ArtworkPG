@@ -23,7 +23,6 @@ const defaultCheckedItems = {
   PF: false,
   IQ: false,
   CICs: false,
-  POAs: true,
 };
 
 const defaultTextBoxEnabled = {
@@ -33,7 +32,6 @@ const defaultTextBoxEnabled = {
   PF: false,
   IQ: false,
   CICs: false,
-  POAs: true,
 };
 
 function AddProject(props) {
@@ -57,6 +55,7 @@ function AddProject(props) {
   const [iL, setIl] = useState("Pranali");
   const [checkedItems, setCheckedItems] = useState(defaultCheckedItems);
   const [textBoxEnabled, setTextBoxEnabled] = useState(defaultTextBoxEnabled);
+  const [POA, setPOA] = useState(10);
   const [designScopeList, setDesignScopeList] = useState({
     DI: "",
     DT: "",
@@ -64,7 +63,6 @@ function AddProject(props) {
     PF: "",
     IQ: "",
     CICs: "",
-    POAs: "10", // set default value to 10
   });
   const [scale, setScale] = useState([]);
   const getSmoOptions = () => {
@@ -134,6 +132,13 @@ function AddProject(props) {
         }));
       }
     }
+    // else {
+    //   // code to update designScopeList when checked
+    //   setDesignScopeList((prevDesignScopeList) => ({
+    //     ...prevDesignScopeList,
+    //     [value]: "", // set default value to an empty string
+    //   }));
+    // }
 
     setCheckedItems((prevCheckedItems) => ({
       ...prevCheckedItems,
@@ -550,7 +555,6 @@ function AddProject(props) {
         </Row>
         <Row>
           <Col>
-            {" "}
             <Form.Group className="mb-3" controlId="smo.SelectMultiple">
               <Form.Label>Region *</Form.Label>
               <div>
@@ -656,18 +660,14 @@ function AddProject(props) {
                     />
                     <Form.Control
                       type="number"
-                      value={
-                        !textBoxEnabled[option.value] && option.value !== "POAs"
-                          ? ""
-                          : designScopeList[option.value]
-                      }
+                      value={designScopeList[option.value]}
                       onChange={(e) => {
-                        designScopeList[option.value] = e.target.value;
-                        setDesignScopeList(designScopeList);
+                        setDesignScopeList((prevDesignScopeList) => ({
+                          ...prevDesignScopeList,
+                          [option.value]: e.target.value,
+                        }));
                       }}
-                      disabled={
-                        !textBoxEnabled[option.value] && option.value !== "POAs"
-                      }
+                      disabled={!textBoxEnabled[option.value]}
                       style={{
                         width: 40,
                         height: 27,
@@ -678,6 +678,31 @@ function AddProject(props) {
                     />
                   </span>
                 ))}
+                <span style={{ display: "flex" }}>
+                  <Form.Check
+                    label="POA"
+                    name="POA"
+                    type="checkbox"
+                    value="POA"
+                    onChange={handleCheckboxChange}
+                    checked
+                    style={{ width: 160 }}
+                  />
+                  <Form.Control
+                    type="number"
+                    value={POA}
+                    required
+                    onChange={(e) => setPOA(e.target.value)}
+                    // disabled={!textBoxEnabled[option.value]}
+                    style={{
+                      width: 40,
+                      height: 27,
+                      paddingLeft: "5px",
+                      paddingRight: 0,
+                      fontSize: "10px",
+                    }}
+                  />
+                </span>
               </div>
             </Form.Group>
           </Col>
@@ -685,40 +710,44 @@ function AddProject(props) {
           <Col>
             <Form.Group className="mb-3" controlId="bve.SelectMultiple">
               <Form.Label>
-                {region?.code === "EUF" && bu === "Baby Care" && "Tier"}
-                {region?.code === "EUF" &&
+                {(region?.code === "EUF" || region?.code === "EUE") &&
+                  bu === "Baby Care" &&
+                  "Tier"}
+                {(region?.code === "EUF" || region?.code === "EUE") &&
                   bu === "Home Care" &&
                   "Production Strategy"}
               </Form.Label>
               <div>
-                {region?.code === "EUF" && bu === "Baby Care" && (
-                  <Form.Select
-                    {...register("Teir", { required: false })}
-                    placeholder="Select Teir"
-                    onChange={handleTierChange}
-                  >
-                    <option value="">Select Teir</option>
-                    {Tier.map((tier) => (
-                      <option key={tier.code} value={tier.code}>
-                        {tier.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                )}
-                {region?.code === "EUF" && bu === "Home Care" && (
-                  <Form.Select
-                    {...register("Production Strtegy", { required: false })}
-                    placeholder="Select PS"
-                    onChange={handlePsChange}
-                  >
-                    <option value="">Select Production Strategy</option>
-                    {ProductionStrategy.map((ps) => (
-                      <option key={ps.code} value={ps.code}>
-                        {ps.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                )}
+                {(region?.code === "EUF" || region?.code === "EUE") &&
+                  bu === "Baby Care" && (
+                    <Form.Select
+                      {...register("Teir", { required: false })}
+                      placeholder="Select Teir"
+                      onChange={handleTierChange}
+                    >
+                      <option value="">Select Teir</option>
+                      {Tier.map((tier) => (
+                        <option key={tier.code} value={tier.code}>
+                          {tier.name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  )}
+                {(region?.code === "EUF" || region?.code === "EUE") &&
+                  bu === "Home Care" && (
+                    <Form.Select
+                      {...register("Production Strtegy", { required: false })}
+                      placeholder="Select PS"
+                      onChange={handlePsChange}
+                    >
+                      <option value="">Select Production Strategy</option>
+                      {ProductionStrategy.map((ps) => (
+                        <option key={ps.code} value={ps.code}>
+                          {ps.name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  )}
               </div>
             </Form.Group>
           </Col>
@@ -728,13 +757,6 @@ function AddProject(props) {
           <Col></Col>
         </Row>
         <Row className="form-buttons">
-          <Button
-            className="cancel-button button-layout"
-            type="reset"
-            onClick={clearForm}
-          >
-            Cancel
-          </Button>
           <Button
             className="button-layout submit-button"
             onClick={onSaveAsDraft}
@@ -746,7 +768,7 @@ function AddProject(props) {
             disabled={!formValid}
             type="submit"
           >
-            Save
+            Submit
           </Button>
         </Row>
       </Form>
