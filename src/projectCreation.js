@@ -1,10 +1,13 @@
 import React from "react";
-import AddProject from "./components/Projects/CreateProject";
+import PageLayout from "./components/PageLayout";
+import ProjectSetup from "./components/ProjectSetup";
 
 const ProjectCreation = () => {
   return (
     <div>
-      <AddProject />
+      <PageLayout>
+        <ProjectSetup />
+      </PageLayout>
     </div>
   );
 };
