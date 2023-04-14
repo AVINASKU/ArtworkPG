@@ -6,8 +6,7 @@ import ConfirmationPopUp from "../ConfirmationPopUp";
 import { Toast } from "primereact/toast";
 import { FilterMatchMode } from "primereact/api";
 import ProjectListHeader from "../MyProjects/ProjectListHeader";
-import { Tag } from 'primereact/tag';
-
+import { Tag } from "primereact/tag";
 
 const CustomisedView = React.lazy(() => import("../MyProjects/CustomisedView"));
 
@@ -82,8 +81,10 @@ const AllProjectList = (props) => {
         //   JSON.stringify(columnNamesAllProjects)
         // );
 
-        let filteredPegaDataJson = localStorage.getItem("allProjectColumnWiseFilterData");
-          const filteredPegaData = JSON.parse(filteredPegaDataJson);
+        let filteredPegaDataJson = localStorage.getItem(
+          "allProjectColumnWiseFilterData"
+        );
+        const filteredPegaData = JSON.parse(filteredPegaDataJson);
 
         if (filteredPegaData && filteredPegaData.length) {
           setFilters(filteredPegaData);
@@ -173,7 +174,7 @@ const AllProjectList = (props) => {
     return (
       <>
         {field === "Full Kit Readiness Tracking" ? (
-          <Tag value="view" style={{backgroundColor: 'grey'}}></Tag>
+          <Tag value="view" style={{ backgroundColor: "grey" }}></Tag>
         ) : (
           <> {options[field]}</>
         )}
@@ -257,7 +258,10 @@ const AllProjectList = (props) => {
   };
 
   const saveSettings = () => {
-    localStorage.setItem("allProjectColumnWiseFilterData", JSON.stringify(filters));
+    localStorage.setItem(
+      "allProjectColumnWiseFilterData",
+      JSON.stringify(filters)
+    );
     localStorage.setItem("allProjectFrozenData", JSON.stringify(frozenCoulmns));
     localStorage.setItem("allProjectSortingData", JSON.stringify(sortData));
     localStorage.setItem(
@@ -279,7 +283,7 @@ const AllProjectList = (props) => {
   };
 
   const clearFilter = () => {
-      localStorage.setItem("allProjectColumnWiseFilterData", JSON.stringify({}));
+    localStorage.setItem("allProjectColumnWiseFilterData", JSON.stringify({}));
     localStorage.setItem("allProjectSortingData", JSON.stringify({}));
     localStorage.setItem("allProjectFrozenData", JSON.stringify({}));
     setSelectedCities([]);
@@ -347,6 +351,7 @@ const AllProjectList = (props) => {
           filters={searchHeader}
           filterDisplay={isSearch && "row"}
           tableStyle={{ minWidth: "50rem" }}
+          ref={dt}
         >
           {dynamicColumns()}
         </DataTable>

@@ -84,8 +84,8 @@ const ProjectList = (props) => {
         //   JSON.stringify(columnNamesAllProjects)
         // );
 
-          let filteredPegaDataJson = localStorage.getItem("columnWiseFilterData");
-          const filteredPegaData = JSON.parse(filteredPegaDataJson);
+        let filteredPegaDataJson = localStorage.getItem("columnWiseFilterData");
+        const filteredPegaData = JSON.parse(filteredPegaDataJson);
 
         if (filteredPegaData && filteredPegaData.length) {
           setFilters(filteredPegaData);
@@ -94,16 +94,15 @@ const ProjectList = (props) => {
         } else setPegaData(ProjectData);
 
         // according to pathname we need to call api and store column name in local storage
-          let columnNamesJson = localStorage.getItem("allColumnNames");
-          const columnNames = JSON.parse(columnNamesJson);
-          if (columnNames != null && columnNames.length) {
-            setProjectColumnNames(columnNames);
-          } else {
-            const columnNames = await ProjectService.getAllColumnNames();
-            localStorage.setItem("allColumnNames", JSON.stringify(columnNames));
-            setProjectColumnNames(columnNames);
-          }
-        
+        let columnNamesJson = localStorage.getItem("allColumnNames");
+        const columnNames = JSON.parse(columnNamesJson);
+        if (columnNames != null && columnNames.length) {
+          setProjectColumnNames(columnNames);
+        } else {
+          const columnNames = await ProjectService.getAllColumnNames();
+          localStorage.setItem("allColumnNames", JSON.stringify(columnNames));
+          setProjectColumnNames(columnNames);
+        }
 
         // const jsonSortingData = await ProjectService.getSortingData();
         //   localStorage.setItem('sortingData', JSON.stringify(jsonSortingData));
@@ -339,6 +338,7 @@ const ProjectList = (props) => {
           onColumnResizeEnd={onColumnResizeEnd}
           filters={searchHeader}
           filterDisplay={isSearch && "row"}
+          ref={dt}
           tableStyle={{ minWidth: "50rem" }}
         >
           {dynamicColumns()}
