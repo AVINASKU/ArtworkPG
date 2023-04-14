@@ -28,10 +28,26 @@ const ConfirmationPopUp = ({
     return optionList;
   };
 
+  const changeColor = (id) => {
+    document.addEventListener("click", (e) => {
+      const flyoutEl = document.getElementById(id);
+      let targetEl = e.target;
+      do {
+        if (targetEl === flyoutEl) {
+          document.getElementById(id).style.color = "red";
+          return;
+        }
+        targetEl = targetEl.parentNode;
+      } while (targetEl);
+      document.getElementById(id).style.color = "";
+    });
+  };
+
   const confirmPopData = () => {
     return (
       <div>
         <div
+          id="clearAllFilter"
           className="clearAllFilter"
           onClick={() => {
             let jsonFrozenItem = localStorage.getItem("frozenData");
@@ -71,33 +87,41 @@ const ConfirmationPopUp = ({
             if (filters && filters.length) {
               setFilters([]);
             }
+            changeColor("clearAllFilter");
           }}
         >
           Clear all filter
         </div>
         <div
+          id="sortZtoA"
           className="sortAndFrozen"
-          onClick={onSort(selectedColumnName, "desc")}
+          onClick={() => {
+            onSort(selectedColumnName, "desc");
+            changeColor("sortZtoA");
+          }}
         >
-          {" "}
           Sort z to a
         </div>
         <div
+          id="sortAtoZ"
           className="sortAndFrozen"
-          onClick={onSort(selectedColumnName, "asc")}
+          onClick={() => {
+            onSort(selectedColumnName, "asc");
+            changeColor("sortAtoZ");
+          }}
         >
-          {" "}
           Sort a to z
         </div>
         <div
+          id="frozen"
           className="sortAndFrozen"
           onClick={() => {
             addFrozenColumns(selectedColumnName);
             setProjectFrozen(!ProjectFrozen);
+            changeColor("frozen");
           }}
         >
-          {" "}
-          Frozen{" "}
+          Frozen
         </div>
         <div className="multiSelect">
           <MultiSelect

@@ -125,7 +125,7 @@ img[disabled] {
   line-height: 12px;
 }
 .multiSelect {
-  margin: 0 25px 0 17px;
+  padding: 0 22px 22px 2px;
   cursor: pointer;
   line-height: 10px;
   .p-placeholder {
@@ -138,7 +138,15 @@ img[disabled] {
   }
 }
 .p-multiselect-panel {
-  top: 104.073px !important;
+  // top: 395.073px !important;
+  // left: 178px !important;
+  // left: 292.927px !important;
+  // border: none;
+  // margin-left: -31px;
+  // width: 194px;
+}
+.p-overlaypanel {
+  position: absolute !important;
 }
 .p-multiselect-item {
   font-size: 10px !important;

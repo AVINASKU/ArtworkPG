@@ -64,7 +64,7 @@ function ProjectSetup() {
           ></i>
 
           <Button className="button-layout" style={{ fontSize: 14 }}>
-            Reset to P&G Default
+            Reset to default
           </Button>
         </div>
       </div>
