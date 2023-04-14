@@ -41,7 +41,7 @@ export default function CustomisedView({
     <div>
       <img
         src={PGDefault}
-        alt="Reset to P&G Default"
+        alt="Reset to default"
         style={{
           width: 234,
           height: 34,

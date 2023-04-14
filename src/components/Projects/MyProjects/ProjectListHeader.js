@@ -59,7 +59,7 @@ const ProjectListHeader = ({
           className="btn btn-secondary resetToPgDefault"
           onClick={() => clearFilters()}
         >
-          Reset to P&G Default
+          Reset to default
         </button>
       </div>
     </div>
