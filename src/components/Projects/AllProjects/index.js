@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import PageLayout from "../../PageLayout";
 import { ProjectService } from "../../../service/PegaService";
-import ProjectList from "../MyProjects/ProjectList";
+import AllProjectList from "./AllProjectList";
 
 function AllProjects() {
   const [pegadata, setPegaData] = useState(null);
@@ -32,7 +32,7 @@ setLoading(false);
         <div className="tabular-view">
 
             {!loading && 
-          <ProjectList pegadata={pegadata} header="All Projects" /> }
+          <AllProjectList pegadata={pegadata} header="All Projects" /> }
         </div>
       </div>
     </PageLayout>
