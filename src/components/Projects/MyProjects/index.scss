@@ -41,8 +41,8 @@ $fontWeight400: 400;
   width: $width100;
   height: 540px;
 }
-.font-bold{
-font-weight: 700;
+.font-bold {
+  font-weight: 700;
 }
 
 // .row{
@@ -50,7 +50,7 @@ font-weight: 700;
 // }
 
 .p-checkbox {
-margin: 8px;
+  margin: 8px;
 }
 
 // .p-checkbox:checked {
@@ -58,14 +58,13 @@ margin: 8px;
 // }
 
 .p-checkbox-checked + label {
-  color: #003DA5;
+  color: #003da5;
 }
 
-.ml-2{
-  font-weight:$fontWeight400;
+.ml-2 {
+  font-weight: $fontWeight400;
   font-size: 14px;
   line-height: 17px;
-
 }
 
 // ProjectList Styles Start
@@ -81,10 +80,13 @@ margin: 8px;
   padding: 10px 18px;
   margin: 0 10px 0 21.82px !important;
   border-radius: 15px;
-  background-color: #ACACAC !important;
+  background-color: #acacac !important;
   font-weight: $fontWeight500;
   line-height: 96%;
   vertical-align: top;
+}
+.resetToPgDefault:hover {
+  background-color: #868484 !important;
 }
 .p-datatable-table {
   line-height: 15px;
@@ -99,13 +101,53 @@ margin: 8px;
   cursor: pointer;
   margin: 8px;
   font-size: 2rem;
-  color: #003DA5;
+  color: #003da5;
   width: 18px;
   height: 18px;
 }
 // Filter and Save buttons disabled
 img[disabled] {
-  opacity:0.5;
-  pointer-events: none;
+  opacity: 0.5;
+  // pointer-events: none;
+  cursor: no-drop;
 }
 // ProjectList Styles End
+
+// ConfirmationPopUp Styles Start
+.clearAllFilter {
+  padding: 10.56px 22px 22px 2px;
+  cursor: pointer;
+  line-height: 12px;
+}
+.sortAndFrozen {
+  padding: 0 22px 22px 2px;
+  cursor: pointer;
+  line-height: 12px;
+}
+.multiSelect {
+  margin: 0 25px 0 17px;
+  cursor: pointer;
+  line-height: 10px;
+  .p-placeholder {
+    font-size: 8px !important;
+    color: #595959 !important;
+  }
+  .p-multiselect {
+    width: 124px !important;
+    // height: 16px !important;
+  }
+}
+.p-multiselect-panel {
+  top: 104.073px !important;
+}
+.p-multiselect-item {
+  font-size: 10px !important;
+  line-height: 12px !important;
+  padding: 0px 9px !important;
+}
+.p-inputtext {
+  font-size: 10px !important;
+  line-height: 12px !important;
+  font-family: Montserrat !important;
+}
+// ConfirmationPopUp Styles End

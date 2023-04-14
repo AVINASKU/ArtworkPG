@@ -23,14 +23,14 @@ const ProjectListHeader = ({
         <img
           src={filter}
           alt="filter logo"
-          onClick={clearFilter}
+          // onClick={clearFilter}
           className="header-icons"
           disabled
         />
         <img
           src={save}
           alt="save settings"
-          onClick={saveSettings}
+          // onClick={saveSettings}
           className="pi pi-save header-icons"
           disabled
         />

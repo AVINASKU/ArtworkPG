@@ -32,7 +32,7 @@ const ConfirmationPopUp = ({
     return (
       <div>
         <div
-          style={{ padding: 3, cursor: "pointer" }}
+          className="clearAllFilter"
           onClick={() => {
             let jsonFrozenItem = localStorage.getItem("frozenData");
             const frozenItem = JSON.parse(jsonFrozenItem);
@@ -76,21 +76,21 @@ const ConfirmationPopUp = ({
           Clear all filter
         </div>
         <div
-          style={{ padding: "5px", cursor: "pointer" }}
+          className="sortAndFrozen"
           onClick={onSort(selectedColumnName, "desc")}
         >
           {" "}
           Sort z to a
         </div>
         <div
-          style={{ padding: "5px", cursor: "pointer" }}
+          className="sortAndFrozen"
           onClick={onSort(selectedColumnName, "asc")}
         >
           {" "}
           Sort a to z
         </div>
         <div
-          style={{ padding: "5px", cursor: "pointer" }}
+          className="sortAndFrozen"
           onClick={() => {
             addFrozenColumns(selectedColumnName);
             setProjectFrozen(!ProjectFrozen);
@@ -99,14 +99,14 @@ const ConfirmationPopUp = ({
           {" "}
           Frozen{" "}
         </div>
-        <div style={{ padding: "5px", cursor: "pointer" }}>
+        <div className="multiSelect">
           <MultiSelect
             value={selectedCities}
             onChange={(e) => onGlobalFilterChange(e)}
             options={multiselectOptions(selectedColumnName)}
             optionLabel={selectedColumnName}
             filter
-            placeholder="Select "
+            placeholder="Select Project ID"
             maxSelectedLabels={3}
             className="p-column-filter"
           />
