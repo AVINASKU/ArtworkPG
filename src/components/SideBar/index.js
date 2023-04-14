@@ -53,22 +53,38 @@ const SideBar = () => {
   const navItems = {
     data: [
       {
-        name: "Projects",
+        name: "My Projects",
         img: ReportsImg,
         arrowUp: ArrowDownImg,
         url: "/myProjects",
         items: [
           { name: "My Projects", url: "/myProjects" },
+        ],
+      },
+      {
+        name: "All Projects",
+        img: ReportsImg,
+        arrowUp: ArrowDownImg,
+        url: "/allProjects",
+        items: [
           { name: "All Projects", url: "/allProjects" },
         ],
       },
       {
-        name: "Tasks",
+        name: "My Tasks",
         img: ChartImg,
         arrowUp: ArrowDownImg,
         url: "/tasks",
         items: [
           { name: "My Tasks", url: "tasks/mytasks" },
+        ],
+      },
+      {
+        name: "All Tasks",
+        img: ChartImg,
+        arrowUp: ArrowDownImg,
+        url: "/tasks",
+        items: [
           { name: "All Tasks", url: "tasks/alltasks" },
         ],
       },
@@ -120,12 +136,16 @@ const SideBar = () => {
                     }
                   >
                     <NavLink
-                      onClick={() => toggleSubMenu(index)}
+                      // onClick={() => toggleSubMenu(index)}
                       className={`nav-link ${isToggle && "parent-link"}`}
                       to={item.url}
                     >
-                      <img src={item.img} alt="logos" />
-                      {isToggle && (
+                      <div>
+                        <img src={item.img} alt="logos" />
+                      </div>
+
+                      <div>{item.name}</div>
+                      {/* {isToggle && (
                         <>
                           <span>{item.name}</span>
                           <img
@@ -138,7 +158,7 @@ const SideBar = () => {
                             }
                           />
                         </>
-                      )}
+                      )} */}
                     </NavLink>
                     {expandedIndex === index && isToggle && (
                       <ul>

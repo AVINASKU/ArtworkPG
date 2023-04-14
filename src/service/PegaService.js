@@ -5,27 +5,27 @@ const frozenColData = ["Record ID#", "Timestamp", "Status", "SOP"];
 const sortingData = ["Record ID#", "desc"];
 
 const allColumnNames = [
-  "Record ID#",
-    "Project Name",
-  "Category",
-  "SMO",
-"Project State",
-"Buffer to work",
-"AW @ Printer",
-"Full Kit Readiness Tracking",
+  "ProjectID",
+  "ProjectName",
+  "Project_Category",
+  "Project_SMO",
+  "Project State",
+  "Buffer to work",
+  "EstimatedAWPrinters",
+  "Full Kit Readiness Tracking",
 ];
 
 const allColumnNamesAllProjects = [
-  "Record ID#",
-    "Project Name",
-  "Category",
-  "SMO",
+  "ProjectID",
+  "ProjectName",
+  "Project_Category",
+  "Project_SMO",
   "PM",
-"Project State",
-"Buffer to work",
-"AW @ Printer",
-"Full Kit Readiness Tracking",
-]
+  "Project State",
+  "Buffer to work",
+  "EstimatedAWPrinters",
+  "Full Kit Readiness Tracking",
+];
 
 const filterProjectData = [
   { "Record ID#": { frozen: true, sort: "desc", width: 50 } },
@@ -52,11 +52,11 @@ export const ProjectService = {
     return frozenColData;
   },
 
-  getAllColumnNames(){
-  return allColumnNames;
+  getAllColumnNames() {
+    return allColumnNames;
   },
-  
-  getAllColumnNamesAllProjects(){
-  return allColumnNamesAllProjects;
-  }
+
+  getAllColumnNamesAllProjects() {
+    return allColumnNamesAllProjects;
+  },
 };
