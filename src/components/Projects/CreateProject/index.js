@@ -38,7 +38,6 @@ function AddProject(props) {
   const [selectedCities, setSelectedCities] = useState([]);
   const [formValid, setFormValid] = useState(false);
   const [formData, setFormData] = useState(null);
-
   const [formattedDate, setFormattedDate] = useState("");
   const [readinessDate, setReadinessDate] = useState(null);
   const [sopDate, setSOPDate] = useState(null);
