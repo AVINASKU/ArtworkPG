@@ -109,9 +109,7 @@ function AddProject(props) {
   let nextYear = nextMonth === 0 ? year + 1 : year;
 
   let minDate = new Date();
-
-  minDate.setMonth(prevMonth);
-  minDate.setFullYear(prevYear);
+  minDate.setDate(today.getDate());
 
   let maxDate = new Date();
 
@@ -123,22 +121,15 @@ function AddProject(props) {
     const isChecked = event.target.checked;
 
     if (!isChecked) {
-      console.log("checked and unchecked", designScopeList);
-      if (designScopeList[value]) {
-        console.log("checked and unchecked", designScopeList, value);
-        delete designScopeList[value];
-        setDesignScopeList((prevScopeList) => ({
-          ...designScopeList,
-        }));
-      }
+      setDesignScopeList((prevDesignScopeList) => ({
+        ...prevDesignScopeList,
+        [value]: "", // set input value to empty string
+      }));
+      setTextBoxEnabled((prevTextBoxEnabled) => ({
+        ...prevTextBoxEnabled,
+        [value]: false, // disable the input textbox
+      }));
     }
-    // else {
-    //   // code to update designScopeList when checked
-    //   setDesignScopeList((prevDesignScopeList) => ({
-    //     ...prevDesignScopeList,
-    //     [value]: "", // set default value to an empty string
-    //   }));
-    // }
 
     setCheckedItems((prevCheckedItems) => ({
       ...prevCheckedItems,
@@ -154,6 +145,10 @@ function AddProject(props) {
             ...prevCheckedItems,
             DT: true,
           }));
+          setTextBoxEnabled((prevTextBoxEnabled) => ({
+            ...prevTextBoxEnabled,
+            DT: true,
+          }));
         }
         break;
       case "DT":
@@ -163,6 +158,10 @@ function AddProject(props) {
             ...prevCheckedItems,
             PRA: false,
           }));
+          setTextBoxEnabled((prevTextBoxEnabled) => ({
+            ...prevTextBoxEnabled,
+            PRA: false,
+          }));
         }
         break;
       case "PRA":
@@ -170,6 +169,10 @@ function AddProject(props) {
         if (isChecked && checkedItems.DT) {
           setCheckedItems((prevCheckedItems) => ({
             ...prevCheckedItems,
+            DT: false,
+          }));
+          setTextBoxEnabled((prevTextBoxEnabled) => ({
+            ...prevTextBoxEnabled,
             DT: false,
           }));
         }
@@ -183,6 +186,12 @@ function AddProject(props) {
     setTextBoxEnabled((prevTextBoxEnabled) => ({
       ...prevTextBoxEnabled,
       [name]: isChecked,
+      // enable both inputs when both DI and DT are selected
+      ...(name === "DI" && isChecked && checkedItems.DT
+        ? { DT: true }
+        : name === "DT" && isChecked && checkedItems.DI
+        ? { DI: true }
+        : {}),
     }));
   };
 
@@ -260,14 +269,14 @@ function AddProject(props) {
   // this function is to change the date format maybe we will change when pega integration is done.
   const changeDateFormat = (value) => {
     const options = { timeZone: "Asia/Kolkata", hour12: false };
-    const outputDateString = value.toLocaleString("en-US", options);
+    const outputDateString = value?.toLocaleString("en-US", options);
     const outputDate = new Date(outputDateString);
     return outputDate;
   };
 
   useEffect(() => {
     //get api call
-    const formDraft = JSON.parse(localStorage.getItem("formDraft"));
+    const formDraft = JSON.parse(localStorage?.getItem("formDraft"));
     if (formDraft) {
       Object.entries(formDraft).forEach(([name, value]) => {
         //
@@ -362,7 +371,6 @@ function AddProject(props) {
             </Form.Group>
           </Col>
           <Col>
-            {" "}
             <Form.Group className="mb-3" controlId="sop.readiness">
               <Form.Label>Estimated AW Readiness *</Form.Label>
               <Controller
@@ -389,7 +397,6 @@ function AddProject(props) {
             </Form.Group>
           </Col>
           <Col>
-            {" "}
             <Form.Group controlId="projectType.SelectMultiple">
               <Form.Label>Project Type</Form.Label>
               <div>
@@ -622,7 +629,23 @@ function AddProject(props) {
               />
             </Form.Group>
           </Col>
-          <Col></Col>
+          <Col>
+            <Form.Group controlId="projectType.SelectMultiple">
+              <Form.Label>Clustor</Form.Label>
+              <div>
+                <Form.Select
+                  // value={selectedCities}
+                  // onChange={(e) => setSelectedCities(e.value)}
+                  {...register("selectedCities", { required: false })}
+                  placeholder="Select Scale"
+                >
+                  <option value="">Select Clustor</option>
+
+                  <option value="clustor1">Clustor1</option>
+                </Form.Select>
+              </div>
+            </Form.Group>
+          </Col>
         </Row>
         <Row>
           <Col>
@@ -658,24 +681,26 @@ function AddProject(props) {
                       checked={checkedItems[option.value]}
                       style={{ width: 160 }}
                     />
-                    <Form.Control
-                      type="number"
-                      value={designScopeList[option.value]}
-                      onChange={(e) => {
-                        setDesignScopeList((prevDesignScopeList) => ({
-                          ...prevDesignScopeList,
-                          [option.value]: e.target.value,
-                        }));
-                      }}
-                      disabled={!textBoxEnabled[option.value]}
-                      style={{
-                        width: 40,
-                        height: 27,
-                        paddingLeft: "5px",
-                        paddingRight: 0,
-                        fontSize: "10px",
-                      }}
-                    />
+                    {option.value !== "PF" && (
+                      <Form.Control
+                        type="number"
+                        value={designScopeList[option.value]}
+                        onChange={(e) => {
+                          setDesignScopeList((prevDesignScopeList) => ({
+                            ...prevDesignScopeList,
+                            [option.value]: e.target.value,
+                          }));
+                        }}
+                        disabled={!textBoxEnabled[option.value]}
+                        style={{
+                          width: 40,
+                          height: 27,
+                          paddingLeft: "5px",
+                          paddingRight: 0,
+                          fontSize: "10px",
+                        }}
+                      />
+                    )}
                   </span>
                 ))}
                 <span style={{ display: "flex" }}>
@@ -751,7 +776,18 @@ function AddProject(props) {
               </div>
             </Form.Group>
           </Col>
-          <Col></Col>
+          <Col>
+            {" "}
+            <Form.Group className="mb-3" controlId="customValue2.ControlInput1">
+              <Form.Label>Comments</Form.Label>
+              <Form.Control
+                as="textarea"
+                style={{ height: "5rem" }}
+                placeholder="Add Comments"
+                {...register("projectDescription", { required: false })}
+              />
+            </Form.Group>
+          </Col>
         </Row>
         <Row>
           <Col></Col>
