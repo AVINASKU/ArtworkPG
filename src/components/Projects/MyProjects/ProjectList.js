@@ -9,7 +9,8 @@ import { FilterMatchMode } from "primereact/api";
 import ProjectListHeader from "./ProjectListHeader";
 import { Tag } from "primereact/tag";
 import filter from "../../../assets/images/filter.svg";
-import {getMyProject} from "../../../store/actions/ProjectActions";
+import { getMyProject } from "../../../store/actions/ProjectActions";
+import { changeDateFormat } from "../utils";
 
 const CustomisedView = React.lazy(() => import("./CustomisedView"));
 
@@ -26,7 +27,7 @@ const ProjectList = (props) => {
   const [sortData, setSortData] = useState([]);
   const [allColumnNames, setAllColumnNames] = useState([]);
   const [isSearch, isSearchSet] = useState(false);
-   const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const searchHeader = projectColumnName.reduce(
     (acc, curr) => ({
@@ -67,8 +68,8 @@ const ProjectList = (props) => {
 
   useEffect(() => {
     // console.log('Branch testing gopal/sprint2/myprojects');
-     const updatedUsers = dispatch(getMyProject());
-     console.log("my projects");
+    const updatedUsers = dispatch(getMyProject());
+    console.log("my projects");
     setLoading(true);
     const { pathname } = window.location;
     console.log("hello", pathname);
@@ -179,11 +180,27 @@ const ProjectList = (props) => {
 
     return (
       <>
-        {field === "Full Kit Readiness Tracking" ? (
-          <Tag value="view" style={{ backgroundColor: "grey" }}></Tag>
-        ) : (
-          <> {options[field]}</>
+        {field === "Full Kit Readiness Tracking" && (
+          <Tag
+            value="view"
+            style={{
+              backgroundColor: "white",
+              color: "gray",
+              border: "1px solid",
+            }}
+          ></Tag>
         )}
+
+        {field === "Estimated_SOP" && changeDateFormat(options[field])}
+
+        {field === "EstimatedAWPrinters" && changeDateFormat(options[field])}
+
+        {field === "Buffer to work" && <>-----</>}
+
+        {field !== "Full Kit Readiness Tracking" &&
+          field !== "Estimated_SOP" &&
+          field !== "EstimatedAWPrinters" &&
+          field !== "Buffer to work" && <> {options[field]}</>}
       </>
     );
   };
