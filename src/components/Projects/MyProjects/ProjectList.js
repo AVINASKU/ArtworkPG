@@ -347,7 +347,7 @@ const ProjectList = (props) => {
 
         <DataTable
           resizableColumns
-          dataKey="Record ID#"
+          dataKey="ProjectID"
           reorderableColumns
           onColReorder={storeReorderedColumns}
           onResize={(e) => console.log("resize", e)}
