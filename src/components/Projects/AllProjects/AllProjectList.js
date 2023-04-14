@@ -7,6 +7,8 @@ import { Toast } from "primereact/toast";
 import { FilterMatchMode } from "primereact/api";
 import ProjectListHeader from "../MyProjects/ProjectListHeader";
 import { Tag } from "primereact/tag";
+import { changeDateFormat } from "../utils";
+
 
 const CustomisedView = React.lazy(() => import("../MyProjects/CustomisedView"));
 
@@ -74,12 +76,12 @@ const AllProjectList = (props) => {
         // const columnNames = await ProjectService.getAllColumnNames();
         // localStorage.setItem("allColumnNames", JSON.stringify(columnNames));
 
-        // const columnNamesAllProjects =
-        //   await ProjectService.getAllColumnNamesAllProjects();
-        // localStorage.setItem(
-        //   "allColumnNamesAllProjects",
-        //   JSON.stringify(columnNamesAllProjects)
-        // );
+        const columnNamesAllProjects =
+          await ProjectService.getAllColumnNamesAllProjects();
+        localStorage.setItem(
+          "allColumnNamesAllProjects",
+          JSON.stringify(columnNamesAllProjects)
+        );
 
         let filteredPegaDataJson = localStorage.getItem(
           "allProjectColumnWiseFilterData"
@@ -100,7 +102,7 @@ const AllProjectList = (props) => {
         if (columnNames != null && columnNames.length) {
           setProjectColumnNames(columnNames);
         } else {
-          const columnNames = await ProjectService.getAllColumnNames();
+          const columnNames = await ProjectService.getAllColumnNamesAllProjects();
           localStorage.setItem(
             "allColumnNamesAllProjects",
             JSON.stringify(columnNames)
@@ -168,16 +170,33 @@ const AllProjectList = (props) => {
       </div>
     );
   };
+
   const fullKitReadinessBody = (options, rowData) => {
     let field = rowData.field;
 
     return (
       <>
-        {field === "Full Kit Readiness Tracking" ? (
-          <Tag value="view" style={{ backgroundColor: "grey" }}></Tag>
-        ) : (
-          <> {options[field]}</>
+        {field === "Full Kit Readiness Tracking" && (
+          <Tag
+            value="view"
+            style={{
+              backgroundColor: "white",
+              color: "gray",
+              border: "1px solid",
+            }}
+          ></Tag>
         )}
+
+        {field === "Estimated_SOP" && changeDateFormat(options[field])}
+
+        {field === "EstimatedAWPrinters" && changeDateFormat(options[field])}
+
+        {field === "Buffer to work" && <>-----</>}
+
+        {field !== "Full Kit Readiness Tracking" &&
+          field !== "Estimated_SOP" &&
+          field !== "EstimatedAWPrinters" &&
+          field !== "Buffer to work" && <> {options[field]}</>}
       </>
     );
   };
@@ -336,7 +355,7 @@ const AllProjectList = (props) => {
 
         <DataTable
           resizableColumns
-          dataKey="Record ID#"
+          dataKey="ProjectID"
           reorderableColumns
           onColReorder={storeReorderedColumns}
           onResize={(e) => console.log("resize", e)}
