@@ -101,7 +101,52 @@ $fontWeight400: 400;
   width: 18px;
   height: 18px;
 }
+// Filter and Save buttons disabled
+img[disabled] {
+  opacity: 0.5;
+  // pointer-events: none;
+  cursor: no-drop;
+}
 // ProjectList Styles End
+
+// ConfirmationPopUp Styles Start
+.clearAllFilter {
+  padding: 10.56px 22px 22px 2px;
+  cursor: pointer;
+  line-height: 12px;
+}
+.sortAndFrozen {
+  padding: 0 22px 22px 2px;
+  cursor: pointer;
+  line-height: 12px;
+}
+.multiSelect {
+  padding: 0 22px 22px 2px;
+  cursor: pointer;
+  line-height: 10px;
+  .p-placeholder {
+    font-size: 8px !important;
+    color: #595959 !important;
+  }
+  .p-multiselect {
+    width: 124px !important;
+    // height: 16px !important;
+  }
+}
+
+.p-overlaypanel {
+  position: absolute !important;
+}
+.p-multiselect-item {
+  font-size: 10px !important;
+  line-height: 12px !important;
+  padding: 0px 9px !important;
+}
+.p-inputtext {
+  font-size: 10px !important;
+  line-height: 12px !important;
+  font-family: Montserrat !important;
+}
 
 th:after,
 td:after {
