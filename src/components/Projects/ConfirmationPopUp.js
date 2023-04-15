@@ -28,47 +28,27 @@ const ConfirmationPopUp = ({
     return optionList;
   };
 
+  const changeColor = (id) => {
+    document.addEventListener("click", (e) => {
+      const flyoutEl = document.getElementById(id);
+      let targetEl = e.target;
+      do {
+        if (targetEl === flyoutEl) {
+          document.getElementById(id).style.color = "red";
+          return;
+        }
+        targetEl = targetEl.parentNode;
+      } while (targetEl);
+      document.getElementById(id).style.color = "";
+    });
+  };
+
   const confirmPopData = () => {
     return (
       <div>
         <div
-          style={{ padding: "5px", cursor: "pointer" }}
-          onClick={onSort(selectedColumnName, "desc")}
-        >
-          {" "}
-          Sort z to a
-        </div>
-        <div
-          style={{ padding: "5px", cursor: "pointer" }}
-          onClick={onSort(selectedColumnName, "asc")}
-        >
-          {" "}
-          Sort a to z
-        </div>
-        <div
-          style={{ padding: "5px", cursor: "pointer" }}
-          onClick={() => {
-            addFrozenColumns(selectedColumnName);
-            setProjectFrozen(!ProjectFrozen);
-          }}
-        >
-          {" "}
-          Frozen{" "}
-        </div>
-        <div style={{ padding: "5px", cursor: "pointer" }}>
-          <MultiSelect
-            value={selectedCities}
-            onChange={(e) => onGlobalFilterChange(e)}
-            options={multiselectOptions(selectedColumnName)}
-            optionLabel={selectedColumnName}
-            filter
-            placeholder="Select "
-            maxSelectedLabels={3}
-            className="p-column-filter"
-          />
-        </div>
-        <div
-          style={{ padding: 3, cursor: "pointer" }}
+          id="clearAllFilter"
+          className="clearAllFilter"
           onClick={() => {
             let jsonFrozenItem = localStorage.getItem("frozenData");
             const frozenItem = JSON.parse(jsonFrozenItem);
@@ -107,9 +87,53 @@ const ConfirmationPopUp = ({
             if (filters && filters.length) {
               setFilters([]);
             }
+            changeColor("clearAllFilter");
           }}
         >
           Clear all filter
+        </div>
+        <div
+          id="sortZtoA"
+          className="sortAndFrozen"
+          onClick={() => {
+            onSort(selectedColumnName, "desc");
+            changeColor("sortZtoA");
+          }}
+        >
+          Sort z to a
+        </div>
+        <div
+          id="sortAtoZ"
+          className="sortAndFrozen"
+          onClick={() => {
+            onSort(selectedColumnName, "asc");
+            changeColor("sortAtoZ");
+          }}
+        >
+          Sort a to z
+        </div>
+        <div
+          id="frozen"
+          className="sortAndFrozen"
+          onClick={() => {
+            addFrozenColumns(selectedColumnName);
+            setProjectFrozen(!ProjectFrozen);
+            changeColor("frozen");
+          }}
+        >
+          Frozen
+        </div>
+        <div className="multiSelect">
+          <MultiSelect
+            value={selectedCities}
+            onChange={(e) => onGlobalFilterChange(e)}
+            options={multiselectOptions(selectedColumnName)}
+            optionLabel={selectedColumnName}
+            filter
+            placeholder="Select Project ID"
+            maxSelectedLabels={3}
+            className="p-column-filter"
+          />
         </div>
       </div>
     );

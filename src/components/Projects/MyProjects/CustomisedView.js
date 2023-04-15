@@ -19,7 +19,6 @@ export default function CustomisedView({
   const [selectedCategories, setSelectedCategories] = useState([]);
 
   useEffect(() => {
-    // console.log("project name", projectColumnName);
     setSelectedCategories(projectColumnName);
   }, [projectColumnName, selectedCategories, setSelectedCategories]);
 
@@ -29,16 +28,24 @@ export default function CustomisedView({
       setSelectedCategories(selectedCategories);
       setChecked(!checked);
     }
+
+    if (!e.checked) {
+      const index = selectedCategories.indexOf(e.value);
+      selectedCategories.splice(index, 1);
+      setSelectedCategories(selectedCategories);
+      setChecked(!checked);
+    }
   };
 
   const footerContent = (
     <div>
       <img
         src={PGDefault}
-        alt="Reset to P&G Default"
+        alt="Reset to default"
         style={{
           width: 234,
           height: 34,
+          cursor:'pointer'
         }}
         onClick={() => {
           const columnNames = ProjectService.getAllColumnNames();
@@ -46,7 +53,6 @@ export default function CustomisedView({
           setProjectColumnNames(columnNames);
           setVisible(false);
         }}
-        className="PGDefault"
       />
       <img
         src={personalDefault}
@@ -55,6 +61,7 @@ export default function CustomisedView({
           width: 264,
           height: 34,
           margin: 15,
+          cursor:'pointer'
         }}
         onClick={() => {
           setProjectColumnNames(selectedCategories);
@@ -62,7 +69,6 @@ export default function CustomisedView({
           localStorage.setItem("allColumnNames", columnNames);
           setVisible(false);
         }}
-        className="PersonalDefault"
       />
     </div>
   );
@@ -73,7 +79,7 @@ export default function CustomisedView({
         header="Customise Fields"
         visible={visible}
         style={{
-          width: "65vw",
+          width: "75vw",
           height: "540px",
         }}
         onHide={() => setVisible(false)}

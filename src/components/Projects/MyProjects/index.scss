@@ -1,3 +1,7 @@
+$width100: 100%;
+$fontWeight500: 500;
+$fontWeight400: 400;
+
 .content-layout {
   display: flex;
   flex-direction: column;
@@ -7,7 +11,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width: 100%;
+    width: $width100;
     align-items: center;
 
     .action-buttons {
@@ -19,7 +23,7 @@
     }
   }
   .tabular-view {
-    width: 100%;
+    width: $width100;
     display: block;
     padding: 0 0 0;
     .card {
@@ -34,33 +38,28 @@
 }
 .p-datatable > .p-datatable-wrapper {
   overflow: scroll;
-  width: 100%;
+  width: $width100;
   height: 540px;
 }
 .font-bold {
   font-weight: 700;
 }
 
-// .row{
-//   min-height: 350px;
-// }
-
 .p-checkbox {
-  margin: 8px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  margin-right: 10px;
 }
-
-// .p-checkbox:checked {
-//   color: red;
-// }
 
 .p-checkbox-checked + label {
   color: #003da5;
 }
 
 .ml-2 {
-  font-weight: 400;
-  font-size: 14px;
+  font-weight: $fontWeight400;
+  font-size: 12px;
   line-height: 17px;
+  width: 180px;
 }
 
 // ProjectList Styles Start
@@ -70,14 +69,29 @@
   width: 11px;
   height: 16px;
 }
+.resetToPgDefault {
+  width: 164px;
+  height: 32px;
+  padding: 10px 18px;
+  margin: 0 10px 0 21.82px !important;
+  border-radius: 15px;
+  background-color: #acacac !important;
+  font-weight: $fontWeight500;
+  line-height: 96%;
+  vertical-align: top;
+  cursor: pointer;
+}
+.resetToPgDefault:hover {
+  background-color: #868484 !important;
+}
 .p-datatable-table {
-  line-height: 14.63px;
+  line-height: 15px;
 }
 .p-column-title {
-  font-weight: 500;
+  font-weight: $fontWeight500;
 }
 .p-datatable-tbody {
-  font-weight: 400;
+  font-weight: $fontWeight400;
 }
 .header-icons {
   cursor: pointer;

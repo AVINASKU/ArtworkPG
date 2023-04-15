@@ -13,12 +13,16 @@ const Header = () => {
         </div>
       </div>
       <div className="user-profile">
-        <img src={Notificaitons} alt="notificaitons" />
+        <img
+          src={Notificaitons}
+          alt="notificaitons"
+          className="notificaitons"
+        />
         <p>
           Audrey
           <span>@audrey24</span>
         </p>
-        <img src={user} alt="user profile" />
+        <img src={user} alt="user profile" className="userProfile" />
       </div>
     </div>
   );
