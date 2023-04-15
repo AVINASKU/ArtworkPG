@@ -16,7 +16,7 @@ function ProjectSetup() {
           <div className="project-name">DC HDW SAR Fairy Fame Pink LBB</div>
         </div>
 
-        <div className="action-buttons">
+        {/* <div className="action-buttons">
           <i
             style={{
               cursor: "pointer",
@@ -66,7 +66,7 @@ function ProjectSetup() {
           <Button className="button-layout" style={{ fontSize: 14 }}>
             Reset to P&G Default
           </Button>
-        </div>
+        </div> */}
       </div>
       <div className="tabular-view">
         <Accordion defaultActiveKey="0">
@@ -77,7 +77,7 @@ function ProjectSetup() {
             </Accordion.Body>
           </Accordion.Item>
           <Accordion.Item eventKey="1">
-            <Accordion.Header>Accordion Item #2</Accordion.Header>
+            <Accordion.Header>Design</Accordion.Header>
             <Accordion.Body>Monitor Project</Accordion.Body>
           </Accordion.Item>
         </Accordion>
