@@ -42,7 +42,9 @@ const ConfirmationPopUp = ({
       document.getElementById(id).style.color = "";
     });
   };
-
+  function formatColumnName(columnName) {
+    return columnName?.replace(/_/g, " ");
+  }
   const confirmPopData = () => {
     return (
       <div>
@@ -130,7 +132,7 @@ const ConfirmationPopUp = ({
             options={multiselectOptions(selectedColumnName)}
             optionLabel={selectedColumnName}
             filter
-            placeholder="Select Project ID"
+            placeholder={`Select ${formatColumnName(selectedColumnName)}`}
             maxSelectedLabels={3}
             className="p-column-filter"
           />
