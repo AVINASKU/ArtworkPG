@@ -139,11 +139,11 @@ export const regionList = [
 
 export const designScope = [
   { label: "Design Intent", value: "DI" },
-  { label: "Design Template", value: "DT" },
+  { label: "Regional Design Template", value: "DT" },
   { label: "Production Ready Art", value: "PRA" },
   { label: "New Print Feasibility", value: "PF" },
   { label: "Ink Qualification", value: "IQ" },
-  { label: "CICs", value: "CICs" },
+  { label: "CIC/GA", value: "CICs" },
   // { label: "POA's", value: "POAs" },
 ];
 

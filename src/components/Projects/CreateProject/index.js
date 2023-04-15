@@ -4,6 +4,7 @@ import { MultiSelect } from "primereact/multiselect";
 import { Calendar } from "primereact/calendar";
 import { Controller, useForm } from "react-hook-form";
 import { classNames } from "primereact/utils";
+import { useNavigate } from "react-router-dom";
 // import moment from "moment";
 import "./index.scss";
 import {
@@ -35,6 +36,7 @@ const defaultTextBoxEnabled = {
 };
 
 function AddProject(props) {
+  const navigate = useNavigate();
   const [selectedCities, setSelectedCities] = useState([]);
   const [formValid, setFormValid] = useState(false);
   const [formData, setFormData] = useState(null);
@@ -55,7 +57,7 @@ function AddProject(props) {
   const [iL, setIl] = useState("Pranali");
   const [checkedItems, setCheckedItems] = useState(defaultCheckedItems);
   const [textBoxEnabled, setTextBoxEnabled] = useState(defaultTextBoxEnabled);
-  const [POA, setPOA] = useState(10);
+  const [POA, setPOA] = useState(1);
   const [designScopeList, setDesignScopeList] = useState({
     DI: "",
     DT: "",
@@ -217,53 +219,103 @@ function AddProject(props) {
 
   const checkFormValidity = () => {
     // check if all fields are filled
-    const valid = selectedCities && selectedCities.length > 0 && isValid;
-    setFormValid(valid);
+    // // const valid = selectedCities && selectedCities.length > 0 && isValid;
+    const valid =
+      brand?.length > 0 &&
+      region &&
+      Object.keys(region).length > 0 &&
+      smo &&
+      smo?.length > 0 &&
+      bu &&
+      bu.length > 0 &&
+      readinessDate &&
+      printerDate &&
+      true;
+    return valid;
   };
 
   useEffect(() => {
-    checkFormValidity();
+    const valid = checkFormValidity();
     // check if all fields are filled
-    const valid = selectedCities && selectedCities.length > 0 && isValid;
+    // const valid = selectedCities && selectedCities.length > 0 && isValid;
     setFormValid(valid);
-  }, [selectedCities, isValid, errors]);
+  });
 
   useEffect(() => {
     trigger();
   }, [trigger]);
 
-  const onSubmit = (data) => {
-    const formData = { data, selectedCities };
-    console.log("form data", formData);
-    setFormData(formData);
-    setFormValid(false); // set formValid to false to show error message again if the form is invalid
-
-    //api call
-  };
-  const onSaveAsDraft = () => {
-    const formData = {
+  const collectFormData = () => {
+    return {
       projectName: getValues("projectName"), // 1
       groupName: getValues("groupName"), // 2
-      customValue1: getValues("customValue1"),
-      bu: bu, // 3
+      projectDescription: getValues("projectDescription"), //18
+      bu: getValues("bu"), // 3
       region: region, //4
       smo: smo, //5
       category: subCategories, //6
       brand: brand, //7
       scale: getValues("scale"), //8
-      estimatedPOA: getValues("estimatedPOA"), //9
-      estimatedCICs: getValues("estimatedCICs"), //10
+      // estimatedPOA: getValues("estimatedPOA"), //9
+      // estimatedCICs: getValues("estimatedCICs"), //10
       printerDate: printerDate, //11
       readinessDate: readinessDate, //12
       sopDate: sopDate, //13
       sosDate: sosDate, //14
-      customValue2: getValues("customValue2"), //15
-      projectType: getValues("selectedCities"), //16
+      projectType: getValues("projectType"), //16
       PM: "Pranali", //17
-      projectDescription: getValues("projectDescription"), //18
+      IL: iL,
+      tier: tier,
+      clustor: getValues("clustor"),
+      comments: getValues("comments"),
+      scope: { ...designScopeList, POA: POA },
+      productionStrategy: ps,
+      // poa: POA
     };
+  };
+
+  const onSubmit = (data) => {
+    const formData = collectFormData();
     console.log("form data", formData);
-    localStorage.setItem("formDraft", JSON.stringify(formData));
+    setFormData(formData);
+    // setFormValid(false); // set formValid to false to show error message again if the form is invalid
+
+    //API call to be added
+    navigate("/myProjects");
+  };
+  const onSaveAsDraft = () => {
+    // const formData = {
+    //   projectName: getValues("projectName"), // 1
+    //   groupName: getValues("groupName"), // 2
+    //   projectDescription: getValues("projectDescription"), //18
+    //   bu: getValues("bu"), // 3
+    //   region: region, //4
+    //   smo: smo, //5
+    //   category: subCategories, //6
+    //   brand: brand, //7
+    //   scale: getValues("scale"), //8
+    //   // estimatedPOA: getValues("estimatedPOA"), //9
+    //   // estimatedCICs: getValues("estimatedCICs"), //10
+    //   printerDate: printerDate, //11
+    //   readinessDate: readinessDate, //12
+    //   sopDate: sopDate, //13
+    //   sosDate: sosDate, //14
+    //   projectType: getValues("projectType"), //16
+    //   PM: "Pranali", //17
+    //   IL: iL,
+    //   tier: tier,
+    //   clustor: getValues("clustor"),
+    //   comments: getValues("comments"),
+    //   scope: {...designScopeList, 'POA':POA},
+    //   productionStrategy: ps,
+    //   // poa: POA
+
+    // };
+    const draftFormData = collectFormData();
+    console.log("draft form data", draftFormData);
+    localStorage.setItem("draftformDraft", JSON.stringify(draftFormData));
+    //API call to be added
+    navigate("/myProjects");
   };
 
   // this function is to change the date format maybe we will change when pega integration is done.
@@ -274,46 +326,46 @@ function AddProject(props) {
     return outputDate;
   };
 
-  useEffect(() => {
-    //get api call
-    const formDraft = JSON.parse(localStorage?.getItem("formDraft"));
-    if (formDraft) {
-      Object.entries(formDraft).forEach(([name, value]) => {
-        //
-        if (name === "sopDate") {
-          let outputDate = changeDateFormat(value);
-          setSOPDate(outputDate);
-        }
-        if (name === "sosDate") {
-          let outputDate = changeDateFormat(value);
-          setSOSDate(outputDate);
-        }
-        if (name === "readinessDate") {
-          let outputDate = changeDateFormat(value);
-          setReadinessDate(outputDate);
-        }
-        if (name === "printerDate") {
-          let outputDate = changeDateFormat(value);
-          setPrinterDate(outputDate);
-        }
-        if (name === "bu") {
-          setBu(value);
-        }
-        if (name === "region") {
-          setRegion(value);
-        }
-        if (name === "smo") {
-          setSmo(value);
-        }
-        if (name === "category") {
-          setSubCategories(value);
-        }
-        setValue(name, value);
-      });
-    }
-  }, [setValue]);
+  // useEffect(() => {
+  //   //get api call
+  //   const formDraft = JSON.parse(localStorage?.getItem("formDraft"));
+  //   if (formDraft) {
+  //     Object.entries(formDraft).forEach(([name, value]) => {
+  //       //
+  //       if (name === "sopDate") {
+  //         let outputDate = changeDateFormat(value);
+  //         setSOPDate(outputDate);
+  //       }
+  //       if (name === "sosDate") {
+  //         let outputDate = changeDateFormat(value);
+  //         setSOSDate(outputDate);
+  //       }
+  //       if (name === "readinessDate") {
+  //         let outputDate = changeDateFormat(value);
+  //         setReadinessDate(outputDate);
+  //       }
+  //       if (name === "printerDate") {
+  //         let outputDate = changeDateFormat(value);
+  //         setPrinterDate(outputDate);
+  //       }
+  //       if (name === "bu") {
+  //         setBu(value);
+  //       }
+  //       if (name === "region") {
+  //         setRegion(value);
+  //       }
+  //       if (name === "smo") {
+  //         setSmo(value);
+  //       }
+  //       if (name === "category") {
+  //         setSubCategories(value);
+  //       }
+  //       setValue(name, value);
+  //     });
+  //   }
+  // }, [setValue]);
   const handleTierChange = (e) => {
-    setPs(e.target.value);
+    setTier(e.target.value);
   };
   const handlePsChange = (e) => {
     setPs(e.target.value);
@@ -340,7 +392,10 @@ function AddProject(props) {
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Row>
           <Col>
-            <Form.Group className="mb-3" controlId="projectName.ControlInput1">
+            <Form.Group
+              className={`mb-3 ${errors.projectName && "error-valid"}`}
+              controlId="projectName.ControlInput1"
+            >
               <Form.Label>Project Name * </Form.Label>
               <Form.Control
                 type="text"
@@ -348,11 +403,17 @@ function AddProject(props) {
                 {...register("projectName", { required: true })}
                 required
               />
+              {errors.projectName && (
+                <span className="error-text">This field is required</span>
+              )}
             </Form.Group>
           </Col>
 
           <Col>
-            <Form.Group className="mb-3" controlId="bu.SelectMultiple">
+            <Form.Group
+              className={`mb-3 ${Object.keys(bu).length < 1 && "error-valid"}`}
+              controlId="bu.SelectMultiple"
+            >
               <Form.Label>BU *</Form.Label>
               <div>
                 <Form.Select
@@ -368,10 +429,16 @@ function AddProject(props) {
                   ))}
                 </Form.Select>
               </div>
+              {Object.keys(bu).length < 1 && (
+                <span className="error-text">This field is required</span>
+              )}
             </Form.Group>
           </Col>
           <Col>
-            <Form.Group className="mb-3" controlId="sop.readiness">
+            <Form.Group
+              className={`mb-3 ${!readinessDate && "error-valid"}`}
+              controlId="sop.readiness"
+            >
               <Form.Label>Estimated AW Readiness *</Form.Label>
               <Controller
                 name="date"
@@ -394,6 +461,9 @@ function AddProject(props) {
                   </>
                 )}
               />
+              {!readinessDate && (
+                <span className="error-text">This field is required</span>
+              )}
             </Form.Group>
           </Col>
           <Col>
@@ -403,10 +473,11 @@ function AddProject(props) {
                 <Form.Select
                   // value={selectedCities}
                   // onChange={(e) => setSelectedCities(e.value)}
-                  {...register("selectedCities", { required: false })}
-                  placeholder="Select Scale"
+                  {...register("projectType", { required: false })}
+                  placeholder="Select Project Type"
                 >
                   {/* <option value="">Select Pro</option> */}
+                  <option value="">Select Project Type</option>
                   {projectType.map((bu) => (
                     <option key={bu.code} value={bu.code}>
                       {bu.name}
@@ -419,19 +490,13 @@ function AddProject(props) {
         </Row>
         <Row>
           <Col>
-            <Form.Group
-              className={`mb-3 ${errors.groupName && "error-valid"}`}
-              controlId="groupName.ControlInput1"
-            >
+            <Form.Group className={`mb-3`} controlId="groupName.ControlInput1">
               <Form.Label>Initiative Group Name</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter Initiative Group Name"
-                {...register("groupName", { required: true })}
+                {...register("groupName")}
               />
-              {errors.groupName && (
-                <span className="error-text">This field is required</span>
-              )}
             </Form.Group>
           </Col>
           <Col>
@@ -455,7 +520,10 @@ function AddProject(props) {
             </Form.Group>
           </Col>
           <Col>
-            <Form.Group className="mb-3" controlId="sop.readiness">
+            <Form.Group
+              className={`mb-3 ${!printerDate && "error-valid"}`}
+              controlId="sop.readiness"
+            >
               <Form.Label>Estimated AW@Printer *</Form.Label>
               <Controller
                 name="date"
@@ -478,6 +546,9 @@ function AddProject(props) {
                   </>
                 )}
               />
+              {!printerDate && (
+                <span className="error-text">This field is required</span>
+              )}
             </Form.Group>
           </Col>
           <Col>
@@ -496,7 +567,10 @@ function AddProject(props) {
         </Row>
         <Row>
           <Col>
-            <Form.Group className="mb-3" controlId="customValue2.ControlInput1">
+            <Form.Group
+              className="mb-3"
+              controlId="projectDescription.ControlInput1"
+            >
               <Form.Label>Project Description</Form.Label>
               <Form.Control
                 as="textarea"
@@ -507,7 +581,10 @@ function AddProject(props) {
             </Form.Group>
           </Col>
           <Col>
-            <Form.Group controlId="brand.SelectMultiple">
+            <Form.Group
+              className={`mb-3 ${brand.length < 1 && "error-valid"}`}
+              controlId="brand.SelectMultiple"
+            >
               <Form.Label>Brand *</Form.Label>
               <div>
                 <MultiSelect
@@ -521,12 +598,15 @@ function AddProject(props) {
                   required
                 />
               </div>
+              {brand.length < 1 && (
+                <span className="error-text">This field is required</span>
+              )}
             </Form.Group>
           </Col>
           <Col>
             {" "}
-            <Form.Group className="mb-3" controlId="sop.readiness">
-              <Form.Label>Estimated SOP *</Form.Label>
+            <Form.Group className={`mb-3`} controlId="sop.readiness">
+              <Form.Label>Estimated SOP</Form.Label>
               <Controller
                 name="date"
                 control={form.control}
@@ -562,11 +642,16 @@ function AddProject(props) {
         </Row>
         <Row>
           <Col>
-            <Form.Group className="mb-3" controlId="smo.SelectMultiple">
+            <Form.Group
+              className={`mb-3 ${
+                (!region || Object.keys(region).length < 1) && "error-valid"
+              }`}
+              controlId="smo.SelectMultiple"
+            >
               <Form.Label>Region *</Form.Label>
               <div>
                 <Form.Select
-                  value={region.code || ""}
+                  value={region?.code || ""}
                   onChange={handleRegionChange}
                   placeholder="Select Region"
                 >
@@ -578,6 +663,9 @@ function AddProject(props) {
                   ))}
                 </Form.Select>
               </div>
+              {(!region || Object.keys(region).length < 1) && (
+                <span className="error-text">This field is required</span>
+              )}
             </Form.Group>
           </Col>
           <Col>
@@ -601,8 +689,8 @@ function AddProject(props) {
             </Form.Group>
           </Col>
           <Col>
-            <Form.Group className="mb-3" controlId="sop.readiness">
-              <Form.Label>Estimated SOS *</Form.Label>
+            <Form.Group className={`mb-3`} controlId="sop.readiness">
+              <Form.Label>Estimated SOS</Form.Label>
               {/*
                 {errors.sopDate && (
                   <span className="error-text">Please select a SOP Date</span>
@@ -630,13 +718,13 @@ function AddProject(props) {
             </Form.Group>
           </Col>
           <Col>
-            <Form.Group controlId="projectType.SelectMultiple">
+            <Form.Group controlId="clustor.SelectMultiple">
               <Form.Label>Clustor</Form.Label>
               <div>
                 <Form.Select
                   // value={selectedCities}
                   // onChange={(e) => setSelectedCities(e.value)}
-                  {...register("selectedCities", { required: false })}
+                  {...register("clustor", { required: false })}
                   placeholder="Select Scale"
                 >
                   <option value="">Select Clustor</option>
@@ -649,7 +737,10 @@ function AddProject(props) {
         </Row>
         <Row>
           <Col>
-            <Form.Group className="mb-3" controlId="smo.SelectMultiple">
+            <Form.Group
+              className={`mb-3 ${(!smo || smo?.length < 1) && "error-valid"}`}
+              controlId="smo.SelectMultiple"
+            >
               <Form.Label>SMO *</Form.Label>
               <div>
                 <MultiSelect
@@ -664,11 +755,14 @@ function AddProject(props) {
                   disabled={!region}
                 />
               </div>
+              {(!smo || smo?.length < 1) && (
+                <span className="error-text">This field is required</span>
+              )}
             </Form.Group>
           </Col>
           <Col>
             <Form.Group controlId="il.SelectMultiple">
-              <Form.Label>Design Scope</Form.Label>
+              <Form.Label>Scope</Form.Label>
               <div className="design-scope">
                 {designScope.map((option, index) => (
                   <span key={index} style={{ display: "flex" }}>
@@ -688,7 +782,7 @@ function AddProject(props) {
                         onChange={(e) => {
                           setDesignScopeList((prevDesignScopeList) => ({
                             ...prevDesignScopeList,
-                            [option.value]: e.target.value,
+                            [option.value]: parseInt(e.target.value),
                           }));
                         }}
                         disabled={!textBoxEnabled[option.value]}
@@ -705,7 +799,7 @@ function AddProject(props) {
                 ))}
                 <span style={{ display: "flex" }}>
                   <Form.Check
-                    label="POA"
+                    label="Final AW"
                     name="POA"
                     type="checkbox"
                     value="POA"
@@ -750,7 +844,7 @@ function AddProject(props) {
                       placeholder="Select Teir"
                       onChange={handleTierChange}
                     >
-                      <option value="">Select Teir</option>
+                      <option value="">Select Tier</option>
                       {Tier.map((tier) => (
                         <option key={tier.code} value={tier.code}>
                           {tier.name}
@@ -778,13 +872,13 @@ function AddProject(props) {
           </Col>
           <Col>
             {" "}
-            <Form.Group className="mb-3" controlId="customValue2.ControlInput1">
+            <Form.Group className="mb-3" controlId="comments.ControlInput1">
               <Form.Label>Comments</Form.Label>
               <Form.Control
                 as="textarea"
                 style={{ height: "5rem" }}
                 placeholder="Add Comments"
-                {...register("projectDescription", { required: false })}
+                {...register("comments", { required: false })}
               />
             </Form.Group>
           </Col>
@@ -793,6 +887,14 @@ function AddProject(props) {
           <Col></Col>
         </Row>
         <Row className="form-buttons">
+          <Button
+            className="button-layout submit-button"
+            onClick={() => {
+              navigate("/myProjects");
+            }}
+          >
+            Cancel
+          </Button>
           <Button
             className="button-layout submit-button"
             onClick={onSaveAsDraft}
