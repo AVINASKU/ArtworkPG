@@ -93,7 +93,7 @@ table {
       background-color: #fff !important;
       // border: 0 !important;
       border-width: 1px 2px 3px 4px;
-      border: 0.5px solid #acacac !important;
+      border: 0 !important;
       &:nth-child(1) {
         border-left: none !important;
       }
@@ -127,7 +127,7 @@ table {
     // border-top: 0.5px solid #ACACAC !important;
     // font-size: 10px;
     // line-height: 20px;
-    border: 0.5px solid #acacac !important;
+    border-top: 0.5px solid #acacac !important;
     color: #595959;
     text-align: center;
     background: #ffffff !important;
