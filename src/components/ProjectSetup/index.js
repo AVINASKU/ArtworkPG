@@ -12,8 +12,8 @@ function ProjectSetup() {
     <div className="content-layout">
       <div className="actions">
         <div>
-          <BreadCrumb model={items} />
-          <div className="project-name">DC HDW SAR Fairy Fame Pink LBB</div>
+          {/* <BreadCrumb model={items} />
+          <div className="project-name">DC HDW SAR Fairy Fame Pink LBB</div> */}
         </div>
 
         <div className="action-buttons">

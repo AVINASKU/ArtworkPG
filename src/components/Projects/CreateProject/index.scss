@@ -170,13 +170,15 @@
   color: red;
   font-weight: 800;
   font-size: 8px;
-  position: absolute;
+  // position: absolute;
 }
 .error-valid {
   label {
     color: red;
   }
   .form-control,
+  .form-select,
+  .p-inputwrapper,
   .p-multiselect {
     border: 1px solid red !important;
   }
