@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { MultiSelect } from "primereact/multiselect";
+import filter from "../../assets/images/filter.svg";
+import fileattach from "../../assets/images/fileattach.svg";
 
 const ConfirmationPopUp = ({
   op,
@@ -34,18 +36,27 @@ const ConfirmationPopUp = ({
       let targetEl = e.target;
       do {
         if (targetEl === flyoutEl) {
-          document.getElementById(id).style.color = "red";
+          document.getElementById(id).style.color = "#003DA5";
+          document.getElementById(id).style.backgroundColor = "#FAFCFF";
           return;
         }
         targetEl = targetEl.parentNode;
       } while (targetEl);
       document.getElementById(id).style.color = "";
+      document.getElementById(id).style.backgroundColor = "";
     });
   };
+
+  const [filterIcon, setFilterIcon] = useState(false);
+
+  const onChangeFilter = () => {
+    setFilterIcon(!filterIcon);
+  }
 
   const confirmPopData = () => {
     return (
       <div>
+        <div className="clearAllFilterMainDiv">
         <div
           id="clearAllFilter"
           className="clearAllFilter"
@@ -91,6 +102,18 @@ const ConfirmationPopUp = ({
           }}
         >
           Clear all filter
+        </div>
+        <div className="clearAllFilterIcon">
+        <img
+          src={filterIcon ? filter : fileattach}
+          alt=""
+          onClick={(e) => {
+            onChangeFilter()
+          }}
+          className="columnFilterIcon"
+          // className="pi pi-align-justify"
+        />
+        </div>
         </div>
         <div
           id="sortZtoA"

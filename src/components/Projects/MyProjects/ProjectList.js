@@ -9,6 +9,7 @@ import { FilterMatchMode } from "primereact/api";
 import ProjectListHeader from "./ProjectListHeader";
 import { Tag } from "primereact/tag";
 import filter from "../../../assets/images/filter.svg";
+import fileattach from "../../../assets/images/fileattach.svg";
 import { getMyProject } from "../../../store/actions/ProjectActions";
 import { changeDateFormat } from "../utils";
 
@@ -67,9 +68,7 @@ const ProjectList = (props) => {
   };
 
   useEffect(() => {
-    // console.log('Branch testing gopal/sprint2/myprojects');
     const updatedUsers = dispatch(getMyProject());
-    console.log("my projects");
     setLoading(true);
     const { pathname } = window.location;
     console.log("hello", pathname);
@@ -156,16 +155,22 @@ const ProjectList = (props) => {
     }
   };
 
+  const [filterIcon, setFilterIcon] = useState(false);
+  const onChangeFilterIcon = () => {
+    setFilterIcon(!filterIcon);
+  }
+
   const projectNameHeader = (options) => {
     return (
       <div>
         <img
-          src={filter}
-          alt="Column Filter"
+          src={!filterIcon ? filter: fileattach}
+          // alt="Column Filter"
+          alt=""
           onClick={(e) => {
             op.current.toggle(e);
-
             setSelectedColumnName(options);
+            onChangeFilterIcon();
           }}
           className="columnFilterIcon"
           // className="pi pi-align-justify"
@@ -180,6 +185,16 @@ const ProjectList = (props) => {
 
     return (
       <>
+        {field === "Project State" && (
+          <Tag
+            value=""
+            style={{
+              backgroundColor: "#DFEBFF",
+              color: "#003DA5",
+              border: "1px solid",
+            }}
+          >Active</Tag>
+        )}
         {field === "Full Kit Readiness Tracking" && (
           <Tag
             value="view"
