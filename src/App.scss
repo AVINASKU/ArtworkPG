@@ -19,7 +19,6 @@ body {
 body,
 html,
 a,
-li,
 p,
 div {
   font-family: "Montserrat" !important;
@@ -53,10 +52,10 @@ fieldset:disabled .btn {
   border-color: #acacac !important;
 }
 .project-title {
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 24.38px;
-  color: #003DA5;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 29px;
+  color: #003da5;
 }
 .arrow-up,
 .arrow-down {
@@ -93,7 +92,7 @@ table {
       background-color: #fff !important;
       // border: 0 !important;
       border-width: 1px 2px 3px 4px;
-      border: 0.5px solid #acacac !important;
+      border: 1px solid gray !important;
       &:nth-child(1) {
         border-left: none !important;
       }
@@ -127,17 +126,16 @@ table {
   td,
   .p-datatable .p-datatable-tbody > tr > td {
     // background-color: #003da5;
-    // border-bottom: 0.5px solid #ACACAC !important;
-    // border-top: 0.5px solid #ACACAC !important;
-    // font-size: 10px;
+    border-bottom: 1px solid #acacac !important;
+    border-top: 1px solid #acacac !important;
+    font-size: 10px;
     // line-height: 20px;
-    border: 0.5px solid #acacac !important;
     color: #595959;
     text-align: center;
     background: #ffffff !important;
     padding: 10px !important;
-    border-width: 0.5px;
-    // border: 2px solid gray !important;
+    border-width: 1px;
+    border: 1px solid gray !important;
     // margin-top: 2px !important;
     // margin-bottom: 2px !important;
     // border-collapse: separate !important;
@@ -161,9 +159,8 @@ table {
       // border-right: 1px solid #acacac !important;
     }
     &:after {
-      border-right: 2px solid black !important;
-      height: 40px !important;
-      // background-color:  #003da5 !important;
+      border-right: 6px solid green !important;
+      height: 30px !important;
     }
   }
 }
@@ -178,7 +175,25 @@ table {
   border-radius: 50px;
   // width:max-content  !important;
 }
-
-p-column-filter-row {
-  background-color: aqua !important;
+.p-breadcrumb {
+  border: 0;
+}
+.p-breadcrumb-chevron:first-child {
+  display: none;
+}
+.p-breadcrumb ul li .p-menuitem-link .p-menuitem-text {
+  color: #acacac;
+  font-size: 12px;
+}
+.p-breadcrumb ul li:last-child {
+  .p-menuitem-text {
+    color: #003da5;
+  }
+}
+.p-breadcrumb ul .pi-chevron-right:nth-child(3) {
+  color: #003da5;
+}
+.p-breadcrumb ul li .p-menuitem-link {
+  box-shadow: none !important;
+  outline: none !important;
 }
