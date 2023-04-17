@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Checkbox } from "primereact/checkbox";
 import { Col, Row } from "react-bootstrap";
-import { ProjectService } from "../../../service/PegaService";
 import PGDefault from "../../../assets/images/PGDefault.svg";
 import personalDefault from "../../../assets/images/personalDefault.svg";
 import "./index.scss";
@@ -14,6 +12,8 @@ export default function CustomisedView({
   allColumnNames,
   projectColumnName,
   setProjectColumnNames,
+  saveAsPersonaliDefault,
+  resetToPgDefault,
 }) {
   const [checked, setChecked] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -45,14 +45,9 @@ export default function CustomisedView({
         style={{
           width: 234,
           height: 34,
-          cursor:'pointer'
+          cursor: "pointer",
         }}
-        onClick={() => {
-          const columnNames = ProjectService.getAllColumnNames();
-          localStorage.setItem("allColumnNames", JSON.stringify(columnNames));
-          setProjectColumnNames(columnNames);
-          setVisible(false);
-        }}
+        onClick={() => resetToPgDefault()}
       />
       <img
         src={personalDefault}
@@ -61,14 +56,9 @@ export default function CustomisedView({
           width: 264,
           height: 34,
           margin: 15,
-          cursor:'pointer'
+          cursor: "pointer",
         }}
-        onClick={() => {
-          setProjectColumnNames(selectedCategories);
-          const columnNames = JSON.stringify(selectedCategories);
-          localStorage.setItem("allColumnNames", columnNames);
-          setVisible(false);
-        }}
+        onClick={() => saveAsPersonaliDefault(selectedCategories)}
       />
     </div>
   );
