@@ -105,7 +105,7 @@ const ProjectList = (props) => {
         // according to pathname we need to call api and store column name in local storage
         let columnNamesJson = localStorage.getItem("allColumnNames");
         const columnNames = JSON.parse(columnNamesJson);
-        if (columnNames != null && columnNames.length ) {
+        if (columnNames != null && columnNames.length) {
           setProjectColumnNames(columnNames);
         } else {
           const columnNames = await ProjectService.getAllColumnNames();
@@ -273,15 +273,26 @@ const ProjectList = (props) => {
   const saveAsPersonaliDefault = (selectedCategories) => {
     const columnNames = JSON.stringify(selectedCategories);
     localStorage.setItem("allColumnNames", columnNames);
-        setProjectColumnNames(selectedCategories);
+    setProjectColumnNames(selectedCategories);
     setVisible(false);
   };
 
-  const resetToPgDefault = () => {
+  const resetToPgDefault = async () => {
+    // This const is added for todays demo purpose
 
-    const columnNames = ProjectService.getAllColumnNames();
-    localStorage.setItem("allColumnNames", JSON.stringify(columnNames));
-    setProjectColumnNames(columnNames);
+    const allColumnNames = [
+      "ProjectID",
+      "ProjectName",
+      "Project_Category",
+      "Project_Brand",
+      "Project_SMO",
+      "EstimatedAWPrinters",
+      "Full Kit Readiness Tracking",
+      "Buffer to work",
+    ];
+    localStorage.setItem("allColumnNames", JSON.stringify({}));
+    localStorage.setItem("allColumnNames", JSON.stringify(allColumnNames));
+    setProjectColumnNames(allColumnNames);
     setVisible(false);
   };
 
@@ -307,7 +318,7 @@ const ProjectList = (props) => {
     setFrozenColumn([]);
   };
 
-    const clearColumnWiseFilter = () => {
+  const clearColumnWiseFilter = () => {
     let jsonFrozenItem = localStorage.getItem("frozenData");
     const frozenItem = JSON.parse(jsonFrozenItem);
     if (

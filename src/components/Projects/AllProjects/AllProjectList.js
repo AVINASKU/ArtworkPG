@@ -236,12 +236,24 @@ const AllProjectList = (props) => {
   };
 
   const resetToPgDefault = () => {
-    const columnNames = ProjectService.getAllColumnNamesAllProjects();
+  // This const is added for todays demo purpose
+    const allColumnNamesAllProjects = [
+      "ProjectID",
+      "ProjectName",
+      "Project_Category",
+      "Project_SMO",
+      "PM",
+      "Project_Brand",
+      "EstimatedAWPrinters",
+      "Full Kit Readiness Tracking",
+      "Buffer to work",
+    ];
+    // const columnNames = ProjectService.getAllColumnNamesAllProjects();
     localStorage.setItem(
       "allColumnNamesAllProjects",
-      JSON.stringify(columnNames)
+      JSON.stringify(allColumnNamesAllProjects)
     );
-    setProjectColumnNames(columnNames);
+    setProjectColumnNames(allColumnNamesAllProjects);
     setVisible(false);
   };
 
@@ -302,7 +314,10 @@ const AllProjectList = (props) => {
       projectColumnName.splice(index, 1); // 2nd parameter means remove one item only
       projectColumnName.splice(e?.dropIndex, 0, dragColumnName);
     }
-    localStorage.setItem("allColumnNamesAllProjects", JSON.stringify(projectColumnName));
+    localStorage.setItem(
+      "allColumnNamesAllProjects",
+      JSON.stringify(projectColumnName)
+    );
     setProjectColumnNames(projectColumnName);
   };
 
@@ -344,7 +359,10 @@ const AllProjectList = (props) => {
       setSortData([]);
     }
     if (filters && filters.length) {
-      localStorage.setItem("allProjectColumnWiseFilterData", JSON.stringify({}));
+      localStorage.setItem(
+        "allProjectColumnWiseFilterData",
+        JSON.stringify({})
+      );
       setSelectedCities([]);
       setFilters([]);
     }

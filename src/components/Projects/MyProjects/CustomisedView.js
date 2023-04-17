@@ -47,7 +47,10 @@ export default function CustomisedView({
           height: 34,
           cursor: "pointer",
         }}
-        onClick={resetToPgDefault}
+        onClick={() => {
+          resetToPgDefault(selectedCategories);
+          setVisible(false);
+        }}
       />
       <img
         src={personalDefault}
