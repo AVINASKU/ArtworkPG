@@ -8,7 +8,8 @@ import { FilterMatchMode } from "primereact/api";
 import ProjectListHeader from "../MyProjects/ProjectListHeader";
 import { Tag } from "primereact/tag";
 import { changeDateFormat } from "../utils";
-
+import { useNavigate } from "react-router-dom";
+import filter from "../../../assets/images/filter.svg";
 
 const CustomisedView = React.lazy(() => import("../MyProjects/CustomisedView"));
 
@@ -25,6 +26,7 @@ const AllProjectList = (props) => {
   const [sortData, setSortData] = useState([]);
   const [allColumnNames, setAllColumnNames] = useState([]);
   const [isSearch, isSearchSet] = useState(false);
+  const navigate = useNavigate();
 
   const searchHeader = projectColumnName.reduce(
     (acc, curr) => ({
@@ -46,7 +48,7 @@ const AllProjectList = (props) => {
     toast.current.show({
       severity: "success",
       summary: "Success",
-      detail: "Message Content",
+      detail: "Saved Successfully",
       life: 3000,
     });
   };
@@ -76,12 +78,12 @@ const AllProjectList = (props) => {
         // const columnNames = await ProjectService.getAllColumnNames();
         // localStorage.setItem("allColumnNames", JSON.stringify(columnNames));
 
-        const columnNamesAllProjects =
-          await ProjectService.getAllColumnNamesAllProjects();
-        localStorage.setItem(
-          "allColumnNamesAllProjects",
-          JSON.stringify(columnNamesAllProjects)
-        );
+        // const columnNamesAllProjects =
+        //   await ProjectService.getAllColumnNamesAllProjects();
+        // localStorage.setItem(
+        //   "allColumnNamesAllProjects",
+        //   JSON.stringify(columnNamesAllProjects)
+        // );
 
         let filteredPegaDataJson = localStorage.getItem(
           "allProjectColumnWiseFilterData"
@@ -102,7 +104,8 @@ const AllProjectList = (props) => {
         if (columnNames != null && columnNames.length) {
           setProjectColumnNames(columnNames);
         } else {
-          const columnNames = await ProjectService.getAllColumnNamesAllProjects();
+          const columnNames =
+            await ProjectService.getAllColumnNamesAllProjects();
           localStorage.setItem(
             "allColumnNamesAllProjects",
             JSON.stringify(columnNames)
@@ -158,14 +161,15 @@ const AllProjectList = (props) => {
   const projectNameHeader = (options) => {
     return (
       <div>
-        <i
-          style={{ cursor: "pointer", paddingRight: 5 }}
+        <img
+          src={filter}
+          alt="Column Filter"
           onClick={(e) => {
             op.current.toggle(e);
             setSelectedColumnName(options);
           }}
-          className="pi pi-align-justify"
-        ></i>
+          className="columnFilterIcon"
+        />
         {options}
       </div>
     );
@@ -232,12 +236,24 @@ const AllProjectList = (props) => {
   };
 
   const resetToPgDefault = () => {
-    const columnNames = ProjectService.getAllColumnNames();
+  // This const is added for todays demo purpose
+    const allColumnNamesAllProjects = [
+      "ProjectID",
+      "ProjectName",
+      "Project_Category",
+      "Project_SMO",
+      "PM",
+      "Project_Brand",
+      "EstimatedAWPrinters",
+      "Full Kit Readiness Tracking",
+      "Buffer to work",
+    ];
+    // const columnNames = ProjectService.getAllColumnNamesAllProjects();
     localStorage.setItem(
       "allColumnNamesAllProjects",
-      JSON.stringify(columnNames)
+      JSON.stringify(allColumnNamesAllProjects)
     );
-    setProjectColumnNames(columnNames);
+    setProjectColumnNames(allColumnNamesAllProjects);
     setVisible(false);
   };
 
@@ -298,6 +314,10 @@ const AllProjectList = (props) => {
       projectColumnName.splice(index, 1); // 2nd parameter means remove one item only
       projectColumnName.splice(e?.dropIndex, 0, dragColumnName);
     }
+    localStorage.setItem(
+      "allColumnNamesAllProjects",
+      JSON.stringify(projectColumnName)
+    );
     setProjectColumnNames(projectColumnName);
   };
 
@@ -309,6 +329,43 @@ const AllProjectList = (props) => {
     setSortData([]);
     setFilters([]);
     setFrozenColumn([]);
+  };
+
+  const clearColumnWiseFilter = () => {
+    let jsonFrozenItem = localStorage.getItem("allProjectFrozenData");
+    const frozenItem = JSON.parse(jsonFrozenItem);
+    if (
+      frozenItem &&
+      frozenItem.length &&
+      frozenItem.includes(selectedColumnName)
+    ) {
+      const index = frozenItem.indexOf(selectedColumnName);
+      frozenItem.splice(index, 1);
+      localStorage.setItem("allProjectFrozenData", JSON.stringify(frozenItem));
+      setFrozenColumn(frozenItem);
+    }
+    if (frozenCoulmns.includes(selectedColumnName)) {
+      const index = frozenCoulmns.indexOf(selectedColumnName);
+      frozenCoulmns.splice(index, 1);
+      setFrozenColumn(frozenCoulmns);
+      setProjectFrozen(!ProjectFrozen);
+    }
+    let jsonSortItem = localStorage.getItem("allProjectFrozenData");
+    const sortItem = JSON.parse(jsonSortItem);
+    if (sortItem && sortItem.length && sortItem[0] === selectedColumnName) {
+      localStorage.setItem("allProjectFrozenData", JSON.stringify([]));
+    }
+    if (sortData && sortData.length && sortData[0] === selectedColumnName) {
+      setSortData([]);
+    }
+    if (filters && filters.length) {
+      localStorage.setItem(
+        "allProjectColumnWiseFilterData",
+        JSON.stringify({})
+      );
+      setSelectedCities([]);
+      setFilters([]);
+    }
   };
 
   return (
@@ -337,6 +394,7 @@ const AllProjectList = (props) => {
 
         <ConfirmationPopUp
           onSort={onSort}
+          saveSettings={saveSettings}
           setProjectFrozen={setProjectFrozen}
           projectData={pegadata}
           addFrozenColumns={addFrozenColumns}
@@ -351,6 +409,7 @@ const AllProjectList = (props) => {
           setFilters={setFilters}
           filters={filters}
           op={op}
+          clearColumnWiseFilter={clearColumnWiseFilter}
         />
 
         <DataTable
@@ -371,6 +430,13 @@ const AllProjectList = (props) => {
           filterDisplay={isSearch && "row"}
           tableStyle={{ minWidth: "50rem" }}
           ref={dt}
+          selectionMode="single"
+          onSelectionChange={(e) => {
+            console.log("eee", e.value.ProjectID);
+            navigate("/addProject");
+            //below code is for future
+            // navigate(`/addProject:${e.value.ProjectID}`)
+          }}
         >
           {dynamicColumns()}
         </DataTable>
