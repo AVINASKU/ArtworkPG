@@ -120,7 +120,7 @@ const SideBar = () => {
           </div>
           <Nav
             style={{
-              paddingTop: !isToggle && "35px",
+              paddingTop: !isToggle && "10px",
             }}
           >
             {navItems?.data?.map((item, index) => {

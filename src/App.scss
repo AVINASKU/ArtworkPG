@@ -19,7 +19,6 @@ body {
 body,
 html,
 a,
-li,
 p,
 div {
   font-family: "Montserrat" !important;
@@ -123,17 +122,16 @@ table {
   td,
   .p-datatable .p-datatable-tbody > tr > td {
     // background-color: #003da5;
-    // border-bottom: 0.5px solid #ACACAC !important;
-    // border-top: 0.5px solid #ACACAC !important;
-    // font-size: 10px;
+    border-bottom: 1px solid #acacac !important;
+    border-top: 1px solid #acacac !important;
+    font-size: 10px;
     // line-height: 20px;
     border-top: 0.5px solid #acacac !important;
     color: #595959;
     text-align: center;
     background: #ffffff !important;
     padding: 10px !important;
-    border-width: 0.5px;
-    // border: 2px solid gray !important;
+    border-width: 1px;
     // margin-top: 2px !important;
     // margin-bottom: 2px !important;
     // border-collapse: separate !important;
@@ -175,4 +173,26 @@ table {
 .p-inputtext {
   border-radius: 50px;
   // width:max-content  !important;
+}
+.p-breadcrumb {
+  border: 0;
+}
+.p-breadcrumb-chevron:first-child {
+  display: none;
+}
+.p-breadcrumb ul li .p-menuitem-link .p-menuitem-text {
+  color: #acacac;
+  font-size: 12px;
+}
+.p-breadcrumb ul li:last-child {
+  .p-menuitem-text {
+    color: #003da5;
+  }
+}
+.p-breadcrumb ul .pi-chevron-right:nth-child(3) {
+  color: #003da5;
+}
+.p-breadcrumb ul li .p-menuitem-link {
+  box-shadow: none !important;
+  outline: none !important;
 }
