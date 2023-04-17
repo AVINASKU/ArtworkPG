@@ -17,7 +17,7 @@ const CustomisedView = React.lazy(() => import("./CustomisedView"));
 
 const ProjectList = (props) => {
   const [pegadata, setPegaData] = useState(null);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
   const [selectedColumnName, setSelectedColumnName] = useState(null);
@@ -28,6 +28,8 @@ const ProjectList = (props) => {
   const [sortData, setSortData] = useState([]);
   const [allColumnNames, setAllColumnNames] = useState([]);
   const [isSearch, isSearchSet] = useState(false);
+  const myProjectList = useSelector((state) => state.myProject);
+  const {loading} = myProjectList;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -69,16 +71,23 @@ const ProjectList = (props) => {
   };
 
   useEffect(() => {
-    // console.log('Branch testing gopal/sprint2/myprojects');
     const updatedUsers = dispatch(getMyProject());
     console.log("my projects", updatedUsers);
-    setLoading(true);
+  }, []);
+
+  useEffect(() => {
+    // setLoading(true);
     const { pathname } = window.location;
     console.log("hello", pathname);
 
     (async () => {
       try {
-        const ProjectData = await ProjectService.getProjectData();
+        // below is json call
+        // const ProjectData = await ProjectService.getProjectData();
+
+        //below is api call
+        const ProjectData = myProjectList.myProject;
+        console.log("my project data here here", ProjectData);
 
         if (ProjectData.length) {
           setAllColumnNames(Object.keys(ProjectData[0]));
@@ -108,7 +117,7 @@ const ProjectList = (props) => {
         if (columnNames != null && columnNames.length) {
           setProjectColumnNames(columnNames);
         } else {
-          const columnNames = await ProjectService.getAllColumnNames();
+          const columnNames = ProjectService.getAllColumnNames();
           localStorage.setItem("allColumnNames", JSON.stringify(columnNames));
           setProjectColumnNames(columnNames);
         }
@@ -144,8 +153,8 @@ const ProjectList = (props) => {
         console.log("error", err);
       }
     })();
-    setLoading(false);
-  }, []);
+    // setLoading(false);
+  }, [myProjectList.myProject]);
 
   const addFrozenColumns = (name) => {
     if (!frozenCoulmns.includes(name)) {
@@ -195,13 +204,13 @@ const ProjectList = (props) => {
 
         {field === "Estimated_SOP" && changeDateFormat(options[field])}
 
-        {field === "EstimatedAWPrinters" && changeDateFormat(options[field])}
+        {field === "Estimated_AW_Printer" && changeDateFormat(options[field])}
 
         {field === "Buffer to work" && <>-----</>}
 
         {field !== "Full Kit Readiness Tracking" &&
           field !== "Estimated_SOP" &&
-          field !== "EstimatedAWPrinters" &&
+          field !== "Estimated_AW_Printer" &&
           field !== "Buffer to work" && <> {options[field]}</>}
       </>
     );
@@ -283,13 +292,15 @@ const ProjectList = (props) => {
     const allColumnNames = [
       "ProjectID",
       "ProjectName",
-      "Project_Category",
-      "Project_Brand",
+      "Project_Categories",
       "Project_SMO",
-      "EstimatedAWPrinters",
+      "Project_State",
+      "Project_Brands",
+      "Buffer_To_Work",
+      "Estimated_AW_Printer",
       "Full Kit Readiness Tracking",
-      "Buffer to work",
     ];
+
     localStorage.setItem("allColumnNames", JSON.stringify({}));
     localStorage.setItem("allColumnNames", JSON.stringify(allColumnNames));
     setProjectColumnNames(allColumnNames);
@@ -417,9 +428,10 @@ const ProjectList = (props) => {
           selectionMode="single"
           onSelectionChange={(e) => {
             console.log("eee", e.value.ProjectID);
-            navigate("/addProject");
+            // navigate("/addProject");
             //below code is for future
-            // navigate(`/addProject:${e.value.ProjectID}`)
+            navigate(`/addProject/${e.value.ProjectID}`);
+            // navigate(`/addProject/id:`);
           }}
         >
           {dynamicColumns()}

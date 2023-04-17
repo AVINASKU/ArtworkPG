@@ -2,21 +2,20 @@ const initialState = {
   myProject: [],
   loading: true,
   error: null,
-  modalOpen: false,
 };
 
 const ProjectReducer = (state = initialState, action) => {
-  const { type } = action;
+  const { type, payload } = action;
   switch (type) {
-    case "GET_MY_PROJECT_SUCCESS":
+    case "GET_PROJECT_DETAILS_SUCCESS":
       return {
         ...state,
-        myProject: action.myProject,
+        myProject: payload,
         loading: false,
         error: null,
       };
 
-    case "GET_MY_PROJECT_ERROR":
+    case "GET_PROJECT_DETAILS_ERROR":
       return {
         ...state,
         loading: false,

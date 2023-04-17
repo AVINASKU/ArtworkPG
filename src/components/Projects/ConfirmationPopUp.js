@@ -96,7 +96,7 @@ const ConfirmationPopUp = ({
             options={multiselectOptions(selectedColumnName)}
             optionLabel={selectedColumnName}
             filter
-            placeholder="Select"
+            placeholder={`Select ${selectedColumnName}`}
             maxSelectedLabels={3}
             className="p-column-filter"
           />

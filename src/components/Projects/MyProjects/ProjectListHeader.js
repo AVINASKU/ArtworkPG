@@ -3,8 +3,6 @@ import export2excel from "../../../assets/images/export2excel.svg";
 import searchMyProjects from "../../../assets/images/searchMyProjects.svg";
 import filter from "../../../assets/images/filter.svg";
 import customizedFields from "../../../assets/images/customizedFields.svg";
-import renameMyProjects from "../../../assets/images/renameMyProjects.svg";
-import save from "../../../assets/images/save.svg";
 
 const ProjectListHeader = ({
   header,
