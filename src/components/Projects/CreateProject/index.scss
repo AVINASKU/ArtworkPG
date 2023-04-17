@@ -208,9 +208,7 @@
     padding-left: 10px;
     position: absolute;
     border-radius: 4px;
-    // width: 190px;
-    // height: max-content;
-    // max-height: fit-content;
+    
   }
 }
 .form-check {
@@ -263,5 +261,11 @@
 .p-breadcrumb ul li .p-menuitem-link {
   box-shadow: none !important;
   outline: none !important;
-  // background-color: coral;
+}
+
+label.form-check-label{
+  &:nth-child(2){
+    white-space: pre;
+  font-size: 10px;
+  }
 }

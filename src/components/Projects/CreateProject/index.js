@@ -407,25 +407,30 @@ function AddProject(props) {
             </Form.Group>
           </Col>
           <Col>
-            <Form.Group controlId="clustor.SelectMultiple">
-              <Form.Label>Clustor</Form.Label>
+            <Form.Group
+              className={`mb-3 ${Object.keys(bu).length < 1 && "error-valid"}`}
+              controlId="bu.SelectMultiple"
+            >
+              <Form.Label>Business Unit*</Form.Label>
               <div>
                 <Form.Select
-                  // value={selectedCities}
-                  // onChange={(e) => setSelectedCities(e.value)}
-                  {...register("clustor", { required: false })}
-                  placeholder="Select Scale"
+                  value={bu}
+                  onChange={handleBuChange}
+                  placeholder="Select BU"
                 >
-                  <option value="" style={{ maxWidth: "208px" }}>
-                    Select Clustor
-                  </option>
-
-                  <option value="clustor1">Clustor1</option>
+                  <option value="">Select BU</option>
+                  {bUs.map((bu) => (
+                    <option key={bu.code} value={bu.code}>
+                      {bu.name}
+                    </option>
+                  ))}
                 </Form.Select>
               </div>
+              {Object.keys(bu).length < 1 && (
+                <span className="error-text">Field Remaining</span>
+              )}
             </Form.Group>
           </Col>
-
           <Col>
             <Form.Group controlId="projectType.SelectMultiple">
               <Form.Label>PM *</Form.Label>
@@ -678,28 +683,22 @@ function AddProject(props) {
         </Row>
         <Row>
           <Col>
-            <Form.Group
-              className={`mb-3 ${Object.keys(bu).length < 1 && "error-valid"}`}
-              controlId="bu.SelectMultiple"
-            >
-              <Form.Label>BU *</Form.Label>
+            <Form.Group controlId="clustor.SelectMultiple">
+              <Form.Label>Clustor</Form.Label>
               <div>
                 <Form.Select
-                  value={bu}
-                  onChange={handleBuChange}
-                  placeholder="Select BU"
+                  // value={selectedCities}
+                  // onChange={(e) => setSelectedCities(e.value)}
+                  {...register("clustor", { required: false })}
+                  placeholder="Select Scale"
                 >
-                  <option value="">Select BU</option>
-                  {bUs.map((bu) => (
-                    <option key={bu.code} value={bu.code}>
-                      {bu.name}
-                    </option>
-                  ))}
+                  <option value="" style={{ maxWidth: "208px" }}>
+                    Select Clustor
+                  </option>
+
+                  <option value="clustor1">Clustor1</option>
                 </Form.Select>
               </div>
-              {Object.keys(bu).length < 1 && (
-                <span className="error-text">Field Remaining</span>
-              )}
             </Form.Group>
           </Col>
           <Col>
