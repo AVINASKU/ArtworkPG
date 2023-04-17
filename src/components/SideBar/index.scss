@@ -12,6 +12,7 @@
     position: relative;
     color: #003da5;
     font-weight: 700;
+    
     img {
       filter: invert(10%) sepia(100%) saturate(1200%) hue-rotate(190deg)
         brightness(90%) contrast(90%);
@@ -47,12 +48,17 @@
   ul {
     margin: 0;
   }
+  &:nth-child(3){ margin-top: 30px}
+  
   a {
-    padding: 10px 15px;
+    padding: 1px 15px 20px;
     color: #acacac;
     position: relative;
     align-items: center;
     justify-content: center;
+    
+    
+
   }
   &:nth-child(6) {
     a {
@@ -72,8 +78,8 @@
   color: green;
   // display: flex;
   img {
-    width: 28px;
-    height: 28px;
+    width: 40px;
+    height: 40px;
   }
   span {
     position: relative;
@@ -90,6 +96,8 @@
   position: absolute;
   right: 5%;
   z-index: 1000;
+  width: 200px;
+  height: 44px;
   cursor: pointer;
   width: 24px;
   height: 24px;
@@ -115,20 +123,28 @@
   //   }
   .nav-item {
     padding: 15px 0 0;
+    font-size: 14px;
   }
   .logout {
-    color: #ff0000;
-    font-size: 20px;
-    font-weight: 500;
+    
+    color: #FF0000;
+    font-size: 16px;
+    font-weight: 400;
+    text-align: center;
   }
   .button-layout {
+    margin-left: 20px;
+    background: #003DA5;
+    border-radius: 20px;
+    padding: 16px 5px;
+    
     img {
       margin: 0 -10px 0 0;
     }
   }
 }
 .logo-title {
-  font-size: 12px;
+  font-size: 14px;
   padding: 10px 0 0;
   font-weight: 500;
   color: #595959;
@@ -137,3 +153,11 @@
 .logo{
 padding-top: 20px;
 }
+.add-project{
+  img {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+
