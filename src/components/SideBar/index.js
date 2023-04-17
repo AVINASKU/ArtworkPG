@@ -9,6 +9,9 @@ import PlusImg from "../../assets/images/plus.svg";
 import plusCollapseImg from "../../assets/images/plusCollapse.svg";
 import ExpandImg from "../../assets/images/expand.svg";
 import ArrowDownImg from "../../assets/images/sort.svg";
+import AllProjects1 from "../../assets/images/AllProjects1.svg";
+import AllTask from "../../assets/images/AllTask.svg";
+import MyTaskMP from "../../assets/images/MyTaskMP.svg";
 import "./index.scss";
 import { Col } from "react-bootstrap";
 
@@ -63,7 +66,7 @@ const SideBar = () => {
       },
       {
         name: "All Projects",
-        img: ReportsImg,
+        img: AllProjects1,
         arrowUp: ArrowDownImg,
         url: "/allProjects",
         items: [
@@ -72,7 +75,7 @@ const SideBar = () => {
       },
       {
         name: "My Tasks",
-        img: ChartImg,
+        img: MyTaskMP,
         arrowUp: ArrowDownImg,
         url: "/tasks",
         items: [
@@ -81,7 +84,7 @@ const SideBar = () => {
       },
       {
         name: "All Tasks",
-        img: ChartImg,
+        img: AllTask,
         arrowUp: ArrowDownImg,
         url: "/tasks",
         items: [
@@ -117,7 +120,7 @@ const SideBar = () => {
           </div>
           <Nav
             style={{
-              paddingTop: !isToggle && "100px",
+              paddingTop: !isToggle && "35px",
             }}
           >
             {navItems?.data?.map((item, index) => {
