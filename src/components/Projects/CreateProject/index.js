@@ -592,7 +592,7 @@ function AddProject(props) {
                       onChange={(e) => setSOSDate(e.target.value)}
                       dateFormat="d-M-y"
                       showIcon={true}
-                      // minDate={sopDate}
+                      minDate={sopDate}
                       style={{ width: 208 }}
                       className={classNames({
                         "p-invalid": fieldState.error,
