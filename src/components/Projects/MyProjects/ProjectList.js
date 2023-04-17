@@ -105,7 +105,7 @@ const ProjectList = (props) => {
         // according to pathname we need to call api and store column name in local storage
         let columnNamesJson = localStorage.getItem("allColumnNames");
         const columnNames = JSON.parse(columnNamesJson);
-        if (columnNames != null && columnNames.length && columnNames==="undefined") {
+        if (columnNames != null && columnNames.length ) {
           setProjectColumnNames(columnNames);
         } else {
           const columnNames = await ProjectService.getAllColumnNames();
@@ -278,6 +278,7 @@ const ProjectList = (props) => {
   };
 
   const resetToPgDefault = () => {
+
     const columnNames = ProjectService.getAllColumnNames();
     localStorage.setItem("allColumnNames", JSON.stringify(columnNames));
     setProjectColumnNames(columnNames);
