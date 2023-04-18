@@ -26,7 +26,10 @@ const AllProjectList = (props) => {
   const [sortData, setSortData] = useState([]);
   const [allColumnNames, setAllColumnNames] = useState([]);
   const [isSearch, isSearchSet] = useState(false);
+  const [isReorderedColumn, setReorderedColumn] = useState(false);
   const navigate = useNavigate();
+
+  // console.log("project col name in state", projectColumnName);
 
   const searchHeader = projectColumnName.reduce(
     (acc, curr) => ({
@@ -44,15 +47,6 @@ const AllProjectList = (props) => {
   const toast = useRef(null);
   const dt = useRef(null);
 
-  const showSuccess = () => {
-    toast.current.show({
-      severity: "success",
-      summary: "Success",
-      detail: "Saved Successfully",
-      life: 3000,
-    });
-  };
-
   const onSort = (column, direction) => (event) => {
     const sortedData = [...pegadata].sort((a, b) => {
       return a[column] > b[column] ? 1 : -1;
@@ -61,8 +55,10 @@ const AllProjectList = (props) => {
     if (direction === "desc") {
       sortedData.reverse();
     }
+
     setPegaData(sortedData);
     setSortData([column, direction]);
+    localStorage.setItem("allProjectSortingData", JSON.stringify(sortData));
   };
 
   useEffect(() => {
@@ -145,7 +141,7 @@ const AllProjectList = (props) => {
       }
     })();
     setLoading(false);
-  }, []);
+  }, [setProjectColumnNames]);
 
   const addFrozenColumns = (name) => {
     if (!frozenCoulmns.includes(name)) {
@@ -158,9 +154,12 @@ const AllProjectList = (props) => {
     }
   };
 
+  console.log("toggle", op.current);
+
   const projectNameHeader = (options) => {
+  // console.log("selected", selectedColumnName, options);
     return (
-      <div>
+      <div style={{display:"flex"}}>
         <img
           src={filter}
           alt="Column Filter"
@@ -205,12 +204,13 @@ const AllProjectList = (props) => {
     );
   };
 
-  const dynamicColumns = () => {
+  const dynamicColumns = (projectColumnName) => {
+    // console.log("project column name dynamic header", projectColumnName);
     if (projectColumnName.length) {
       return projectColumnName.map((ele, i) => {
         return (
           <Column
-            key={ele}
+            key={i}
             field={ele}
             filterField={ele}
             header={projectNameHeader(ele)}
@@ -236,8 +236,7 @@ const AllProjectList = (props) => {
   };
 
   const resetToPgDefault = () => {
-  // This const is added for todays demo purpose
-    const allColumnNamesAllProjects = [
+    const defaultColName = [
       "ProjectID",
       "ProjectName",
       "Project_Category",
@@ -248,24 +247,37 @@ const AllProjectList = (props) => {
       "Full Kit Readiness Tracking",
       "Buffer to work",
     ];
+    setProjectColumnNames(defaultColName);
     // const columnNames = ProjectService.getAllColumnNamesAllProjects();
     localStorage.setItem(
       "allColumnNamesAllProjects",
-      JSON.stringify(allColumnNamesAllProjects)
+      JSON.stringify(defaultColName)
     );
-    setProjectColumnNames(allColumnNamesAllProjects);
     setVisible(false);
   };
 
   const clearFilters = () => {
-    const columnNames = ProjectService.getAllColumnNamesAllProjects();
+    const defaultCol = [
+      "ProjectID",
+      "ProjectName",
+      "Project_Category",
+      "Project_SMO",
+      "PM",
+      "Project_Brand",
+      "EstimatedAWPrinters",
+      "Full Kit Readiness Tracking",
+      "Buffer to work",
+    ];
+    console.log("all column name constant", defaultCol);
+
+    setProjectColumnNames(defaultCol);
+
     localStorage.setItem(
       "allColumnNamesAllProjects",
-      JSON.stringify(columnNames)
+      JSON.stringify(defaultCol)
     );
-    setProjectColumnNames(columnNames);
+    setReorderedColumn(false);
     setFilters([]);
-    showSuccess();
   };
 
   const onGlobalFilterChange = (e) => {
@@ -292,6 +304,8 @@ const AllProjectList = (props) => {
     dt.current.exportCSV({ selectionOnly });
   };
 
+  // in header save setting button was there and due to requirement I removed that
+  //code is kept here if requirement comes
   const saveSettings = () => {
     localStorage.setItem(
       "allProjectColumnWiseFilterData",
@@ -303,7 +317,7 @@ const AllProjectList = (props) => {
       "allColumnNamesAllProjects",
       JSON.stringify(projectColumnName)
     );
-    showSuccess();
+    // showSuccess();
   };
 
   const storeReorderedColumns = (e) => {
@@ -313,12 +327,14 @@ const AllProjectList = (props) => {
       // only splice array when item is found
       projectColumnName.splice(index, 1); // 2nd parameter means remove one item only
       projectColumnName.splice(e?.dropIndex, 0, dragColumnName);
+      setReorderedColumn(true);
     }
     localStorage.setItem(
       "allColumnNamesAllProjects",
       JSON.stringify(projectColumnName)
     );
     setProjectColumnNames(projectColumnName);
+    setReorderedColumn(true);
   };
 
   const clearFilter = () => {
@@ -368,6 +384,14 @@ const AllProjectList = (props) => {
     }
   };
 
+  const isFilterEnabled =
+    isReorderedColumn ||
+    frozenCoulmns?.length ||
+    filters?.length ||
+    sortData?.length;
+
+  // console.log("project column name", projectColumnName);
+
   return (
     <div>
       <Suspense fallback={<div>Loading...</div>}>
@@ -380,6 +404,7 @@ const AllProjectList = (props) => {
           saveSettings={saveSettings}
           onSearchClick={onSearchClick}
           exportCSV={exportCSV}
+          isFilterEnabled={isFilterEnabled}
         />
 
         <CustomisedView
@@ -433,12 +458,14 @@ const AllProjectList = (props) => {
           selectionMode="single"
           onSelectionChange={(e) => {
             console.log("eee", e.value.ProjectID);
-            navigate("/addProject");
+            // navigate("/addProject");
+            navigate(`/addProject/${e.value.ProjectID}`);
+
             //below code is for future
             // navigate(`/addProject:${e.value.ProjectID}`)
           }}
         >
-          {dynamicColumns()}
+          {dynamicColumns(projectColumnName)}
         </DataTable>
       </Suspense>
     </div>

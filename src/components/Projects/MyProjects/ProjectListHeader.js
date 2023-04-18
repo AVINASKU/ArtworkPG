@@ -12,18 +12,26 @@ const ProjectListHeader = ({
   saveSettings,
   onSearchClick,
   exportCSV,
+  isFilterEnabled
 }) => {
   return (
     <div className="actions">
       <div className="project-title">{header}</div>
 
       <div className="action-buttons">
+      {isFilterEnabled ? <img
+          src={filter}
+          alt="filter logo"
+          onClick={clearFilter}
+          className="header-icons"
+        /> :
         <img
           src={filter}
           alt="filter logo"
           onClick={clearFilter}
           className="header-icons"
-        />
+          disabled
+        />}
         {/* <img
           src={save}
           alt="save settings"
@@ -53,7 +61,7 @@ const ProjectListHeader = ({
         <button
           type="button"
           className="btn btn-secondary resetToPgDefault"
-          onClick={() => clearFilters()}
+          onClick={()=> clearFilters()}
         >
           Reset to default
         </button>
