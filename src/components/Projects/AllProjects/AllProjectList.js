@@ -29,7 +29,7 @@ const AllProjectList = (props) => {
   const [allColumnNames, setAllColumnNames] = useState([]);
   const [isSearch, isSearchSet] = useState(false);
   const [isReorderedColumn, setReorderedColumn] = useState(false);
- const allProjectList = useSelector((state) => state.myProject);
+  const allProjectList = useSelector((state) => state.myProject);
   // const {loading} = allProjectList;
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -79,10 +79,7 @@ const AllProjectList = (props) => {
     (async () => {
       try {
         // const ProjectData = await ProjectService.getProjectData();
-
-                const ProjectData = allProjectList.allProjects;
-
-
+        const ProjectData = allProjectList.allProjects;
         if (ProjectData.length) {
           setAllColumnNames(Object.keys(ProjectData[0]));
         }
@@ -156,7 +153,7 @@ const AllProjectList = (props) => {
       }
     })();
     setLoading(false);
-  },  [allProjectList.allProjects]);
+  }, [allProjectList.allProjects]);
 
   const addFrozenColumns = (name) => {
     if (!frozenCoulmns.includes(name)) {
