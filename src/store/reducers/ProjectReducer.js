@@ -37,8 +37,6 @@ const ProjectReducer = (state = initialState, action) => {
         loading: false,
         error: action.payload,
       };
-
-      return { ...state, modalOpen: false };
     default:
       return state;
   }
