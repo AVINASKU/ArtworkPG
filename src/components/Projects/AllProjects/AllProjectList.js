@@ -10,6 +10,8 @@ import { Tag } from "primereact/tag";
 import { changeDateFormat } from "../utils";
 import { useNavigate } from "react-router-dom";
 import filter from "../../../assets/images/filter.svg";
+import { getAllProject } from "../../../store/actions/ProjectActions";
+import { useDispatch, useSelector } from "react-redux";
 
 const CustomisedView = React.lazy(() => import("../MyProjects/CustomisedView"));
 
@@ -27,7 +29,12 @@ const AllProjectList = (props) => {
   const [allColumnNames, setAllColumnNames] = useState([]);
   const [isSearch, isSearchSet] = useState(false);
   const [isReorderedColumn, setReorderedColumn] = useState(false);
+ const allProjectList = useSelector((state) => state.myProject);
+  // const {loading} = allProjectList;
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  console.log("all project list", allProjectList);
 
   // console.log("project col name in state", projectColumnName);
 
@@ -62,11 +69,19 @@ const AllProjectList = (props) => {
   };
 
   useEffect(() => {
+    const updatedUsers = dispatch(getAllProject());
+    console.log("my projects", updatedUsers);
+  }, [dispatch]);
+
+  useEffect(() => {
     setLoading(true);
 
     (async () => {
       try {
-        const ProjectData = await ProjectService.getProjectData();
+        // const ProjectData = await ProjectService.getProjectData();
+
+                const ProjectData = allProjectList.allProjects;
+
 
         if (ProjectData.length) {
           setAllColumnNames(Object.keys(ProjectData[0]));
@@ -141,7 +156,7 @@ const AllProjectList = (props) => {
       }
     })();
     setLoading(false);
-  }, [setProjectColumnNames]);
+  },  [allProjectList.allProjects]);
 
   const addFrozenColumns = (name) => {
     if (!frozenCoulmns.includes(name)) {
@@ -157,9 +172,9 @@ const AllProjectList = (props) => {
   console.log("toggle", op.current);
 
   const projectNameHeader = (options) => {
-  // console.log("selected", selectedColumnName, options);
+    // console.log("selected", selectedColumnName, options);
     return (
-      <div style={{display:"flex"}}>
+      <div style={{ display: "flex" }}>
         <img
           src={filter}
           alt="Column Filter"
@@ -457,12 +472,7 @@ const AllProjectList = (props) => {
           ref={dt}
           selectionMode="single"
           onSelectionChange={(e) => {
-            console.log("eee", e.value.ProjectID);
-            // navigate("/addProject");
             navigate(`/addProject/${e.value.ProjectID}`);
-
-            //below code is for future
-            // navigate(`/addProject:${e.value.ProjectID}`)
           }}
         >
           {dynamicColumns(projectColumnName)}

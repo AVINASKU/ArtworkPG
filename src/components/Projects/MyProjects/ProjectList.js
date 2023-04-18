@@ -29,7 +29,7 @@ const ProjectList = (props) => {
   const [allColumnNames, setAllColumnNames] = useState([]);
   const [isSearch, isSearchSet] = useState(false);
   const myProjectList = useSelector((state) => state.myProject);
-  const {loading} = myProjectList;
+  const { loading } = myProjectList;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -71,9 +71,11 @@ const ProjectList = (props) => {
   };
 
   useEffect(() => {
-    const updatedUsers = dispatch(getMyProject());
-    console.log("my projects", updatedUsers);
-  }, []);
+    if (!myProjectList.myProject.length) {
+      const updatedUsers = dispatch(getMyProject());
+      console.log("my projects", updatedUsers);
+    }
+  }, [dispatch, myProjectList.myProject]);
 
   useEffect(() => {
     // setLoading(true);

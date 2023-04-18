@@ -148,20 +148,6 @@ const SideBar = () => {
                       </div>
 
                       <div>{item.name}</div>
-                      {/* {isToggle && (
-                        <>
-                          <span>{item.name}</span>
-                          <img
-                            src={item.arrowUp}
-                            alt="arrows"
-                            className={
-                              expandedIndex === index
-                                ? "arrow-up"
-                                : "arrow-down"
-                            }
-                          />
-                        </>
-                      )} */}
                     </NavLink>
                     {expandedIndex === index && isToggle && (
                       <ul>

@@ -18,8 +18,8 @@ const allColumnNames = [
 ];
 
 const allColumnNamesAllProjects = [
-  "ProjectID",
-  "ProjectName",
+  "Project_ID",
+  "Project_Name",
   "Project_Categories",
   "Project_SMO",
   "PM",
