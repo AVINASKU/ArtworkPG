@@ -5,9 +5,14 @@ import { Calendar } from "primereact/calendar";
 import { Controller, useForm } from "react-hook-form";
 import { classNames } from "primereact/utils";
 import { useNavigate } from "react-router-dom";
+import {
+  createProjectSaveAsDraft,
+  createProjectSubmit,
+} from "../../../apis/projectSetup";
 // import moment from "moment";
 import "./index.scss";
 import {
+  businessUnits,
   categories,
   regionList,
   designScope,
@@ -37,17 +42,19 @@ const defaultTextBoxEnabled = {
 
 function AddProject(props) {
   const navigate = useNavigate();
+  const { status } = props;
   const [selectedCities, setSelectedCities] = useState([]);
   const [formValid, setFormValid] = useState(false);
   const [formData, setFormData] = useState(null);
+  const [subCategoriesOptions, setSubCategoriesOptions] = useState([]);
   const [formattedDate, setFormattedDate] = useState("");
-  const [readinessDate, setReadinessDate] = useState(null);
-  const [sopDate, setSOPDate] = useState(null);
-  const [printerDate, setPrinterDate] = useState(null);
-  const [sosDate, setSOSDate] = useState(null);
+  const [readinessDate, setReadinessDate] = useState("");
+  const [sopDate, setSOPDate] = useState("");
+  const [printerDate, setPrinterDate] = useState("");
+  const [sosDate, setSOSDate] = useState("");
   const [region, setRegion] = useState({});
   const [smo, setSmo] = useState(null);
-  const [bu, setBu] = useState({});
+  const [bu, setBu] = useState("");
   const [subCategories, setSubCategories] = useState([]);
   const [brand, setBrand] = useState([]);
   const [tier, setTier] = useState("");
@@ -56,7 +63,7 @@ function AddProject(props) {
   const [iL, setIl] = useState("Highway");
   const [checkedItems, setCheckedItems] = useState(defaultCheckedItems);
   const [textBoxEnabled, setTextBoxEnabled] = useState(defaultTextBoxEnabled);
-  const [POA, setPOA] = useState(1);
+  const [POA, setPOA] = useState("1");
   const [designScopeList, setDesignScopeList] = useState({
     DI: "",
     DT: "",
@@ -75,6 +82,67 @@ function AddProject(props) {
     }));
   };
 
+  const getProjectSMO = () => {
+    const selectedSmoOptions = [];
+
+    smo?.forEach((sm) => {
+      let temp = {};
+      smoOptions?.forEach((option) => {
+        if (option.value === sm) {
+          temp.instruction = "APPEND";
+          temp.target = "ProjectSMO";
+          temp.content = {};
+          temp.content.SMO_Name = option.label;
+          temp.content.code = option.value;
+        }
+      });
+      selectedSmoOptions.push(temp);
+    });
+    // console.log("selectedSmoOptions:", selectedSmoOptions);
+    return selectedSmoOptions;
+  };
+
+  const getProjectBrand = () => {
+    const selectedBrandOptions = [];
+    // console.log("brand:", brand);
+
+    brand.forEach((obj) => {
+      let temp = {};
+      temp.instruction = "APPEND";
+      temp.target = "ProjectBrand";
+      temp.content = obj;
+      selectedBrandOptions.push(temp);
+    });
+    // console.log("selectedBrandOptions:", selectedBrandOptions);
+    return selectedBrandOptions;
+  };
+
+  const getProjectCategory = () => {
+    const selectedCategoriesOptions = [];
+    // console.log("subCategories:", subCategories);
+
+    subCategories.forEach((obj) => {
+      let temp = {};
+      temp.instruction = "APPEND";
+      temp.target = "ProjectCategory";
+      temp.content = obj;
+      selectedCategoriesOptions.push(temp);
+    });
+    // console.log("selectedCategoriesOptions:", selectedCategoriesOptions);
+    return selectedCategoriesOptions;
+  };
+
+  const getProjectCode = () => {
+    const projName = getValues("projectType");
+    let projCode;
+    projectType.map((pt) => {
+      if (pt.name === projName) {
+        projCode = pt.code;
+      }
+    });
+    return projCode || "";
+  };
+
   const handleRegionChange = (e) => {
     const selectedRegion = regionList.find((r) => r.code === e.target.value);
     setRegion(selectedRegion);
@@ -88,17 +156,33 @@ function AddProject(props) {
     setSubCategories([]);
   };
 
-  const bUs = Object.keys(categories).map((bu) => ({ code: bu, name: bu }));
+  // const bUs = Object.keys(categories).map((bu) => ({ code: bu, name: bu }));
+  const bUs = businessUnits.map((bu) => {
+    return {
+      name: bu.name,
+      code: bu.code,
+    };
+  });
   const handleSubCategoryChange = (e) => {
     setSubCategories(e.value);
   };
 
-  const subCategoriesOptions = useMemo(() => {
-    if (bu && categories[bu]) {
-      return categories[bu].map((subCat) => ({ label: subCat, value: subCat }));
-    }
-    return [];
-  }, [bu, categories]);
+  // const subCategoriesOptions = useMemo(() => {
+  //   if (bu && categories[bu]) {
+  //     return categories[bu].map((subCat) => ({ label: subCat, value: subCat }));
+  //   }
+  //   return [];
+  // }, [bu, categories]);
+  // console.log("subCategoriesOptions: ", subCategoriesOptions);
+
+  useEffect(() => {
+    bu &&
+      businessUnits.map((obj) => {
+        if (obj.code === bu) {
+          setSubCategoriesOptions(obj.categories);
+        }
+      });
+  }, [bu, businessUnits]);
 
   const form = useForm({ date: null });
   let today = new Date();
@@ -220,6 +304,7 @@ function AddProject(props) {
     // check if all fields are filled
     // // const valid = selectedCities && selectedCities.length > 0 && isValid;
     const valid =
+      getValues("projectName") !== "" &&
       brand?.length > 0 &&
       region &&
       Object.keys(region).length > 0 &&
@@ -244,74 +329,74 @@ function AddProject(props) {
     trigger();
   }, [trigger]);
 
-  const collectFormData = () => {
-    return {
-      projectName: getValues("projectName"), // 1
-      groupName: getValues("groupName"), // 2
-      projectDescription: getValues("projectDescription"), //18
-      bu: getValues("bu"), // 3
-      region: region, //4
-      smo: smo, //5
-      category: subCategories, //6
-      brand: brand, //7
-      scale: getValues("scale"), //8
-      // estimatedPOA: getValues("estimatedPOA"), //9
-      // estimatedCICs: getValues("estimatedCICs"), //10
-      printerDate: printerDate, //11
-      readinessDate: readinessDate, //12
-      sopDate: sopDate, //13
-      sosDate: sosDate, //14
-      projectType: getValues("projectType"), //16
-      PM: "Guillaume", //17
-      IL: iL,
-      tier: tier,
-      clustor: getValues("clustor"),
-      comments: getValues("comments"),
-      scope: { ...designScopeList, POA: POA },
-      productionStrategy: ps,
-      // poa: POA
+  const collectFormData = (status) => {
+    const ProjectSMO = getProjectSMO();
+    const ProjectCategory = getProjectCategory();
+    const ProjectBrand = getProjectBrand();
+    const ProjectCode = getProjectCode();
+
+    const formData = {
+      caseTypeID: "PG-AAS-Work-ArtworkProject",
+      content: {
+        BU: bu,
+        Comments: getValues("comments"),
+        DesignIntent: (designScopeList.DI !== "").toString(),
+        EstimatedNoOfDI: designScopeList.DI.toString(),
+        DesignTemplate: (designScopeList.DT !== "").toString(),
+        EstimatedNoOfDT: designScopeList.DT.toString(),
+        InkQualification: (designScopeList.IQ !== "").toString(),
+        EstimatedNoOfIQ: designScopeList.IQ.toString(),
+        NewPrintFeasibility: (designScopeList.PF !== "").toString(),
+        EstimatedNoOfNPF: designScopeList.PF.toString(),
+        ProductionReadyArt: (designScopeList.PRA !== "").toString(),
+        EstimatedNoOfPRA: designScopeList.PRA.toString(),
+        POAs: "true",
+        Estimated_ofCICs: designScopeList.CICs.toString(),
+        CICs: (designScopeList.CICs !== "").toString(),
+        Estimated_ofPOAs: POA,
+        Estimated_SOP: sopDate,
+        Estimated_SOS: sosDate,
+        Estimated_AW_Printer: printerDate,
+        Estimated_AW_Readiness: readinessDate,
+        IL: iL,
+        tier: tier,
+        InitiativeGroupName: getValues("groupName"),
+        PM: pm,
+        ProductionStrategy: ps,
+        // Project_Brands: "V14", //
+        // Project_Categories: "AIR", //
+        Project_Scale: getValues("scale"),
+        ProjectDescription: getValues("projectDescription"),
+        ProjectName: getValues("projectName"),
+        Project_region: region.name,
+        Project_Code: ProjectCode,
+        ProjectType: getValues("projectType"),
+        Project_State: "",
+        Buffer_To_Work: "",
+        ProjectStatus: status,
+      },
+      pageInstructions: [...ProjectCategory, ...ProjectBrand, ...ProjectSMO],
     };
+    return formData;
   };
 
-  const onSubmit = (data) => {
-    const formData = collectFormData();
+  const onSubmit = () => {
+    const formData = collectFormData("Active");
+    console.log("form data", formData);
     setFormData(formData);
-    // setFormValid(false); // set formValid to false to show error message again if the form is invalid
-
-    //API call to be added
+    if (status?.status === "new") {
+      createProjectSubmit(formData);
+    }
     navigate("/myProjects");
   };
   const onSaveAsDraft = () => {
-    // const formData = {
-    //   projectName: getValues("projectName"), // 1
-    //   groupName: getValues("groupName"), // 2
-    //   projectDescription: getValues("projectDescription"), //18
-    //   bu: getValues("bu"), // 3
-    //   region: region, //4
-    //   smo: smo, //5
-    //   category: subCategories, //6
-    //   brand: brand, //7
-    //   scale: getValues("scale"), //8
-    //   // estimatedPOA: getValues("estimatedPOA"), //9
-    //   // estimatedCICs: getValues("estimatedCICs"), //10
-    //   printerDate: printerDate, //11
-    //   readinessDate: readinessDate, //12
-    //   sopDate: sopDate, //13
-    //   sosDate: sosDate, //14
-    //   projectType: getValues("projectType"), //16
-    //   PM: "Pranali", //17
-    //   IL: iL,
-    //   tier: tier,
-    //   clustor: getValues("clustor"),
-    //   comments: getValues("comments"),
-    //   scope: {...designScopeList, 'POA':POA},
-    //   productionStrategy: ps,
-    //   // poa: POA
-
-    // };
-    const draftFormData = collectFormData();
+    const draftFormData = collectFormData("Draft");
+    console.log("draft form data", draftFormData);
     localStorage.setItem("formDraft", JSON.stringify(draftFormData));
     //API call to be added
+    if (status?.status === "new") {
+      createProjectSaveAsDraft(draftFormData);
+    }
     navigate("/myProjects");
   };
 
@@ -407,7 +492,7 @@ function AddProject(props) {
           </Col>
           <Col>
             <Form.Group
-              className={`mb-3 ${Object.keys(bu).length < 1 && "error-valid"}`}
+              className={`mb-3 ${bu === "" && "error-valid"}`}
               controlId="bu.SelectMultiple"
             >
               <Form.Label>Business Unit*</Form.Label>
@@ -425,9 +510,7 @@ function AddProject(props) {
                   ))}
                 </Form.Select>
               </div>
-              {Object.keys(bu).length < 1 && (
-                <span className="error-text">Field Remaining</span>
-              )}
+              {bu === "" && <span className="error-text">Field Remaining</span>}
             </Form.Group>
           </Col>
           <Col>
@@ -442,7 +525,6 @@ function AddProject(props) {
               </div>
             </Form.Group>
           </Col>
-
           <Col>
             {" "}
             <Form.Group className={`mb-3`} controlId="sop.readiness">
@@ -495,7 +577,7 @@ function AddProject(props) {
                 value={subCategories}
                 onChange={handleSubCategoryChange}
                 options={subCategoriesOptions}
-                optionLabel="label"
+                optionLabel="name"
                 filter
                 placeholder="Select Categories"
                 className="w-full md:w-20rem"
@@ -630,7 +712,7 @@ function AddProject(props) {
                   value={brand}
                   onChange={(e) => setBrand(e.value)}
                   options={brandList}
-                  optionLabel="name"
+                  optionLabel="Brand_Name"
                   filter
                   placeholder="Select Brand"
                   className="w-full md:w-20rem"
@@ -704,15 +786,15 @@ function AddProject(props) {
             <Form.Group className="mb-3" controlId="bve.SelectMultiple">
               <Form.Label>
                 {(region?.code === "EUF" || region?.code === "EUE") &&
-                  bu === "Baby Care" &&
+                  bu === "BABY" &&
                   "Tier"}
                 {(region?.code === "EUF" || region?.code === "EUE") &&
-                  bu === "Home Care" &&
+                  bu === "HC" &&
                   "Production Strategy"}
               </Form.Label>
               <div>
                 {(region?.code === "EUF" || region?.code === "EUE") &&
-                  bu === "Baby Care" && (
+                  bu === "BABY" && (
                     <Form.Select
                       {...register("Teir", { required: false })}
                       placeholder="Select Teir"
@@ -727,7 +809,7 @@ function AddProject(props) {
                     </Form.Select>
                   )}
                 {(region?.code === "EUF" || region?.code === "EUE") &&
-                  bu === "Home Care" && (
+                  bu === "HC" && (
                     <Form.Select
                       {...register("Production Strtegy", { required: false })}
                       placeholder="Select PS"
@@ -780,13 +862,13 @@ function AddProject(props) {
                 <Form.Select
                   // value={selectedCities}
                   // onChange={(e) => setSelectedCities(e.value)}
-                  {...register("selectedCities", { required: false })}
-                  placeholder="Select Scale"
+                  {...register("projectType", { required: false })}
+                  placeholder="Select Project Type"
                 >
                   <option value="">Select Project Type</option>
-                  {projectType.map((bu) => (
-                    <option key={bu.code} value={bu.code}>
-                      {bu.name}
+                  {projectType.map((pt) => (
+                    <option key={pt.code} value={pt.name}>
+                      {pt.name}
                     </option>
                   ))}
                 </Form.Select>
