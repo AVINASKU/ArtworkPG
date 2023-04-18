@@ -60,36 +60,28 @@ const SideBar = () => {
         img: ReportsImg,
         arrowUp: ArrowDownImg,
         url: "/myProjects",
-        items: [
-          { name: "My Projects", url: "/myProjects" },
-        ],
+        items: [{ name: "My Projects", url: "/myProjects" }],
       },
       {
         name: "All Projects",
         img: AllProjects1,
         arrowUp: ArrowDownImg,
         url: "/allProjects",
-        items: [
-          { name: "All Projects", url: "/allProjects" },
-        ],
+        items: [{ name: "All Projects", url: "/allProjects" }],
       },
       {
         name: "My Tasks",
         img: MyTaskMP,
         arrowUp: ArrowDownImg,
         url: "/tasks",
-        items: [
-          { name: "My Tasks", url: "tasks/mytasks" },
-        ],
+        items: [{ name: "My Tasks", url: "tasks/mytasks" }],
       },
       {
         name: "All Tasks",
         img: AllTask,
         arrowUp: ArrowDownImg,
         url: "/tasks",
-        items: [
-          { name: "All Tasks", url: "tasks/alltasks" },
-        ],
+        items: [{ name: "All Tasks", url: "tasks/alltasks" }],
       },
     ],
   };
@@ -186,9 +178,13 @@ const SideBar = () => {
               }
             })}
             <div className="add-project">
-              <NavItem to="/addProject">
+              <NavItem to="/addProject" state={{ status: "new" }}>
                 {!isToggle ? (
-                  <NavLink to="/addProject" className="nav-link">
+                  <NavLink
+                    to="/addProject"
+                    state={{ status: "new" }}
+                    className="nav-link"
+                  >
                     <img
                       src={plusCollapseImg}
                       className="collapse-img"
@@ -196,7 +192,11 @@ const SideBar = () => {
                     />
                   </NavLink>
                 ) : (
-                  <NavLink to="/addProject" className="nav-link">
+                  <NavLink
+                    to="/addProject"
+                    state={{ status: "new" }}
+                    className="nav-link"
+                  >
                     <Button className="button-layout">
                       <img src={PlusImg} alt={PlusImg} />
                       Create Project

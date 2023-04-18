@@ -5,7 +5,7 @@ import { BreadCrumb } from "primereact/breadcrumb";
 import "primeicons/primeicons.css";
 import "./index.scss";
 
-function ProjectSetup() {
+function ProjectSetup(props) {
   const items = [{ label: "My Projects" }, { label: "Project Setup" }];
 
   return (
@@ -73,7 +73,7 @@ function ProjectSetup() {
           <Accordion.Item eventKey="0">
             <Accordion.Header>Project Setup</Accordion.Header>
             <Accordion.Body>
-              <AddProject />
+              <AddProject {...props} />
             </Accordion.Body>
           </Accordion.Item>
           <Accordion.Item eventKey="1">
