@@ -15,6 +15,10 @@
   .accordion-item {
     border-radius: 0;
     border: 0;
+    .accordion-header{
+    background-color: #EDF4FA;
+
+    }
   }
   .accordion-button {
     box-shadow: none !important;
@@ -23,7 +27,12 @@
     padding-left: 30px;
     font-size: 14px;
     color: #003da5;
-    background: rgb(242, 242, 245);
+    background-color: #EDF4FA !important;
+    width: fit-content;
+    margin-right: 2px;
+    &::after{
+      margin-left: 5px;
+    }
   }
   .accordion-button:not(.collapsed) {
     background: #edf4fa;

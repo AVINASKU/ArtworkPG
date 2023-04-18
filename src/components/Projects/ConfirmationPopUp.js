@@ -20,6 +20,8 @@ const ConfirmationPopUp = ({
   setSortData,
   setFilters,
   filters,
+  saveSettings,
+  clearColumnWiseFilter,
 }) => {
   const multiselectOptions = (colName) => {
     let optionList = [];
@@ -30,22 +32,22 @@ const ConfirmationPopUp = ({
     return optionList;
   };
 
-  const changeColor = (id) => {
-    document.addEventListener("click", (e) => {
-      const flyoutEl = document.getElementById(id);
-      let targetEl = e.target;
-      do {
-        if (targetEl === flyoutEl) {
-          document.getElementById(id).style.color = "#003DA5";
-          document.getElementById(id).style.backgroundColor = "#FAFCFF";
-          return;
-        }
-        targetEl = targetEl.parentNode;
-      } while (targetEl);
-      document.getElementById(id).style.color = "";
-      document.getElementById(id).style.backgroundColor = "";
-    });
-  };
+  // const changeColor = (id) => {
+  //   document.addEventListener("click", (e) => {
+  //     const flyoutEl = document.getElementById(id);
+  //     let targetEl = e.target;
+  //     do {
+  //       if (targetEl === flyoutEl) {
+  //         document.getElementById(id).style.color = "red";
+            //  document.getElementById(id).style.backgroundColor = "#FAFCFF";
+  //         return;
+  //       }
+  //       targetEl = targetEl.parentNode;
+  //     } while (targetEl);
+  //     document.getElementById(id).style.color = "";
+  // document.getElementById(id).style.backgroundColor = "";
+  //   });
+  // };
 
   const [filterIcon, setFilterIcon] = useState(false);
 
@@ -60,46 +62,7 @@ const ConfirmationPopUp = ({
         <div
           id="clearAllFilter"
           className="clearAllFilter"
-          onClick={() => {
-            let jsonFrozenItem = localStorage.getItem("frozenData");
-            const frozenItem = JSON.parse(jsonFrozenItem);
-            if (
-              frozenItem &&
-              frozenItem.length &&
-              frozenItem.includes(selectedColumnName)
-            ) {
-              const index = frozenItem.indexOf(selectedColumnName);
-              frozenItem.splice(index, 1);
-              localStorage.setItem("frozenData", JSON.stringify(frozenItem));
-              setFrozenColumn(frozenItem);
-            }
-            if (frozenCoulmns.includes(selectedColumnName)) {
-              const index = frozenCoulmns.indexOf(selectedColumnName);
-              frozenCoulmns.splice(index, 1);
-              setFrozenColumn(frozenCoulmns);
-              setProjectFrozen(!ProjectFrozen);
-            }
-            let jsonSortItem = localStorage.getItem("sortingData");
-            const sortItem = JSON.parse(jsonSortItem);
-            if (
-              sortItem &&
-              sortItem.length &&
-              sortItem[0] === selectedColumnName
-            ) {
-              localStorage.setItem("sortingData", JSON.stringify([]));
-            }
-            if (
-              sortData &&
-              sortData.length &&
-              sortData[0] === selectedColumnName
-            ) {
-              setSortData([]);
-            }
-            if (filters && filters.length) {
-              setFilters([]);
-            }
-            changeColor("clearAllFilter");
-          }}
+          onClick={() => clearColumnWiseFilter()}
         >
           Clear all filter
         </div>
@@ -120,7 +83,8 @@ const ConfirmationPopUp = ({
           className="sortAndFrozen"
           onClick={() => {
             onSort(selectedColumnName, "desc");
-            changeColor("sortZtoA");
+            saveSettings();
+            // changeColor("sortZtoA");
           }}
         >
           Sort z to a
@@ -130,7 +94,8 @@ const ConfirmationPopUp = ({
           className="sortAndFrozen"
           onClick={() => {
             onSort(selectedColumnName, "asc");
-            changeColor("sortAtoZ");
+            saveSettings();
+            // changeColor("sortAtoZ");
           }}
         >
           Sort a to z
@@ -141,7 +106,8 @@ const ConfirmationPopUp = ({
           onClick={() => {
             addFrozenColumns(selectedColumnName);
             setProjectFrozen(!ProjectFrozen);
-            changeColor("frozen");
+            // changeColor("frozen");
+            saveSettings();
           }}
         >
           Frozen
@@ -153,7 +119,7 @@ const ConfirmationPopUp = ({
             options={multiselectOptions(selectedColumnName)}
             optionLabel={selectedColumnName}
             filter
-            placeholder="Select Project ID"
+            placeholder="Select"
             maxSelectedLabels={3}
             className="p-column-filter"
           />

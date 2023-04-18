@@ -137,14 +137,7 @@ img[disabled] {
     // height: 16px !important;
   }
 }
-.p-multiselect-panel {
-  // top: 395.073px !important;
-  // left: 178px !important;
-  // left: 292.927px !important;
-  // border: none;
-  // margin-left: -31px;
-  // width: 194px;
-}
+
 .p-overlaypanel {
   position: absolute !important;
 }
@@ -158,4 +151,24 @@ img[disabled] {
   line-height: 12px !important;
   font-family: Montserrat !important;
 }
-// ConfirmationPopUp Styles End
+
+th:after,
+td:after {
+  content: "";
+  display: block;
+  height: 22px;
+  width: 0.8px;
+  background-color: #acacac;
+  position: absolute;
+  top: 25%;
+  right: 0;
+}
+
+td,
+table .p-datatable .p-datatable-tbody > tr > td,
+th,
+tr {
+  position: relative;
+  border: 0 !important;
+  height: 40px;
+}
