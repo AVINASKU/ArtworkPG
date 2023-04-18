@@ -3,7 +3,6 @@ import { Nav, NavItem, Button } from "react-bootstrap";
 import { NavLink, useLocation } from "react-router-dom";
 import PgLogo from "../../assets/images/logo.svg";
 import ReportsImg from "../../assets/images/projects.svg";
-import ChartImg from "../../assets/images/reports.svg";
 import LogoutImg from "../../assets/images/logout.svg";
 import PlusImg from "../../assets/images/plus.svg";
 import plusCollapseImg from "../../assets/images/plusCollapse.svg";
@@ -18,7 +17,6 @@ import { Col } from "react-bootstrap";
 const SideBar = () => {
   const location = useLocation();
   const [isToggle, setIsToggle] = useState(false);
-  const [visible, setVisible] = useState(false);
   const [expandedItems, setExpandedItems] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState(null);
   const toggleSidebar = () => {
