@@ -6,6 +6,7 @@ import AllProjects from "./components/Projects/AllProjects/index";
 import MyProjects from "./components/Projects/MyProjects/index.js";
 import ProjectCreation from "./projectCreation.js";
 import Login from "./login.js";
+import DefineDesignIntent from "./components/Tasks/DesignIntent/index.js";
 
 const RoutesNav = () => {
   return (
@@ -18,8 +19,8 @@ const RoutesNav = () => {
         {/* <Route path="/createProject" element={<AddProject />} /> */}
          <Route path="/addProject" element={<ProjectCreation />} />
         <Route path="/addProject/:ProjectID" element={<ProjectCreation />} />
-        {/* <Route path="/gant" element={<GantChart />} />
-        <Route path="/reports" element={<Reports />} /> */}
+         <Route path="/tasks" element={<DefineDesignIntent />} />
+        {/* <Route path="/reports" element={<Reports />} /> */}
       </Route>
     </Routes>
   );
