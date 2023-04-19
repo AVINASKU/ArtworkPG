@@ -536,12 +536,13 @@ function AddProject(props) {
                 render={({ field, fieldState }) => (
                   <>
                     <Calendar
+                      placeholder="Select Estimated SOP"
                       inputId={field.name}
                       value={sopDate}
                       onChange={(e) => setSOPDate(e.target.value)}
                       dateFormat="d-M-y"
                       showIcon={true}
-                      minDate={printerDate}
+                      minDate={sopDate !=='' ? sopDate: minDate}
                       maxDate={sosDate}
                       className={classNames({
                         "p-invalid": fieldState.error,
@@ -668,13 +669,14 @@ function AddProject(props) {
                 render={({ field, fieldState }) => (
                   <>
                     <Calendar
+                      placeholder="Select Estimated SOS"
                       inputId={field.name}
                       value={sosDate}
                       onChange={(e) => setSOSDate(e.target.value)}
                       dateFormat="d-M-y"
                       showIcon={true}
-                      minDate={sopDate}
-                      // style={{ width: 208 }}
+                      minDate={sosDate !==''? sosDate: minDate}
+                      style={{ width: 208 }}
                       className={classNames({
                         "p-invalid": fieldState.error,
                       })}
@@ -888,12 +890,13 @@ function AddProject(props) {
                 render={({ field, fieldState }) => (
                   <>
                     <Calendar
+                      // placeholder="Select Estimated AW Readiness"
                       inputId={field.name}
                       value={readinessDate}
                       onChange={(e) => setReadinessDate(e.target.value)}
                       dateFormat="d-M-y"
                       showIcon={true}
-                      minDate={minDate}
+                      minDate={readinessDate !==''? readinessDate: minDate}
                       maxDate={printerDate}
                       className={classNames({
                         "p-invalid": fieldState.error,
@@ -956,12 +959,13 @@ function AddProject(props) {
                 render={({ field, fieldState }) => (
                   <>
                     <Calendar
+                      // placeholder="Select Estimated AW@Printer"
                       inputId={field.name}
                       value={printerDate}
                       onChange={(e) => setPrinterDate(e.target.value)}
                       dateFormat="d-M-y"
                       showIcon={true}
-                      minDate={readinessDate}
+                      minDate={printerDate !==''? printerDate: minDate}
                       maxDate={sopDate}
                       className={classNames({
                         "p-invalid": fieldState.error,

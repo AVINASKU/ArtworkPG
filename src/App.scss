@@ -84,13 +84,15 @@ fieldset:disabled .btn {
   background-color: rgba(1, 104, 191, 0.05) !important;
   margin-top: 18px;
 }
+.projectList {
 table {
   // border-collapse: separate !important;
   // border-spacing: 0 5px !important;
   thead {
     th {
       background-color: #fff !important;
-      // border: 0 !important;
+      // border: 0 !important;      
+      text-align: center !important;
       border-width: 1px 2px 3px 4px;
       border: 0 !important;
       &:nth-child(1) {
@@ -131,7 +133,9 @@ table {
     text-align: center;
     background: #ffffff !important;
     padding: 10px !important;
-    border-width: 1px;
+    border-width: 0.5px;
+    text-align: center !important;
+    // border: 2px solid gray !important;
     // margin-top: 2px !important;
     // margin-bottom: 2px !important;
     // border-collapse: separate !important;
@@ -165,6 +169,7 @@ table {
     //   // background-color:  #003da5 !important;
     // }
   }
+}
 }
 .fullscreen-mode {
   background-color: #fff;

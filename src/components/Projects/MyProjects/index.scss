@@ -36,19 +36,53 @@ $fontWeight400: 400;
   top: 12% !important;
   left: 0% !important;
 }
-.p-datatable > .p-datatable-wrapper {
-  overflow: scroll;
-  width: $width100;
-  height: 540px;
+// Datepicker for ProjectSetUp component
+.p-datepicker table td {
+  padding: 0.2px !important;
+}
+.projectList {
+  .p-datatable > .p-datatable-wrapper {
+    overflow: scroll;
+    width: $width100;
+    height: 540px;
+  }
+  .p-datatable-table {
+    line-height: 15px;
+  }
+  .p-column-title {
+    font-weight: $fontWeight500;
+  }
+  .p-datatable-tbody {
+    font-weight: $fontWeight400;
+  }
+
+  th:after,
+  td:after {
+    content: "";
+    display: block;
+    height: 22px;
+    width: 0.8px;
+    background-color: #acacac;
+    position: absolute;
+    top: 25%;
+    right: 0;
+  }
+
+  td,
+  table .p-datatable .p-datatable-tbody > tr > td,
+  th,
+  tr {
+    position: relative;
+    border: 0 !important;
+    height: 40px;
+  }
 }
 .font-bold {
   font-weight: 700;
 }
 
 .p-checkbox {
-  margin-top: 3px;
-  margin-bottom: 3px;
-  margin-right: 10px;
+  margin: 8px;
 }
 
 .p-checkbox-checked + label {
@@ -57,9 +91,8 @@ $fontWeight400: 400;
 
 .ml-2 {
   font-weight: $fontWeight400;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 17px;
-  width: 180px;
 }
 
 // ProjectList Styles Start
@@ -79,19 +112,9 @@ $fontWeight400: 400;
   font-weight: $fontWeight500;
   line-height: 96%;
   vertical-align: top;
-  cursor: pointer;
 }
 .resetToPgDefault:hover {
   background-color: #868484 !important;
-}
-.p-datatable-table {
-  line-height: 15px;
-}
-.p-column-title {
-  font-weight: $fontWeight500;
-}
-.p-datatable-tbody {
-  font-weight: $fontWeight400;
 }
 .header-icons {
   cursor: pointer;
@@ -110,10 +133,18 @@ img[disabled] {
 // ProjectList Styles End
 
 // ConfirmationPopUp Styles Start
+// .clearAllFilterMainDiv {
+//   padding: 10.56px 22px 22px 2px;
+//   line-height: 12px;
+//   display: flex;
+// }
 .clearAllFilter {
-  padding: 10.56px 22px 22px 2px;
   cursor: pointer;
-  line-height: 12px;
+}
+.clearAllFilterIcon {
+  cursor: pointer;
+  position: absolute;
+  right: 5px;
 }
 .sortAndFrozen {
   padding: 0 22px 22px 2px;
@@ -125,7 +156,7 @@ img[disabled] {
   cursor: pointer;
   line-height: 10px;
   .p-placeholder {
-    font-size: 8px !important;
+    // font-size: 8px !important;
     color: #595959 !important;
   }
   .p-multiselect {
@@ -146,27 +177,6 @@ img[disabled] {
   font-size: 10px !important;
   line-height: 12px !important;
   font-family: Montserrat !important;
-}
-
-th:after,
-td:after {
-  content: "";
-  display: block;
-  height: 22px;
-  width: 0.8px;
-  background-color: #acacac;
-  position: absolute;
-  top: 25%;
-  right: 0;
-}
-
-td,
-table .p-datatable .p-datatable-tbody > tr > td,
-th,
-tr {
-  position: relative;
-  border: 0 !important;
-  height: 40px;
 }
 
 .reset-to-default-view {

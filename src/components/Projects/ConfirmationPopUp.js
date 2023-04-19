@@ -40,11 +40,13 @@ const ConfirmationPopUp = ({
   //     do {
   //       if (targetEl === flyoutEl) {
   //         document.getElementById(id).style.color = "red";
+            //  document.getElementById(id).style.backgroundColor = "#FAFCFF";
   //         return;
   //       }
   //       targetEl = targetEl.parentNode;
   //     } while (targetEl);
   //     document.getElementById(id).style.color = "";
+  // document.getElementById(id).style.backgroundColor = "";
   //   });
   // };
 

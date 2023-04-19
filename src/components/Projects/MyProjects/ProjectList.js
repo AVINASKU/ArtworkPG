@@ -174,7 +174,6 @@ const ProjectList = (props) => {
           alt="Column Filter"
           onClick={(e) => {
             op.current.toggle(e);
-
             setSelectedColumnName(options);
           }}
           className="columnFilterIcon"
@@ -206,6 +205,16 @@ const ProjectList = (props) => {
 
     return (
       <>
+        {field === "Project State" && (
+          <Tag
+            value=""
+            style={{
+              backgroundColor: "#DFEBFF",
+              color: "#003DA5",
+              border: "1px solid",
+            }}
+          >Active</Tag>
+        )}
         {field === "Full Kit Readiness Tracking" && (
           <Tag
             value="view"
@@ -394,7 +403,7 @@ const ProjectList = (props) => {
     sortData?.length;
 
   return (
-    <div>
+    <div className="projectList">
       <Suspense fallback={<div>Loading...</div>}>
         <Toast ref={toast} />
         <ProjectListHeader
