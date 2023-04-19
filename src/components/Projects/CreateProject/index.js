@@ -674,7 +674,7 @@ function AddProject(props) {
                       dateFormat="d-M-y"
                       showIcon={true}
                       minDate={sopDate}
-                      style={{ width: 208 }}
+                      // style={{ width: 208 }}
                       className={classNames({
                         "p-invalid": fieldState.error,
                       })}
