@@ -11,6 +11,7 @@ import { Tag } from "primereact/tag";
 import filter from "../../../assets/images/filter.svg";
 import { getMyProject } from "../../../store/actions/ProjectActions";
 import { changeDateFormat } from "../utils";
+import BlueFilter from "../../../assets/images/BlueFilter.svg";
 
 const CustomisedView = React.lazy(() => import("./CustomisedView"));
 
@@ -166,20 +167,41 @@ const ProjectList = (props) => {
     }
   };
 
+
+
   const projectNameHeader = (options) => {
+      const isFilterActivated =
+    (frozenCoulmns &&
+      frozenCoulmns.length &&
+      frozenCoulmns.includes(options)) ||
+    (sortData && sortData.length && sortData[0] === options);
+
     return (
       <div>
+      {isFilterActivated ?
+      <>
         <img
-          src={filter}
+          src={BlueFilter}
           alt="Column Filter"
           onClick={(e) => {
             op.current.toggle(e);
             setSelectedColumnName(options);
           }}
           className="columnFilterIcon"
-          // className="pi pi-align-justify"
         />
+        <span style={{color: "#003DA5"}}>{options}</span>
+         </> : <><img
+          src={filter}
+          alt="Column Filter"
+          onClick={(e) => {
+            op.current.toggle(e);
+
+            setSelectedColumnName(options);
+          }}
+          className="columnFilterIcon"
+        /> 
         {options}
+        </> }
       </div>
     );
   };
