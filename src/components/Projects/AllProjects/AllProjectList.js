@@ -422,7 +422,7 @@ const AllProjectList = (props) => {
   // console.log("project column name", projectColumnName);
 
   return (
-    <div>
+    <div className="myProjectAnddAllProjectList">
       <Suspense fallback={<div>Loading...</div>}>
         <Toast ref={toast} />
         <ProjectListHeader

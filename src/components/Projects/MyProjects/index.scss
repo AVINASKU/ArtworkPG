@@ -36,11 +36,15 @@ $fontWeight400: 400;
   top: 12% !important;
   left: 0% !important;
 }
-// Datepicker for ProjectSetUp component
+// Datepicker for ProjectSetUp component Style Start
 .p-datepicker table td {
   padding: 0.2px !important;
 }
-.projectList {
+.p-button:focus {
+  box-shadow: none !important;
+}
+// Datepicker for ProjectSetUp component Style End
+.myProjectAnddAllProjectList {
   .p-datatable > .p-datatable-wrapper {
     overflow: scroll;
     width: $width100;
@@ -133,11 +137,18 @@ img[disabled] {
 // ProjectList Styles End
 
 // ConfirmationPopUp Styles Start
-// .clearAllFilterMainDiv {
-//   padding: 10.56px 22px 22px 2px;
-//   line-height: 12px;
-//   display: flex;
-// }
+.clearAllFilterMainDiv {
+  display: flex;
+  padding: 10.56px 22px 22px 2px;
+}
+.clearAllFilterDiv {
+  line-height: 12px;
+  justify-items: end;
+  display: flex;
+  position: absolute;
+  right: 22px;
+  top: 18px;
+}
 .clearAllFilter {
   cursor: pointer;
 }

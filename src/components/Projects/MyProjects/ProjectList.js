@@ -403,7 +403,7 @@ const ProjectList = (props) => {
     sortData?.length;
 
   return (
-    <div className="projectList">
+    <div className="myProjectAnddAllProjectList">
       <Suspense fallback={<div>Loading...</div>}>
         <Toast ref={toast} />
         <ProjectListHeader
