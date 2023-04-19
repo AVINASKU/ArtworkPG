@@ -8,7 +8,6 @@ import { FilterMatchMode } from "primereact/api";
 import ProjectListHeader from "../MyProjects/ProjectListHeader";
 import { Tag } from "primereact/tag";
 import { changeDateFormat } from "../utils";
-import { useNavigate } from "react-router-dom";
 import filter from "../../../assets/images/filter.svg";
 import { getAllProject } from "../../../store/actions/ProjectActions";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,7 +30,6 @@ const AllProjectList = (props) => {
   const allProjectList = useSelector((state) => state.myProject);
   const { loading } = allProjectList;
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   console.log("all project list", allProjectList);
 

@@ -11,7 +11,6 @@ import { Tag } from "primereact/tag";
 import filter from "../../../assets/images/filter.svg";
 import { getMyProject } from "../../../store/actions/ProjectActions";
 import { changeDateFormat } from "../utils";
-import { useNavigate } from "react-router-dom";
 
 const CustomisedView = React.lazy(() => import("./CustomisedView"));
 
@@ -33,7 +32,6 @@ const ProjectList = (props) => {
   const myProjectList = useSelector((state) => state.myProject);
   const { loading } = myProjectList;
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const searchHeader = projectColumnName.reduce(
     (acc, curr) => ({
@@ -81,9 +79,6 @@ const ProjectList = (props) => {
 
   useEffect(() => {
     // setLoading(true);
-    const { pathname } = window.location;
-    console.log("hello", pathname);
-
     (async () => {
       try {
         // below is json call
