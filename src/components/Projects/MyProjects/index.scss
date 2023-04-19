@@ -192,9 +192,9 @@ img[disabled] {
 
 .reset-to-default-view {
   padding: 10px 18px;
-  margin: 0 10px 0 21.82px ;
+  margin: 0 10px 0 21.82px;
   border-radius: 15px;
-  background-color: #00A3E0 ;
+  background-color: #00a3e0;
   font-weight: $fontWeight500;
   line-height: 96%;
   vertical-align: top;
@@ -205,10 +205,17 @@ img[disabled] {
   padding: 10px 18px;
   margin: 0 10px 0 21.82px;
   border-radius: 15px;
-  background-color: #003DA5;
+  background-color: #003da5;
   font-weight: $fontWeight500;
   line-height: 96%;
   vertical-align: top;
   cursor: pointer;
 }
 
+.apply-filter-text {
+  color: "#003DA5" !important;
+}
+
+.p-datatable-scrollable .p-frozen-column {
+  z-index: 1000;
+}
