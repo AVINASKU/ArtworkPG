@@ -60,7 +60,7 @@ const ConfirmationPopUp = ({
   const confirmPopData = () => {
     return (
       <div>
-        <div style={{ display: "flex" }}>
+        <div className="clearAllFilterMainDiv">
           <div
             id="clearAllFilter"
             className="clearAllFilter"
@@ -68,7 +68,7 @@ const ConfirmationPopUp = ({
           >
             Clear all filter
           </div>
-          <div>
+          <div className="clearAllFilterDiv">
             {isFilterActivated ? (
               <img
                 src={BlueFilterIcon}
