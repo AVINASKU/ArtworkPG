@@ -3,7 +3,6 @@ import { Nav, NavItem, Button } from "react-bootstrap";
 import { NavLink, useLocation } from "react-router-dom";
 import PgLogo from "../../assets/images/logo.svg";
 import ReportsImg from "../../assets/images/projects.svg";
-import ChartImg from "../../assets/images/reports.svg";
 import LogoutImg from "../../assets/images/logout.svg";
 import PlusImg from "../../assets/images/plus.svg";
 import plusCollapseImg from "../../assets/images/plusCollapse.svg";
@@ -18,7 +17,6 @@ import { Col } from "react-bootstrap";
 const SideBar = () => {
   const location = useLocation();
   const [isToggle, setIsToggle] = useState(false);
-  const [visible, setVisible] = useState(false);
   const [expandedItems, setExpandedItems] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState(null);
   const toggleSidebar = () => {
@@ -60,36 +58,28 @@ const SideBar = () => {
         img: ReportsImg,
         arrowUp: ArrowDownImg,
         url: "/myProjects",
-        items: [
-          { name: "My Projects", url: "/myProjects" },
-        ],
+        items: [{ name: "My Projects", url: "/myProjects" }],
       },
       {
         name: "All Projects",
         img: AllProjects1,
         arrowUp: ArrowDownImg,
         url: "/allProjects",
-        items: [
-          { name: "All Projects", url: "/allProjects" },
-        ],
+        items: [{ name: "All Projects", url: "/allProjects" }],
       },
       {
         name: "My Tasks",
         img: MyTaskMP,
         arrowUp: ArrowDownImg,
         url: "/tasks",
-        items: [
-          { name: "My Tasks", url: "tasks/mytasks" },
-        ],
+        items: [{ name: "My Tasks", url: "tasks/mytasks" }],
       },
       {
         name: "All Tasks",
         img: AllTask,
         arrowUp: ArrowDownImg,
         url: "/tasks",
-        items: [
-          { name: "All Tasks", url: "tasks/alltasks" },
-        ],
+        items: [{ name: "All Tasks", url: "tasks/alltasks" }],
       },
     ],
   };
@@ -148,20 +138,6 @@ const SideBar = () => {
                       </div>
 
                       <div>{item.name}</div>
-                      {/* {isToggle && (
-                        <>
-                          <span>{item.name}</span>
-                          <img
-                            src={item.arrowUp}
-                            alt="arrows"
-                            className={
-                              expandedIndex === index
-                                ? "arrow-up"
-                                : "arrow-down"
-                            }
-                          />
-                        </>
-                      )} */}
                     </NavLink>
                     {expandedIndex === index && isToggle && (
                       <ul>
@@ -186,9 +162,13 @@ const SideBar = () => {
               }
             })}
             <div className="add-project">
-              <NavItem to="/addProject">
+              <NavItem to="/addProject" state={{ status: "new" }}>
                 {!isToggle ? (
-                  <NavLink to="/addProject" className="nav-link">
+                  <NavLink
+                    to="/addProject"
+                    state={{ status: "new" }}
+                    className="nav-link"
+                  >
                     <img
                       src={plusCollapseImg}
                       className="collapse-img"
@@ -196,7 +176,11 @@ const SideBar = () => {
                     />
                   </NavLink>
                 ) : (
-                  <NavLink to="/addProject" className="nav-link">
+                  <NavLink
+                    to="/addProject"
+                    state={{ status: "new" }}
+                    className="nav-link"
+                  >
                     <Button className="button-layout">
                       <img src={PlusImg} alt={PlusImg} />
                       Create Project

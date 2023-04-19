@@ -11,13 +11,12 @@ import { Tag } from "primereact/tag";
 import filter from "../../../assets/images/filter.svg";
 import { getMyProject } from "../../../store/actions/ProjectActions";
 import { changeDateFormat } from "../utils";
-import { useNavigate } from "react-router-dom";
 
 const CustomisedView = React.lazy(() => import("./CustomisedView"));
 
 const ProjectList = (props) => {
   const [pegadata, setPegaData] = useState(null);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
   const [selectedColumnName, setSelectedColumnName] = useState(null);
@@ -28,8 +27,11 @@ const ProjectList = (props) => {
   const [sortData, setSortData] = useState([]);
   const [allColumnNames, setAllColumnNames] = useState([]);
   const [isSearch, isSearchSet] = useState(false);
+  const [isReorderedColumn, setReorderedColumn] = useState(false);
+
+  const myProjectList = useSelector((state) => state.myProject);
+  const { loading } = myProjectList;
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const searchHeader = projectColumnName.reduce(
     (acc, curr) => ({
@@ -69,15 +71,22 @@ const ProjectList = (props) => {
   };
 
   useEffect(() => {
-    const updatedUsers = dispatch(getMyProject());
-    console.log("my projects", updatedUsers);
-    setLoading(true);
-    const { pathname } = window.location;
-    console.log("hello", pathname);
+    if (!myProjectList.myProject.length) {
+      const updatedUsers = dispatch(getMyProject());
+      console.log("my projects", updatedUsers);
+    }
+  }, [dispatch, myProjectList.myProject]);
 
+  useEffect(() => {
+    // setLoading(true);
     (async () => {
       try {
-        const ProjectData = await ProjectService.getProjectData();
+        // below is json call
+        // const ProjectData = await ProjectService.getProjectData();
+
+        //below is api call
+        const ProjectData = myProjectList.myProject;
+        console.log("my project data here here", ProjectData);
 
         if (ProjectData.length) {
           setAllColumnNames(Object.keys(ProjectData[0]));
@@ -107,7 +116,7 @@ const ProjectList = (props) => {
         if (columnNames != null && columnNames.length) {
           setProjectColumnNames(columnNames);
         } else {
-          const columnNames = await ProjectService.getAllColumnNames();
+          const columnNames = ProjectService.getAllColumnNames();
           localStorage.setItem("allColumnNames", JSON.stringify(columnNames));
           setProjectColumnNames(columnNames);
         }
@@ -143,8 +152,8 @@ const ProjectList = (props) => {
         console.log("error", err);
       }
     })();
-    setLoading(false);
-  }, []);
+    // setLoading(false);
+  }, [myProjectList.myProject]);
 
   const addFrozenColumns = (name) => {
     if (!frozenCoulmns.includes(name)) {
@@ -177,6 +186,22 @@ const ProjectList = (props) => {
 
   const fullKitReadinessBody = (options, rowData) => {
     let field = rowData.field;
+    let categoryNames = [];
+    let SMOName = [];
+    let brandName = [];
+    let projectId = options["Project_ID"];
+    if (field === "Artwork_Category") {
+      categoryNames = options[field]
+        .map((item) => item.Category_Name)
+        .join(",");
+    }
+
+    if (field === "Artwork_SMO") {
+      SMOName = options[field].map((item) => item.SMO_Name).join(",");
+    }
+    if (field === "Artwork_Brand") {
+      brandName = options[field].map((item) => item.Brand_Name).join(",");
+    }
 
     return (
       <>
@@ -201,16 +226,23 @@ const ProjectList = (props) => {
           ></Tag>
         )}
 
+        {field === "Project_Name" && (
+          <a href={`/addProject/${projectId}`}> {options[field]} </a>
+        )}
+
         {field === "Estimated_SOP" && changeDateFormat(options[field])}
-
-        {field === "EstimatedAWPrinters" && changeDateFormat(options[field])}
-
-        {field === "Buffer to work" && <>-----</>}
+        {field === "Estimated_AW_Printer" && changeDateFormat(options[field])}
+        {field === "Artwork_Category" && categoryNames}
+        {field === "Artwork_SMO" && SMOName}
+        {field === "Artwork_Brand" && brandName}
 
         {field !== "Full Kit Readiness Tracking" &&
           field !== "Estimated_SOP" &&
-          field !== "EstimatedAWPrinters" &&
-          field !== "Buffer to work" && <> {options[field]}</>}
+          field !== "Estimated_AW_Printer" &&
+          field !== "Artwork_Category" &&
+          field !== "Project_Name" &&
+          field !== "Artwork_SMO" &&
+          field !== "Artwork_Brand" && <> {options[field]}</>}
       </>
     );
   };
@@ -241,6 +273,7 @@ const ProjectList = (props) => {
   const clearFilters = () => {
     const columnNames = ProjectService.getAllColumnNames();
     localStorage.setItem("allColumnNames", JSON.stringify(columnNames));
+    setReorderedColumn(false);
     setProjectColumnNames(columnNames);
     setFilters([]);
     showSuccess();
@@ -289,15 +322,17 @@ const ProjectList = (props) => {
     // This const is added for todays demo purpose
 
     const allColumnNames = [
-      "ProjectID",
-      "ProjectName",
-      "Project_Category",
-      "Project_Brand",
-      "Project_SMO",
-      "EstimatedAWPrinters",
+      "Project_ID",
+      "Project_Name",
+      "Artwork_Category",
+      "Artwork_SMO",
+      "Project_State",
+      "Artwork_Brand",
+      "Buffer_To_Work",
+      "Estimated_AW_Printer",
       "Full Kit Readiness Tracking",
-      "Buffer to work",
     ];
+
     localStorage.setItem("allColumnNames", JSON.stringify({}));
     localStorage.setItem("allColumnNames", JSON.stringify(allColumnNames));
     setProjectColumnNames(allColumnNames);
@@ -311,6 +346,7 @@ const ProjectList = (props) => {
       // only splice array when item is found
       projectColumnName.splice(index, 1); // 2nd parameter means remove one item only
       projectColumnName.splice(e?.dropIndex, 0, dragColumnName);
+      setReorderedColumn(true);
     }
     localStorage.setItem("allColumnNames", JSON.stringify(projectColumnName));
     setProjectColumnNames(projectColumnName);
@@ -360,6 +396,12 @@ const ProjectList = (props) => {
     }
   };
 
+  const isFilterEnabled =
+    isReorderedColumn ||
+    frozenCoulmns?.length ||
+    filters?.length ||
+    sortData?.length;
+
   return (
     <div className="projectList">
       <Suspense fallback={<div>Loading...</div>}>
@@ -372,6 +414,7 @@ const ProjectList = (props) => {
           saveSettings={saveSettings}
           onSearchClick={onSearchClick}
           exportCSV={exportCSV}
+          isFilterEnabled={isFilterEnabled}
         />
 
         <CustomisedView
@@ -406,7 +449,7 @@ const ProjectList = (props) => {
 
         <DataTable
           resizableColumns
-          dataKey="ProjectID"
+          dataKey="Project_ID"
           reorderableColumns
           onColReorder={storeReorderedColumns}
           onResize={(e) => console.log("resize", e)}
@@ -422,13 +465,11 @@ const ProjectList = (props) => {
           filterDisplay={isSearch && "row"}
           ref={dt}
           tableStyle={{ minWidth: "50rem" }}
-          selectionMode="single"
-          onSelectionChange={(e) => {
-            console.log("eee", e.value.ProjectID);
-            navigate("/addProject");
-            //below code is for future
-            // navigate(`/addProject:${e.value.ProjectID}`)
-          }}
+          // selectionMode="single"
+          // onSelectionChange={(e) => {
+          //   console.log("eee", e.value.ProjectID);
+          //   navigate(`/addProject/${e.value.ProjectID}`);
+          // }}
         >
           {dynamicColumns()}
         </DataTable>
