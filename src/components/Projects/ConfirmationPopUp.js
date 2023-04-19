@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { MultiSelect } from "primereact/multiselect";
 import filter from "../../assets/images/filter.svg";
-import fileattach from "../../assets/images/fileattach.svg";
 
 const ConfirmationPopUp = ({
   op,
@@ -49,12 +48,6 @@ const ConfirmationPopUp = ({
   //   });
   // };
 
-  const [filterIcon, setFilterIcon] = useState(false);
-
-  const onChangeFilter = () => {
-    setFilterIcon(!filterIcon);
-  }
-
   const confirmPopData = () => {
     return (
       <div>
@@ -68,11 +61,8 @@ const ConfirmationPopUp = ({
         </div>
         <div className="clearAllFilterIcon">
         <img
-          src={filterIcon ? filter : fileattach}
+          src={filter}
           alt=""
-          onClick={(e) => {
-            onChangeFilter()
-          }}
           className="columnFilterIcon"
           // className="pi pi-align-justify"
         />

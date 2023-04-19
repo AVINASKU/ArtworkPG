@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, Suspense } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { ProjectService } from "../../../service/PegaService";
@@ -9,7 +9,6 @@ import { FilterMatchMode } from "primereact/api";
 import ProjectListHeader from "./ProjectListHeader";
 import { Tag } from "primereact/tag";
 import filter from "../../../assets/images/filter.svg";
-import fileattach from "../../../assets/images/fileattach.svg";
 import { getMyProject } from "../../../store/actions/ProjectActions";
 import { changeDateFormat } from "../utils";
 import { useNavigate } from "react-router-dom";
@@ -158,22 +157,15 @@ const ProjectList = (props) => {
     }
   };
 
-  const [filterIcon, setFilterIcon] = useState(false);
-  const onChangeFilterIcon = () => {
-    setFilterIcon(!filterIcon);
-  }
-
   const projectNameHeader = (options) => {
     return (
       <div>
         <img
-          src={!filterIcon ? filter: fileattach}
-          // alt="Column Filter"
-          alt=""
+          src={filter}
+          alt="Column Filter"
           onClick={(e) => {
             op.current.toggle(e);
             setSelectedColumnName(options);
-            onChangeFilterIcon();
           }}
           className="columnFilterIcon"
           // className="pi pi-align-justify"
@@ -369,7 +361,7 @@ const ProjectList = (props) => {
   };
 
   return (
-    <div>
+    <div className="projectList">
       <Suspense fallback={<div>Loading...</div>}>
         <Toast ref={toast} />
         <ProjectListHeader
