@@ -28,6 +28,8 @@ const ProjectList = (props) => {
   const [sortData, setSortData] = useState([]);
   const [allColumnNames, setAllColumnNames] = useState([]);
   const [isSearch, isSearchSet] = useState(false);
+  const [isReorderedColumn, setReorderedColumn] = useState(false);
+
   const myProjectList = useSelector((state) => state.myProject);
   const { loading } = myProjectList;
   const dispatch = useDispatch();
@@ -190,6 +192,22 @@ const ProjectList = (props) => {
 
   const fullKitReadinessBody = (options, rowData) => {
     let field = rowData.field;
+    let categoryNames = [];
+    let SMOName = [];
+    let brandName = [];
+    let projectId = options["Project_ID"];
+    if (field === "Artwork_Category") {
+      categoryNames = options[field]
+        .map((item) => item.Category_Name)
+        .join(",");
+    }
+
+    if (field === "Artwork_SMO") {
+      SMOName = options[field].map((item) => item.SMO_Name).join(",");
+    }
+    if (field === "Artwork_Brand") {
+      brandName = options[field].map((item) => item.Brand_Name).join(",");
+    }
 
     return (
       <>
@@ -204,16 +222,23 @@ const ProjectList = (props) => {
           ></Tag>
         )}
 
+        {field === "Project_Name" && (
+          <a href={`/addProject/${projectId}`}> {options[field]} </a>
+        )}
+
         {field === "Estimated_SOP" && changeDateFormat(options[field])}
-
         {field === "Estimated_AW_Printer" && changeDateFormat(options[field])}
-
-        {field === "Buffer to work" && <>-----</>}
+        {field === "Artwork_Category" && categoryNames}
+        {field === "Artwork_SMO" && SMOName}
+        {field === "Artwork_Brand" && brandName}
 
         {field !== "Full Kit Readiness Tracking" &&
           field !== "Estimated_SOP" &&
           field !== "Estimated_AW_Printer" &&
-          field !== "Buffer to work" && <> {options[field]}</>}
+          field !== "Artwork_Category" &&
+          field !== "Project_Name" &&
+          field !== "Artwork_SMO" &&
+          field !== "Artwork_Brand" && <> {options[field]}</>}
       </>
     );
   };
@@ -244,6 +269,7 @@ const ProjectList = (props) => {
   const clearFilters = () => {
     const columnNames = ProjectService.getAllColumnNames();
     localStorage.setItem("allColumnNames", JSON.stringify(columnNames));
+    setReorderedColumn(false);
     setProjectColumnNames(columnNames);
     setFilters([]);
     showSuccess();
@@ -292,12 +318,12 @@ const ProjectList = (props) => {
     // This const is added for todays demo purpose
 
     const allColumnNames = [
-      "ProjectID",
-      "ProjectName",
-      "Project_Categories",
-      "Project_SMO",
+      "Project_ID",
+      "Project_Name",
+      "Artwork_Category",
+      "Artwork_SMO",
       "Project_State",
-      "Project_Brands",
+      "Artwork_Brand",
       "Buffer_To_Work",
       "Estimated_AW_Printer",
       "Full Kit Readiness Tracking",
@@ -316,6 +342,7 @@ const ProjectList = (props) => {
       // only splice array when item is found
       projectColumnName.splice(index, 1); // 2nd parameter means remove one item only
       projectColumnName.splice(e?.dropIndex, 0, dragColumnName);
+      setReorderedColumn(true);
     }
     localStorage.setItem("allColumnNames", JSON.stringify(projectColumnName));
     setProjectColumnNames(projectColumnName);
@@ -365,6 +392,12 @@ const ProjectList = (props) => {
     }
   };
 
+  const isFilterEnabled =
+    isReorderedColumn ||
+    frozenCoulmns?.length ||
+    filters?.length ||
+    sortData?.length;
+
   return (
     <div>
       <Suspense fallback={<div>Loading...</div>}>
@@ -377,6 +410,7 @@ const ProjectList = (props) => {
           saveSettings={saveSettings}
           onSearchClick={onSearchClick}
           exportCSV={exportCSV}
+          isFilterEnabled={isFilterEnabled}
         />
 
         <CustomisedView
@@ -411,7 +445,7 @@ const ProjectList = (props) => {
 
         <DataTable
           resizableColumns
-          dataKey="ProjectID"
+          dataKey="Project_ID"
           reorderableColumns
           onColReorder={storeReorderedColumns}
           onResize={(e) => console.log("resize", e)}
@@ -427,14 +461,11 @@ const ProjectList = (props) => {
           filterDisplay={isSearch && "row"}
           ref={dt}
           tableStyle={{ minWidth: "50rem" }}
-          selectionMode="single"
-          onSelectionChange={(e) => {
-            console.log("eee", e.value.ProjectID);
-            // navigate("/addProject");
-            //below code is for future
-            navigate(`/addProject/${e.value.ProjectID}`);
-            // navigate(`/addProject/id:`);
-          }}
+          // selectionMode="single"
+          // onSelectionChange={(e) => {
+          //   console.log("eee", e.value.ProjectID);
+          //   navigate(`/addProject/${e.value.ProjectID}`);
+          // }}
         >
           {dynamicColumns()}
         </DataTable>

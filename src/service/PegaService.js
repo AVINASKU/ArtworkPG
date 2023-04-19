@@ -5,26 +5,25 @@ const frozenColData = ["Record ID#", "Timestamp", "Status", "SOP"];
 const sortingData = ["Record ID#", "desc"];
 
 const allColumnNames = [
-  "ProjectID",
-  "ProjectName",
-  "Project_Categories",
-  "Project_SMO",
+  "Project_ID",
+  "Project_Name",
+  "Artwork_Category",
+  "Artwork_SMO",
   "Project_State",
-  "Project_Brands",
+  "Artwork_Brand",
   "Buffer_To_Work",
   "Estimated_AW_Printer",
   "Full Kit Readiness Tracking",
-
 ];
 
 const allColumnNamesAllProjects = [
   "Project_ID",
   "Project_Name",
-  "Project_Categories",
-  "Project_SMO",
+  "Artwork_Category",
+  "Artwork_SMO",
   "PM",
   "Project_State",
-  "Project_Brands",
+  "Artwork_Brand",
   "Buffer_To_Work",
   "Estimated_AW_Printer",
   "Full Kit Readiness Tracking",

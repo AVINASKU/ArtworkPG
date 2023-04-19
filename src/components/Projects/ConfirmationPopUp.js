@@ -2,6 +2,8 @@ import React from "react";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { MultiSelect } from "primereact/multiselect";
 import filter from "../../assets/images/filter.svg";
+import BlueFilterIcon from "../../assets/images/BlueFilterIcon.svg";
+
 
 const ConfirmationPopUp = ({
   op,
@@ -67,7 +69,7 @@ const ConfirmationPopUp = ({
           <div>
             {isFilterActivated ? (
               <img
-                src={filter}
+                src={BlueFilterIcon}
                 alt="filter logo"
                 onClick={() => clearColumnWiseFilter()}
                 className="header-icons"
@@ -78,7 +80,6 @@ const ConfirmationPopUp = ({
                 alt="filter logo"
                 onClick={() => clearColumnWiseFilter()}
                 className="header-icons"
-                disabled
               />
             )}
           </div>

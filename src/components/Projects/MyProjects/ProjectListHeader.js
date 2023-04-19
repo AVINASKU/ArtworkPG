@@ -2,6 +2,7 @@ import React from "react";
 import export2excel from "../../../assets/images/export2excel.svg";
 import searchMyProjects from "../../../assets/images/searchMyProjects.svg";
 import filter from "../../../assets/images/filter.svg";
+import BlueFilterIcon from "../../../assets/images/BlueFilterIcon.svg";
 import customizedFields from "../../../assets/images/customizedFields.svg";
 
 const ProjectListHeader = ({
@@ -20,7 +21,7 @@ const ProjectListHeader = ({
 
       <div className="action-buttons">
       {isFilterEnabled ? <img
-          src={filter}
+          src={BlueFilterIcon}
           alt="filter logo"
           onClick={clearFilter}
           className="header-icons"
@@ -30,7 +31,6 @@ const ProjectListHeader = ({
           alt="filter logo"
           onClick={clearFilter}
           className="header-icons"
-          disabled
         />}
         {/* <img
           src={save}
