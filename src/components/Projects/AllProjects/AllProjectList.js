@@ -346,6 +346,10 @@ const AllProjectList = (props) => {
     const value = e.value;
     setSelectedCities(value);
     setFilters(value);
+     localStorage.setItem(
+      "allProjectColumnWiseFilterData",
+      JSON.stringify(value)
+    );
   };
 
   const onColumnResizeEnd = (event) => {
