@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { ProjectService } from "../../../service/PegaService";
 import ConfirmationPopUp from "../ConfirmationPopUp";
-import { Toast } from "primereact/toast";
 import { FilterMatchMode } from "primereact/api";
 import ProjectListHeader from "./ProjectListHeader";
 import { Tag } from "primereact/tag";
 import filter from "../../../assets/images/filter.svg";
-import { getMyProject } from "../../../store/actions/ProjectActions";
+import {
+  getMyProject,
+  updateProject,
+} from "../../../store/actions/ProjectActions";
 import { changeDateFormat } from "../utils";
-import BlueFilter from "../../../assets/images/BlueFilter.svg";
 
 const CustomisedView = React.lazy(() => import("./CustomisedView"));
 
@@ -33,6 +35,8 @@ const ProjectList = (props) => {
   const myProjectList = useSelector((state) => state.myProject);
   const { loading } = myProjectList;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  // const history = useHistory();
 
   const searchHeader = projectColumnName.reduce(
     (acc, curr) => ({
@@ -47,17 +51,7 @@ const ProjectList = (props) => {
   };
 
   const op = useRef(null);
-  const toast = useRef(null);
   const dt = useRef(null);
-
-  const showSuccess = () => {
-    toast.current.show({
-      severity: "success",
-      summary: "Success",
-      detail: "Saved Successfully",
-      life: 3000,
-    });
-  };
 
   const onSort = (column, direction) => (event) => {
     const sortedData = [...pegadata].sort((a, b) => {
@@ -167,46 +161,38 @@ const ProjectList = (props) => {
     }
   };
 
-
-
   const projectNameHeader = (options) => {
-      const isFilterActivated =
-    (frozenCoulmns &&
-      frozenCoulmns.length &&
-      frozenCoulmns.includes(options)) ||
-    (sortData && sortData.length && sortData[0] === options);
+    const isFilterActivated =
+      (frozenCoulmns &&
+        frozenCoulmns.length &&
+        frozenCoulmns.includes(options)) ||
+      (sortData && sortData.length && sortData[0] === options);
 
     return (
       <div>
-      {isFilterActivated ?
-      <>
-        <img
-          src={BlueFilter}
-          alt="Column Filter"
-          onClick={(e) => {
-            op.current.toggle(e);
-            setSelectedColumnName(options);
-          }}
-          className="columnFilterIcon"
-        />
-        <span style={{color: "#003DA5"}}>{options}</span>
-         </> : <><img
-          src={filter}
-          alt="Column Filter"
-          onClick={(e) => {
-            op.current.toggle(e);
+        <>
+          <img
+            src={filter}
+            alt="Column Filter"
+            onClick={(e) => {
+              op.current.toggle(e);
 
-            setSelectedColumnName(options);
-          }}
-          className="columnFilterIcon"
-        /> 
-        {options}
-        </> }
+              setSelectedColumnName(options);
+            }}
+            className={
+              isFilterActivated
+                ? "columnFilterIcon filter-color-change"
+                : "columnFilterIcon"
+            }
+          />
+          <span className={isFilterActivated&& "filter-color-change"}>{options}</span>
+        </>
       </div>
     );
   };
 
   const fullKitReadinessBody = (options, rowData) => {
+    // console.log("row data",rowData, options);
     let field = rowData.field;
     let categoryNames = [];
     let SMOName = [];
@@ -235,7 +221,9 @@ const ProjectList = (props) => {
               color: "#003DA5",
               border: "1px solid",
             }}
-          >Active</Tag>
+          >
+            Active
+          </Tag>
         )}
         {field === "Full Kit Readiness Tracking" && (
           <Tag
@@ -249,7 +237,19 @@ const ProjectList = (props) => {
         )}
 
         {field === "Project_Name" && (
-          <a href={`/addProject/${projectId}`}> {options[field]} </a>
+          <span
+            style={{color:"#003DA5", cursor:"pointer"}}
+            // href={`/addProject/${projectId}`}
+            onClick={() => {
+              if (field && field.length) {
+                dispatch(updateProject(options));
+                navigate(`/addProject/${projectId}`);
+              }
+            }}
+          >
+            {" "}
+            {options[field]}{" "}
+          </span>
         )}
 
         {field === "Estimated_SOP" && changeDateFormat(options[field])}
@@ -274,11 +274,11 @@ const ProjectList = (props) => {
       return projectColumnName.map((ele, i) => {
         return (
           <Column
-            key={ele}
+          key={ele}
             field={ele}
             filterField={ele}
             header={projectNameHeader(ele)}
-            columnKey={i}
+            columnKey={ele || i}
             frozen={frozenCoulmns.includes(ele)}
             alignFrozen="left"
             className={frozenCoulmns.includes(ele) ? "font-bold" : ""}
@@ -293,12 +293,23 @@ const ProjectList = (props) => {
   };
 
   const clearFilters = () => {
-    const columnNames = ProjectService.getAllColumnNames();
-    localStorage.setItem("allColumnNames", JSON.stringify(columnNames));
+// localStorage.removeItem("allColumnNames");
+    const allColumnNames = [
+      "Project_ID",
+      "Project_Name",
+      "Artwork_Category",
+      "Artwork_SMO",
+      "Project_State",
+      "Artwork_Brand",
+      "Buffer_To_Work",
+      "Estimated_AW_Printer",
+      "Full Kit Readiness Tracking",
+    ];
+    setProjectColumnNames(allColumnNames);
+    localStorage.setItem("allColumnNames", JSON.stringify(allColumnNames));
+
     setReorderedColumn(false);
-    setProjectColumnNames(columnNames);
     setFilters([]);
-    showSuccess();
   };
 
   const onGlobalFilterChange = (e) => {
@@ -330,7 +341,6 @@ const ProjectList = (props) => {
     localStorage.setItem("frozenData", JSON.stringify(frozenCoulmns));
     localStorage.setItem("sortingData", JSON.stringify(sortData));
     localStorage.setItem("allColumnNames", JSON.stringify(projectColumnName));
-    showSuccess();
   };
 
   const saveAsPersonaliDefault = (selectedCategories) => {
@@ -419,15 +429,15 @@ const ProjectList = (props) => {
   };
 
   const isFilterEnabled =
-    isReorderedColumn ||
     frozenCoulmns?.length ||
     filters?.length ||
     sortData?.length;
 
+  const isResetEnabled = isReorderedColumn;
+
   return (
     <div className="myProjectAnddAllProjectList">
       <Suspense fallback={<div>Loading...</div>}>
-        <Toast ref={toast} />
         <ProjectListHeader
           header={props.header}
           clearFilters={clearFilters}
@@ -437,6 +447,7 @@ const ProjectList = (props) => {
           onSearchClick={onSearchClick}
           exportCSV={exportCSV}
           isFilterEnabled={isFilterEnabled}
+          isResetEnabled={isResetEnabled}
         />
 
         <CustomisedView
@@ -487,11 +498,6 @@ const ProjectList = (props) => {
           filterDisplay={isSearch && "row"}
           ref={dt}
           tableStyle={{ minWidth: "50rem" }}
-          // selectionMode="single"
-          // onSelectionChange={(e) => {
-          //   console.log("eee", e.value.ProjectID);
-          //   navigate(`/addProject/${e.value.ProjectID}`);
-          // }}
         >
           {dynamicColumns()}
         </DataTable>

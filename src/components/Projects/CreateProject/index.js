@@ -5,7 +5,7 @@ import { Calendar } from "primereact/calendar";
 import { Controller, useForm } from "react-hook-form";
 import { classNames } from "primereact/utils";
 import { useNavigate } from "react-router-dom";
-import { createNewProject, editProject } from "../../../apis/projectSetup";
+import { createNewProject, editProject } from "../../../apis/projects";
 // import moment from "moment";
 import "./index.scss";
 import {
@@ -553,7 +553,7 @@ function AddProject(props) {
                       onChange={(e) => setSOPDate(e.target.value)}
                       dateFormat="d-M-y"
                       showIcon={true}
-                      minDate={sopDate !=='' ? sopDate: minDate}
+                      minDate={sopDate !== "" ? sopDate : minDate}
                       maxDate={sosDate}
                       className={classNames({
                         "p-invalid": fieldState.error,
@@ -686,7 +686,7 @@ function AddProject(props) {
                       onChange={(e) => setSOSDate(e.target.value)}
                       dateFormat="d-M-y"
                       showIcon={true}
-                      minDate={sosDate !==''? sosDate: minDate}
+                      minDate={sosDate !== "" ? sosDate : minDate}
                       style={{ width: 208 }}
                       className={classNames({
                         "p-invalid": fieldState.error,
@@ -907,7 +907,7 @@ function AddProject(props) {
                       onChange={(e) => setReadinessDate(e.target.value)}
                       dateFormat="d-M-y"
                       showIcon={true}
-                      minDate={readinessDate !==''? readinessDate: minDate}
+                      minDate={readinessDate !== "" ? readinessDate : minDate}
                       maxDate={printerDate}
                       className={classNames({
                         "p-invalid": fieldState.error,
@@ -976,7 +976,7 @@ function AddProject(props) {
                       onChange={(e) => setPrinterDate(e.target.value)}
                       dateFormat="d-M-y"
                       showIcon={true}
-                      minDate={printerDate !==''? printerDate: minDate}
+                      minDate={printerDate !== "" ? printerDate : minDate}
                       maxDate={sopDate}
                       className={classNames({
                         "p-invalid": fieldState.error,
