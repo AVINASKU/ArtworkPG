@@ -13,7 +13,8 @@ const ProjectListHeader = ({
   saveSettings,
   onSearchClick,
   exportCSV,
-  isFilterEnabled
+  isFilterEnabled,
+  isResetEnabled
 }) => {
   return (
     <div className="actions">
@@ -32,23 +33,15 @@ const ProjectListHeader = ({
           onClick={clearFilter}
           className="header-icons"
         />}
-        {/* <img
-          src={save}
-          alt="save settings"
-          onClick={saveSettings}
-          className="pi pi-save header-icons"
-        /> */}
         <img
           src={searchMyProjects}
           alt="search field"
-          // onClick={saveSettings}
           onClick={onSearchClick}
           className="header-icons"
         />
         <img
           src={export2excel}
           alt="download file"
-          // onClick={saveSettings}
           onClick={() => exportCSV(false)}
           className="pi pi-file-excel header-icons"
         />
@@ -60,10 +53,10 @@ const ProjectListHeader = ({
         />
         <button
           type="button"
-          className="btn btn-secondary resetToPgDefault"
+          className={isResetEnabled? "btn btn-secondary reset-to-default-view": " btn btn-secondary resetToPgDefault"}
           onClick={()=> clearFilters()}
         >
-          Reset to default
+          Reset to default View
         </button>
       </div>
     </div>
