@@ -52,9 +52,9 @@ fieldset:disabled .btn {
   border-color: #acacac !important;
 }
 .project-title {
-  font-weight: 900;
-  font-size: 24px;
-  line-height: 29px;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24.38px;
   color: #003da5;
 }
 .arrow-up,
@@ -84,15 +84,17 @@ fieldset:disabled .btn {
   background-color: rgba(1, 104, 191, 0.05) !important;
   margin-top: 18px;
 }
+.myProjectAnddAllProjectList {
 table {
   // border-collapse: separate !important;
   // border-spacing: 0 5px !important;
   thead {
     th {
       background-color: #fff !important;
-      // border: 0 !important;
+      // border: 0 !important;      
+      text-align: center !important;
       border-width: 1px 2px 3px 4px;
-      border: 1px solid gray !important;
+      border: 0 !important;
       &:nth-child(1) {
         border-left: none !important;
       }
@@ -116,11 +118,7 @@ table {
 
   .p-datatable .p-datatable-tbody > tr {
     line-height: 50px !important;
-    // background-color: #003da5 !important;
-    // color: aqua !important;
     font-size: 12px;
-    // line-height: 30px !important;
-    // height: 50px !important;
   }
 
   td,
@@ -130,12 +128,14 @@ table {
     border-top: 1px solid #acacac !important;
     font-size: 10px;
     // line-height: 20px;
+    border-top: 0.5px solid #acacac !important;
     color: #595959;
     text-align: center;
     background: #ffffff !important;
     padding: 10px !important;
-    border-width: 1px;
-    border: 1px solid gray !important;
+    border-width: 0.5px;
+    text-align: center !important;
+    // border: 2px solid gray !important;
     // margin-top: 2px !important;
     // margin-bottom: 2px !important;
     // border-collapse: separate !important;
@@ -158,15 +158,19 @@ table {
       // background-color: #003da5;
       // border-right: 1px solid #acacac !important;
     }
-    &:after {
-      border-right: 6px solid green !important;
-      height: 30px !important;
-    }
+    // &:after {
+    //   // border-right: 2px solid black !important;
+    //   height: 40px !important;
+    //   // background-color:  #003da5 !important;
+    // }
+    // &:after {
+    //   // border-right: 2px solid black !important;
+    //   // height: 40px !important;
+    //   // background-color:  #003da5 !important;
+    // }
   }
 }
-// .p-datatable .p-datatable-tbody > tr  td:nth-child(odd) {
-// background-color: red !important;
-// }
+}
 .fullscreen-mode {
   background-color: #fff;
 }

@@ -63,6 +63,115 @@ export const categories = {
   ],
 };
 
+export const businessUnits = [
+  {
+    name: "Baby Care",
+    code: "BABY",
+    categories: [
+      {
+        name: "Baby & Feminine Care No Detail",
+        code: "BFCND",
+      },
+      {
+        name: "Baby Care Adjacencies",
+        code: "BCA",
+      },
+      {
+        name: "Baby Care NBD",
+        code: "BCN",
+      },
+      {
+        name: "Baby Connected Care",
+        code: "BCC",
+      },
+      {
+        name: "Baby Wipes",
+        code: "BW",
+      },
+      {
+        name: "Diapers",
+        code: "DP",
+      },
+    ],
+  },
+  {
+    name: "Fabric Care",
+    code: "FAB",
+    categories: [
+      {
+        name: "Bleach",
+        code: "BL",
+      },
+      {
+        name: "Fabric Care NBD",
+        code: "FCN",
+      },
+      {
+        name: "Fabric Enhancers",
+        code: "FE",
+      },
+      {
+        name: "Fabric Revitalizer",
+        code: "FR",
+      },
+    ],
+  },
+  {
+    name: "Feminine Care",
+    code: "FEMI",
+    categories: [
+      {
+        name: "Adult Incontinence",
+        code: "AI",
+      },
+      {
+        name: "Feminine Care",
+        code: "FC",
+      },
+    ],
+  },
+  {
+    name: "Home Care",
+    code: "HC",
+    categories: [
+      {
+        name: "Air Care",
+        code: "AC",
+      },
+      {
+        name: "Auto Dish",
+        code: "AD",
+      },
+      {
+        name: "Cleaning Products",
+        code: "CP",
+      },
+      {
+        name: "Dish Care",
+        code: "DC",
+      },
+    ],
+  },
+  {
+    name: "Oral Care",
+    code: "OC",
+    categories: [
+      {
+        name: "Dental Floss",
+        code: "DENTF",
+      },
+      {
+        name: "DENT",
+        code: "AD",
+      },
+      {
+        name: "Denture Care",
+        code: "DENC",
+      },
+    ],
+  },
+];
+
 export const regionList = [
   {
     name: "ASIA MIDDLE EAST AFRICA",
@@ -191,287 +300,287 @@ export const ProductionStrategy = [
 ];
 export const brandList = [
   {
-    name: "Charlie Banana",
+    Brand_Name: "Charlie Banana",
     code: "BV0102",
   },
   {
-    name: "Pampers",
+    Brand_Name: "Pampers",
     code: "J29",
   },
   {
-    name: "All Clean",
+    Brand_Name: "All Clean",
     code: "BV0121",
   },
   {
-    name: "Lines",
+    Brand_Name: "Lines",
     code: "D76",
   },
   {
-    name: "Cutie",
+    Brand_Name: "Cutie",
     code: "H61",
   },
   {
-    name: "Dodot",
+    Brand_Name: "Dodot",
     code: "H66",
   },
   {
-    name: "Luvs",
+    Brand_Name: "Luvs",
     code: "J15",
   },
   {
-    name: "Linidor",
+    Brand_Name: "Linidor",
     code: "LNDR",
   },
   {
-    name: "Minor Brands",
+    Brand_Name: "Minor Brands",
     code: "MB",
   },
   {
-    name: "Lumi",
+    Brand_Name: "Lumi",
     code: "CC7863",
   },
   {
-    name: "Pampers Kandoo",
+    Brand_Name: "Pampers Kandoo",
     code: "JJM02",
   },
   {
-    name: "Dodot Kandoo",
+    Brand_Name: "Dodot Kandoo",
     code: "JJM03",
   },
   {
-    name: "Ninjamas",
+    Brand_Name: "Ninjamas",
     code: "BV0098",
   },
   {
-    name: "All Good",
+    Brand_Name: "All Good",
     code: "CC3334",
   },
   {
-    name: "Dodotis",
+    Brand_Name: "Dodotis",
     code: "H67",
   },
   {
-    name: "Babysan",
+    Brand_Name: "Babysan",
     code: "H9",
   },
   {
-    name: "Mammi",
+    Brand_Name: "Mammi",
     code: "J18",
   },
   {
-    name: "Liberty",
+    Brand_Name: "Liberty",
     code: "LIB",
   },
   {
-    name: "Disco",
+    Brand_Name: "Disco",
     code: "TA31",
   },
   {
-    name: "Ausonia",
+    Brand_Name: "Ausonia",
     code: "D75",
   },
   {
-    name: "Ambi Pur",
+    Brand_Name: "Ambi Pur",
     code: "AP",
   },
   {
-    name: "Attento",
+    Brand_Name: "Attento",
     code: "ATNT",
   },
   {
-    name: "9 Elements",
+    Brand_Name: "9 Elements",
     code: "BV0088",
   },
   {
-    name: "NBD.",
+    Brand_Name: "NBD.",
     code: "BV0090",
   },
   {
-    name: "Diversified Chemicals Techn",
+    Brand_Name: "Diversified Chemicals Techn",
     code: "CC0267",
   },
   {
-    name: "Home Made Simple",
+    Brand_Name: "Home Made Simple",
     code: "CC892",
   },
   {
-    name: "Downy",
+    Brand_Name: "Downy",
     code: "DWNY",
   },
   {
-    name: "Febreze",
+    Brand_Name: "Febreze",
     code: "FBRZ",
   },
   {
-    name: "Private Label",
+    Brand_Name: "Private Label",
     code: "KM102",
   },
   {
-    name: "Lenor",
+    Brand_Name: "Lenor",
     code: "LENR",
   },
   {
-    name: "Sanytol",
+    Brand_Name: "Sanytol",
     code: "NC1620",
   },
   {
-    name: "Ariel",
+    Brand_Name: "Ariel",
     code: "V14",
   },
   {
-    name: "Luster Professional",
+    Brand_Name: "Luster Professional",
     code: "CC720",
   },
   {
-    name: "Deepio Professional",
+    Brand_Name: "Deepio Professional",
     code: "CJG79PRO",
   },
   {
-    name: "Clean Quick Professional",
+    Brand_Name: "Clean Quick Professional",
     code: "CLNQ1",
   },
   {
-    name: "Cream Suds Professional",
+    Brand_Name: "Cream Suds Professional",
     code: "CRSD1",
   },
   {
-    name: "Ace",
+    Brand_Name: "Ace",
     code: "V04",
   },
   {
-    name: "All",
+    Brand_Name: "All",
     code: "V01",
   },
   {
-    name: "Ambi Pur Professional",
+    Brand_Name: "Ambi Pur Professional",
     code: "APPRO",
   },
   {
-    name: "Antikal",
+    Brand_Name: "Antikal",
     code: "ANTK",
   },
   {
-    name: "Antikal Professional",
+    Brand_Name: "Antikal Professional",
     code: "ANTKPRO",
   },
   {
-    name: "Ava",
+    Brand_Name: "Ava",
     code: "AVA",
   },
   {
-    name: "Ava Mat",
+    Brand_Name: "Ava Mat",
     code: "M19",
   },
   {
-    name: "Ayudin",
+    Brand_Name: "Ayudin",
     code: "AYDN",
   },
   {
-    name: "Base Line",
+    Brand_Name: "Base Line",
     code: "BV0045",
   },
   {
-    name: "Battle",
+    Brand_Name: "Battle",
     code: "BAT",
   },
   {
-    name: "Baleno",
+    Brand_Name: "Baleno",
     code: "BAL",
   },
   {
-    name: "Blue Planet",
+    Brand_Name: "Blue Planet",
     code: "BV0141",
   },
   {
-    name: "Blesk",
+    Brand_Name: "Blesk",
     code: "BLSK",
   },
   {
-    name: "Biz",
+    Brand_Name: "Biz",
     code: "BZBL",
   },
   {
-    name: "Brigade",
+    Brand_Name: "Brigade",
     code: "BRGD",
   },
   {
-    name: "Buena Vibra (Maestro Limpio)",
+    Brand_Name: "Buena Vibra (Maestro Limpio)",
     code: "BVML",
   },
   {
-    name: "Buena Vibra (Mr Clean)",
+    Brand_Name: "Buena Vibra (Mr Clean)",
     code: "BVMC",
   },
   {
-    name: "Bowl Quick",
+    Brand_Name: "Bowl Quick",
     code: "BWQK",
   },
   {
-    name: "Cierto",
+    Brand_Name: "Cierto",
     code: "CRTO",
   },
   {
-    name: "CLOSA",
+    Brand_Name: "CLOSA",
     code: "BV0013",
   },
   {
-    name: "Cascade",
+    Brand_Name: "Cascade",
     code: "CSCD",
   },
   {
-    name: "Cascade Professional",
+    Brand_Name: "Cascade Professional",
     code: "CSCD1",
   },
   {
-    name: "Cinch",
+    Brand_Name: "Cinch",
     code: "CNCH",
   },
   {
-    name: "Cream Suds",
+    Brand_Name: "Cream Suds",
     code: "CRSD",
   },
   {
-    name: "Cream Suds Professional",
+    Brand_Name: "Cream Suds Professional",
     code: "CRSD1",
   },
   {
-    name: "Cristal",
+    Brand_Name: "Cristal",
     code: "CRST",
   },
   {
-    name: "Comet",
+    Brand_Name: "Comet",
     code: "T4",
   },
   {
-    name: "Comet Professional",
+    Brand_Name: "Comet Professional",
     code: "T41",
   },
   {
-    name: "Deepio",
+    Brand_Name: "Deepio",
     code: "CJG79",
   },
   {
-    name: "Dawn",
+    Brand_Name: "Dawn",
     code: "DAWN",
   },
   {
-    name: "Dawn Professional",
+    Brand_Name: "Dawn Professional",
     code: "DAWNPRO",
   },
   {
-    name: "Dax",
+    Brand_Name: "Dax",
     code: "C5",
   },
   {
-    name: "Don Limpio",
+    Brand_Name: "Don Limpio",
     code: "TA11",
   },
   {
-    name: "Don Limpio Professional",
+    Brand_Name: "Don Limpio Professional",
     code: "TA11PRO",
   },
   {
-    name: "Dreft",
+    Brand_Name: "Dreft",
     code: "DRFD",
   },
 ];

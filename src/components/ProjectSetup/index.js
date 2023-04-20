@@ -8,6 +8,7 @@ import "primeicons/primeicons.css";
 import { SelectButton } from "primereact/selectbutton";
 import "./index.scss";
 
+
 function ProjectSetup() {
   const items = [
     { label: "My Projects" },
@@ -28,7 +29,6 @@ function ProjectSetup() {
     setIsClicked(true);
     setSelectedColor("button-click");
   }
-
   return (
     <div className="content-layout">
       <div className="actions">
@@ -65,7 +65,7 @@ function ProjectSetup() {
           <Accordion.Item eventKey="0">
             <Accordion.Header>Project Setup</Accordion.Header>
             <Accordion.Body>
-              <AddProject />
+              <AddProject {...props} />
             </Accordion.Body>
           </Accordion.Item>
           <Accordion.Item eventKey="1">
