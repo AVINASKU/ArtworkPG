@@ -192,7 +192,7 @@ const SideBar = () => {
                 {!isToggle ? (
                   <img src={LogoutImg} className="collapse-img" alt="" />
                 ) : (
-                  <NavLink to="/logout" className="nav-link">
+                  <NavLink to="/" className="nav-link">
                     <img src={LogoutImg} alt="logout" />
                     {isToggle && <span className="logout">Logout</span>}
                   </NavLink>
