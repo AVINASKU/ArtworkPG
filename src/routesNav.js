@@ -5,11 +5,13 @@ import { Outlet } from "react-router-dom";
 import AllProjects from "./components/Projects/AllProjects/index";
 import MyProjects from "./components/Projects/MyProjects/index.js";
 import ProjectCreation from "./projectCreation.js";
+import Login from "./login.js";
 
 const RoutesNav = () => {
   return (
     <Routes>
       <Route path="/" element={<Outlet />}>
+        <Route index element={<Login />} />
         <Route index element={<Home />} />
         <Route path="/myProjects" element={<MyProjects />} />
         <Route path="/allProjects" element={<AllProjects />} />
