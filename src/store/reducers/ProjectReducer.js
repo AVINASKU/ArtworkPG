@@ -1,6 +1,6 @@
 const initialState = {
   myProject: [],
-  allProjects:[],
+  allProjects: [],
   loading: true,
   error: null,
 };
@@ -36,6 +36,11 @@ const ProjectReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         error: action.payload,
+      };
+    case "UPDATE_PROJECT":
+      return {
+        ...state,
+        updateProject: payload,
       };
     default:
       return state;

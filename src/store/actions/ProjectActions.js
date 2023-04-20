@@ -6,7 +6,7 @@ export const getMyProject = (PM) => async (dispatch) => {
     const res = await axios.get(
       `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1/MyProjects/Hemant`
     );
-    
+
     if (res?.data === null) {
       dispatch({
         type: "GET_PROJECT_DETAILS_ERROR",
@@ -37,7 +37,7 @@ export const getAllProject = (PM) => async (dispatch) => {
     const res = await axios.get(
       `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1/AllProjects/FAM/EUROPE ENTERPRISE`
     );
-    
+
     if (res?.data === null) {
       dispatch({
         type: "GET_ALL_PROJECT_DETAILS_ERROR",
@@ -59,5 +59,18 @@ export const getAllProject = (PM) => async (dispatch) => {
   } catch (err) {
     console.error(err);
     dispatch({ type: "GET_ALL_PROJECT_DETAILS_ERROR", payload: err });
+  }
+};
+
+export const updateProject = (data) => async (dispatch) => {
+  try {
+    if (data) {
+      dispatch({
+        type: "UPDATE_PROJECT",
+        payload: data,
+      });
+    }
+  } catch (err) {
+    dispatch({ type: "UPDATE_PROJECT_ERROR", payload: err });
   }
 };
