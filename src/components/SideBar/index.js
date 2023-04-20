@@ -11,6 +11,7 @@ import ArrowDownImg from "../../assets/images/sort.svg";
 import AllProjects1 from "../../assets/images/AllProjects1.svg";
 import AllTask from "../../assets/images/AllTask.svg";
 import MyTaskMP from "../../assets/images/MyTaskMP.svg";
+import MyProject from "../../assets/images/MyProject.svg";
 import "./index.scss";
 import { Col } from "react-bootstrap";
 
@@ -55,7 +56,7 @@ const SideBar = () => {
     data: [
       {
         name: "My Projects",
-        img: ReportsImg,
+        img: MyProject,
         arrowUp: ArrowDownImg,
         url: "/myProjects",
         items: [{ name: "My Projects", url: "/myProjects" }],
@@ -162,11 +163,11 @@ const SideBar = () => {
               }
             })}
             <div className="add-project">
-              <NavItem to="/addProject" state={{ mode: "create" }}>
+              <NavItem to="/addProject" state={{ status: "new" }}>
                 {!isToggle ? (
                   <NavLink
                     to="/addProject"
-                    state={{ mode: "create" }}
+                    state={{ status: "new" }}
                     className="nav-link"
                   >
                     <img
@@ -178,7 +179,7 @@ const SideBar = () => {
                 ) : (
                   <NavLink
                     to="/addProject"
-                    state={{ mode: "create" }}
+                    state={{ status: "new" }}
                     className="nav-link"
                   >
                     <Button className="button-layout">
@@ -192,7 +193,7 @@ const SideBar = () => {
                 {!isToggle ? (
                   <img src={LogoutImg} className="collapse-img" alt="" />
                 ) : (
-                  <NavLink to="/" className="nav-link">
+                  <NavLink to="/logout" className="nav-link">
                     <img src={LogoutImg} alt="logout" />
                     {isToggle && <span className="logout">Logout</span>}
                   </NavLink>
