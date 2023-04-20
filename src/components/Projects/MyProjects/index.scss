@@ -107,19 +107,19 @@ $fontWeight400: 400;
   height: 16px;
 }
 .resetToPgDefault {
-  width: 170px;
+  width: 164px;
   height: 32px;
   padding: 10px 18px;
   margin: 0 10px 0 21.82px !important;
   border-radius: 15px;
-  background-color: #acacac;
+  background-color: #acacac !important;
   font-weight: $fontWeight500;
   line-height: 96%;
   vertical-align: top;
 }
-// .resetToPgDefault:hover {
-//   background-color: #868484 !important;
-// }
+.resetToPgDefault:hover {
+  background-color: #868484 !important;
+}
 .header-icons {
   cursor: pointer;
   margin: 8px;
@@ -178,6 +178,7 @@ img[disabled] {
 
 .p-overlaypanel {
   position: absolute !important;
+
 }
 .p-multiselect-item {
   font-size: 10px !important;
@@ -189,7 +190,74 @@ img[disabled] {
   line-height: 12px !important;
   font-family: Montserrat !important;
 }
+// Container header section
+.action-button{
+border-radius: 20px;
+box-shadow: 0 0 0 1px #003DA5;
+}
 
+div.p-dropdown-panel{
+  height: 111px !important;
+  width: 186px !important;
+  top: 185.667px !important;
+  left: 1043.06px !important;
+  border: solid 1px #003DA5;
+}
+.p-dropdown-item:hover{
+background-color: #EDF4FA !important;
+}
+
+.content-layout .actions{
+  padding-right: 10px;
+}
+
+li.p-dropdown-item{
+  &:nth-child(1){
+    color: orange !important;
+  }
+  &:nth-child(2){
+    color: red !important;
+  }
+  &:nth-child(3){
+    color: #003DA5 !important;
+  }
+}
+
+div.actions-right{
+  display: flex;
+  flex-direction: row;
+  &:nth-child(2){
+    margin-left: 12px;
+  }
+}
+
+.justify-content-center , .justify-content-center1{
+  border: none;
+}
+
+.justify-content-center1{
+  margin-left: 15px;
+}
+
+div.p-button.p-component:nth-child(1){
+    border-radius: 12px 0 0 12px;
+}
+div.p-button.p-component:nth-child(2){
+  background-color: #ACACAC!important;
+    color: white !important;
+    border-radius: 0 12px 12px 0;
+}
+
+div.p-selectbutton.p-buttonset.p-component{
+  border: none;
+}
+.p-selectbutton .p-button.p-highlight{
+  border-color: grey !important;
+}
+
+.p-selectbutton .p-button{
+  border-color: grey;
+}
 .reset-to-default-view {
   padding: 10px 18px;
   margin: 0 10px 0 21.82px;
@@ -218,21 +286,4 @@ img[disabled] {
 
 .p-datatable-scrollable .p-frozen-column {
   z-index: 1000;
-}
-
-.filter-color-change {
-  filter: invert(10%) sepia(100%) saturate(1200%) hue-rotate(190deg)
-    brightness(70%) contrast(90%);
-}
-
-.reset-to-default-view{
-  width: 170px;
-  height: 32px;
-  padding: 10px 18px;
-  margin: 0 10px 0 21.82px !important;
-  border-radius: 15px;
-  background-color: #003DA5;
-  font-weight: $fontWeight500;
-  line-height: 96%;
-  vertical-align: top;
 }
