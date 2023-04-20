@@ -8,7 +8,7 @@ const ProjectCreation = () => {
   return (
     <div>
       <PageLayout>
-        <ProjectSetup status={location.state} />
+        <ProjectSetup mode={location.state} />
       </PageLayout>
     </div>
   );

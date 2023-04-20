@@ -162,11 +162,11 @@ const SideBar = () => {
               }
             })}
             <div className="add-project">
-              <NavItem to="/addProject" state={{ status: "new" }}>
+              <NavItem to="/addProject" state={{ mode: "create" }}>
                 {!isToggle ? (
                   <NavLink
                     to="/addProject"
-                    state={{ status: "new" }}
+                    state={{ mode: "create" }}
                     className="nav-link"
                   >
                     <img
@@ -178,7 +178,7 @@ const SideBar = () => {
                 ) : (
                   <NavLink
                     to="/addProject"
-                    state={{ status: "new" }}
+                    state={{ mode: "create" }}
                     className="nav-link"
                   >
                     <Button className="button-layout">
