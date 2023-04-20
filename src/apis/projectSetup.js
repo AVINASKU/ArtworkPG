@@ -1,39 +1,44 @@
-import axios from "axios";
+import Api from ".";
+import App from "../App";
+import {
+  createNewProjectAction,
+  editProjectAction,
+} from "../store/actions/projectSetup";
 
-export const createProjectSaveAsDraft = async (data) => {
-  let apiURL = "https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1/cases";
+const baseURL = "https://pegadev.pg.com/prweb/api/ArtworkAgilityFile";
 
-  const options = {
-    method: "POST",
+export const createNewProject = async (formData, headers = {}) => {
+  const api = new Api();
+  const axiosInstance = await api.init({ headers });
+  let apiURL = `${baseURL}/v1/cases`;
+  const { data: newProjectData } = await axiosInstance({
     url: apiURL,
-    data: data,
-  };
-
-  await axios
-    .request(options)
-    .then((res) => {
-      console.log("res ID:", res.data.ID);
-    })
-    .catch((error) => {
-      console.log("error:", error);
-    });
+    method: "POST",
+    data: formData,
+  });
+  if (newProjectData.ID) {
+    App.dispatchToStore(createNewProjectAction(formData));
+  }
+  return newProjectData;
 };
 
-export const createProjectSubmit = async (data) => {
-  let apiURL = "https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1/cases";
+export const editProject = async (formData, id, method, headers = {}) => {
+  const api = new Api();
+  const axiosInstance = await api.init({ headers });
+  let apiURL;
+  if (method === "PUT") {
+    apiURL = `${baseURL}/v1/cases/${id}`;
+  } else if (method === "PATCH") {
+    apiURL = `${baseURL}/v2/assignments/ASSIGN-WORKLIST ${id}!CREATE_FLOW_3/actions/CreateProjectManually`;
+  }
 
-  const options = {
-    method: "POST",
+  const { data: editProjectData } = await axiosInstance({
     url: apiURL,
-    data: data,
-  };
-
-  await axios
-    .request(options)
-    .then((res) => {
-      console.log("res ID:", res.data.ID);
-    })
-    .catch((error) => {
-      console.log("error:", error);
-    });
+    method: method,
+    data: formData,
+  });
+  if (editProjectData.ID) {
+    App.dispatchToStore(editProjectAction(formData));
+  }
+  return editProjectData;
 };
