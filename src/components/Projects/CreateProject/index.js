@@ -1,19 +1,15 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { MultiSelect } from "primereact/multiselect";
 import { Calendar } from "primereact/calendar";
 import { Controller, useForm } from "react-hook-form";
 import { classNames } from "primereact/utils";
 import { useNavigate } from "react-router-dom";
-import {
-  createProjectSaveAsDraft,
-  createProjectSubmit,
-} from "../../../apis/projectSetup";
+import { createNewProject, editProject } from "../../../apis/projectSetup";
 // import moment from "moment";
 import "./index.scss";
 import {
   businessUnits,
-  categories,
   regionList,
   designScope,
   scaleList,
@@ -22,6 +18,9 @@ import {
   ProductionStrategy,
   Tier,
 } from "../../../categories";
+
+const id = "PG-AAS-WORK A-443";
+
 const defaultCheckedItems = {
   DI: false,
   DT: false,
@@ -42,7 +41,8 @@ const defaultTextBoxEnabled = {
 
 function AddProject(props) {
   const navigate = useNavigate();
-  const { status } = props;
+  const { mode = "" } = props;
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedCities, setSelectedCities] = useState([]);
   const [formValid, setFormValid] = useState(false);
   const [formData, setFormData] = useState(null);
@@ -135,7 +135,7 @@ function AddProject(props) {
   const getProjectCode = () => {
     const projName = getValues("projectType");
     let projCode;
-    projectType.map((pt) => {
+    projectType.forEach((pt) => {
       if (pt.name === projName) {
         projCode = pt.code;
       }
@@ -177,12 +177,12 @@ function AddProject(props) {
 
   useEffect(() => {
     bu &&
-      businessUnits.map((obj) => {
+      businessUnits.forEach((obj) => {
         if (obj.code === bu) {
           setSubCategoriesOptions(obj.categories);
         }
       });
-  }, [bu, businessUnits]);
+  }, [bu]);
 
   const form = useForm({ date: null });
   let today = new Date();
@@ -329,14 +329,13 @@ function AddProject(props) {
     trigger();
   }, [trigger]);
 
-  const collectFormData = (status) => {
+  const collectFormData = (status, mode) => {
     const ProjectSMO = getProjectSMO();
     const ProjectCategory = getProjectCategory();
     const ProjectBrand = getProjectBrand();
     const ProjectCode = getProjectCode();
 
     const formData = {
-      caseTypeID: "PG-AAS-Work-ArtworkProject",
       content: {
         BU: bu,
         Comments: getValues("comments"),
@@ -377,26 +376,38 @@ function AddProject(props) {
       },
       pageInstructions: [...ProjectCategory, ...ProjectBrand, ...ProjectSMO],
     };
+    if (mode === "create") {
+      formData.caseTypeID = "PG-AAS-Work-ArtworkProject";
+    }
     return formData;
   };
 
-  const onSubmit = () => {
-    const formData = collectFormData("Active");
+  const onSubmit = async () => {
+    const formData = collectFormData("Active", mode?.mode);
     console.log("form data", formData);
     setFormData(formData);
-    if (status?.status === "new") {
-      createProjectSubmit(formData);
+    if (mode?.mode === "create") {
+      await createNewProject(formData);
+    } else if (mode?.mode === "edit") {
+      const method = "PATCH";
+      const headers = { key: "If-Match", value: "20230419T135559.155 GMT" };
+      await editProject(formData, id, method, headers);
     }
     navigate("/myProjects");
   };
-  const onSaveAsDraft = () => {
-    const draftFormData = collectFormData("Draft");
+  const onSaveAsDraft = async () => {
+    const draftFormData = collectFormData("Draft", mode?.mode);
     console.log("draft form data", draftFormData);
     localStorage.setItem("formDraft", JSON.stringify(draftFormData));
-    //API call to be added
-    if (status?.status === "new") {
-      createProjectSaveAsDraft(draftFormData);
+    setIsLoading(true);
+    if (mode?.mode === "create") {
+      await createNewProject(draftFormData);
+    } else if (mode?.mode === "edit") {
+      const method = "PUT";
+      const headers = { key: "If-Match", value: "20230419T135559.155 GMT" };
+      await editProject(draftFormData, id, method, headers);
     }
+    setIsLoading(false);
     navigate("/myProjects");
   };
 

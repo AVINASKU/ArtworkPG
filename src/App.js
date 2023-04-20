@@ -7,15 +7,22 @@ import Home from "./home";
 import RoutesNav from "./routesNav";
 
 function App() {
+  App.getStoreState = () => {
+    return store.getState();
+  };
+
+  App.dispatchToStore = (params) => {
+    store.dispatch(params);
+  };
   return (
     <div>
-    <Provider store={store}>
-      <React.StrictMode>
-        <BrowserRouter>
-          <RoutesNav />
-          {/* <Home /> */}
-        </BrowserRouter>
-      </React.StrictMode>
+      <Provider store={store}>
+        <React.StrictMode>
+          <BrowserRouter>
+            <RoutesNav />
+            {/* <Home /> */}
+          </BrowserRouter>
+        </React.StrictMode>
       </Provider>
     </div>
   );

@@ -96,7 +96,7 @@ export const businessUnits = [
   },
   {
     name: "Fabric Care",
-    code: "FAB",
+    code: "FAM",
     categories: [
       {
         name: "Bleach",
