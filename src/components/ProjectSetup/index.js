@@ -5,7 +5,7 @@ import { BreadCrumb } from "primereact/breadcrumb";
 import "primeicons/primeicons.css";
 import "./index.scss";
 
-function ProjectSetup() {
+function ProjectSetup(props) {
   const items = [{ label: "My Projects" }, { label: "Project Setup" }];
 
   return (
@@ -16,7 +16,7 @@ function ProjectSetup() {
           <div className="project-name">DC HDW SAR Fairy Fame Pink LBB</div> */}
         </div>
 
-        <div className="action-buttons">
+        {/* <div className="action-buttons">
           <i
             style={{
               cursor: "pointer",
@@ -66,18 +66,18 @@ function ProjectSetup() {
           <Button className="button-layout" style={{ fontSize: 14 }}>
             Reset to default
           </Button>
-        </div>
+        </div> */}
       </div>
       <div className="tabular-view">
         <Accordion defaultActiveKey="0">
           <Accordion.Item eventKey="0">
             <Accordion.Header>Project Setup</Accordion.Header>
             <Accordion.Body>
-              <AddProject />
+              <AddProject {...props} />
             </Accordion.Body>
           </Accordion.Item>
           <Accordion.Item eventKey="1">
-            <Accordion.Header>Accordion Item #2</Accordion.Header>
+            <Accordion.Header>Design</Accordion.Header>
             <Accordion.Body>Monitor Project</Accordion.Body>
           </Accordion.Item>
         </Accordion>

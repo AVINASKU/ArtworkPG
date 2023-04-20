@@ -1,5 +1,6 @@
 .p-multiselect {
   width: 100%;
+  max-width: 208px;
 }
 .p-multiselect-panel .p-multiselect-items .p-multiselect-item {
   display: flex;
@@ -20,6 +21,7 @@
   .p-multiselect-filter-container
   .p-inputtext {
   padding-right: 0;
+  // background-color: #003da5;
 }
 
 .p-multiselect-filter-container .p-inputtext {
@@ -90,6 +92,7 @@
 .form-control {
   display: block;
   width: 100%;
+  max-width: 208px;
   padding: 0.375rem 0.75rem;
   font-size: 12px;
   font-weight: 400;
@@ -112,7 +115,9 @@
 }
 .form-label {
   font-size: 12px;
-  line-height: 17px;
+  line-height: 14.63px;
+  font-weight: 500;
+  // background-color: #003da5;
   /* identical to box height */
 
   text-align: center;
@@ -170,6 +175,10 @@
   color: red;
   font-weight: 800;
   font-size: 8px;
+  display: flex;
+  justify-content: flex-end;
+  // align-items: flex-end !important;
+
   // position: absolute;
 }
 .error-valid {
@@ -187,8 +196,9 @@
   padding: 15px;
   overflow-y: auto;
   height: 57vh;
+  // width: 90vw;
   .col {
-    max-width: 208px;
+    max-width: 230px;
     margin: 0 13px;
     position: relative;
   }
@@ -196,9 +206,9 @@
     border: 1px solid #acacac;
     padding-top: 10px;
     padding-left: 10px;
-    // position: absolute;
+    position: absolute;
     border-radius: 4px;
-    width: 220px;
+    
   }
 }
 .form-check {
@@ -237,4 +247,25 @@
 .p-calendar {
   border-radius: 4px;
   border: 1px solid #adadad;
+  min-width: 208px;
+}
+
+.form-select{
+  max-width: 208px;
+  min-height: 32px;
+}
+
+.p-breadcrumb ul .pi-chevron-right:nth-child(3) {
+  color: #003da5;
+}
+.p-breadcrumb ul li .p-menuitem-link {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+label.form-check-label{
+  &:nth-child(2){
+    white-space: pre;
+  font-size: 10px;
+  }
 }

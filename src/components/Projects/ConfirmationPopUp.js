@@ -1,6 +1,9 @@
 import React from "react";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { MultiSelect } from "primereact/multiselect";
+import filter from "../../assets/images/filter.svg";
+import BlueFilterIcon from "../../assets/images/BlueFilterIcon.svg";
+
 
 const ConfirmationPopUp = ({
   op,
@@ -18,6 +21,8 @@ const ConfirmationPopUp = ({
   setSortData,
   setFilters,
   filters,
+  saveSettings,
+  clearColumnWiseFilter,
 }) => {
   const multiselectOptions = (colName) => {
     let optionList = [];
@@ -28,91 +33,90 @@ const ConfirmationPopUp = ({
     return optionList;
   };
 
-  const changeColor = (id) => {
-    document.addEventListener("click", (e) => {
-      const flyoutEl = document.getElementById(id);
-      let targetEl = e.target;
-      do {
-        if (targetEl === flyoutEl) {
-          document.getElementById(id).style.color = "red";
-          return;
-        }
-        targetEl = targetEl.parentNode;
-      } while (targetEl);
-      document.getElementById(id).style.color = "";
-    });
-  };
-  function formatColumnName(columnName) {
-    return columnName?.replace(/_/g, " ");
-  }
+  // const changeColor = (id) => {
+  //   document.addEventListener("click", (e) => {
+  //     const flyoutEl = document.getElementById(id);
+  //     let targetEl = e.target;
+  //     do {
+  //       if (targetEl === flyoutEl) {
+  //         document.getElementById(id).style.color = "red";
+            //  document.getElementById(id).style.backgroundColor = "#FAFCFF";
+  //         return;
+  //       }
+  //       targetEl = targetEl.parentNode;
+  //     } while (targetEl);
+  //     document.getElementById(id).style.color = "";
+  // document.getElementById(id).style.backgroundColor = "";
+  //   });
+  // };
+
+  const isFilterActivated =
+    (frozenCoulmns &&
+      frozenCoulmns.length &&
+      frozenCoulmns.includes(selectedColumnName)) ||
+    (sortData && sortData.length) ||
+    (filters && filters.length);
+
   const confirmPopData = () => {
     return (
       <div>
-        <div
-          id="clearAllFilter"
-          className="clearAllFilter"
-          onClick={() => {
-            let jsonFrozenItem = localStorage.getItem("frozenData");
-            const frozenItem = JSON.parse(jsonFrozenItem);
-            if (
-              frozenItem &&
-              frozenItem.length &&
-              frozenItem.includes(selectedColumnName)
-            ) {
-              const index = frozenItem.indexOf(selectedColumnName);
-              frozenItem.splice(index, 1);
-              localStorage.setItem("frozenData", JSON.stringify(frozenItem));
-              setFrozenColumn(frozenItem);
-            }
-            if (frozenCoulmns.includes(selectedColumnName)) {
-              const index = frozenCoulmns.indexOf(selectedColumnName);
-              frozenCoulmns.splice(index, 1);
-              setFrozenColumn(frozenCoulmns);
-              setProjectFrozen(!ProjectFrozen);
-            }
-            let jsonSortItem = localStorage.getItem("sortingData");
-            const sortItem = JSON.parse(jsonSortItem);
-            if (
-              sortItem &&
-              sortItem.length &&
-              sortItem[0] === selectedColumnName
-            ) {
-              localStorage.setItem("sortingData", JSON.stringify([]));
-            }
-            if (
-              sortData &&
-              sortData.length &&
-              sortData[0] === selectedColumnName
-            ) {
-              setSortData([]);
-            }
-            if (filters && filters.length) {
-              setFilters([]);
-            }
-            changeColor("clearAllFilter");
-          }}
-        >
-          Clear all filter
+        <div className="clearAllFilterMainDiv">
+          <div
+            id="clearAllFilter"
+            className="clearAllFilter"
+            onClick={() => clearColumnWiseFilter()}
+          >
+            Clear all filter
+          </div>
+          <div className="clearAllFilterDiv">
+            {isFilterActivated ? (
+              <img
+                src={BlueFilterIcon}
+                alt="filter logo"
+                onClick={() => clearColumnWiseFilter()}
+                className="header-icons"
+              />
+            ) : (
+              <img
+                src={filter}
+                alt="filter logo"
+                onClick={() => clearColumnWiseFilter()}
+                className="header-icons"
+              />
+            )}
+          </div>
         </div>
         <div
           id="sortZtoA"
           className="sortAndFrozen"
-          onClick={() => {
-            onSort(selectedColumnName, "desc");
-            changeColor("sortZtoA");
-          }}
+          onClick={onSort(selectedColumnName, "desc")}
         >
-          Sort z to a
+          {sortData &&
+          sortData.length &&
+          sortData[0] === selectedColumnName &&
+          sortData[1] === "desc" ? (
+            <div style={{ color: "#003DA5" }}> Sort z to a </div>
+          ) : (
+            <div> Sort z to a</div>
+          )}
         </div>
         <div
           id="sortAtoZ"
           className="sortAndFrozen"
-          onClick={() => {
-            onSort(selectedColumnName, "asc");
-            changeColor("sortAtoZ");
-          }}
+          onClick={
+            onSort(selectedColumnName, "asc")
+            // saveSettings();
+            // changeColor("sortAtoZ");
+          }
         >
-          Sort a to z
+          {sortData &&
+          sortData.length &&
+          sortData[0] === selectedColumnName &&
+          sortData[1] === "asc" ? (
+            <div style={{ color: "#003DA5" }}> Sort a to z </div>
+          ) : (
+            <div> Sort a to z</div>
+          )}
         </div>
         <div
           id="frozen"
@@ -120,10 +124,15 @@ const ConfirmationPopUp = ({
           onClick={() => {
             addFrozenColumns(selectedColumnName);
             setProjectFrozen(!ProjectFrozen);
-            changeColor("frozen");
+            // changeColor("frozen");
+            saveSettings();
           }}
         >
-          Frozen
+          {frozenCoulmns.includes(selectedColumnName) ? (
+            <div style={{ color: "#003DA5" }}>Frozen </div>
+          ) : (
+            <div> Frozen</div>
+          )}
         </div>
         <div className="multiSelect">
           <MultiSelect
@@ -132,7 +141,7 @@ const ConfirmationPopUp = ({
             options={multiselectOptions(selectedColumnName)}
             optionLabel={selectedColumnName}
             filter
-            placeholder={`Select ${formatColumnName(selectedColumnName)}`}
+            placeholder={`Select ${selectedColumnName}`}
             maxSelectedLabels={3}
             className="p-column-filter"
           />

@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Checkbox } from "primereact/checkbox";
 import { Col, Row } from "react-bootstrap";
-import { ProjectService } from "../../../service/PegaService";
-import PGDefault from "../../../assets/images/PGDefault.svg";
-import personalDefault from "../../../assets/images/personalDefault.svg";
 import "./index.scss";
 
 export default function CustomisedView({
@@ -14,6 +10,8 @@ export default function CustomisedView({
   allColumnNames,
   projectColumnName,
   setProjectColumnNames,
+  saveAsPersonaliDefault,
+  resetToPgDefault,
 }) {
   const [checked, setChecked] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -38,45 +36,33 @@ export default function CustomisedView({
   };
 
   const footerContent = (
-    <div>
-      <img
-        src={PGDefault}
-        alt="Reset to default"
-        style={{
-          width: 234,
-          height: 34,
-          cursor:'pointer'
-        }}
-        onClick={() => {
-          const columnNames = ProjectService.getAllColumnNames();
-          localStorage.setItem("allColumnNames", JSON.stringify(columnNames));
-          setProjectColumnNames(columnNames);
+    <>
+       <button
+          type="button"
+          className="btn btn-secondary reset-to-default-view"
+           onClick={() => {
+          resetToPgDefault(selectedCategories);
           setVisible(false);
         }}
-      />
-      <img
-        src={personalDefault}
-        alt="Save as personal Default"
-        style={{
-          width: 264,
-          height: 34,
-          margin: 15,
-          cursor:'pointer'
-        }}
-        onClick={() => {
-          setProjectColumnNames(selectedCategories);
-          const columnNames = JSON.stringify(selectedCategories);
-          localStorage.setItem("allColumnNames", columnNames);
-          setVisible(false);
-        }}
-      />
-    </div>
+        >
+          Reset to Default View
+        </button>
+
+        <button
+          type="button"
+          className="btn btn-secondary save-as-personal-view"
+           onClick={() => saveAsPersonaliDefault(selectedCategories)}
+        >
+          Save as Personal View
+        </button>
+
+    </>
   );
 
   return (
-    <div>
+    <>
       <Dialog
-        header="Customise Fields"
+        header="Customise View"
         visible={visible}
         style={{
           width: "75vw",
@@ -104,6 +90,6 @@ export default function CustomisedView({
           })}
         </Row>
       </Dialog>
-    </div>
+    </>
   );
 }

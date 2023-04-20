@@ -5,9 +5,14 @@ import { Calendar } from "primereact/calendar";
 import { Controller, useForm } from "react-hook-form";
 import { classNames } from "primereact/utils";
 import { useNavigate } from "react-router-dom";
+import {
+  createProjectSaveAsDraft,
+  createProjectSubmit,
+} from "../../../apis/projectSetup";
 // import moment from "moment";
 import "./index.scss";
 import {
+  businessUnits,
   categories,
   regionList,
   designScope,
@@ -37,26 +42,28 @@ const defaultTextBoxEnabled = {
 
 function AddProject(props) {
   const navigate = useNavigate();
+  const { status } = props;
   const [selectedCities, setSelectedCities] = useState([]);
   const [formValid, setFormValid] = useState(false);
   const [formData, setFormData] = useState(null);
+  const [subCategoriesOptions, setSubCategoriesOptions] = useState([]);
   const [formattedDate, setFormattedDate] = useState("");
-  const [readinessDate, setReadinessDate] = useState(null);
-  const [sopDate, setSOPDate] = useState(null);
-  const [printerDate, setPrinterDate] = useState(null);
-  const [sosDate, setSOSDate] = useState(null);
+  const [readinessDate, setReadinessDate] = useState("");
+  const [sopDate, setSOPDate] = useState("");
+  const [printerDate, setPrinterDate] = useState("");
+  const [sosDate, setSOSDate] = useState("");
   const [region, setRegion] = useState({});
   const [smo, setSmo] = useState(null);
-  const [bu, setBu] = useState({});
+  const [bu, setBu] = useState("");
   const [subCategories, setSubCategories] = useState([]);
   const [brand, setBrand] = useState([]);
   const [tier, setTier] = useState("");
   const [ps, setPs] = useState("");
-  const [pm, setPm] = useState("Pranali");
-  const [iL, setIl] = useState("Pranali");
+  const [pm, setPm] = useState("Guillaume");
+  const [iL, setIl] = useState("Highway");
   const [checkedItems, setCheckedItems] = useState(defaultCheckedItems);
   const [textBoxEnabled, setTextBoxEnabled] = useState(defaultTextBoxEnabled);
-  const [POA, setPOA] = useState(1);
+  const [POA, setPOA] = useState("1");
   const [designScopeList, setDesignScopeList] = useState({
     DI: "",
     DT: "",
@@ -75,6 +82,67 @@ function AddProject(props) {
     }));
   };
 
+  const getProjectSMO = () => {
+    const selectedSmoOptions = [];
+
+    smo?.forEach((sm) => {
+      let temp = {};
+      smoOptions?.forEach((option) => {
+        if (option.value === sm) {
+          temp.instruction = "APPEND";
+          temp.target = "ProjectSMO";
+          temp.content = {};
+          temp.content.SMO_Name = option.label;
+          temp.content.code = option.value;
+        }
+      });
+      selectedSmoOptions.push(temp);
+    });
+    // console.log("selectedSmoOptions:", selectedSmoOptions);
+    return selectedSmoOptions;
+  };
+
+  const getProjectBrand = () => {
+    const selectedBrandOptions = [];
+    // console.log("brand:", brand);
+
+    brand.forEach((obj) => {
+      let temp = {};
+      temp.instruction = "APPEND";
+      temp.target = "ProjectBrand";
+      temp.content = obj;
+      selectedBrandOptions.push(temp);
+    });
+    // console.log("selectedBrandOptions:", selectedBrandOptions);
+    return selectedBrandOptions;
+  };
+
+  const getProjectCategory = () => {
+    const selectedCategoriesOptions = [];
+    // console.log("subCategories:", subCategories);
+
+    subCategories.forEach((obj) => {
+      let temp = {};
+      temp.instruction = "APPEND";
+      temp.target = "ProjectCategory";
+      temp.content = obj;
+      selectedCategoriesOptions.push(temp);
+    });
+    // console.log("selectedCategoriesOptions:", selectedCategoriesOptions);
+    return selectedCategoriesOptions;
+  };
+
+  const getProjectCode = () => {
+    const projName = getValues("projectType");
+    let projCode;
+    projectType.map((pt) => {
+      if (pt.name === projName) {
+        projCode = pt.code;
+      }
+    });
+    return projCode || "";
+  };
+
   const handleRegionChange = (e) => {
     const selectedRegion = regionList.find((r) => r.code === e.target.value);
     setRegion(selectedRegion);
@@ -88,17 +156,33 @@ function AddProject(props) {
     setSubCategories([]);
   };
 
-  const bUs = Object.keys(categories).map((bu) => ({ code: bu, name: bu }));
+  // const bUs = Object.keys(categories).map((bu) => ({ code: bu, name: bu }));
+  const bUs = businessUnits.map((bu) => {
+    return {
+      name: bu.name,
+      code: bu.code,
+    };
+  });
   const handleSubCategoryChange = (e) => {
     setSubCategories(e.value);
   };
 
-  const subCategoriesOptions = useMemo(() => {
-    if (bu && categories[bu]) {
-      return categories[bu].map((subCat) => ({ label: subCat, value: subCat }));
-    }
-    return [];
-  }, [bu, categories]);
+  // const subCategoriesOptions = useMemo(() => {
+  //   if (bu && categories[bu]) {
+  //     return categories[bu].map((subCat) => ({ label: subCat, value: subCat }));
+  //   }
+  //   return [];
+  // }, [bu, categories]);
+  // console.log("subCategoriesOptions: ", subCategoriesOptions);
+
+  useEffect(() => {
+    bu &&
+      businessUnits.map((obj) => {
+        if (obj.code === bu) {
+          setSubCategoriesOptions(obj.categories);
+        }
+      });
+  }, [bu, businessUnits]);
 
   const form = useForm({ date: null });
   let today = new Date();
@@ -200,7 +284,7 @@ function AddProject(props) {
     groupName: "",
     customValue: "",
     kickoffDate: "",
-    PM: "PRanali",
+    PM: "Guillaume",
   };
   const {
     register,
@@ -220,6 +304,7 @@ function AddProject(props) {
     // check if all fields are filled
     // // const valid = selectedCities && selectedCities.length > 0 && isValid;
     const valid =
+      getValues("projectName") !== "" &&
       brand?.length > 0 &&
       region &&
       Object.keys(region).length > 0 &&
@@ -244,76 +329,74 @@ function AddProject(props) {
     trigger();
   }, [trigger]);
 
-  const collectFormData = () => {
-    return {
-      projectName: getValues("projectName"), // 1
-      groupName: getValues("groupName"), // 2
-      projectDescription: getValues("projectDescription"), //18
-      bu: getValues("bu"), // 3
-      region: region, //4
-      smo: smo, //5
-      category: subCategories, //6
-      brand: brand, //7
-      scale: getValues("scale"), //8
-      // estimatedPOA: getValues("estimatedPOA"), //9
-      // estimatedCICs: getValues("estimatedCICs"), //10
-      printerDate: printerDate, //11
-      readinessDate: readinessDate, //12
-      sopDate: sopDate, //13
-      sosDate: sosDate, //14
-      projectType: getValues("projectType"), //16
-      PM: "Pranali", //17
-      IL: iL,
-      tier: tier,
-      clustor: getValues("clustor"),
-      comments: getValues("comments"),
-      scope: { ...designScopeList, POA: POA },
-      productionStrategy: ps,
-      // poa: POA
+  const collectFormData = (status) => {
+    const ProjectSMO = getProjectSMO();
+    const ProjectCategory = getProjectCategory();
+    const ProjectBrand = getProjectBrand();
+    const ProjectCode = getProjectCode();
+
+    const formData = {
+      caseTypeID: "PG-AAS-Work-ArtworkProject",
+      content: {
+        BU: bu,
+        Comments: getValues("comments"),
+        DesignIntent: (designScopeList.DI !== "").toString(),
+        EstimatedNoOfDI: designScopeList.DI.toString(),
+        DesignTemplate: (designScopeList.DT !== "").toString(),
+        EstimatedNoOfDT: designScopeList.DT.toString(),
+        InkQualification: (designScopeList.IQ !== "").toString(),
+        EstimatedNoOfIQ: designScopeList.IQ.toString(),
+        NewPrintFeasibility: (designScopeList.PF !== "").toString(),
+        EstimatedNoOfNPF: designScopeList.PF.toString(),
+        ProductionReadyArt: (designScopeList.PRA !== "").toString(),
+        EstimatedNoOfPRA: designScopeList.PRA.toString(),
+        POAs: "true",
+        Estimated_ofCICs: designScopeList.CICs.toString(),
+        CICs: (designScopeList.CICs !== "").toString(),
+        Estimated_ofPOAs: POA,
+        Estimated_SOP: sopDate,
+        Estimated_SOS: sosDate,
+        Estimated_AW_Printer: printerDate,
+        Estimated_AW_Readiness: readinessDate,
+        IL: iL,
+        tier: tier,
+        InitiativeGroupName: getValues("groupName"),
+        PM: pm,
+        ProductionStrategy: ps,
+        // Project_Brands: "V14", //
+        // Project_Categories: "AIR", //
+        Project_Scale: getValues("scale"),
+        ProjectDescription: getValues("projectDescription"),
+        ProjectName: getValues("projectName"),
+        Project_region: region.name,
+        Project_Code: ProjectCode,
+        ProjectType: getValues("projectType"),
+        Project_State: "",
+        Buffer_To_Work: "",
+        ProjectStatus: status,
+      },
+      pageInstructions: [...ProjectCategory, ...ProjectBrand, ...ProjectSMO],
     };
+    return formData;
   };
 
-  const onSubmit = (data) => {
-    const formData = collectFormData();
+  const onSubmit = () => {
+    const formData = collectFormData("Active");
     console.log("form data", formData);
     setFormData(formData);
-    // setFormValid(false); // set formValid to false to show error message again if the form is invalid
-
-    //API call to be added
+    if (status?.status === "new") {
+      createProjectSubmit(formData);
+    }
     navigate("/myProjects");
   };
   const onSaveAsDraft = () => {
-    // const formData = {
-    //   projectName: getValues("projectName"), // 1
-    //   groupName: getValues("groupName"), // 2
-    //   projectDescription: getValues("projectDescription"), //18
-    //   bu: getValues("bu"), // 3
-    //   region: region, //4
-    //   smo: smo, //5
-    //   category: subCategories, //6
-    //   brand: brand, //7
-    //   scale: getValues("scale"), //8
-    //   // estimatedPOA: getValues("estimatedPOA"), //9
-    //   // estimatedCICs: getValues("estimatedCICs"), //10
-    //   printerDate: printerDate, //11
-    //   readinessDate: readinessDate, //12
-    //   sopDate: sopDate, //13
-    //   sosDate: sosDate, //14
-    //   projectType: getValues("projectType"), //16
-    //   PM: "Pranali", //17
-    //   IL: iL,
-    //   tier: tier,
-    //   clustor: getValues("clustor"),
-    //   comments: getValues("comments"),
-    //   scope: {...designScopeList, 'POA':POA},
-    //   productionStrategy: ps,
-    //   // poa: POA
-
-    // };
-    const draftFormData = collectFormData();
+    const draftFormData = collectFormData("Draft");
     console.log("draft form data", draftFormData);
-    localStorage.setItem("draftformDraft", JSON.stringify(draftFormData));
+    localStorage.setItem("formDraft", JSON.stringify(draftFormData));
     //API call to be added
+    if (status?.status === "new") {
+      createProjectSaveAsDraft(draftFormData);
+    }
     navigate("/myProjects");
   };
 
@@ -403,17 +486,16 @@ function AddProject(props) {
                 required
               />
               {errors.projectName && (
-                <span className="error-text">This field is required</span>
+                <span className="error-text">Field Remaining</span>
               )}
             </Form.Group>
           </Col>
-
           <Col>
             <Form.Group
-              className={`mb-3 ${Object.keys(bu).length < 1 && "error-valid"}`}
+              className={`mb-3 ${bu === "" && "error-valid"}`}
               controlId="bu.SelectMultiple"
             >
-              <Form.Label>BU *</Form.Label>
+              <Form.Label>Business Unit*</Form.Label>
               <div>
                 <Form.Select
                   value={bu}
@@ -428,17 +510,25 @@ function AddProject(props) {
                   ))}
                 </Form.Select>
               </div>
-              {Object.keys(bu).length < 1 && (
-                <span className="error-text">This field is required</span>
-              )}
+              {bu === "" && <span className="error-text">Field Remaining</span>}
             </Form.Group>
           </Col>
           <Col>
-            <Form.Group
-              className={`mb-3 ${!readinessDate && "error-valid"}`}
-              controlId="sop.readiness"
-            >
-              <Form.Label>Estimated AW Readiness *</Form.Label>
+            <Form.Group controlId="projectType.SelectMultiple">
+              <Form.Label>PM *</Form.Label>
+              <div>
+                <Form.Control
+                  value={pm}
+                  onChange={handlePM}
+                  disabled
+                ></Form.Control>
+              </div>
+            </Form.Group>
+          </Col>
+          <Col>
+            {" "}
+            <Form.Group className={`mb-3`} controlId="sop.readiness">
+              <Form.Label>Estimated SOP</Form.Label>
               <Controller
                 name="date"
                 control={form.control}
@@ -446,13 +536,14 @@ function AddProject(props) {
                 render={({ field, fieldState }) => (
                   <>
                     <Calendar
+                      placeholder="Select Estimated SOP"
                       inputId={field.name}
-                      value={readinessDate}
-                      onChange={(e) => setReadinessDate(e.target.value)}
+                      value={sopDate}
+                      onChange={(e) => setSOPDate(e.target.value)}
                       dateFormat="d-M-y"
                       showIcon={true}
-                      minDate={minDate}
-                      maxDate={printerDate}
+                      minDate={sopDate !=='' ? sopDate: minDate}
+                      maxDate={sosDate}
                       className={classNames({
                         "p-invalid": fieldState.error,
                       })}
@@ -460,30 +551,6 @@ function AddProject(props) {
                   </>
                 )}
               />
-              {!readinessDate && (
-                <span className="error-text">This field is required</span>
-              )}
-            </Form.Group>
-          </Col>
-          <Col>
-            <Form.Group controlId="projectType.SelectMultiple">
-              <Form.Label>Project Type</Form.Label>
-              <div>
-                <Form.Select
-                  // value={selectedCities}
-                  // onChange={(e) => setSelectedCities(e.value)}
-                  {...register("projectType", { required: false })}
-                  placeholder="Select Project Type"
-                >
-                  {/* <option value="">Select Pro</option> */}
-                  <option value="">Select Project Type</option>
-                  {projectType.map((bu) => (
-                    <option key={bu.code} value={bu.code}>
-                      {bu.name}
-                    </option>
-                  ))}
-                </Form.Select>
-              </div>
             </Form.Group>
           </Col>
         </Row>
@@ -493,7 +560,7 @@ function AddProject(props) {
               <Form.Label>Initiative Group Name</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter Initiative Group Name"
+                placeholder=""
                 {...register("groupName")}
               />
             </Form.Group>
@@ -511,7 +578,7 @@ function AddProject(props) {
                 value={subCategories}
                 onChange={handleSubCategoryChange}
                 options={subCategoriesOptions}
-                optionLabel="label"
+                optionLabel="name"
                 filter
                 placeholder="Select Categories"
                 className="w-full md:w-20rem"
@@ -519,11 +586,82 @@ function AddProject(props) {
             </Form.Group>
           </Col>
           <Col>
-            <Form.Group
-              className={`mb-3 ${!printerDate && "error-valid"}`}
-              controlId="sop.readiness"
-            >
-              <Form.Label>Estimated AW@Printer *</Form.Label>
+            <Form.Group controlId="il.SelectMultiple">
+              <Form.Label>Scope and Estimated Numbers</Form.Label>
+              <div className="design-scope">
+                {designScope.map((option, index) => (
+                  <span key={index} style={{ display: "flex" }}>
+                    <Form.Check
+                      label={option.label}
+                      name={option.value}
+                      type="checkbox"
+                      value={option.value}
+                      onChange={handleCheckboxChange}
+                      checked={checkedItems[option.value]}
+                      style={{
+                        width: 160,
+                      }}
+                    />
+                    {option.value !== "PF" && (
+                      <Form.Control
+                        type="number"
+                        value={designScopeList[option.value]}
+                        onChange={(e) => {
+                          setDesignScopeList((prevDesignScopeList) => ({
+                            ...prevDesignScopeList,
+                            [option.value]: parseInt(e.target.value),
+                          }));
+                        }}
+                        disabled={!textBoxEnabled[option.value]}
+                        style={{
+                          width: 40,
+                          height: 27,
+                          paddingLeft: "5px",
+                          paddingRight: 0,
+                          fontSize: "10px",
+                          marginRight: "10px",
+                        }}
+                      />
+                    )}
+                  </span>
+                ))}
+                <span style={{ display: "flex" }}>
+                  <Form.Check
+                    label="Final AW"
+                    name="POA"
+                    type="checkbox"
+                    value="POA"
+                    onChange={handleCheckboxChange}
+                    checked
+                    style={{ width: 160 }}
+                  />
+                  <Form.Control
+                    type="number"
+                    value={POA}
+                    required
+                    onChange={(e) => setPOA(e.target.value)}
+                    // disabled={!textBoxEnabled[option.value]}
+                    style={{
+                      width: 40,
+                      height: 27,
+                      paddingLeft: "5px",
+                      paddingRight: 0,
+                      fontSize: "10px",
+                      marginRight: "10px",
+                    }}
+                  />
+                </span>
+              </div>
+            </Form.Group>
+          </Col>
+
+          <Col>
+            <Form.Group className="mb-3" controlId="sop.readiness">
+              <Form.Label>Estimated SOS</Form.Label>
+              {/*
+                {errors.sopDate && (
+                  <span className="error-text">Please select a SOP Date</span>
+                )} */}
               <Controller
                 name="date"
                 control={form.control}
@@ -531,13 +669,14 @@ function AddProject(props) {
                 render={({ field, fieldState }) => (
                   <>
                     <Calendar
+                      placeholder="Select Estimated SOS"
                       inputId={field.name}
-                      value={printerDate}
-                      onChange={(e) => setPrinterDate(e.target.value)}
+                      value={sosDate}
+                      onChange={(e) => setSOSDate(e.target.value)}
                       dateFormat="d-M-y"
                       showIcon={true}
-                      minDate={readinessDate}
-                      maxDate={sopDate}
+                      minDate={sosDate !==''? sosDate: minDate}
+                      style={{ width: 208 }}
                       className={classNames({
                         "p-invalid": fieldState.error,
                       })}
@@ -545,22 +684,6 @@ function AddProject(props) {
                   </>
                 )}
               />
-              {!printerDate && (
-                <span className="error-text">This field is required</span>
-              )}
-            </Form.Group>
-          </Col>
-          <Col>
-            {" "}
-            <Form.Group controlId="projectType.SelectMultiple">
-              <Form.Label>PM *</Form.Label>
-              <div>
-                <Form.Control
-                  value={pm}
-                  onChange={handlePM}
-                  disabled
-                ></Form.Control>
-              </div>
             </Form.Group>
           </Col>
         </Row>
@@ -573,7 +696,8 @@ function AddProject(props) {
               <Form.Label>Project Description</Form.Label>
               <Form.Control
                 as="textarea"
-                style={{ height: "5rem" }}
+                style={{ height: "114px", position: "absolute" }}
+                // style={{ height: "5rem" }}
                 placeholder="Add Project description"
                 {...register("projectDescription", { required: false })}
               />
@@ -590,51 +714,117 @@ function AddProject(props) {
                   value={brand}
                   onChange={(e) => setBrand(e.value)}
                   options={brandList}
-                  optionLabel="name"
+                  optionLabel="Brand_Name"
                   filter
                   placeholder="Select Brand"
                   className="w-full md:w-20rem"
+                  // style={{ marginBottom: "12px" }}
                   required
                 />
               </div>
               {brand.length < 1 && (
-                <span className="error-text">This field is required</span>
+                <span className="error-text">Field Remaining</span>
               )}
             </Form.Group>
           </Col>
+          <Col></Col>
           <Col>
             {" "}
-            <Form.Group className={`mb-3`} controlId="sop.readiness">
-              <Form.Label>Estimated SOP</Form.Label>
-              <Controller
-                name="date"
-                control={form.control}
-                rules={{ required: "Date is required." }}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Calendar
-                      inputId={field.name}
-                      value={sopDate}
-                      onChange={(e) => setSOPDate(e.target.value)}
-                      dateFormat="d-M-y"
-                      showIcon={true}
-                      minDate={printerDate}
-                      maxDate={sosDate}
-                      className={classNames({
-                        "p-invalid": fieldState.error,
-                      })}
-                    />
-                  </>
-                )}
+            <Form.Group className="mb-3" controlId="comments.ControlInput1">
+              <Form.Label>Comments</Form.Label>
+              <Form.Control
+                as="textarea"
+                style={{ height: 94, position: "absolute", width: 208 }}
+                placeholder="Add Comments"
+                {...register("comments", { required: false })}
               />
             </Form.Group>
           </Col>
+        </Row>
+        <Row>
+          <Col></Col>
           <Col>
-            {" "}
-            <Form.Group controlId="projectType.SelectMultiple">
-              <Form.Label>IL *</Form.Label>
+            <Form.Group className="mb-3" controlId="bve.SelectMultiple">
+              <Form.Label>Scale </Form.Label>
               <div>
-                <Form.Control value={iL} onChange={handleIL}></Form.Control>
+                <Form.Select
+                  // value={scale}
+                  // onChange={(e) => setScale(e.target.value)}
+                  {...register("scale", { required: false })}
+                  placeholder="Select Scale"
+                >
+                  <option value="">Select Scale</option>
+                  {scaleList.map((bu) => (
+                    <option key={bu.code} value={bu.code}>
+                      {bu.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </div>
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Form.Group controlId="clustor.SelectMultiple">
+              <Form.Label>Clustor</Form.Label>
+              <div>
+                <Form.Select
+                  // value={selectedCities}
+                  // onChange={(e) => setSelectedCities(e.value)}
+                  {...register("clustor", { required: false })}
+                  placeholder="Select Scale"
+                >
+                  <option value="" style={{ maxWidth: "208px" }}>
+                    Select Clustor
+                  </option>
+
+                  <option value="clustor1">Clustor1</option>
+                </Form.Select>
+              </div>
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group className="mb-3" controlId="bve.SelectMultiple">
+              <Form.Label>
+                {(region?.code === "EUF" || region?.code === "EUE") &&
+                  bu === "BABY" &&
+                  "Tier"}
+                {(region?.code === "EUF" || region?.code === "EUE") &&
+                  bu === "HC" &&
+                  "Production Strategy"}
+              </Form.Label>
+              <div>
+                {(region?.code === "EUF" || region?.code === "EUE") &&
+                  bu === "BABY" && (
+                    <Form.Select
+                      {...register("Teir", { required: false })}
+                      placeholder="Select Teir"
+                      onChange={handleTierChange}
+                    >
+                      <option value="">Select Tier</option>
+                      {Tier.map((tier) => (
+                        <option key={tier.code} value={tier.code}>
+                          {tier.name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  )}
+                {(region?.code === "EUF" || region?.code === "EUE") &&
+                  bu === "HC" && (
+                    <Form.Select
+                      {...register("Production Strtegy", { required: false })}
+                      placeholder="Select PS"
+                      onChange={handlePsChange}
+                    >
+                      <option value="">Select Production Strategy</option>
+                      {ProductionStrategy.map((ps) => (
+                        <option key={ps.code} value={ps.code}>
+                          {ps.name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  )}
               </div>
             </Form.Group>
           </Col>
@@ -663,24 +853,24 @@ function AddProject(props) {
                 </Form.Select>
               </div>
               {(!region || Object.keys(region).length < 1) && (
-                <span className="error-text">This field is required</span>
+                <span className="error-text">Field Remaining</span>
               )}
             </Form.Group>
           </Col>
           <Col>
-            <Form.Group className="mb-3" controlId="bve.SelectMultiple">
-              <Form.Label>Scale </Form.Label>
+            <Form.Group controlId="projectType.SelectMultiple">
+              <Form.Label>Project Type</Form.Label>
               <div>
                 <Form.Select
-                  // value={scale}
-                  // onChange={(e) => setScale(e.target.value)}
-                  {...register("scale", { required: false })}
-                  placeholder="Select Scale"
+                  // value={selectedCities}
+                  // onChange={(e) => setSelectedCities(e.value)}
+                  {...register("projectType", { required: false })}
+                  placeholder="Select Project Type"
                 >
-                  <option value="">Select Scale</option>
-                  {scaleList.map((bu) => (
-                    <option key={bu.code} value={bu.code}>
-                      {bu.name}
+                  <option value="">Select Project Type</option>
+                  {projectType.map((pt) => (
+                    <option key={pt.code} value={pt.name}>
+                      {pt.name}
                     </option>
                   ))}
                 </Form.Select>
@@ -688,12 +878,11 @@ function AddProject(props) {
             </Form.Group>
           </Col>
           <Col>
-            <Form.Group className={`mb-3`} controlId="sop.readiness">
-              <Form.Label>Estimated SOS</Form.Label>
-              {/*
-                {errors.sopDate && (
-                  <span className="error-text">Please select a SOP Date</span>
-                )} */}
+            <Form.Group
+              className={`mb-3 ${!readinessDate && "error-valid"}`}
+              controlId="sop.readiness"
+            >
+              <Form.Label>Estimated AW Readiness *</Form.Label>
               <Controller
                 name="date"
                 control={form.control}
@@ -701,12 +890,14 @@ function AddProject(props) {
                 render={({ field, fieldState }) => (
                   <>
                     <Calendar
+                      // placeholder="Select Estimated AW Readiness"
                       inputId={field.name}
-                      value={sosDate}
-                      onChange={(e) => setSOSDate(e.target.value)}
+                      value={readinessDate}
+                      onChange={(e) => setReadinessDate(e.target.value)}
                       dateFormat="d-M-y"
                       showIcon={true}
-                      // minDate={sopDate}
+                      minDate={readinessDate !==''? readinessDate: minDate}
+                      maxDate={printerDate}
                       className={classNames({
                         "p-invalid": fieldState.error,
                       })}
@@ -714,23 +905,9 @@ function AddProject(props) {
                   </>
                 )}
               />
-            </Form.Group>
-          </Col>
-          <Col>
-            <Form.Group controlId="clustor.SelectMultiple">
-              <Form.Label>Clustor</Form.Label>
-              <div>
-                <Form.Select
-                  // value={selectedCities}
-                  // onChange={(e) => setSelectedCities(e.value)}
-                  {...register("clustor", { required: false })}
-                  placeholder="Select Scale"
-                >
-                  <option value="">Select Clustor</option>
-
-                  <option value="clustor1">Clustor1</option>
-                </Form.Select>
-              </div>
+              {!readinessDate && (
+                <span className="error-text">Field Remaining</span>
+              )}
             </Form.Group>
           </Col>
         </Row>
@@ -755,130 +932,51 @@ function AddProject(props) {
                 />
               </div>
               {(!smo || smo?.length < 1) && (
-                <span className="error-text">This field is required</span>
+                <span className="error-text">Field Remaining</span>
               )}
             </Form.Group>
           </Col>
           <Col>
-            <Form.Group controlId="il.SelectMultiple">
-              <Form.Label>Scope</Form.Label>
-              <div className="design-scope">
-                {designScope.map((option, index) => (
-                  <span key={index} style={{ display: "flex" }}>
-                    <Form.Check
-                      label={option.label}
-                      name={option.value}
-                      type="checkbox"
-                      value={option.value}
-                      onChange={handleCheckboxChange}
-                      checked={checkedItems[option.value]}
-                      style={{ width: 160 }}
-                    />
-                    {option.value !== "PF" && (
-                      <Form.Control
-                        type="number"
-                        value={designScopeList[option.value]}
-                        onChange={(e) => {
-                          setDesignScopeList((prevDesignScopeList) => ({
-                            ...prevDesignScopeList,
-                            [option.value]: parseInt(e.target.value),
-                          }));
-                        }}
-                        disabled={!textBoxEnabled[option.value]}
-                        style={{
-                          width: 40,
-                          height: 27,
-                          paddingLeft: "5px",
-                          paddingRight: 0,
-                          fontSize: "10px",
-                        }}
-                      />
-                    )}
-                  </span>
-                ))}
-                <span style={{ display: "flex" }}>
-                  <Form.Check
-                    label="Final AW"
-                    name="POA"
-                    type="checkbox"
-                    value="POA"
-                    onChange={handleCheckboxChange}
-                    checked
-                    style={{ width: 160 }}
-                  />
-                  <Form.Control
-                    type="number"
-                    value={POA}
-                    required
-                    onChange={(e) => setPOA(e.target.value)}
-                    // disabled={!textBoxEnabled[option.value]}
-                    style={{
-                      width: 40,
-                      height: 27,
-                      paddingLeft: "5px",
-                      paddingRight: 0,
-                      fontSize: "10px",
-                    }}
-                  />
-                </span>
+            {" "}
+            <Form.Group controlId="projectType.SelectMultiple">
+              <Form.Label>IL</Form.Label>
+              <div>
+                <Form.Control value={iL} onChange={handleIL}></Form.Control>
               </div>
             </Form.Group>
           </Col>
 
           <Col>
-            <Form.Group className="mb-3" controlId="bve.SelectMultiple">
-              <Form.Label>
-                {(region?.code === "EUF" || region?.code === "EUE") &&
-                  bu === "Baby Care" &&
-                  "Tier"}
-                {(region?.code === "EUF" || region?.code === "EUE") &&
-                  bu === "Home Care" &&
-                  "Production Strategy"}
-              </Form.Label>
-              <div>
-                {(region?.code === "EUF" || region?.code === "EUE") &&
-                  bu === "Baby Care" && (
-                    <Form.Select
-                      {...register("Teir", { required: false })}
-                      placeholder="Select Teir"
-                      onChange={handleTierChange}
-                    >
-                      <option value="">Select Tier</option>
-                      {Tier.map((tier) => (
-                        <option key={tier.code} value={tier.code}>
-                          {tier.name}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  )}
-                {(region?.code === "EUF" || region?.code === "EUE") &&
-                  bu === "Home Care" && (
-                    <Form.Select
-                      {...register("Production Strtegy", { required: false })}
-                      placeholder="Select PS"
-                      onChange={handlePsChange}
-                    >
-                      <option value="">Select Production Strategy</option>
-                      {ProductionStrategy.map((ps) => (
-                        <option key={ps.code} value={ps.code}>
-                          {ps.name}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  )}
-              </div>
-            </Form.Group>
-          </Col>
-          <Col>
-            {" "}
-            <Form.Group className="mb-3" controlId="comments.ControlInput1">
-              <Form.Label>Comments</Form.Label>
-              <Form.Control
-                as="textarea"
-                style={{ height: "5rem" }}
-                placeholder="Add Comments"
-                {...register("comments", { required: false })}
+            <Form.Group
+              className={`mb-3 ${!printerDate && "error-valid"}`}
+              controlId="sop.readiness"
+            >
+              <Form.Label>Estimated AW@Printer *</Form.Label>
+              <Controller
+                name="date"
+                control={form.control}
+                rules={{ required: "Date is required." }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Calendar
+                      // placeholder="Select Estimated AW@Printer"
+                      inputId={field.name}
+                      value={printerDate}
+                      onChange={(e) => setPrinterDate(e.target.value)}
+                      dateFormat="d-M-y"
+                      showIcon={true}
+                      minDate={printerDate !==''? printerDate: minDate}
+                      maxDate={sopDate}
+                      className={classNames({
+                        "p-invalid": fieldState.error,
+                      })}
+                    />
+                  </>
+                )}
               />
+              {!printerDate && (
+                <span className="error-text">Field Remaining</span>
+              )}
             </Form.Group>
           </Col>
         </Row>

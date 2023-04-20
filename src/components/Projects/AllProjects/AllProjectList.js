@@ -8,13 +8,14 @@ import { FilterMatchMode } from "primereact/api";
 import ProjectListHeader from "../MyProjects/ProjectListHeader";
 import { Tag } from "primereact/tag";
 import { changeDateFormat } from "../utils";
-
+import filter from "../../../assets/images/filter.svg";
+import { getAllProject } from "../../../store/actions/ProjectActions";
+import { useDispatch, useSelector } from "react-redux";
 
 const CustomisedView = React.lazy(() => import("../MyProjects/CustomisedView"));
 
 const AllProjectList = (props) => {
   const [pegadata, setPegaData] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
   const [selectedColumnName, setSelectedColumnName] = useState(null);
@@ -25,6 +26,14 @@ const AllProjectList = (props) => {
   const [sortData, setSortData] = useState([]);
   const [allColumnNames, setAllColumnNames] = useState([]);
   const [isSearch, isSearchSet] = useState(false);
+  const [isReorderedColumn, setReorderedColumn] = useState(false);
+  const allProjectList = useSelector((state) => state.myProject);
+  const { loading } = allProjectList;
+  const dispatch = useDispatch();
+
+  console.log("all project list", allProjectList);
+
+  // console.log("project col name in state", projectColumnName);
 
   const searchHeader = projectColumnName.reduce(
     (acc, curr) => ({
@@ -42,15 +51,6 @@ const AllProjectList = (props) => {
   const toast = useRef(null);
   const dt = useRef(null);
 
-  const showSuccess = () => {
-    toast.current.show({
-      severity: "success",
-      summary: "Success",
-      detail: "Message Content",
-      life: 3000,
-    });
-  };
-
   const onSort = (column, direction) => (event) => {
     const sortedData = [...pegadata].sort((a, b) => {
       return a[column] > b[column] ? 1 : -1;
@@ -59,29 +59,34 @@ const AllProjectList = (props) => {
     if (direction === "desc") {
       sortedData.reverse();
     }
+
     setPegaData(sortedData);
     setSortData([column, direction]);
+    localStorage.setItem("allProjectSortingData", JSON.stringify(sortData));
   };
 
   useEffect(() => {
-    setLoading(true);
+    const updatedUsers = dispatch(getAllProject());
+    console.log("my projects", updatedUsers);
+  }, [dispatch]);
 
+  useEffect(() => {
     (async () => {
       try {
-        const ProjectData = await ProjectService.getProjectData();
-
+        // const ProjectData = await ProjectService.getProjectData();
+        const ProjectData = allProjectList.allProjects;
         if (ProjectData.length) {
           setAllColumnNames(Object.keys(ProjectData[0]));
         }
         // const columnNames = await ProjectService.getAllColumnNames();
         // localStorage.setItem("allColumnNames", JSON.stringify(columnNames));
 
-        const columnNamesAllProjects =
-          await ProjectService.getAllColumnNamesAllProjects();
-        localStorage.setItem(
-          "allColumnNamesAllProjects",
-          JSON.stringify(columnNamesAllProjects)
-        );
+        // const columnNamesAllProjects =
+        //   await ProjectService.getAllColumnNamesAllProjects();
+        // localStorage.setItem(
+        //   "allColumnNamesAllProjects",
+        //   JSON.stringify(columnNamesAllProjects)
+        // );
 
         let filteredPegaDataJson = localStorage.getItem(
           "allProjectColumnWiseFilterData"
@@ -102,7 +107,8 @@ const AllProjectList = (props) => {
         if (columnNames != null && columnNames.length) {
           setProjectColumnNames(columnNames);
         } else {
-          const columnNames = await ProjectService.getAllColumnNamesAllProjects();
+          const columnNames =
+            await ProjectService.getAllColumnNamesAllProjects();
           localStorage.setItem(
             "allColumnNamesAllProjects",
             JSON.stringify(columnNames)
@@ -141,8 +147,7 @@ const AllProjectList = (props) => {
         console.log("error", err);
       }
     })();
-    setLoading(false);
-  }, []);
+  }, [allProjectList.allProjects]);
 
   const addFrozenColumns = (name) => {
     if (!frozenCoulmns.includes(name)) {
@@ -156,16 +161,19 @@ const AllProjectList = (props) => {
   };
 
   const projectNameHeader = (options) => {
+    // console.log("selected", selectedColumnName, options);
     return (
-      <div>
-        <i
-          style={{ cursor: "pointer", paddingRight: 5 }}
+      <div style={{ display: "flex" }}>
+        <img
+          src={filter}
+          alt="Column Filter"
           onClick={(e) => {
             op.current.toggle(e);
             setSelectedColumnName(options);
           }}
-          className="pi pi-align-justify"
-        ></i>
+          className="columnFilterIcon"
+        />
+
         {options}
       </div>
     );
@@ -173,6 +181,22 @@ const AllProjectList = (props) => {
 
   const fullKitReadinessBody = (options, rowData) => {
     let field = rowData.field;
+    let categoryNames = [];
+    let SMOName = [];
+    let brandName = [];
+    let projectId = options["Project_ID"];
+    if (field === "Artwork_Category") {
+      categoryNames = options[field]
+        .map((item) => item.Category_Name)
+        .join(",");
+    }
+
+    if (field === "Artwork_SMO") {
+      SMOName = options[field].map((item) => item.SMO_Name).join(",");
+    }
+    if (field === "Artwork_Brand") {
+      brandName = options[field].map((item) => item.Brand_Name).join(",");
+    }
 
     return (
       <>
@@ -187,26 +211,34 @@ const AllProjectList = (props) => {
           ></Tag>
         )}
 
+        {field === "Project_Name" && (
+          <a href={`/addProject/${projectId}`}> {options[field]} </a>
+        )}
+
         {field === "Estimated_SOP" && changeDateFormat(options[field])}
-
-        {field === "EstimatedAWPrinters" && changeDateFormat(options[field])}
-
-        {field === "Buffer to work" && <>-----</>}
+        {field === "Estimated_AW_Printer" && changeDateFormat(options[field])}
+        {field === "Artwork_Category" && categoryNames}
+        {field === "Artwork_SMO" && SMOName}
+        {field === "Artwork_Brand" && brandName}
 
         {field !== "Full Kit Readiness Tracking" &&
           field !== "Estimated_SOP" &&
-          field !== "EstimatedAWPrinters" &&
-          field !== "Buffer to work" && <> {options[field]}</>}
+          field !== "Estimated_AW_Printer" &&
+          field !== "Artwork_Category" &&
+          field !== "Project_Name" &&
+          field !== "Artwork_SMO" &&
+          field !== "Artwork_Brand" && <> {options[field]}</>}
       </>
     );
   };
 
-  const dynamicColumns = () => {
+  const dynamicColumns = (projectColumnName) => {
+    // console.log("project column name dynamic header", projectColumnName);
     if (projectColumnName.length) {
       return projectColumnName.map((ele, i) => {
         return (
           <Column
-            key={ele}
+            key={i}
             field={ele}
             filterField={ele}
             header={projectNameHeader(ele)}
@@ -232,24 +264,49 @@ const AllProjectList = (props) => {
   };
 
   const resetToPgDefault = () => {
-    const columnNames = ProjectService.getAllColumnNames();
+    const defaultColName = [
+      "ProjectID",
+      "ProjectName",
+      "Project_Category",
+      "Project_SMO",
+      "PM",
+      "Project_Brand",
+      "EstimatedAWPrinters",
+      "Full Kit Readiness Tracking",
+      "Buffer to work",
+    ];
+    setProjectColumnNames(defaultColName);
+    // const columnNames = ProjectService.getAllColumnNamesAllProjects();
     localStorage.setItem(
       "allColumnNamesAllProjects",
-      JSON.stringify(columnNames)
+      JSON.stringify(defaultColName)
     );
-    setProjectColumnNames(columnNames);
     setVisible(false);
   };
 
   const clearFilters = () => {
-    const columnNames = ProjectService.getAllColumnNamesAllProjects();
+    const defaultCol = [
+      "Project_ID",
+      "Project_Name",
+      "Artwork_Category",
+      "Artwork_SMO",
+      "PM",
+      "Project_State",
+      "Artwork_Brand",
+      "Buffer_To_Work",
+      "Estimated_AW_Printer",
+      "Full Kit Readiness Tracking",
+    ];
+    console.log("all column name constant", defaultCol);
+
+    setProjectColumnNames(defaultCol);
+
     localStorage.setItem(
       "allColumnNamesAllProjects",
-      JSON.stringify(columnNames)
+      JSON.stringify(defaultCol)
     );
-    setProjectColumnNames(columnNames);
+    setReorderedColumn(false);
     setFilters([]);
-    showSuccess();
   };
 
   const onGlobalFilterChange = (e) => {
@@ -276,6 +333,8 @@ const AllProjectList = (props) => {
     dt.current.exportCSV({ selectionOnly });
   };
 
+  // in header save setting button was there and due to requirement I removed that
+  //code is kept here if requirement comes
   const saveSettings = () => {
     localStorage.setItem(
       "allProjectColumnWiseFilterData",
@@ -287,7 +346,7 @@ const AllProjectList = (props) => {
       "allColumnNamesAllProjects",
       JSON.stringify(projectColumnName)
     );
-    showSuccess();
+    // showSuccess();
   };
 
   const storeReorderedColumns = (e) => {
@@ -297,8 +356,14 @@ const AllProjectList = (props) => {
       // only splice array when item is found
       projectColumnName.splice(index, 1); // 2nd parameter means remove one item only
       projectColumnName.splice(e?.dropIndex, 0, dragColumnName);
+      setReorderedColumn(true);
     }
+    localStorage.setItem(
+      "allColumnNamesAllProjects",
+      JSON.stringify(projectColumnName)
+    );
     setProjectColumnNames(projectColumnName);
+    setReorderedColumn(true);
   };
 
   const clearFilter = () => {
@@ -311,8 +376,53 @@ const AllProjectList = (props) => {
     setFrozenColumn([]);
   };
 
+  const clearColumnWiseFilter = () => {
+    let jsonFrozenItem = localStorage.getItem("allProjectFrozenData");
+    const frozenItem = JSON.parse(jsonFrozenItem);
+    if (
+      frozenItem &&
+      frozenItem.length &&
+      frozenItem.includes(selectedColumnName)
+    ) {
+      const index = frozenItem.indexOf(selectedColumnName);
+      frozenItem.splice(index, 1);
+      localStorage.setItem("allProjectFrozenData", JSON.stringify(frozenItem));
+      setFrozenColumn(frozenItem);
+    }
+    if (frozenCoulmns.includes(selectedColumnName)) {
+      const index = frozenCoulmns.indexOf(selectedColumnName);
+      frozenCoulmns.splice(index, 1);
+      setFrozenColumn(frozenCoulmns);
+      setProjectFrozen(!ProjectFrozen);
+    }
+    let jsonSortItem = localStorage.getItem("allProjectFrozenData");
+    const sortItem = JSON.parse(jsonSortItem);
+    if (sortItem && sortItem.length && sortItem[0] === selectedColumnName) {
+      localStorage.setItem("allProjectFrozenData", JSON.stringify([]));
+    }
+    if (sortData && sortData.length && sortData[0] === selectedColumnName) {
+      setSortData([]);
+    }
+    if (filters && filters.length) {
+      localStorage.setItem(
+        "allProjectColumnWiseFilterData",
+        JSON.stringify({})
+      );
+      setSelectedCities([]);
+      setFilters([]);
+    }
+  };
+
+  const isFilterEnabled =
+    isReorderedColumn ||
+    frozenCoulmns?.length ||
+    filters?.length ||
+    sortData?.length;
+
+  // console.log("project column name", projectColumnName);
+
   return (
-    <div>
+    <div className="myProjectAnddAllProjectList">
       <Suspense fallback={<div>Loading...</div>}>
         <Toast ref={toast} />
         <ProjectListHeader
@@ -323,6 +433,7 @@ const AllProjectList = (props) => {
           saveSettings={saveSettings}
           onSearchClick={onSearchClick}
           exportCSV={exportCSV}
+          isFilterEnabled={isFilterEnabled}
         />
 
         <CustomisedView
@@ -337,6 +448,7 @@ const AllProjectList = (props) => {
 
         <ConfirmationPopUp
           onSort={onSort}
+          saveSettings={saveSettings}
           setProjectFrozen={setProjectFrozen}
           projectData={pegadata}
           addFrozenColumns={addFrozenColumns}
@@ -351,11 +463,12 @@ const AllProjectList = (props) => {
           setFilters={setFilters}
           filters={filters}
           op={op}
+          clearColumnWiseFilter={clearColumnWiseFilter}
         />
 
         <DataTable
           resizableColumns
-          dataKey="ProjectID"
+          dataKey="Project_ID"
           reorderableColumns
           onColReorder={storeReorderedColumns}
           onResize={(e) => console.log("resize", e)}
@@ -371,8 +484,12 @@ const AllProjectList = (props) => {
           filterDisplay={isSearch && "row"}
           tableStyle={{ minWidth: "50rem" }}
           ref={dt}
+          // selectionMode="single"
+          // onSelectionChange={(e) => {
+          //   navigate(`/addProject/${e.value.ProjectID}`);
+          // }}
         >
-          {dynamicColumns()}
+          {dynamicColumns(projectColumnName)}
         </DataTable>
       </Suspense>
     </div>

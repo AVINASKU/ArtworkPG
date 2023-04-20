@@ -29,7 +29,9 @@
             "ProjectType": "Cost Saving",
             "RecordID": "",
             "Estimated_SOP": "20230413",
-            "PM": "Hemant"
+            "PM": "Hemant",
+            "Full Kit Readiness Tracking":true,
+            "Buffer to work": true
         },
         {
             "ProductionStrategy": "abc",
