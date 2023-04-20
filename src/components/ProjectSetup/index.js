@@ -1,72 +1,64 @@
+import React, { useState } from "react";
 import Accordion from "react-bootstrap/Accordion";
 import AddProject from "../Projects/CreateProject";
 import { Button } from "react-bootstrap";
 import { BreadCrumb } from "primereact/breadcrumb";
+import { Dropdown } from "primereact/dropdown";
 import "primeicons/primeicons.css";
+import { SelectButton } from "primereact/selectbutton";
 import "./index.scss";
 
 function ProjectSetup() {
-  const items = [{ label: "My Projects" }, { label: "Project Setup" }];
+  const items = [
+    { label: "My Projects" },
+    { label: "Project Setup/Project Plan" },
+  ];
+  const [selectedAction, setSelectedAction] = useState(null);
+  const [selectedColor, setSelectedColor] = useState("");
+  const [isClicked, setIsClicked] = useState(false);
+  const options = ["Gantt Chart", "Tabular"];
+  const [value, setValue] = useState(options[0]);
+  const ActionOptions = [
+    { name: "On Hold", color: "orange" },
+    { name: "Cancel", color: "red" },
+    { name: "Previous State", color: "blue" },
+  ];
+
+  function handleClick() {
+    setIsClicked(true);
+    setSelectedColor("button-click");
+  }
 
   return (
     <div className="content-layout">
       <div className="actions">
-        <div>
-          {/* <BreadCrumb model={items} />
-          <div className="project-name">DC HDW SAR Fairy Fame Pink LBB</div> */}
+        <div className="actions-left">
+          <BreadCrumb model={items} />
+          <div className="project-name">DC HDW SAR Fairy Fame Pink LBB</div>
         </div>
-
-        {/* <div className="action-buttons">
-          <i
-            style={{
-              cursor: "pointer",
-              padding: 10,
-              fontSize: "2rem",
-              color: "#003DA5",
-            }}
-            className="pi pi-filter-slash"
-          ></i>
-          <i
-            style={{
-              cursor: "pointer",
-              padding: 10,
-              fontSize: "2rem",
-              color: "#003DA5",
-            }}
-            className="pi pi-save"
-          ></i>
-          <i
-            style={{
-              cursor: "pointer",
-              padding: 10,
-              fontSize: "2rem",
-              color: "#003DA5",
-            }}
-            className="pi pi-search"
-          ></i>
-          <i
-            style={{
-              cursor: "pointer",
-              padding: 10,
-              fontSize: "2rem",
-              color: "#003DA5",
-            }}
-            className="pi pi-pencil"
-          ></i>
-          <i
-            style={{
-              cursor: "pointer",
-              padding: 10,
-              fontSize: "2rem",
-              color: "#003DA5",
-            }}
-            className="pi pi-file-excel"
-          ></i>
-
-          <Button className="button-layout" style={{ fontSize: 14 }}>
-            Reset to default
-          </Button>
-        </div> */}
+        <div className="actions-right">
+          <div className="card flex justify-content-center">
+            <SelectButton
+              value={value}
+              onChange={(e) => setValue(e.value)}
+              options={options}
+            />
+          </div>
+          <div className="card flex justify-content-center1">
+            <Dropdown
+              value={selectedAction}
+              onChange={(e) => {
+                setSelectedAction(e.value);
+                // setSelectedColor({ backgroundColor: "blue" });
+              }}
+              onClick={handleClick}
+              options={ActionOptions}
+              optionLabel="name"
+              placeholder="Action"
+              className="w-full action-button selectedColor md:w-14rem"
+            />
+          </div>
+        </div>
       </div>
       <div className="tabular-view">
         <Accordion defaultActiveKey="0">

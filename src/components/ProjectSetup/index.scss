@@ -15,9 +15,16 @@
   .accordion-item {
     border-radius: 0;
     border: 0;
+    // &:nth-child(2) {
+    //   display: none;
+    //   position: fixed;
+    //   bottom: 0;
+    //  }
+    //  &:nth-child(2).active{
+    //   display: block;
+    //  }
     .accordion-header{
     background-color: #EDF4FA;
-
     }
   }
   .accordion-button {
@@ -41,4 +48,17 @@
   .accordion-body {
     padding: 0;
   }
+}
+.tabular-add-project{
+  padding: 15px;
+    overflow-y: scroll;
+    height: 72vh;
+}
+
+.p-breadcrumb ul .pi-chevron-right:nth-child(3) {
+  color: #003da5;
+}
+.p-breadcrumb ul li .p-menuitem-link {
+  box-shadow: none !important;
+  outline: none !important;
 }
