@@ -2,9 +2,8 @@ import React from "react";
 import export2excel from "../../../assets/images/export2excel.svg";
 import searchMyProjects from "../../../assets/images/searchMyProjects.svg";
 import filter from "../../../assets/images/filter.svg";
+import BlueFilterIcon from "../../../assets/images/BlueFilterIcon.svg";
 import customizedFields from "../../../assets/images/customizedFields.svg";
-import renameMyProjects from "../../../assets/images/renameMyProjects.svg";
-import save from "../../../assets/images/save.svg";
 
 const ProjectListHeader = ({
   header,
@@ -14,18 +13,25 @@ const ProjectListHeader = ({
   saveSettings,
   onSearchClick,
   exportCSV,
+  isFilterEnabled
 }) => {
   return (
     <div className="actions">
       <div className="project-title">{header}</div>
 
       <div className="action-buttons">
+      {isFilterEnabled ? <img
+          src={BlueFilterIcon}
+          alt="filter logo"
+          onClick={clearFilter}
+          className="header-icons"
+        /> :
         <img
           src={filter}
           alt="filter logo"
           onClick={clearFilter}
           className="header-icons"
-        />
+        />}
         {/* <img
           src={save}
           alt="save settings"
@@ -55,7 +61,7 @@ const ProjectListHeader = ({
         <button
           type="button"
           className="btn btn-secondary resetToPgDefault"
-          onClick={() => clearFilters()}
+          onClick={()=> clearFilters()}
         >
           Reset to default
         </button>
