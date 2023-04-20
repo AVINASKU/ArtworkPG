@@ -66,11 +66,10 @@ const ProjectList = (props) => {
   };
 
   useEffect(() => {
-    if (!myProjectList.myProject.length) {
       const updatedUsers = dispatch(getMyProject());
       console.log("my projects", updatedUsers);
-    }
-  }, [dispatch, myProjectList.myProject]);
+    
+  }, [dispatch]);
 
   useEffect(() => {
     // setLoading(true);

@@ -8,13 +8,13 @@ const sessionData = sessionStorage.getItem("session");
 
 const sessionObj = JSON.parse(sessionData);
 
-const time = sessionObj.loginTime;
+const time = sessionObj?.loginTime;
 
 
 //for userid and username
-const username = sessionObj.username;
+const username = sessionObj?.username;
 
-const userid = sessionObj.userid;
+const userid = sessionObj?.userid;
 
 
 
