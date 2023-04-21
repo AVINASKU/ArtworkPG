@@ -14,9 +14,11 @@ import MyTaskMP from "../../assets/images/MyTaskMP.svg";
 import MyProject from "../../assets/images/MyProject.svg";
 import "./index.scss";
 import { Col } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const SideBar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isToggle, setIsToggle] = useState(false);
   const [expandedItems, setExpandedItems] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState(null);
@@ -51,6 +53,10 @@ const SideBar = () => {
         return [index];
       }
     });
+  }
+  const handleLogout =()=>{
+    sessionStorage.removeItem("session");
+    navigate("/");
   }
   const navItems = {
     data: [
@@ -189,11 +195,12 @@ const SideBar = () => {
                   </NavLink>
                 )}
               </NavItem>
-              <NavItem>
+              <NavItem onClick={handleLogout}>
+                
                 {!isToggle ? (
                   <img src={LogoutImg} className="collapse-img" alt="" />
                 ) : (
-                  <NavLink to="/logout" className="nav-link">
+                  <NavLink to="/" className="nav-link">
                     <img src={LogoutImg} alt="logout" />
                     {isToggle && <span className="logout">Logout</span>}
                   </NavLink>
