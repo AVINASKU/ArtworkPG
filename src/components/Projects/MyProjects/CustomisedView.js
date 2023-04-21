@@ -16,6 +16,9 @@ export default function CustomisedView({
   const [checked, setChecked] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
 
+  const numColumns = 4;
+  const numRows = Math.ceil(allColumnNames.length / (numColumns));
+
   useEffect(() => {
     setSelectedCategories(projectColumnName);
   }, [projectColumnName, selectedCategories, setSelectedCategories]);
@@ -71,24 +74,41 @@ export default function CustomisedView({
         onHide={() => setVisible(false)}
         footer={footerContent}
       >
-        <Row>
-          {allColumnNames.map((category) => {
-            return (
-              <Col sm={3} key={category} style={{ marginBottom: 10 }}>
-                <Checkbox
-                  inputId={category}
-                  name="category"
-                  value={category}
-                  onChange={onCategoryChange}
-                  checked={selectedCategories.some((item) => item === category)}
-                />
-                <label htmlFor={category} className="ml-2">
-                  {category}
-                </label>
-              </Col>
-            );
-          })}
-        </Row>
+        <div>
+          {" "}
+          {[...Array(numColumns)].map((_, colIndex) => (
+            <Row >
+              {" "}
+              {[...Array(numRows)].map((_, rowIndex) => {
+                const startIndex =
+                  colIndex * 8 * numRows + rowIndex * 2 * numColumns;
+                return (
+                  <Col sm={3} >
+                    {" "}
+                    {allColumnNames
+                      .slice(startIndex, startIndex + 2 * numColumns)
+                      .map((category) => (
+                        <div key={category} className="checkbox-columnnames">
+                          <Checkbox
+                            inputId={category}
+                            name="category"
+                            value={category}
+                            onChange={onCategoryChange}
+                            checked={selectedCategories.some(
+                              (item) => item === category
+                            )}
+                          />
+                          <label htmlFor={category} className="ml-2">
+                             {category}
+                          </label>
+                        </div>
+                      ))}
+                  </Col>
+                );
+              })}
+            </Row>
+          ))}
+        </div>
       </Dialog>
     </>
   );

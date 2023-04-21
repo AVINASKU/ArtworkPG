@@ -69,13 +69,59 @@ const AllProjectList = (props) => {
     console.log("my projects", updatedUsers);
   }, [dispatch]);
 
+  const reorderColumns =(columns)=>{
+    const requiredColumnOrderArray = [
+      "Project_ID",
+      "Project_Name",
+      "Initiative_Group_Name",
+      "Project_Description",
+      "BU",
+      "Artwork_Category",
+      "Artwork_Brand",
+      "Project_region",
+      "Artwork_SMO",
+      "Cluster",
+      "Project_Scale",
+      "Project_State",
+      "Buffer_To_Work",
+      "Estimated_No_Of_DI",
+      "Estimated_No_Of_DT",
+      "Estimated_No_Of_NPF",
+      "Estimated_No_Of_IQ",
+      "Estimated_No_Of_PRA",
+      "Estimated_No_Of_CICs",
+      "Estimated_No_Of_POAs",
+      "Estimated_SOS",
+      "Estimated_SOP",
+      "Estimated_AW_Printer",
+      "Estimated_AW_Readiness",
+      "IL",
+      "PM",
+      "Comments",
+      "Project_Type",
+      "Production_Strategy",
+      "Tier"
+    ]
+    
+    let reorderedColumns =[];
+    requiredColumnOrderArray.forEach((rcl)=>{
+      columns.forEach((cl)=>{
+        if(rcl===cl){
+          reorderedColumns.push(cl)
+        }
+      })
+    })
+    return reorderedColumns
+    
+
+  }
   useEffect(() => {
     (async () => {
       try {
         // const ProjectData = await ProjectService.getProjectData();
         const ProjectData = allProjectList.allProjects;
         if (ProjectData.length) {
-          setAllColumnNames(Object.keys(ProjectData[0]));
+          setAllColumnNames(reorderColumns(Object.keys(ProjectData[0])));
         }
         // const columnNames = await ProjectService.getAllColumnNames();
         // localStorage.setItem("allColumnNames", JSON.stringify(columnNames));
@@ -291,8 +337,8 @@ const AllProjectList = (props) => {
   };
 
   const saveAsPersonaliDefault = (selectedCategories) => {
-    setProjectColumnNames(selectedCategories);
-    const columnNames = JSON.stringify(selectedCategories);
+    setProjectColumnNames(reorderColumns(selectedCategories));
+    const columnNames = JSON.stringify(reorderColumns(selectedCategories));
     localStorage.setItem("allColumnNamesAllProjects", columnNames);
     setVisible(false);
   };

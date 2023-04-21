@@ -195,7 +195,7 @@
 .tabular-add-project {
   padding: 15px;
   overflow-y: auto;
-  height: 57vh;
+  height: 67vh;
   // width: 90vw;
   .col {
     max-width: 230px;
@@ -208,7 +208,6 @@
     padding-left: 10px;
     position: absolute;
     border-radius: 4px;
-    
   }
 }
 .form-check {
@@ -250,7 +249,7 @@
   min-width: 208px;
 }
 
-.form-select{
+.form-select {
   max-width: 208px;
   min-height: 32px;
 }
@@ -263,9 +262,9 @@
   outline: none !important;
 }
 
-label.form-check-label{
-  &:nth-child(2){
+label.form-check-label {
+  &:nth-child(2) {
     white-space: pre;
-  font-size: 10px;
+    font-size: 10px;
   }
 }
