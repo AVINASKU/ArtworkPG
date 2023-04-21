@@ -4,7 +4,6 @@ import Notificaitons from "../../assets/images/notification.svg";
 import user from "../../assets/images/user.svg";
 import moment from "moment";
 
-
 const sessionData = sessionStorage?.getItem("session");
 
 const sessionObj = JSON.parse(sessionData);
@@ -15,18 +14,17 @@ const username = sessionObj?.username;
 
 const userid = sessionObj?.userid;
 
+// For date
 
+const loginTime = sessionObj?.loginTime;
 
-// For date 
+const formattedDate = moment(loginTime, "M/D/YYYY, h:mm:ss A").format(
+  "DD, MMMM,  YYYY"
+);
 
-const loginTime = sessionObj.loginTime;
-
-const formattedDate = moment(loginTime, "M/D/YYYY, h:mm:ss A").format("DD, MMMM,  YYYY");
-
-//for time 
+//for time
 
 const formattedTime = moment(loginTime).format(" h:mm  A (GMT Z)");
-
 
 const Header = () => {
   return (
@@ -45,7 +43,7 @@ const Header = () => {
           className="notificaitons"
         />
         <p>
-         {username}
+          {username}
           <span>{userid}</span>
         </p>
         <img src={user} alt="user profile" className="userProfile" />
