@@ -15,10 +15,13 @@
   .accordion-item {
     border-radius: 0;
     border: 0;
-    .accordion-header{
-    background-color: #EDF4FA;
-
+    .accordion-header {
+      background-color: #edf4fa;
     }
+    // .accordion-body {
+    //   height: 50vh;
+    //   overflow: auto;
+    // }
   }
   .accordion-button {
     box-shadow: none !important;
@@ -27,10 +30,10 @@
     padding-left: 30px;
     font-size: 14px;
     color: #003da5;
-    background-color: #EDF4FA !important;
+    background-color: #edf4fa !important;
     width: fit-content;
     margin-right: 2px;
-    &::after{
+    &::after {
       margin-left: 5px;
     }
   }

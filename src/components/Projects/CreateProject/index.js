@@ -53,7 +53,7 @@ function AddProject(props) {
   const [projectName, setProjectName] = useState("");
   const [projectDesc, setProjectDesc] = useState("");
   const [groupName, setGroupName] = useState("");
-  const [clustor, setClustor] = useState("");
+  const [cluster, setCluster] = useState("");
   const [scale, setScale] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCities, setSelectedCities] = useState([]);
@@ -114,7 +114,7 @@ function AddProject(props) {
           {}
       );
       setSmo(prePopuSmo || null);
-      setClustor(selectedProjectDetails?.clustor || "");
+      setCluster(selectedProjectDetails?.cluster || "");
       setScale(
         (selectedProjectDetails &&
           scaleList.find(
@@ -235,7 +235,7 @@ function AddProject(props) {
       setBrand([]);
       setRegion({});
       setSmo(null);
-      setClustor("");
+      setCluster("");
       setScale([]);
       setSOSDate("");
       setSOPDate("");
@@ -620,7 +620,7 @@ function AddProject(props) {
         // Project_Brands: "V14", //
         // Project_Categories: "AIR", //
         Project_Scale: scale,
-        Clustor: clustor,
+        Cluster: cluster,
         ProjectDescription: projectDesc,
         ProjectName: projectName,
         Project_region: region.name,
@@ -913,18 +913,18 @@ function AddProject(props) {
               </Form.Group>
             </Row>
             <Row>
-              <Form.Group className="mb-4" controlId="clustor.SelectMultiple">
-                <Form.Label>Clustor</Form.Label>
+              <Form.Group className="mb-4" controlId="cluster.SelectMultiple">
+                <Form.Label>Cluster</Form.Label>
                 <div>
                   <Form.Select
-                    value={clustor}
-                    onChange={(e) => setClustor(e.target.value)}
-                    placeholder="Select Clustor"
+                    value={cluster}
+                    onChange={(e) => setCluster(e.target.value)}
+                    placeholder="Select Cluster"
                   >
                     <option value="" style={{ maxWidth: "208px" }}>
-                      Select Clustor
+                      Select Cluster
                     </option>
-                    <option value="clustor1">Clustor1</option>
+                    <option value="cluster1">Cluster1</option>
                   </Form.Select>
                 </div>
               </Form.Group>

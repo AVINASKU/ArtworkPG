@@ -29,6 +29,13 @@ function ProjectSetup(props) {
     }
   }, [mode]);
 
+  const handleActiveKeyChange = (key) => {
+    if (activeKey === key) {
+      key = -1;
+    }
+    setActiveKey(key);
+  };
+
   return (
     <div className="content-layout">
       <div className="actions">
@@ -98,7 +105,7 @@ function ProjectSetup(props) {
       <div className="tabular-view">
         <Accordion defaultActiveKey="0" activeKey={activeKey}>
           <Accordion.Item eventKey="0">
-            <Accordion.Header onClick={() => setActiveKey("0")}>
+            <Accordion.Header onClick={() => handleActiveKeyChange("0")}>
               Project Setup
             </Accordion.Header>
             <Accordion.Body>
@@ -106,8 +113,8 @@ function ProjectSetup(props) {
             </Accordion.Body>
           </Accordion.Item>
           <Accordion.Item eventKey="1">
-            <Accordion.Header onClick={() => setActiveKey("1")}>
-              Design
+            <Accordion.Header onClick={() => handleActiveKeyChange("1")}>
+              Project Plan
             </Accordion.Header>
             <Accordion.Body>Monitor Project</Accordion.Body>
           </Accordion.Item>
