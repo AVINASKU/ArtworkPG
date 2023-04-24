@@ -46,9 +46,9 @@ $fontWeight400: 400;
 // Datepicker for ProjectSetUp component Style End
 .myProjectAnddAllProjectList {
   .p-datatable > .p-datatable-wrapper {
-    overflow: scroll;
+    // overflow: scroll;
     width: $width100;
-    height: 540px;
+    height: 100vh;
   }
   .p-datatable-table {
     line-height: 15px;
@@ -226,18 +226,18 @@ img[disabled] {
     brightness(70%) contrast(90%);
 }
 
-.reset-to-default-view{
+.reset-to-default-view {
   width: 170px;
   height: 32px;
   padding: 10px 18px;
   margin: 0 10px 0 21.82px !important;
   border-radius: 15px;
-  background-color: #003DA5;
+  background-color: #003da5;
   font-weight: $fontWeight500;
   line-height: 96%;
   vertical-align: top;
 }
-.checkbox-columnnames{
+.checkbox-columnnames {
   display: flex;
   align-items: center;
   margin-bottom: 10px;

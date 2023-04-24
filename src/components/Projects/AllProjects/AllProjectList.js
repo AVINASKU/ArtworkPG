@@ -10,8 +10,9 @@ import { changeDateFormat } from "../utils";
 import filter from "../../../assets/images/filter.svg";
 import {
   getAllProject,
-  updateProject,
+  // updateProject,
 } from "../../../store/actions/ProjectActions";
+import { selectedProject } from "../../../store/actions/projectSetup";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -66,10 +67,10 @@ const AllProjectList = (props) => {
 
   useEffect(() => {
     const updatedUsers = dispatch(getAllProject());
-    console.log("my projects", updatedUsers);
+    console.log("all projects", updatedUsers);
   }, [dispatch]);
 
-  const reorderColumns =(columns)=>{
+  const reorderColumns = (columns) => {
     const requiredColumnOrderArray = [
       "Project_ID",
       "Project_Name",
@@ -100,21 +101,19 @@ const AllProjectList = (props) => {
       "Comments",
       "Project_Type",
       "Production_Strategy",
-      "Tier"
-    ]
-    
-    let reorderedColumns =[];
-    requiredColumnOrderArray.forEach((rcl)=>{
-      columns.forEach((cl)=>{
-        if(rcl===cl){
-          reorderedColumns.push(cl)
-        }
-      })
-    })
-    return reorderedColumns
-    
+      "Tier",
+    ];
 
-  }
+    let reorderedColumns = [];
+    requiredColumnOrderArray.forEach((rcl) => {
+      columns.forEach((cl) => {
+        if (rcl === cl) {
+          reorderedColumns.push(cl);
+        }
+      });
+    });
+    return reorderedColumns;
+  };
   useEffect(() => {
     (async () => {
       try {
@@ -229,7 +228,9 @@ const AllProjectList = (props) => {
                 : "columnFilterIcon"
             }
           />
-          <span className={isFilterActivated&& "filter-color-change"}>{options}</span>
+          <span className={isFilterActivated && "filter-color-change"}>
+            {options}
+          </span>
         </>
       </div>
     );
@@ -243,16 +244,16 @@ const AllProjectList = (props) => {
     let brandName = [];
     let projectId = options["Project_ID"];
     if (field === "Artwork_Category") {
-      categoryNames = options[field]
-        .map((item) => item.Category_Name)
-        .join(",");
+      categoryNames =
+        options[field] &&
+        options[field].map((item) => item.Category_Name).join(",");
     }
 
     if (field === "Artwork_SMO") {
-      SMOName = options[field].map((item) => item.SMO_Name).join(",");
+      SMOName = options[field]?.map((item) => item.SMO_Name).join(",");
     }
     if (field === "Artwork_Brand") {
-      brandName = options[field].map((item) => item.Brand_Name).join(",");
+      brandName = options[field]?.map((item) => item.Brand_Name).join(",");
     }
 
     return (
@@ -282,10 +283,10 @@ const AllProjectList = (props) => {
 
         {field === "Project_Name" && (
           <span
-            style={{color:"#003DA5", cursor:"pointer"}}
+            style={{ color: "#003DA5", cursor: "pointer" }}
             onClick={() => {
               if (field && field.length) {
-                dispatch(updateProject(options));
+                dispatch(selectedProject(options, "All Projects"));
                 navigate(`/addProject/${projectId}`);
               }
             }}
@@ -492,12 +493,9 @@ const AllProjectList = (props) => {
   };
 
   const isFilterEnabled =
-    frozenCoulmns?.length ||
-    filters?.length ||
-    sortData?.length;
+    frozenCoulmns?.length || filters?.length || sortData?.length;
 
-      const isResetEnabled = isReorderedColumn;
-
+  const isResetEnabled = isReorderedColumn;
 
   // console.log("project column name", projectColumnName);
 
