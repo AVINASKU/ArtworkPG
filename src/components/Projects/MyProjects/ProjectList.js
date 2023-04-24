@@ -72,7 +72,7 @@ const ProjectList = (props) => {
     }
   }, [dispatch, myProjectList.myProject]);
 
-  const reorderColumns =(columns)=>{
+  const reorderColumns = (columns) => {
     const requiredColumnOrderArray = [
       "Project_ID",
       "Project_Name",
@@ -102,21 +102,19 @@ const ProjectList = (props) => {
       "Comments",
       "Project_Type",
       "Production_Strategy",
-      "Tier"
-    ]
+      "Tier",
+    ];
 
-    let reorderedColumns =[];
-    requiredColumnOrderArray.forEach((rcl)=>{
-      columns.forEach((cl)=>{
-        if(rcl===cl){
-          reorderedColumns.push(cl)
+    let reorderedColumns = [];
+    requiredColumnOrderArray.forEach((rcl) => {
+      columns.forEach((cl) => {
+        if (rcl === cl) {
+          reorderedColumns.push(cl);
         }
-      })
-    })
-    return reorderedColumns
-    
-
-  }
+      });
+    });
+    return reorderedColumns;
+  };
   useEffect(() => {
     // setLoading(true);
     (async () => {
@@ -231,7 +229,9 @@ const ProjectList = (props) => {
                 : "columnFilterIcon"
             }
           />
-          <span className={isFilterActivated&& "filter-color-change"}>{options}</span>
+          <span className={isFilterActivated && "filter-color-change"}>
+            {options}
+          </span>
         </>
       </div>
     );
@@ -251,10 +251,10 @@ const ProjectList = (props) => {
     }
 
     if (field === "Artwork_SMO") {
-      SMOName = options[field].map((item) => item.SMO_Name).join(",");
+      SMOName = options[field]?.map((item) => item.SMO_Name).join(",");
     }
     if (field === "Artwork_Brand") {
-      brandName = options[field].map((item) => item.Brand_Name).join(",");
+      brandName = options[field]?.map((item) => item.Brand_Name).join(",");
     }
 
     return (
@@ -284,7 +284,7 @@ const ProjectList = (props) => {
 
         {field === "Project_Name" && (
           <span
-            style={{color:"#003DA5", cursor:"pointer"}}
+            style={{ color: "#003DA5", cursor: "pointer" }}
             // href={`/addProject/${projectId}`}
             onClick={() => {
               if (field && field.length) {
@@ -320,7 +320,7 @@ const ProjectList = (props) => {
       return projectColumnName.map((ele, i) => {
         return (
           <Column
-          key={ele}
+            key={ele}
             field={ele}
             filterField={ele}
             header={projectNameHeader(ele)}
@@ -339,7 +339,7 @@ const ProjectList = (props) => {
   };
 
   const clearFilters = () => {
-// localStorage.removeItem("allColumnNames");
+    // localStorage.removeItem("allColumnNames");
     const allColumnNames = [
       "Project_ID",
       "Project_Name",
@@ -475,9 +475,7 @@ const ProjectList = (props) => {
   };
 
   const isFilterEnabled =
-    frozenCoulmns?.length ||
-    filters?.length ||
-    sortData?.length;
+    frozenCoulmns?.length || filters?.length || sortData?.length;
 
   const isResetEnabled = isReorderedColumn;
 
