@@ -5,21 +5,20 @@ import { Calendar } from "primereact/calendar";
 import { Controller, useForm } from "react-hook-form";
 import { classNames } from "primereact/utils";
 import { useNavigate } from "react-router-dom";
-import { createNewProject, editProject } from "../../../apis/projects";
-// import moment from "moment";
+import { createNewProject, editProject } from "../../../apis/projectSetupApi";
+import moment from "moment-timezone";
 import "./index.scss";
 import {
   businessUnits,
   regionList,
   designScope,
   scaleList,
-  projectType,
+  projectTypeList,
   brandList,
   ProductionStrategy,
   Tier,
 } from "../../../categories";
-
-const id = "PG-AAS-WORK A-443";
+import { useSelector } from "react-redux";
 
 const defaultCheckedItems = {
   DI: false,
@@ -41,7 +40,21 @@ const defaultTextBoxEnabled = {
 
 function AddProject(props) {
   const navigate = useNavigate();
-  const { mode = "" } = props;
+
+  const projectSetup = useSelector((state) => state.projectSetup);
+  const selectedProjectDetails = projectSetup.selectedProject;
+  const mode = projectSetup.mode;
+  const id = `PG-AAS-WORK ${selectedProjectDetails.Project_ID}`;
+  const prePopuSmo = [];
+  selectedProjectDetails?.Artwork_SMO?.forEach((obj) => {
+    prePopuSmo.push(obj.code);
+  });
+
+  const [projectName, setProjectName] = useState("");
+  const [projectDesc, setProjectDesc] = useState("");
+  const [groupName, setGroupName] = useState("");
+  const [clustor, setClustor] = useState("");
+  const [scale, setScale] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCities, setSelectedCities] = useState([]);
   const [formValid, setFormValid] = useState(false);
@@ -59,8 +72,12 @@ function AddProject(props) {
   const [brand, setBrand] = useState([]);
   const [tier, setTier] = useState("");
   const [ps, setPs] = useState("");
-  const [pm, setPm] = useState("Guillaume");
-  const [iL, setIl] = useState("Highway");
+  const [pm, setPm] = useState(
+    JSON.parse(sessionStorage.getItem("session")).username
+  );
+  const [iL, setIl] = useState("");
+  const [comments, setComments] = useState("");
+  const [projectType, setProjectType] = useState("");
   const [checkedItems, setCheckedItems] = useState(defaultCheckedItems);
   const [textBoxEnabled, setTextBoxEnabled] = useState(defaultTextBoxEnabled);
   const [POA, setPOA] = useState("1");
@@ -72,7 +89,240 @@ function AddProject(props) {
     IQ: "",
     CICs: "",
   });
-  const [scale, setScale] = useState([]);
+
+  const formatDate = (date) => {
+    return new Date(
+      moment(date, "YYYYMMDD[T]HHmmss.SSS [GMT]")
+        .tz("Asia/Kolkata")
+        .format("ddd MMM DD YYYY HH:mm:ss [GMT]ZZ (z)")
+    );
+  };
+
+  useEffect(() => {
+    if (mode === "edit" || mode === "design") {
+      setProjectName(selectedProjectDetails?.Project_Name || "");
+      setGroupName(selectedProjectDetails?.Initiative_Group_Name || "");
+      setProjectDesc(selectedProjectDetails?.Project_Description || "");
+      setBu(selectedProjectDetails?.BU || "");
+      setSubCategories(selectedProjectDetails?.Artwork_Category || []);
+      setBrand(selectedProjectDetails?.Artwork_Brand || []);
+      setRegion(
+        (selectedProjectDetails &&
+          regionList.find(
+            (r) => r.name === selectedProjectDetails.Project_region
+          )) ||
+          {}
+      );
+      setSmo(prePopuSmo || null);
+      setClustor(selectedProjectDetails?.clustor || "");
+      setScale(
+        (selectedProjectDetails &&
+          scaleList.find(
+            (r) => r.code === selectedProjectDetails.Project_Scale
+          ) &&
+          scaleList.find((r) => r.code === selectedProjectDetails.Project_Scale)
+            .code) ||
+          []
+      );
+      setSOSDate(
+        (selectedProjectDetails?.Estimated_SOS &&
+          formatDate(selectedProjectDetails?.Estimated_SOS)) ||
+          ""
+      );
+      setSOPDate(
+        (selectedProjectDetails?.Estimated_SOP &&
+          formatDate(selectedProjectDetails?.Estimated_SOP)) ||
+          ""
+      );
+      setPrinterDate(
+        (selectedProjectDetails?.Estimated_AW_Printer &&
+          formatDate(selectedProjectDetails?.Estimated_AW_Printer)) ||
+          ""
+      );
+      setReadinessDate(
+        (selectedProjectDetails?.Estimated_AW_Readiness &&
+          formatDate(selectedProjectDetails?.Estimated_AW_Readiness)) ||
+          ""
+      );
+      setIl(selectedProjectDetails?.IL);
+      setPm(
+        selectedProjectDetails?.PM ||
+          JSON.parse(sessionStorage.getItem("session")).username
+      );
+      setComments(selectedProjectDetails?.Comments || "");
+      setProjectType(selectedProjectDetails?.Project_Type || []);
+
+      setDesignScopeList((prevDesignScopeList) => ({
+        ...prevDesignScopeList,
+        DI: parseInt(selectedProjectDetails?.Estimated_No_Of_DI),
+      }));
+      handleCheckboxChange({
+        target: {
+          name: "DI",
+          value: "DI",
+          checked: selectedProjectDetails?.Design_Intent,
+        },
+      });
+
+      setDesignScopeList((prevDesignScopeList) => ({
+        ...prevDesignScopeList,
+        DT: parseInt(selectedProjectDetails?.Estimated_No_Of_DT),
+      }));
+      handleCheckboxChange({
+        target: {
+          name: "DT",
+          value: "DT",
+          checked: selectedProjectDetails?.Design_Template,
+        },
+      });
+
+      setDesignScopeList((prevDesignScopeList) => ({
+        ...prevDesignScopeList,
+        PF: parseInt(selectedProjectDetails?.Estimated_No_Of_NPF),
+      }));
+      handleCheckboxChange({
+        target: {
+          name: "PF",
+          value: "PF",
+          checked: selectedProjectDetails?.New_Print_Feasibility,
+        },
+      });
+
+      setDesignScopeList((prevDesignScopeList) => ({
+        ...prevDesignScopeList,
+        IQ: parseInt(selectedProjectDetails?.Estimated_No_Of_IQ),
+      }));
+      handleCheckboxChange({
+        target: {
+          name: "IQ",
+          value: "IQ",
+          checked: selectedProjectDetails?.Ink_Qualification,
+        },
+      });
+
+      setDesignScopeList((prevDesignScopeList) => ({
+        ...prevDesignScopeList,
+        PRA: parseInt(selectedProjectDetails?.Estimated_No_Of_PRA),
+      }));
+      handleCheckboxChange({
+        target: {
+          name: "PRA",
+          value: "PRA",
+          checked: selectedProjectDetails?.Production_Ready_Art,
+        },
+      });
+
+      setDesignScopeList((prevDesignScopeList) => ({
+        ...prevDesignScopeList,
+        PRA: parseInt(selectedProjectDetails?.Estimated_No_Of_CICs),
+      }));
+      handleCheckboxChange({
+        target: {
+          name: "CICs",
+          value: "CICs",
+          checked: selectedProjectDetails?.CICs,
+        },
+      });
+      setPOA(selectedProjectDetails?.Estimated_No_Of_POAs);
+      setPs(selectedProjectDetails?.Production_Strategy);
+      setTier(selectedProjectDetails?.Tier);
+    } else {
+      setProjectName("");
+      setGroupName("");
+      setProjectDesc("");
+      setBu("");
+      setSubCategories([]);
+      setBrand([]);
+      setRegion({});
+      setSmo(null);
+      setClustor("");
+      setScale([]);
+      setSOSDate("");
+      setSOPDate("");
+      setPrinterDate("");
+      setReadinessDate("");
+      setIl("");
+      setPm(JSON.parse(sessionStorage.getItem("session")).username);
+      setComments("");
+      setProjectType("");
+
+      setDesignScopeList((prevDesignScopeList) => ({
+        ...prevDesignScopeList,
+        DI: "",
+      }));
+      handleCheckboxChange({
+        target: {
+          name: "DI",
+          value: "DI",
+          checked: false,
+        },
+      });
+
+      setDesignScopeList((prevDesignScopeList) => ({
+        ...prevDesignScopeList,
+        DT: "",
+      }));
+      handleCheckboxChange({
+        target: {
+          name: "DT",
+          value: "DT",
+          checked: false,
+        },
+      });
+
+      setDesignScopeList((prevDesignScopeList) => ({
+        ...prevDesignScopeList,
+        PF: "",
+      }));
+      handleCheckboxChange({
+        target: {
+          name: "PF",
+          value: "PF",
+          checked: false,
+        },
+      });
+
+      setDesignScopeList((prevDesignScopeList) => ({
+        ...prevDesignScopeList,
+        IQ: "",
+      }));
+      handleCheckboxChange({
+        target: {
+          name: "IQ",
+          value: "IQ",
+          checked: false,
+        },
+      });
+
+      setDesignScopeList((prevDesignScopeList) => ({
+        ...prevDesignScopeList,
+        PRA: "",
+      }));
+      handleCheckboxChange({
+        target: {
+          name: "PRA",
+          value: "PRA",
+          checked: false,
+        },
+      });
+
+      setDesignScopeList((prevDesignScopeList) => ({
+        ...prevDesignScopeList,
+        CICs: "",
+      }));
+      handleCheckboxChange({
+        target: {
+          name: "CICs",
+          value: "CICs",
+          checked: false,
+        },
+      });
+      setPOA("1");
+      setPs("");
+      setTier("");
+    }
+  }, [mode]);
+
   const getSmoOptions = () => {
     if (!region?.countries) return [];
 
@@ -135,7 +385,7 @@ function AddProject(props) {
   const getProjectCode = () => {
     const projName = getValues("projectType");
     let projCode;
-    projectType.forEach((pt) => {
+    projectTypeList.forEach((pt) => {
       if (pt.name === projName) {
         projCode = pt.code;
       }
@@ -144,8 +394,13 @@ function AddProject(props) {
   };
 
   const handleRegionChange = (e) => {
-    const selectedRegion = regionList.find((r) => r.code === e.target.value);
+    const selectedRegion = regionList.find((r) => r.name === e.target.value);
     setRegion(selectedRegion);
+    setSmo(null);
+  };
+  const handleScaleChange = (e) => {
+    const selectedScale = scaleList.find((r) => r.code === e.target.value);
+    setRegion(selectedScale);
     setSmo(null);
   };
 
@@ -284,7 +539,7 @@ function AddProject(props) {
     groupName: "",
     customValue: "",
     kickoffDate: "",
-    PM: "Guillaume",
+    PM: "",
   };
   const {
     register,
@@ -304,7 +559,7 @@ function AddProject(props) {
     // check if all fields are filled
     // // const valid = selectedCities && selectedCities.length > 0 && isValid;
     const valid =
-      getValues("projectName") !== "" &&
+      projectName !== "" &&
       brand?.length > 0 &&
       region &&
       Object.keys(region).length > 0 &&
@@ -338,7 +593,7 @@ function AddProject(props) {
     const formData = {
       content: {
         BU: bu,
-        Comments: getValues("comments"),
+        Comments: comments,
         DesignIntent: (designScopeList.DI !== "").toString(),
         EstimatedNoOfDI: designScopeList.DI.toString(),
         DesignTemplate: (designScopeList.DT !== "").toString(),
@@ -349,9 +604,9 @@ function AddProject(props) {
         EstimatedNoOfNPF: designScopeList.PF.toString(),
         ProductionReadyArt: (designScopeList.PRA !== "").toString(),
         EstimatedNoOfPRA: designScopeList.PRA.toString(),
-        POAs: "true",
         Estimated_ofCICs: designScopeList.CICs.toString(),
         CICs: (designScopeList.CICs !== "").toString(),
+        POAs: "true",
         Estimated_ofPOAs: POA,
         Estimated_SOP: sopDate,
         Estimated_SOS: sosDate,
@@ -359,17 +614,18 @@ function AddProject(props) {
         Estimated_AW_Readiness: readinessDate,
         IL: iL,
         tier: tier,
-        InitiativeGroupName: getValues("groupName"),
+        InitiativeGroupName: groupName,
         PM: pm,
         ProductionStrategy: ps,
         // Project_Brands: "V14", //
         // Project_Categories: "AIR", //
-        Project_Scale: getValues("scale"),
-        ProjectDescription: getValues("projectDescription"),
-        ProjectName: getValues("projectName"),
+        Project_Scale: scale,
+        Clustor: clustor,
+        ProjectDescription: projectDesc,
+        ProjectName: projectName,
         Project_region: region.name,
         Project_Code: ProjectCode,
-        ProjectType: getValues("projectType"),
+        ProjectType: projectType,
         Project_State: "",
         Buffer_To_Work: "",
         ProjectStatus: status,
@@ -383,28 +639,28 @@ function AddProject(props) {
   };
 
   const onSubmit = async () => {
-    const formData = collectFormData("Active", mode?.mode);
+    const formData = collectFormData("Active", mode);
     console.log("form data", formData);
     setFormData(formData);
-    if (mode?.mode === "create") {
+    if (mode === "create") {
       await createNewProject(formData);
-    } else if (mode?.mode === "edit") {
+    } else if (mode === "edit") {
       const method = "PATCH";
-      const headers = { key: "If-Match", value: "20230419T135559.155 GMT" };
+      const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
       await editProject(formData, id, method, headers);
     }
     navigate("/myProjects");
   };
   const onSaveAsDraft = async () => {
-    const draftFormData = collectFormData("Draft", mode?.mode);
+    const draftFormData = collectFormData("Draft", mode);
     console.log("draft form data", draftFormData);
     localStorage.setItem("formDraft", JSON.stringify(draftFormData));
     setIsLoading(true);
-    if (mode?.mode === "create") {
+    if (mode === "create") {
       await createNewProject(draftFormData);
-    } else if (mode?.mode === "edit") {
+    } else if (mode === "edit" || mode === "design") {
       const method = "PUT";
-      const headers = { key: "If-Match", value: "20230419T135559.155 GMT" };
+      const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
       await editProject(draftFormData, id, method, headers);
     }
     setIsLoading(false);
@@ -487,17 +743,18 @@ function AddProject(props) {
           <Col>
             <Row>
               <Form.Group
-                className={`mb-3 ${errors.projectName && "error-valid"}`}
+                className={`mb-3 ${projectName === "" && "error-valid"}`}
                 controlId="projectName.ControlInput1"
               >
                 <Form.Label>Project Name * </Form.Label>
-                <Form.Control
+                <input
                   type="text"
+                  className="form-control"
                   placeholder="Enter Project Name"
-                  {...register("projectName", { required: true })}
-                  required
+                  onChange={(e) => setProjectName(e.target.value)}
+                  value={projectName}
                 />
-                {errors.projectName && (
+                {projectName === "" && (
                   <span className="error-text">Field Remaining</span>
                 )}
               </Form.Group>
@@ -508,10 +765,12 @@ function AddProject(props) {
                 controlId="groupName.ControlInput1"
               >
                 <Form.Label>Initiative Group Name</Form.Label>
-                <Form.Control
+                <input
                   type="text"
-                  placeholder=""
-                  {...register("groupName")}
+                  className="form-control"
+                  placeholder="Enter Group Name"
+                  onChange={(e) => setGroupName(e.target.value)}
+                  value={groupName}
                 />
               </Form.Group>
             </Row>
@@ -521,12 +780,13 @@ function AddProject(props) {
                 controlId="projectDescription.ControlInput1"
               >
                 <Form.Label>Project Description</Form.Label>
-                <Form.Control
-                  as="textarea"
+                <textarea
+                  type="text"
                   style={{ height: "114px" }}
-                  // style={{ height: "5rem" }}
-                  placeholder="Add Project description"
-                  {...register("projectDescription", { required: false })}
+                  className="form-control"
+                  placeholder="Enter Project Description"
+                  onChange={(e) => setProjectDesc(e.target.value)}
+                  value={projectDesc}
                 />
               </Form.Group>
             </Row>
@@ -568,7 +828,7 @@ function AddProject(props) {
                   value={subCategories}
                   onChange={handleSubCategoryChange}
                   options={subCategoriesOptions}
-                  optionLabel="name"
+                  optionLabel="Category_Name"
                   filter
                   placeholder="Select Categories"
                   className="w-full md:w-20rem"
@@ -577,7 +837,7 @@ function AddProject(props) {
             </Row>
             <Row>
               <Form.Group
-                className={`mb-3 ${brand.length < 1 && "error-valid"}`}
+                className={`mb-3 ${brand?.length < 1 && "error-valid"}`}
                 controlId="brand.SelectMultiple"
               >
                 <Form.Label>Brand *</Form.Label>
@@ -594,7 +854,7 @@ function AddProject(props) {
                     required
                   />
                 </div>
-                {brand.length < 1 && (
+                {brand?.length < 1 && (
                   <span className="error-text">Field Remaining</span>
                 )}
               </Form.Group>
@@ -611,13 +871,13 @@ function AddProject(props) {
                 <Form.Label>Region *</Form.Label>
                 <div>
                   <Form.Select
-                    value={region?.code || ""}
+                    value={region?.name || ""}
                     onChange={handleRegionChange}
                     placeholder="Select Region"
                   >
                     <option value="">Select Region</option>
                     {regionList.map((r) => (
-                      <option key={r.code} value={r.code}>
+                      <option key={r.code} value={r.name}>
                         {r.name}
                       </option>
                     ))}
@@ -657,15 +917,13 @@ function AddProject(props) {
                 <Form.Label>Clustor</Form.Label>
                 <div>
                   <Form.Select
-                    // value={selectedCities}
-                    // onChange={(e) => setSelectedCities(e.value)}
-                    {...register("clustor", { required: false })}
-                    placeholder="Select Scale"
+                    value={clustor}
+                    onChange={(e) => setClustor(e.target.value)}
+                    placeholder="Select Clustor"
                   >
                     <option value="" style={{ maxWidth: "208px" }}>
                       Select Clustor
                     </option>
-
                     <option value="clustor1">Clustor1</option>
                   </Form.Select>
                 </div>
@@ -676,9 +934,8 @@ function AddProject(props) {
                 <Form.Label>Scale </Form.Label>
                 <div>
                   <Form.Select
-                    // value={scale}
-                    // onChange={(e) => setScale(e.target.value)}
-                    {...register("scale", { required: false })}
+                    value={scale}
+                    onChange={(e) => setScale(e.target.value)}
                     placeholder="Select Scale"
                   >
                     <option value="">Select Scale</option>
@@ -887,10 +1144,7 @@ function AddProject(props) {
               </Form.Group>
             </Row>
             <Row>
-              <Form.Group
-                className="mb-4"
-                controlId="projectType.SelectMultiple"
-              >
+              <Form.Group className="mb-4" controlId="il.SelectMultiple">
                 <Form.Label>IL</Form.Label>
                 <div>
                   <Form.Control value={iL} onChange={handleIL}></Form.Control>
@@ -898,10 +1152,7 @@ function AddProject(props) {
               </Form.Group>
             </Row>
             <Row>
-              <Form.Group
-                className="mb-4"
-                controlId="projectType.SelectMultiple"
-              >
+              <Form.Group className="mb-4" controlId="pm.SelectMultiple">
                 <Form.Label>PM *</Form.Label>
                 <div>
                   <Form.Control
@@ -917,11 +1168,13 @@ function AddProject(props) {
             <Row>
               <Form.Group className="mb-4" controlId="comments.ControlInput1">
                 <Form.Label>Comments</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  style={{ height: 105, width: 208 }}
+                <textarea
+                  type="text"
+                  style={{ height: "114px" }}
+                  className="form-control"
                   placeholder="Add Comments"
-                  {...register("comments", { required: false })}
+                  onChange={(e) => setComments(e.target.value)}
+                  value={comments}
                 />
               </Form.Group>
             </Row>
@@ -933,14 +1186,13 @@ function AddProject(props) {
                 <Form.Label>Project Type</Form.Label>
                 <div>
                   <Form.Select
-                    // value={selectedCities}
-                    // onChange={(e) => setSelectedCities(e.value)}
-                    {...register("projectType", { required: false })}
+                    value={projectType}
+                    onChange={(e) => setProjectType(e.target.value)}
                     placeholder="Select Project Type"
                   >
                     <option value="">Select Project Type</option>
-                    {projectType.map((pt) => (
-                      <option key={pt.code} value={pt.name}>
+                    {projectTypeList.map((pt) => (
+                      <option key={pt.code} value={pt.code}>
                         {pt.name}
                       </option>
                     ))}

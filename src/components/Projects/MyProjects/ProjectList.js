@@ -11,10 +11,11 @@ import { Tag } from "primereact/tag";
 import filter from "../../../assets/images/filter.svg";
 import {
   getMyProject,
-  updateProject,
+  // updateProject,
 } from "../../../store/actions/ProjectActions";
 import { changeDateFormat } from "../utils";
 
+import { selectedProject } from "../../../store/actions/projectSetup";
 const CustomisedView = React.lazy(() => import("./CustomisedView"));
 
 const ProjectList = (props) => {
@@ -66,11 +67,11 @@ const ProjectList = (props) => {
   };
 
   useEffect(() => {
-    if (!myProjectList.myProject.length) {
-      const updatedUsers = dispatch(getMyProject());
-      console.log("my projects", updatedUsers);
-    }
-  }, [dispatch, myProjectList.myProject]);
+    // if (!myProjectList.myProject.length) {
+    const updatedUsers = dispatch(getMyProject());
+    console.log("my projects", updatedUsers);
+    // }
+  }, [dispatch]);
 
   const reorderColumns = (columns) => {
     const requiredColumnOrderArray = [
@@ -245,9 +246,9 @@ const ProjectList = (props) => {
     let brandName = [];
     let projectId = options["Project_ID"];
     if (field === "Artwork_Category") {
-      categoryNames = options[field]
-        .map((item) => item.Category_Name)
-        .join(",");
+      categoryNames =
+        options[field] &&
+        options[field].map((item) => item.Category_Name).join(",");
     }
 
     if (field === "Artwork_SMO") {
@@ -288,7 +289,7 @@ const ProjectList = (props) => {
             // href={`/addProject/${projectId}`}
             onClick={() => {
               if (field && field.length) {
-                dispatch(updateProject(options));
+                dispatch(selectedProject(options, "My Projects"));
                 navigate(`/addProject/${projectId}`);
               }
             }}

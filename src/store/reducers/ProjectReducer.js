@@ -40,7 +40,6 @@ const ProjectReducer = (state = initialState, action) => {
     case "UPDATE_PROJECT":
       return {
         ...state,
-        updateProject: payload,
       };
     default:
       return state;
