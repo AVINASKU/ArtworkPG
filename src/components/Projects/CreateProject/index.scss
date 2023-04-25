@@ -7,12 +7,15 @@
   flex-direction: row-reverse;
   justify-content: space-between;
 }
+
 .p-multiselect-panel .p-multiselect-header {
-  padding: 10px 5px;
+  // padding: 10px 5px;
   display: flex;
   flex-direction: row-reverse;
 }
-
+.p-multiselect-panel .p-multiselect-items .p-multiselect-item .p-checkbox {
+margin-right: 0 !important;
+}
 .p-multiselect-filter-container {
   flex: 1;
 }
@@ -76,13 +79,19 @@
   margin-top: 5px;
 }
 .p-multiselect-panel .p-multiselect-header {
-  padding: 0.75rem 1.25rem;
+  padding: 0.75rem 1.25rem !important;
   border-bottom: 1px solid #acacac;
   color: #343a40;
   background: #fff;
   margin: 0;
   border-top-right-radius: 8px;
   border-top-left-radius: 8px;
+}
+.p-multiselect-items-wrapper {
+  padding: 0 1.25rem !important;
+}
+::-webkit-scrollbar {
+  width: 5px;
 }
 
 .p-checkbox {
@@ -208,7 +217,6 @@
     padding-left: 10px;
     position: absolute;
     border-radius: 4px;
-    
   }
 }
 .form-check {
@@ -250,7 +258,7 @@
   min-width: 208px;
 }
 
-.form-select{
+.form-select {
   max-width: 208px;
   min-height: 32px;
 }
@@ -263,15 +271,9 @@
   outline: none !important;
 }
 
-label.form-check-label{
-  &:nth-child(2){
+label.form-check-label {
+  &:nth-child(2) {
     white-space: pre;
-  font-size: 10px;
+    font-size: 10px;
   }
 }
-
-// form.form-class{
-// &:nth-child(6){
-//   height: 200px;
-//   }
-// }

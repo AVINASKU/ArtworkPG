@@ -7,70 +7,96 @@ import { Dropdown } from "primereact/dropdown";
 import "primeicons/primeicons.css";
 import { SelectButton } from "primereact/selectbutton";
 import "./index.scss";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import ProjectPlanCompo from "../Projects/ProjectPlan/ProjectPlanCompo";
 
-function ProjectSetup() {
+function ProjectSetup(props) {
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  console.log("projectSetup:", projectSetup);
+  const selectedProjectDetails = projectSetup.selectedProject;
+  const { mode, rootBreadCrumb } = projectSetup;
+  const [activeKey, setActiveKey] = useState("0");
   const items = [
-    { label: "My Projects" },
-    { label: "Project Setup/Project Plan" },
-  ];
-  const [selectedAction, setSelectedAction] = useState(null);
-  const [selectedColor, setSelectedColor] = useState("");
-  const [isClicked, setIsClicked] = useState(false);
-  const options = ["Gantt Chart", "Tabular"];
-  const [value, setValue] = useState(options[0]);
-  const ActionOptions = [
-    { name: "On Hold", color: "orange" },
-    { name: "Cancel", color: "red" },
-    { name: "Previous State", color: "blue" },
+    { label: rootBreadCrumb },
+    { label: activeKey === "0" ? "Project Setup" : "Design" },
   ];
 
-  function handleClick() {
-    setIsClicked(true);
-    setSelectedColor("button-click");
-  }
+  useEffect(() => {
+    if (mode === "create") {
+      setActiveKey("0");
+    } else {
+      if (mode === "edit") {
+        setActiveKey("0");
+      } else if (mode === "design") {
+        setActiveKey("1");
+      }
+    }
+  }, [mode]);
+
+  const handleActiveKeyChange = (key) => {
+    if (activeKey === key) {
+      key = -1;
+    }
+    setActiveKey(key);
+  };
 
   return (
     <div className="content-layout">
       <div className="actions">
-        <div className="actions-left">
+        <div>
           <BreadCrumb model={items} />
-          <div className="project-name">DC HDW SAR Fairy Fame Pink LBB</div>
-        </div>
-        <div className="actions-right">
-          <div className="card flex justify-content-center">
-            <SelectButton
-              value={value}
-              onChange={(e) => setValue(e.value)}
-              options={options}
-            />
-          </div>
-          <div className="card flex justify-content-center1">
-            <Dropdown
-              value={selectedAction}
-              onChange={(e) => {
-                setSelectedAction(e.value);
-                // setSelectedColor({ backgroundColor: "blue" });
-              }}
-              onClick={handleClick}
-              options={ActionOptions}
-              optionLabel="name"
-              placeholder="Action"
-              className="w-full action-button selectedColor md:w-14rem"
-            />
-          </div>
+
+          {/* {`--------${mode}`} */}
+          {mode !== "create" && (
+            <div className="project-name">
+              {selectedProjectDetails.Project_Name}
+            </div>
+          )}
         </div>
       </div>
       <div className="tabular-view">
-        <Accordion defaultActiveKey="0">
+        <Accordion defaultActiveKey="0" activeKey={activeKey}>
           <Accordion.Item eventKey="0">
-            <Accordion.Header>Project Setup</Accordion.Header>
+            <Accordion.Header onClick={() => handleActiveKeyChange("0")}>
+              Project Setup
+            </Accordion.Header>
             <Accordion.Body>
-              <AddProject />
+              <AddProject {...props} projectMode={mode} />
             </Accordion.Body>
           </Accordion.Item>
+
           <Accordion.Item eventKey="1">
-            <Accordion.Header>Design</Accordion.Header>
-            <Accordion.Body>Monitor Project</Accordion.Body>
+            <Accordion.Header onClick={() => handleActiveKeyChange("1")}>
+              Project Plan
+            </Accordion.Header>
+            <Accordion.Body>
+              <ProjectPlanCompo />
+              {/* <Accordion
+                defaultActiveKey="2"
+                style={{ paddingLeft: "43px", background: "#edf4fa", width: "100%",
+                marginLeft: "0px" }}
+              >
+                <Accordion.Item eventKey="2">
+                  <Accordion.Header>Design</Accordion.Header>
+                  <Accordion.Body>
+                    <ProjectPlan {...props} />
+                  </Accordion.Body>
+                </Accordion.Item>
+                <Accordion.Item eventKey="3">
+                  <Accordion.Header>Input</Accordion.Header>
+                  <Accordion.Body>
+                    Input
+                  </Accordion.Body>
+                </Accordion.Item>
+                <Accordion.Item eventKey="4">
+                  <Accordion.Header>FA Assembly</Accordion.Header>
+                  <Accordion.Body>
+                  FA Assembly
+                  </Accordion.Body>
+                </Accordion.Item>
+              </Accordion> */}
+            </Accordion.Body>
           </Accordion.Item>
         </Accordion>
       </div>

@@ -436,5 +436,37 @@
             "Estimated_SOP": "20230413",
             "PM": "Hemant"
         }
+    ],
+    "ProjectPlan": [
+        {
+            "Task": "Define Design Intent",
+            "SubTask": [],
+            "Dependancy": "Project active & task in scope",
+            "Role": ["Design Manager", "Project Manager"],
+            "Owner": ["Paleczna", "Sriram"],
+            "State": "Completed",
+            "Duration(Days)": "02",
+            "Start Date": "20230411T000000.000 GMT"
+        },
+        {
+            "Task": "Define Design Intent",
+            "SubTask": [
+                {
+                    "Task": "Define Design Intent",
+                    "Dependancy": "Project active & task in scope",
+                    "Role": ["Design Manager", "Project Manager"],
+                    "Owner": ["Paleczna", "Sriram"],
+                    "State": "Completed",
+                    "Duration(Days)": "02",
+                    "Start Date": "20230411T000000.000 GMT"
+                }
+            ],
+            "Dependancy": "Project active & task in scope",
+            "Role": ["Design Manager", "Project Manager"],
+            "Owner": ["Paleczna", "Sriram"],
+            "State": "Completed",
+            "Duration(Days)": "02",
+            "Start Date": "20230411T000000.000 GMT"
+        }
     ]
 }

@@ -69,27 +69,27 @@ export const businessUnits = [
     code: "BABY",
     categories: [
       {
-        name: "Baby & Feminine Care No Detail",
+        Category_Name: "Baby & Feminine Care No Detail",
         code: "BFCND",
       },
       {
-        name: "Baby Care Adjacencies",
+        Category_Name: "Baby Care Adjacencies",
         code: "BCA",
       },
       {
-        name: "Baby Care NBD",
+        Category_Name: "Baby Care NBD",
         code: "BCN",
       },
       {
-        name: "Baby Connected Care",
+        Category_Name: "Baby Connected Care",
         code: "BCC",
       },
       {
-        name: "Baby Wipes",
+        Category_Name: "Baby Wipes",
         code: "BW",
       },
       {
-        name: "Diapers",
+        Category_Name: "Diapers",
         code: "DP",
       },
     ],
@@ -99,19 +99,19 @@ export const businessUnits = [
     code: "FAM",
     categories: [
       {
-        name: "Bleach",
+        Category_Name: "Bleach",
         code: "BL",
       },
       {
-        name: "Fabric Care NBD",
+        Category_Name: "Fabric Care NBD",
         code: "FCN",
       },
       {
-        name: "Fabric Enhancers",
+        Category_Name: "Fabric Enhancers",
         code: "FE",
       },
       {
-        name: "Fabric Revitalizer",
+        Category_Name: "Fabric Revitalizer",
         code: "FR",
       },
     ],
@@ -121,11 +121,11 @@ export const businessUnits = [
     code: "FEMI",
     categories: [
       {
-        name: "Adult Incontinence",
+        Category_Name: "Adult Incontinence",
         code: "AI",
       },
       {
-        name: "Feminine Care",
+        Category_Name: "Feminine Care",
         code: "FC",
       },
     ],
@@ -135,19 +135,19 @@ export const businessUnits = [
     code: "HC",
     categories: [
       {
-        name: "Air Care",
-        code: "AC",
+        Category_Name: "Air Care",
+        code: "HC",
       },
       {
-        name: "Auto Dish",
-        code: "AD",
+        Category_Name: "Auto Dish",
+        code: "BV0041",
       },
       {
-        name: "Cleaning Products",
+        Category_Name: "Cleaning Products",
         code: "CP",
       },
       {
-        name: "Dish Care",
+        Category_Name: "Dish Care",
         code: "DC",
       },
     ],
@@ -157,15 +157,15 @@ export const businessUnits = [
     code: "OC",
     categories: [
       {
-        name: "Dental Floss",
+        Category_Name: "Dental Floss",
         code: "DENTF",
       },
       {
-        name: "DENT",
+        Category_Name: "DENT",
         code: "AD",
       },
       {
-        name: "Denture Care",
+        Category_Name: "Denture Care",
         code: "DENC",
       },
     ],
@@ -249,9 +249,9 @@ export const regionList = [
 export const designScope = [
   { label: "Design Intent", value: "DI" },
   { label: "Regional Design Template", value: "DT" },
-  { label: "Production Ready Art", value: "PRA" },
   { label: "New Print Feasibility", value: "PF" },
   { label: "Ink Qualification", value: "IQ" },
+  { label: "Production Ready Art", value: "PRA" },
   { label: "CIC/GA", value: "CICs" },
   // { label: "POA's", value: "POAs" },
 ];
@@ -263,7 +263,7 @@ export const scaleList = [
   { name: "RBU Customization", code: "RBU Customization" },
 ];
 
-export const projectType = [
+export const projectTypeList = [
   { name: "Highway", code: "Highway" },
   { name: "TR (Travel Retail)", code: "TR (Travel Retail)" },
   { name: "Cost Saving", code: "C" },

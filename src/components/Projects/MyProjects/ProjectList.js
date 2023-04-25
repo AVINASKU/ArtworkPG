@@ -11,10 +11,11 @@ import { Tag } from "primereact/tag";
 import filter from "../../../assets/images/filter.svg";
 import {
   getMyProject,
-  updateProject,
+  // updateProject,
 } from "../../../store/actions/ProjectActions";
 import { changeDateFormat } from "../utils";
 
+import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 const CustomisedView = React.lazy(() => import("./CustomisedView"));
 
 const ProjectList = (props) => {
@@ -66,12 +67,55 @@ const ProjectList = (props) => {
   };
 
   useEffect(() => {
-    if (!myProjectList.myProject.length) {
-      const updatedUsers = dispatch(getMyProject());
-      console.log("my projects", updatedUsers);
-    }
-  }, [dispatch, myProjectList.myProject]);
+    // if (!myProjectList.myProject.length) {
+    const updatedUsers = dispatch(getMyProject());
+    console.log("my projects", updatedUsers);
+    // }
+  }, [dispatch]);
 
+  const reorderColumns = (columns) => {
+    const requiredColumnOrderArray = [
+      "Project_ID",
+      "Project_Name",
+      "Initiative_Group_Name",
+      "Project_Description",
+      "BU",
+      "Artwork_Category",
+      "Artwork_Brand",
+      "Project_region",
+      "Artwork_SMO",
+      "Cluster",
+      "Project_Scale",
+      "Project_State",
+      "Buffer_To_Work",
+      "Estimated_No_Of_DI",
+      "Estimated_No_Of_DT",
+      "Estimated_No_Of_NPF",
+      "Estimated_No_Of_IQ",
+      "Estimated_No_Of_PRA",
+      "Estimated_No_Of_CICs",
+      "Estimated_No_Of_POAs",
+      "Estimated_SOS",
+      "Estimated_SOP",
+      "Estimated_AW_Printer",
+      "Estimated_AW_Readiness",
+      "IL",
+      "Comments",
+      "Project_Type",
+      "Production_Strategy",
+      "Tier",
+    ];
+
+    let reorderedColumns = [];
+    requiredColumnOrderArray.forEach((rcl) => {
+      columns.forEach((cl) => {
+        if (rcl === cl) {
+          reorderedColumns.push(cl);
+        }
+      });
+    });
+    return reorderedColumns;
+  };
   useEffect(() => {
     // setLoading(true);
     (async () => {
@@ -84,7 +128,8 @@ const ProjectList = (props) => {
         console.log("my project data here here", ProjectData);
 
         if (ProjectData.length) {
-          setAllColumnNames(Object.keys(ProjectData[0]));
+          // console.log(Object.keys(ProjectData[0]));
+          setAllColumnNames(reorderColumns(Object.keys(ProjectData[0])));
         }
         // const columnNames = await ProjectService.getAllColumnNames();
         // localStorage.setItem("allColumnNames", JSON.stringify(columnNames));
@@ -185,7 +230,9 @@ const ProjectList = (props) => {
                 : "columnFilterIcon"
             }
           />
-          <span className={isFilterActivated&& "filter-color-change"}>{options}</span>
+          <span className={isFilterActivated && "filter-color-change"}>
+            {options}
+          </span>
         </>
       </div>
     );
@@ -199,16 +246,16 @@ const ProjectList = (props) => {
     let brandName = [];
     let projectId = options["Project_ID"];
     if (field === "Artwork_Category") {
-      categoryNames = options[field]
-        .map((item) => item.Category_Name)
-        .join(",");
+      categoryNames =
+        options[field] &&
+        options[field].map((item) => item.Category_Name).join(",");
     }
 
     if (field === "Artwork_SMO") {
-      SMOName = options[field].map((item) => item.SMO_Name).join(",");
+      SMOName = options[field]?.map((item) => item.SMO_Name).join(",");
     }
     if (field === "Artwork_Brand") {
-      brandName = options[field].map((item) => item.Brand_Name).join(",");
+      brandName = options[field]?.map((item) => item.Brand_Name).join(",");
     }
 
     return (
@@ -238,11 +285,11 @@ const ProjectList = (props) => {
 
         {field === "Project_Name" && (
           <span
-            style={{color:"#003DA5", cursor:"pointer"}}
+            style={{ color: "#003DA5", cursor: "pointer" }}
             // href={`/addProject/${projectId}`}
             onClick={() => {
               if (field && field.length) {
-                dispatch(updateProject(options));
+                dispatch(selectedProject(options, "My Projects"));
                 navigate(`/addProject/${projectId}`);
               }
             }}
@@ -274,7 +321,7 @@ const ProjectList = (props) => {
       return projectColumnName.map((ele, i) => {
         return (
           <Column
-          key={ele}
+            key={ele}
             field={ele}
             filterField={ele}
             header={projectNameHeader(ele)}
@@ -293,7 +340,7 @@ const ProjectList = (props) => {
   };
 
   const clearFilters = () => {
-// localStorage.removeItem("allColumnNames");
+    // localStorage.removeItem("allColumnNames");
     const allColumnNames = [
       "Project_ID",
       "Project_Name",
@@ -344,9 +391,9 @@ const ProjectList = (props) => {
   };
 
   const saveAsPersonaliDefault = (selectedCategories) => {
-    const columnNames = JSON.stringify(selectedCategories);
+    const columnNames = JSON.stringify(reorderColumns(selectedCategories));
     localStorage.setItem("allColumnNames", columnNames);
-    setProjectColumnNames(selectedCategories);
+    setProjectColumnNames(reorderColumns(selectedCategories));
     setVisible(false);
   };
 
@@ -429,9 +476,7 @@ const ProjectList = (props) => {
   };
 
   const isFilterEnabled =
-    frozenCoulmns?.length ||
-    filters?.length ||
-    sortData?.length;
+    frozenCoulmns?.length || filters?.length || sortData?.length;
 
   const isResetEnabled = isReorderedColumn;
 

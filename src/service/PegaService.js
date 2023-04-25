@@ -4,29 +4,50 @@ const frozenColData = ["Record ID#", "Timestamp", "Status", "SOP"];
 
 const sortingData = ["Record ID#", "desc"];
 
+const projectPlanAllColumnNames = [
+  "Task",
+  "Dependancy",
+  "Role",
+  "Owner",
+  "State",
+  "Duration(Days)",
+  "Start Date",
+  "End Date",
+  "Consumed Buffer",
+  "Help Needed",
+  // "Project_ID",
+  // "Project_Name",
+  // "Artwork_Category",
+  // "Artwork_SMO",
+  // "Project_State",
+  // "Artwork_Brand",
+  // "Buffer_To_Work",
+  // "Estimated_AW_Printer",
+  // "Full Kit Readiness Tracking",
+];
 const allColumnNames = [
   "Project_ID",
   "Project_Name",
   "Artwork_Category",
+  "Artwork_Brand",
   "Artwork_SMO",
   "Project_State",
-  "Artwork_Brand",
   "Buffer_To_Work",
   "Estimated_AW_Printer",
-  "Full Kit Readiness Tracking",
+  // "Full Kit Readiness Tracking",
 ];
 
 const allColumnNamesAllProjects = [
   "Project_ID",
   "Project_Name",
   "Artwork_Category",
-  "Artwork_SMO",
-  "PM",
-  "Project_State",
   "Artwork_Brand",
+  "Artwork_SMO",
+  "Project_State",
   "Buffer_To_Work",
   "Estimated_AW_Printer",
-  "Full Kit Readiness Tracking",
+  "PM",
+  // "Full Kit Readiness Tracking",
 ];
 
 const filterProjectData = [
@@ -54,6 +75,9 @@ export const ProjectService = {
     return frozenColData;
   },
 
+  getProjectPlanAllColumnNames() {
+    return projectPlanAllColumnNames;
+  },
   getAllColumnNames() {
     return allColumnNames;
   },

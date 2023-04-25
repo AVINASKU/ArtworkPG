@@ -10,8 +10,9 @@ import { changeDateFormat } from "../utils";
 import filter from "../../../assets/images/filter.svg";
 import {
   getAllProject,
-  updateProject,
+  // updateProject,
 } from "../../../store/actions/ProjectActions";
+import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -66,16 +67,60 @@ const AllProjectList = (props) => {
 
   useEffect(() => {
     const updatedUsers = dispatch(getAllProject());
-    console.log("my projects", updatedUsers);
+    console.log("all projects", updatedUsers);
   }, [dispatch]);
 
+  const reorderColumns = (columns) => {
+    const requiredColumnOrderArray = [
+      "Project_ID",
+      "Project_Name",
+      "Initiative_Group_Name",
+      "Project_Description",
+      "BU",
+      "Artwork_Category",
+      "Artwork_Brand",
+      "Project_region",
+      "Artwork_SMO",
+      "Cluster",
+      "Project_Scale",
+      "Project_State",
+      "Buffer_To_Work",
+      "Estimated_No_Of_DI",
+      "Estimated_No_Of_DT",
+      "Estimated_No_Of_NPF",
+      "Estimated_No_Of_IQ",
+      "Estimated_No_Of_PRA",
+      "Estimated_No_Of_CICs",
+      "Estimated_No_Of_POAs",
+      "Estimated_SOS",
+      "Estimated_SOP",
+      "Estimated_AW_Printer",
+      "Estimated_AW_Readiness",
+      "IL",
+      "PM",
+      "Comments",
+      "Project_Type",
+      "Production_Strategy",
+      "Tier",
+    ];
+
+    let reorderedColumns = [];
+    requiredColumnOrderArray.forEach((rcl) => {
+      columns.forEach((cl) => {
+        if (rcl === cl) {
+          reorderedColumns.push(cl);
+        }
+      });
+    });
+    return reorderedColumns;
+  };
   useEffect(() => {
     (async () => {
       try {
         // const ProjectData = await ProjectService.getProjectData();
         const ProjectData = allProjectList.allProjects;
         if (ProjectData.length) {
-          setAllColumnNames(Object.keys(ProjectData[0]));
+          setAllColumnNames(reorderColumns(Object.keys(ProjectData[0])));
         }
         // const columnNames = await ProjectService.getAllColumnNames();
         // localStorage.setItem("allColumnNames", JSON.stringify(columnNames));
@@ -183,7 +228,9 @@ const AllProjectList = (props) => {
                 : "columnFilterIcon"
             }
           />
-          <span className={isFilterActivated&& "filter-color-change"}>{options}</span>
+          <span className={isFilterActivated && "filter-color-change"}>
+            {options}
+          </span>
         </>
       </div>
     );
@@ -197,16 +244,16 @@ const AllProjectList = (props) => {
     let brandName = [];
     let projectId = options["Project_ID"];
     if (field === "Artwork_Category") {
-      categoryNames = options[field]
-        .map((item) => item.Category_Name)
-        .join(",");
+      categoryNames =
+        options[field] &&
+        options[field].map((item) => item.Category_Name).join(",");
     }
 
     if (field === "Artwork_SMO") {
-      SMOName = options[field].map((item) => item.SMO_Name).join(",");
+      SMOName = options[field]?.map((item) => item.SMO_Name).join(",");
     }
     if (field === "Artwork_Brand") {
-      brandName = options[field].map((item) => item.Brand_Name).join(",");
+      brandName = options[field]?.map((item) => item.Brand_Name).join(",");
     }
 
     return (
@@ -236,10 +283,10 @@ const AllProjectList = (props) => {
 
         {field === "Project_Name" && (
           <span
-            style={{color:"#003DA5", cursor:"pointer"}}
+            style={{ color: "#003DA5", cursor: "pointer" }}
             onClick={() => {
               if (field && field.length) {
-                dispatch(updateProject(options));
+                dispatch(selectedProject(options, "All Projects"));
                 navigate(`/addProject/${projectId}`);
               }
             }}
@@ -291,8 +338,8 @@ const AllProjectList = (props) => {
   };
 
   const saveAsPersonaliDefault = (selectedCategories) => {
-    setProjectColumnNames(selectedCategories);
-    const columnNames = JSON.stringify(selectedCategories);
+    setProjectColumnNames(reorderColumns(selectedCategories));
+    const columnNames = JSON.stringify(reorderColumns(selectedCategories));
     localStorage.setItem("allColumnNamesAllProjects", columnNames);
     setVisible(false);
   };
@@ -446,12 +493,9 @@ const AllProjectList = (props) => {
   };
 
   const isFilterEnabled =
-    frozenCoulmns?.length ||
-    filters?.length ||
-    sortData?.length;
+    frozenCoulmns?.length || filters?.length || sortData?.length;
 
-      const isResetEnabled = isReorderedColumn;
-
+  const isResetEnabled = isReorderedColumn;
 
   // console.log("project column name", projectColumnName);
 
