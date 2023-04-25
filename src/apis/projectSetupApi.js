@@ -3,7 +3,7 @@ import App from "../App";
 import {
   createNewProjectAction,
   editProjectAction,
-} from "../store/actions/projectSetup";
+} from "../store/actions/ProjectSetupActions";
 import { store } from "../store/store";
 
 const baseURL = "https://pegadev.pg.com/prweb/api/ArtworkAgilityFile";

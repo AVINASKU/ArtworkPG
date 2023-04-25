@@ -1,18 +1,20 @@
+import * as types from "../types/types";
+
 export const createNewProjectAction = (data) => ({
   payload: data,
-  type: "CREATE_NEW_PROJECT",
+  type: types.CREATE_NEW_PROJECT,
 });
 export const editProjectAction = (data) => ({
   payload: data,
-  type: "EDIT_PROJECT",
+  type: types.EDIT_PROJECT,
 });
 
 export const selectedProject = (data, rootBreadCrumb) => ({
   payload: data,
-  type: "SELECTED_PROJECT",
+  type: types.SELECTED_PROJECT,
   rootBreadCrumb: rootBreadCrumb
 });
 export const updateMode = (data) => ({
   payload: data,
-  type: "UPDATE_MODE",
+  type: types.UPDATE_MODE,
 });

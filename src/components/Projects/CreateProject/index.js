@@ -41,7 +41,7 @@ const defaultTextBoxEnabled = {
 function AddProject(props) {
   const navigate = useNavigate();
 
-  const projectSetup = useSelector((state) => state.projectSetup);
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const mode = projectSetup.mode;
   const id = `PG-AAS-WORK ${selectedProjectDetails.Project_ID}`;

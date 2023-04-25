@@ -1,3 +1,5 @@
+import * as types from "../types/types";
+
 const initialState = {
   projects: [],
   selectedProject: {},
@@ -8,27 +10,27 @@ const initialState = {
 const projectSetup = (state = initialState, action) => {
   console.log("action.payload: ", action.payload);
   switch (action.type) {
-    case "CREATE_NEW_PROJECT":
+    case types.CREATE_NEW_PROJECT:
       // return {
       //   ...state,
       //   projects: state.projects.push(action.payload),
       // };
       return state;
-    case "EDIT_PROJECT":
+    case types.EDIT_PROJECT:
       //write logic to update projects based on id
       // return {
       // ...state,
       // projects: state.projects.push(action.payload),
       // };
       return state;
-    case "SELECTED_PROJECT":
+    case types.SELECTED_PROJECT:
       return {
         ...state,
         selectedProject: action.payload,
         mode: getProjectMode(action.payload),
         rootBreadCrumb: action.rootBreadCrumb,
       };
-    case "UPDATE_MODE":
+    case types.UPDATE_MODE:
       return {
         ...state,
         mode: action.payload,

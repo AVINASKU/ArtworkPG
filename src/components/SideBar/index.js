@@ -16,7 +16,7 @@ import "./index.scss";
 import { Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { updateMode } from "../../store/actions/projectSetup";
+import { updateMode } from "../../store/actions/ProjectSetupActions";
 
 const SideBar = () => {
   const location = useLocation();

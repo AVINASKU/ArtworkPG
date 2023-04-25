@@ -12,7 +12,7 @@ import {
   getAllProject,
   // updateProject,
 } from "../../../store/actions/ProjectActions";
-import { selectedProject } from "../../../store/actions/projectSetup";
+import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 

@@ -6,9 +6,11 @@ import "primeicons/primeicons.css";
 import "./index.scss";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import ProjectPlanCompo from "../Projects/ProjectPlan/ProjectPlanCompo";
 
 function ProjectSetup(props) {
-  const projectSetup = useSelector((state) => state.projectSetup);
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  console.log('projectSetup:', projectSetup);
   const selectedProjectDetails = projectSetup.selectedProject;
   const { mode, rootBreadCrumb } = projectSetup;
   const [activeKey, setActiveKey] = useState("0");
@@ -112,11 +114,38 @@ function ProjectSetup(props) {
               <AddProject {...props} projectMode={mode} />
             </Accordion.Body>
           </Accordion.Item>
+
           <Accordion.Item eventKey="1">
             <Accordion.Header onClick={() => handleActiveKeyChange("1")}>
               Project Plan
             </Accordion.Header>
-            <Accordion.Body>Monitor Project</Accordion.Body>
+            <Accordion.Body>
+              <ProjectPlanCompo />
+              {/* <Accordion
+                defaultActiveKey="2"
+                style={{ paddingLeft: "43px", background: "#edf4fa", width: "100%",
+                marginLeft: "0px" }}
+              >
+                <Accordion.Item eventKey="2">
+                  <Accordion.Header>Design</Accordion.Header>
+                  <Accordion.Body>
+                    <ProjectPlan {...props} />
+                  </Accordion.Body>
+                </Accordion.Item>
+                <Accordion.Item eventKey="3">
+                  <Accordion.Header>Input</Accordion.Header>
+                  <Accordion.Body>
+                    Input
+                  </Accordion.Body>
+                </Accordion.Item>
+                <Accordion.Item eventKey="4">
+                  <Accordion.Header>FA Assembly</Accordion.Header>
+                  <Accordion.Body>
+                  FA Assembly
+                  </Accordion.Body>
+                </Accordion.Item>
+              </Accordion> */}
+            </Accordion.Body>
           </Accordion.Item>
         </Accordion>
       </div>

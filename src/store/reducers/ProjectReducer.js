@@ -1,4 +1,7 @@
+import * as types from "./../types/types";
+
 const initialState = {
+  projectPlan: [],
   myProject: [],
   allProjects: [],
   loading: true,
@@ -8,7 +11,21 @@ const initialState = {
 const ProjectReducer = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
-    case "GET_PROJECT_DETAILS_SUCCESS":
+    case types.GET_PROJECTPLAN_DETAILS_SUCCESS:
+      return {
+        ...state,
+        projectPlan: payload,
+        loading: false,
+        error: null,
+      };
+
+    case types.GET_PROJECTPLAN_DETAILS_ERROR:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case types.GET_PROJECT_DETAILS_SUCCESS:
       return {
         ...state,
         myProject: payload,
@@ -16,14 +33,14 @@ const ProjectReducer = (state = initialState, action) => {
         error: null,
       };
 
-    case "GET_PROJECT_DETAILS_ERROR":
+    case types.GET_PROJECT_DETAILS_ERROR:
       return {
         ...state,
         loading: false,
         error: action.payload,
       };
 
-    case "GET_ALL_PROJECT_DETAILS_SUCCESS":
+    case types.GET_ALL_PROJECT_DETAILS_SUCCESS:
       return {
         ...state,
         allProjects: payload,
@@ -31,13 +48,13 @@ const ProjectReducer = (state = initialState, action) => {
         error: null,
       };
 
-    case "GET_ALL_PROJECT_DETAILS_ERROR":
+    case types.GET_ALL_PROJECT_DETAILS_ERROR:
       return {
         ...state,
         loading: false,
         error: action.payload,
       };
-    case "UPDATE_PROJECT":
+    case types.UPDATE_PROJECT:
       return {
         ...state,
       };

@@ -15,7 +15,7 @@ import {
 } from "../../../store/actions/ProjectActions";
 import { changeDateFormat } from "../utils";
 
-import { selectedProject } from "../../../store/actions/projectSetup";
+import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 const CustomisedView = React.lazy(() => import("./CustomisedView"));
 
 const ProjectList = (props) => {
