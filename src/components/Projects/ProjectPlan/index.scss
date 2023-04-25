@@ -219,3 +219,9 @@ img[disabled] {
 .p-datatable-scrollable .p-frozen-column {
   z-index: 1000;
 }
+
+// ProjectPlan Styles Start
+.p-treetable .p-treetable-thead > tr > th {
+  width: 100px;
+}
+// ProjectPlan Styles End
