@@ -11,6 +11,7 @@ import filter from "../../../assets/images/filter.svg";
 import { projectPlan } from "../../../store/actions/ProjectActions";
 import { changeDateFormat } from "../utils";
 import BlueFilter from "../../../assets/images/BlueFilterIcon.svg";
+import { Dropdown } from "primereact/dropdown";
 
 const ProjectPlanList = (props) => {
   const [pegadata, setPegaData] = useState(null);
@@ -22,6 +23,8 @@ const ProjectPlanList = (props) => {
   const [filters, setFilters] = useState([]);
   const [sortData, setSortData] = useState([]);
   const [isSearch] = useState(false);
+  const [selectedOwner, setSelectedOwner] = useState(null);
+  const [selectedState, setSelectedState] = useState(null);
 
   const myProjectList = useSelector((state) => state.myProject);
   console.log("myProjectList:", myProjectList);
@@ -325,6 +328,34 @@ const ProjectPlanList = (props) => {
     "HelpNeeded",
   ];
 
+  const elementTemplate = (ele) => {
+    const owners = [
+      { name: "Luca", code: "Luca" },
+      { name: "Karol", code: "Karol" },
+      { name: "Iza", code: "Iza" },
+    ];
+    const states = [
+      { name: "New York", code: "NY" },
+      { name: "Rome", code: "RM" },
+      { name: "London", code: "LDN" },
+    ];
+    return (
+      (ele === "Owner" || ele === "State") && (
+        <Dropdown
+          value={ele === "Owner" ? selectedOwner : selectedState}
+          onChange={(e) => {
+            ele === "Owner" && setSelectedOwner(e.value);
+            ele === "State" && setSelectedState(e.value);
+          }}
+          options={ele === "Owner" ? owners : ele === "State" ? states : []}
+          optionLabel="name"
+          placeholder={`Select ${ele}`}
+          className="w-full md:w-14rem"
+        />
+      )
+    );
+  };
+
   const rowExpansionHeader = (options) => {
     return <div>{options}</div>;
   };
@@ -337,12 +368,13 @@ const ProjectPlanList = (props) => {
             field={ele}
             filterField={ele}
             header={projectNameHeader(ele)}
+            expander={ele === "Task"}
             columnKey={ele || i}
             frozen={frozenCoulmns.includes(ele)}
             alignFrozen="left"
             className={frozenCoulmns.includes(ele) ? "font-bold" : ""}
             showFilterMenu={false}
-            // body={fullKitReadinessBody}
+            body={elementTemplate(ele)}
           />
         );
       });
@@ -374,25 +406,25 @@ const ProjectPlanList = (props) => {
             clearColumnWiseFilter={clearColumnWiseFilter}
           />
           <TreeTable
-            resizableColumns
+            // resizableColumns
             dataKey="Task"
             reorderableColumns
-            onColReorder={storeReorderedColumns}
-            onResize={(e) => console.log("resize", e)}
-            onResizeCapture={(e) => console.log("e", e)}
+            // onColReorder={storeReorderedColumns}
+            // onResize={(e) => console.log("resize", e)}
+            // onResizeCapture={(e) => console.log("e", e)}
             value={filters.length ? filters : pegadata}
-            scrollable
-            responsiveLayout="scroll"
+            // scrollable
+            // responsiveLayout="scroll"
             loading={loading}
             className="mt-3"
-            columnResizeMode="expand"
-            onColumnResizeEnd={onColumnResizeEnd}
-            filters={searchHeader}
-            filterDisplay={isSearch && "row"}
-            ref={dt}
-            tableStyle={{ minWidth: "50rem", tableLayout: "auto" }}
+            // columnResizeMode="expand"
+            // onColumnResizeEnd={onColumnResizeEnd}
+            // filters={searchHeader}
+            // filterDisplay={isSearch && "row"}
+            // ref={dt}
+            tableStyle={{ minWidth: "150rem", tableLayout: "auto" }}
           >
-            <Column header="" expander></Column>
+            {/* <Column header="" expander={true}></Column> */}
             {rowExpansionColumns()}
           </TreeTable>
         </div>
