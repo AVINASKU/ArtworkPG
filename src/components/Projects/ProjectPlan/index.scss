@@ -6,7 +6,7 @@ $fontWeight400: 400;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 25px 15px 0;
+  padding: 25px 15px;
   .actions {
     display: flex;
     flex-direction: row;
@@ -48,7 +48,7 @@ $fontWeight400: 400;
   .p-datatable > .p-datatable-wrapper {
     overflow: scroll;
     width: $width100;
-    height: 540px;
+    height: 65vh;
   }
   .p-datatable-table {
     line-height: 15px;
@@ -225,3 +225,12 @@ img[disabled] {
   width: 100px;
 }
 // ProjectPlan Styles End
+.accordion.projectPlanAccordian {
+  margin: 0px;
+  .accordion-item > .accordion-header {
+    background-color: #f7f7f7;
+    .accordion-button {
+      background-color: #f7f7f7 !important;
+    }
+  }
+}

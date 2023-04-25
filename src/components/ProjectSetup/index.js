@@ -10,14 +10,13 @@ import ProjectPlanCompo from "../Projects/ProjectPlan/ProjectPlanCompo";
 
 function ProjectSetup(props) {
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
-  console.log('projectSetup:', projectSetup);
+  console.log("projectSetup:", projectSetup);
   const selectedProjectDetails = projectSetup.selectedProject;
   const { mode, rootBreadCrumb } = projectSetup;
   const [activeKey, setActiveKey] = useState("0");
-  const items = [
-    { label: rootBreadCrumb },
-    { label: activeKey === "0" ? "Project Setup" : "Design" },
-  ];
+  const items = [{ label: rootBreadCrumb }];
+  activeKey === "0" && items.push({ label: "Project Setup" });
+  activeKey === "1" && items.push({ label: "Project Plan" });
 
   useEffect(() => {
     if (mode === "create") {
