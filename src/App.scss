@@ -84,92 +84,133 @@ fieldset:disabled .btn {
   background-color: rgba(1, 104, 191, 0.05) !important;
   margin-top: 18px;
 }
-.myProjectAnddAllProjectList {
-table {
-  // border-collapse: separate !important;
-  // border-spacing: 0 5px !important;
+// ProjectPlanList Styles Start
+.rowExpansionTemplate {
+  // table {
+  //   // width: 100% !important;
+  // }
+  background-color: #ffffff !important;
+  // background-color: #a6bda5 !important;
+  .p-datatable {
+    height: 90px !important;
+    overflow-y: auto;
+    .p-datatable-tbody,
+    tr,
+    td {
+      padding: 1px !important;
+      border-bottom: 1px solid #acacac !important;
+      line-height: 10px !important;
+      text-align: center;
+    }
+  }
   thead {
-    th {
-      background-color: #fff !important;
-      // border: 0 !important;      
+    display: none;
+  }
+  // th,
+  // td {
+  //   width: 9% !important;
+  // }
+  th,
+  td {
+    width: 8em;
+    min-width: 8em;
+    max-width: 8em;
+    word-break: break-all;
+  }
+}
+// ProjectPlanList Styles End
+
+.myProjectAnddAllProjectList {
+  table {
+    // border-collapse: separate !important;
+    // border-spacing: 0 5px !important;
+    // width: 100%;
+    thead {
+      th {
+        background-color: #fff !important;
+        // border: 0 !important;
+        text-align: center !important;
+        border-width: 1px 2px 3px 4px;
+        border: 0 !important;
+        &:nth-child(1) {
+          border-left: none !important;
+        }
+        &:last-child {
+          border-left: none !important;
+          // margin: 10px;
+        }
+      }
+
+      th.p-filter-column .p-column-filter .p-fluid {
+        min-width: 100px;
+        border-radius: 140px;
+      }
+    }
+    tr:nth-child(even) > td {
+      // background:lightcyan !important;
+      // background: linear-gradient(to right, transparent 49.5%, black 49.5%, black 50.5%, transparent 50.5%) !important;
+      background: #fafcff !important;
+      // background-color: blue;
+    }
+
+    .p-datatable .p-datatable-tbody > tr {
+      line-height: 50px !important;
+      font-size: 12px;
+    }
+
+    td,
+    .p-datatable .p-datatable-tbody > tr > td {
+      // background-color: #003da5;
+      border-bottom: 1px solid #acacac !important;
+      border-top: 1px solid #acacac !important;
+      font-size: 10px;
+      // line-height: 20px;
+      border-top: 0.5px solid #acacac !important;
+      color: #595959;
+      text-align: center;
+      background: #ffffff !important;
+      padding: 10px !important;
+      border-width: 0.5px;
       text-align: center !important;
-      border-width: 1px 2px 3px 4px;
-      border: 0 !important;
-      &:nth-child(1) {
+      // border: 2px solid gray !important;
+      // margin-top: 2px !important;
+      // margin-bottom: 2px !important;
+      // border-collapse: separate !important;
+      // border-spacing: 0 10px !important;
+      // border-left: 0px !important;
+      // border-right: 0px !important;
+      // &:first-child {
+      //   // border-top-left-radius: 14px;
+      //   // border-bottom-left-radius: 14px;
+      //   // border-left: 1px solid coral !important;
+      //   border-collapse: collapse;
+      // }
+      &:first-child {
         border-left: none !important;
       }
       &:last-child {
-        border-left: none !important;
-        // margin: 10px;
+        border-right: none !important;
+        // border-top-right-radius: 14px;
+        // border-bottom-right-radius: 14px;
+        // background-color: #003da5;
+        // border-right: 1px solid #acacac !important;
       }
-    }
-
-    th.p-filter-column .p-column-filter .p-fluid {
-      min-width: 100px;
-      border-radius: 140px;
+      // &:after {
+      //   // border-right: 2px solid black !important;
+      //   height: 40px !important;
+      //   // background-color:  #003da5 !important;
+      // }
+      // &:after {
+      //   // border-right: 2px solid black !important;
+      //   // height: 40px !important;
+      //   // background-color:  #003da5 !important;
+      // }
     }
   }
-  tr:nth-child(even) > td {
-    // background:lightcyan !important;
-    // background: linear-gradient(to right, transparent 49.5%, black 49.5%, black 50.5%, transparent 50.5%) !important;
-    background: #fafcff !important;
-    // background-color: blue;
-  }
-
-  .p-datatable .p-datatable-tbody > tr {
-    line-height: 50px !important;
-    font-size: 12px;
-  }
-
-  td,
-  .p-datatable .p-datatable-tbody > tr > td {
-    // background-color: #003da5;
-    border-bottom: 1px solid #acacac !important;
-    border-top: 1px solid #acacac !important;
-    font-size: 10px;
-    // line-height: 20px;
-    border-top: 0.5px solid #acacac !important;
-    color: #595959;
-    text-align: center;
-    background: #ffffff !important;
-    padding: 10px !important;
-    border-width: 0.5px;
-    text-align: center !important;
-    // border: 2px solid gray !important;
-    // margin-top: 2px !important;
-    // margin-bottom: 2px !important;
-    // border-collapse: separate !important;
-    // border-spacing: 0 10px !important;
-    // border-left: 0px !important;
-    // border-right: 0px !important;
-    // &:first-child {
-    //   // border-top-left-radius: 14px;
-    //   // border-bottom-left-radius: 14px;
-    //   // border-left: 1px solid coral !important;
-    //   border-collapse: collapse;
-    // }
-    &:first-child {
-      border-left: none !important;
-    }
-    &:last-child {
-      border-right: none !important;
-      // border-top-right-radius: 14px;
-      // border-bottom-right-radius: 14px;
-      // background-color: #003da5;
-      // border-right: 1px solid #acacac !important;
-    }
-    // &:after {
-    //   // border-right: 2px solid black !important;
-    //   height: 40px !important;
-    //   // background-color:  #003da5 !important;
-    // }
-    // &:after {
-    //   // border-right: 2px solid black !important;
-    //   // height: 40px !important;
-    //   // background-color:  #003da5 !important;
-    // }
-  }
-}
+  // th,
+  // td {
+  //   width: 9% !important;
+  // }
 }
 .fullscreen-mode {
   background-color: #fff;

@@ -1,8 +1,10 @@
+import * as types from "./../types/types";
+
 export const createNewProjectAction = (data) => ({
   payload: data,
-  type: "CREATE_NEW_PROJECT",
+  type: types.CREATE_NEW_PROJECT,
 });
 export const editProjectAction = (data) => ({
   payload: data,
-  type: "EDIT_PROJECT",
+  type: types.EDIT_PROJECT,
 });

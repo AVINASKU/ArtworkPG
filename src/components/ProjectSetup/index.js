@@ -1,5 +1,6 @@
 import Accordion from "react-bootstrap/Accordion";
 import AddProject from "../Projects/CreateProject";
+import ProjectPlan from "../Projects/ProjectPlan";
 import { Button } from "react-bootstrap";
 import { BreadCrumb } from "primereact/breadcrumb";
 import "primeicons/primeicons.css";
@@ -76,9 +77,48 @@ function ProjectSetup(props) {
               <AddProject {...props} />
             </Accordion.Body>
           </Accordion.Item>
+
           <Accordion.Item eventKey="1">
-            <Accordion.Header>Design</Accordion.Header>
-            <Accordion.Body>Monitor Project</Accordion.Body>
+            <Accordion.Header>Project Plan</Accordion.Header>
+            <Accordion.Body>
+              <Accordion
+                defaultActiveKey="2"
+                style={{ paddingLeft: "43px", background: "#edf4fa", width: "100%",
+                marginLeft: "0px" }}
+              >
+                <Accordion.Item eventKey="2">
+                  <Accordion.Header>Design</Accordion.Header>
+                  <Accordion.Body>
+                    <ProjectPlan {...props} />
+                  </Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
+            </Accordion.Body>
+          </Accordion.Item>
+
+          {/* <Accordion.Item eventKey="1">
+            <Accordion.Header>Project Plan</Accordion.Header>
+            <Accordion.Body>
+              <Accordion defaultActiveKey="0">
+                <Accordion.Item eventKey="0">
+                  <Accordion.Header>Design</Accordion.Header>
+                  <Accordion.Body>
+                    <ProjectPlan {...props} />
+                  </Accordion.Body>
+                </Accordion.Item>
+                <Accordion.Item eventKey="1">
+                  <Accordion.Header>Input</Accordion.Header>
+                  <Accordion.Body>
+                    Input
+                  </Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
+            </Accordion.Body>
+          </Accordion.Item> */}
+
+          <Accordion.Item eventKey="3">
+            <Accordion.Header>Input</Accordion.Header>
+            <Accordion.Body>Input</Accordion.Body>
           </Accordion.Item>
         </Accordion>
       </div>
