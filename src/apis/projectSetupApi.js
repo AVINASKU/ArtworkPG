@@ -3,7 +3,8 @@ import App from "../App";
 import {
   createNewProjectAction,
   editProjectAction,
-} from "../store/actions/projectSetup";
+} from "../store/actions/ProjectSetupActions";
+import { store } from "../store/store";
 
 const baseURL = "https://pegadev.pg.com/prweb/api/ArtworkAgilityFile";
 
@@ -17,7 +18,7 @@ export const createNewProject = async (formData, headers = {}) => {
     data: formData,
   });
   if (newProjectData.ID) {
-    App.dispatchToStore(createNewProjectAction(formData));
+    store.dispatch(createNewProjectAction(formData));
   }
   return newProjectData;
 };

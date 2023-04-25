@@ -15,10 +15,13 @@ import MyProject from "../../assets/images/MyProject.svg";
 import "./index.scss";
 import { Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { updateMode } from "../../store/actions/ProjectSetupActions";
 
 const SideBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isToggle, setIsToggle] = useState(false);
   const [expandedItems, setExpandedItems] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState(null);
@@ -54,10 +57,10 @@ const SideBar = () => {
       }
     });
   }
-  const handleLogout =()=>{
+  const handleLogout = () => {
     sessionStorage.removeItem("session");
     navigate("/");
-  }
+  };
   const navItems = {
     data: [
       {
@@ -169,12 +172,21 @@ const SideBar = () => {
               }
             })}
             <div className="add-project">
-              <NavItem to="/addProject" state={{ status: "new" }}>
+              <NavItem
+                to="/addProject"
+                state={{ mode: "create" }}
+                onClick={() => {
+                  dispatch(updateMode("create"));
+                }}
+              >
                 {!isToggle ? (
                   <NavLink
                     to="/addProject"
-                    state={{ status: "new" }}
+                    state={{ mode: "create" }}
                     className="nav-link"
+                    onClick={() => {
+                      dispatch(updateMode("create"));
+                    }}
                   >
                     <img
                       src={plusCollapseImg}
@@ -185,8 +197,11 @@ const SideBar = () => {
                 ) : (
                   <NavLink
                     to="/addProject"
-                    state={{ status: "new" }}
+                    state={{ mode: "create" }}
                     className="nav-link"
+                    onClick={() => {
+                      dispatch(updateMode("create"));
+                    }}
                   >
                     <Button className="button-layout">
                       <img src={PlusImg} alt={PlusImg} />
@@ -196,7 +211,6 @@ const SideBar = () => {
                 )}
               </NavItem>
               <NavItem onClick={handleLogout}>
-                
                 {!isToggle ? (
                   <img src={LogoutImg} className="collapse-img" alt="" />
                 ) : (

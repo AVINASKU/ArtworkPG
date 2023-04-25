@@ -19,6 +19,8 @@ export const UPDATE_PROJECT_ERROR = "UPDATE_PROJECT_ERROR";
 // ProjectSetUp
 export const CREATE_NEW_PROJECT = "CREATE_NEW_PROJECT";
 export const EDIT_PROJECT = "EDIT_PROJECT";
+export const SELECTED_PROJECT = "SELECTED_PROJECT";
+export const UPDATE_MODE = "UPDATE_MODE";
 
 // User
 export const UPDATE_USER = "UPDATE_USER";

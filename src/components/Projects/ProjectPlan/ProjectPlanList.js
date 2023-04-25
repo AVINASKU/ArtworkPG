@@ -779,6 +779,14 @@ const ProjectPlanList = (props) => {
                 <Column field="name" header="Name" expander></Column>
                 <Column field="size" header="Size"></Column>
                 <Column field="type" header="Type"></Column>
+                <Column field="size" header="Size1"></Column>
+                <Column field="type" header="Type1"></Column>
+                <Column field="size" header="Size2"></Column>
+                <Column field="type" header="Type2"></Column>
+                <Column field="size" header="Size3"></Column>
+                <Column field="type" header="Type3"></Column>
+                <Column field="size" header="Size4"></Column>
+                <Column field="type" header="Type4"></Column>
             </TreeTable>
         </div>
         {/* <DataTable

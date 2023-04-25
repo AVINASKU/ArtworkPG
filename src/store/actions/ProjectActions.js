@@ -76,7 +76,7 @@ export const getMyProject = (PM) => async (dispatch) => {
   try {
     //here need to add url and pass PM name
     const res = await axios.get(
-      `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1/MyProjects/Hemant`
+      `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1/MyProjects/Luca`
     );
 
     if (res?.data === null) {
@@ -107,7 +107,7 @@ export const getAllProject = (PM) => async (dispatch) => {
   try {
     //here need to add url and pass PM name
     const res = await axios.get(
-      `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1/AllProjects/FAM/EUROPE ENTERPRISE`
+      `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1/AllProjects/BABY/EUROPE ENTERPRISE`
     );
 
     if (res?.data === null) {
@@ -134,15 +134,15 @@ export const getAllProject = (PM) => async (dispatch) => {
   }
 };
 
-export const updateProject = (data) => async (dispatch) => {
-  try {
-    if (data) {
-      dispatch({
-        type: types.UPDATE_PROJECT,
-        payload: data,
-      });
-    }
-  } catch (err) {
-    dispatch({ type: types.UPDATE_PROJECT_ERROR, payload: err });
-  }
-};
+// export const updateProject = (data) => async (dispatch) => {
+//   try {
+//     if (data) {
+//       dispatch({
+//         type: types.UPDATE_PROJECT,
+//         payload: data,
+//       });
+//     }
+//   } catch (err) {
+//     dispatch({ type: types.UPDATE_PROJECT_ERROR, payload: err });
+//   }
+// };

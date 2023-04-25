@@ -57,7 +57,6 @@ const ProjectReducer = (state = initialState, action) => {
     case types.UPDATE_PROJECT:
       return {
         ...state,
-        updateProject: payload,
       };
     default:
       return state;
