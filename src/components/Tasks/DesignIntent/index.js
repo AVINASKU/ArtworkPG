@@ -53,7 +53,18 @@ function DefineDesignIntent() {
       >
         {<AddNewDesign {...data} />}
 
-        {subProject &&
+        { data?.count && Array.from({ length: 2 }, (_, index) => (
+          <div key={index}>
+            {" "}
+            <AddNewDesignContent
+              key={index}
+              index={index}
+              handleDelete={handleDelete}
+            />
+          </div>
+        ))}
+
+        {/* {subProject &&
           subProject.length &&
           subProject.map((item, index) => {
             return (
@@ -64,7 +75,7 @@ function DefineDesignIntent() {
                 handleDelete={handleDelete}
               />
             );
-          })}
+          })} */}
       </div>
     </PageLayout>
   );

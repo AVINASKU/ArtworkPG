@@ -64,31 +64,7 @@ const DI = {
   start_date: "20-mar-2023",
   end_date: "4-apr-23",
   consumed_buffer: "15",
-  DI_Submit:false,
-  sub_project: [
-    {
-      name: "DI_Abc_Linen&sky_FrontLebel_Xyz",
-      id:1,
-      prefix: "abc",
-      varient: "Linen & sky",
-      usage: "FrontLabel",
-      suffex: "Xyz",
-      submitted:true,
-    },
-    {
-      name: "DI_Abc_Sprint&Renewal_FrontLebel_Pqr",
-      id:2,
-      prefix: "abc",
-      varient: "Sprint&Renewal",
-      usage: "FrontLabel",
-      suffex: "Pqr",
-      submitted:true,
-    },
-    {
-      id:3,
-      submitted:false,
-    },
-  ],
+  count:3,
 };
 
 export const ProjectService = {

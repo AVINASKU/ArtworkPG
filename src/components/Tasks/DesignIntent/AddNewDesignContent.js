@@ -1,35 +1,23 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { Form, Row, Col } from "react-bootstrap";
-import { AutoComplete } from "primereact/autocomplete";
 import { Checkbox } from "primereact/checkbox";
 import deleteIcon from "../../../assets/images/deleteIcon.svg";
 
 const AddNewDesignContent = ({
   name,
-  prefix,
-  varient,
-  usage,
-  suffex,
+  agency,
+  cluster,
   index,
+  additionalInfo,
   handleDelete,
   id,
 }) => {
-  const [projectPrefix, setPrefix] = useState(prefix);
-  const [projectVarient, setVarient] = useState(varient);
-  const [awUsage, setAwUsage] = useState(usage);
-  const [items, setItems] = useState([]);
-  const [projectSuffex, setSuffex] = useState(suffex);
   const [checked, setChecked] = useState(false);
 
-  const search = (event) => {
-    let _items = [...Array(10).keys()];
-    setItems(
-      event.query
-        ? [...Array(10).keys()].map((item) => event.query + "-" + item)
-        : _items
-    );
-  };
+  const [agencyRef, setAgency] = useState(null);
+  const [clusters, setCluster] = useState(null);
+  const [additionalInformation, setAdditionalInfo] = useState(null);
 
   const DesignHeader = (di_name) => {
     return (
@@ -43,8 +31,8 @@ const AddNewDesignContent = ({
           }}
           className="font-color"
         >
-        {/* {di_name} */}
-          {!name ? `Design Intent ${index+1}` : di_name}
+          {/* {di_name} */}
+          {!name ? `Design Intent ${index + 1}` : di_name}
         </div>
         <img
           src={deleteIcon}
@@ -55,66 +43,59 @@ const AddNewDesignContent = ({
       </>
     );
   };
-    let di_name = "DI_" + projectPrefix + "_" + projectVarient + "_" + awUsage + "_" + projectSuffex;
-    console.log("suffex", projectSuffex);
+  let di_name = "DI_";
+  //   "DI_" +
+  //   projectPrefix +
+  //   "_" +
+  //   projectVarient +
+  //   "_" +
+  //   awUsage +
+  //   "_" +
+  //   projectSuffex;
+  // console.log("suffex", projectSuffex);
 
   return (
-  
     <div>
-      <div className="design-intent-header">
-        {DesignHeader(di_name)}
-      </div>
-      <Row style={{ marginLeft: 15, marginRight: 15, marginBottom: 15 }}>
+      <div className="design-intent-header">{DesignHeader(di_name)}</div>
+      <Row
+        style={{
+          marginLeft: 15,
+          marginRight: 15,
+          marginBottom: 15,
+          marginTop: 5,
+        }}
+      >
         <Col sm={2}>
           <div>
-            <label htmlFor="username">Prefix</label>
+            <label htmlFor="agency">Agency Reference * </label>
             <InputText
-              id="prefix"
-              value={projectPrefix}
-              onChange={(e)=>setPrefix(e.target.value)}
-              aria-describedby="prefix-help"
+              id="agency"
+              value={agencyRef}
+              onChange={(e) => setAgency(e.target.value)}
+              aria-describedby="agency-help"
             />
           </div>
         </Col>
         <Col sm={2}>
-          <Form.Group>
-            <label>Select Variant *</label>
-            <div style={{ width: 142 }}>
-              <AutoComplete
-                value={projectVarient}
-                suggestions={items}
-                completeMethod={search}
-                onChange={(e) => setVarient(e.value)}
-                dropdown
-              />
-            </div>
-          </Form.Group>
-        </Col>
-        <Col sm={2}>
-          <Form.Group>
-            <label>Select AW Usage *</label>
-            <div style={{ width: 142 }}>
-              <AutoComplete
-                value={awUsage}
-                suggestions={items}
-                completeMethod={search}
-                onChange={(e) => setAwUsage(e.value)}
-                dropdown
-              />
-            </div>
-          </Form.Group>
-        </Col>
-        <Col sm={1}>
-          <div className="flex flex-column gap-2">
-            <label htmlFor="suffix">Suffix</label>
+          <div>
+            <label htmlFor="cluster">Cluster * </label>
             <InputText
-              id="suffix"
-              value={projectSuffex}
-              onChange={(e)=> {
-              setSuffex(e.target.value);
-              }}
-              style={{ width: "80px" }}
-              aria-describedby="suffix-help"
+              id="cluster"
+              value={clusters}
+              onChange={(e) => setCluster(e.target.value)}
+              aria-describedby="cluster-help"
+            />
+          </div>
+        </Col>
+
+        <Col sm={2}>
+          <div>
+            <label htmlFor="additional">Additional Info </label>
+            <InputText
+              id="additional"
+              value={additionalInformation}
+              onChange={(e) => setAdditionalInfo(e.target.value)}
+              aria-describedby="info-help"
             />
           </div>
         </Col>
