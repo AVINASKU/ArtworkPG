@@ -4,6 +4,7 @@ import Home from "./home.js";
 import { Outlet } from "react-router-dom";
 import AllProjects from "./components/Projects/AllProjects/index";
 import MyProjects from "./components/Projects/MyProjects/index.js";
+import Example from "./components/FullKit/index.tsx";
 import ProjectCreation from "./projectCreation.js";
 import Login from "./login.js";
 
@@ -18,6 +19,7 @@ const RoutesNav = () => {
         {/* <Route path="/createProject" element={<AddProject />} /> */}
          <Route path="/addProject" element={<ProjectCreation />} />
         <Route path="/addProject/:ProjectID" element={<ProjectCreation />} />
+        <Route path="/full-kit" element={<Example/>} />
         {/* <Route path="/gant" element={<GantChart />} />
         <Route path="/reports" element={<Reports />} /> */}
       </Route>
