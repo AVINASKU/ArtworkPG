@@ -2,11 +2,11 @@
 import pegatasksJsonData from "../tasks.json";
 
 const myTaskColumnNames = [
-  "Project_Name",
-  "Task",
+  "ProjectName",
+  "TaskName",
   "Status",
-  "Help Needed",
-  "Remaining Buffer",
+  "Help_Needed",
+  "Remaining_Buffer",
 ];
 
 export const TaskService = {

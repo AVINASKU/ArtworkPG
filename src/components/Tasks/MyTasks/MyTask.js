@@ -25,76 +25,29 @@ import {
 // import { Tag } from "primereact/tag";
 
 const MyTask = (props) => {
-  const [MyTaskData, setMyTaskData] = useState(null);
-  const [MyTaskcolumnName, setMyTaskColumnName] = useState(null);
   const [isSearch, isSearchSet] = useState(false);
-  const [checked, setChecked] = useState(false);
+  const [selectedProdSrchList, setSelectedProdSrchList] = useState([]);
   const dispatch = useDispatch();
   const myTasks = useSelector((state) => state.TaskReducer.myTasks);
-  console.log("myTasks", myTasks);
-  //setMyTaskData(myTasks);
-  // let a1 = [
-  //   {
-  //     name: "lakshay",
-  //     age: 28,
-  //   },
-  //   {
-  //     name: "lakshay",
-  //     age: 28,
-  //   },
-  //   {
-  //     name: "lakshay",
-  //     age: 28,
-  //   },
-  //   {
-  //     name: "lakshay",
-  //     age: 28,
-  //   },
-  //   {
-  //     name: "lakshay",
-  //     age: 28,
-  //   },
-  //   {
-  //     name: "lakshay",
-  //     age: 28,
-  //   },
-  //   {
-  //     name: "lakshay",
-  //     age: 28,
-  //   },
-  //   {
-  //     name: "lakshay",
-  //     age: 28,
-  //   },
-  // ];
-  //   console.log("poo are", props);
-
+  
+  const getMyTasks = (myTasks) => {
+    const getMyTasksList = [];
+    myTasks.forEach((project) => {
+      project.TaskDetails.forEach((taskDetails) => {
+        getMyTasksList.push(taskDetails);
+      });
+    });
+    setSelectedProdSrchList(getMyTasksList);
+  }
+  
   useEffect(() => {
-    // if (!myProjectList.myProject.length) {
     const gettasks = dispatch(getTasks());
     console.log("my gettasks", gettasks);
-    // }
   }, [dispatch]);
 
   useEffect(() => {
-    // (async () => {
-    // try {
-    setMyTaskData(TaskService.getProjectData());
-    console.log("MyTaskData is", MyTaskData);
-
-    // console.log("ProjectData is", ProjectData);
-    // console.log("TaskService is", TaskService.getProjectData);
-    // } catch (err) {
-    // console.log("error", err);
-    // }
-    // })();
-    // }
-    // if (MyTaskData.length) {
-    // setMyTaskColumnName(Object.keys(MyTaskData[0]));
-    setMyTaskColumnName(Object.keys(TaskService.getProjectData()[0]));
-    // }
-    console.log("MyTaskcolumnName is", MyTaskcolumnName);
-  }, []);
+   getMyTasks(myTasks);
+  }, [myTasks]);
 
   const onSearchClick = () => {
     isSearchSet(!isSearch);
@@ -180,7 +133,7 @@ const MyTask = (props) => {
   return (
     <div className="my-task-project">
       {console.log("TaskService is", TaskService.getProjectData())}
-      {console.log("MyTaskData is", MyTaskData)}
+     
       <ProjectListHeader
         header={props.header}
         exportCSV={exportCSV}
@@ -189,7 +142,7 @@ const MyTask = (props) => {
 
       <DataTable
         resizableColumns
-        value={MyTaskData}
+        value={selectedProdSrchList}
         reorderableColumns
         scrollable
         responsiveLayout="scroll"
