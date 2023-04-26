@@ -60,11 +60,13 @@ const filterProjectData = [
 
 const DI = {
   projectName: "Paste Mulsaane Oral-B Medical Device Europe",
+  brand:"Fairy",
+  category:"Hand Dish Wash",
   duration: "15 days",
   start_date: "20-mar-2023",
   end_date: "4-apr-23",
   consumed_buffer: "15",
-  count:3,
+  count:1,
 };
 
 export const ProjectService = {

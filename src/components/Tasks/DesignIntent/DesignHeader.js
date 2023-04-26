@@ -9,7 +9,7 @@ const items = [
   { label: "Define Design Intent" },
 ];
 
-const DesignHeader = ({ addNewDesign, setAddNewDesign }) => {
+const DesignHeader = ({setAddNewDesign }) => {
   const [checked, setChecked] = useState(false);
 
   return (

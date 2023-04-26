@@ -1,17 +1,15 @@
 import React, { useState } from "react";
 import { InputText } from "primereact/inputtext";
-import { Form, Row, Col } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import { Checkbox } from "primereact/checkbox";
 import deleteIcon from "../../../assets/images/deleteIcon.svg";
 
 const AddNewDesignContent = ({
-  name,
-  agency,
-  cluster,
   index,
-  additionalInfo,
+  brand,
+  category,
+  projectName,
   handleDelete,
-  id,
 }) => {
   const [checked, setChecked] = useState(false);
 
@@ -25,14 +23,12 @@ const AddNewDesignContent = ({
         <div
           style={{
             marginLeft: 20,
-            marginBottom: 10,
-            marginRight: 15,
             padding: 5,
           }}
           className="font-color"
         >
           {/* {di_name} */}
-          {!name ? `Design Intent ${index + 1}` : di_name}
+          {!di_name ? `Design Intent ${index + 1}` : di_name}
         </div>
         <img
           src={deleteIcon}
@@ -43,16 +39,22 @@ const AddNewDesignContent = ({
       </>
     );
   };
-  let di_name = "DI_";
-  //   "DI_" +
-  //   projectPrefix +
-  //   "_" +
-  //   projectVarient +
-  //   "_" +
-  //   awUsage +
-  //   "_" +
-  //   projectSuffex;
-  // console.log("suffex", projectSuffex);
+
+  let di_name;
+
+  if (agencyRef || clusters || additionalInformation) {
+    di_name =
+      "DI_" +
+      (agencyRef && agencyRef + "_") +
+      brand +
+      "_" +
+      category +
+      "_" +
+      projectName +
+      "_" +
+      (clusters && clusters + "_") +
+      (additionalInformation && additionalInformation);
+  }
 
   return (
     <div>
