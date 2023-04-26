@@ -1,5 +1,12 @@
 import axios from "axios";
 import * as types from "./../types/types";
+const sessionData = sessionStorage.getItem("session");
+
+const sessionObj = JSON.parse(sessionData);
+
+let PM = sessionObj?.username;
+let region = sessionObj?.region;
+let bu = sessionObj?.bu;
 
 export const projectPlan = (PM) => async (dispatch) => {
   try {
@@ -72,11 +79,11 @@ export const projectPlan = (PM) => async (dispatch) => {
   }
 };
 
-export const getMyProject = (PM) => async (dispatch) => {
+export const getMyProject = () => async (dispatch) => {
   try {
     //here need to add url and pass PM name
     const res = await axios.get(
-      `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1/MyProjects/Luca`
+      `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1/MyProjects/${PM}`
     );
 
     if (res?.data === null) {
@@ -103,11 +110,11 @@ export const getMyProject = (PM) => async (dispatch) => {
   }
 };
 
-export const getAllProject = (PM) => async (dispatch) => {
+export const getAllProject = () => async (dispatch) => {
   try {
     //here need to add url and pass PM name
     const res = await axios.get(
-      `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1/AllProjects/BABY/EUROPE ENTERPRISE`
+      `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1/AllProjects/${bu}/${region}`
     );
 
     if (res?.data === null) {

@@ -8,13 +8,11 @@ import ProjectListHeader from "../MyProjects/ProjectListHeader";
 import { Tag } from "primereact/tag";
 import { changeDateFormat } from "../utils";
 import filter from "../../../assets/images/filter.svg";
-import {
-  getAllProject,
-  // updateProject,
-} from "../../../store/actions/ProjectActions";
+import { getAllProject } from "../../../store/actions/ProjectActions";
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import _ from "lodash";
 
 const CustomisedView = React.lazy(() => import("../MyProjects/CustomisedView"));
 
@@ -118,7 +116,34 @@ const AllProjectList = (props) => {
     (async () => {
       try {
         // const ProjectData = await ProjectService.getProjectData();
-        const ProjectData = allProjectList.allProjects;
+        const ProjectData = _.cloneDeep(allProjectList.allProjects);
+        if (ProjectData && ProjectData.length) {
+          ProjectData.filter((field) => {
+            if (field.Artwork_Category) {
+              let categoryNames = field?.Artwork_Category?.map(
+                (item) => item.Category_Name
+              ).join(",");
+              field.Artwork_Category = categoryNames;
+            }
+
+            if (field.Artwork_SMO) {
+              let SMOName = field?.Artwork_SMO?.map(
+                (item) => item.SMO_Name
+              ).join(",");
+              field.Artwork_SMO = SMOName;
+            }
+
+            if (field.Artwork_Brand) {
+              let brandName = field?.Artwork_Brand?.map(
+                (item) => item.Brand_Name
+              ).join(",");
+              field.Artwork_Brand = brandName;
+            }
+
+            return field;
+          });
+        }
+
         if (ProjectData.length) {
           setAllColumnNames(reorderColumns(Object.keys(ProjectData[0])));
         }
@@ -237,24 +262,20 @@ const AllProjectList = (props) => {
   };
 
   const fullKitReadinessBody = (options, rowData) => {
-    // console.log("row data",rowData, options);
     let field = rowData.field;
-    let categoryNames = [];
-    let SMOName = [];
-    let brandName = [];
     let projectId = options["Project_ID"];
-    if (field === "Artwork_Category") {
-      categoryNames =
-        options[field] &&
-        options[field].map((item) => item.Category_Name).join(",");
-    }
+    // if (field === "Artwork_Category") {
+    //   categoryNames =
+    //     options[field] &&
+    //     options[field].map((item) => item.Category_Name).join(",");
+    // }
 
-    if (field === "Artwork_SMO") {
-      SMOName = options[field]?.map((item) => item.SMO_Name).join(",");
-    }
-    if (field === "Artwork_Brand") {
-      brandName = options[field]?.map((item) => item.Brand_Name).join(",");
-    }
+    // if (field === "Artwork_SMO") {
+    //   SMOName = options[field]?.map((item) => item.SMO_Name).join(",");
+    // }
+    // if (field === "Artwork_Brand") {
+    //   brandName = options[field]?.map((item) => item.Brand_Name).join(",");
+    // }
 
     return (
       <>
@@ -281,34 +302,44 @@ const AllProjectList = (props) => {
           ></Tag>
         )}
 
+        {field === "Project_ID" && (
+          <span
+            style={{ color: "#003DA5", cursor: "pointer" }}
+            onClick={() => {
+              if (field && field.length) {
+                let option = allProjectList.allProjects[rowData.rowIndex];
+                dispatch(selectedProject(option, "All Projects"));
+                navigate(`/addProject/${projectId}`);
+              }
+            }}
+          >
+            {options[field]}{" "}
+          </span>
+        )}
+
         {field === "Project_Name" && (
           <span
             style={{ color: "#003DA5", cursor: "pointer" }}
             onClick={() => {
               if (field && field.length) {
-                dispatch(selectedProject(options, "All Projects"));
+                let option = allProjectList.allProjects[rowData.rowIndex];
+                dispatch(selectedProject(option, "All Projects"));
                 navigate(`/addProject/${projectId}`);
               }
             }}
           >
-            {" "}
             {options[field]}{" "}
           </span>
         )}
 
         {field === "Estimated_SOP" && changeDateFormat(options[field])}
         {field === "Estimated_AW_Printer" && changeDateFormat(options[field])}
-        {field === "Artwork_Category" && categoryNames}
-        {field === "Artwork_SMO" && SMOName}
-        {field === "Artwork_Brand" && brandName}
 
         {field !== "Full Kit Readiness Tracking" &&
           field !== "Estimated_SOP" &&
           field !== "Estimated_AW_Printer" &&
-          field !== "Artwork_Category" &&
           field !== "Project_Name" &&
-          field !== "Artwork_SMO" &&
-          field !== "Artwork_Brand" && <> {options[field]}</>}
+          field !== "Project_ID" && <> {options[field]}</>}
       </>
     );
   };
