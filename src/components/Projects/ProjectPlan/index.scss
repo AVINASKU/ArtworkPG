@@ -7,6 +7,7 @@ $fontWeight400: 400;
   flex-direction: column;
   align-items: flex-start;
   padding: 25px 15px;
+
   .actions {
     display: flex;
     flex-direction: row;
@@ -17,45 +18,55 @@ $fontWeight400: 400;
     .action-buttons {
       display: flex;
       flex-direction: row;
+
       button {
         margin: 0 16px;
       }
     }
   }
+
   .tabular-view {
     width: $width100;
     display: block;
     padding: 0 0 0;
+
     .card {
       border: 0 !important;
     }
   }
 }
+
 .p-confirm-popup {
   position: absolute;
   top: 12% !important;
   left: 0% !important;
 }
+
 // Datepicker for ProjectSetUp component Style Start
 .p-datepicker table td {
   padding: 0.2px !important;
 }
+
 .p-button:focus {
   box-shadow: none !important;
 }
+
 // Datepicker for ProjectSetUp component Style End
 .myProjectAnddAllProjectList {
-  .p-datatable > .p-datatable-wrapper {
+  .p-datatable>.p-datatable-wrapper {
     overflow: scroll;
     width: $width100;
     height: 65vh;
   }
+
   .p-datatable-table {
     line-height: 15px;
   }
+
   .p-column-title {
     font-weight: $fontWeight500;
   }
+
   .p-datatable-tbody {
     font-weight: $fontWeight400;
   }
@@ -73,7 +84,7 @@ $fontWeight400: 400;
   }
 
   td,
-  table .p-datatable .p-datatable-tbody > tr > td,
+  table .p-datatable .p-datatable-tbody>tr>td,
   th,
   tr {
     position: relative;
@@ -81,6 +92,7 @@ $fontWeight400: 400;
     height: 40px;
   }
 }
+
 .font-bold {
   font-weight: 700;
 }
@@ -89,7 +101,7 @@ $fontWeight400: 400;
   margin: 8px 0 8px 8px;
 }
 
-.p-checkbox-checked + label {
+.p-checkbox-checked+label {
   color: #003da5;
 }
 
@@ -106,6 +118,7 @@ $fontWeight400: 400;
   width: 11px;
   height: 16px;
 }
+
 .resetToPgDefault {
   width: 164px;
   height: 32px;
@@ -117,9 +130,11 @@ $fontWeight400: 400;
   line-height: 96%;
   vertical-align: top;
 }
+
 .resetToPgDefault:hover {
   background-color: #868484 !important;
 }
+
 .header-icons {
   cursor: pointer;
   margin: 8px;
@@ -128,12 +143,14 @@ $fontWeight400: 400;
   width: 18px;
   height: 18px;
 }
+
 // Filter and Save buttons disabled
 img[disabled] {
   opacity: 0.5;
   // pointer-events: none;
   cursor: no-drop;
 }
+
 // ProjectList Styles End
 
 // ConfirmationPopUp Styles Start
@@ -141,6 +158,7 @@ img[disabled] {
   display: flex;
   padding: 10.56px 22px 22px 2px;
 }
+
 .clearAllFilterDiv {
   line-height: 12px;
   justify-items: end;
@@ -149,27 +167,33 @@ img[disabled] {
   right: 22px;
   top: 18px;
 }
+
 .clearAllFilter {
   cursor: pointer;
 }
+
 .clearAllFilterIcon {
   cursor: pointer;
   position: absolute;
   right: 5px;
 }
+
 .sortAndFrozen {
   padding: 0 22px 22px 2px;
   cursor: pointer;
   line-height: 12px;
 }
+
 .multiSelect {
   padding: 0 22px 22px 2px;
   cursor: pointer;
   line-height: 10px;
+
   .p-placeholder {
     // font-size: 8px !important;
     color: #595959 !important;
   }
+
   .p-multiselect {
     width: 124px !important;
     // height: 16px !important;
@@ -179,11 +203,13 @@ img[disabled] {
 .p-overlaypanel {
   position: absolute !important;
 }
+
 .p-multiselect-item {
   font-size: 10px !important;
   line-height: 12px !important;
   padding: 0px 0 !important;
 }
+
 .p-inputtext {
   font-size: 10px !important;
   line-height: 12px !important;
@@ -221,14 +247,50 @@ img[disabled] {
 }
 
 // ProjectPlan Styles Start
-.p-treetable .p-treetable-thead > tr > th {
-  width: 100px;
+.duration {
+  color: #9A9898;
+  background-color: #ffffff !important;
+  width: 38px;
+  height: 20px;
+  border-color: #9A9898;
+  border-radius: 4px;
+  padding: 0px;
+  font-weight: 400;
+  font-size: 10px;
+}
+.helpNeeded {
+  color: #ffffff;
+  background-color: #01D309 !important;
+  width: 48px;
+  height: 20px;
+  border: none;
+  border-radius: 4px;
+  padding: 0px;
+  font-weight: 500;
+  font-size: 12px;
+}
+.iconsStyle {
+  cursor: pointer;
+  margin-right: 3.3px;
+  width: 13.33px;
+  height: 13.33px;
+}
+.iconsTextStyle {
+  color: #03A000;
+  font-size: 10px;
+  line-height: 12px;
+  // cursor: pointer;
+  // margin-right: 3.3px;
+  // width: 13.33px;
+  // height: 13.33px;
 }
 // ProjectPlan Styles End
 .accordion.projectPlanAccordian {
   margin: 0px;
-  .accordion-item > .accordion-header {
+
+  .accordion-item>.accordion-header {
     background-color: #f7f7f7;
+
     .accordion-button {
       background-color: #f7f7f7 !important;
     }

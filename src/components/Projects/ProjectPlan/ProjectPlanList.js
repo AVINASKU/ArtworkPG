@@ -11,7 +11,11 @@ import filter from "../../../assets/images/filter.svg";
 import { projectPlan } from "../../../store/actions/ProjectActions";
 import { changeDateFormat } from "../utils";
 import BlueFilter from "../../../assets/images/BlueFilterIcon.svg";
+import complete from "../../../assets/images/complete.svg";
+import hyphen from "../../../assets/images/hyphen.svg";
 import { Dropdown } from "primereact/dropdown";
+import { useNavigate } from "react-router-dom";
+import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 
 const ProjectPlanList = (props) => {
   const [pegadata, setPegaData] = useState(null);
@@ -24,12 +28,13 @@ const ProjectPlanList = (props) => {
   const [sortData, setSortData] = useState([]);
   const [isSearch] = useState(false);
   const [selectedOwner, setSelectedOwner] = useState(null);
-  const [selectedState, setSelectedState] = useState(null);
+  const [selectedRole, setSelectedRole] = useState(null);
 
   const myProjectList = useSelector((state) => state.myProject);
   console.log("myProjectList:", myProjectList);
   const { loading } = myProjectList;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const searchHeader = projectColumnName.reduce(
     (acc, curr) => ({
@@ -178,72 +183,6 @@ const ProjectPlanList = (props) => {
     );
   };
 
-  const fullKitReadinessBody = (options, rowData) => {
-    let field = rowData.field;
-    let categoryNames = [];
-    let SMOName = [];
-    let brandName = [];
-    let projectId = options["Task"];
-    // if (field === "Artwork_Category") {
-    //   categoryNames = options[field]
-    //     .map((item) => item.Category_Name)
-    //     .join(",");
-    // }
-
-    // if (field === "Artwork_SMO" && options[field]) {
-    //   console.log('field:', options[field]);
-    //   SMOName = options[field].map((item) => item.SMO_Name).join(",");
-    // }
-    // if (field === "Artwork_Brand" && options[field]) {
-    //   brandName = options[field].map((item) => item.Brand_Name).join(",");
-    // }
-
-    return (
-      <>
-        {field === "Project State" && (
-          <Tag
-            value=""
-            style={{
-              backgroundColor: "#DFEBFF",
-              color: "#003DA5",
-              border: "1px solid",
-            }}
-          >
-            Active
-          </Tag>
-        )}
-        {field === "Full Kit Readiness Tracking" && (
-          <Tag
-            value="view"
-            style={{
-              backgroundColor: "white",
-              color: "gray",
-              border: "1px solid",
-            }}
-          ></Tag>
-        )}
-
-        {field === "Project_Name" && (
-          <a href={`/addProject/${projectId}`}> {options[field]} </a>
-        )}
-
-        {field === "Estimated_SOP" && changeDateFormat(options[field])}
-        {field === "Estimated_AW_Printer" && changeDateFormat(options[field])}
-        {field === "Artwork_Category" && categoryNames}
-        {field === "Artwork_SMO" && SMOName}
-        {field === "Artwork_Brand" && brandName}
-
-        {field !== "Full Kit Readiness Tracking" &&
-          field !== "Estimated_SOP" &&
-          field !== "Estimated_AW_Printer" &&
-          field !== "Artwork_Category" &&
-          field !== "Project_Name" &&
-          field !== "Artwork_SMO" &&
-          field !== "Artwork_Brand" && <> {options[field]}</>}
-      </>
-    );
-  };
-
   const onGlobalFilterChange = (e) => {
     const value = e.value;
     setSelectedCities(value);
@@ -314,7 +253,6 @@ const ProjectPlanList = (props) => {
     }
   };
 
-  const [expandedRows, setExpandedRows] = useState(null);
   const rowExpansionColumnNames = [
     "Task",
     "Dependancy",
@@ -328,37 +266,108 @@ const ProjectPlanList = (props) => {
     "HelpNeeded",
   ];
 
-  const elementTemplate = (ele) => {
-    const owners = [
-      { name: "Luca", code: "Luca" },
-      { name: "Karol", code: "Karol" },
-      { name: "Iza", code: "Iza" },
-    ];
-    const states = [
-      { name: "New York", code: "NY" },
-      { name: "Rome", code: "RM" },
-      { name: "London", code: "LDN" },
-    ];
+  const elementTemplate = (options, rowData) => {
+    let roles = [],
+      owners = [];
+    const field = rowData.field,
+      task = options.data["Task"];
+
+    if (field === "Role") {
+      roles = options.data[field];
+    }
+    if (field === "Owner") {
+      owners = options.data[field];
+    }
+
     return (
-      (ele === "Owner" || ele === "State") && (
-        <Dropdown
-          value={ele === "Owner" ? selectedOwner : selectedState}
-          onChange={(e) => {
-            ele === "Owner" && setSelectedOwner(e.value);
-            ele === "State" && setSelectedState(e.value);
-          }}
-          options={ele === "Owner" ? owners : ele === "State" ? states : []}
-          optionLabel="name"
-          placeholder={`Select ${ele}`}
-          className="w-full md:w-14rem"
-        />
-      )
+      <>
+        {field === "Task" && (
+          <span
+            style={{ color: "#003DA5", cursor: "pointer" }}
+            onClick={() => {
+              if (field && field.length) {
+                dispatch(selectedProject(options.data, "My Projects"));
+                navigate(`/addProject/${task}`);
+              }
+            }}
+          >
+            {options.data[field]}
+          </span>
+        )}
+
+        {options.children ? (
+          <>
+            {(field === "Role" || field === "Owner") && (
+              <img
+                src={hyphen}
+                alt="Hyphen"
+                onClick={(e) => {
+                  op.current.toggle(e);
+                }}
+                // className="iconsStyle"
+              />
+            )}
+          </>
+        ) : (
+          (field === "Role" || field === "Owner") && (
+            <Dropdown
+              value={field === "Owner" ? selectedOwner : selectedRole}
+              onChange={(e) => {
+                field === "Role" && setSelectedRole(e.value);
+                field === "Owner" && setSelectedOwner(e.value);
+              }}
+              options={
+                field === "Role" ? roles : field === "Owner" ? owners : []
+              }
+              optionLabel="name"
+              placeholder={`Select ${field}`}
+              className="w-full md:w-14rem"
+            />
+          )
+        )}
+
+        {field === "State" && options.data[field] === "Complete" ? (
+          <>
+            <img
+              src={complete}
+              alt="Check"
+              onClick={(e) => {
+                op.current.toggle(e);
+              }}
+              className="iconsStyle"
+            />
+            <span className="iconsTextStyle" onClick={() => {}}>
+              {options.data[field]}
+            </span>
+          </>
+        ) : (
+          <>{field === "State" && options.data[field]}</>
+        )}
+        {field === "Duration" && (
+          <button type="button" className="btn btn-outline-secondary duration">
+            {options.data[field]}
+          </button>
+        )}
+        {field === "HelpNeeded" && (
+          <button type="button" className="btn btn-success helpNeeded">
+            {options.data[field]}
+          </button>
+        )}
+
+        {field === "StartDate" && changeDateFormat(options.data[field])}
+        {field === "EndDate" && changeDateFormat(options.data[field])}
+        {field !== "Task" &&
+          field !== "Role" &&
+          field !== "Owner" &&
+          field !== "State" &&
+          field !== "StartDate" &&
+          field !== "EndDate" &&
+          field !== "Duration" &&
+          field !== "HelpNeeded" && <>{options.data[field]}</>}
+      </>
     );
   };
 
-  const rowExpansionHeader = (options) => {
-    return <div>{options}</div>;
-  };
   const rowExpansionColumns = () => {
     if (rowExpansionColumnNames.length) {
       return rowExpansionColumnNames.map((ele, i) => {
@@ -374,7 +383,7 @@ const ProjectPlanList = (props) => {
             alignFrozen="left"
             className={frozenCoulmns.includes(ele) ? "font-bold" : ""}
             showFilterMenu={false}
-            body={elementTemplate(ele)}
+            body={elementTemplate}
           />
         );
       });
@@ -422,7 +431,7 @@ const ProjectPlanList = (props) => {
             // filters={searchHeader}
             // filterDisplay={isSearch && "row"}
             // ref={dt}
-            tableStyle={{ minWidth: "150rem", tableLayout: "auto" }}
+            tableStyle={{ minWidth: "107rem", tableLayout: "auto" }}
           >
             {/* <Column header="" expander={true}></Column> */}
             {rowExpansionColumns()}
