@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import "./index.scss";
 import "../../Projects/MyProjects/index.scss";
 
@@ -10,7 +11,10 @@ import { Column } from "primereact/column";
 import { Checkbox } from "primereact/checkbox";
 import filter from "../../../assets/images/filter.svg";
 import { Button } from "primereact/button";
-
+import {
+  getTasks,
+  // updateProject,
+} from "../../../store/actions/TaskActions";
 // import { DataTable } from "primereact/datatable";
 // import { Column } from "primereact/column";
 // import { ProjectService } from "../../../service/PegaService";
@@ -25,7 +29,10 @@ const MyTask = (props) => {
   const [MyTaskcolumnName, setMyTaskColumnName] = useState(null);
   const [isSearch, isSearchSet] = useState(false);
   const [checked, setChecked] = useState(false);
-
+  const dispatch = useDispatch();
+  const myTasks = useSelector((state) => state.TaskReducer.myTasks);
+  console.log("myTasks", myTasks);
+  //setMyTaskData(myTasks);
   // let a1 = [
   //   {
   //     name: "lakshay",
@@ -61,6 +68,14 @@ const MyTask = (props) => {
   //   },
   // ];
   //   console.log("poo are", props);
+
+  useEffect(() => {
+    // if (!myProjectList.myProject.length) {
+    const gettasks = dispatch(getTasks());
+    console.log("my gettasks", gettasks);
+    // }
+  }, [dispatch]);
+
   useEffect(() => {
     // (async () => {
     // try {
@@ -105,7 +120,6 @@ const MyTask = (props) => {
     );
   };
   const taskBodyTemplate = (rowData) => {
-    console.log("rowData is", rowData);
     return (
       <div className="flex align-items-center gap-2">
         <div class="p-checkbox p-component">

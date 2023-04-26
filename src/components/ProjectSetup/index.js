@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Accordion from "react-bootstrap/Accordion";
 import AddProject from "../Projects/CreateProject";
 import { Button } from "react-bootstrap";
@@ -7,7 +7,6 @@ import { Dropdown } from "primereact/dropdown";
 import "primeicons/primeicons.css";
 import { SelectButton } from "primereact/selectbutton";
 import "./index.scss";
-import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ProjectPlanCompo from "../Projects/ProjectPlan/ProjectPlanCompo";
 
