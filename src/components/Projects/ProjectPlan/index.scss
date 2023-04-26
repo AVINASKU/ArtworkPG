@@ -80,6 +80,11 @@ $fontWeight400: 400;
     border: 0 !important;
     height: 40px;
   }
+  .input-duration > input {
+    max-width: 70px;
+    border-radius: 5px;
+    text-align: center;
+  }
 }
 .font-bold {
   font-weight: 700;

@@ -12,6 +12,8 @@ import { projectPlan } from "../../../store/actions/ProjectActions";
 import { changeDateFormat } from "../utils";
 import BlueFilter from "../../../assets/images/BlueFilterIcon.svg";
 import { Dropdown } from "primereact/dropdown";
+import { InputNumber } from "primereact/inputnumber";
+import "./index.scss";
 
 const ProjectPlanList = (props) => {
   const [pegadata, setPegaData] = useState(null);
@@ -23,8 +25,6 @@ const ProjectPlanList = (props) => {
   const [filters, setFilters] = useState([]);
   const [sortData, setSortData] = useState([]);
   const [isSearch] = useState(false);
-  const [selectedOwner, setSelectedOwner] = useState(null);
-  const [selectedState, setSelectedState] = useState(null);
 
   const myProjectList = useSelector((state) => state.myProject);
   console.log("myProjectList:", myProjectList);
@@ -328,38 +328,57 @@ const ProjectPlanList = (props) => {
     "HelpNeeded",
   ];
 
-  const elementTemplate = (ele) => {
+  const elementTemplate = (ele, rowData) => {
+    // console.log("ele: ", ele);
+    // console.log("rowData: ", rowData);
+
+    const roles = [
+      { name: "Project Manager", code: "PN" },
+      { name: "Task Owner", code: "TO" },
+      { name: "Executive", code: "EC" },
+    ];
     const owners = [
       { name: "Luca", code: "Luca" },
       { name: "Karol", code: "Karol" },
       { name: "Iza", code: "Iza" },
     ];
-    const states = [
-      { name: "New York", code: "NY" },
-      { name: "Rome", code: "RM" },
-      { name: "London", code: "LDN" },
-    ];
-    return (
-      (ele === "Owner" || ele === "State") && (
-        <Dropdown
-          value={ele === "Owner" ? selectedOwner : selectedState}
-          onChange={(e) => {
-            ele === "Owner" && setSelectedOwner(e.value);
-            ele === "State" && setSelectedState(e.value);
-          }}
-          options={ele === "Owner" ? owners : ele === "State" ? states : []}
-          optionLabel="name"
-          placeholder={`Select ${ele}`}
-          className="w-full md:w-14rem"
-        />
-      )
-    );
+
+    return rowData?.data[ele] && (ele === "Role" || ele === "Owner") ? (
+      <Dropdown
+        editable
+        value={rowData?.data[ele]}
+        onChange={(e) => onDropdownChange(rowData, e, ele)}
+        options={ele === "Role" ? roles : ele === "Owner" ? owners : []}
+        optionLabel="name"
+        placeholder={`Select ${ele}`}
+        className="w-full md:w-14rem"
+      />
+    ) : rowData?.data[ele] && ele === "Duration" ? (
+      <InputNumber
+        className="input-duration"
+        inputId="integeronly"
+        value={rowData?.data[ele]}
+        onValueChange={(e) => onDurationChange(rowData, e, ele)}
+      />
+    ) : null;
+  };
+
+  const onDropdownChange = (rowData, { value }, ele) => {
+    // Update the data with the new value
+    rowData.data[ele] = value.name;
+    setPegaData([...pegadata]);
+  };
+
+  const onDurationChange = (rowData, { value }, ele) => {
+    rowData.data[ele] = value < 1 ? "0" : value?.toString();
+    setPegaData([...pegadata]);
   };
 
   const rowExpansionHeader = (options) => {
     return <div>{options}</div>;
   };
   const rowExpansionColumns = () => {
+    console.log("pegadata inside rowExpansionColumns: ", pegadata);
     if (rowExpansionColumnNames.length) {
       return rowExpansionColumnNames.map((ele, i) => {
         return (
@@ -374,7 +393,11 @@ const ProjectPlanList = (props) => {
             alignFrozen="left"
             className={frozenCoulmns.includes(ele) ? "font-bold" : ""}
             showFilterMenu={false}
-            body={elementTemplate(ele)}
+            body={
+              ele === "Role" || ele === "Owner" || ele === "Duration"
+                ? (rowData) => elementTemplate(ele, rowData)
+                : elementTemplate(ele)
+            }
           />
         );
       });
@@ -422,7 +445,7 @@ const ProjectPlanList = (props) => {
             // filters={searchHeader}
             // filterDisplay={isSearch && "row"}
             // ref={dt}
-            tableStyle={{ minWidth: "150rem", tableLayout: "auto" }}
+            tableStyle={{ minWidth: "120rem", tableLayout: "auto" }}
           >
             {/* <Column header="" expander={true}></Column> */}
             {rowExpansionColumns()}
