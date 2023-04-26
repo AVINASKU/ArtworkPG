@@ -14,6 +14,7 @@ import {
   // updateProject,
 } from "../../../store/actions/ProjectActions";
 import { changeDateFormat } from "../utils";
+import _ from "lodash";
 
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 const CustomisedView = React.lazy(() => import("./CustomisedView"));
@@ -124,11 +125,9 @@ const ProjectList = (props) => {
         // const ProjectData = await ProjectService.getProjectData();
 
         //below is api call
-        const ProjectData = myProjectList.myProject;
-        console.log("my project data here here", ProjectData);
-
+        const ProjectData = _.cloneDeep(myProjectList.myProject);
         if (ProjectData && ProjectData.length) {
-          ProjectData.map((field) => {
+          ProjectData.filter((field) => {
             if (field.Artwork_Category) {
               let categoryNames = field?.Artwork_Category?.map(
                 (item) => item.Category_Name
@@ -152,7 +151,6 @@ const ProjectList = (props) => {
 
             return field;
           });
-          console.log("newProjectData", ProjectData);
         }
 
         if (ProjectData.length) {
@@ -267,7 +265,6 @@ const ProjectList = (props) => {
   };
 
   const fullKitReadinessBody = (options, rowData) => {
-    // console.log("row data",rowData, options);
     let field = rowData.field;
     let projectId = options["Project_ID"];
     // if (field === "Artwork_Category") {
@@ -314,7 +311,25 @@ const ProjectList = (props) => {
             // href={`/addProject/${projectId}`}
             onClick={() => {
               if (field && field.length) {
-                dispatch(selectedProject(options, "My Projects"));
+                let option = myProjectList.myProject[rowData.rowIndex];
+                dispatch(selectedProject(option, "My Projects"));
+                navigate(`/addProject/${projectId}`);
+              }
+            }}
+          >
+            {" "}
+            {options[field]}{" "}
+          </span>
+        )}
+
+        {field === "Project_ID" && (
+          <span
+            style={{ color: "#003DA5", cursor: "pointer" }}
+            // href={`/addProject/${projectId}`}
+            onClick={() => {
+              if (field && field.length) {
+                let option = myProjectList.myProject[rowData.rowIndex];
+                dispatch(selectedProject(option, "My Projects"));
                 navigate(`/addProject/${projectId}`);
               }
             }}
@@ -330,7 +345,8 @@ const ProjectList = (props) => {
         {field !== "Full Kit Readiness Tracking" &&
           field !== "Estimated_SOP" &&
           field !== "Estimated_AW_Printer" &&
-          field !== "Project_Name" && <> {options[field]}</>}
+          field !== "Project_Name" &&
+          field !== "Project_ID" && <> {options[field]}</>}
       </>
     );
   };
