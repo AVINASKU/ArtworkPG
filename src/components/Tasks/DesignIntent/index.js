@@ -5,14 +5,17 @@ import DesignHeader from "./DesignHeader";
 import AddNewDesignContent from "./AddNewDesignContent";
 import { ProjectService } from "../../../service/PegaService";
 import "./index.scss";
+import { Button } from "react-bootstrap";
 
 function DefineDesignIntent() {
   const [data, setData] = useState(null);
+  const [designIntent, setDesignIntent] = useState([]);
   const [updated, setUpdated] = useState(false);
 
   useEffect(() => {
     const data1 = ProjectService.getDIData();
     setData(data1);
+    setDesignIntent(data1.DesignIntentList);
     console.log("data in useeffect", data1);
   }, [data]);
 
@@ -23,15 +26,39 @@ function DefineDesignIntent() {
     // console.log("sub", sub);
   };
 
-  const addNewEmptyDesign = useCallback(() => {
-    data.count = data.count + 1;
-    // setData(data);
-    setData((t) => [t]);
-    // setUpdated(true);
-    console.log("data", data);
-  },[data]);
+  const addNewEmptyDesign = () => {
+    designIntent.push({});
+    setDesignIntent((designIntent) => designIntent);
+    setUpdated(!updated);
+  };
+
+  console.log("design intent");
 
   console.log("updated data", data, data?.count);
+
+  const addData = (fieldName, index, value) => {
+    let data = designIntent[index];
+    data[fieldName] = value;
+    setDesignIntent(designIntent);
+  };
+
+  const addIntoDesignIntent = (item) => {
+    console.log("data", item);
+  };
+
+  const onSubmit = () => {
+    console.log("full data", designIntent);
+  };
+
+  const FooterButtons = () => {
+    return (
+      <>
+        <Button>Cancel</Button>
+        <Button>Save as Draft</Button>
+        <Button onClick={() => onSubmit()}>Submit</Button>
+      </>
+    );
+  };
 
   return (
     <PageLayout>
@@ -46,31 +73,23 @@ function DefineDesignIntent() {
       >
         {<AddNewDesign {...data} />}
 
-        {data?.count &&
-          Array.from({ length: data?.count }, (_, index) => (
-            <div key={index}>
-              {" "}
-              <AddNewDesignContent
-                key={index}
-                index={index}
-                {...data}
-                handleDelete={handleDelete}
-              />
-            </div>
-          ))}
-
-        {/* {subProject &&
-          subProject.length &&
-          subProject.map((item, index) => {
+        {designIntent &&
+          designIntent.length &&
+          designIntent.map((item, index) => {
             return (
               <AddNewDesignContent
                 key={item.id}
-                {...item}
+                {...data}
+                item={item}
                 index={index}
+                addData={addData}
+                addIntoDesignIntent={addIntoDesignIntent}
                 handleDelete={handleDelete}
               />
             );
-          })} */}
+          })}
+
+        {FooterButtons()}
       </div>
     </PageLayout>
   );

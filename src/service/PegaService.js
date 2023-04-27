@@ -60,13 +60,40 @@ const filterProjectData = [
 
 const DI = {
   projectName: "Paste Mulsaane Oral-B Medical Device Europe",
-  brand:"Fairy",
-  category:"Hand Dish Wash",
+  brand: "Fairy",
+  category: "Hand Dish Wash",
   duration: "15 days",
   start_date: "20-mar-2023",
   end_date: "4-apr-23",
   consumed_buffer: "15",
-  count:1,
+  count: 1,
+  DesignIntentList: [
+    {
+      Design_Intent_Name:
+        "DI_FAI-214_Fairy_Hand Dish Wash_Paste Mulsaane Oral-B Medical Device Europe_UK_Test",
+      AWMTaskId: "DI-1",
+      DesignJobid: "1234",
+      AWMProjectId: "",
+      AgencyReference: "FAI-214",
+      Cluster: "UK",
+      AdditionalInfo: "Test",
+      Select: "true",
+      event: "submit",
+    },
+    {
+      Design_Intent_Name: "Abc",
+      TaskId: "DI-2",
+      AgencyReference: "FAI-215",
+      Cluster: "UK",
+      AdditionalInfo: "Test",
+      Select: "false",
+      event: "draft",
+      DesignJobid: "1112",
+    },
+    {
+      DesignJobid: "2235",
+    },
+  ],
 };
 
 export const ProjectService = {
