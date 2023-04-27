@@ -5,17 +5,20 @@ import { Column } from "primereact/column";
 import { ProjectService } from "../../../service/PegaService";
 import ConfirmationPopUp from "../ConfirmationPopUp";
 import { Toast } from "primereact/toast";
-import { FilterMatchMode } from "primereact/api";
-import { Tag } from "primereact/tag";
 import filter from "../../../assets/images/filter.svg";
 import { projectPlan } from "../../../store/actions/ProjectActions";
-import { changeDateFormat } from "../utils";
+import { changeDateFormat, onSort } from "../utils";
 import BlueFilter from "../../../assets/images/BlueFilterIcon.svg";
 import complete from "../../../assets/images/complete.svg";
 import hyphen from "../../../assets/images/hyphen.svg";
+import inprogress from "../../../assets/images/inprogress.svg";
+import lock from "../../../assets/images/lock.svg";
+import Awaiting from "../../../assets/images/Awaiting.svg";
 import { Dropdown } from "primereact/dropdown";
 import { useNavigate } from "react-router-dom";
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
+import { InputNumber } from "primereact/inputnumber";
+import "./index.scss";
 
 const ProjectPlanList = (props) => {
   const [pegadata, setPegaData] = useState(null);
@@ -26,27 +29,14 @@ const ProjectPlanList = (props) => {
   const [selectedCities, setSelectedCities] = useState([]);
   const [filters, setFilters] = useState([]);
   const [sortData, setSortData] = useState([]);
-  const [isSearch] = useState(false);
-  const [selectedOwner, setSelectedOwner] = useState(null);
-  const [selectedRole, setSelectedRole] = useState(null);
 
   const myProjectList = useSelector((state) => state.myProject);
-  console.log("myProjectList:", myProjectList);
   const { loading } = myProjectList;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const searchHeader = projectColumnName.reduce(
-    (acc, curr) => ({
-      ...acc,
-      [curr]: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    }),
-    {}
-  );
-
   const op = useRef(null);
   const toast = useRef(null);
-  const dt = useRef(null);
 
   const showSuccess = () => {
     toast.current.show({
@@ -55,18 +45,6 @@ const ProjectPlanList = (props) => {
       detail: "Saved Successfully",
       life: 3000,
     });
-  };
-
-  const onSort = (column, direction) => (event) => {
-    const sortedData = [...pegadata].sort((a, b) => {
-      return a[column] > b[column] ? 1 : -1;
-    });
-
-    if (direction === "desc") {
-      sortedData.reverse();
-    }
-    setPegaData(sortedData);
-    setSortData([column, direction]);
   };
 
   useEffect(() => {
@@ -184,13 +162,10 @@ const ProjectPlanList = (props) => {
   };
 
   const onGlobalFilterChange = (e) => {
+    console.log('data:',e);
     const value = e.value;
     setSelectedCities(value);
     setFilters(value);
-  };
-
-  const onColumnResizeEnd = (event) => {
-    console.log("updated column name", event, event?.element?.clientWidth);
   };
 
   const saveSettings = () => {
@@ -202,21 +177,6 @@ const ProjectPlanList = (props) => {
       JSON.stringify(projectColumnName)
     );
     showSuccess();
-  };
-
-  const storeReorderedColumns = (e) => {
-    const dragColumnName = projectColumnName[e?.dragIndex];
-    const index = projectColumnName.indexOf(dragColumnName);
-    if (index > -1) {
-      // only splice array when item is found
-      projectColumnName.splice(index, 1); // 2nd parameter means remove one item only
-      projectColumnName.splice(e?.dropIndex, 0, dragColumnName);
-    }
-    localStorage.setItem(
-      "projectPlanAllColumnNames",
-      JSON.stringify(projectColumnName)
-    );
-    setProjectColumnNames(projectColumnName);
   };
 
   const clearColumnWiseFilter = () => {
@@ -269,8 +229,7 @@ const ProjectPlanList = (props) => {
   const elementTemplate = (options, rowData) => {
     let roles = [],
       owners = [];
-    const field = rowData.field,
-      task = options.data["Task"];
+    const field = rowData.field;
 
     if (field === "Role") {
       roles = options.data[field];
@@ -287,7 +246,7 @@ const ProjectPlanList = (props) => {
             onClick={() => {
               if (field && field.length) {
                 dispatch(selectedProject(options.data, "My Projects"));
-                navigate(`/addProject/${task}`);
+                navigate(`/addProject/${options.data[field]}`);
               }
             }}
           >
@@ -295,59 +254,111 @@ const ProjectPlanList = (props) => {
           </span>
         )}
 
-        {options.children ? (
+        {options.children && options.children.length > 0 ? (
           <>
-            {(field === "Role" || field === "Owner") && (
+            {(field === "Role" ||
+              field === "Owner" ||
+              field === "State" ||
+              field === "Duration") && (
               <img
                 src={hyphen}
                 alt="Hyphen"
                 onClick={(e) => {
                   op.current.toggle(e);
                 }}
-                // className="iconsStyle"
               />
             )}
           </>
         ) : (
-          (field === "Role" || field === "Owner") && (
-            <Dropdown
-              value={field === "Owner" ? selectedOwner : selectedRole}
-              onChange={(e) => {
-                field === "Role" && setSelectedRole(e.value);
-                field === "Owner" && setSelectedOwner(e.value);
-              }}
-              options={
-                field === "Role" ? roles : field === "Owner" ? owners : []
-              }
-              optionLabel="name"
-              placeholder={`Select ${field}`}
-              className="w-full md:w-14rem"
-            />
-          )
+          <>
+            {(field === "Role" || field === "Owner") && (
+              <Dropdown
+                value={options?.data[field]}
+                onChange={(e) => onDropdownChange(options, e, field)}
+                options={
+                  field === "Role" ? roles : field === "Owner" ? owners : []
+                }
+                optionLabel="name"
+                placeholder={`Select ${field}`}
+                className="w-full md:w-14rem"
+              />
+            )}
+            {field === "State" && options.data[field] === "Complete" ? (
+              <>
+                <img
+                  src={complete}
+                  alt="Check"
+                  onClick={(e) => {
+                    op.current.toggle(e);
+                  }}
+                  className="iconsStyle"
+                />
+                <span className="iconsTextStyle" onClick={() => {}}>
+                  {options.data[field]}
+                </span>
+              </>
+            ) : field === "State" && options.data[field] === "In Progress" ? (
+              <>
+                <img
+                  src={inprogress}
+                  alt="In Progress"
+                  onClick={(e) => {
+                    op.current.toggle(e);
+                  }}
+                  className="iconsStyle"
+                />
+                <span
+                  className="iconsTextStyle iconInprogress"
+                  onClick={() => {}}
+                >
+                  {options.data[field]}
+                </span>
+              </>
+            ) : field === "State" && options.data[field] === "Available" ? (
+              <>
+                <img
+                  src={lock}
+                  alt="Lock"
+                  onClick={(e) => {
+                    op.current.toggle(e);
+                  }}
+                  className="iconsStyle"
+                />
+                <span className="iconsTextStyle iconLock" onClick={() => {}}>
+                  {options.data[field]}
+                </span>
+              </>
+            ) : field === "State" && options.data[field] === "Awaiting" ? (
+              <>
+                <img
+                  src={Awaiting}
+                  alt="Awaiting"
+                  onClick={(e) => {
+                    op.current.toggle(e);
+                  }}
+                  className="iconsStyle"
+                />
+                <span
+                  className="iconsTextStyle iconAwaiting"
+                  onClick={() => {}}
+                >
+                  {options.data[field]}
+                </span>
+              </>
+            ) : (
+              <>{field === "State" && options.data[field]}</>
+            )}
+            {field === "Duration" && (
+              <InputNumber
+                className="input-duration"
+                inputId="integeronly"
+                value={options?.data[field]}
+                onValueChange={(e) => onDurationChange(options, e, field)}
+              />
+            )}
+          </>
         )}
 
-        {field === "State" && options.data[field] === "Complete" ? (
-          <>
-            <img
-              src={complete}
-              alt="Check"
-              onClick={(e) => {
-                op.current.toggle(e);
-              }}
-              className="iconsStyle"
-            />
-            <span className="iconsTextStyle" onClick={() => {}}>
-              {options.data[field]}
-            </span>
-          </>
-        ) : (
-          <>{field === "State" && options.data[field]}</>
-        )}
-        {field === "Duration" && (
-          <button type="button" className="btn btn-outline-secondary duration">
-            {options.data[field]}
-          </button>
-        )}
         {field === "HelpNeeded" && (
           <button type="button" className="btn btn-success helpNeeded">
             {options.data[field]}
@@ -355,7 +366,9 @@ const ProjectPlanList = (props) => {
         )}
 
         {field === "StartDate" && changeDateFormat(options.data[field])}
-        {field === "EndDate" && changeDateFormat(options.data[field])}
+        {field === "EndDate" && (
+          <span>{changeDateFormat(options.data[field])}</span>
+        )}
         {field !== "Task" &&
           field !== "Role" &&
           field !== "Owner" &&
@@ -366,6 +379,18 @@ const ProjectPlanList = (props) => {
           field !== "HelpNeeded" && <>{options.data[field]}</>}
       </>
     );
+  };
+
+  const onDropdownChange = (rowData, { value }, ele) => {
+    console.log("rowData:", rowData, { value }, ele);
+    // Update the data with the new value
+    rowData.data[ele] = value.name;
+    setPegaData([...pegadata]);
+  };
+
+  const onDurationChange = (rowData, { value }, ele) => {
+    rowData.data[ele] = value < 1 ? "0" : value?.toString();
+    setPegaData([...pegadata]);
   };
 
   const rowExpansionColumns = () => {
@@ -390,16 +415,23 @@ const ProjectPlanList = (props) => {
     }
   };
 
+  const data = () => {
+    const data = pegadata?.map(obj => obj.data);
+    console.log('data:', data);
+    return data || [];
+  }
   return (
     <div className="myProjectAnddAllProjectList">
       <Suspense fallback={<div>Loading...</div>}>
         <Toast ref={toast} />
         <div className="card">
           <ConfirmationPopUp
-            onSort={onSort}
+            onSort={(column, direction) =>
+              onSort(column, direction, pegadata, setPegaData, setSortData)
+            }
             setProjectFrozen={setProjectFrozen}
             saveSettings={saveSettings}
-            projectData={pegadata}
+            projectData={data()}
             addFrozenColumns={addFrozenColumns}
             onGlobalFilterChange={onGlobalFilterChange}
             selectedColumnName={selectedColumnName}
@@ -415,22 +447,11 @@ const ProjectPlanList = (props) => {
             clearColumnWiseFilter={clearColumnWiseFilter}
           />
           <TreeTable
-            // resizableColumns
             dataKey="Task"
             reorderableColumns
-            // onColReorder={storeReorderedColumns}
-            // onResize={(e) => console.log("resize", e)}
-            // onResizeCapture={(e) => console.log("e", e)}
             value={filters.length ? filters : pegadata}
-            // scrollable
-            // responsiveLayout="scroll"
             loading={loading}
             className="mt-3"
-            // columnResizeMode="expand"
-            // onColumnResizeEnd={onColumnResizeEnd}
-            // filters={searchHeader}
-            // filterDisplay={isSearch && "row"}
-            // ref={dt}
             tableStyle={{ minWidth: "107rem", tableLayout: "auto" }}
           >
             {/* <Column header="" expander={true}></Column> */}
@@ -441,4 +462,5 @@ const ProjectPlanList = (props) => {
     </div>
   );
 };
+
 export default ProjectPlanList;
