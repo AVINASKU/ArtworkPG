@@ -20,6 +20,8 @@ const AddNewDesignContent = ({
   const [agencyRef, setAgency] = useState(AgencyReference);
   const [clusters, setCluster] = useState(Cluster);
   const [additionalInformation, setAdditionalInfo] = useState(AdditionalInfo);
+  const [additionalError,setAdditionalError]=useState("");
+  const [clusterError, setClusterError]=useState("");
 
   const DesignHeader = (di_name) => {
     return (
@@ -83,6 +85,7 @@ const AddNewDesignContent = ({
                 setAgency(e.target.value);
               }}
               aria-describedby="agency-help"
+              disabled={event === "submit" && true}
             />
           </div>
         </Col>
@@ -93,11 +96,14 @@ const AddNewDesignContent = ({
               id="cluster"
               value={clusters}
               onChange={(e) => {
-                addData("Cluster", index, e.target.value);
+                addData("Cluster", index, e.target.value, clusterError);
                 setCluster(e.target.value);
+                setClusterError("");
               }}
               aria-describedby="cluster-help"
+              disabled={event === "submit" && true}
             />
+            {clusterError && <div>{clusterError}</div>}
           </div>
         </Col>
 
@@ -112,6 +118,7 @@ const AddNewDesignContent = ({
                 setAdditionalInfo(e.target.value);
               }}
               aria-describedby="info-help"
+              disabled={event === "submit" && true}
             />
           </div>
         </Col>
@@ -120,7 +127,13 @@ const AddNewDesignContent = ({
           <div>
             <Checkbox
               onChange={(e) => {
-                addIntoDesignIntent(item);
+                if (!additionalInformation) {
+                  setAdditionalError("Select Additional Info");
+                }
+                if (!clusters) {
+                  setClusterError("Select Cluster");
+                }
+                addData("select", index, e.checked);
                 setChecked(e.checked);
               }}
               checked={event === "submit" ? true : checked}

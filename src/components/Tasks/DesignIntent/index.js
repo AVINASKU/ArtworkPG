@@ -11,50 +11,109 @@ function DefineDesignIntent() {
   const [data, setData] = useState(null);
   const [designIntent, setDesignIntent] = useState([]);
   const [updated, setUpdated] = useState(false);
+  const [submittedDI, setSubmittedDI] = useState([]);
+  const [validation, setValidation] = useState(false);
 
   useEffect(() => {
     const data1 = ProjectService.getDIData();
     setData(data1);
+    // let notSubmittedData = data1.DesignIntentList.filter((task)=> task.event !== "submit");
+    // let submittedData = data1.DesignIntentList.filter((task)=> task?.event === "submit");
     setDesignIntent(data1.DesignIntentList);
-    console.log("data in useeffect", data1);
+    // setSubmittedDI(submittedData);
   }, [data]);
 
   const handleDelete = (index) => {
-    // const sub = subProject.filter((item, i) => i !== index);
+    console.log("index", index);
+    const sub = designIntent.filter((item, i) => i !== index);
     // console.log("index here", sub1);
     // const sub = subProject.splice(index,1);
-    // console.log("sub", sub);
+    console.log("sub", sub);
+    setDesignIntent(sub);
   };
 
   const addNewEmptyDesign = () => {
-    designIntent.push({});
-    setDesignIntent((designIntent) => designIntent);
+    designIntent.push({
+      DesignJobid: designIntent.length + 1,
+      isNew: true,
+      AgencyReference: "",
+      Cluster: "",
+      AdditionalInfo: "",
+    });
+    setDesignIntent(designIntent);
     setUpdated(!updated);
   };
 
-  console.log("design intent");
-
-  console.log("updated data", data, data?.count);
-
-  const addData = (fieldName, index, value) => {
+  const addData = (fieldName, index, value, error) => {
     let data = designIntent[index];
     data[fieldName] = value;
-    setDesignIntent(designIntent);
+    submittedDI.push(data);
+    setSubmittedDI(submittedDI);
+    // setDesignIntent(designIntent);
   };
 
-  const addIntoDesignIntent = (item) => {
-    console.log("data", item);
+  const selectSubmit = (item) => {
+    console.log("item", item);
   };
 
   const onSubmit = () => {
-    console.log("full data", designIntent);
+    let submitOnlySelectedData = designIntent.filter(
+      (task) => task?.select === true
+    );
+    console.log("full submit data --->", designIntent, submitOnlySelectedData);
+  };
+
+  const DI = {
+    project_name: "Paste Mulsaane Oral-B Medical Device Europe",
+    duration: "15",
+    start_date: "20-mar-2023",
+    end_date: "4-mar-2024",
+    consumed_buffer: "-2",
+    DesignIntentList: [
+      {
+        Design_Intent_Name:
+          "DI_FAI-214_Fairy_Hand Dish Wash_Paste Mulsaane Oral-B Medical Device Europe_UK_Test",
+        AWMTaskId: "DI-1",
+        DesignJobid: "1234",
+        AWMProjectId: "",
+        AgencyReference: "FAI-214",
+        Cluster: "UK",
+        AdditionalInfo: "Test",
+        Select: "true",
+        event: "submit",
+      },
+      {
+        Design_Intent_Name: "Abc",
+        TaskId: "DI-2",
+        AgencyReference: "FAI-215",
+        Cluster: "UK",
+        AdditionalInfo: "Test",
+        Select: "false",
+        event: "draft",
+        DesignJobid: "1112",
+      },
+      {
+        DesignJobid: "2235",
+      },
+    ],
+  };
+
+  const onSaveAsDraft = () => {
+    let submitOnlySelectedData = designIntent.filter(
+      (task) => task?.event !== "submit"
+    );
+    submitOnlySelectedData.map((task) => {
+      task?.DesignJobid ? (task.action = "update") : (task.action = "add");
+      task.event = "draft";
+    });
+    console.log("full draft data --->", submitOnlySelectedData);
   };
 
   const FooterButtons = () => {
     return (
       <>
         <Button>Cancel</Button>
-        <Button>Save as Draft</Button>
+        <Button onClick={() => onSaveAsDraft()}>Save as Draft</Button>
         <Button onClick={() => onSubmit()}>Submit</Button>
       </>
     );
@@ -73,9 +132,10 @@ function DefineDesignIntent() {
       >
         {<AddNewDesign {...data} />}
 
-        {designIntent &&
-          designIntent.length &&
-          designIntent.map((item, index) => {
+        {/* submittedDI */}
+        {/* {submittedDI &&
+          submittedDI.length &&
+          submittedDI.map((item, index) => {
             return (
               <AddNewDesignContent
                 key={item.id}
@@ -83,7 +143,21 @@ function DefineDesignIntent() {
                 item={item}
                 index={index}
                 addData={addData}
-                addIntoDesignIntent={addIntoDesignIntent}
+                handleDelete={handleDelete}
+              />
+            );
+          })} */}
+
+        {designIntent &&
+          designIntent.length &&
+          designIntent.map((item, index) => {
+            return (
+              <AddNewDesignContent
+                key={item.DesignJobid}
+                {...data}
+                item={item}
+                index={index}
+                addData={addData}
                 handleDelete={handleDelete}
               />
             );
