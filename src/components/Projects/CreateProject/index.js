@@ -40,7 +40,8 @@ const defaultTextBoxEnabled = {
 
 function AddProject(props) {
   const navigate = useNavigate();
-
+  const User = useSelector((state) => state.UserReducer);
+  const userInformation = User.userInformation;
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const mode = projectSetup.mode;
@@ -72,9 +73,7 @@ function AddProject(props) {
   const [brand, setBrand] = useState([]);
   const [tier, setTier] = useState("");
   const [ps, setPs] = useState("");
-  const [pm, setPm] = useState(
-    JSON.parse(sessionStorage.getItem("session")).username
-  );
+  const [pm, setPm] = useState(userInformation.username);
   const [iL, setIl] = useState("");
   const [comments, setComments] = useState("");
   const [projectType, setProjectType] = useState("");
@@ -93,7 +92,7 @@ function AddProject(props) {
   const formatDate = (date) => {
     return new Date(
       moment(date, "YYYYMMDD[T]HHmmss.SSS [GMT]")
-        .tz("Asia/Kolkata")
+        .tz(Intl.DateTimeFormat().resolvedOptions().timeZone)
         .format("ddd MMM DD YYYY HH:mm:ss [GMT]ZZ (z)")
     );
   };
@@ -145,10 +144,7 @@ function AddProject(props) {
           ""
       );
       setIl(selectedProjectDetails?.IL);
-      setPm(
-        selectedProjectDetails?.PM ||
-          JSON.parse(sessionStorage.getItem("session")).username
-      );
+      setPm(selectedProjectDetails?.PM || userInformation.username);
       setComments(selectedProjectDetails?.Comments || "");
       setProjectType(selectedProjectDetails?.Project_Type || []);
 
@@ -242,7 +238,7 @@ function AddProject(props) {
       setPrinterDate("");
       setReadinessDate("");
       setIl("");
-      setPm(JSON.parse(sessionStorage.getItem("session")).username);
+      setPm(userInformation.username);
       setComments("");
       setProjectType("");
 

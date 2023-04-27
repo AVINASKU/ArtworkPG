@@ -17,6 +17,8 @@ import _ from "lodash";
 const CustomisedView = React.lazy(() => import("../MyProjects/CustomisedView"));
 
 const AllProjectList = (props) => {
+  const User = useSelector((state) => state.UserReducer);
+  const userInformation = User.userInformation;
   const [pegadata, setPegaData] = useState(null);
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
@@ -64,7 +66,7 @@ const AllProjectList = (props) => {
   };
 
   useEffect(() => {
-    const updatedUsers = dispatch(getAllProject());
+    const updatedUsers = dispatch(getAllProject(userInformation));
     console.log("all projects", updatedUsers);
   }, [dispatch]);
 

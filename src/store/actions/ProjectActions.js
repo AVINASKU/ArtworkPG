@@ -1,12 +1,13 @@
 import axios from "axios";
 import * as types from "./../types/types";
+import { useSelector } from "react-redux";
 const sessionData = sessionStorage.getItem("session");
 
 const sessionObj = JSON.parse(sessionData);
 
-let PM = sessionObj?.username;
-let region = sessionObj?.region;
-let bu = sessionObj?.bu;
+// let PM = sessionObj?.username;
+// let region = sessionObj?.region;
+// let bu = sessionObj?.bu;
 
 export const projectPlan = (PM) => async (dispatch) => {
   try {
@@ -79,7 +80,9 @@ export const projectPlan = (PM) => async (dispatch) => {
   }
 };
 
-export const getMyProject = () => async (dispatch) => {
+export const getMyProject = (userInformation) => async (dispatch) => {
+  let PM = userInformation?.username;
+
   try {
     //here need to add url and pass PM name
     const res = await axios.get(
@@ -110,7 +113,9 @@ export const getMyProject = () => async (dispatch) => {
   }
 };
 
-export const getAllProject = () => async (dispatch) => {
+export const getAllProject = (userInformation) => async (dispatch) => {
+  let region = userInformation?.region;
+  let bu = userInformation?.bu;
   try {
     //here need to add url and pass PM name
     const res = await axios.get(
