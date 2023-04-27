@@ -44,6 +44,12 @@ $fontWeight400: 400;
   box-shadow: none !important;
 }
 // Datepicker for ProjectSetUp component Style End
+.my-task-project tr{
+  position: relative;
+    border: 0 !important;
+    height: 30px !important;
+}
+
 .my-task-project {
   .p-datatable > .p-datatable-wrapper {
     overflow: scroll;
@@ -60,8 +66,10 @@ $fontWeight400: 400;
     font-weight: $fontWeight400;
   }
 
-  th:after,
-  td:after {
+
+  td, th{
+  position: relative;
+  &:after {
     content: "";
     display: block;
     height: 22px;
@@ -71,14 +79,26 @@ $fontWeight400: 400;
     top: 25%;
     right: 0;
   }
+  }
 
-  td,
-  table .p-datatable .p-datatable-tbody > tr > td,
-  th,
-  tr {
+  td, th:last-child{
     position: relative;
-    // border: 0 !important;
-    height: 40px !important;
+    &:after {
+      content: "";
+      display: block;
+      height: 22px;
+      width: 0.8px;
+      background-color: #acacac;
+      position: absolute;
+      top: 25%;
+      right: 0;
+    }
+    }
+  
+
+.p-datatable-thead > tr > th {
+  position: relative;
+    padding: 0 1rem;
   }
 }
 .font-bold {
@@ -289,11 +309,16 @@ div.p-selectbutton.p-buttonset.p-component{
 }
 
 .helpneeded_value{
-    max-width: 48px;
+    min-width: 48px;
     height: 20px;
     text-align: center;
     background-color: #01D309;
     color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 12px;
+    border-radius: 5px;
 }
 
 .p-button.p-button-success{
@@ -302,8 +327,57 @@ div.p-selectbutton.p-buttonset.p-component{
 }
 
 .status-value{
+  display: inline-block;
 background-color: #E6FFE8;
-width: 81px;
-height: 20px;
-padding: 4px, 12px, 4px, 12px;
+color: #006F05;
+padding: 4px, 4px;
+border-radius: 4px;
+}
+
+thead.p-datatable-thead{
+  max-height: 30px ;
+}
+.p-datatable .p-datatable-thead > tr > th{
+  background: #EDF4FA;
+  // height: 30px;
+}
+
+
+.task_name{
+  position: relative;
+  // bottom: 6px;
+}
+
+div.flex.align-items-center.gap-2{
+  display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+th.p-resizable-column.p-reorderable-column:nth-child(2){
+  // background-color: #00a3e0 !important;
+  width: 350px;
+}
+
+.p-datatable-resizable-table > .p-datatable-tbody > tr > td:nth-child(4){
+  // background-color: #00a3e0 !important;
+  display: flex;
+  justify-content: center;
+  height: 49.82px !important;
+  border-bottom: none !important;
+  // align-items: center;
+}
+.p-datatable-resizable-table > .p-datatable-tbody > tr > td:nth-child(3){
+  // display: flex;
+  // justify-content: center;
+  // height: 49.82px !important;
+  // border-bottom: none !important;
+  // margin-left: 50px !important;
+  Padding: 4px, 12px, 4px, 12px
+  // background-color: #006F05 !important;
+
+}
+
+th.p-resizable-column.p-reorderable-column{
+  max-height: 30px !important;
 }

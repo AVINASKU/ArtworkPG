@@ -25,11 +25,13 @@ import {
 // import { Tag } from "primereact/tag";
 
 const MyTask = (props) => {
+  const [selectAllChecked, setSelectAllChecked] = useState(false);
+  const [selected, setSelected] = useState([]);
   const [isSearch, isSearchSet] = useState(false);
   const [selectedProdSrchList, setSelectedProdSrchList] = useState([]);
   const dispatch = useDispatch();
   const myTasks = useSelector((state) => state.TaskReducer.myTasks);
-  
+
   const getMyTasks = (myTasks) => {
     const getMyTasksList = [];
     myTasks.forEach((project) => {
@@ -38,29 +40,70 @@ const MyTask = (props) => {
       });
     });
     setSelectedProdSrchList(getMyTasksList);
-  }
-  
+  };
+
   useEffect(() => {
     const gettasks = dispatch(getTasks());
     console.log("my gettasks", gettasks);
   }, [dispatch]);
 
   useEffect(() => {
-   getMyTasks(myTasks);
+    getMyTasks(myTasks);
   }, [myTasks]);
+
+  useEffect(() => {
+    if (TaskService.getProjectData()?.length !== selected.length) {
+      setSelectAllChecked(false);
+    }
+  }, [TaskService.getProjectData(), selected, selectAllChecked]);
+  const handleSelect = (item) => {
+    if (selected?.includes(item)) {
+      setSelected(selected.filter((i) => i !== item));
+      console.log("selected is", selected);
+    } else {
+      if (selected.length === 0) {
+        const selectedList = [];
+        selectedList.push(item);
+        setSelected(selectedList);
+      } else {
+        setSelected([...selected, item]);
+      }
+    }
+  };
 
   const onSearchClick = () => {
     isSearchSet(!isSearch);
   };
   const dt = useRef(null);
   const exportCSV = (selectionOnly) => {
-    dt.current.exportCSV({ selectionOnly });
+    console.log("dt.current is", dt.current);
+    console.log("selectionOnly is", selectionOnly);
+    dt.current.exportCSV({ selectionOnly: true });
+  };
+
+  const handleSelectAll = (e) => {
+    // console.log("MyTaskData is", MyTaskData);
+    if (e.target.checked) {
+      // setSelected(TaskService.getProjectData());
+      setSelected(selectedProdSrchList);
+    } else {
+      setSelected([]);
+    }
+    setSelectAllChecked(e.target.checked);
   };
 
   const myTaskHeader = (options) => {
     return (
       <div>
         <>
+          {options === "TaskName" && (
+            <input
+              type="checkbox"
+              checked={selectAllChecked}
+              onChange={handleSelectAll}
+              // disabled={error && true}
+            />
+          )}
           <img
             src={filter}
             alt="Column filter"
@@ -75,7 +118,7 @@ const MyTask = (props) => {
   const taskBodyTemplate = (rowData) => {
     return (
       <div className="flex align-items-center gap-2">
-        <div class="p-checkbox p-component">
+        {/* <div class="p-checkbox p-component">
           <div
             class="p-checkbox-box p-component"
             role="checkbox"
@@ -83,20 +126,25 @@ const MyTask = (props) => {
             tabindex="0"
             aria-label="Select 1007"
           ></div>
-        </div>
+        </div> */}
+        <input
+          type="checkbox"
+          checked={selected?.includes(rowData)}
+          onChange={() => handleSelect(rowData)}
+        />
         {/* <div className="card flex justify-content-center">
           <Checkbox
             onChange={(e) => setChecked(e.checked)}
             checked={checked}
           ></Checkbox>
         </div> */}
-        <span>{rowData.Task}</span>{" "}
+        <span className="task_name">{rowData.TaskName}</span>{" "}
       </div>
     );
   };
 
   const helpNeededBodyTemplate = (rowData) => {
-    return <div className="helpneeded_value">{rowData.help_needed}</div>;
+    return <div className="helpneeded_value">{rowData.Help_Needed}</div>;
   };
   const statusTemplate = (rowData) => {
     return <div className="status-value">{rowData.Status}</div>;
@@ -109,7 +157,7 @@ const MyTask = (props) => {
     );
     if (TaskService.getMyTaskColumnNames().length) {
       return TaskService.getMyTaskColumnNames().map((ele, i) => {
-        const cbadd = ele === "Task" ? "checkbox-added" : "";
+        const cbadd = ele === "TaskName" ? "checkbox-added" : "";
         return (
           <Column
             key={ele}
@@ -119,8 +167,8 @@ const MyTask = (props) => {
             showFilterMenu={false}
             classNme={cbadd}
             body={
-              (ele === "Task" && taskBodyTemplate) ||
-              (ele === "Help Needed" && helpNeededBodyTemplate) ||
+              (ele === "TaskName" && taskBodyTemplate) ||
+              (ele === "Help_Needed" && helpNeededBodyTemplate) ||
               (ele === "Status" && statusTemplate)
             }
             // body={ele === "Help Needed" && countryBodyTemplate}
@@ -133,10 +181,10 @@ const MyTask = (props) => {
   return (
     <div className="my-task-project">
       {console.log("TaskService is", TaskService.getProjectData())}
-     
+
       <ProjectListHeader
         header={props.header}
-        exportCSV={exportCSV}
+        exportCSV={() => exportCSV(false)}
         onSearchClick={onSearchClick}
       />
 

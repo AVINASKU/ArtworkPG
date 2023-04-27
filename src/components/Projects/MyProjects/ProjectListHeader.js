@@ -14,25 +14,28 @@ const ProjectListHeader = ({
   onSearchClick,
   exportCSV,
   isFilterEnabled,
-  isResetEnabled
+  isResetEnabled,
 }) => {
   return (
     <div className="actions">
       <div className="project-title">{header}</div>
 
       <div className="action-buttons">
-      {isFilterEnabled ? <img
-          src={BlueFilterIcon}
-          alt="filter logo"
-          onClick={clearFilter}
-          className="header-icons"
-        /> :
-        <img
-          src={filter}
-          alt="filter logo"
-          onClick={clearFilter}
-          className="header-icons"
-        />}
+        {isFilterEnabled ? (
+          <img
+            src={BlueFilterIcon}
+            alt="filter logo"
+            onClick={clearFilter}
+            className="header-icons"
+          />
+        ) : (
+          <img
+            src={filter}
+            alt="filter logo"
+            onClick={clearFilter}
+            className="header-icons"
+          />
+        )}
         <img
           src={searchMyProjects}
           alt="search field"
@@ -51,12 +54,23 @@ const ProjectListHeader = ({
           onClick={() => setVisible(true)}
           className="header-icons"
         />
-        <button
+        {/* <button
           type="button"
           className={isResetEnabled? "btn btn-secondary reset-to-default-view": " btn btn-secondary resetToPgDefault"}
           onClick={()=> clearFilters()}
         >
           Reset to default View
+        </button> */}
+        <button
+          type="button"
+          className={
+            isResetEnabled
+              ? "btn btn-secondary reset-to-default-view"
+              : " btn btn-secondary resetToPgDefault"
+          }
+          onClick={() => clearFilters()}
+        >
+          Actions
         </button>
       </div>
     </div>
