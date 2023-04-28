@@ -2,7 +2,8 @@ import React from "react";
 import "./index.scss";
 import Notificaitons from "../../assets/images/notification.svg";
 import user from "../../assets/images/user.svg";
-import moment from "moment";
+import moment from "moment-timezone";
+import { useSelector } from "react-redux";
 
 const sessionData = sessionStorage?.getItem("session");
 
@@ -18,22 +19,34 @@ const userid = sessionObj?.userid;
 
 const loginTime = sessionObj?.loginTime;
 
-const formattedDate = moment(loginTime, "M/D/YYYY, h:mm:ss A").format(
-  "DD, MMMM,  YYYY"
-);
+const formattedDate = (loginTime) => {
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const time = moment.tz(loginTime, timezone);
+  const zone = moment.tz(loginTime, timezone).zoneAbbr();
+  return time.clone().tz(zone).format("DD, MMMM,  YYYY");
+};
 
 //for time
 
-const formattedTime = moment(loginTime).format(" h:mm  A (GMT Z)");
+const formattedTime = (loginTime) => {
+  // console.log("loginTime: ", loginTime);
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const time = moment.tz(loginTime, timezone);
+  const zone = moment.tz(loginTime, timezone).zoneAbbr();
+  // console.log("zone: ", zone);
+  return time.clone().tz(zone).format("h:mm a ([GMT]Z)");
+};
 
 const Header = () => {
+  const User = useSelector((state) => state.UserReducer);
+  const userInformation = User.userInformation;
   return (
     <div className="header">
       <div>
-        <h1>Welcome Back, {username}!</h1>
+        <h1>Welcome Back, {userInformation.username}!</h1>
         <div className="user-date-time">
-          <p>{formattedDate}</p>
-          <p>{formattedTime}</p>
+          <p>{formattedDate(userInformation.loginTime)}</p>
+          <p>{formattedTime(userInformation.loginTime)}</p>
         </div>
       </div>
       <div className="user-profile">
@@ -43,8 +56,8 @@ const Header = () => {
           className="notificaitons"
         />
         <p>
-          {username}
-          <span>{userid}</span>
+          {userInformation.username}
+          <span>{userInformation.userid}</span>
         </p>
         <img src={user} alt="user profile" className="userProfile" />
       </div>

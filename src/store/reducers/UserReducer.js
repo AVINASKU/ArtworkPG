@@ -1,4 +1,4 @@
-import * as types from "./../types/types";
+import * as types from "../types/types";
 
 const initialState = {
   userInformation: {},
@@ -6,7 +6,7 @@ const initialState = {
   userRole: [],
 };
 
-const user = (state = initialState, action) => {
+const UserReducer = (state = initialState, action) => {
   switch (action.type) {
     case types.UPDATE_USER:
       return {
@@ -27,4 +27,4 @@ const user = (state = initialState, action) => {
   }
 };
 
-export default user;
+export default UserReducer;
