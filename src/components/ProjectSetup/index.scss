@@ -47,6 +47,19 @@ $width: 100%;
     padding: 5px;
   }
 }
+.tabular-add-project {
+  padding: 15px;
+  overflow-y: scroll;
+  height: 72vh;
+}
+
+.p-breadcrumb ul .pi-chevron-right:nth-child(3) {
+  color: #003da5;
+}
+.p-breadcrumb ul li .p-menuitem-link {
+  box-shadow: none !important;
+  outline: none !important;
+}
 
 .breadCrumbParent {
   width: $width;
@@ -62,5 +75,5 @@ $width: 100%;
   border-radius: 0 20px 20px 0;
 }
 .ActionsDropdown {
-  background-color: #003DA5;
+  background-color: #003da5;
 }

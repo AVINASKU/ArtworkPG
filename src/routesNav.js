@@ -4,6 +4,8 @@ import Home from "./home.js";
 import { Outlet } from "react-router-dom";
 import AllProjects from "./components/Projects/AllProjects/index";
 import MyProjects from "./components/Projects/MyProjects/index.js";
+import MyTasks from "./components/Tasks/MyTasks/index.js";
+
 import ProjectCreation from "./projectCreation.js";
 import Login from "./login.js";
 
@@ -15,6 +17,7 @@ const RoutesNav = () => {
         <Route index element={<Home />} />
         <Route path="/myProjects" element={<MyProjects />} />
         <Route path="/allProjects" element={<AllProjects />} />
+         <Route path="/mytasks" element={<MyTasks />} />
         {/* <Route path="/createProject" element={<AddProject />} /> */}
          <Route path="/addProject" element={<ProjectCreation />} />
         <Route path="/addProject/:ProjectID" element={<ProjectCreation />} />

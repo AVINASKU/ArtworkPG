@@ -13,7 +13,7 @@ import {
   getMyProject,
   // updateProject,
 } from "../../../store/actions/ProjectActions";
-import { changeDateFormat } from "../utils";
+import { changeDateFormat, onSortData } from "../utils";
 import _ from "lodash";
 
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
@@ -59,13 +59,7 @@ const ProjectList = (props) => {
   const dt = useRef(null);
 
   const onSort = (column, direction) => (event) => {
-    const sortedData = [...pegadata].sort((a, b) => {
-      return a[column] > b[column] ? 1 : -1;
-    });
-
-    if (direction === "desc") {
-      sortedData.reverse();
-    }
+    const sortedData = onSortData(column, direction, pegadata);
     setPegaData(sortedData);
     setSortData([column, direction]);
   };
