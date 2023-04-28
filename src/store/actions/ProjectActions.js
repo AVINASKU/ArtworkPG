@@ -39,12 +39,14 @@ export const projectPlan = (PM) => async (dispatch) => {
           data: {
             Task: "Define Design Intent",
             Dependancy: "Project active & task in scope",
-            Role: [{ name: "Design Manager", code: "DM" }],
-            Owner: [
+            RoleOptions: [{ name: "Design Manager", code: "DM" }],
+            Role: "",
+            OwnerOptions: [
               { name: "Paleczna", code: "Pa" },
               { name: "Karol", code: "Karol" },
               { name: "Iza", code: "Iza" },
             ],
+            Owner: "",
             State: "Complete",
             Duration: "02",
             StartDate: "20230411T000000.000 GMT",
@@ -59,12 +61,14 @@ export const projectPlan = (PM) => async (dispatch) => {
           data: {
             Task: "Upload Approved Design Intent(x3)",
             Dependancy: "Define Design Intent",
-            Role: [{ name: "New York", code: "NY" }],
-            Owner: [
+            RoleOptions: [{ name: "New York", code: "NY" }],
+            Role: "",
+            OwnerOptions: [
               { name: "Luca", code: "Luca" },
               { name: "Karol", code: "Karol" },
               { name: "Iza", code: "Iza" },
             ],
+            Owner: "",
             State: "Complete",
             Duration: "02",
             StartDate: "20230411T000000.000 GMT",
@@ -78,12 +82,14 @@ export const projectPlan = (PM) => async (dispatch) => {
               data: {
                 Task: "note-meeting.txt",
                 Dependancy: "50kb",
-                Role: [{ name: "New York", code: "NY" }],
-                Owner: [
+                RoleOptions: [{ name: "New York", code: "NY" }],
+                Role: "",
+                OwnerOptions: [
                   { name: "Luca", code: "Luca" },
                   { name: "Karol", code: "Karol" },
                   { name: "Iza", code: "Iza" },
                 ],
+                Owner: "",
                 State: "Awaiting",
                 Duration: "02",
                 StartDate: "20230411T000000.000 GMT",
@@ -97,12 +103,14 @@ export const projectPlan = (PM) => async (dispatch) => {
               data: {
                 Task: "note-todo.txt",
                 Dependancy: "100kb",
-                Role: [{ name: "New York", code: "NY" }],
-                Owner: [
+                RoleOptions: [{ name: "New York", code: "NY" }],
+                Role: "",
+                OwnerOptions: [
                   { name: "Luca", code: "Luca" },
                   { name: "Karol", code: "Karol" },
                   { name: "Iza", code: "Iza" },
                 ],
+                Owner: "",
                 State: "In Progress",
                 Duration: "02",
                 StartDate: "20230411T000000.000 GMT",
@@ -118,12 +126,14 @@ export const projectPlan = (PM) => async (dispatch) => {
           data: {
             Task: "Documents",
             Dependancy: "75kb",
-            Role: [{ name: "New York", code: "NY" }],
-            Owner: [
+            RoleOptions: [{ name: "New York", code: "NY" }],
+            OwnerOptions: [
               { name: "Luca", code: "Luca" },
               { name: "Karol", code: "Karol" },
               { name: "Iza", code: "Iza" },
             ],
+            Role: "",
+            Owner: "",
             State: "In Progress",
             Duration: "02",
             StartDate: "20230411T000000.000 GMT",
@@ -137,12 +147,14 @@ export const projectPlan = (PM) => async (dispatch) => {
               data: {
                 Task: "Work",
                 Dependancy: "55kb",
-                Role: [{ name: "New York", code: "NY" }],
-                Owner: [
+                RoleOptions: [{ name: "New York", code: "NY" }],
+                OwnerOptions: [
                   { name: "Luca", code: "Luca" },
                   { name: "Karol", code: "Karol" },
                   { name: "Iza", code: "Iza" },
                 ],
+                Role: "",
+                Owner: "",
                 State: "State",
                 Duration: "02",
                 StartDate: "20230411T000000.000 GMT",
@@ -156,12 +168,14 @@ export const projectPlan = (PM) => async (dispatch) => {
                   data: {
                     Task: "Expenses.doc",
                     Dependancy: "30kb",
-                    Role: [{ name: "New York", code: "NY" }],
-                    Owner: [
+                    RoleOptions: [{ name: "New York", code: "NY" }],
+                    OwnerOptions: [
                       { name: "Luca", code: "Luca" },
                       { name: "Karol", code: "Karol" },
                       { name: "Iza", code: "Iza" },
                     ],
+                    Role: "",
+                    Owner: "",
                     State: "Complete",
                     Duration: "02",
                     StartDate: "20230411T000000.000 GMT",
@@ -175,12 +189,14 @@ export const projectPlan = (PM) => async (dispatch) => {
                   data: {
                     Task: "Resume.doc",
                     Dependancy: "25kb",
-                    Role: [{ name: "New York", code: "NY" }],
-                    Owner: [
+                    RoleOptions: [{ name: "New York", code: "NY" }],
+                    OwnerOptions: [
                       { name: "Luca", code: "Luca" },
                       { name: "Karol", code: "Karol" },
                       { name: "Iza", code: "Iza" },
                     ],
+                    Role: "",
+                    Owner: "",
                     State: "State",
                     Duration: "02",
                     StartDate: "20230411T000000.000 GMT",
@@ -196,12 +212,14 @@ export const projectPlan = (PM) => async (dispatch) => {
               data: {
                 Task: "Home",
                 Dependancy: "20kb",
-                Role: [{ name: "New York", code: "NY" }],
-                Owner: [
+                RoleOptions: [{ name: "New York", code: "NY" }],
+                OwnerOptions: [
                   { name: "Luca", code: "Luca" },
                   { name: "Karol", code: "Karol" },
                   { name: "Iza", code: "Iza" },
                 ],
+                Role: "",
+                Owner: "",
                 State: "State",
                 Duration: "02",
                 StartDate: "20230411T000000.000 GMT",
@@ -215,12 +233,14 @@ export const projectPlan = (PM) => async (dispatch) => {
                   data: {
                     Task: "Invoices",
                     Dependancy: "20kb",
-                    Role: [{ name: "New York", code: "NY" }],
-                    Owner: [
+                    RoleOptions: [{ name: "New York", code: "NY" }],
+                    OwnerOptions: [
                       { name: "Luca", code: "Luca" },
                       { name: "Karol", code: "Karol" },
                       { name: "Iza", code: "Iza" },
                     ],
+                    Role: "",
+                    Owner: "",
                     State: "State",
                     Duration: "02",
                     StartDate: "20230411T000000.000 GMT",
@@ -238,12 +258,14 @@ export const projectPlan = (PM) => async (dispatch) => {
           data: {
             Task: "Downloads",
             Dependancy: "25kb",
-            Role: [{ name: "New York", code: "NY" }],
-            Owner: [
+            RoleOptions: [{ name: "New York", code: "NY" }],
+            OwnerOptions: [
               { name: "Luca", code: "Luca" },
               { name: "Karol", code: "Karol" },
               { name: "Iza", code: "Iza" },
             ],
+            Role: "",
+            Owner: "",
             State: "Available",
             Duration: "02",
             StartDate: "20230411T000000.000 GMT",
@@ -257,12 +279,14 @@ export const projectPlan = (PM) => async (dispatch) => {
               data: {
                 Task: "Spanish",
                 Dependancy: "10kb",
-                Role: [{ name: "New York", code: "NY" }],
-                Owner: [
+                RoleOptions: [{ name: "New York", code: "NY" }],
+                OwnerOptions: [
                   { name: "Luca", code: "Luca" },
                   { name: "Karol", code: "Karol" },
                   { name: "Iza", code: "Iza" },
                 ],
+                Role: "",
+                Owner: "",
                 State: "State",
                 Duration: "02",
                 StartDate: "20230411T000000.000 GMT",
@@ -276,12 +300,14 @@ export const projectPlan = (PM) => async (dispatch) => {
                   data: {
                     Task: "tutorial-a1.txt",
                     Dependancy: "5kb",
-                    Role: [{ name: "New York", code: "NY" }],
-                    Owner: [
+                    RoleOptions: [{ name: "New York", code: "NY" }],
+                    OwnerOptions: [
                       { name: "Luca", code: "Luca" },
                       { name: "Karol", code: "Karol" },
                       { name: "Iza", code: "Iza" },
                     ],
+                    Role: "",
+                    Owner: "",
                     State: "State",
                     Duration: "02",
                     StartDate: "20230411T000000.000 GMT",
@@ -295,12 +321,14 @@ export const projectPlan = (PM) => async (dispatch) => {
                   data: {
                     Task: "tutorial-a2.txt",
                     Dependancy: "5kb",
-                    Role: [{ name: "New York", code: "NY" }],
-                    Owner: [
+                    RoleOptions: [{ name: "New York", code: "NY" }],
+                    OwnerOptions: [
                       { name: "Luca", code: "Luca" },
                       { name: "Karol", code: "Karol" },
                       { name: "Iza", code: "Iza" },
                     ],
+                    Role: "",
+                    Owner: "",
                     State: "State",
                     Duration: "02",
                     StartDate: "20230411T000000.000 GMT",
@@ -318,12 +346,14 @@ export const projectPlan = (PM) => async (dispatch) => {
           data: {
             Task: "Videos",
             Dependancy: "1500kb",
-            Role: [{ name: "New York", code: "NY" }],
-            Owner: [
+            RoleOptions: [{ name: "New York", code: "NY" }],
+            OwnerOptions: [
               { name: "Luca", code: "Luca" },
               { name: "Karol", code: "Karol" },
               { name: "Iza", code: "Iza" },
             ],
+            Role: "",
+            Owner: "",
             State: "Awaiting",
             Duration: "02",
             StartDate: "20230411T000000.000 GMT",
@@ -337,12 +367,14 @@ export const projectPlan = (PM) => async (dispatch) => {
               data: {
                 Task: "primefaces.mkv",
                 Dependancy: "1000kb",
-                Role: [{ name: "New York", code: "NY" }],
-                Owner: [
+                RoleOptions: [{ name: "New York", code: "NY" }],
+                OwnerOptions: [
                   { name: "Luca", code: "Luca" },
                   { name: "Karol", code: "Karol" },
                   { name: "Iza", code: "Iza" },
                 ],
+                Role: "",
+                Owner: "",
                 State: "State",
                 Duration: "02",
                 StartDate: "20230411T000000.000 GMT",
@@ -356,12 +388,14 @@ export const projectPlan = (PM) => async (dispatch) => {
               data: {
                 Task: "intro.avi",
                 Dependancy: "500kb",
-                Role: [{ name: "New York", code: "NY" }],
-                Owner: [
+                RoleOptions: [{ name: "New York", code: "NY" }],
+                OwnerOptions: [
                   { name: "Luca", code: "Luca" },
                   { name: "Karol", code: "Karol" },
                   { name: "Iza", code: "Iza" },
                 ],
+                Role: "",
+                Owner: "",
                 State: "State",
                 Duration: "02",
                 StartDate: "20230411T000000.000 GMT",

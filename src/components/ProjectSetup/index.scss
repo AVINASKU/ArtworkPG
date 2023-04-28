@@ -1,3 +1,4 @@
+$width: 100%;
 .project-name {
   font-size: 18px;
   font-weight: 900;
@@ -45,4 +46,21 @@
   .accordion-body {
     padding: 5px;
   }
+}
+
+.breadCrumbParent {
+  width: $width;
+}
+.projectPlanButtons {
+  text-align: right;
+  width: $width;
+}
+.projectPlanButtonsRadius1 {
+  border-radius: 20px 0 0 20px;
+}
+.projectPlanButtonsRadius2 {
+  border-radius: 0 20px 20px 0;
+}
+.ActionsDropdown {
+  background-color: #003DA5;
 }

@@ -97,10 +97,10 @@ const ProjectPlanList = (props) => {
         }
 
         //get frozen data from local storage and add in state
-        let jsonFrozenrData1 = localStorage.getItem("frozenData");
-        const frozenData = JSON.parse(jsonFrozenrData1);
-        if (frozenData && frozenData.length) {
-          setFrozenColumn(frozenData);
+        let jsonFrozenrData1 = localStorage.getItem("frozenDataProjectPlan");
+        const frozenDataProjectPlan = JSON.parse(jsonFrozenrData1);
+        if (frozenDataProjectPlan && frozenDataProjectPlan.length) {
+          setFrozenColumn(frozenDataProjectPlan);
         }
       } catch (err) {
         console.log("error", err);
@@ -170,7 +170,7 @@ const ProjectPlanList = (props) => {
 
   const saveSettings = () => {
     localStorage.setItem("columnWiseFilterData", JSON.stringify(filters));
-    localStorage.setItem("frozenData", JSON.stringify(frozenCoulmns));
+    localStorage.setItem("frozenDataProjectPlan", JSON.stringify(frozenCoulmns));
     localStorage.setItem("sortingData", JSON.stringify(sortData));
     localStorage.setItem(
       "projectPlanAllColumnNames",
@@ -180,7 +180,7 @@ const ProjectPlanList = (props) => {
   };
 
   const clearColumnWiseFilter = () => {
-    let jsonFrozenItem = localStorage.getItem("frozenData");
+    let jsonFrozenItem = localStorage.getItem("frozenDataProjectPlan");
     const frozenItem = JSON.parse(jsonFrozenItem);
     if (
       frozenItem &&
@@ -189,7 +189,7 @@ const ProjectPlanList = (props) => {
     ) {
       const index = frozenItem.indexOf(selectedColumnName);
       frozenItem.splice(index, 1);
-      localStorage.setItem("frozenData", JSON.stringify(frozenItem));
+      localStorage.setItem("frozenDataProjectPlan", JSON.stringify(frozenItem));
       setFrozenColumn(frozenItem);
     }
     if (frozenCoulmns.includes(selectedColumnName)) {
@@ -227,16 +227,7 @@ const ProjectPlanList = (props) => {
   ];
 
   const elementTemplate = (options, rowData) => {
-    let roles = [],
-      owners = [];
     const field = rowData.field;
-
-    if (field === "Role") {
-      roles = options.data[field];
-    }
-    if (field === "Owner") {
-      owners = options.data[field];
-    }
 
     return (
       <>
@@ -273,10 +264,11 @@ const ProjectPlanList = (props) => {
           <>
             {(field === "Role" || field === "Owner") && (
               <Dropdown
+                editable
                 value={options?.data[field]}
                 onChange={(e) => onDropdownChange(options, e, field)}
                 options={
-                  field === "Role" ? roles : field === "Owner" ? owners : []
+                  field === "Role" ? options.data["RoleOptions"] : field === "Owner" ? options.data["OwnerOptions"] : []
                 }
                 optionLabel="name"
                 placeholder={`Select ${field}`}
@@ -382,7 +374,6 @@ const ProjectPlanList = (props) => {
   };
 
   const onDropdownChange = (rowData, { value }, ele) => {
-    console.log("rowData:", rowData, { value }, ele);
     // Update the data with the new value
     rowData.data[ele] = value.name;
     setPegaData([...pegadata]);
@@ -431,7 +422,7 @@ const ProjectPlanList = (props) => {
             }
             setProjectFrozen={setProjectFrozen}
             saveSettings={saveSettings}
-            projectData={data()}
+            projectData={pegadata}
             addFrozenColumns={addFrozenColumns}
             onGlobalFilterChange={onGlobalFilterChange}
             selectedColumnName={selectedColumnName}
