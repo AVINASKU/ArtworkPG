@@ -7,17 +7,17 @@ import "./index.scss";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ProjectPlanCompo from "../Projects/ProjectPlan/ProjectPlanCompo";
+import { Dropdown } from "primereact/dropdown";
 
 function ProjectSetup(props) {
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
-  console.log('projectSetup:', projectSetup);
+  console.log("projectSetup:", projectSetup);
   const selectedProjectDetails = projectSetup.selectedProject;
   const { mode, rootBreadCrumb } = projectSetup;
   const [activeKey, setActiveKey] = useState("0");
-  const items = [
-    { label: rootBreadCrumb },
-    { label: activeKey === "0" ? "Project Setup" : "Design" },
-  ];
+  const items = [{ label: rootBreadCrumb }];
+  activeKey === "0" && items.push({ label: "Project Setup" });
+  activeKey === "1" && items.push({ label: "Project Plan" });
 
   useEffect(() => {
     if (mode === "create") {
@@ -38,16 +38,62 @@ function ProjectSetup(props) {
     setActiveKey(key);
   };
 
+  const [toggleButtons, setToggleButtons] = useState("GanttChart");
+
+  const options =[
+    { name: "Luca", code: "Luca" },
+    { name: "Karol", code: "Karol" },
+    { name: "Iza", code: "Iza" },
+  ];
+  
   return (
     <div className="content-layout">
       <div className="actions">
-        <div>
+        <div className="breadCrumbParent">
           <BreadCrumb model={items} />
 
           {/* {`--------${mode}`} */}
           {mode !== "create" && (
-            <div className="project-name">
-              {selectedProjectDetails.Project_Name}
+            <div style={{ display: "flex" }}>
+              <div className="project-name">
+                {selectedProjectDetails.Project_Name}
+              </div>
+              <div className="projectPlanButtons">
+                <div
+                  className="btn-group btn-group-toggle"
+                  data-toggle="buttons"
+                >
+                  <label
+                    className={`btn border border-secondary projectPlanButtonsRadius1 ${
+                      toggleButtons === "GanttChart"
+                        ? "btn-secondary active"
+                        : ""
+                    }`}
+                    onClick={() => setToggleButtons("GanttChart")}
+                  >
+                    Gantt Chart
+                  </label>
+                  <label
+                    className={`btn border border-secondary projectPlanButtonsRadius2 ${
+                      toggleButtons === "Tabular" ? "btn-secondary active" : ""
+                    }`}
+                    onClick={() => setToggleButtons("Tabular")}
+                  >
+                    Tabular
+                  </label>
+                </div>
+                <span>
+                  <Dropdown
+                    editable
+                    // value={options}
+                    // onChange={(e) => onDropdownChange(options, e, field)}
+                    options={options}
+                    optionLabel="name"
+                    placeholder="Actions"
+                    className="w-full md:w-14rem ActionsDropdown"
+                  />
+                </span>
+              </div>
             </div>
           )}
         </div>

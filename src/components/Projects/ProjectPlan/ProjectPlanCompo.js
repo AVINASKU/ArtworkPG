@@ -5,15 +5,7 @@ import "./index.scss";
 
 function ProjectPlanCompo(props) {
   return (
-    <Accordion
-      defaultActiveKey="2"
-      style={{
-        // paddingLeft: "43px",
-        background: "#edf4fa",
-        width: "100%",
-        marginLeft: "0px",
-      }}
-    >
+    <Accordion className="projectPlanAccordian" defaultActiveKey="2">
       <Accordion.Item eventKey="2">
         <Accordion.Header>Design</Accordion.Header>
         <Accordion.Body>
