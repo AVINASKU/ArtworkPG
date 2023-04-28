@@ -15,7 +15,7 @@ export const RoleUser = {
       userid: "@karol123",
       role: "TaskOwner",
       bu: "Baby Care",
-      region: "Europe",
+      region: "Europe ENTERPRISE",
       permissions: ["read", "view"],
     },
     {

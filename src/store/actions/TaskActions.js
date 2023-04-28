@@ -2,7 +2,7 @@ import axios from "axios";
 import * as types from "./../types/types";
 
 export const getTasks = (PM) => async (dispatch) => {
-// let userName = sessionStorage.getItem("username");
+  // let userName = sessionStorage.getItem("username");
   try {
     //here need to add url and pass PM name
     const res = await axios.get(
@@ -33,33 +33,35 @@ export const getTasks = (PM) => async (dispatch) => {
   }
 };
 
-export const getAllTasks = (PM) => async (dispatch) => {
-    try {
-      //here need to add url and pass PM name
-      const res = await axios.get(
-        `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/AllTasks/Baby Care/EUROPE ENTERPRISE`
-      );
-  
-      if (res?.data === null) {
+export const getAllTasks = (userInformation) => async (dispatch) => {
+  let region = userInformation?.region;
+  let bu = userInformation?.bu;
+  try {
+    //here need to add url and pass PM name
+    const res = await axios.get(
+      `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/AllTasks/${bu}/${region}`
+    );
+
+    if (res?.data === null) {
+      dispatch({
+        type: types.GET_ALL_TASKS_ERROR,
+        payload: "No records found",
+      });
+    } else {
+      if (res.status === 200) {
         dispatch({
-          type: types.GET_ALL_TASKS_ERROR,
-          payload: "No records found",
+          type: "GET_ALL_TASKS_SUCCESS",
+          payload: res?.data?.ArtworkAgilityProjects,
         });
       } else {
-        if (res.status === 200) {
-          dispatch({
-            type: types.GET_ALL_TASKS_SUCCESS,
-            payload: res.data.ArtworkAgilityProjects,
-          });
-        } else {
-          dispatch({
-            type: types.GET_ALL_TASKS_ERROR,
-            payload: "Project not found",
-          });
-        }
+        dispatch({
+          type: "GET_ALL_TASKS_ERROR",
+          payload: "Project not found",
+        });
       }
-    } catch (err) {
-      console.error(err);
-      dispatch({ type: types.GET_ALL_TASKS_ERROR, payload: err });
     }
-  };
+  } catch (err) {
+    console.error(err);
+    dispatch({ type: "GET_ALL_TASKS_ERROR", payload: err });
+  }
+};
