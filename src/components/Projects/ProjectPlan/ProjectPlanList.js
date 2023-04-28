@@ -7,7 +7,7 @@ import ConfirmationPopUp from "../ConfirmationPopUp";
 import { Toast } from "primereact/toast";
 import filter from "../../../assets/images/filter.svg";
 import { projectPlan } from "../../../store/actions/ProjectActions";
-import { changeDateFormat, onSort } from "../utils";
+import { changeDateFormat, onSort } from "../../../utils";
 import BlueFilter from "../../../assets/images/BlueFilterIcon.svg";
 import complete from "../../../assets/images/complete.svg";
 import hyphen from "../../../assets/images/hyphen.svg";

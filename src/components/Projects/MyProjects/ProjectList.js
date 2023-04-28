@@ -13,7 +13,7 @@ import {
   getMyProject,
   // updateProject,
 } from "../../../store/actions/ProjectActions";
-import { changeDateFormat } from "../utils";
+import { changeDateFormat } from "../../../utils";
 import _ from "lodash";
 
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
