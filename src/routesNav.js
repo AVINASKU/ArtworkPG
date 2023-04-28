@@ -21,8 +21,8 @@ const RoutesNav = () => {
         <Route path="/allProjects" element={<AllProjects />} />
          <Route path="/mytasks" element={<MyTasks />} />
         {/* <Route path="/createProject" element={<AddProject />} /> */}
-         <Route path="/addProject" element={<ProjectCreation />} />
-        <Route path="/addProject/:ProjectID" element={<ProjectCreation />} />
+        <Route path="/projectPlan" element={<ProjectCreation />} />
+        <Route path="/projectPlan/:ProjectID" element={<ProjectCreation />} />
          <Route path="/tasks/define-design-intent" element={<DefineDesignIntent />} />
          <Route path="/tasks/approve-define-design-intent" element={<ApproveDesignIntent />} />
         {/* <Route path="/reports" element={<Reports />} /> */}
