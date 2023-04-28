@@ -12,12 +12,12 @@ export const createNewProject = async (formData, headers = {}) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
   let apiURL = `${baseURL}/v1/cases`;
-  const { data: newProjectData } = await axiosInstance({
+  const newProjectData = await axiosInstance({
     url: apiURL,
     method: "POST",
     data: formData,
   });
-  if (newProjectData.ID) {
+  if (newProjectData?.data?.ID) {
     store.dispatch(createNewProjectAction(formData));
   }
   return newProjectData;
@@ -33,12 +33,12 @@ export const editProject = async (formData, id, method, headers = {}) => {
     apiURL = `${baseURL}/v2/assignments/ASSIGN-WORKLIST ${id}!CREATE_FLOW_3/actions/CreateProjectManually`;
   }
 
-  const { data: editProjectData } = await axiosInstance({
+  const editProjectData = await axiosInstance({
     url: apiURL,
     method: method,
     data: formData,
   });
-  if (editProjectData.ID) {
+  if (editProjectData?.data?.ID) {
     App.dispatchToStore(editProjectAction(formData));
   }
   return editProjectData;

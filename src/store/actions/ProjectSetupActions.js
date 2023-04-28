@@ -12,7 +12,7 @@ export const editProjectAction = (data) => ({
 export const selectedProject = (data, rootBreadCrumb) => ({
   payload: data,
   type: types.SELECTED_PROJECT,
-  rootBreadCrumb: rootBreadCrumb
+  rootBreadCrumb: rootBreadCrumb,
 });
 export const updateMode = (data) => ({
   payload: data,

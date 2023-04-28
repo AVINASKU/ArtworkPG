@@ -23,8 +23,8 @@ export const RoleUser = {
       password: "luca123",
       userid: "@luca123",
       role: "TaskOwner",
-      bu: "Baby Care",
-      region: "Europe",
+      bu: "BABY",
+      region: "EUROPE ENTERPRISE",
       permissions: ["read", "view"],
     },
     {

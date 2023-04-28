@@ -24,7 +24,15 @@ const ConfirmationPopUp = ({
   saveSettings,
   clearColumnWiseFilter,
 }) => {
+  console.log('ooopppp:',
+  // selectedCities,
+  // onGlobalFilterChange,
+  // setProjectFrozen,
+  // addFrozenColumns,
+  // ProjectFrozen,
+  JSON.stringify(projectData),);
   const multiselectOptions = (colName) => {
+    console.log('colName:', colName);
     let optionList = [];
     optionList = projectData?.filter(
       (ele) =>

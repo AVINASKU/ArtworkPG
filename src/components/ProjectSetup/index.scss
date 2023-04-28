@@ -1,3 +1,4 @@
+$width: 100%;
 .project-name {
   font-size: 18px;
   font-weight: 900;
@@ -15,6 +16,7 @@
   .accordion-item {
     border-radius: 0;
     border: 0;
+    margin-bottom: 5px;
     .accordion-header {
       background-color: #edf4fa;
     }
@@ -42,13 +44,13 @@
     color: #003da5;
   }
   .accordion-body {
-    padding: 0;
+    padding: 5px;
   }
 }
-.tabular-add-project{
+.tabular-add-project {
   padding: 15px;
-    overflow-y: scroll;
-    height: 72vh;
+  overflow-y: scroll;
+  height: 72vh;
 }
 
 .p-breadcrumb ul .pi-chevron-right:nth-child(3) {
@@ -57,4 +59,21 @@
 .p-breadcrumb ul li .p-menuitem-link {
   box-shadow: none !important;
   outline: none !important;
+}
+
+.breadCrumbParent {
+  width: $width;
+}
+.projectPlanButtons {
+  text-align: right;
+  width: $width;
+}
+.projectPlanButtonsRadius1 {
+  border-radius: 20px 0 0 20px;
+}
+.projectPlanButtonsRadius2 {
+  border-radius: 0 20px 20px 0;
+}
+.ActionsDropdown {
+  background-color: #003da5;
 }
