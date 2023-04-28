@@ -4,8 +4,15 @@ import AddNewDesign from "./AddNewDesign.js";
 import DesignHeader from "./DesignHeader";
 import AddNewDesignContent from "./AddNewDesignContent";
 import { ProjectService } from "../../../service/PegaService";
+import FooterButtons from "./FooterButtons";
 import "./index.scss";
-import { Button, Row } from "react-bootstrap";
+
+const breadcrumb = [
+  { label: "My Tasks", url: "/tasks" },
+  { label: "Define Design Intent" },
+];
+
+const headerName = "Define Design Intent";
 
 function DefineDesignIntent() {
   const [data, setData] = useState(null);
@@ -120,32 +127,15 @@ function DefineDesignIntent() {
     console.log("full draft data --->", submitOnlySelectedData);
   };
 
-  const FooterButtons = () => {
-    return (
-      <Row className="form-buttons">
-        <Button className="button-layout cancel-button">Cancel</Button>
-        <Button
-          onClick={() => onSaveAsDraft()}
-          className="button-layout save-as-draft-button"
-        >
-          Save as Draft
-        </Button>
-        <Button
-          className="button-layout submit-button"
-          type="submit"
-          onClick={() => onSubmit()}
-        >
-          Submit
-        </Button>
-      </Row>
-    );
-  };
+
 
   return (
     <PageLayout>
       <DesignHeader
         setAddNewDesign={addNewEmptyDesign}
         onSelectAll={onSelectAll}
+        breadcrumb={breadcrumb}
+        headerName={headerName}
       />
       <div
         style={{
@@ -156,22 +146,6 @@ function DefineDesignIntent() {
         }}
       >
         {<AddNewDesign {...data} />}
-
-        {/* submittedDI */}
-        {/* {submittedDI &&
-          submittedDI.length &&
-          submittedDI.map((item, index) => {
-            return (
-              <AddNewDesignContent
-                key={item.id}
-                {...data}
-                item={item}
-                index={index}
-                addData={addData}
-                handleDelete={handleDelete}
-              />
-            );
-          })} */}
 
         {designIntent &&
           designIntent.length &&
@@ -187,8 +161,7 @@ function DefineDesignIntent() {
               />
             );
           })}
-
-        {FooterButtons()}
+        <FooterButtons onSaveAsDraft={onSaveAsDraft} onSubmit={onSubmit} />
       </div>
     </PageLayout>
   );

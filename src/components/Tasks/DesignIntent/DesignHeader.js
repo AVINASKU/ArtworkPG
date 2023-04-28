@@ -4,25 +4,21 @@ import plusCollapseImg from "../../../assets/images/plusCollapse.svg";
 import { BreadCrumb } from "primereact/breadcrumb";
 import filter from "../../../assets/images/filter.svg";
 
-const items = [
-  { label: "My Tasks", url: "/tasks" },
-  { label: "Define Design Intent" },
-];
 
-const DesignHeader = ({setAddNewDesign,onSelectAll }) => {
+const DesignHeader = ({setAddNewDesign,onSelectAll, breadcrumb, headerName,disabled }) => {
   const [checked, setChecked] = useState(false);
 
   return (
     <div className="content-layout">
       <div className="actions">
         <div>
-          <BreadCrumb model={items} />
+          <BreadCrumb model={breadcrumb} />
 
           <div
             style={{ marginLeft: 7, marginRight: 7 }}
             className="project-title"
           >
-            Define Design Intent
+             {headerName}
           </div>
         </div>
 
@@ -36,9 +32,10 @@ const DesignHeader = ({setAddNewDesign,onSelectAll }) => {
               }
               checked={checked}
               className="margin-right"
+              disabled={!onSelectAll && true}
             ></Checkbox>
             <div className="icon-label">
-              <label>Select All </label>
+              <label className={disabled && "disable-buttons"}> Select All </label>
             </div>
           </div>
           <div className="icon-items">
@@ -54,12 +51,13 @@ const DesignHeader = ({setAddNewDesign,onSelectAll }) => {
           <div className="icon-items">
             <img
               src={plusCollapseImg}
-              onClick={() => setAddNewDesign()}
+              onClick={() => setAddNewDesign && setAddNewDesign()}
               className="add-new-design-intent-icon"
               alt=""
+              disabled={!setAddNewDesign && true}
             />
             <div className="icon-label">
-              <label>Add Design Intent</label>
+              <label className={disabled && "disable-buttons"}>Add Design Intent</label>
             </div>
           </div>
         </div>

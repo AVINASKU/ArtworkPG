@@ -7,6 +7,7 @@ import MyProjects from "./components/Projects/MyProjects/index.js";
 import ProjectCreation from "./projectCreation.js";
 import Login from "./login.js";
 import DefineDesignIntent from "./components/Tasks/DesignIntent/index.js";
+import ApproveDesignIntent from "./components/Tasks/DesignIntent/ApproveDesignIntent";
 
 const RoutesNav = () => {
   return (
@@ -20,6 +21,7 @@ const RoutesNav = () => {
          <Route path="/addProject" element={<ProjectCreation />} />
         <Route path="/addProject/:ProjectID" element={<ProjectCreation />} />
          <Route path="/tasks/define-design-intent" element={<DefineDesignIntent />} />
+         <Route path="/tasks/approve-define-design-intent" element={<ApproveDesignIntent />} />
         {/* <Route path="/reports" element={<Reports />} /> */}
       </Route>
     </Routes>
