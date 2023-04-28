@@ -180,7 +180,7 @@ const SideBar = () => {
             })}
             <div className="add-project">
               <NavItem
-                to="/addProject"
+                to="/projectPlan"
                 state={{ mode: "create" }}
                 onClick={() => {
                   dispatch(updateMode("create"));
@@ -188,7 +188,7 @@ const SideBar = () => {
               >
                 {!isToggle ? (
                   <NavLink
-                    to="/addProject"
+                    to="/projectPlan"
                     state={{ mode: "create" }}
                     className="nav-link"
                     onClick={() => {
@@ -203,7 +203,7 @@ const SideBar = () => {
                   </NavLink>
                 ) : (
                   <NavLink
-                    to="/addProject"
+                    to="/projectPlan"
                     state={{ mode: "create" }}
                     className="nav-link"
                     onClick={() => {

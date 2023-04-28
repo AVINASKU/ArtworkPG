@@ -656,26 +656,26 @@ function AddProject(props) {
     setFormData(formData);
     if (mode === "create") {
       const response = await createNewProject(formData);
-      if (response?.data?.ID) {
-        showStatus("success", "Success", "Submit Successful", "navigate");
-        // alert("Submit Successful");
-      } else {
-        showStatus("error", "Error", "Submit Failed");
-        // alert("Submit failed");
-      }
+      // if (response?.data?.ID) {
+      //   showStatus("success", "Success", "Submit Successful", "navigate");
+      //   // alert("Submit Successful");
+      // } else {
+      //   showStatus("error", "Error", "Submit Failed");
+      //   // alert("Submit failed");
+      // }
     } else if (mode === "edit") {
       const method = "PATCH";
       const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
       const response = await editProject(formData, id, method, headers);
-      if (response?.data?.ID) {
-        showStatus("success", "Success", "Submit Successful", "navigate");
-        // alert("Submit Successful");
-      } else {
-        showStatus("error", "Error", "Submit Failed");
-        // alert("Submit failed");
-      }
+      // if (response?.data?.ID) {
+      //   showStatus("success", "Success", "Submit Successful", "navigate");
+      //   // alert("Submit Successful");
+      // } else {
+      //   showStatus("error", "Error", "Submit Failed");
+      //   // alert("Submit failed");
+      // }
     }
-    // navigate("/myProjects");
+    navigate("/myProjects");
   };
   const onSaveAsDraft = async () => {
     const draftFormData = collectFormData("Draft", mode);
@@ -684,37 +684,37 @@ function AddProject(props) {
     setIsLoading(true);
     if (mode === "create") {
       const response = await createNewProject(draftFormData);
-      if (response?.data?.ID) {
-        showStatus(
-          "success",
-          "Success",
-          "Save As Draft Successful",
-          "navigate"
-        );
-        // alert("Save As Draft Successful");
-      } else {
-        showStatus("error", "Error", "Save As Draft Failed");
-        // alert("Save As Draft failed");
-      }
+      // if (response?.data?.ID) {
+      //   showStatus(
+      //     "success",
+      //     "Success",
+      //     "Save As Draft Successful",
+      //     "navigate"
+      //   );
+      //   // alert("Save As Draft Successful");
+      // } else {
+      //   showStatus("error", "Error", "Save As Draft Failed");
+      //   // alert("Save As Draft failed");
+      // }
     } else if (mode === "edit" || mode === "design") {
       const method = "PUT";
       const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
       const response = await editProject(draftFormData, id, method, headers);
-      if (response?.data?.ID) {
-        showStatus(
-          "success",
-          "Success",
-          "Save As Draft Successful",
-          "navigate"
-        );
-        // alert("Save As Draft Successful");
-      } else {
-        showStatus("error", "Error", "Save As Draft Failed");
-        // alert("Save As Draft failed");
-      }
+      // if (response?.data?.ID) {
+      //   showStatus(
+      //     "success",
+      //     "Success",
+      //     "Save As Draft Successful",
+      //     "navigate"
+      //   );
+      //   // alert("Save As Draft Successful");
+      // } else {
+      //   showStatus("error", "Error", "Save As Draft Failed");
+      //   // alert("Save As Draft failed");
+      // }
     }
     setIsLoading(false);
-    // navigate("/myProjects");
+    navigate("/myProjects");
   };
 
   // this function is to change the date format maybe we will change when pega integration is done.
