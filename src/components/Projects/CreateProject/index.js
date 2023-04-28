@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { MultiSelect } from "primereact/multiselect";
 import { Calendar } from "primereact/calendar";
@@ -7,6 +7,7 @@ import { classNames } from "primereact/utils";
 import { useNavigate } from "react-router-dom";
 import { createNewProject, editProject } from "../../../apis/projectSetupApi";
 import moment from "moment-timezone";
+import { Toast } from "primereact/toast";
 import "./index.scss";
 import {
   businessUnits,
@@ -39,6 +40,7 @@ const defaultTextBoxEnabled = {
 };
 
 function AddProject(props) {
+  const toast = useRef(null);
   const navigate = useNavigate();
   const User = useSelector((state) => state.UserReducer);
   const userInformation = User.userInformation;
@@ -88,6 +90,20 @@ function AddProject(props) {
     IQ: "",
     CICs: "",
   });
+
+  const showStatus = (severity, summary, detail, redirect) => {
+    toast.current.show({
+      severity: severity,
+      summary: summary,
+      detail: detail,
+      life: 3000,
+    });
+    if (redirect === "navigate") {
+      setTimeout(() => {
+        navigate("/myProjects");
+      }, 1000);
+    }
+  };
 
   const formatDate = (date) => {
     return new Date(
@@ -639,13 +655,27 @@ function AddProject(props) {
     console.log("form data", formData);
     setFormData(formData);
     if (mode === "create") {
-      await createNewProject(formData);
+      const response = await createNewProject(formData);
+      if (response?.data?.ID) {
+        showStatus("success", "Success", "Submit Successful", "navigate");
+        // alert("Submit Successful");
+      } else {
+        showStatus("error", "Error", "Submit Failed");
+        // alert("Submit failed");
+      }
     } else if (mode === "edit") {
       const method = "PATCH";
       const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
-      await editProject(formData, id, method, headers);
+      const response = await editProject(formData, id, method, headers);
+      if (response?.data?.ID) {
+        showStatus("success", "Success", "Submit Successful", "navigate");
+        // alert("Submit Successful");
+      } else {
+        showStatus("error", "Error", "Submit Failed");
+        // alert("Submit failed");
+      }
     }
-    navigate("/myProjects");
+    // navigate("/myProjects");
   };
   const onSaveAsDraft = async () => {
     const draftFormData = collectFormData("Draft", mode);
@@ -653,14 +683,38 @@ function AddProject(props) {
     localStorage.setItem("formDraft", JSON.stringify(draftFormData));
     setIsLoading(true);
     if (mode === "create") {
-      await createNewProject(draftFormData);
+      const response = await createNewProject(draftFormData);
+      if (response?.data?.ID) {
+        showStatus(
+          "success",
+          "Success",
+          "Save As Draft Successful",
+          "navigate"
+        );
+        // alert("Save As Draft Successful");
+      } else {
+        showStatus("error", "Error", "Save As Draft Failed");
+        // alert("Save As Draft failed");
+      }
     } else if (mode === "edit" || mode === "design") {
       const method = "PUT";
       const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
-      await editProject(draftFormData, id, method, headers);
+      const response = await editProject(draftFormData, id, method, headers);
+      if (response?.data?.ID) {
+        showStatus(
+          "success",
+          "Success",
+          "Save As Draft Successful",
+          "navigate"
+        );
+        // alert("Save As Draft Successful");
+      } else {
+        showStatus("error", "Error", "Save As Draft Failed");
+        // alert("Save As Draft failed");
+      }
     }
     setIsLoading(false);
-    navigate("/myProjects");
+    // navigate("/myProjects");
   };
 
   // this function is to change the date format maybe we will change when pega integration is done.
@@ -734,6 +788,7 @@ function AddProject(props) {
 
   return (
     <div className="tabular-add-project">
+      <Toast ref={toast} />
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Row>
           <Col>
@@ -1259,7 +1314,7 @@ function AddProject(props) {
           </Button>
           <Button
             className="button-layout draft-button"
-            disabled={!formValid}
+            disabled={!formValid || mode === "design"}
             type="submit"
           >
             Submit
