@@ -1,40 +1,62 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { RoleUser } from "../../userRole";
 import PgLogo from "../../assets/images/logo.svg";
+import { updateUser } from "../../apis/userApi";
 import "./index.scss";
+import { useSelector } from "react-redux";
 function UserLogin() {
+  const User = useSelector((state) => state.UserReducer);
+  const userInformation = User.userInformation;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [credentialsValid, setCredentialsValid] = useState(true);
+  const [userInfoUpdated, setUserInfoUpdated] = useState(false);
   const navigate = useNavigate();
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Find the user in the users array with the entered username
-    const user = RoleUser.users.find(
-      (u) => u.username.toLowerCase() === username.toLowerCase()
-    );
+    // const user = RoleUser.users.find(
+    //   (u) => u.username.toLowerCase() === username.toLowerCase()
+    // );
 
-    if (user && user.password === password) {
-      // Save the user's username and role in sessionStorage
-      const session = {
-        username: user.username,
-        role: user.role,
-        permissions: user.permissions,
-        bu: user.bu,
-        region: user.region,
-        userid: user.userid,
-        loginTime: new Date().toLocaleString(),
-      };
+    // if (user && user.password === password) {
+    //   // Save the user's username and role in sessionStorage
+    //   const session = {
+    //     username: user.username,
+    //     role: user.role,
+    //     permissions: user.permissions,
+    //     bu: user.bu,
+    //     region: user.region,
+    //     userid: user.userid,
+    //     loginTime: new Date().toLocaleString(),
+    //   };
 
-      // Save the session object in sessionStorage
-      sessionStorage.setItem("session", JSON.stringify(session));
-      // Redirect to home page
-      navigate("/myProjects");
-    } else {
-      alert("Invalid username or password");
-    }
+    //   // Save the session object in sessionStorage
+    //   sessionStorage.setItem("session", JSON.stringify(session));
+    // Redirect to home page
+    //   navigate("/myProjects");
+    // } else {
+    //   alert("Invalid username or password");
+    // }
+    const infoUpdated = await updateUser(username, password);
+    setUserInfoUpdated(infoUpdated);
   };
+
+  useEffect(() => {
+    if (userInfoUpdated) {
+      if (userInformation?.username) {
+        setCredentialsValid(true);
+        navigate("/myProjects");
+      } else {
+        // alert("Invalid username or password");
+        setCredentialsValid(false);
+        setUsername("");
+        setPassword("");
+      }
+    }
+  }, [userInfoUpdated, userInformation]);
 
   return (
     <div className="login-screen">
@@ -70,6 +92,12 @@ function UserLogin() {
             <Button variant="primary" type="submit" className="mb-3">
               Login
             </Button>
+            {!credentialsValid && (
+              <p style={{ color: "red" }}>
+                CREDENTIALS INVALID! <br />
+                Please try with correct credentials.
+              </p>
+            )}
           </Form>
         </Col>
       </Row>

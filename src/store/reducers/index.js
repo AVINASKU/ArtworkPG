@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
 import ProjectReducer from "./ProjectReducer";
 import ProjectSetupReducer from "./ProjectSetupReducer";
-import user from "./user";
+import UserReducer from "./UserReducer";
 
 export default combineReducers({
   myProject: ProjectReducer,
   ProjectSetupReducer,
-  user,
+  UserReducer,
 });

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Nav, NavItem, Button } from "react-bootstrap";
 import { NavLink, useLocation } from "react-router-dom";
 import PgLogo from "../../assets/images/logo.svg";
@@ -17,20 +17,25 @@ import { Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { updateMode } from "../../store/actions/ProjectSetupActions";
+import { updateUser } from "../../apis/userApi";
 
 const SideBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [isToggle, setIsToggle] = useState(false);
+  const [isToggle, setIsToggle] = useState(
+    JSON.parse(sessionStorage.getItem("sideBarOpen"))
+  );
   const [expandedItems, setExpandedItems] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState(null);
+
   const toggleSidebar = () => {
+    sessionStorage.setItem("sideBarOpen", JSON.stringify(!isToggle));
     setIsToggle(!isToggle);
-    //
-    if (expandedIndex) {
-      setExpandedIndex(null);
-    }
+
+    // if (expandedIndex) {
+    //   setExpandedIndex(null);
+    // }
   };
   const sidebarWidth = isToggle ? "220px" : "100px";
   function toggleSubMenu(index) {
@@ -59,6 +64,8 @@ const SideBar = () => {
   }
   const handleLogout = () => {
     sessionStorage.removeItem("session");
+    sessionStorage.removeItem("sideBarOpen");
+    updateUser("", "");
     navigate("/");
   };
   const navItems = {

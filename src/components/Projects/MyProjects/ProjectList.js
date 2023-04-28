@@ -20,6 +20,9 @@ import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 const CustomisedView = React.lazy(() => import("./CustomisedView"));
 
 const ProjectList = (props) => {
+  const User = useSelector((state) => state.UserReducer);
+  const userInformation = User.userInformation;
+
   const [pegadata, setPegaData] = useState(null);
   // const [loading, setLoading] = useState(false);
   const [ProjectFrozen, setProjectFrozen] = useState(false);
@@ -69,7 +72,7 @@ const ProjectList = (props) => {
 
   useEffect(() => {
     // if (!myProjectList.myProject.length) {
-    const updatedUsers = dispatch(getMyProject());
+    const updatedUsers = dispatch(getMyProject(userInformation));
     console.log("my projects", updatedUsers);
     // }
   }, [dispatch]);
@@ -312,6 +315,10 @@ const ProjectList = (props) => {
             onClick={() => {
               if (field && field.length) {
                 let option = myProjectList.myProject[rowData.rowIndex];
+                console.log(
+                  "details of selected project (Project_Name): ",
+                  option
+                );
                 dispatch(selectedProject(option, "My Projects"));
                 navigate(`/addProject/${projectId}`);
               }
@@ -329,6 +336,10 @@ const ProjectList = (props) => {
             onClick={() => {
               if (field && field.length) {
                 let option = myProjectList.myProject[rowData.rowIndex];
+                console.log(
+                  "details of selected project (Project_Id): ",
+                  option
+                );
                 dispatch(selectedProject(option, "My Projects"));
                 navigate(`/addProject/${projectId}`);
               }
