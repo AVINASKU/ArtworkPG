@@ -120,14 +120,15 @@ fieldset:disabled .btn {
 }
 // ProjectPlanList Styles End
 
-.myProjectAnddAllProjectList, .my-task-project {
+.myProjectAnddAllProjectList,
+.my-task-project {
   table {
     // border-collapse: separate !important;
     // border-spacing: 0 5px !important;
     // width: 100%;
     thead {
       th {
-        background-color: #EDF4FA !important;
+        background-color: #edf4fa !important;
         height: 30px;
         // border: 0 !important;
         text-align: center !important;
@@ -145,6 +146,11 @@ fieldset:disabled .btn {
       th.p-filter-column .p-column-filter .p-fluid {
         min-width: 100px;
         border-radius: 140px;
+        background-color: #ffffff !important;
+      }
+      .p-filter-column {
+        background-color: #ffffff !important;
+        padding: 10px !important;
       }
     }
     tr:nth-child(even) > td {
@@ -170,7 +176,7 @@ fieldset:disabled .btn {
       color: #595959;
       text-align: center;
       background: #ffffff !important;
-      padding: 10px !important;
+      padding: 10px;
       border-width: 0.5px;
       text-align: center !important;
       // border: 2px solid gray !important;

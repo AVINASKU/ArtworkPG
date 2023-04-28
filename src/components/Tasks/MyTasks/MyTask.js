@@ -8,13 +8,14 @@ import ProjectListHeader from "../../Projects/MyProjects/ProjectListHeader";
 import { TaskService } from "../../../service/PegaTask";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Checkbox } from "primereact/checkbox";
 import filter from "../../../assets/images/filter.svg";
-import { Button } from "primereact/button";
+
 import {
   getTasks,
   // updateProject,
 } from "../../../store/actions/TaskActions";
+import TaskDialog from "../../TaskDialog";
+import { NavLink } from "react-bootstrap";
 // import { DataTable } from "primereact/datatable";
 // import { Column } from "primereact/column";
 // import { ProjectService } from "../../../service/PegaService";
@@ -29,6 +30,9 @@ const MyTask = (props) => {
   const [selected, setSelected] = useState([]);
   const [isSearch, isSearchSet] = useState(false);
   const [selectedProdSrchList, setSelectedProdSrchList] = useState([]);
+  const [showTaskDialog, setShowTaskDialog] = useState(false);
+  const [selectedTask, setSelectedTask] = useState([]);
+  const [flag, setFlag] = useState("");
   const dispatch = useDispatch();
   const myTasks = useSelector((state) => state.TaskReducer.myTasks);
 
@@ -52,46 +56,97 @@ const MyTask = (props) => {
   }, [myTasks]);
 
   useEffect(() => {
-    if (TaskService.getProjectData()?.length !== selected.length) {
+    if (
+      selectedProdSrchList.length > 0 &&
+      selected.length === selectedProdSrchList.length
+    ) {
+      setSelectAllChecked(true);
+    } else {
       setSelectAllChecked(false);
     }
-  }, [TaskService.getProjectData(), selected, selectAllChecked]);
-  const handleSelect = (item) => {
-    if (selected?.includes(item)) {
-      setSelected(selected.filter((i) => i !== item));
-      console.log("selected is", selected);
-    } else {
-      if (selected.length === 0) {
-        const selectedList = [];
-        selectedList.push(item);
-        setSelected(selectedList);
-      } else {
-        setSelected([...selected, item]);
-      }
-    }
-  };
+  }, [selected, selectedProdSrchList]);
 
   const onSearchClick = () => {
     isSearchSet(!isSearch);
   };
   const dt = useRef(null);
+  const headerColumns = [
+    { title: "ProjectName", field: "ProjectName" },
+    { title: "TaskName", field: "TaskName" },
+    { title: "Status", field: "Status" },
+    { title: "Help_Needed", field: "Help_Needed" },
+    { title: "Remaining_Buffer", field: "Remaining_Buffer" },
+  ];
+
   const exportCSV = (selectionOnly) => {
-    console.log("dt.current is", dt.current);
-    console.log("selectionOnly is", selectionOnly);
-    dt.current.exportCSV({ selectionOnly: true });
+    const columns = headerColumns.map((col) => ({
+      title: col.title,
+      field: col.field,
+    }));
+    if (selectionOnly || dt.current.getSelectedData().length === 0) {
+      dt.current.exportCSV({
+        selectionOnly: true,
+        columns: columns,
+        data: selected,
+      });
+    } else {
+      dt.current.exportCSV({ columns: columns });
+    }
   };
 
   const handleSelectAll = (e) => {
-    // console.log("MyTaskData is", MyTaskData);
     if (e.target.checked) {
-      // setSelected(TaskService.getProjectData());
       setSelected(selectedProdSrchList);
     } else {
       setSelected([]);
     }
-    setSelectAllChecked(e.target.checked);
+  };
+  const handleSelect = (item) => {
+    if (selected?.includes(item)) {
+      setSelected(selected.filter((i) => i !== item));
+      setSelectedTask(selectedTask.filter((i) => i !== item));
+    } else {
+      if (selected.length === 0) {
+        const selectedList = [];
+        selectedList.push(item);
+        setSelected(selectedList);
+        setSelectedTask([...selectedTask, item]);
+      } else {
+        setSelected([...selected, item]);
+        setSelectedTask([...selectedTask, item]);
+      }
+    }
   };
 
+  const handleHelpNeededClick = () => {
+    setShowTaskDialog(true);
+    setFlag("help");
+    if (selectedTask.length > 0) {
+      setSelectedTask(selected);
+    }
+  };
+  const handleDelegateClick = () => {
+    setShowTaskDialog(true);
+    setFlag("delegate");
+    if (selectedTask.length > 0) {
+      setSelectedTask(selected);
+    }
+  };
+
+  function getStatusClassName(status) {
+    switch (status) {
+      case "In Progress":
+        return "In Progress";
+      case "On-Hold":
+        return "On-Hold";
+      case "Awaiting":
+        return "Awaiting";
+      case "Available":
+        return "available-now";
+      default:
+        return "";
+    }
+  }
   const myTaskHeader = (options) => {
     return (
       <div>
@@ -110,7 +165,7 @@ const MyTask = (props) => {
             className="filter-icon"
             style={{ margin: "10px" }}
           />
-          <span className="header-name">{options}</span>
+          <span className="header-name">{options?.replace(/_/g, " ")}</span>
         </>
       </div>
     );
@@ -118,43 +173,42 @@ const MyTask = (props) => {
   const taskBodyTemplate = (rowData) => {
     return (
       <div className="flex align-items-center gap-2">
-        {/* <div class="p-checkbox p-component">
-          <div
-            class="p-checkbox-box p-component"
-            role="checkbox"
-            aria-checked="false"
-            tabindex="0"
-            aria-label="Select 1007"
-          ></div>
-        </div> */}
         <input
           type="checkbox"
           checked={selected?.includes(rowData)}
           onChange={() => handleSelect(rowData)}
         />
-        {/* <div className="card flex justify-content-center">
-          <Checkbox
-            onChange={(e) => setChecked(e.checked)}
-            checked={checked}
-          ></Checkbox>
-        </div> */}
-        <span className="task_name">{rowData.TaskName}</span>{" "}
+        <NavLink className="task_name" to="#">
+          {rowData.TaskName}
+        </NavLink>
       </div>
     );
   };
 
   const helpNeededBodyTemplate = (rowData) => {
-    return <div className="helpneeded_value">{rowData.Help_Needed}</div>;
+    return (
+      <div
+        className={`${
+          rowData.Help_Needed ? "helpneeded_no" : "helpneeded_yes"
+        }`}
+      >
+        {rowData.Help_Needed ? "yes" : "No"}
+      </div>
+    );
   };
   const statusTemplate = (rowData) => {
-    return <div className="status-value">{rowData.Status}</div>;
+    return (
+      <div className={`status-value ${getStatusClassName(rowData.Status)}`}>
+        {rowData.Status}
+      </div>
+    );
   };
 
   const dynamicColumns = () => {
-    console.log(
-      "TaskService.getMyTaskColumnNames().length is",
-      TaskService.getMyTaskColumnNames()
-    );
+    // console.log(
+    //   "TaskService.getMyTaskColumnNames().length is",
+    //   TaskService.getMyTaskColumnNames()
+    // );
     if (TaskService.getMyTaskColumnNames().length) {
       return TaskService.getMyTaskColumnNames().map((ele, i) => {
         const cbadd = ele === "TaskName" ? "checkbox-added" : "";
@@ -166,6 +220,7 @@ const MyTask = (props) => {
             filter
             showFilterMenu={false}
             classNme={cbadd}
+            filterPlaceholder="Search"
             body={
               (ele === "TaskName" && taskBodyTemplate) ||
               (ele === "Help_Needed" && helpNeededBodyTemplate) ||
@@ -179,34 +234,49 @@ const MyTask = (props) => {
   };
   // console.log("ProjectData is", ProjectData);
   return (
-    <div className="my-task-project">
-      {console.log("TaskService is", TaskService.getProjectData())}
+    <>
+      <div className="my-task-project">
+        {/* {console.log("TaskService is", TaskService.getProjectData())} */}
 
-      <ProjectListHeader
-        header={props.header}
-        exportCSV={() => exportCSV(false)}
-        onSearchClick={onSearchClick}
-      />
+        <ProjectListHeader
+          exportCSV={selected ? () => exportCSV(true) : () => exportCSV(false)}
+          onSearchClick={onSearchClick}
+          handleDelegateClick={handleDelegateClick}
+          handleHelpNeededClick={handleHelpNeededClick}
+          actionFlag={!selected || selected.length === 0}
+          header="My Tasks"
+        />
 
-      <DataTable
-        resizableColumns
-        value={selectedProdSrchList}
-        reorderableColumns
-        scrollable
-        responsiveLayout="scroll"
-        className="mt-3"
-        ref={dt}
-        filterDisplay={isSearch && "row"}
-        tableStyle={{ minWidth: "50rem" }}
-      >
-        {dynamicColumns()}
-        {/* <Column field="Project_Name" header="Project_Name"></Column>
+        <DataTable
+          resizableColumns
+          value={selectedProdSrchList}
+          reorderableColumns
+          scrollable
+          selection={selected}
+          onSelectionChange={(e) => setSelected(e.value)}
+          responsiveLayout="scroll"
+          className="mt-3"
+          ref={dt}
+          filterDisplay={isSearch && "row"}
+          tableStyle={{ minWidth: "50rem" }}
+        >
+          {dynamicColumns()}
+          {/* <Column field="Project_Name" header="Project_Name"></Column>
         <Column field="Task" header="Task"></Column>
         <Column field="Status" header="Status"></Column>
         <Column field="Help Needed" header="Help Needed"></Column>
         <Column field="Remaining Buffer" header="Remaining Buffer"></Column> */}
-      </DataTable>
-    </div>
+        </DataTable>
+      </div>
+      {showTaskDialog && (
+        <TaskDialog
+          onClose={() => setShowTaskDialog(!showTaskDialog)}
+          showTaskDialog={showTaskDialog}
+          selectedTaskData={selectedTask}
+          flag={flag}
+        />
+      )}
+    </>
   );
 };
 
