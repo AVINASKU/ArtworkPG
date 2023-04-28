@@ -1,13 +1,14 @@
+import React, { useState, useEffect } from "react";
 import Accordion from "react-bootstrap/Accordion";
 import AddProject from "../Projects/CreateProject";
 import { Button } from "react-bootstrap";
 import { BreadCrumb } from "primereact/breadcrumb";
+import { Dropdown } from "primereact/dropdown";
 import "primeicons/primeicons.css";
+import { SelectButton } from "primereact/selectbutton";
 import "./index.scss";
-import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ProjectPlanCompo from "../Projects/ProjectPlan/ProjectPlanCompo";
-import { Dropdown } from "primereact/dropdown";
 
 function ProjectSetup(props) {
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
@@ -40,12 +41,12 @@ function ProjectSetup(props) {
 
   const [toggleButtons, setToggleButtons] = useState("GanttChart");
 
-  const options =[
+  const options = [
     { name: "Luca", code: "Luca" },
     { name: "Karol", code: "Karol" },
     { name: "Iza", code: "Iza" },
   ];
-  
+
   return (
     <div className="content-layout">
       <div className="actions">
@@ -97,58 +98,6 @@ function ProjectSetup(props) {
             </div>
           )}
         </div>
-
-        {/* <div className="action-buttons">
-          <i
-            style={{
-              cursor: "pointer",
-              padding: 10,
-              fontSize: "2rem",
-              color: "#003DA5",
-            }}
-            className="pi pi-filter-slash"
-          ></i>
-          <i
-            style={{
-              cursor: "pointer",
-              padding: 10,
-              fontSize: "2rem",
-              color: "#003DA5",
-            }}
-            className="pi pi-save"
-          ></i>
-          <i
-            style={{
-              cursor: "pointer",
-              padding: 10,
-              fontSize: "2rem",
-              color: "#003DA5",
-            }}
-            className="pi pi-search"
-          ></i>
-          <i
-            style={{
-              cursor: "pointer",
-              padding: 10,
-              fontSize: "2rem",
-              color: "#003DA5",
-            }}
-            className="pi pi-pencil"
-          ></i>
-          <i
-            style={{
-              cursor: "pointer",
-              padding: 10,
-              fontSize: "2rem",
-              color: "#003DA5",
-            }}
-            className="pi pi-file-excel"
-          ></i>
-
-          <Button className="button-layout" style={{ fontSize: 14 }}>
-            Reset to default
-          </Button>
-        </div> */}
       </div>
       <div className="tabular-view">
         <Accordion defaultActiveKey="0" activeKey={activeKey}>
