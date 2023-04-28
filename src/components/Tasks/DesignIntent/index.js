@@ -5,7 +5,7 @@ import DesignHeader from "./DesignHeader";
 import AddNewDesignContent from "./AddNewDesignContent";
 import { ProjectService } from "../../../service/PegaService";
 import "./index.scss";
-import { Button } from "react-bootstrap";
+import { Button, Row } from "react-bootstrap";
 
 function DefineDesignIntent() {
   const [data, setData] = useState(null);
@@ -44,59 +44,70 @@ function DefineDesignIntent() {
     setUpdated(!updated);
   };
 
-  const addData = (fieldName, index, value, error) => {
+  const addData = (fieldName, index, value, Design_Intent_Name) => {
     let data = designIntent[index];
     data[fieldName] = value;
+    data["Design_Intent_Name"] = Design_Intent_Name;
     submittedDI.push(data);
     setSubmittedDI(submittedDI);
     // setDesignIntent(designIntent);
   };
 
-  const selectSubmit = (item) => {
-    console.log("item", item);
+  const onSelectAll = (checked) => {
+    designIntent.map((task) => {
+      if (task?.event !== "submit") {
+        task.Select = checked;
+      }
+      return task;
+    });
+    setDesignIntent(designIntent);
+    setUpdated(!updated);
   };
 
   const onSubmit = () => {
     let submitOnlySelectedData = designIntent.filter(
-      (task) => task?.select === true
+      (task) => task?.Select === true
     );
-    console.log("full submit data --->", designIntent, submitOnlySelectedData);
+    submitOnlySelectedData.map((task) => {
+      task.event = "submit";
+    });
+    console.log("full submit data --->", submitOnlySelectedData);
   };
 
-  const DI = {
-    project_name: "Paste Mulsaane Oral-B Medical Device Europe",
-    duration: "15",
-    start_date: "20-mar-2023",
-    end_date: "4-mar-2024",
-    consumed_buffer: "-2",
-    DesignIntentList: [
-      {
-        Design_Intent_Name:
-          "DI_FAI-214_Fairy_Hand Dish Wash_Paste Mulsaane Oral-B Medical Device Europe_UK_Test",
-        AWMTaskId: "DI-1",
-        DesignJobid: "1234",
-        AWMProjectId: "",
-        AgencyReference: "FAI-214",
-        Cluster: "UK",
-        AdditionalInfo: "Test",
-        Select: "true",
-        event: "submit",
-      },
-      {
-        Design_Intent_Name: "Abc",
-        TaskId: "DI-2",
-        AgencyReference: "FAI-215",
-        Cluster: "UK",
-        AdditionalInfo: "Test",
-        Select: "false",
-        event: "draft",
-        DesignJobid: "1112",
-      },
-      {
-        DesignJobid: "2235",
-      },
-    ],
-  };
+  // const DI = {
+  //   project_name: "Paste Mulsaane Oral-B Medical Device Europe",
+  //   duration: "15",
+  //   start_date: "20-mar-2023",
+  //   end_date: "4-mar-2024",
+  //   consumed_buffer: "-2",
+  //   DesignIntentList: [
+  //     {
+  //       Design_Intent_Name:
+  //         "DI_FAI-214_Fairy_Hand Dish Wash_Paste Mulsaane Oral-B Medical Device Europe_UK_Test",
+  //       AWMTaskId: "DI-1",
+  //       DesignJobid: "1234",
+  //       AWMProjectId: "",
+  //       AgencyReference: "FAI-214",
+  //       Cluster: "UK",
+  //       AdditionalInfo: "Test",
+  //       Select: "true",
+  //       event: "submit",
+  //     },
+  //     {
+  //       Design_Intent_Name: "Abc",
+  //       TaskId: "DI-2",
+  //       AgencyReference: "FAI-215",
+  //       Cluster: "UK",
+  //       AdditionalInfo: "Test",
+  //       Select: "false",
+  //       event: "draft",
+  //       DesignJobid: "1112",
+  //     },
+  //     {
+  //       DesignJobid: "2235",
+  //     },
+  //   ],
+  // };
 
   const onSaveAsDraft = () => {
     let submitOnlySelectedData = designIntent.filter(
@@ -111,17 +122,31 @@ function DefineDesignIntent() {
 
   const FooterButtons = () => {
     return (
-      <>
-        <Button>Cancel</Button>
-        <Button onClick={() => onSaveAsDraft()}>Save as Draft</Button>
-        <Button onClick={() => onSubmit()}>Submit</Button>
-      </>
+      <Row className="form-buttons">
+        <Button className="button-layout cancel-button">Cancel</Button>
+        <Button
+          onClick={() => onSaveAsDraft()}
+          className="button-layout save-as-draft-button"
+        >
+          Save as Draft
+        </Button>
+        <Button
+          className="button-layout submit-button"
+          type="submit"
+          onClick={() => onSubmit()}
+        >
+          Submit
+        </Button>
+      </Row>
     );
   };
 
   return (
     <PageLayout>
-      <DesignHeader setAddNewDesign={addNewEmptyDesign} />
+      <DesignHeader
+        setAddNewDesign={addNewEmptyDesign}
+        onSelectAll={onSelectAll}
+      />
       <div
         style={{
           overflowY: "scroll",

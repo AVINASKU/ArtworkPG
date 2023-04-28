@@ -47,6 +47,28 @@
   margin-top: 9px;
 }
 
-.font-color{
-color: #003da5;
+.font-color {
+  color: #003da5;
+}
+.cancel-button {
+  width: 90px;
+  height: 32px;
+  color: #003da5;
+  border-color: #003da5;
+  font-size: 12px;
+  border-radius: 20px;
+}
+.save-as-draft-button {
+  width: 127px;
+  height: 32px;
+  background: #00a3e0;
+  font-size: 12px;
+  border-radius: 20px;
+}
+.submit-button {
+  width: 93px;
+  height: 32px;
+  background: #003da5;
+  font-size: 12px;
+  border-radius: 20px;
 }

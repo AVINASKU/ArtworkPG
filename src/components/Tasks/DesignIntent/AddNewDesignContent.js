@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { Row, Col, Button } from "react-bootstrap";
 import { Checkbox } from "primereact/checkbox";
@@ -14,7 +14,9 @@ const AddNewDesignContent = ({
   addIntoDesignIntent,
   addData,
 }) => {
-  const { AgencyReference, AdditionalInfo, event, Cluster } = item;
+  const { AgencyReference, AdditionalInfo, event,Select, Cluster } = item;
+
+  console.log("Select --->", Select);
 
   const [checked, setChecked] = useState(false);
   const [agencyRef, setAgency] = useState(AgencyReference);
@@ -22,6 +24,12 @@ const AddNewDesignContent = ({
   const [additionalInformation, setAdditionalInfo] = useState(AdditionalInfo);
   const [additionalError,setAdditionalError]=useState("");
   const [clusterError, setClusterError]=useState("");
+
+  console.log("checked--->", checked);
+
+  useEffect(()=>{
+  setChecked(Select);
+  },[Select]);
 
   const DesignHeader = (di_name) => {
     return (
@@ -81,7 +89,7 @@ const AddNewDesignContent = ({
               id="agency"
               value={agencyRef}
               onChange={(e) => {
-                addData("AgencyReference", index, e.target.value);
+                addData("AgencyReference", index, e.target.value, di_name);
                 setAgency(e.target.value);
               }}
               aria-describedby="agency-help"
@@ -96,7 +104,7 @@ const AddNewDesignContent = ({
               id="cluster"
               value={clusters}
               onChange={(e) => {
-                addData("Cluster", index, e.target.value, clusterError);
+                addData("Cluster", index, e.target.value, di_name);
                 setCluster(e.target.value);
                 setClusterError("");
               }}
@@ -114,7 +122,7 @@ const AddNewDesignContent = ({
               id="additional"
               value={additionalInformation}
               onChange={(e) => {
-                addData("AdditionalInfo", index, e.target.value);
+                addData("AdditionalInfo", index, e.target.value, di_name);
                 setAdditionalInfo(e.target.value);
               }}
               aria-describedby="info-help"
@@ -133,7 +141,7 @@ const AddNewDesignContent = ({
                 if (!clusters) {
                   setClusterError("Select Cluster");
                 }
-                addData("select", index, e.checked);
+                addData("Select", index, e.checked, di_name);
                 setChecked(e.checked);
               }}
               checked={event === "submit" ? true : checked}

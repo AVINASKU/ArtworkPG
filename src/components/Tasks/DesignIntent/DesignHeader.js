@@ -9,7 +9,7 @@ const items = [
   { label: "Define Design Intent" },
 ];
 
-const DesignHeader = ({setAddNewDesign }) => {
+const DesignHeader = ({setAddNewDesign,onSelectAll }) => {
   const [checked, setChecked] = useState(false);
 
   return (
@@ -29,7 +29,11 @@ const DesignHeader = ({setAddNewDesign }) => {
         <div className="action-buttons">
           <div className="icon-items">
             <Checkbox
-              onChange={(e) => setChecked(e.checked)}
+              onChange={(e) => 
+              {
+              setChecked(e.checked);
+              onSelectAll(e.checked);}
+              }
               checked={checked}
               className="margin-right"
             ></Checkbox>
