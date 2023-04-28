@@ -305,7 +305,7 @@ const ProjectList = (props) => {
         {field === "Project_Name" && (
           <span
             style={{ color: "#003DA5", cursor: "pointer" }}
-            // href={`/addProject/${projectId}`}
+            // href={`/projectPlan/${projectId}`}
             onClick={() => {
               if (field && field.length) {
                 let option = myProjectList.myProject[rowData.rowIndex];
@@ -314,7 +314,7 @@ const ProjectList = (props) => {
                   option
                 );
                 dispatch(selectedProject(option, "My Projects"));
-                navigate(`/addProject/${projectId}`);
+                navigate(`/projectPlan/${projectId}`);
               }
             }}
           >
@@ -326,7 +326,7 @@ const ProjectList = (props) => {
         {field === "Project_ID" && (
           <span
             style={{ color: "#003DA5", cursor: "pointer" }}
-            // href={`/addProject/${projectId}`}
+            // href={`/projectPlan/${projectId}`}
             onClick={() => {
               if (field && field.length) {
                 let option = myProjectList.myProject[rowData.rowIndex];
@@ -335,7 +335,7 @@ const ProjectList = (props) => {
                   option
                 );
                 dispatch(selectedProject(option, "My Projects"));
-                navigate(`/addProject/${projectId}`);
+                navigate(`/projectPlan/${projectId}`);
               }
             }}
           >

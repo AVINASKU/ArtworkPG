@@ -19,17 +19,25 @@ const RoutesNav = () => {
         <Route index element={<Home />} />
         <Route path="/myProjects" element={<MyProjects />} />
         <Route path="/allProjects" element={<AllProjects />} />
-        <Route path="/mytasks" element={<MyTasksPage />} />
+        <Route path="/myTasks" element={<MyTasksPage />} />
          <Route path="/AllTasks" element={<AllTasksPage />} />
         {/* <Route path="/createProject" element={<AddProject />} /> */}
-         <Route path="/addProject" element={<ProjectCreation />} />
-        <Route path="/addProject/:ProjectID" element={<ProjectCreation />} />
+        <Route path="/projectPlan" element={<ProjectCreation />} />
+        <Route path="/projectPlan/:ProjectID" element={<ProjectCreation />} />
         <Route
-          path="/mytasks/define-design-intent"
+          path="/myTasks/define-design-intent"
           element={<DefineDesignIntent />}
         />
         <Route
-          path="/mytasks/approve-define-design-intent"
+          path="/myTasks/approve-define-design-intent"
+          element={<ApproveDesignIntent />}
+        />
+        <Route
+          path="/allTasks/define-design-intent"
+          element={<DefineDesignIntent />}
+        />
+        <Route
+          path="/allTasks/approve-define-design-intent"
           element={<ApproveDesignIntent />}
         />
         {/* <Route path="/reports" element={<Reports />} /> */}
