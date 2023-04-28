@@ -162,7 +162,6 @@ const ProjectPlanList = (props) => {
   };
 
   const onGlobalFilterChange = (e) => {
-    console.log('data:',e);
     const value = e.value;
     setSelectedCities(value);
     setFilters(value);
@@ -170,7 +169,10 @@ const ProjectPlanList = (props) => {
 
   const saveSettings = () => {
     localStorage.setItem("columnWiseFilterData", JSON.stringify(filters));
-    localStorage.setItem("frozenDataProjectPlan", JSON.stringify(frozenCoulmns));
+    localStorage.setItem(
+      "frozenDataProjectPlan",
+      JSON.stringify(frozenCoulmns)
+    );
     localStorage.setItem("sortingData", JSON.stringify(sortData));
     localStorage.setItem(
       "projectPlanAllColumnNames",
@@ -233,7 +235,7 @@ const ProjectPlanList = (props) => {
       <>
         {field === "Task" && (
           <span
-            style={{ color: "#003DA5", cursor: "pointer" }}
+            className="TaskStyles"
             onClick={() => {
               if (field && field.length) {
                 dispatch(selectedProject(options.data, "My Projects"));
@@ -268,7 +270,11 @@ const ProjectPlanList = (props) => {
                 value={options?.data[field]}
                 onChange={(e) => onDropdownChange(options, e, field)}
                 options={
-                  field === "Role" ? options.data["RoleOptions"] : field === "Owner" ? options.data["OwnerOptions"] : []
+                  field === "Role"
+                    ? options.data["RoleOptions"]
+                    : field === "Owner"
+                    ? options.data["OwnerOptions"]
+                    : []
                 }
                 optionLabel="name"
                 placeholder={`Select ${field}`}
@@ -397,7 +403,11 @@ const ProjectPlanList = (props) => {
             columnKey={ele || i}
             frozen={frozenCoulmns.includes(ele)}
             alignFrozen="left"
-            className={frozenCoulmns.includes(ele) ? "font-bold" : ""}
+            className={
+              frozenCoulmns.includes(ele)
+                ? "font-bold"
+                : ""
+            }
             showFilterMenu={false}
             body={elementTemplate}
           />
@@ -407,10 +417,10 @@ const ProjectPlanList = (props) => {
   };
 
   const data = () => {
-    const data = pegadata?.map(obj => obj.data);
-    console.log('data:', data);
+    const data = pegadata?.map((obj) => obj.data);
+    console.log("data:", data);
     return data || [];
-  }
+  };
   return (
     <div className="myProjectAnddAllProjectList">
       <Suspense fallback={<div>Loading...</div>}>
@@ -442,7 +452,7 @@ const ProjectPlanList = (props) => {
             reorderableColumns
             value={filters.length ? filters : pegadata}
             loading={loading}
-            className="mt-3"
+            className="mt-3 textAlignTreeTable"
             tableStyle={{ minWidth: "107rem", tableLayout: "auto" }}
           >
             {/* <Column header="" expander={true}></Column> */}

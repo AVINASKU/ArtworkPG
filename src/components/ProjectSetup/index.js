@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Accordion from "react-bootstrap/Accordion";
 import AddProject from "../Projects/CreateProject";
-import { Button } from "react-bootstrap";
+import { Button, DropdownButton } from "react-bootstrap";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { Dropdown } from "primereact/dropdown";
 import "primeicons/primeicons.css";
@@ -9,6 +9,7 @@ import { SelectButton } from "primereact/selectbutton";
 import "./index.scss";
 import { useSelector } from "react-redux";
 import ProjectPlanCompo from "../Projects/ProjectPlan/ProjectPlanCompo";
+import { useLocation } from "react-router-dom";
 
 function ProjectSetup(props) {
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
@@ -19,6 +20,9 @@ function ProjectSetup(props) {
   const items = [{ label: rootBreadCrumb }];
   activeKey === "0" && items.push({ label: "Project Setup" });
   activeKey === "1" && items.push({ label: "Project Plan" });
+
+  const location = useLocation();
+  const shouldShowResetButton = location.pathname.includes("/addProject");
 
   useEffect(() => {
     if (mode === "create") {
@@ -47,6 +51,13 @@ function ProjectSetup(props) {
     { name: "Iza", code: "Iza" },
   ];
 
+  const handleDelegate = () => {
+    // handleDelegateClick();
+  };
+  const handleHelpNeeded = () => {
+    // handleHelpNeededClick();
+  };
+
   return (
     <div className="content-layout">
       <div className="actions">
@@ -55,51 +66,128 @@ function ProjectSetup(props) {
 
           {/* {`--------${mode}`} */}
           {mode !== "create" && (
-            <div style={{ display: "flex" }}>
-              <div className="project-name">
-                {selectedProjectDetails.Project_Name}
-              </div>
-              <div className="projectPlanButtons">
-                <div
-                  className="btn-group btn-group-toggle"
-                  data-toggle="buttons"
-                >
-                  <label
-                    className={`btn border border-secondary projectPlanButtonsRadius1 ${
-                      toggleButtons === "GanttChart"
-                        ? "btn-secondary active"
-                        : ""
-                    }`}
-                    onClick={() => setToggleButtons("GanttChart")}
-                  >
-                    Gantt Chart
-                  </label>
-                  <label
-                    className={`btn border border-secondary projectPlanButtonsRadius2 ${
-                      toggleButtons === "Tabular" ? "btn-secondary active" : ""
-                    }`}
-                    onClick={() => setToggleButtons("Tabular")}
-                  >
-                    Tabular
-                  </label>
+            <div className="row">
+              <div className="col">
+                <div className="project-name">
+                  {selectedProjectDetails.Project_Name}
                 </div>
-                <span>
-                  <Dropdown
-                    editable
-                    // value={options}
-                    // onChange={(e) => onDropdownChange(options, e, field)}
-                    options={options}
-                    optionLabel="name"
-                    placeholder="Actions"
-                    className="w-full md:w-14rem ActionsDropdown"
-                  />
-                </span>
+              </div>
+              <div className="col">
+                <div className="row">
+                  <div
+                    className="col btn-group btn-group-toggle d-flex justify-content-end"
+                    data-toggle="buttons"
+                  >
+                    <div className="col projectPlanButtons">
+                      <label
+                        className={` btn border border-secondary projectPlanButtonsRadius1 ${
+                          toggleButtons === "GanttChart"
+                            ? "btn-secondary active"
+                            : ""
+                        }`}
+                        onClick={() => setToggleButtons("GanttChart")}
+                      >
+                        Gantt Chart
+                      </label>
+                      <label
+                        className={` btn border border-secondary projectPlanButtonsRadius2 ${
+                          toggleButtons === "Tabular"
+                            ? "btn-secondary active"
+                            : ""
+                        }`}
+                        onClick={() => setToggleButtons("Tabular")}
+                      >
+                        Tabular
+                      </label>
+                    </div>
+                    {shouldShowResetButton && (
+                      <DropdownButton
+                        id="tasksActions"
+                        title="Actions"
+                        disabled={false}
+                        // disabled={actionFlag}
+                      >
+                        <Dropdown.Item onClick={handleHelpNeeded}>
+                          Help Needed
+                        </Dropdown.Item>
+                        <Dropdown.Item onClick={handleDelegate}>
+                          Delegate
+                        </Dropdown.Item>
+                      </DropdownButton>
+                    )}
+                    {/* <Dropdown
+                        editable
+                        // value={options}
+                        // onChange={(e) => onDropdownChange(options, e, field)}
+                        options={options}
+                        optionLabel="name"
+                        placeholder="Actions"
+                        className="w-full md:w-14rem ActionsDropdown"
+                      /> */}
+                  </div>
+                </div>
               </div>
             </div>
+            //     <div style={{ display: "flex" }}>
+            //       <div className="project-name">
+            //         {selectedProjectDetails.Project_Name}
+            //       </div>
+            //       <div className="projectPlanButtons">
+            //         <div>
+            //         <div
+            //           className="btn-group btn-group-toggle"
+            //           data-toggle="buttons"
+            //         >
+            //           <label
+            //             className={`btn border border-secondary projectPlanButtonsRadius1 ${
+            //               toggleButtons === "GanttChart"
+            //                 ? "btn-secondary active"
+            //                 : ""
+            //             }`}
+            //             onClick={() => setToggleButtons("GanttChart")}
+            //           >
+            //             Gantt Chart
+            //           </label>
+            //           <label
+            //             className={`btn border border-secondary projectPlanButtonsRadius2 ${
+            //               toggleButtons === "Tabular" ? "btn-secondary active" : ""
+            //             }`}
+            //             onClick={() => setToggleButtons("Tabular")}
+            //           >
+            //             Tabular
+            //           </label>
+            //         </div>
+            //         <div>
+            //         {shouldShowResetButton && (
+            //   <DropdownButton
+            //     id="tasksActions"
+            //     title="Action"
+            //     disabled={false}
+            //     // disabled={actionFlag}
+            //   >
+            //     <Dropdown.Item onClick={handleHelpNeeded}>
+            //       Help Needed
+            //     </Dropdown.Item>
+            //     <Dropdown.Item onClick={handleDelegate}>Delegate</Dropdown.Item>
+            //   </DropdownButton>
+            // )}
+            //           {/* <Dropdown
+            //             editable
+            //             // value={options}
+            //             // onChange={(e) => onDropdownChange(options, e, field)}
+            //             options={options}
+            //             optionLabel="name"
+            //             placeholder="Actions"
+            //             className="w-full md:w-14rem ActionsDropdown"
+            //           /> */}
+            //         </div>
+            //       </div>
+            //       </div>
+            //     </div>
           )}
         </div>
       </div>
-      <div className="tabular-view">
+      <div className="tabular-view AccordionIndent">
         <Accordion defaultActiveKey="0" activeKey={activeKey}>
           <Accordion.Item eventKey="0">
             <Accordion.Header onClick={() => handleActiveKeyChange("0")}>
