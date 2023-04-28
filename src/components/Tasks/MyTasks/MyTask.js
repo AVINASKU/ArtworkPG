@@ -97,8 +97,12 @@ const MyTask = (props) => {
   const handleSelectAll = (e) => {
     if (e.target.checked) {
       setSelected(selectedProdSrchList);
+      setSelectedTask(selectedProdSrchList);
+      setSelectAllChecked(true);
     } else {
       setSelected([]);
+      setSelectedTask([]);
+      setSelectAllChecked(false);
     }
   };
   const handleSelect = (item) => {
