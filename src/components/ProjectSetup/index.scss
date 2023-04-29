@@ -65,15 +65,23 @@ $width: 100%;
   width: $width;
 }
 .projectPlanButtons {
-  text-align: right;
-  width: $width;
+  display: flex;
+  justify-content:end;
+  margin-right: 13px;
 }
 .projectPlanButtonsRadius1 {
   border-radius: 20px 0 0 20px;
 }
 .projectPlanButtonsRadius2 {
-  border-radius: 0 20px 20px 0;
+  border-radius: 0 20px 20px 0 !important;
 }
 .ActionsDropdown {
   background-color: #003da5;
+}
+.AccordionIndent > .accordion > .accordion-item > .accordion-header {
+  position: relative !important;
+}
+.AccordionIndent > .accordion > .accordion-item > .accordion-header > button::after {
+  position: absolute !important;
+  margin-left: 110px !important;
 }

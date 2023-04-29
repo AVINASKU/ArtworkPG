@@ -6,7 +6,7 @@ import ConfirmationPopUp from "../ConfirmationPopUp";
 import { FilterMatchMode } from "primereact/api";
 import ProjectListHeader from "../MyProjects/ProjectListHeader";
 import { Tag } from "primereact/tag";
-import { changeDateFormat } from "../utils";
+import { changeDateFormat } from "../../../utils";
 import filter from "../../../assets/images/filter.svg";
 import { getAllProject } from "../../../store/actions/ProjectActions";
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
