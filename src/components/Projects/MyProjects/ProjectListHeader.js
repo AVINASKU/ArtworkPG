@@ -21,6 +21,7 @@ const ProjectListHeader = ({
   handleDelegateClick,
   handleHelpNeededClick,
   actionFlag,
+  exportCSVTasks,
 }) => {
   const location = useLocation();
   const shouldShowResetButton =
@@ -64,14 +65,15 @@ const ProjectListHeader = ({
           onClick={onSearchClick}
           className="header-icons"
         />
-        <img
-          src={export2excel}
-          alt="download file"
-          onClick={() => exportCSV(false)}
-          className="pi pi-file-excel header-icons"
-        />
+
         {!shouldShowResetButton && (
           <>
+            <img
+              src={export2excel}
+              alt="download file"
+              onClick={() => exportCSV(false)}
+              className="pi pi-file-excel header-icons"
+            />
             <img
               src={customizedFields}
               alt="alternate img"
@@ -93,16 +95,24 @@ const ProjectListHeader = ({
           </>
         )}
         {shouldShowResetButton && (
-          <DropdownButton
-            id="tasksActions"
-            title="Action"
-            disabled={actionFlag}
-          >
-            <Dropdown.Item onClick={handleHelpNeeded}>
-              Help Needed
-            </Dropdown.Item>
-            <Dropdown.Item onClick={handleDelegate}>Delegate</Dropdown.Item>
-          </DropdownButton>
+          <>
+            <img
+              src={export2excel}
+              alt="download file"
+              onClick={exportCSVTasks}
+              className="pi pi-file-excel header-icons"
+            />
+            <DropdownButton
+              id="tasksActions"
+              title="Action"
+              disabled={actionFlag}
+            >
+              <Dropdown.Item onClick={handleHelpNeeded}>
+                Help Needed
+              </Dropdown.Item>
+              <Dropdown.Item onClick={handleDelegate}>Delegate</Dropdown.Item>
+            </DropdownButton>
+          </>
         )}
       </div>
     </div>

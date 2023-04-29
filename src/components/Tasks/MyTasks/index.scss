@@ -372,3 +372,7 @@ div.flex.align-items-center.gap-2 {
   flex-direction: row;
   justify-content: flex-start;
 }
+
+.filter-color-change {
+  filter: invert(10%) sepia(100%) saturate(1200%) hue-rotate(190deg) brightness(70%) contrast(90%);
+}
