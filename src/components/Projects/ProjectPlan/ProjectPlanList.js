@@ -455,7 +455,7 @@ const ProjectPlanList = (props) => {
             value={filters.length ? filters : pegadata}
             loading={loading}
             className="mt-3 textAlignTreeTable"
-            tableStyle={{ minWidth: "107rem", tableLayout: "auto" }}
+            tableStyle={{ minWidth: "119rem", tableLayout: "auto" }}
           >
             {/* <Column header="" expander={true}></Column> */}
             {rowExpansionColumns()}

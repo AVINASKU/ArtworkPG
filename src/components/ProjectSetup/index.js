@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Accordion from "react-bootstrap/Accordion";
 import AddProject from "../Projects/CreateProject";
-import { Button, DropdownButton } from "react-bootstrap";
+import { Button, DropdownButton, Dropdown } from "react-bootstrap";
 import { BreadCrumb } from "primereact/breadcrumb";
-import { Dropdown } from "primereact/dropdown";
 import "primeicons/primeicons.css";
 import { SelectButton } from "primereact/selectbutton";
 import "./index.scss";
@@ -100,21 +99,22 @@ function ProjectSetup(props) {
                         Tabular
                       </label>
                     </div>
-                    {/* {shouldShowResetButton && (
+                    {/* {shouldShowResetButton && ( */}
+                    {(
                       <DropdownButton
-                        id="tasksActions"
+                        id="projectActions"
                         title="Actions"
-                        disabled={false}
+                        // disabled={false}
                         // disabled={actionFlag}
                       >
-                        <Dropdown.Item onClick={handleHelpNeeded}>
+                        <Dropdown.Item>
                           Help Needed
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={handleDelegate}>
+                        <Dropdown.Item>
                           Delegate
                         </Dropdown.Item>
                       </DropdownButton>
-                    )} */}
+                    )}
                     {/* <Dropdown
                         editable
                         // value={options}
