@@ -22,7 +22,7 @@ function ProjectSetup(props) {
   activeKey === "1" && items.push({ label: "Project Plan" });
 
   const location = useLocation();
-  const shouldShowResetButton = location.pathname.includes("/addProject");
+  const shouldShowResetButton = location.pathname.includes("/addProject/A-468");
 
   useEffect(() => {
     if (mode === "create") {
@@ -100,7 +100,7 @@ function ProjectSetup(props) {
                         Tabular
                       </label>
                     </div>
-                    {shouldShowResetButton && (
+                    {/* {shouldShowResetButton && (
                       <DropdownButton
                         id="tasksActions"
                         title="Actions"
@@ -114,7 +114,7 @@ function ProjectSetup(props) {
                           Delegate
                         </Dropdown.Item>
                       </DropdownButton>
-                    )}
+                    )} */}
                     {/* <Dropdown
                         editable
                         // value={options}

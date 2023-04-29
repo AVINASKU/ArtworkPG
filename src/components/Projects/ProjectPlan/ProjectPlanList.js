@@ -239,7 +239,7 @@ const ProjectPlanList = (props) => {
             onClick={() => {
               if (field && field.length) {
                 dispatch(selectedProject(options.data, "My Projects"));
-                navigate(`/addProject/${options.data[field]}`);
+                navigate(`/projectPlan/${options.data[field]}`);
               }
             }}
           >
@@ -382,11 +382,13 @@ const ProjectPlanList = (props) => {
   const onDropdownChange = (rowData, { value }, ele) => {
     // Update the data with the new value
     rowData.data[ele] = value.name;
+    console.log("Pegadata: ", pegadata);
     setPegaData([...pegadata]);
   };
 
   const onDurationChange = (rowData, { value }, ele) => {
     rowData.data[ele] = value < 1 ? "0" : value?.toString();
+    console.log("Pegadata: ", pegadata);
     setPegaData([...pegadata]);
   };
 

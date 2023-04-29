@@ -11,6 +11,10 @@ const sessionObj = JSON.parse(sessionData);
 
 //for userid and username
 
+const time = sessionObj?.loginTime;
+
+
+//for userid and username
 const username = sessionObj?.username;
 
 const userid = sessionObj?.userid;

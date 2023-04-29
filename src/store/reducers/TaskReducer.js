@@ -5,7 +5,7 @@ const initialState = {
   error: null,
 };
 
-const TaskReducer = (state = initialState, action) => {
+const TaskReducer = (state = initialState, action = {}) => {
   const { type, payload } = action;
   switch (type) {
     case "GET_MY_TASKS_SUCCESS":
@@ -24,6 +24,7 @@ const TaskReducer = (state = initialState, action) => {
       };
 
     case "GET_ALL_TASKS_SUCCESS":
+      console.log(payload);
       return {
         ...state,
         allTasks: payload,
@@ -41,4 +42,5 @@ const TaskReducer = (state = initialState, action) => {
       return state;
   }
 };
+
 export default TaskReducer;

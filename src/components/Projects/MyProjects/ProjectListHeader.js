@@ -24,8 +24,8 @@ const ProjectListHeader = ({
 }) => {
   const location = useLocation();
   const shouldShowResetButton =
-    location.pathname.includes("/mytasks") ||
-    location.pathname.includes("/alltasks");
+    location.pathname.includes("/AllTasks") ||
+    location.pathname.includes("/MyTasks");
   const handleDelegate = () => {
     handleDelegateClick();
   };

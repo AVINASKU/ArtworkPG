@@ -311,7 +311,7 @@ const AllProjectList = (props) => {
               if (field && field.length) {
                 let option = allProjectList.allProjects[rowData.rowIndex];
                 dispatch(selectedProject(option, "All Projects"));
-                navigate(`/addProject/${projectId}`);
+                navigate(`/projectPlan/${projectId}`);
               }
             }}
           >
@@ -326,7 +326,7 @@ const AllProjectList = (props) => {
               if (field && field.length) {
                 let option = allProjectList.allProjects[rowData.rowIndex];
                 dispatch(selectedProject(option, "All Projects"));
-                navigate(`/addProject/${projectId}`);
+                navigate(`/projectPlan/${projectId}`);
               }
             }}
           >
@@ -597,7 +597,7 @@ const AllProjectList = (props) => {
           ref={dt}
           // selectionMode="single"
           // onSelectionChange={(e) => {
-          //   navigate(`/addProject/${e.value.ProjectID}`);
+          //   navigate(`/projectPlan/${e.value.ProjectID}`);
           // }}
         >
           {dynamicColumns(projectColumnName)}
