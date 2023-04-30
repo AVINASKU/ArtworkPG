@@ -65,7 +65,7 @@
   font-size: 12px;
   border-radius: 20px;
 }
-.submit-button {
+.submit-di-button {
   width: 93px;
   height: 32px;
   background: #003da5;
@@ -77,4 +77,11 @@
   font-size: 10px;
   color: #acacac;
   font-weight: 400;
+}
+
+.approve-design-intent{
+.p-button.p-button-rounded {
+    border: hidden !important;
+}
+padding: 10px;
 }

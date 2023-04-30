@@ -12,7 +12,7 @@
           Save as Draft
         </Button>
         <Button
-          className="button-layout submit-button"
+          className="button-layout submit-di-button"
           type="submit"
           onClick={() => onSubmit()}
         >

@@ -14,12 +14,16 @@ const headerName = "Upload Approved Design Intent";
 
 const ApproveDesignIntent = () => {
   const [data, setData] = useState(null);
+  const [taskData , setTaskData] = useState(null)
 
   useEffect(() => {
     const data1 = ProjectService.getApproveDI();
     setData(data1);
+    setTaskData(data1.DesignIntentList);
 
   }, [data]);
+
+  console.log("task data", taskData);
 
   return (
     <PageLayout>
@@ -30,7 +34,7 @@ const ApproveDesignIntent = () => {
       />
 
       {<AddNewDesign {...data} />}
-      <ApproveDesignIntentContent/>
+      <ApproveDesignIntentContent {...taskData}/>
 
       <FooterButtons />
     </PageLayout>
