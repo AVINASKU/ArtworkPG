@@ -306,6 +306,9 @@ img[disabled] {
 
 .textAlignTreeTable > div > .p-treetable-table > .p-treetable-tbody > tr > td:first-child {
   text-align: left !important;
+  display: flex;
+  height: auto;
+  border-bottom: none !important;
   }
 
 // ProjectPlan Styles End
