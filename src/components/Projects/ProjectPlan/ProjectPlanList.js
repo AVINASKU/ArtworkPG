@@ -450,6 +450,7 @@ const ProjectPlanList = (props) => {
             clearColumnWiseFilter={clearColumnWiseFilter}
           />
           <TreeTable
+            resizableColumns
             dataKey="Task"
             reorderableColumns
             value={filters.length ? filters : pegadata}
