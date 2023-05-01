@@ -108,10 +108,13 @@ function ProjectSetup(props) {
                         // disabled={actionFlag}
                       >
                         <Dropdown.Item>
-                          Help Needed
+                          On Hold
                         </Dropdown.Item>
                         <Dropdown.Item>
-                          Delegate
+                          Cancel
+                        </Dropdown.Item>
+                        <Dropdown.Item>
+                          Previous State
                         </Dropdown.Item>
                       </DropdownButton>
                     )}
