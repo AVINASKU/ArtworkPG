@@ -70,28 +70,29 @@ const MyTask = (props) => {
   };
   const dt = useRef(null);
   const headerColumns = [
-    { title: "ProjectName", field: "ProjectName" },
-    { title: "TaskName", field: "TaskName" },
-    { title: "Status", field: "Status" },
-    { title: "Help_Needed", field: "Help_Needed" },
-    { title: "Remaining_Buffer", field: "Remaining_Buffer" },
+    { title: "ProjectName", field: "ProjectName", csvExport: true },
+    { title: "TaskName", field: "TaskName", csvExport: true },
+    { title: "Status", field: "Status", csvExport: true },
+    { title: "Help_Needed", field: "Help_Needed", csvExport: true },
+    { title: "Remaining_Buffer", field: "Remaining_Buffer", csvExport: true },
   ];
 
-  const exportCSV = (selectionOnly) => {
-    const columns = headerColumns.map((col) => ({
-      title: col.title,
-      field: col.field,
-    }));
-    if (selectionOnly || dt.current.getSelectedData().length === 0) {
-      dt.current.exportCSV({
-        selectionOnly: true,
-        columns: columns,
-        data: selected,
-      });
-    } else {
-      dt.current.exportCSV({ columns: columns });
-    }
-  };
+  // const exportCSVTasks = (selectionOnly) => {
+  //   const columnNames = headerColumns.map((col) => col.title);
+  //   if (selectionOnly || dt.current.getSelectedData().length === 0) {
+  //     dt.current.exportCSV({
+  //       selectionOnly: true,
+  //       fileName: "selected_data.csv",
+  //       columnNames: columnNames,
+  //       data: selected,
+  //     });
+  //   } else {
+  //     dt.current.exportCSV({
+  //       fileName: "all_data.csv",
+  //       columnNames: columnNames,
+  //     });
+  //   }
+  // };
 
   const handleSelectAll = (e) => {
     if (e.target.checked) {
@@ -241,7 +242,9 @@ const MyTask = (props) => {
         {/* {console.log("TaskService is", TaskService.getProjectData())} */}
 
         <ProjectListHeader
-          exportCSV={selected ? () => exportCSV(true) : () => exportCSV(false)}
+          // exportCSVTasks={
+          //   selected ? exportCSVTasks(true) : exportCSVTasks(true)
+          // }
           onSearchClick={onSearchClick}
           handleDelegateClick={handleDelegateClick}
           handleHelpNeededClick={handleHelpNeededClick}
@@ -263,11 +266,6 @@ const MyTask = (props) => {
           tableStyle={{ minWidth: "50rem" }}
         >
           {dynamicColumns()}
-          {/* <Column field="Project_Name" header="Project_Name"></Column>
-        <Column field="Task" header="Task"></Column>
-        <Column field="Status" header="Status"></Column>
-        <Column field="Help Needed" header="Help Needed"></Column>
-        <Column field="Remaining Buffer" header="Remaining Buffer"></Column> */}
         </DataTable>
       </div>
       {showTaskDialog && (
