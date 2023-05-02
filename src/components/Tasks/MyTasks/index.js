@@ -14,6 +14,8 @@ import {
   getTasks,
   // updateProject,
 } from "../../../store/actions/TaskActions";
+import { onSortData } from "../../Projects/utils";
+import ConfirmationPopUp from "../../Projects/ConfirmationPopUp";
 import TaskDialog from "../../TaskDialog";
 // import { DataTable } from "primereact/datatable";
 // import { Column } from "primereact/column";
@@ -32,17 +34,26 @@ const MyTask = (props) => {
   const [showTaskDialog, setShowTaskDialog] = useState(false);
   const [selectedTask, setSelectedTask] = useState([]);
   const [flag, setFlag] = useState("");
+  const [frozenCoulmns, setFrozenColumn] = useState([]);
+  const [ProjectFrozen, setProjectFrozen] = useState(false);
+  const [projectColumnName, setProjectColumnNames] = useState([]);
+  const [selectedCities, setSelectedCities] = useState([]);
+  const [sortData, setSortData] = useState([]);
+  const [filters, setFilters] = useState([]);
+
+  const [selectedColumnName, setSelectedColumnName] = useState(null);
+
   const dispatch = useDispatch();
   const myTasks = useSelector((state) => state.TaskReducer.myTasks);
 
-  const getMyTasks = (myTasks) => {
+  const getMyTasks = (myTasksList) => {
     const getMyTasksList = [];
-    myTasks.forEach((project) => {
+    myTasksList.forEach((project) => {
       project.TaskDetails.forEach((taskDetails) => {
         getMyTasksList.push(taskDetails);
       });
     });
-    setSelectedProdSrchList(getMyTasksList);
+    return getMyTasksList;
   };
 
   useEffect(() => {
@@ -51,7 +62,30 @@ const MyTask = (props) => {
   }, [dispatch]);
 
   useEffect(() => {
-    getMyTasks(myTasks);
+    const myTasksList = getMyTasks(myTasks);
+    setSelectedProdSrchList(myTasksList);
+
+    let filteredPegaDataJson = localStorage.getItem("columnWiseFilterData");
+    const filteredPegaData = JSON.parse(filteredPegaDataJson);
+
+    if (filteredPegaData && filteredPegaData.length) {
+      setFilters(filteredPegaData);
+      setSelectedCities(filteredPegaData);
+      setSelectedProdSrchList(myTasksList);
+    }
+
+    let columnNamesJson = localStorage.getItem("myTasksAllColumnNames");
+    const columnNames = JSON.parse(columnNamesJson);
+    if (columnNames != null && columnNames.length) {
+      setProjectColumnNames(columnNames);
+    } else {
+      const columnNames = TaskService.getMyTaskColumnNames();
+      localStorage.setItem(
+        "myTasksAllColumnNames",
+        JSON.stringify(columnNames)
+      );
+      setProjectColumnNames(columnNames);
+    }
   }, [myTasks]);
 
   useEffect(() => {
@@ -65,9 +99,93 @@ const MyTask = (props) => {
     }
   }, [selected, selectedProdSrchList]);
 
+  const onSort = (column, direction) => (event) => {
+    const sortedData = onSortData(column, direction, selectedProdSrchList);
+    setSelectedProdSrchList(sortedData);
+    setSortData([column, direction]);
+  };
+
+  const addFrozenColumns = (name) => {
+    if (!frozenCoulmns.includes(name)) {
+      frozenCoulmns.push(name);
+      setFrozenColumn(frozenCoulmns);
+    } else {
+      let columnIndex = frozenCoulmns.indexOf(name);
+      frozenCoulmns.splice(columnIndex, 1);
+      setFrozenColumn(frozenCoulmns);
+    }
+  };
+
+  let jsonFrozenrData1 = localStorage.getItem("myTasksFrozenData");
+  const myTasksFrozenData = JSON.parse(jsonFrozenrData1);
+  if (myTasksFrozenData && myTasksFrozenData.length) {
+    setFrozenColumn(myTasksFrozenData);
+  }
+
+  const saveSettings = () => {
+    localStorage.setItem("columnWiseFilterData", JSON.stringify(filters));
+    localStorage.setItem("myTasksFrozenData", JSON.stringify(frozenCoulmns));
+    localStorage.setItem("sortingData", JSON.stringify(sortData));
+    localStorage.setItem(
+      "myTasksAllColumnNames",
+      JSON.stringify(projectColumnName)
+    );
+  };
+
+  const clearColumnWiseFilter = () => {
+    let jsonFrozenItem = localStorage.getItem("myTasksFrozenData");
+    const frozenItem = JSON.parse(jsonFrozenItem);
+    if (
+      frozenItem &&
+      frozenItem.length &&
+      frozenItem.includes(selectedColumnName)
+    ) {
+      const index = frozenItem.indexOf(selectedColumnName);
+      frozenItem.splice(index, 1);
+      localStorage.setItem("myTasksFrozenData", JSON.stringify(frozenItem));
+      setFrozenColumn(frozenItem);
+    }
+    if (frozenCoulmns.includes(selectedColumnName)) {
+      const index = frozenCoulmns.indexOf(selectedColumnName);
+      frozenCoulmns.splice(index, 1);
+      setFrozenColumn(frozenCoulmns);
+      setProjectFrozen(!ProjectFrozen);
+    }
+    let jsonSortItem = localStorage.getItem("sortingData");
+    const sortItem = JSON.parse(jsonSortItem);
+    if (sortItem && sortItem.length && sortItem[0] === selectedColumnName) {
+      localStorage.setItem("sortingData", JSON.stringify([]));
+    }
+    if (sortData && sortData.length && sortData[0] === selectedColumnName) {
+      setSortData([]);
+    }
+    if (filters && filters.length) {
+      localStorage.setItem("columnWiseFilterData", JSON.stringify({}));
+      setSelectedCities([]);
+      setFilters([]);
+    }
+  };
+
+  const onGlobalFilterChange = (e) => {
+    const value = e.value;
+    setSelectedCities(value);
+    setFilters(value);
+  };
+
+  const clearFilter = () => {
+    localStorage.setItem("columnWiseFilterData", JSON.stringify({}));
+    localStorage.setItem("sortingData", JSON.stringify({}));
+    localStorage.setItem("frozenData", JSON.stringify({}));
+    setSelectedCities([]);
+    setSortData([]);
+    setFilters([]);
+    setFrozenColumn([]);
+  };
+
   const onSearchClick = () => {
     isSearchSet(!isSearch);
   };
+  const op = useRef(null);
   const dt = useRef(null);
   const headerColumns = [
     { title: "ProjectName", field: "ProjectName", csvExport: true },
@@ -152,6 +270,11 @@ const MyTask = (props) => {
     }
   }
   const myTaskHeader = (options) => {
+    const isFilterActivated =
+      (frozenCoulmns &&
+        frozenCoulmns.length &&
+        frozenCoulmns.includes(options)) ||
+      (sortData && sortData.length && sortData[0] === options);
     return (
       <div>
         <>
@@ -168,8 +291,18 @@ const MyTask = (props) => {
             alt="Column filter"
             className="filter-icon"
             style={{ margin: "10px" }}
+            onClick={(e) => {
+              op.current.toggle(e);
+              setSelectedColumnName(options);
+            }}
           />
-          <span className="header-name">{options?.replace(/_/g, " ")}</span>
+          <span
+            className={`header-name ${
+              isFilterActivated && "filter-color-change"
+            }`}
+          >
+            {options?.replace(/_/g, " ")}
+          </span>
         </>
       </div>
     );
@@ -221,6 +354,8 @@ const MyTask = (props) => {
               header={myTaskHeader(ele)}
               field={ele}
               filter
+              frozen={frozenCoulmns.includes(ele)}
+              className={frozenCoulmns.includes(ele) ? "font-bold" : ""}
               showFilterMenu={false}
               classNme={checkBoxAdded}
               filterPlaceholder="Search"
@@ -236,6 +371,9 @@ const MyTask = (props) => {
     }
   };
   // console.log("ProjectData is", ProjectData);
+  const isFilterEnabled =
+    frozenCoulmns?.length || filters?.length || sortData?.length;
+
   return (
     <>
       <div className="my-task-project">
@@ -250,11 +388,29 @@ const MyTask = (props) => {
           handleHelpNeededClick={handleHelpNeededClick}
           actionFlag={!selected || selected.length === 0}
           header="My Tasks"
+          isFilterEnabled={isFilterEnabled}
+          clearFilter={clearFilter}
         />
-
+        <ConfirmationPopUp
+          onSort={onSort}
+          selectedColumnName={selectedColumnName}
+          sortData={sortData}
+          op={op}
+          addFrozenColumns={addFrozenColumns}
+          ProjectFrozen={ProjectFrozen}
+          setProjectFrozen={setProjectFrozen}
+          setFrozenColumn={setFrozenColumn}
+          frozenCoulmns={frozenCoulmns}
+          clearColumnWiseFilter={clearColumnWiseFilter}
+          saveSettings={saveSettings}
+          selectedCities={selectedCities}
+          onGlobalFilterChange={onGlobalFilterChange}
+          projectData={selectedProdSrchList}
+          setFilters={setFilters}
+        />
         <DataTable
           resizableColumns
-          value={selectedProdSrchList}
+          value={filters?.length ? filters : selectedProdSrchList}
           reorderableColumns
           scrollable
           selection={selected}

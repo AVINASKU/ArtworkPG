@@ -90,5 +90,14 @@ export const RoleUser = {
       region: "Europe Enterprice",
       permissions: ["read", "view"],
     },
+    {
+      username: "Deboleena",
+      password: "deb123",
+      userid: "@deboleena",
+      role: "PM",
+      bu: "BBY",
+      region: "EUROPE ENTERPRISE",
+      permissions: ["read", "view"],
+    },
   ],
 };
