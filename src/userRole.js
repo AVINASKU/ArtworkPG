@@ -15,7 +15,7 @@ export const RoleUser = {
       userid: "@karol123",
       role: "TaskOwner",
       bu: "Baby Care",
-      region: "Europe",
+      region: "Europe ENTERPRISE",
       permissions: ["read", "view"],
     },
     {
@@ -72,33 +72,17 @@ export const RoleUser = {
       region: "EUROPE ENTERPRISE",
       permissions: ["read", "view"],
     },
-    // {
-    //   username: "asha",
-    //   password: "asha123",
-    //   userid: "@asha123",
-    //   role: "TaskOwner",
-    //   bu: "Baby Care",
-    //   region: "Europe",
-    //   permissions: ["create", "read", "update", "delete"],
-    // },
 
-    // {
-    //   username: "test",
-    //   password: "test123",
-    //   userid: "@test123",
-    //   role: "TaskOwner",
-    //   bu: "Baby Care",
-    //   region: "Europe",
-    //   permissions: ["read", "view"],
-    // },
-    // {
-    //   username: "Hemant",
-    //   password: "hemant123",
-    //   userid: "@hemant123",
-    //   role: "PM",
-    //   bu: "FAM",
-    //   region: "Europe Enterprice",
-    //   permissions: ["read", "view"],
-    // },
+
+    {
+      username: "Deboleena",
+      password: "deb123",
+      userid: "@deboleena",
+      role: "PM",
+      bu: "BBY",
+      region: "EUROPE ENTERPRISE",
+      permissions: ["read", "view"],
+    },
+
   ],
 };

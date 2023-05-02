@@ -4,6 +4,9 @@ import searchMyProjects from "../../../assets/images/searchMyProjects.svg";
 import filter from "../../../assets/images/filter.svg";
 import BlueFilterIcon from "../../../assets/images/BlueFilterIcon.svg";
 import customizedFields from "../../../assets/images/customizedFields.svg";
+import { useLocation } from "react-router-dom";
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
 
 const ProjectListHeader = ({
   header,
@@ -14,50 +17,103 @@ const ProjectListHeader = ({
   onSearchClick,
   exportCSV,
   isFilterEnabled,
-  isResetEnabled
+  isResetEnabled,
+  handleDelegateClick,
+  handleHelpNeededClick,
+  actionFlag,
+  exportCSVTasks,
 }) => {
+  const location = useLocation();
+  const shouldShowResetButton =
+    location.pathname.includes("/AllTasks") ||
+    location.pathname.includes("/MyTasks");
+  const handleDelegate = () => {
+    handleDelegateClick();
+  };
+  const handleHelpNeeded = () => {
+    handleHelpNeededClick();
+  };
+
+  // if (actionFlag) {
+  //   dropdown.disabled = false;
+  // } else {
+  //   dropdown.disabled = true;
+  // }
   return (
     <div className="actions">
       <div className="project-title">{header}</div>
 
       <div className="action-buttons">
-      {isFilterEnabled ? <img
-          src={BlueFilterIcon}
-          alt="filter logo"
-          onClick={clearFilter}
-          className="header-icons"
-        /> :
-        <img
-          src={filter}
-          alt="filter logo"
-          onClick={clearFilter}
-          className="header-icons"
-        />}
+        {isFilterEnabled ? (
+          <img
+            src={BlueFilterIcon}
+            alt="filter logo"
+            onClick={clearFilter}
+            className="header-icons"
+          />
+        ) : (
+          <img
+            src={filter}
+            alt="filter logo"
+            onClick={clearFilter}
+            className="header-icons"
+          />
+        )}
         <img
           src={searchMyProjects}
           alt="search field"
           onClick={onSearchClick}
           className="header-icons"
         />
-        <img
-          src={export2excel}
-          alt="download file"
-          onClick={() => exportCSV(false)}
-          className="pi pi-file-excel header-icons"
-        />
-        <img
-          src={customizedFields}
-          alt="alternate img"
-          onClick={() => setVisible(true)}
-          className="header-icons"
-        />
-        <button
-          type="button"
-          className={isResetEnabled? "btn btn-secondary reset-to-default-view": " btn btn-secondary resetToPgDefault"}
-          onClick={()=> clearFilters()}
-        >
-          Reset to default View
-        </button>
+
+        {!shouldShowResetButton && (
+          <>
+            <img
+              src={export2excel}
+              alt="download file"
+              onClick={() => exportCSV(false)}
+              className="pi pi-file-excel header-icons"
+            />
+            <img
+              src={customizedFields}
+              alt="alternate img"
+              onClick={() => setVisible(true)}
+              className="header-icons"
+            />
+
+            <button
+              type="button"
+              className={
+                isResetEnabled
+                  ? "btn btn-secondary reset-to-default-view"
+                  : " btn btn-secondary resetToPgDefault"
+              }
+              onClick={() => clearFilters()}
+            >
+              Reset to Default
+            </button>
+          </>
+        )}
+        {shouldShowResetButton && (
+          <>
+            <img
+              src={export2excel}
+              alt="download file"
+              onClick={exportCSVTasks}
+              className="pi pi-file-excel header-icons"
+            />
+            <DropdownButton
+              id="tasksActions"
+              title="Action"
+              disabled={actionFlag}
+            >
+              <Dropdown.Item onClick={handleHelpNeeded}>
+                Help Needed
+              </Dropdown.Item>
+              <Dropdown.Item onClick={handleDelegate}>Delegate</Dropdown.Item>
+            </DropdownButton>
+          </>
+        )}
       </div>
     </div>
   );

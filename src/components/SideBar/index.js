@@ -88,15 +88,15 @@ const SideBar = () => {
         name: "My Tasks",
         img: MyTaskMP,
         arrowUp: ArrowDownImg,
-        url: "/tasks",
-        items: [{ name: "My Tasks", url: "tasks/mytasks" }],
+        url: "/MyTasks",
+        items: [{ name: "My Tasks", url: "Mytasks" }],
       },
       {
         name: "All Tasks",
         img: AllTask,
         arrowUp: ArrowDownImg,
-        url: "/tasks",
-        items: [{ name: "All Tasks", url: "tasks/alltasks" }],
+        url: "/AllTasks",
+        items: [{ name: "All Tasks", url: "AllTasks" }],
       },
     ],
   };
@@ -180,7 +180,7 @@ const SideBar = () => {
             })}
             <div className="add-project">
               <NavItem
-                to="/addProject"
+                to="/projectPlan"
                 state={{ mode: "create" }}
                 onClick={() => {
                   dispatch(updateMode("create"));
@@ -188,7 +188,7 @@ const SideBar = () => {
               >
                 {!isToggle ? (
                   <NavLink
-                    to="/addProject"
+                    to="/projectPlan"
                     state={{ mode: "create" }}
                     className="nav-link"
                     onClick={() => {
@@ -203,7 +203,7 @@ const SideBar = () => {
                   </NavLink>
                 ) : (
                   <NavLink
-                    to="/addProject"
+                    to="/projectPlan"
                     state={{ mode: "create" }}
                     className="nav-link"
                     onClick={() => {

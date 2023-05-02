@@ -120,14 +120,16 @@ fieldset:disabled .btn {
 }
 // ProjectPlanList Styles End
 
-.myProjectAnddAllProjectList {
+.myProjectAnddAllProjectList,
+.my-task-project {
   table {
     // border-collapse: separate !important;
     // border-spacing: 0 5px !important;
     // width: 100%;
     thead {
       th {
-        background-color: #fff !important;
+        background-color: #edf4fa !important;
+        height: 30px;
         // border: 0 !important;
         text-align: center !important;
         border-width: 1px 2px 3px 4px;
@@ -144,6 +146,11 @@ fieldset:disabled .btn {
       th.p-filter-column .p-column-filter .p-fluid {
         min-width: 100px;
         border-radius: 140px;
+        background-color: #ffffff !important;
+      }
+      .p-filter-column {
+        background-color: #ffffff !important;
+        padding: 10px !important;
       }
     }
     tr:nth-child(even) > td {
@@ -163,13 +170,13 @@ fieldset:disabled .btn {
       // background-color: #003da5;
       border-bottom: 1px solid #acacac !important;
       border-top: 1px solid #acacac !important;
-      font-size: 10px;
+      font-size: 12px;
       // line-height: 20px;
       border-top: 0.5px solid #acacac !important;
       color: #595959;
       text-align: center;
       background: #ffffff !important;
-      padding: 10px !important;
+      padding: 10px;
       border-width: 0.5px;
       text-align: center !important;
       // border: 2px solid gray !important;
@@ -206,6 +213,9 @@ fieldset:disabled .btn {
       //   // background-color:  #003da5 !important;
       // }
     }
+    .p-inputtext {
+      border-radius: 50px;
+    }
   }
   // th,
   // td {
@@ -216,10 +226,9 @@ fieldset:disabled .btn {
   background-color: #fff;
 }
 
-.p-inputtext {
-  border-radius: 50px;
-  // width:max-content  !important;
-}
+// .p-inputtext {
+//   border-radius: 50px;
+// }
 .p-breadcrumb {
   border: 0;
 }
