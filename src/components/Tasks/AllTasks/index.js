@@ -195,6 +195,9 @@ const AllTasks = (props) => {
       </div>
     );
   };
+  const assigneeTemplate = (rowData) => {
+    return <div>{rowData.Assignee}</div>;
+  };
 
   const dynamicColumns = () => {
     if (TaskService.getMyTaskColumnNames().length) {
@@ -212,7 +215,8 @@ const AllTasks = (props) => {
             body={
               (ele === "TaskName" && taskBodyTemplate) ||
               (ele === "Help_Needed" && helpNeededBodyTemplate) ||
-              (ele === "Status" && statusTemplate)
+              (ele === "Status" && statusTemplate) ||
+              (ele === "PM" && assigneeTemplate)
             }
             // body={ele === "Help Needed" && countryBodyTemplate}
           />

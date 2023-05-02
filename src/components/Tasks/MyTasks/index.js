@@ -14,7 +14,7 @@ import {
   getTasks,
   // updateProject,
 } from "../../../store/actions/TaskActions";
-import { onSortData } from "../../Projects/utils";
+import { onSortData } from "../../../utils";
 import ConfirmationPopUp from "../../Projects/ConfirmationPopUp";
 import TaskDialog from "../../TaskDialog";
 // import { DataTable } from "primereact/datatable";
