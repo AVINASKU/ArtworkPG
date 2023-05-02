@@ -1,12 +1,13 @@
 import axios from "axios";
 import * as types from "./../types/types";
 
-export const getTasks = (PM) => async (dispatch) => {
+export const getTasks = (userInformation) => async (dispatch) => {
+  let username = userInformation?.username;
   // let userName = sessionStorage.getItem("username");
   try {
     //here need to add url and pass PM name
     const res = await axios.get(
-      `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/MyTasks/Deboleena`
+      `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/MyTasks/${username}`
     );
 
     if (res?.data === null) {

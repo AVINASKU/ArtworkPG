@@ -4,7 +4,6 @@ import { MultiSelect } from "primereact/multiselect";
 import filter from "../../assets/images/filter.svg";
 import BlueFilterIcon from "../../assets/images/BlueFilterIcon.svg";
 
-
 const ConfirmationPopUp = ({
   op,
   onSort,
@@ -25,6 +24,7 @@ const ConfirmationPopUp = ({
   clearColumnWiseFilter,
 }) => {
   const multiselectOptions = (colName) => {
+    console.log("colName:", colName);
     let optionList = [];
     optionList = projectData?.filter(
       (ele) =>
@@ -40,7 +40,7 @@ const ConfirmationPopUp = ({
   //     do {
   //       if (targetEl === flyoutEl) {
   //         document.getElementById(id).style.color = "red";
-            //  document.getElementById(id).style.backgroundColor = "#FAFCFF";
+  //  document.getElementById(id).style.backgroundColor = "#FAFCFF";
   //         return;
   //       }
   //       targetEl = targetEl.parentNode;
