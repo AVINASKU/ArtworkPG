@@ -1,21 +1,18 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import "./index.scss";
 import "../../Projects/MyProjects/index.scss";
 import ProjectListHeader from "../../Projects/MyProjects/ProjectListHeader";
 import { TaskService } from "../../../service/PegaTask";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { FilterMatchMode } from "primereact/api";
 import filter from "../../../assets/images/filter.svg";
 import { NavLink } from "react-router-dom";
-import { getTasks } from "../../../store/actions/TaskActions";
 import { onSortData } from "../../Projects/utils";
 import ConfirmationPopUp from "../../Projects/ConfirmationPopUp";
 import TaskDialog from "../../TaskDialog";
 
 const TaskList = (props) => {
-  const User = useSelector((state) => state.UserReducer);
-  const userInformation = User.userInformation;
   const [selectAllChecked, setSelectAllChecked] = useState(false);
   const [selected, setSelected] = useState([]);
   const [isSearch, isSearchSet] = useState(false);
@@ -30,26 +27,19 @@ const TaskList = (props) => {
   const [sortData, setSortData] = useState([]);
   const [filters, setFilters] = useState([]);
   const [selectedColumnName, setSelectedColumnName] = useState(null);
-  const dispatch = useDispatch();
-  const myTasks = useSelector((state) => state.TaskReducer.myTasks);
 
   const getMyTasks = (myTasksList) => {
-    const getMyTasksList = [];
-    myTasksList?.forEach((project) => {
-      project?.TaskDetails?.forEach((taskDetails) => {
-        getMyTasksList.push(taskDetails);
-      });
-    });
-
-    if (getMyTasksList.length === 0) {
+    const myTasks = myTasksList?.flatMap(
+      (project) => project?.TaskDetails ?? []
+    );
+    if (myTasks.length === 0) {
       console.log("No records found");
     }
-
-    return getMyTasksList;
+    return myTasks;
   };
 
   useEffect(() => {
-    const myTasksList = getMyTasks(props.myTasks);
+    const myTasksList = getMyTasks(props?.myTasks);
     setSelectedProdSrchList(myTasksList);
 
     let filteredPegaDataJson = localStorage.getItem("columnWiseFilterData");
@@ -102,12 +92,6 @@ const TaskList = (props) => {
       setFrozenColumn(frozenCoulmns);
     }
   };
-
-  let jsonFrozenrData1 = localStorage.getItem("myTasksFrozenData");
-  const myTasksFrozenData = JSON.parse(jsonFrozenrData1);
-  if (myTasksFrozenData && myTasksFrozenData.length) {
-    setFrozenColumn(myTasksFrozenData);
-  }
 
   const saveSettings = () => {
     localStorage.setItem("columnWiseFilterData", JSON.stringify(filters));
@@ -295,6 +279,10 @@ const TaskList = (props) => {
     );
   };
   const taskBodyTemplate = (rowData) => {
+    const taskId = rowData?.TaskID;
+    const projectID = rowData?.Project_ID;
+    const TaskCode = taskId?.split("_");
+    const url = `${TaskCode[0]}/${taskId}/${projectID}`;
     return (
       <div className="flex align-items-center gap-2">
         <input
@@ -303,8 +291,8 @@ const TaskList = (props) => {
           checked={selected?.includes(rowData)}
           onChange={() => handleSelect(rowData)}
         />
-        <NavLink className="task_name" to="/mytasks/define-design-intent">
-          {rowData.TaskName}
+        <NavLink className="task_name" to={url}>
+          {rowData.TaskName} - {rowData.TaskID}
         </NavLink>
       </div>
     );
@@ -391,6 +379,15 @@ const TaskList = (props) => {
   const isFilterEnabled =
     frozenCoulmns?.length || filters?.length || sortData?.length;
 
+  //search each columns
+  const searchHeader = projectColumnName.reduce(
+    (columns, curr) => ({
+      ...columns,
+      [curr]: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    }),
+
+    {}
+  );
   return (
     <>
       <div className="my-task-project">
@@ -437,6 +434,7 @@ const TaskList = (props) => {
           ref={dt}
           filterDisplay={isSearch && "row"}
           tableStyle={{ minWidth: "50rem" }}
+          filters={searchHeader}
         >
           {dynamicColumns()}
         </DataTable>
