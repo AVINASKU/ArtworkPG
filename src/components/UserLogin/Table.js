@@ -1,6 +1,7 @@
 import React from "react";
 import "./Table.scss";
 import { RoleUser } from "../../userRole";
+import { slice } from "lodash";
 
 // const users = [
 //   { username: "Izabela", password: "iza123" },
@@ -22,7 +23,7 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          {RoleUser.users.map((user) => (
+          {RoleUser.users?.slice(0, 6).map((user) => (
             <tr key={user.userid}>
               <td>{user.username}</td>
               <td>{user.password}</td>

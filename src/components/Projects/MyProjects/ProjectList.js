@@ -13,7 +13,7 @@ import {
   getMyProject,
   // updateProject,
 } from "../../../store/actions/ProjectActions";
-import { changeDateFormat } from "../utils";
+import { changeDateFormat, onSortData } from "../../../utils";
 import _ from "lodash";
 
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
@@ -59,13 +59,7 @@ const ProjectList = (props) => {
   const dt = useRef(null);
 
   const onSort = (column, direction) => (event) => {
-    const sortedData = [...pegadata].sort((a, b) => {
-      return a[column] > b[column] ? 1 : -1;
-    });
-
-    if (direction === "desc") {
-      sortedData.reverse();
-    }
+    const sortedData = onSortData(column, direction, pegadata);
     setPegaData(sortedData);
     setSortData([column, direction]);
   };
@@ -311,7 +305,7 @@ const ProjectList = (props) => {
         {field === "Project_Name" && (
           <span
             style={{ color: "#003DA5", cursor: "pointer" }}
-            // href={`/addProject/${projectId}`}
+            // href={`/projectPlan/${projectId}`}
             onClick={() => {
               if (field && field.length) {
                 let option = myProjectList.myProject[rowData.rowIndex];
@@ -320,7 +314,7 @@ const ProjectList = (props) => {
                   option
                 );
                 dispatch(selectedProject(option, "My Projects"));
-                navigate(`/addProject/${projectId}`);
+                navigate(`/projectPlan/${projectId}`);
               }
             }}
           >
@@ -332,7 +326,7 @@ const ProjectList = (props) => {
         {field === "Project_ID" && (
           <span
             style={{ color: "#003DA5", cursor: "pointer" }}
-            // href={`/addProject/${projectId}`}
+            // href={`/projectPlan/${projectId}`}
             onClick={() => {
               if (field && field.length) {
                 let option = myProjectList.myProject[rowData.rowIndex];
@@ -341,7 +335,7 @@ const ProjectList = (props) => {
                   option
                 );
                 dispatch(selectedProject(option, "My Projects"));
-                navigate(`/addProject/${projectId}`);
+                navigate(`/projectPlan/${projectId}`);
               }
             }}
           >

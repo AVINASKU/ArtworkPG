@@ -6,7 +6,7 @@ import ConfirmationPopUp from "../ConfirmationPopUp";
 import { FilterMatchMode } from "primereact/api";
 import ProjectListHeader from "../MyProjects/ProjectListHeader";
 import { Tag } from "primereact/tag";
-import { changeDateFormat } from "../utils";
+import { changeDateFormat } from "../../../utils";
 import filter from "../../../assets/images/filter.svg";
 import { getAllProject } from "../../../store/actions/ProjectActions";
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
@@ -311,7 +311,7 @@ const AllProjectList = (props) => {
               if (field && field.length) {
                 let option = allProjectList.allProjects[rowData.rowIndex];
                 dispatch(selectedProject(option, "All Projects"));
-                navigate(`/addProject/${projectId}`);
+                navigate(`/projectPlan/${projectId}`);
               }
             }}
           >
@@ -326,7 +326,7 @@ const AllProjectList = (props) => {
               if (field && field.length) {
                 let option = allProjectList.allProjects[rowData.rowIndex];
                 dispatch(selectedProject(option, "All Projects"));
-                navigate(`/addProject/${projectId}`);
+                navigate(`/projectPlan/${projectId}`);
               }
             }}
           >
@@ -597,7 +597,7 @@ const AllProjectList = (props) => {
           ref={dt}
           // selectionMode="single"
           // onSelectionChange={(e) => {
-          //   navigate(`/addProject/${e.value.ProjectID}`);
+          //   navigate(`/projectPlan/${e.value.ProjectID}`);
           // }}
         >
           {dynamicColumns(projectColumnName)}
