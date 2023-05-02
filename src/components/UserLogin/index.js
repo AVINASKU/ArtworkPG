@@ -6,6 +6,8 @@ import PgLogo from "../../assets/images/logo.svg";
 import { updateUser } from "../../apis/userApi";
 import "./index.scss";
 import { useSelector } from "react-redux";
+import Table from "./Table";
+
 function UserLogin() {
   const User = useSelector((state) => state.UserReducer);
   const userInformation = User.userInformation;
@@ -60,6 +62,7 @@ function UserLogin() {
 
   return (
     <div className="login-screen">
+      <Table />
       <Row>
         <Col>
           <img src={PgLogo} />
@@ -78,6 +81,7 @@ function UserLogin() {
                 onChange={(e) => setUsername(e.target.value)}
               />
             </Form.Group>
+
             <Form.Group controlId="formPassword">
               <Form.Label>Password</Form.Label>
               <Form.Control
