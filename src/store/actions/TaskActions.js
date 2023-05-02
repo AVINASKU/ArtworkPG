@@ -6,7 +6,7 @@ export const getTasks = (PM) => async (dispatch) => {
   try {
     //here need to add url and pass PM name
     const res = await axios.get(
-      `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/MyTasks/Luca`
+      `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/MyTasks/Deboleena`
     );
 
     if (res?.data === null) {
