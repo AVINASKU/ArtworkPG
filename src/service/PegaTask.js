@@ -7,6 +7,7 @@ const myTaskColumnNames = [
   "Status",
   "Help_Needed",
   "Remaining_Buffer",
+  "PM",
 ];
 
 export const TaskService = {

@@ -8,7 +8,6 @@ const initialState = {
 };
 
 const projectSetup = (state = initialState, action) => {
-  console.log("action.payload: ", action.payload);
   switch (action.type) {
     case types.CREATE_NEW_PROJECT:
       // return {
