@@ -1,30 +1,31 @@
 import React from "react";
+import {changeDateFormat} from "../../Projects/utils";
 
-function AddNewDesign({ projectName, start_date, end_date, duration, consumed_buffer }) {
+function AddNewDesign({ Project_Name, Start_Date, End_Date, Duration, Consumed_Buffer }) {
   const intentName = () => {
     return (
       <div className="actions">
           <div className="project-content">
           <label className="project-header-spacing">Project Name</label>
-          <div className="font-color">{projectName}</div>
+          <div className="font-color">{Project_Name}</div>
         </div>
 
         <div className="action-buttons">
           <div className="project-content">
             <label className="project-header-spacing">Duration</label>
-            <div>{duration}</div>
+            <div>{Duration}</div>
           </div>
           <div className="project-content">
             <label className="project-header-spacing">Start Date</label>
-            <div>{start_date}</div>
+           {Start_Date&& <div>{changeDateFormat(Start_Date)}</div>}
           </div>
           <div className="project-content">
             <label className="project-header-spacing">End Date</label>
-            <div>{end_date}</div>
+           {End_Date&& <div>{changeDateFormat(End_Date)}</div>}
           </div>
            <div className="project-content">
             <label className="project-header-spacing">Consumed Buffer</label>
-            <div style={{textAlign:'center', color:'red'}}> + {consumed_buffer}</div>
+            <div style={{textAlign:'center', color:'red'}}> + {Consumed_Buffer}</div>
           </div>
         </div>
       </div>
