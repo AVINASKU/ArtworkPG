@@ -183,7 +183,7 @@ const ProjectPlanList = (props) => {
 
         tempObj["key"] = task.code;
         let dataObj = {};
-        dataObj["Task"] = task.name;
+        dataObj["Task"] = `${task.name} (X${task.data?.length})`;
         dataObj["Dependancy"] = task.data[0].Dependency;
         dataObj["Role"] = "";
         dataObj["RoleOptions"] = "";
@@ -200,7 +200,7 @@ const ProjectPlanList = (props) => {
 
         //child array creation
 
-        task.data.forEach((dt) => {
+        task.data.forEach((dt, index) => {
           dt.Start_Date && startDateArr?.push(dt.Start_Date);
           dt.End_Date && endDateArr?.push(dt.End_Date);
           pStartDate =
@@ -221,7 +221,7 @@ const ProjectPlanList = (props) => {
           tempObj["key"] = dt.AWM_Task_ID;
 
           let dataObj = {};
-          dataObj["Task"] = dt.Task_Name;
+          dataObj["Task"] = `${index + 1}. ${dt.Task_Name}`;
           dataObj["Dependancy"] = dt.Dependency;
           dataObj["Role"] = dt.Role;
           dataObj["RoleOptions"] = dt.RoleOptions;
