@@ -12,6 +12,7 @@ const AddNewDesignContent = ({
   handleDelete,
   item,
   addData,
+  roleName,
 }) => {
   const { Agency_Reference, Additional_Info, event, Select, Cluster } = item;
 
@@ -52,7 +53,7 @@ const AddNewDesignContent = ({
 
   if (agencyRef || clusters || additionalInformation) {
     di_name =
-      "DI_" +
+      roleName +
       (agencyRef && agencyRef + "_") +
       brand +
       "_" +

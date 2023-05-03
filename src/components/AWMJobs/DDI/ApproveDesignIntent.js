@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import PageLayout from "../../PageLayout";
-import DesignHeader from "./DesignHeader";
-import FooterButtons from "./FooterButtons";
-import AddNewDesign from "./AddNewDesign";
+import DesignHeader from "../DesignJobs/DesignHeader";
+import FooterButtons from "../DesignJobs/FooterButtons";
+import AddNewDesign from "../DesignJobs/AddNewDesign";
 import { ProjectService } from "../../../service/PegaService";
 import ApproveDesignIntentContent from "./ApproveDesignIntentContent";
 

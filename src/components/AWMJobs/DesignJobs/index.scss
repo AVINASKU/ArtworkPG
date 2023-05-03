@@ -1,0 +1,95 @@
+.header-margin {
+  margin-right: 5%;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background-color: "#EDF4FA";
+}
+.design-intent-header {
+  background-color: rgb(237, 244, 250);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.project-content {
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+.project-header-spacing {
+  margin-bottom: 5px;
+}
+.icon-items {
+  text-align: center;
+  margin-right: 20px;
+}
+
+.icon-label {
+  font-size: 10px;
+  color: #003da5;
+}
+
+.filter-icon {
+  cursor: pointer;
+  color: #003da5;
+  width: 18px;
+  height: 18px;
+  margin-top: 9px;
+}
+
+.add-new-design-intent-icon {
+  cursor: pointer;
+  color: #003da5;
+  width: 20px;
+  height: 20px;
+  margin-top: 9px;
+}
+
+.font-color {
+  color: #003da5;
+}
+.cancel-button {
+  width: 90px;
+  height: 32px;
+  color: #003da5;
+  border-color: #003da5;
+  font-size: 12px;
+  border-radius: 20px;
+}
+.save-as-draft-button {
+  width: 127px;
+  height: 32px;
+  background: #00a3e0;
+  font-size: 12px;
+  border-radius: 20px;
+}
+.submit-di-button {
+  width: 93px;
+  height: 32px;
+  background: #003da5;
+  font-size: 12px;
+  border-radius: 20px;
+}
+
+.disable-buttons {
+  font-size: 10px;
+  color: #acacac;
+  font-weight: 400;
+}
+
+.approve-design-intent{
+.p-button.p-button-rounded {
+    border: hidden !important;
+}
+padding: 10px;
+}
+
+.error-text-di{
+
+    color: red;
+    font-weight: 800;
+    font-size: 8px;
+}
+

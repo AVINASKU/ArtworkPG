@@ -1,17 +1,16 @@
-import React, {  useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import PageLayout from "../../PageLayout";
-import AddNewDesign from "./AddNewDesign.js";
-import DesignHeader from "./DesignHeader";
-import AddNewDesignContent from "./AddNewDesignContent";
-import FooterButtons from "./FooterButtons";
+import AddNewDesign from "../DesignJobs/AddNewDesign";
+import DesignHeader from "../DesignJobs/DesignHeader";
+import AddNewDesignContent from "../DesignJobs/AddNewDesignContent";
+import FooterButtons from "../DesignJobs/FooterButtons";
 import {
   getDesignIntent,
   saveDesignIntent,
 } from "../../../apis/designIntentApi";
-import "./index.scss";
+import "../DesignJobs/index.scss";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
 
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
@@ -19,16 +18,15 @@ const breadcrumb = [
 ];
 
 const headerName = "Define Design Intent";
+const roleName = "DI_";
 
-function DefineDesignIntent() {
+function DDI() {
   const [data, setData] = useState(null);
   const [designIntent, setDesignIntent] = useState([]);
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
-
-  console.log("task id", TaskID, ProjectID);
 
   useEffect(() => {
     // const data1 = ProjectService.getDIData();
@@ -50,17 +48,11 @@ function DefineDesignIntent() {
         console.log("error", err);
       }
     })();
-
-    // setData(data1);
-    // let notSubmittedData = data1.DesignIntentList.filter((task)=> task.event !== "submit");
-    // let submittedData = data1.DesignIntentList.filter((task)=> task?.event === "submit");
-    // setDesignIntent(data1?.DesignIntentList);
-    // setSubmittedDI(submittedData);
   }, []);
 
-  const handleCancel = ()=>{
-  return navigate(`/myTasks`);
-  }
+  const handleCancel = () => {
+    return navigate(`/myTasks`);
+  };
 
   const handleDelete = (index) => {
     console.log("index", index);
@@ -175,14 +167,19 @@ function DefineDesignIntent() {
                   index={index}
                   addData={addData}
                   handleDelete={handleDelete}
+                  roleName={roleName}
                 />
               );
             }
           })}
-        <FooterButtons handleCancel={handleCancel} onSaveAsDraft={onSaveAsDraft} onSubmit={onSubmit} />
+        <FooterButtons
+          handleCancel={handleCancel}
+          onSaveAsDraft={onSaveAsDraft}
+          onSubmit={onSubmit}
+        />
       </div>
     </PageLayout>
   );
 }
 
-export default DefineDesignIntent;
+export default DDI;
