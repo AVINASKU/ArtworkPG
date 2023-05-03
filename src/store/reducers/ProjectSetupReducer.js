@@ -45,9 +45,9 @@ const getProjectMode = (payload) => {
   if (
     payload["Project_Name"] &&
     payload["BU"] &&
-    payload["Artwork_Brand"].length &&
+    payload["Artwork_Brand"]?.length &&
     payload["Project_region"] &&
-    payload["Artwork_SMO"].length &&
+    payload["Artwork_SMO"]?.length &&
     payload["Estimated_AW_Printer"] &&
     payload["Estimated_AW_Readiness"]
   ) {

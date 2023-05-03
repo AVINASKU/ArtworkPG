@@ -6,6 +6,8 @@ import { Controller, useForm } from "react-hook-form";
 import { classNames } from "primereact/utils";
 import { useNavigate } from "react-router-dom";
 import { createNewProject, editProject } from "../../../apis/projectSetupApi";
+import { selectedProject } from "../../../store/actions/ProjectSetupActions";
+import { updateProjectPlanAction } from "../../../store/actions/ProjectPlanActions";
 import moment from "moment-timezone";
 import { Toast } from "primereact/toast";
 import "./index.scss";
@@ -19,7 +21,7 @@ import {
   ProductionStrategy,
   Tier,
 } from "../../../categories";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const defaultCheckedItems = {
   DI: false,
@@ -41,6 +43,7 @@ const defaultTextBoxEnabled = {
 
 function AddProject(props) {
   const toast = useRef(null);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const User = useSelector((state) => state.UserReducer);
   const userInformation = User.userInformation;

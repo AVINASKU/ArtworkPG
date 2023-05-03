@@ -1,7 +1,6 @@
 import * as types from "./../types/types";
 
 const initialState = {
-  projectPlan: [],
   myProject: [],
   allProjects: [],
   loading: true,
@@ -11,20 +10,6 @@ const initialState = {
 const ProjectReducer = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
-    case types.GET_PROJECTPLAN_DETAILS_SUCCESS:
-      return {
-        ...state,
-        projectPlan: payload,
-        loading: false,
-        error: null,
-      };
-
-    case types.GET_PROJECTPLAN_DETAILS_ERROR:
-      return {
-        ...state,
-        loading: false,
-        error: action.payload,
-      };
     case types.GET_PROJECT_DETAILS_SUCCESS:
       return {
         ...state,
