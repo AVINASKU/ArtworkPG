@@ -12,6 +12,15 @@ import AllTasksPage from "./AllTaksPage.js";
 import MyTasksPage from "./MyTaskPage.js";
 import DDT from "./components/AWMJobs/DDT/index.js";
 import PRA from "./components/AWMJobs/PRA/index.js";
+import CCD from "./components/AWMJobs/CCD/index.js";
+import DCD from "./components/AWMJobs/DCD/index.js";
+import CNIQ from "./components/AWMJobs/CNIQ/index.js";
+import CPT from "./components/AWMJobs/CPT/index.js";
+import ADT from "./components/AWMJobs/ADT/index.js";
+import APRA from "./components/AWMJobs/APRA/index.js";
+import UPRA from "./components/AWMJobs/UPRA/index.js";
+import CPPFA from "./components/AWMJobs/CPPFA/index.js";
+import UDT from "./components/AWMJobs/UDT/index.js";
 
 const RoutesNav = () => {
   return (
@@ -44,68 +53,28 @@ const RoutesNav = () => {
         />
         <Route path="/myTasks/DDT/:TaskID/:ProjectID" element={<DDT />} />
         <Route path="/allTasks/DDT/:TaskID/:ProjectID" element={<DDT />} />
-        <Route
-          path="/myTasks/ADT/:TaskID/:ProjectID"
-          element={<ApproveDesignIntent />}
-        />
+        <Route path="/myTasks/ADT/:TaskID/:ProjectID" element={<ADT />} />
+        <Route path="/allTasks/ADT/:TaskID/:ProjectID" element={<ADT />} />
+        <Route path="/myTasks/UDT/:TaskID/:ProjectID" element={<UDT />} />
+        <Route path="/allTasks/UDT/:TaskID/:ProjectID" element={<UDT />} />
         <Route path="/myTasks/PRA/:TaskID/:ProjectID" element={<PRA />} />
         <Route path="/allTasks/PRA/:TaskID/:ProjectID" element={<PRA />} />
-        <Route
-          path="/myTasks/APRA/:TaskID/:ProjectID"
-          element={<ApproveDesignIntent />}
-        />
-        <Route
-          path="/allTasks/APRA/:TaskID/:ProjectID"
-          element={<ApproveDesignIntent />}
-        />
-        <Route
-          path="/myTasks/UPRA/:TaskID/:ProjectID"
-          element={<ApproveDesignIntent />}
-        />
-        <Route
-          path="/allTasks/UPRA/:TaskID/:ProjectID"
-          element={<ApproveDesignIntent />}
-        />
-        <Route
-          path="/myTasks/CCD/:TaskID/:ProjectID"
-          element={<ApproveDesignIntent />}
-        />
-        <Route
-          path="/allTasks/CCD/:TaskID/:ProjectID"
-          element={<ApproveDesignIntent />}
-        />
-        <Route
-          path="/myTasks/CNIQ/:TaskID/:ProjectID"
-          element={<ApproveDesignIntent />}
-        />
-        <Route
-          path="/allTasks/CCD/:TaskID/:ProjectID"
-          element={<ApproveDesignIntent />}
-        />
-        <Route
-          path="/myTasks/CPPFA/:TaskID/:ProjectID"
-          element={<ApproveDesignIntent />}
-        />
-        <Route
-          path="/allTasks/CPPFA/:TaskID/:ProjectID"
-          element={<ApproveDesignIntent />}
-        />
-        <Route
-          path="/myTasks/CPT/:TaskID/:ProjectID"
-          element={<ApproveDesignIntent />}
-        />
-        <Route
-          path="/allTasks/CPT/:TaskID/:ProjectID"
-          element={<ApproveDesignIntent />}
-        />
-        <Route
-          path="/myTasks/CPT/:TaskID/:ProjectID"
-          element={<ApproveDesignIntent />}
-        />
-        <Route
-          path="/allTasks/CPT/:TaskID/:ProjectID"
-          element={<ApproveDesignIntent />}
-        />
+        <Route path="/myTasks/APRA/:TaskID/:ProjectID" element={<APRA />} />
+        <Route path="/allTasks/APRA/:TaskID/:ProjectID" element={<APRA />} />
+        <Route path="/myTasks/UPRA/:TaskID/:ProjectID" element={<UPRA />} />
+        <Route path="/allTasks/UPRA/:TaskID/:ProjectID" element={<CCD />} />
+        <Route path="/myTasks/CCD/:TaskID/:ProjectID" element={<CCD />} />
+        <Route path="/allTasks/CCD/:TaskID/:ProjectID" element={<CCD />} />
+        <Route path="/myTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
+        <Route path="/allTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
+        <Route path="/myTasks/CNIQ/:TaskID/:ProjectID" element={<CNIQ />} />
+        <Route path="/allTasks/CNIQ/:TaskID/:ProjectID" element={<CNIQ />} />
+        <Route path="/myTasks/CPPFA/:TaskID/:ProjectID" element={<CPPFA />} />
+        <Route path="/allTasks/CPPFA/:TaskID/:ProjectID" element={<CPPFA />} />
+        <Route path="/myTasks/CPT/:TaskID/:ProjectID" element={<CPT />} />
+        <Route path="/allTasks/CPT/:TaskID/:ProjectID" element={<CPT />} />
+        <Route path="/myTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
+        <Route path="/allTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
         {/* <Route path="/reports" element={<Reports />} /> */}
       </Route>
     </Routes>
