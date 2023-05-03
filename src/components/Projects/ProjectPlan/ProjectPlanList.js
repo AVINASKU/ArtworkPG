@@ -6,19 +6,25 @@ import { ProjectService } from "../../../service/PegaService";
 import ConfirmationPopUp from "../ConfirmationPopUp";
 import { Toast } from "primereact/toast";
 import filter from "../../../assets/images/filter.svg";
-import { projectPlan } from "../../../store/actions/ProjectActions";
 import { changeDateFormat, onSort } from "../../../utils";
+// import { projectPlan } from "../../../store/actions/ProjectActions";
 import BlueFilter from "../../../assets/images/BlueFilterIcon.svg";
 import complete from "../../../assets/images/complete.svg";
 import hyphen from "../../../assets/images/hyphen.svg";
 import inprogress from "../../../assets/images/inprogress.svg";
 import lock from "../../../assets/images/lock.svg";
 import Awaiting from "../../../assets/images/Awaiting.svg";
+import override from "../../../assets/images/override.svg";
 import { Dropdown } from "primereact/dropdown";
 import { useNavigate } from "react-router-dom";
-import { selectedProject } from "../../../store/actions/ProjectSetupActions";
+// import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 import { InputNumber } from "primereact/inputnumber";
+import { getProjectPlan } from "../../../apis/projectPlanApi";
 import "./index.scss";
+import TaskDialog from "../../TaskDialog";
+import { selectedProject } from "../../../store/actions/ProjectSetupActions";
+import { updateProjectPlanAction } from "../../../store/actions/ProjectPlanActions";
+import moment from "moment";
 
 const ProjectPlanList = (props) => {
   const [pegadata, setPegaData] = useState(null);
@@ -29,9 +35,17 @@ const ProjectPlanList = (props) => {
   const [selectedCities, setSelectedCities] = useState([]);
   const [filters, setFilters] = useState([]);
   const [sortData, setSortData] = useState([]);
+  const [showTaskDialog, setShowTaskDialog] = useState(false);
+  const [selectedTask, setSelectedTask] = useState([]);
+  const [flag, setFlag] = useState("");
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
+  const mode = projectSetup.mode;
+  // console.log("selectedProjectDetails: ", selectedProjectDetails);
+  const projectPlanReducer = useSelector((state) => state.ProjectPlanReducer);
+  const ProjectPlanData = projectPlanReducer.projectPlan;
+  const { loading } = projectPlanReducer;
 
-  const myProjectList = useSelector((state) => state.myProject);
-  const { loading } = myProjectList;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -47,15 +61,202 @@ const ProjectPlanList = (props) => {
     });
   };
 
+  const handleHelpNeededClick = (options) => {
+    console.log("handleHelpNeededClick rowData: ", options);
+    setShowTaskDialog(true);
+    setFlag("help");
+    let task = [{ TaskID: options.key, TaskName: options.data.Task }];
+    setSelectedTask(task);
+  };
+
   useEffect(() => {
-    const updatedUsers = dispatch(projectPlan());
-    console.log("projectPlan::", updatedUsers);
-  }, [dispatch]);
+    (async () => {
+      let restructuredData = [];
+      const apiData =
+        mode === "design" && selectedProjectDetails.Project_ID
+          ? await getProjectPlan(selectedProjectDetails.Project_ID)
+          : [];
+      // console.log("projectPlanApiData::", apiData);
+      restructuredData = apiData.length > 0 ? getRestructuredData(apiData) : [];
+      dispatch(updateProjectPlanAction(restructuredData));
+    })();
+  }, [mode]);
+
+  const getRestructuredData = (apiData) => {
+    let mainTempArr = [];
+
+    const tasks = [
+      {
+        name: "Define Design Intent",
+        code: "DDI",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("DDI_")),
+      },
+      {
+        name: "Upload Approved Design Intent",
+        code: "UADI",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("UADI_")),
+      },
+      {
+        name: "Define Design Template",
+        code: "DDT",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("DDT_")),
+      },
+      {
+        name: "Upload Design Template",
+        code: "UDT",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("UDT_")),
+      },
+      {
+        name: "Approve Design Template",
+        code: "ADT",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("ADT_")),
+      },
+      {
+        name: "Confirm Preliminary print feasibility Assessment done (& upload documents - optional)",
+        code: "CPPFA",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("CPPFA_")),
+      },
+      {
+        name: "Define New Print Feasibility Scope",
+        code: "DNPF",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("DNPF_")),
+      },
+      {
+        name: "Color Confirm Development done (& upload documents - optional) (can be multiple)",
+        code: "CCD",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("CCD_")),
+      },
+      {
+        name: "Confirm Print Trial (if applicable) done (& upload documents - optional) (can be multiple)",
+        code: "CPT",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("CPT_")),
+      },
+      {
+        name: "Define New Link Ink Qualification scope",
+        code: "DNIQ",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("DNIQ_")),
+      },
+      {
+        name: "Confirm New Ink Qualification done (& upload documents - optional) (can be multiple)",
+        code: "CNIQ",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("CNIQ_")),
+      },
+    ];
+    // console.log("tasks:", tasks);
+    tasks.forEach((task) => {
+      // console.log("taskLength", task.data?.length);
+      if (task.data?.length === 1) {
+        let tempObj = {};
+        tempObj["key"] = task.data[0].AWM_Task_ID;
+
+        let dataObj = {};
+        dataObj["Task"] = task.data[0].Task_Name;
+        dataObj["Dependancy"] = task.data[0].Dependency;
+        dataObj["Role"] = task.data[0].Role;
+        dataObj["RoleOptions"] = task.data[0].RoleOptions;
+        dataObj["Assignee"] = task.data[0].Assignee;
+        dataObj["OwnerOptions"] = task.data[0].OwnerOptions;
+        dataObj["State"] = task.data[0].State;
+        dataObj["Duration"] = task.data[0].Duration;
+        dataObj["StartDate"] = task.data[0].Start_Date;
+        dataObj["EndDate"] = task.data[0].End_Date;
+        dataObj["ConsumedBuffer"] = task.data[0].Consumed_Buffer;
+        dataObj["HelpNeeded"] = task.data[0].Help_Needed;
+
+        tempObj["data"] = dataObj;
+        tempObj["children"] = [];
+        tempObj["redirect"] = true;
+
+        mainTempArr.push(tempObj);
+      } else if (task.data?.length > 1) {
+        let tempObj = {};
+        let tempArr = [];
+        let pStartDate = "";
+        let pEndDate = "";
+        let startDateArr = [];
+        let endDateArr = [];
+        // let startDateArr = [
+        //   "20230411T000000.000 GMT",
+        //   "20230410T000000.000 GMT",
+        // ];
+        // let endDateArr = ["20230412T000000.000 GMT", "20230411T000000.000 GMT"];
+
+        tempObj["key"] = task.code;
+        let dataObj = {};
+        dataObj["Task"] = task.name;
+        dataObj["Dependancy"] = task.data[0].Dependency;
+        dataObj["Role"] = "";
+        dataObj["RoleOptions"] = "";
+        dataObj["Assignee"] = "";
+        dataObj["OwnerOptions"] = "";
+        dataObj["State"] = "";
+        dataObj["Duration"] = "";
+
+        dataObj["ConsumedBuffer"] = "";
+        dataObj["HelpNeeded"] = false;
+
+        tempObj["data"] = dataObj;
+        tempObj["redirect"] = true;
+
+        //child array creation
+
+        task.data.forEach((dt) => {
+          dt.Start_Date && startDateArr?.push(dt.Start_Date);
+          dt.End_Date && endDateArr?.push(dt.End_Date);
+          pStartDate =
+            startDateArr.length > 0 &&
+            moment.min(
+              startDateArr.map((date) =>
+                moment(date, "YYYYMMDDTHHmmss.SSS [GMT]")
+              )
+            );
+          pEndDate =
+            endDateArr.length > 0 &&
+            moment.max(
+              endDateArr.map((date) =>
+                moment(date, "YYYYMMDDTHHmmss.SSS [GMT]")
+              )
+            );
+          let tempObj = {};
+          tempObj["key"] = dt.AWM_Task_ID;
+
+          let dataObj = {};
+          dataObj["Task"] = dt.Task_Name;
+          dataObj["Dependancy"] = dt.Dependency;
+          dataObj["Role"] = dt.Role;
+          dataObj["RoleOptions"] = dt.RoleOptions;
+          dataObj["Assignee"] = dt.Assignee;
+          dataObj["OwnerOptions"] = dt.OwnerOptions;
+          dataObj["State"] = dt.State;
+          dataObj["Duration"] = dt.Duration;
+          dataObj["StartDate"] = dt.Start_Date;
+          dataObj["EndDate"] = dt.End_Date;
+          dataObj["ConsumedBuffer"] = dt.Consumed_Buffer;
+          dataObj["HelpNeeded"] = dt.Help_Needed;
+
+          tempObj["data"] = dataObj;
+          tempObj["children"] = [];
+
+          tempArr.push(tempObj);
+        });
+        dataObj["StartDate"] = pStartDate;
+        dataObj["EndDate"] = pEndDate;
+
+        tempObj["children"] = tempArr;
+
+        mainTempArr.push(tempObj);
+      }
+    });
+
+    // console.log("MainTemp Array: ", mainTempArr);
+
+    return mainTempArr; //toBeReplacedWithapiData;
+  };
 
   useEffect(() => {
     (async () => {
       try {
-        const ProjectData = myProjectList.projectPlan;
+        const ProjectPlanData = projectPlanReducer.projectPlan;
 
         let filteredPegaDataJson = localStorage.getItem("columnWiseFilterData");
         const filteredPegaData = JSON.parse(filteredPegaDataJson);
@@ -63,8 +264,8 @@ const ProjectPlanList = (props) => {
         if (filteredPegaData && filteredPegaData.length) {
           setFilters(filteredPegaData);
           setSelectedCities(filteredPegaData);
-          setPegaData(ProjectData);
-        } else setPegaData(ProjectData);
+          setPegaData(ProjectPlanData);
+        } else setPegaData(ProjectPlanData);
 
         // according to pathname we need to call api and store column name in local storage
         let columnNamesJson = localStorage.getItem("projectPlanAllColumnNames");
@@ -85,7 +286,7 @@ const ProjectPlanList = (props) => {
         const sortingData = JSON.parse(jsonSortingData1);
 
         if (sortingData && sortingData.length) {
-          const sortedData = [...ProjectData].sort((a, b) => {
+          const sortedData = [...ProjectPlanData].sort((a, b) => {
             return a[sortingData[0]] > b[sortingData[0]] ? 1 : -1;
           });
 
@@ -107,7 +308,7 @@ const ProjectPlanList = (props) => {
       }
     })();
     // setLoading(false);
-  }, [myProjectList.projectPlan]);
+  }, [projectPlanReducer.projectPlan]);
 
   const addFrozenColumns = (name) => {
     if (!frozenCoulmns.includes(name)) {
@@ -229,17 +430,20 @@ const ProjectPlanList = (props) => {
   ];
 
   const elementTemplate = (options, rowData) => {
+    // console.log("inside elementTemplate: ", options, rowData);
     const field = rowData.field;
 
     return (
       <>
         {field === "Task" && (
           <span
-            className="TaskStyles"
+            className={`${options.redirect === true ? "task-link" : "task"}`}
+            // style={{ color: "#003DA5", cursor: "pointer" }}
             onClick={() => {
               if (field && field.length) {
-                dispatch(selectedProject(options.data, "My Projects"));
-                navigate(`/projectPlan/${options.data[field]}`);
+                // dispatch(selectedProject(options.data, "My Projects"));
+                options.redirect === true &&
+                  navigate(`/projectPlan/${options.data[field]}`);
               }
             }}
           >
@@ -265,21 +469,35 @@ const ProjectPlanList = (props) => {
         ) : (
           <>
             {(field === "Role" || field === "Owner") && (
-              <Dropdown
-                editable
-                value={options?.data[field]}
-                onChange={(e) => onDropdownChange(options, e, field)}
-                options={
-                  field === "Role"
-                    ? options.data["RoleOptions"]
-                    : field === "Owner"
-                    ? options.data["OwnerOptions"]
-                    : []
-                }
-                optionLabel="name"
-                placeholder={`Select ${field}`}
-                className="w-full md:w-14rem"
-              />
+              <div className="d-flex">
+                <Dropdown
+                  editable
+                  value={options?.data[field]}
+                  onChange={(e) => onDropdownChange(options, e, field)}
+                  options={
+                    field === "Role"
+                      ? options.data["RoleOptions"]
+                      : field === "Owner"
+                      ? options.data["OwnerOptions"]
+                      : []
+                  }
+                  optionLabel="Name"
+                  placeholder={`Select ${field}`}
+                  className="w-full md:w-14rem"
+                />
+
+                {field === "Owner" && options.key.includes("ADT_") && (
+                  <img
+                    src={override}
+                    alt="Override"
+                    // onClick={(e) => {
+                    //   op.current.toggle(e);
+                    //   setSelectedColumnName(options);
+                    // }}
+                    // className="overrideIcon"
+                  />
+                )}
+              </div>
             )}
             {field === "State" && options.data[field] === "Complete" ? (
               <>
@@ -358,8 +576,12 @@ const ProjectPlanList = (props) => {
         )}
 
         {field === "HelpNeeded" && (
-          <button type="button" className="btn btn-success helpNeeded">
-            {options.data[field]}
+          <button
+            type="button"
+            onClick={() => handleHelpNeededClick(options)}
+            className="btn btn-success helpNeeded"
+          >
+            {options.data[field] === "true" ? "YES" : "NO"}
           </button>
         )}
 
@@ -381,7 +603,7 @@ const ProjectPlanList = (props) => {
 
   const onDropdownChange = (rowData, { value }, ele) => {
     // Update the data with the new value
-    rowData.data[ele] = value.name;
+    rowData.data[ele] = value.Name;
     console.log("Pegadata: ", pegadata);
     setPegaData([...pegadata]);
   };
@@ -405,11 +627,7 @@ const ProjectPlanList = (props) => {
             columnKey={ele || i}
             frozen={frozenCoulmns.includes(ele)}
             alignFrozen="left"
-            className={
-              frozenCoulmns.includes(ele)
-                ? "font-bold"
-                : ""
-            }
+            className={frozenCoulmns.includes(ele) ? "font-bold" : ""}
             showFilterMenu={false}
             body={elementTemplate}
           />
@@ -434,7 +652,7 @@ const ProjectPlanList = (props) => {
             }
             setProjectFrozen={setProjectFrozen}
             saveSettings={saveSettings}
-            projectData={pegadata}
+            ProjectPlanData={pegadata}
             addFrozenColumns={addFrozenColumns}
             onGlobalFilterChange={onGlobalFilterChange}
             selectedColumnName={selectedColumnName}
@@ -461,6 +679,14 @@ const ProjectPlanList = (props) => {
             {/* <Column header="" expander={true}></Column> */}
             {rowExpansionColumns()}
           </TreeTable>
+          {showTaskDialog && (
+            <TaskDialog
+              onClose={() => setShowTaskDialog(!showTaskDialog)}
+              showTaskDialog={showTaskDialog}
+              selectedTaskData={selectedTask}
+              flag={flag}
+            />
+          )}
         </div>
       </Suspense>
     </div>
