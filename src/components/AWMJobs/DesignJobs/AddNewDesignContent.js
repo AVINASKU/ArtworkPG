@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { InputText } from "primereact/inputtext";
-import { Row, Col, Button } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import { Checkbox } from "primereact/checkbox";
 import deleteIcon from "../../../assets/images/deleteIcon.svg";
 
@@ -8,28 +8,22 @@ const AddNewDesignContent = ({
   index,
   brand,
   category,
-  projectName,
+  Project_Name,
   handleDelete,
   item,
-  addIntoDesignIntent,
   addData,
+  roleName,
 }) => {
-  const { AgencyReference, AdditionalInfo, event,Select, Cluster } = item;
-
-  console.log("Select --->", Select);
+  const { Agency_Reference, Additional_Info, event, Select, Cluster } = item;
 
   const [checked, setChecked] = useState(false);
-  const [agencyRef, setAgency] = useState(AgencyReference);
+  const [agencyRef, setAgency] = useState(Agency_Reference);
   const [clusters, setCluster] = useState(Cluster);
-  const [additionalInformation, setAdditionalInfo] = useState(AdditionalInfo);
-  const [additionalError,setAdditionalError]=useState("");
-  const [clusterError, setClusterError]=useState("");
+  const [additionalInformation, setAdditionalInfo] = useState(Additional_Info);
 
-  console.log("checked--->", checked);
-
-  useEffect(()=>{
-  setChecked(Select);
-  },[Select]);
+  useEffect(() => {
+    setChecked(Select);
+  }, [Select]);
 
   const DesignHeader = (di_name) => {
     return (
@@ -59,13 +53,13 @@ const AddNewDesignContent = ({
 
   if (agencyRef || clusters || additionalInformation) {
     di_name =
-      "DI_" +
+      roleName +
       (agencyRef && agencyRef + "_") +
       brand +
       "_" +
       category +
       "_" +
-      projectName +
+      Project_Name +
       "_" +
       (clusters && clusters + "_") +
       (additionalInformation && additionalInformation);
@@ -89,13 +83,17 @@ const AddNewDesignContent = ({
               id="agency"
               value={agencyRef}
               onChange={(e) => {
-                addData("AgencyReference", index, e.target.value, di_name);
+                addData("Agency_Reference", index, e.target.value, di_name);
                 setAgency(e.target.value);
               }}
               aria-describedby="agency-help"
               disabled={event === "submit" && true}
             />
+          
           </div>
+            {(agencyRef === "" || agencyRef === undefined) && (
+              <div className="error-text-di">Field Remaining</div>
+            )}
         </Col>
         <Col sm={2}>
           <div>
@@ -106,13 +104,14 @@ const AddNewDesignContent = ({
               onChange={(e) => {
                 addData("Cluster", index, e.target.value, di_name);
                 setCluster(e.target.value);
-                setClusterError("");
               }}
               aria-describedby="cluster-help"
               disabled={event === "submit" && true}
             />
-            {clusterError && <div>{clusterError}</div>}
           </div>
+             {(clusters === "" || clusters === undefined) && (
+              <span className="error-text-di">Field Remaining</span>
+            )}{" "}
         </Col>
 
         <Col sm={2}>
@@ -122,7 +121,7 @@ const AddNewDesignContent = ({
               id="additional"
               value={additionalInformation}
               onChange={(e) => {
-                addData("AdditionalInfo", index, e.target.value, di_name);
+                addData("Additional_Info", index, e.target.value, di_name);
                 setAdditionalInfo(e.target.value);
               }}
               aria-describedby="info-help"
@@ -135,12 +134,6 @@ const AddNewDesignContent = ({
           <div>
             <Checkbox
               onChange={(e) => {
-                if (!additionalInformation) {
-                  setAdditionalError("Select Additional Info");
-                }
-                if (!clusters) {
-                  setClusterError("Select Cluster");
-                }
                 addData("Select", index, e.checked, di_name);
                 setChecked(e.checked);
               }}
