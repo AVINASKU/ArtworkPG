@@ -3,13 +3,13 @@ import PageLayout from "../../PageLayout";
 import AddNewDesign from "./AddNewDesign.js";
 import DesignHeader from "./DesignHeader";
 import AddNewDesignContent from "./AddNewDesignContent";
-import { ProjectService } from "../../../service/PegaService";
 import FooterButtons from "./FooterButtons";
 import {
   getDesignIntent,
   saveDesignIntent,
 } from "../../../apis/designIntentApi";
 import "./index.scss";
+import { useParams } from "react-router-dom";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/tasks" },
@@ -23,16 +23,26 @@ function DefineDesignIntent() {
   const [designIntent, setDesignIntent] = useState([]);
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
+  let { TaskID, ProjectID } = useParams();
+
+  console.log("task id", TaskID, ProjectID);
 
   useEffect(() => {
     // const data1 = ProjectService.getDIData();
+    let taskId;
+    if (TaskID) {
+      taskId = TaskID.split("_")[1];
+      console.log("task id-->", taskId[1]);
+    }
 
     (async () => {
       try {
-        const data1 = await getDesignIntent();
+        const data1 = await getDesignIntent(taskId, ProjectID);
         console.log("api data------>", data1);
         data1 && data1.length && setData(data1[0]);
-        setDesignIntent(data1[0]?.Design_Intent_Details);
+        data1 &&
+          data1.length &&
+          setDesignIntent(data1[0]?.Design_Intent_Details);
       } catch (err) {
         console.log("error", err);
       }
