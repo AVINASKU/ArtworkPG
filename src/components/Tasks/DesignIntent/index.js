@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import PageLayout from "../../PageLayout";
 import AddNewDesign from "./AddNewDesign.js";
 import DesignHeader from "./DesignHeader";
@@ -10,9 +10,11 @@ import {
 } from "../../../apis/designIntentApi";
 import "./index.scss";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 
 const breadcrumb = [
-  { label: "My Tasks", url: "/tasks" },
+  { label: "My Tasks", url: "/myTasks" },
   { label: "Define Design Intent" },
 ];
 
@@ -24,6 +26,7 @@ function DefineDesignIntent() {
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
   let { TaskID, ProjectID } = useParams();
+  const navigate = useNavigate();
 
   console.log("task id", TaskID, ProjectID);
 
@@ -54,6 +57,10 @@ function DefineDesignIntent() {
     // setDesignIntent(data1?.DesignIntentList);
     // setSubmittedDI(submittedData);
   }, []);
+
+  const handleCancel = ()=>{
+  return navigate(`/myTasks`);
+  }
 
   const handleDelete = (index) => {
     console.log("index", index);
@@ -88,7 +95,6 @@ function DefineDesignIntent() {
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
     setSubmittedDI(submittedDI);
-    // setDesignIntent(designIntent);
   };
 
   const onSelectAll = (checked) => {
@@ -173,7 +179,7 @@ function DefineDesignIntent() {
               );
             }
           })}
-        <FooterButtons onSaveAsDraft={onSaveAsDraft} onSubmit={onSubmit} />
+        <FooterButtons handleCancel={handleCancel} onSaveAsDraft={onSaveAsDraft} onSubmit={onSubmit} />
       </div>
     </PageLayout>
   );
