@@ -8,7 +8,7 @@ import { Column } from "primereact/column";
 import { FilterMatchMode } from "primereact/api";
 import filter from "../../../assets/images/filter.svg";
 import { NavLink } from "react-router-dom";
-import { onSortData } from "../../Projects/utils";
+import { onSortData } from "../../../utils";
 import ConfirmationPopUp from "../../Projects/ConfirmationPopUp";
 import TaskDialog from "../../TaskDialog";
 
