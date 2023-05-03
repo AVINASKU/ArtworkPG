@@ -96,7 +96,6 @@ const DI = {
   ],
 };
 
-
 const Approve_di = {
   projectName: "Paste Mulsaane Oral-B Medical Device Europe",
   brand: "Fairy",
@@ -106,20 +105,18 @@ const Approve_di = {
   end_date: "4-apr-23",
   consumed_buffer: "15",
   count: 1,
-  DesignIntentList: [
-    {
-      Design_Intent_Name:
-        "DI_FAI-214_Fairy_Hand Dish Wash_Paste Mulsaane Oral-B Medical Device Europe_UK_Test",
-      AWMTaskId: "DI-1",
-      DesignJobid: "1234",
-      AWMProjectId: "",
-      AgencyReference: "FAI-214",
-      Cluster: "UK",
-      AdditionalInfo: "Test",
-      Select: "true",
-      event: "submit",
-    },
-  ],
+  DesignIntentList: {
+    Design_Intent_Name:
+      "DI_FAI-214_Fairy_Hand Dish Wash_Paste Mulsaane Oral-B Medical Device Europe_UK_Test",
+    AWMTaskId: "DI-1",
+    DesignJobid: "1234",
+    AWMProjectId: "",
+    AgencyReference: "FAI-214",
+    Cluster: "UK",
+    AdditionalInfo: "Test",
+    Select: "true",
+    event: "submit",
+  },
 };
 
 export const ProjectService = {
@@ -150,8 +147,8 @@ export const ProjectService = {
     return DI;
   },
 
-  getApproveDI(){
-  return Approve_di;
+  getApproveDI() {
+    return Approve_di;
   },
 
   getAllColumnNamesAllProjects() {

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import "../../Tasks/DesignIntent/index.scss";
+import "../DesignJobs/index.scss";
 import PageLayout from "../../PageLayout";
-import DesignHeader from "../../Tasks/DesignIntent/DesignHeader";
-import AddNewDesign from "../../Tasks/DesignIntent/AddNewDesign";
-import AddNewDesignContent from "../../Tasks/DesignIntent/AddNewDesignContent";
-import FooterButtons from "../../Tasks/DesignIntent/FooterButtons";
+import DesignHeader from "../DesignJobs/DesignHeader";
+import AddNewDesign from "../DesignJobs/AddNewDesign";
+import AddNewDesignContent from "../DesignJobs/AddNewDesignContent";
+import FooterButtons from "../DesignJobs/FooterButtons";
 import { ProjectService } from "../../../service/PegaService";
 
 const breadcrumb = [

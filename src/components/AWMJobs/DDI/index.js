@@ -11,18 +11,16 @@ import {
 import "../DesignJobs/index.scss";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { ProjectService } from "../../../service/PegaService";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
-  { label: "Define Regional Design Template" },
+  { label: "Define Design Intent" },
 ];
 
-const headerName = "Define Regional Design Template";
+const headerName = "Define Design Intent";
+const roleName = "DI_";
 
-const roleName = "DT_";
-
-function DDT() {
+function DDI() {
   const [data, setData] = useState(null);
   const [designIntent, setDesignIntent] = useState([]);
   const [updated, setUpdated] = useState(false);
@@ -30,9 +28,8 @@ function DDT() {
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
 
-  console.log("task id", TaskID, ProjectID);
-
   useEffect(() => {
+    // const data1 = ProjectService.getDIData();
     let taskId;
     if (TaskID) {
       taskId = TaskID.split("_")[1];
@@ -41,9 +38,7 @@ function DDT() {
 
     (async () => {
       try {
-          const data1 = ProjectService.getDIData();
-
-        // const data1 = await getDesignIntent();
+        const data1 = await getDesignIntent(taskId, ProjectID);
         console.log("api data------>", data1);
         data1 && data1.length && setData(data1[0]);
         data1 &&
@@ -53,12 +48,6 @@ function DDT() {
         console.log("error", err);
       }
     })();
-
-    // setData(data1);
-    // let notSubmittedData = data1.DesignIntentList.filter((task)=> task.event !== "submit");
-    // let submittedData = data1.DesignIntentList.filter((task)=> task?.event === "submit");
-    // setDesignIntent(data1?.DesignIntentList);
-    // setSubmittedDI(submittedData);
   }, []);
 
   const handleCancel = () => {
@@ -193,4 +182,4 @@ function DDT() {
   );
 }
 
-export default DDT;
+export default DDI;

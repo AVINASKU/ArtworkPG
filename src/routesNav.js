@@ -6,8 +6,8 @@ import AllProjects from "./components/Projects/AllProjects/index";
 import MyProjects from "./components/Projects/MyProjects/index.js";
 import ProjectCreation from "./projectCreation.js";
 import Login from "./login.js";
-import DefineDesignIntent from "./components/Tasks/DesignIntent/index.js";
-import ApproveDesignIntent from "./components/Tasks/DesignIntent/ApproveDesignIntent";
+import DDI from "./components/AWMJobs/DDI/index.js";
+import ApproveDesignIntent from "./components/AWMJobs/DDI/ApproveDesignIntent";
 import AllTasksPage from "./AllTaksPage.js";
 import MyTasksPage from "./MyTaskPage.js";
 import DDT from "./components/AWMJobs/DDT/index.js";
@@ -37,11 +37,11 @@ const RoutesNav = () => {
         <Route path="/projectPlan/:ProjectID" element={<ProjectCreation />} />
         <Route
           path="/myTasks/DDI/:TaskID/:ProjectID"
-          element={<DefineDesignIntent />}
+          element={<DDI />}
         />
         <Route
           path="/allTasks/DDI/:TaskID/:ProjectID"
-          element={<DefineDesignIntent />}
+          element={<DDI />}
         />
         <Route
           path="/myTasks/UADI/:TaskID/:ProjectID"

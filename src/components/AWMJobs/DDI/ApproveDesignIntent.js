@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import PageLayout from "../../PageLayout";
-import DesignHeader from "./DesignHeader";
-import FooterButtons from "./FooterButtons";
-import AddNewDesign from "./AddNewDesign";
+import DesignHeader from "../DesignJobs/DesignHeader";
+import FooterButtons from "../DesignJobs/FooterButtons";
+import AddNewDesign from "../DesignJobs/AddNewDesign";
 import { ProjectService } from "../../../service/PegaService";
 import ApproveDesignIntentContent from "./ApproveDesignIntentContent";
 
@@ -14,12 +14,16 @@ const headerName = "Upload Approved Design Intent";
 
 const ApproveDesignIntent = () => {
   const [data, setData] = useState(null);
+  const [taskData , setTaskData] = useState(null)
 
   useEffect(() => {
     const data1 = ProjectService.getApproveDI();
     setData(data1);
+    setTaskData(data1.DesignIntentList);
 
   }, [data]);
+
+  console.log("task data", taskData);
 
   return (
     <PageLayout>
@@ -30,7 +34,7 @@ const ApproveDesignIntent = () => {
       />
 
       {<AddNewDesign {...data} />}
-      <ApproveDesignIntentContent/>
+      <ApproveDesignIntentContent {...taskData}/>
 
       <FooterButtons />
     </PageLayout>
