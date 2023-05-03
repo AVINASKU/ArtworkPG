@@ -45,20 +45,13 @@ function DDT() {
 
         // const data1 = await getDesignIntent();
         console.log("api data------>", data1);
-        data1 && data1.length && setData(data1[0]);
+        data1 && setData(data1);
         data1 &&
-          data1.length &&
-          setDesignIntent(data1[0]?.Design_Intent_Details);
+          setDesignIntent(data1.Design_Intent_Details);
       } catch (err) {
         console.log("error", err);
       }
     })();
-
-    // setData(data1);
-    // let notSubmittedData = data1.DesignIntentList.filter((task)=> task.event !== "submit");
-    // let submittedData = data1.DesignIntentList.filter((task)=> task?.event === "submit");
-    // setDesignIntent(data1?.DesignIntentList);
-    // setSubmittedDI(submittedData);
   }, []);
 
   const handleCancel = () => {

@@ -3,6 +3,7 @@ import { InputText } from "primereact/inputtext";
 import { Row, Col } from "react-bootstrap";
 import { Checkbox } from "primereact/checkbox";
 import deleteIcon from "../../../assets/images/deleteIcon.svg";
+import { AutoComplete } from "primereact/autocomplete";
 
 const AddNewDesignContent = ({
   index,
@@ -14,12 +15,20 @@ const AddNewDesignContent = ({
   addData,
   roleName,
 }) => {
+  const bu = true;
   const { Agency_Reference, Additional_Info, event, Select, Cluster } = item;
 
   const [checked, setChecked] = useState(false);
   const [agencyRef, setAgency] = useState(Agency_Reference);
   const [clusters, setCluster] = useState(Cluster);
   const [additionalInformation, setAdditionalInfo] = useState(Additional_Info);
+   const [value, setValue] = useState('');
+    const [items, setItems] = useState([]);
+
+     const search = (event) => {
+        let _items = [...Array(10).keys()];
+        setItems(event.query ? [...Array(10).keys()].map(item => event.query + '-' + item) : _items);
+    }
 
   useEffect(() => {
     setChecked(Select);
@@ -89,11 +98,10 @@ const AddNewDesignContent = ({
               aria-describedby="agency-help"
               disabled={event === "submit" && true}
             />
-          
           </div>
-            {(agencyRef === "" || agencyRef === undefined) && (
-              <div className="error-text-di">Field Remaining</div>
-            )}
+          {(agencyRef === "" || agencyRef === undefined) && (
+            <div className="error-text-di">Field Remaining</div>
+          )}
         </Col>
         <Col sm={2}>
           <div>
@@ -109,10 +117,17 @@ const AddNewDesignContent = ({
               disabled={event === "submit" && true}
             />
           </div>
-             {(clusters === "" || clusters === undefined) && (
-              <span className="error-text-di">Field Remaining</span>
-            )}{" "}
+          {(clusters === "" || clusters === undefined) && (
+            <span className="error-text-di">Field Remaining</span>
+          )}{" "}
         </Col>
+        {bu && (
+          <Col sm={2} className="set-autocomplete-height">
+            <label htmlFor="cluster">Tire </label>
+                        <AutoComplete value={value} suggestions={items} completeMethod={search} onChange={(e) => setValue(e.value)} dropdown />
+
+          </Col>
+        )}
 
         <Col sm={2}>
           <div>
