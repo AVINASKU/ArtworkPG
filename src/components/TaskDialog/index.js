@@ -12,7 +12,6 @@ const TaskDialog = (props) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [filteredItems, setFilteredItems] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
-  console.log(props.flag);
   const usernames = RoleUser?.users?.map((user) => user.username);
 
   const items = usernames.map((username, i) => ({

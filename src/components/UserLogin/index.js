@@ -6,6 +6,8 @@ import PgLogo from "../../assets/images/logo.svg";
 import { updateUser } from "../../apis/userApi";
 import "./index.scss";
 import { useSelector } from "react-redux";
+import Table from "./Table";
+
 function UserLogin() {
   const User = useSelector((state) => state.UserReducer);
   const userInformation = User.userInformation;
@@ -60,47 +62,51 @@ function UserLogin() {
 
   return (
     <div className="login-screen">
-      <Row>
-        <Col>
-          <img src={PgLogo} />
-        </Col>
-        <Col>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="formUsername">
-              <h2>Welcome!</h2>
-              <Form.Label>Username</Form.Label>
-              <Form.Control
-                type="text"
-                value={username}
-                required
-                className="mb-3"
-                placeholder="Enter your usename"
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group controlId="formPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                value={password}
-                required
-                className="mb-3"
-                placeholder="Enter your password"
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </Form.Group>
-            <Button variant="primary" type="submit" className="mb-3">
-              Login
-            </Button>
-            {!credentialsValid && (
-              <p style={{ color: "red" }}>
-                CREDENTIALS INVALID! <br />
-                Please try with correct credentials.
-              </p>
-            )}
-          </Form>
-        </Col>
-      </Row>
+      <div className="userList">
+        <Row>
+          <Col>
+            <img src={PgLogo} />
+          </Col>
+          <Col>
+            <Form onSubmit={handleSubmit}>
+              <Form.Group controlId="formUsername">
+                <h2>Welcome!</h2>
+                <Form.Label>Username</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={username}
+                  required
+                  className="mb-3"
+                  placeholder="Enter your usename"
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </Form.Group>
+
+              <Form.Group controlId="formPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  value={password}
+                  required
+                  className="mb-3"
+                  placeholder="Enter your password"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </Form.Group>
+              <Button variant="primary" type="submit" className="mb-3">
+                Login
+              </Button>
+              {!credentialsValid && (
+                <p style={{ color: "red" }}>
+                  CREDENTIALS INVALID! <br />
+                  Please try with correct credentials.
+                </p>
+              )}
+            </Form>
+            <Table />
+          </Col>
+        </Row>
+      </div>
     </div>
   );
 }
