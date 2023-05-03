@@ -22,7 +22,7 @@ import TaskDialog from "../../TaskDialog";
 // import { ProjectService } from "../../../service/PegaService";
 // import ConfirmationPopUp from "../ConfirmationPopUp";
 // import { Toast } from "primereact/toast";
-// import { FilterMatchMode } from "primereact/api";
+import { FilterMatchMode } from "primereact/api";
 // import ProjectListHeader from "./ProjectListHeader";
 // import { Tag } from "primereact/tag";
 
@@ -42,17 +42,40 @@ const MyTask = (props) => {
   const [filters, setFilters] = useState([]);
 
   const [selectedColumnName, setSelectedColumnName] = useState(null);
+  const [exportCSVValue, setExportCSVValue] = useState(false);
 
   const dispatch = useDispatch();
   const myTasks = useSelector((state) => state.TaskReducer.myTasks);
 
+  const searchHeader = projectColumnName.reduce(
+    (acc, curr) => ({
+      ...acc,
+      [curr]: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    }),
+    {}
+  );
+
+  // const getMyTasks = (myTasksList) => {
+  //   const getMyTasksList = [];
+  //   myTasksList.forEach((project) => {
+  //     project.TaskDetails.forEach((taskDetails) => {
+  //       getMyTasksList.push(taskDetails);
+  //     });
+  //   });
+  //   return getMyTasksList;
+  // };
+
   const getMyTasks = (myTasksList) => {
     const getMyTasksList = [];
-    myTasksList.forEach((project) => {
-      project.TaskDetails.forEach((taskDetails) => {
-        getMyTasksList.push(taskDetails);
+    if (Array.isArray(myTasksList)) {
+      myTasksList.forEach((project) => {
+        if (project && Array.isArray(project.TaskDetails)) {
+          project.TaskDetails.forEach((taskDetails) => {
+            getMyTasksList.push(taskDetails);
+          });
+        }
       });
-    });
+    }
     return getMyTasksList;
   };
 
@@ -116,11 +139,11 @@ const MyTask = (props) => {
     }
   };
 
-  let jsonFrozenrData1 = localStorage.getItem("myTasksFrozenData");
-  const myTasksFrozenData = JSON.parse(jsonFrozenrData1);
-  if (myTasksFrozenData && myTasksFrozenData.length) {
-    setFrozenColumn(myTasksFrozenData);
-  }
+  // let jsonFrozenrData1 = localStorage.getItem("myTasksFrozenData");
+  // const myTasksFrozenData = JSON.parse(jsonFrozenrData1);
+  // if (myTasksFrozenData && myTasksFrozenData.length) {
+  //   setFrozenColumn(myTasksFrozenData);
+  // }
 
   const saveSettings = () => {
     localStorage.setItem("columnWiseFilterData", JSON.stringify(filters));
@@ -194,22 +217,39 @@ const MyTask = (props) => {
     { title: "Help_Needed", field: "Help_Needed", csvExport: true },
     { title: "Remaining_Buffer", field: "Remaining_Buffer", csvExport: true },
   ];
+  // const columnNames = headerColumns.map((col) => col.title);
+
+  const exportCSVTasks = (selectionOnly) => {
+    setExportCSVValue(true);
+    console.log("exportCSVValue is", exportCSVValue);
+    // console.log("columnNames is", columnNames);
+    console.log("dt.current is", dt.current);
+    console.log("dt.current.exportCSV is", dt.current.exportCSV);
+    console.log("dt.current.header is", dt.current.header);
+    const columnNames = headerColumns.map((col) => col.title);
+    // dt.current.header = columnNames;
+    if (selectionOnly || dt.current.getSelectedData().length === 0) {
+      // if (selectionOnly) {
+      dt.current.exportCSV({
+        selectionOnly: true,
+        fileName: "selected_data.csv",
+        // header: columnNames,
+        columnNames: columnNames,
+        data: selected,
+      });
+    } else {
+      dt.current.exportCSV({
+        fileName: "all_data.csv",
+        // header: columnNames,
+        columnNames: columnNames,
+      });
+    }
+  };
 
   // const exportCSVTasks = (selectionOnly) => {
-  //   const columnNames = headerColumns.map((col) => col.title);
-  //   if (selectionOnly || dt.current.getSelectedData().length === 0) {
-  //     dt.current.exportCSV({
-  //       selectionOnly: true,
-  //       fileName: "selected_data.csv",
-  //       columnNames: columnNames,
-  //       data: selected,
-  //     });
-  //   } else {
-  //     dt.current.exportCSV({
-  //       fileName: "all_data.csv",
-  //       columnNames: columnNames,
-  //     });
-  //   }
+  //   setExportCSVValue(true);
+  //   console.log("exportCSV is working");
+  //   dt.current.exportCSV({ selectionOnly });
   // };
 
   const handleSelectAll = (e) => {
@@ -270,6 +310,7 @@ const MyTask = (props) => {
     }
   }
   const myTaskHeader = (options) => {
+    console.log("options are", options);
     const isFilterActivated =
       (frozenCoulmns &&
         frozenCoulmns.length &&
@@ -324,6 +365,12 @@ const MyTask = (props) => {
   };
 
   const helpNeededBodyTemplate = (rowData) => {
+    // const arryes = ["Yes", "No"];
+    // const arryes = ["Yes", "No"];
+    // const rowDataValue = rowData.map((obj) => obj.Help_Needed);
+    console.log("rowDataValue is", typeof rowData);
+    // console.log("rowDataValue is", rowDataValue);
+    console.log("rowData.Help_Needed is", rowData);
     return (
       <div
         className={`${
@@ -331,6 +378,8 @@ const MyTask = (props) => {
         }`}
       >
         {rowData.Help_Needed ? "yes" : "No"}
+        {/* {rowData.Help_Needed ? arryes[0] : arryes[1]} */}
+        {/* {rowData.Help_Needed ? { rowData.Help_Needed } : ""} */}
       </div>
     );
   };
@@ -351,8 +400,11 @@ const MyTask = (props) => {
           return (
             <Column
               key={ele}
-              header={myTaskHeader(ele)}
               field={ele}
+              // header={myTaskHeader(ele)}
+              // header={ele}
+              header={exportCSVValue === "true" ? ele : myTaskHeader(ele)}
+              exportable={true}
               filter
               frozen={frozenCoulmns.includes(ele)}
               className={frozenCoulmns.includes(ele) ? "font-bold" : ""}
@@ -381,9 +433,11 @@ const MyTask = (props) => {
 
         <ProjectListHeader
           // exportCSVTasks={
-          //   selected ? exportCSVTasks(true) : exportCSVTasks(true)
+          //   selected ? exportCSVTasks(true) : exportCSVTasks(false)
           // }
+          exportCSVTasks={exportCSVTasks}
           onSearchClick={onSearchClick}
+          // columnNames={columnNames}
           handleDelegateClick={handleDelegateClick}
           handleHelpNeededClick={handleHelpNeededClick}
           actionFlag={!selected || selected.length === 0}
@@ -418,6 +472,7 @@ const MyTask = (props) => {
           responsiveLayout="scroll"
           className="mt-3"
           ref={dt}
+          filters={searchHeader}
           filterDisplay={isSearch && "row"}
           tableStyle={{ minWidth: "50rem" }}
         >
