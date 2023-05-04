@@ -1,0 +1,42 @@
+{
+  "data": [
+    {
+      "Color_Development_Details": [
+        {
+          "CD_Job_Name": "CD2",
+          "Printer": "ALL4LABELS ERFURT GMBH & CO KG~15206299",
+          "CD_Job_ID": "2",
+          "Select": true,
+          "PrintTrail": true,
+          "Printer_Process": "Digital",
+          "Substrate": "Cartonboard-Coated-Wax",
+          "Additional_Info": "test2"
+        },
+        {
+          "CD_Job_Name": "CD3",
+          "Printer": "MCC CARDIFF LTD~10073106",
+          "CD_Job_ID": "3",
+          "Select": true,
+          "PrintTrail": false,
+          "Printer_Process": "Flexo 133lpi",
+          "Substrate": "Cartonboard-Aseptic Composite Board",
+          "Additional_Info": "test3"
+        }
+      ],
+      "Etag": "",
+      "Consumed_Buffer": null,
+      "Project_ID": "A-610",
+      "Duration": null,
+      "Brand": [
+        "Pampers",
+        "Huggies"
+      ],
+      "Category": "Fabric",
+      "Project_Name": "TestProject80",
+      "Task_Name": "Color Development",
+      "Start_Date": "",
+      "End_Date": "",
+      "Task_ID": "CCD_Task-12"
+    }
+  ]
+}

@@ -1,9 +1,6 @@
-// import
-import pegatasksJsonData from "../tasks.json";
-
 const myTaskColumnNames = [
-  "ProjectName",
-  "TaskName",
+  "Project_Name",
+  "Task_Name",
   "Status",
   "Help_Needed",
   "Remaining_Buffer",
@@ -11,10 +8,6 @@ const myTaskColumnNames = [
 ];
 
 export const TaskService = {
-  getProjectData() {
-    return pegatasksJsonData.ArtworkAgilityTasks;
-  },
-
   getMyTaskColumnNames() {
     return myTaskColumnNames;
   },

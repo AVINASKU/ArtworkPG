@@ -1,7 +1,7 @@
 import React from "react";
 import { changeDateFormat } from "../../../utils";
 
-function AddNewDesign({
+function TaskHeader({
   Project_Name,
   Start_Date,
   End_Date,
@@ -43,4 +43,4 @@ function AddNewDesign({
   return <div className="content-layout">{intentName()}</div>;
 }
 
-export default AddNewDesign;
+export default TaskHeader;

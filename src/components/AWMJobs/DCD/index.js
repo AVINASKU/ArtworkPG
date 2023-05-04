@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../DesignJobs/index.scss";
 import PageLayout from "../../PageLayout";
 import DesignHeader from "../DesignJobs/DesignHeader";
-import AddNewDesign from "../DesignJobs/AddNewDesign";
+import AddNewDesign from "../DesignJobs/TaskHeader";
 import AddNewDesignContent from "../DesignJobs/AddNewDesignContent";
 import FooterButtons from "../DesignJobs/FooterButtons";
 import { ProjectService } from "../../../service/PegaService";
