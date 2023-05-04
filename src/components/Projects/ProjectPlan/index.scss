@@ -300,16 +300,21 @@ img[disabled] {
   color: #d37302 !important;
 }
 .TaskStyles {
-  color: #003DA5;
+  color: #003da5;
   cursor: pointer;
 }
 
-.textAlignTreeTable > div > .p-treetable-table > .p-treetable-tbody > tr > td:first-child {
+.textAlignTreeTable
+  > div
+  > .p-treetable-table
+  > .p-treetable-tbody
+  > tr
+  > td:first-child {
   text-align: left !important;
   display: flex;
   height: auto;
   border-bottom: none !important;
-  }
+}
 
 // ProjectPlan Styles End
 .accordion.projectPlanAccordian {
@@ -331,5 +336,9 @@ img[disabled] {
   .accordion-item > .accordion-header > button::after {
     position: absolute !important;
     margin-left: 110px;
+  }
+  .task-link {
+    color: #003da5;
+    cursor: pointer;
   }
 }
