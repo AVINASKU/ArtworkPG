@@ -7,7 +7,7 @@ import { ProjectService } from "../../../service/PegaService";
 import ApproveDesignIntentContent from "../DesignJobs/ApproveDesignIntentContent";
 
 const breadcrumb = [
-  { label: "My Tasks", url: "/tasks" },
+  { label: "My Tasks", url: "/myTasks" },
   { label: "Upload Regional Design Intent" },
 ];
 const headerName = "Upload Regional Design Intent";

@@ -1,51 +1,81 @@
 import React, { useEffect, useState } from "react";
-import "../DesignJobs/index.scss";
 import PageLayout from "../../PageLayout";
 import DesignHeader from "../DesignJobs/DesignHeader";
 import AddNewDesign from "../DesignJobs/TaskHeader";
 import AddNewDesignContent from "../DesignJobs/AddNewDesignContent";
 import FooterButtons from "../DesignJobs/FooterButtons";
+import { saveDesignIntent } from "../../../apis/designIntentApi";
+import "../DesignJobs/index.scss";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ProjectService } from "../../../service/PegaService";
+import { useSelector } from "react-redux";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
-  { label: "Produciton Ready Art" },
+  { label: "Define Production Ready Art" },
 ];
 
-const headerName = "Produciton Ready Art";
+const headerName = "Define Production Ready Art";
+
+const roleName = "PRA_";
 
 function PRA() {
   const [data, setData] = useState(null);
   const [designIntent, setDesignIntent] = useState([]);
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
-  const [validation, setValidation] = useState(false);
+  let { TaskID, ProjectID } = useParams();
+  const navigate = useNavigate();
+  const User = useSelector((state) => state.UserReducer);
+  const userInformation = User.userInformation;
+
+  let bu = userInformation?.bu;
+// if bu is baby care show tire field else not
+  let checkBU = bu === "Baby Care" ? true : false;
 
   useEffect(() => {
-    const data1 = ProjectService.getDIData();
-    setData(data1);
-    // let notSubmittedData = data1.DesignIntentList.filter((task)=> task.event !== "submit");
-    // let submittedData = data1.DesignIntentList.filter((task)=> task?.event === "submit");
-    setDesignIntent(data1.DesignIntentList);
-    // setSubmittedDI(submittedData);
-  }, [data]);
+    let taskId;
+    if (TaskID) {
+      taskId = TaskID.split("_")[1];
+      console.log("task id-->", taskId[1], ProjectID);
+    }
+
+    (async () => {
+      try {
+        const data1 = ProjectService.getDIData();
+        console.log("api data------>", data1);
+        data1 && setData(data1);
+        data1 && setDesignIntent(data1.Design_Intent_Details);
+      } catch (err) {
+        console.log("error", err);
+      }
+    })();
+  }, []);
+
+  const handleCancel = () => {
+    return navigate(`/myTasks`);
+  };
 
   const handleDelete = (index) => {
     console.log("index", index);
-    const sub = designIntent.filter((item, i) => i !== index);
-    // console.log("index here", sub1);
-    // const sub = subProject.splice(index,1);
-    console.log("sub", sub);
+    const sub = designIntent.map((item, i) => {
+      if (i === index) {
+        item.Action = "delete";
+      }
+      return item;
+    });
     setDesignIntent(sub);
   };
 
   const addNewEmptyDesign = () => {
     designIntent.push({
-      DesignJobid: designIntent.length + 1,
+      Design_Job_ID: designIntent.length + 1,
       isNew: true,
-      AgencyReference: "",
+      Agency_Reference: "",
       Cluster: "",
-      AdditionalInfo: "",
+      Additional_Info: "",
+      Select: false,
     });
     setDesignIntent(designIntent);
     setUpdated(!updated);
@@ -54,15 +84,15 @@ function PRA() {
   const addData = (fieldName, index, value, Design_Intent_Name) => {
     let data = designIntent[index];
     data[fieldName] = value;
-    data["Design_Intent_Name"] = Design_Intent_Name;
+    // add here design job name here check it out from API.
+    data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
     setSubmittedDI(submittedDI);
-    // setDesignIntent(designIntent);
   };
 
   const onSelectAll = (checked) => {
     designIntent.map((task) => {
-      if (task?.event !== "submit") {
+      if (task?.Event !== "submit") {
         task.Select = checked;
       }
       return task;
@@ -76,20 +106,37 @@ function PRA() {
       (task) => task?.Select === true
     );
     submitOnlySelectedData.map((task) => {
-      task.event = "submit";
+      task.Event = "submit";
     });
     console.log("full submit data --->", submitOnlySelectedData);
+    // call submit API here
   };
 
-  const onSaveAsDraft = () => {
-    let submitOnlySelectedData = designIntent.filter(
-      (task) => task?.event !== "submit"
-    );
-    submitOnlySelectedData.map((task) => {
-      task?.DesignJobid ? (task.action = "update") : (task.action = "add");
-      task.event = "draft";
+  const onSaveAsDraft = async () => {
+    console.log("design intent list full", designIntent);
+    // let submitOnlySelectedData = designIntent.filter(
+    //   (task) => task?.Event !== "submit"
+    // );
+    let submitOnlySelectedData = designIntent.map((task) => {
+      task.Action = "update";
+      if (task?.Action !== "delete" && task?.Design_Job_ID) {
+        task.Action = "update";
+      } else if (task?.Action !== "delete" && task?.isNew === true)
+        task.Action = "add";
+
+      if (task?.isNew) {
+        task.Design_Job_ID = "";
+      }
+
+      task.Event = "draft";
+      task.AWM_Project_ID = "A-1000";
+      return task;
     });
-    console.log("full draft data --->", submitOnlySelectedData);
+    let formData = {
+      DesignIntentList: submitOnlySelectedData,
+    };
+    // call save as draft API here below
+
   };
 
   return (
@@ -113,18 +160,26 @@ function PRA() {
         {designIntent &&
           designIntent.length &&
           designIntent.map((item, index) => {
-            return (
-              <AddNewDesignContent
-                key={item.DesignJobid}
-                {...data}
-                item={item}
-                index={index}
-                addData={addData}
-                handleDelete={handleDelete}
-              />
-            );
+            if (item && item?.Action !== "delete") {
+              return (
+                <AddNewDesignContent
+                  key={item.Design_Job_ID}
+                  {...data}
+                  item={item}
+                  index={index}
+                  addData={addData}
+                  handleDelete={handleDelete}
+                  roleName={roleName}
+                  checkBU={checkBU}
+                />
+              );
+            }
           })}
-        <FooterButtons onSaveAsDraft={onSaveAsDraft} onSubmit={onSubmit} />
+        <FooterButtons
+          handleCancel={handleCancel}
+          onSaveAsDraft={onSaveAsDraft}
+          onSubmit={onSubmit}
+        />
       </div>
     </PageLayout>
   );

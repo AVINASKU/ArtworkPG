@@ -137,7 +137,7 @@ function DDT() {
     let formData = {
       DesignIntentList: submitOnlySelectedData,
     };
-    // call save as draft API here
+    // call save as draft API here below
 
   };
 
