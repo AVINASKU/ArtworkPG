@@ -27,17 +27,17 @@ const TaskList = (props) => {
   const [sortData, setSortData] = useState([]);
   const [filters, setFilters] = useState([]);
   const [selectedColumnName, setSelectedColumnName] = useState(null);
-
   const getMyTasks = (myTasksList) => {
-    const myTasks = myTasksList?.flatMap(
-      (project) => project?.TaskDetails ?? []
-    );
-    if (myTasks.length === 0) {
+    const myTasks = myTasksList?.map((element) => {
+      return element;
+    });
+
+    if (!myTasks || myTasks.length === 0) {
       console.log("No records found");
+      return [];
     }
     return myTasks;
   };
-
   useEffect(() => {
     const myTasksList = getMyTasks(props?.myTasks);
     setSelectedProdSrchList(myTasksList);
@@ -67,7 +67,7 @@ const TaskList = (props) => {
 
   useEffect(() => {
     if (
-      selectedProdSrchList.length > 0 &&
+      selectedProdSrchList?.length > 0 &&
       selected.length === selectedProdSrchList.length
     ) {
       setSelectAllChecked(true);
@@ -279,8 +279,8 @@ const TaskList = (props) => {
     );
   };
   const taskBodyTemplate = (rowData) => {
-    const taskId = rowData?.TaskID;
-    const projectID = rowData?.Project_ID;
+    const taskId = rowData?.AWM_Task_ID;
+    const projectID = rowData?.AWM_Project_ID;
     const TaskCode = taskId?.split("_");
     const url = `${TaskCode[0]}/${taskId}/${projectID}`;
     return (
@@ -292,7 +292,7 @@ const TaskList = (props) => {
           onChange={() => handleSelect(rowData)}
         />
         <NavLink className="task_name" to={url}>
-          {rowData.TaskName} - {rowData.TaskID}
+          {rowData.Task_Name} - {rowData.AWM_Task_ID}
         </NavLink>
       </div>
     );
@@ -325,7 +325,7 @@ const TaskList = (props) => {
       return TaskService.getMyTaskColumnNames()
         .slice(0, 5)
         .map((ele, i) => {
-          const checkBoxAdded = ele === "TaskName" ? "checkbox-added" : "";
+          const checkBoxAdded = ele === "Task_Name" ? "checkbox-added" : "";
           return (
             <Column
               key={ele}
@@ -338,7 +338,7 @@ const TaskList = (props) => {
               classNme={checkBoxAdded}
               filterPlaceholder="Search"
               body={
-                (ele === "TaskName" && taskBodyTemplate) ||
+                (ele === "Task_Name" && taskBodyTemplate) ||
                 (ele === "Help_Needed" && helpNeededBodyTemplate) ||
                 (ele === "Status" && statusTemplate)
               }
@@ -351,7 +351,7 @@ const TaskList = (props) => {
       TaskService.getMyTaskColumnNames().length
     ) {
       return TaskService.getMyTaskColumnNames().map((ele, i) => {
-        const checkBoxAdded = ele === "TaskName" ? "checkbox-added" : "";
+        const checkBoxAdded = ele === "Task_Name" ? "checkbox-added" : "";
         return (
           <Column
             key={ele}
@@ -364,7 +364,7 @@ const TaskList = (props) => {
             classNme={checkBoxAdded}
             filterPlaceholder="Search"
             body={
-              (ele === "TaskName" && taskBodyTemplate) ||
+              (ele === "Task_Name" && taskBodyTemplate) ||
               (ele === "Help_Needed" && helpNeededBodyTemplate) ||
               (ele === "Status" && statusTemplate) ||
               (ele === "PM" && assigneeTemplate)

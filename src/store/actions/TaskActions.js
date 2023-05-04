@@ -19,7 +19,7 @@ export const getTasks = (userInformation) => async (dispatch) => {
       if (res.status === 200) {
         dispatch({
           type: types.GET_MY_TASKS_SUCCESS,
-          payload: res.data.ArtworkAgilityProjects,
+          payload: res?.data?.ArtworkAgilityTasks,
         });
       } else {
         dispatch({
@@ -52,7 +52,7 @@ export const getAllTasks = (userInformation) => async (dispatch) => {
       if (res.status === 200) {
         dispatch({
           type: "GET_ALL_TASKS_SUCCESS",
-          payload: res?.data?.ArtworkAgilityProjects,
+          payload: res?.data?.ArtworkAgilityTasks,
         });
       } else {
         dispatch({
