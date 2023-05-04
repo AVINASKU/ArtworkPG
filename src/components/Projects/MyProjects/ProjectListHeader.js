@@ -99,7 +99,9 @@ const ProjectListHeader = ({
             <img
               src={export2excel}
               alt="download file"
-              onClick={exportCSVTasks}
+              onClick={() => {
+                exportCSVTasks(true);
+              }}
               className="pi pi-file-excel header-icons"
             />
             <DropdownButton

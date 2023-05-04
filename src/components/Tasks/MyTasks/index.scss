@@ -77,7 +77,7 @@ $fontWeight400: 400;
       background-color: #acacac;
       position: absolute;
       top: 25%;
-      right: 0;
+      right: 1px;
     }
   }
 
@@ -89,10 +89,12 @@ $fontWeight400: 400;
   }
 
   .p-datatable-thead > tr > th {
-    position: relative;
+    // position: relative;
     padding: 0 1rem;
   }
 }
+
+
 .font-bold {
   font-weight: 700;
 }
@@ -297,7 +299,18 @@ div.p-selectbutton.p-buttonset.p-component {
 }
 
 .p-datatable-scrollable .p-frozen-column {
+  position: static;
   z-index: 1000;
+  &::after{
+  content: "";
+    display: block;
+    height: 22px;
+    width: 0.8px;
+    background-color: #acacac;
+    position: absolute;
+    top: 25%;
+    right: 0;
+  }
 }
 
 .helpneeded_yes,
@@ -376,3 +389,14 @@ div.flex.align-items-center.gap-2 {
 .filter-color-change {
   filter: invert(10%) sepia(100%) saturate(1200%) hue-rotate(190deg) brightness(70%) contrast(90%);
 }
+
+.p-datatable-resizable-table >  .p-datatable-thead > tr > th{
+  overflow:auto;
+  white-space: nowrap;
+}
+
+
+// .p-datatable-wrapper .font-bold.p-frozen-column{
+//   position: relative;
+//   left:0 !important;
+// }

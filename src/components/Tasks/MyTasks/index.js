@@ -365,21 +365,16 @@ const MyTask = (props) => {
   };
 
   const helpNeededBodyTemplate = (rowData) => {
-    // const arryes = ["Yes", "No"];
-    // const arryes = ["Yes", "No"];
-    // const rowDataValue = rowData.map((obj) => obj.Help_Needed);
-    console.log("rowDataValue is", typeof rowData);
-    // console.log("rowDataValue is", rowDataValue);
-    console.log("rowData.Help_Needed is", rowData);
+    rowData["Help_Needed"] = rowData["Help_Needed"] ? "Yes" : "No";
+    console.log("rowData.Help_Needed is", rowData.Help_Needed);
+    console.log("rowData is", rowData);
     return (
       <div
         className={`${
-          rowData.Help_Needed ? "helpneeded_no" : "helpneeded_yes"
+          rowData.Help_Needed === "No" ? "helpneeded_no" : "helpneeded_yes"
         }`}
       >
-        {rowData.Help_Needed ? "yes" : "No"}
-        {/* {rowData.Help_Needed ? arryes[0] : arryes[1]} */}
-        {/* {rowData.Help_Needed ? { rowData.Help_Needed } : ""} */}
+        {rowData.Help_Needed}
       </div>
     );
   };
