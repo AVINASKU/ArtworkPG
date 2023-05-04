@@ -12,13 +12,13 @@ import {
 import { AutoComplete } from "primereact/autocomplete";
 const CloneJobs = ({
   index,
-  brand,
-  category,
+  Brand,
+  Category,
   Project_Name,
   handleDelete,
   item,
   addData,
-  roleName,
+  jobName,
 }) => {
   const {
     Printer_Process,
@@ -72,16 +72,24 @@ const CloneJobs = ({
 
   if (printerProcess || printers || additionalInformation) {
     di_name =
-      roleName +
-      (printerProcess && printerProcess + "_") +
-      brand +
+      jobName +
+      (printers && printers ? printers + "_" : "Printer" + "_") +
+      (printerProcess && printerProcess
+        ? printerProcess + "_"
+        : "Printing Process" + "_") +
+      (substrateData && substrateData
+        ? "Substrate" + "_"
+        : substrateData + "_") +
+      Brand.map((obj) => obj) +
       "_" +
-      category +
+      Category +
       "_" +
       Project_Name +
       "_" +
       (printers && printers + "_") +
-      (additionalInformation && additionalInformation);
+      (additionalInformation && additionalInformation
+        ? "Additional info"
+        : additionalInformation);
   }
   const searchFilters = (query, printerProcessList, setFilteredItems) => {
     let _filteredItems = [];
@@ -108,6 +116,45 @@ const CloneJobs = ({
         <Col sm={2}>
           <div>
             <label htmlFor="cluster">Printer * </label>
+
+            <AutoComplete
+              id="printer"
+              value={printers}
+              suggestions={filteredItems}
+              completeMethod={(e) =>
+                searchFilters(e.query, PrinterList, setFilteredItems)
+              }
+              dropdown
+              placeholder="Search Printer"
+              onChange={(e) => {
+                addData("Printer", index, e.target.value, di_name);
+                setPrinters(e.target.value);
+              }}
+              aria-describedby="cluster-help"
+              disabled={event === "submit" && true}
+            />
+          </div>
+        </Col>
+        <Col sm={2}>
+          <div>
+            <label htmlFor="agency">Printer Process * </label>
+            {/* <MultiSelect
+              value={printers}
+              onChange={(e) => {
+                addData("Printer_Process", index, e.value, di_name);
+                setPrinters(e.value);
+              }}
+              options={
+                PrinterList
+                  ? PrinterList.map((obj) => ({ label: obj, value: obj }))
+                  : []
+              }
+              optionLabel="label"
+              filter
+              aria-describedby="agency-help"
+              disabled={event === "submit" && true}
+              placeholder="Select Printer Process"
+            /> */}
             <AutoComplete
               id="printer"
               value={printerProcess}
@@ -125,29 +172,7 @@ const CloneJobs = ({
               disabled={event === "submit" && true}
             />
           </div>
-        </Col>
-        <Col sm={2}>
-          <div>
-            <label htmlFor="agency">Printer Process * </label>
-            <MultiSelect
-              value={printers}
-              onChange={(e) => {
-                addData("Printer_Process", index, e.value, di_name);
-                setPrinters(e.value);
-              }}
-              options={
-                PrinterList
-                  ? PrinterList.map((obj) => ({ label: obj, value: obj }))
-                  : []
-              }
-              optionLabel="label"
-              filter
-              aria-describedby="agency-help"
-              disabled={event === "submit" && true}
-              placeholder="Select Printer Process"
-            />
-          </div>
-          {(Printer_Process === "" || Printer_Process === undefined) && (
+          {(printers === "" || printers === undefined) && (
             <div className="error-text-di">Field Remaining</div>
           )}
         </Col>

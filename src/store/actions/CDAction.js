@@ -16,7 +16,7 @@ export const getDefineCD = (taskID, projectId, headers) => {
       });
       dispatch({
         type: "GET_DEFINE_CD_SUCCESS",
-        payload: defineCD?.data[0]?.Color_Development_Details,
+        payload: defineCD?.data[0],
       });
     } catch (error) {
       dispatch({ type: "GET_DEFINE_CD_FAILURE", payload: error });
