@@ -4,14 +4,12 @@ import AddNewDesign from "../DesignJobs/TaskHeader";
 import DesignHeader from "../DesignJobs/DesignHeader";
 import AddNewDesignContent from "../DesignJobs/AddNewDesignContent";
 import FooterButtons from "../DesignJobs/FooterButtons";
-import {
-  getDesignIntent,
-  saveDesignIntent,
-} from "../../../apis/designIntentApi";
+import { saveDesignIntent } from "../../../apis/designIntentApi";
 import "../DesignJobs/index.scss";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { ProjectService } from "../../../service/PegaService";
+import { useSelector } from "react-redux";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
@@ -29,14 +27,18 @@ function DDT() {
   const [submittedDI, setSubmittedDI] = useState([]);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
+  const User = useSelector((state) => state.UserReducer);
+  const userInformation = User.userInformation;
 
-  console.log("task id", TaskID, ProjectID);
+  let bu = userInformation?.bu;
+// if bu is baby care show tire field else not
+  let checkBU = bu === "Baby Care" ? true : false;
 
   useEffect(() => {
     let taskId;
     if (TaskID) {
       taskId = TaskID.split("_")[1];
-      console.log("task id-->", taskId[1]);
+      console.log("task id-->", taskId[1], ProjectID);
     }
 
     (async () => {
@@ -46,8 +48,7 @@ function DDT() {
         // const data1 = await getDesignIntent();
         console.log("api data------>", data1);
         data1 && setData(data1);
-        data1 &&
-          setDesignIntent(data1.Design_Intent_Details);
+        data1 && setDesignIntent(data1.Design_Intent_Details);
       } catch (err) {
         console.log("error", err);
       }
@@ -66,9 +67,6 @@ function DDT() {
       }
       return item;
     });
-    // console.log("index here", sub1);
-    // const sub = subProject.splice(index,1);
-    console.log("sub", sub);
     setDesignIntent(sub);
   };
 
@@ -88,6 +86,7 @@ function DDT() {
   const addData = (fieldName, index, value, Design_Intent_Name) => {
     let data = designIntent[index];
     data[fieldName] = value;
+    // add here design job name here check it out from API.
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
     setSubmittedDI(submittedDI);
@@ -112,6 +111,7 @@ function DDT() {
       task.Event = "submit";
     });
     console.log("full submit data --->", submitOnlySelectedData);
+    // call submit API here
   };
 
   const onSaveAsDraft = async () => {
@@ -137,8 +137,8 @@ function DDT() {
     let formData = {
       DesignIntentList: submitOnlySelectedData,
     };
-    console.log("full draft data --->", submitOnlySelectedData);
-    await saveDesignIntent(formData);
+    // call save as draft API here
+
   };
 
   return (
@@ -172,6 +172,7 @@ function DDT() {
                   addData={addData}
                   handleDelete={handleDelete}
                   roleName={roleName}
+                  checkBU={checkBU}
                 />
               );
             }

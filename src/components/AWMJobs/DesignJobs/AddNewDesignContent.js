@@ -14,21 +14,25 @@ const AddNewDesignContent = ({
   item,
   addData,
   roleName,
+  checkBU,
 }) => {
-  const bu = true;
   const { Agency_Reference, Additional_Info, event, Select, Cluster } = item;
 
   const [checked, setChecked] = useState(false);
   const [agencyRef, setAgency] = useState(Agency_Reference);
   const [clusters, setCluster] = useState(Cluster);
   const [additionalInformation, setAdditionalInfo] = useState(Additional_Info);
-   const [value, setValue] = useState('');
-    const [items, setItems] = useState([]);
+  const [tire, setTire] = useState("");
+  const [items, setItems] = useState([]);
 
-     const search = (event) => {
-        let _items = [...Array(10).keys()];
-        setItems(event.query ? [...Array(10).keys()].map(item => event.query + '-' + item) : _items);
-    }
+  const search = (event) => {
+    let _items = [...Array(10).keys()];
+    setItems(
+      event.query
+        ? [...Array(10).keys()].map((item) => event.query + "-" + item)
+        : _items
+    );
+  };
 
   useEffect(() => {
     setChecked(Select);
@@ -44,7 +48,6 @@ const AddNewDesignContent = ({
           }}
           className="font-color"
         >
-          {/* {di_name} */}
           {!di_name ? `Design Intent ${index + 1}` : di_name}
         </div>
         <img
@@ -52,7 +55,6 @@ const AddNewDesignContent = ({
           alt="filter logo"
           onClick={() => handleDelete(index)}
           className="header-icons"
-          disabled={event === "submit" && true}
         />
       </>
     );
@@ -121,11 +123,18 @@ const AddNewDesignContent = ({
             <span className="error-text-di">Field Remaining</span>
           )}{" "}
         </Col>
-        {bu && (
+        {checkBU && (
           <Col sm={2} className="set-autocomplete-height">
-            <label htmlFor="cluster">Tire </label>
-                        <AutoComplete value={value} suggestions={items} completeMethod={search} onChange={(e) => setValue(e.value)} dropdown />
-
+            <div>
+              <label htmlFor="cluster">Tire </label>
+              <AutoComplete
+                value={tire}
+                suggestions={items}
+                completeMethod={search}
+                onChange={(e) => setTire(e.value)}
+                dropdown
+              />
+            </div>
           </Col>
         )}
 
@@ -154,7 +163,6 @@ const AddNewDesignContent = ({
               }}
               checked={event === "submit" ? true : checked}
               className="margin-right"
-              disabled={event === "submit" && true}
             ></Checkbox>
           </div>
         </Col>
