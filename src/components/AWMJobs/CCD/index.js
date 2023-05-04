@@ -2,16 +2,15 @@ import React, { useEffect, useState } from "react";
 import PageLayout from "../../PageLayout";
 import TaskHeader from "../DesignJobs/TaskHeader";
 import DesignHeader from "../DesignJobs/DesignHeader";
-import AddNewDesignContent from "../DesignJobs/AddNewDesignContent";
 import FooterButtons from "../DesignJobs/FooterButtons";
-import {
-  getDesignIntent,
-  saveDesignIntent,
-} from "../../../apis/designIntentApi";
+import { saveDesignIntent } from "../../../apis/designIntentApi";
+import { useDispatch, useSelector } from "react-redux";
+import { getDefineCD } from "../../../store/actions/CDAction";
 import "../DesignJobs/index.scss";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
+import CloneJobs from "../DesignJobs/CloneJobs";
+import "./index.scss";
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
   { label: "Define Color Development" },
@@ -21,8 +20,10 @@ const headerName = "Define Color Development";
 const roleName = "DI_";
 
 function CCD() {
+  const dispatch = useDispatch();
+  const { defineCD } = useSelector((state) => state.CDReducer);
   const [data, setData] = useState(null);
-  const [designIntent, setDesignIntent] = useState([]);
+  const [CD, setCD] = useState([]);
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
   let { TaskID, ProjectID } = useParams();
@@ -33,30 +34,23 @@ function CCD() {
     let taskId;
     if (TaskID) {
       taskId = TaskID.split("_")[1];
-      console.log("task id-->", taskId[1]);
+      console.log("task id-->", TaskID);
     }
+    dispatch(getDefineCD(TaskID, ProjectID));
+  }, [dispatch, TaskID, ProjectID]);
 
-    (async () => {
-      try {
-        const data1 = await getDesignIntent(taskId, ProjectID);
-        console.log("api data------>", data1);
-        data1 && data1.length && setData(data1[0]);
-        data1 &&
-          data1.length &&
-          setDesignIntent(data1[0]?.Design_Intent_Details);
-      } catch (err) {
-        console.log("error", err);
-      }
-    })();
-  }, []);
-
+  useEffect(() => {
+    if (defineCD) {
+      setCD(defineCD || []);
+    }
+  }, [defineCD]);
   const handleCancel = () => {
     return navigate(`/myTasks`);
   };
 
   const handleDelete = (index) => {
     console.log("index", index);
-    const sub = designIntent.map((item, i) => {
+    const sub = CD.map((item, i) => {
       if (i === index) {
         item.Action = "delete";
       }
@@ -65,45 +59,47 @@ function CCD() {
     // console.log("index here", sub1);
     // const sub = subProject.splice(index,1);
     console.log("sub", sub);
-    setDesignIntent(sub);
+    setCD(sub);
   };
 
   const addNewEmptyDesign = () => {
-    designIntent.push({
-      Design_Job_ID: designIntent.length + 1,
-      isNew: true,
-      Agency_Reference: "",
-      Cluster: "",
-      Additional_Info: "",
-      Select: false,
-    });
-    setDesignIntent(designIntent);
+    const newDesignIntent = [
+      ...CD,
+      {
+        CD_Job_ID: CD.length + 1,
+        isNew: true,
+        CD_Job_Name: "",
+        Printer_Process: "",
+        Substrate: "",
+        Additional_Info: "",
+        Select: false,
+      },
+    ];
+    setCD(newDesignIntent);
     setUpdated(!updated);
   };
 
   const addData = (fieldName, index, value, Design_Intent_Name) => {
-    let data = designIntent[index];
+    let data = CD[index];
     data[fieldName] = value;
-    data["Design_Job_Name"] = Design_Intent_Name;
+    data["CD_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
     setSubmittedDI(submittedDI);
   };
 
   const onSelectAll = (checked) => {
-    designIntent.map((task) => {
+    CD.map((task) => {
       if (task?.Event !== "submit") {
         task.Select = checked;
       }
       return task;
     });
-    setDesignIntent(designIntent);
+    setCD(CD);
     setUpdated(!updated);
   };
 
   const onSubmit = () => {
-    let submitOnlySelectedData = designIntent.filter(
-      (task) => task?.Select === true
-    );
+    let submitOnlySelectedData = CD.filter((task) => task?.Select === true);
     submitOnlySelectedData.map((task) => {
       task.Event = "submit";
     });
@@ -111,11 +107,11 @@ function CCD() {
   };
 
   const onSaveAsDraft = async () => {
-    console.log("design intent list full", designIntent);
+    console.log("design intent list full", CD);
     // let submitOnlySelectedData = designIntent.filter(
     //   (task) => task?.Event !== "submit"
     // );
-    let submitOnlySelectedData = designIntent.map((task) => {
+    let submitOnlySelectedData = CD.map((task) => {
       task.Action = "update";
       if (task?.Action !== "delete" && task?.Design_Job_ID) {
         task.Action = "update";
@@ -155,23 +151,21 @@ function CCD() {
       >
         {<TaskHeader {...data} />}
 
-        {designIntent &&
-          designIntent.length &&
-          designIntent.map((item, index) => {
-            if (item && item?.Action !== "delete") {
-              return (
-                <AddNewDesignContent
-                  key={item.Design_Job_ID}
-                  {...data}
-                  item={item}
-                  index={index}
-                  addData={addData}
-                  handleDelete={handleDelete}
-                  roleName={roleName}
-                />
-              );
-            }
-          })}
+        {CD?.map((item, index) => {
+          if (item && item?.Action !== "delete") {
+            return (
+              <CloneJobs
+                key={item.CD_Job_ID}
+                {...data}
+                item={item}
+                index={index}
+                addData={addData}
+                handleDelete={handleDelete}
+                roleName={roleName}
+              />
+            );
+          }
+        })}
         <FooterButtons
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
