@@ -34,7 +34,7 @@ const ApproveDesignIntent = () => {
       />
 
       {<AddNewDesign {...data} />}
-      <ApproveDesignIntentContent {...taskData} upload={true} approve={true}/>
+      <ApproveDesignIntentContent {...taskData} approve={true}/>
       <FooterButtons />
     </PageLayout>
   );
