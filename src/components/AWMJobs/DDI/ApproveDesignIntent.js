@@ -30,6 +30,7 @@ const ApproveDesignIntent = () => {
         breadcrumb={breadcrumb}
         headerName={headerName}
         disabled={true}
+        label="Approve Upload Design Intent"
       />
 
       {<AddNewDesign {...data} />}

@@ -21,8 +21,6 @@ const headerName = "Define Production Ready Art";
 
 const roleName = "PRA_";
 
-
-
 function DPRA() {
   const [data, setData] = useState(null);
   const [designIntent, setDesignIntent] = useState([]);
@@ -52,10 +50,10 @@ function DPRA() {
         const data1 = ProjectService.getDIData();
         console.log("api data------>", data1);
 
-        if (data1 && data1.Category && data1.Brand) {
-          data1.Category = convertCategoryIntoString(data1.Category);
-          data1.Brand = convertBrandIntoString(data1.Brand);
-        }
+        // if (data1 && data1.Category && data1.Brand) {
+        //   data1.Category = convertCategoryIntoString(data1.Category);
+        //   data1.Brand = convertBrandIntoString(data1.Brand);
+        // }
         data1 && setData(data1);
         data1 && setDesignIntent(data1.Design_Intent_Details);
       } catch (err) {
@@ -156,6 +154,7 @@ function DPRA() {
         onSelectAll={onSelectAll}
         breadcrumb={breadcrumb}
         headerName={headerName}
+        label = "Define Roduction Ready Art"
       />
       <div
         style={{

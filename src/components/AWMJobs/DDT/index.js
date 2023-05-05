@@ -11,11 +11,11 @@ import { useNavigate } from "react-router-dom";
 import { ProjectService } from "../../../service/PegaService";
 import { useSelector } from "react-redux";
 import {
-  convertCategoryIntoString,
-  convertBrandIntoString,
-  AddNavigation
+  AddNavigation,
 } from "../../../utils";
-import { toLower } from "lodash";
+import { toLower} from "lodash";
+import _ from "lodash";
+
 
 const headerName = "Define Regional Design Template";
 const roleName = "DT_";
@@ -33,7 +33,7 @@ function DDT() {
   let breadcrumb = AddNavigation(headerName);
 
   let bu = userInformation?.bu;
-// if bu is baby care show tire field else not
+  // if bu is baby care show tire field else not
   let checkBU = toLower(bu) === toLower("Home Care") ? true : false;
 
   useEffect(() => {
@@ -45,11 +45,7 @@ function DDT() {
 
     (async () => {
       try {
-        const data1 = ProjectService.getDIData();
-        if (data1) {
-          data1.Category = convertCategoryIntoString(data1.Category);
-          data1.Brand = convertBrandIntoString(data1.Brand);
-        }
+        const data1 =ProjectService.getDIData();
         // const data1 = await getDesignIntent();
         console.log("api data------>", data1);
         data1 && setData(data1);
@@ -58,7 +54,7 @@ function DDT() {
         console.log("error", err);
       }
     })();
-  }, [TaskID,ProjectID]);
+  }, [TaskID, ProjectID]);
 
   const handleCancel = () => {
     return navigate(`/myTasks`);
@@ -143,7 +139,6 @@ function DDT() {
       DesignIntentList: submitOnlySelectedData,
     };
     // call save as draft API here below
-
   };
 
   return (
@@ -153,6 +148,7 @@ function DDT() {
         onSelectAll={onSelectAll}
         breadcrumb={breadcrumb}
         headerName={headerName}
+        label="Define Regional Design Template"
       />
       <div
         style={{
@@ -180,7 +176,7 @@ function DDT() {
                   checkBU={checkBU}
                 />
               );
-            } else return <>Data Not Found</>
+            } else return <>Data Not Found</>;
           })}
         <FooterButtons
           handleCancel={handleCancel}

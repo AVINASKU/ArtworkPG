@@ -28,6 +28,7 @@ const UPRA = () => {
         breadcrumb={breadcrumb}
         headerName={headerName}
         disabled={true}
+        label="Upload Production Ready Art"
       />
       {<CloneJobs {...data} />}
       <ApproveDesignIntentContent {...taskData} />

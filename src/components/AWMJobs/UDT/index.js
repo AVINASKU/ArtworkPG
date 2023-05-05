@@ -30,6 +30,7 @@ const UDT = () => {
         breadcrumb={breadcrumb}
         headerName={headerName}
         disabled={true}
+        label="Upload Regional Design Template"
       />
 
       {<AddNewDesign {...data} />}
