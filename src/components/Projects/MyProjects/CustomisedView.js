@@ -77,13 +77,13 @@ export default function CustomisedView({
         <div>
           {" "}
           {[...Array(numColumns)].map((_, colIndex) => (
-            <Row >
+            <Row key={colIndex}>
               {" "}
               {[...Array(numRows)].map((_, rowIndex) => {
                 const startIndex =
                   colIndex * 8 * numRows + rowIndex * 2 * numColumns;
                 return (
-                  <Col sm={3} >
+                  <Col sm={3} key={rowIndex} >
                     {" "}
                     {allColumnNames
                       .slice(startIndex, startIndex + 2 * numColumns)
@@ -99,7 +99,7 @@ export default function CustomisedView({
                             )}
                           />
                           <label htmlFor={category} className="ml-2">
-                             {category}
+                             {category && category.split("_").join(" ")}
                           </label>
                         </div>
                       ))}
