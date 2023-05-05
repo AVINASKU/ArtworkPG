@@ -3,16 +3,18 @@ import { InputText } from "primereact/inputtext";
 import { Row, Col } from "react-bootstrap";
 import { Checkbox } from "primereact/checkbox";
 import deleteIcon from "../../../assets/images/deleteIcon.svg";
+import { AutoComplete } from "primereact/autocomplete";
 
 const AddNewDesignContent = ({
   index,
-  brand,
-  category,
+  Brand,
+  Category,
   Project_Name,
   handleDelete,
   item,
   addData,
   roleName,
+  checkBU,
 }) => {
   const { Agency_Reference, Additional_Info, event, Select, Cluster } = item;
 
@@ -20,6 +22,17 @@ const AddNewDesignContent = ({
   const [agencyRef, setAgency] = useState(Agency_Reference);
   const [clusters, setCluster] = useState(Cluster);
   const [additionalInformation, setAdditionalInfo] = useState(Additional_Info);
+  const [tire, setTire] = useState("");
+  const [items, setItems] = useState([]);
+
+  const search = (event) => {
+    let _items = [...Array(10).keys()];
+    setItems(
+      event.query
+        ? [...Array(10).keys()].map((item) => event.query + "-" + item)
+        : _items
+    );
+  };
 
   useEffect(() => {
     setChecked(Select);
@@ -35,7 +48,6 @@ const AddNewDesignContent = ({
           }}
           className="font-color"
         >
-          {/* {di_name} */}
           {!di_name ? `Design Intent ${index + 1}` : di_name}
         </div>
         <img
@@ -43,21 +55,23 @@ const AddNewDesignContent = ({
           alt="filter logo"
           onClick={() => handleDelete(index)}
           className="header-icons"
-          disabled={event === "submit" && true}
         />
       </>
     );
   };
 
   let di_name;
-
+  let clubBrandName =
+    Brand.length && Brand.map((item) => item.Brand_Name).join(",");
+  let clubCategory =
+    Category.length && Category.map((item) => item.Category_Name).join(",");
   if (agencyRef || clusters || additionalInformation) {
     di_name =
       roleName +
       (agencyRef && agencyRef + "_") +
-      brand +
+      clubBrandName +
       "_" +
-      category +
+      clubCategory +
       "_" +
       Project_Name +
       "_" +
@@ -87,13 +101,11 @@ const AddNewDesignContent = ({
                 setAgency(e.target.value);
               }}
               aria-describedby="agency-help"
-              disabled={event === "submit" && true}
             />
-          
           </div>
-            {(agencyRef === "" || agencyRef === undefined) && (
-              <div className="error-text-di">Field Remaining</div>
-            )}
+          {(agencyRef === "" || agencyRef === undefined) && (
+            <div className="error-text-di">Field Remaining</div>
+          )}
         </Col>
         <Col sm={2}>
           <div>
@@ -106,13 +118,26 @@ const AddNewDesignContent = ({
                 setCluster(e.target.value);
               }}
               aria-describedby="cluster-help"
-              disabled={event === "submit" && true}
             />
           </div>
-             {(clusters === "" || clusters === undefined) && (
-              <span className="error-text-di">Field Remaining</span>
-            )}{" "}
+          {(clusters === "" || clusters === undefined) && (
+            <span className="error-text-di">Field Remaining</span>
+          )}{" "}
         </Col>
+        {checkBU && (
+          <Col sm={2} className="set-autocomplete-height">
+            <div>
+              <label htmlFor="cluster">Tire </label>
+              <AutoComplete
+                value={tire}
+                suggestions={items}
+                completeMethod={search}
+                onChange={(e) => setTire(e.value)}
+                dropdown
+              />
+            </div>
+          </Col>
+        )}
 
         <Col sm={2}>
           <div>
@@ -125,7 +150,6 @@ const AddNewDesignContent = ({
                 setAdditionalInfo(e.target.value);
               }}
               aria-describedby="info-help"
-              disabled={event === "submit" && true}
             />
           </div>
         </Col>
@@ -139,7 +163,6 @@ const AddNewDesignContent = ({
               }}
               checked={event === "submit" ? true : checked}
               className="margin-right"
-              disabled={event === "submit" && true}
             ></Checkbox>
           </div>
         </Col>
