@@ -4,20 +4,20 @@ import AddNewDesign from "../DesignJobs/TaskHeader";
 import DesignHeader from "../DesignJobs/DesignHeader";
 import AddNewDesignContent from "../DesignJobs/AddNewDesignContent";
 import FooterButtons from "../DesignJobs/FooterButtons";
-import { saveDesignIntent } from "../../../apis/designIntentApi";
+// import { saveDesignIntent } from "../../../apis/designIntentApi";
 import "../DesignJobs/index.scss";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { ProjectService } from "../../../service/PegaService";
 import { useSelector } from "react-redux";
-
-const breadcrumb = [
-  { label: "My Tasks", url: "/myTasks" },
-  { label: "Define Regional Design Template" },
-];
+import {
+  convertCategoryIntoString,
+  convertBrandIntoString,
+  AddNavigation
+} from "../../../utils";
+import { toLower } from "lodash";
 
 const headerName = "Define Regional Design Template";
-
 const roleName = "DT_";
 
 function DDT() {
@@ -30,9 +30,11 @@ function DDT() {
   const User = useSelector((state) => state.UserReducer);
   const userInformation = User.userInformation;
 
+  let breadcrumb = AddNavigation(headerName);
+
   let bu = userInformation?.bu;
 // if bu is baby care show tire field else not
-  let checkBU = bu === "Baby Care" ? true : false;
+  let checkBU = toLower(bu) === toLower("Home Care") ? true : false;
 
   useEffect(() => {
     let taskId;
@@ -44,7 +46,10 @@ function DDT() {
     (async () => {
       try {
         const data1 = ProjectService.getDIData();
-
+        if (data1) {
+          data1.Category = convertCategoryIntoString(data1.Category);
+          data1.Brand = convertBrandIntoString(data1.Brand);
+        }
         // const data1 = await getDesignIntent();
         console.log("api data------>", data1);
         data1 && setData(data1);
@@ -53,7 +58,7 @@ function DDT() {
         console.log("error", err);
       }
     })();
-  }, []);
+  }, [TaskID,ProjectID]);
 
   const handleCancel = () => {
     return navigate(`/myTasks`);
@@ -175,7 +180,7 @@ function DDT() {
                   checkBU={checkBU}
                 />
               );
-            }
+            } else return <>Data Not Found</>
           })}
         <FooterButtons
           handleCancel={handleCancel}

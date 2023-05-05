@@ -10,29 +10,35 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { ProjectService } from "../../../service/PegaService";
 import { useSelector } from "react-redux";
-
-const breadcrumb = [
-  { label: "My Tasks", url: "/myTasks" },
-  { label: "Define Production Ready Art" },
-];
+import { toLower } from "lodash";
+import {
+  convertCategoryIntoString,
+  convertBrandIntoString,
+  AddNavigation
+} from "../../../utils";
 
 const headerName = "Define Production Ready Art";
 
 const roleName = "PRA_";
 
-function PRA() {
+
+
+function DPRA() {
   const [data, setData] = useState(null);
   const [designIntent, setDesignIntent] = useState([]);
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
+
+  let breadcrumb = AddNavigation(headerName);
+
   const User = useSelector((state) => state.UserReducer);
   const userInformation = User.userInformation;
 
   let bu = userInformation?.bu;
-// if bu is baby care show tire field else not
-  let checkBU = bu === "Baby Care" ? true : false;
+  // if bu is home care show tire field else not
+  let checkBU = toLower(bu) === toLower("Home Care") ? true : false;
 
   useEffect(() => {
     let taskId;
@@ -45,6 +51,11 @@ function PRA() {
       try {
         const data1 = ProjectService.getDIData();
         console.log("api data------>", data1);
+
+        if (data1 && data1.Category && data1.Brand) {
+          data1.Category = convertCategoryIntoString(data1.Category);
+          data1.Brand = convertBrandIntoString(data1.Brand);
+        }
         data1 && setData(data1);
         data1 && setDesignIntent(data1.Design_Intent_Details);
       } catch (err) {
@@ -136,7 +147,6 @@ function PRA() {
       DesignIntentList: submitOnlySelectedData,
     };
     // call save as draft API here below
-
   };
 
   return (
@@ -173,7 +183,7 @@ function PRA() {
                   checkBU={checkBU}
                 />
               );
-            }
+            } else return <>Data Not Found</>;
           })}
         <FooterButtons
           handleCancel={handleCancel}
@@ -185,4 +195,4 @@ function PRA() {
   );
 }
 
-export default PRA;
+export default DPRA;

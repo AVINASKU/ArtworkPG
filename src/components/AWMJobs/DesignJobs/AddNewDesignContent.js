@@ -7,8 +7,8 @@ import { AutoComplete } from "primereact/autocomplete";
 
 const AddNewDesignContent = ({
   index,
-  brand,
-  category,
+  Brand,
+  Category,
   Project_Name,
   handleDelete,
   item,
@@ -66,9 +66,9 @@ const AddNewDesignContent = ({
     di_name =
       roleName +
       (agencyRef && agencyRef + "_") +
-      brand +
+      Brand +
       "_" +
-      category +
+      Category +
       "_" +
       Project_Name +
       "_" +
@@ -98,7 +98,6 @@ const AddNewDesignContent = ({
                 setAgency(e.target.value);
               }}
               aria-describedby="agency-help"
-              disabled={event === "submit" && true}
             />
           </div>
           {(agencyRef === "" || agencyRef === undefined) && (
@@ -116,7 +115,6 @@ const AddNewDesignContent = ({
                 setCluster(e.target.value);
               }}
               aria-describedby="cluster-help"
-              disabled={event === "submit" && true}
             />
           </div>
           {(clusters === "" || clusters === undefined) && (
@@ -149,7 +147,6 @@ const AddNewDesignContent = ({
                 setAdditionalInfo(e.target.value);
               }}
               aria-describedby="info-help"
-              disabled={event === "submit" && true}
             />
           </div>
         </Col>

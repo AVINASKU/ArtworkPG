@@ -60,8 +60,38 @@ const filterProjectData = [
 
 const DI = {
   Project_Name: "Paste Mulsaane Oral-B Medical Device Europe",
-  Brand: "Fairy",
-  Category: "Hand Dish Wash",
+  Brand: [
+    {
+      Brand_Name: "Charlie Banana",
+      code: "BV0102",
+    },
+    {
+      Brand_Name: "Pampers",
+      code: "J29",
+    },
+    {
+      Brand_Name: "All Clean",
+      code: "BV0121",
+    },
+    {
+      Brand_Name: "Lines",
+      code: "D76",
+    },
+  ],
+  Category: [
+    {
+      Category_Name: "Baby Care Adjacencies",
+      code: "BCA",
+    },
+    {
+      Category_Name: "Baby Wipes",
+      code: "BW",
+    },
+    {
+      Category_Name: "Diapers",
+      code: "DP",
+    },
+  ],
   Duration: "15 days",
   Start_Date: "20-mar-2023",
   End_Date: "4-apr-23",
