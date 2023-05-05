@@ -401,7 +401,7 @@ const TaskList = (props) => {
           handleDelegateClick={handleDelegateClick}
           handleHelpNeededClick={handleHelpNeededClick}
           actionFlag={!selected || selected.length === 0}
-          header="My Tasks"
+          header={props.flag === "myTasks" ? "My Tasks" : "All Tasks"}
           isFilterEnabled={isFilterEnabled}
           clearFilter={clearFilter}
         />
