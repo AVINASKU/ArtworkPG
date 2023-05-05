@@ -8,6 +8,8 @@ function TaskHeader({
   Duration,
   Consumed_Buffer,
 }) {
+
+console.log("data", Project_Name, Start_Date, End_Date, Duration, Consumed_Buffer);
   const intentName = () => {
     return (
       <div className="actions">

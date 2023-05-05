@@ -34,7 +34,7 @@ const CloneJobs = ({
   const [printTrailNeeded, setPrintTrailNeeded] = useState(false);
   const [printerProcess, setPrinterProcess] = useState(Printer_Process);
   const [substrateData, setSubstarteData] = useState(Substrate);
-  const [printers, setPrinters] = useState([]);
+  const [printers, setPrinters] = useState(Printer);
   const [additionalInformation, setAdditionalInfo] = useState(Additional_Info);
   const [filteredItems, setFilteredItems] = useState(null);
   useEffect(() => {
@@ -70,26 +70,19 @@ const CloneJobs = ({
 
   let di_name;
 
-  if (printerProcess || printers || additionalInformation) {
+  if (printerProcess || printers || substrateData || printers || Brand) {
     di_name =
       jobName +
-      (printers && printers ? printers + "_" : "Printer" + "_") +
-      (printerProcess && printerProcess
-        ? printerProcess + "_"
-        : "Printing Process" + "_") +
-      (substrateData && substrateData
-        ? "Substrate" + "_"
-        : substrateData + "_") +
+      (printers ? printers + "_" : "Printer" + "_") +
+      (printerProcess ? printerProcess + "_" : "Printing Process" + "_") +
+      (substrateData ? substrateData + "_" : "Substrate" + "_") +
       Brand.map((obj) => obj) +
       "_" +
       Category +
       "_" +
       Project_Name +
       "_" +
-      (printers && printers + "_") +
-      (additionalInformation && additionalInformation
-        ? "Additional info"
-        : additionalInformation);
+      (additionalInformation ? additionalInformation : "Additional info");
   }
   const searchFilters = (query, printerProcessList, setFilteredItems) => {
     let _filteredItems = [];
@@ -104,7 +97,7 @@ const CloneJobs = ({
   };
   return (
     <div>
-      <div className="design-intent-header">{DesignHeader(di_name)}</div>
+      <div className="design-intent-header ">{DesignHeader(di_name)}</div>
       <Row
         style={{
           marginLeft: 15,
@@ -112,33 +105,14 @@ const CloneJobs = ({
           marginBottom: 15,
           marginTop: 5,
         }}
+        className="label-header"
       >
         <Col sm={2}>
           <div>
-            <label htmlFor="cluster">Printer * </label>
+            <label htmlFor="cluster">Printer </label>
 
-            <AutoComplete
-              id="printer"
-              value={printers}
-              suggestions={filteredItems}
-              completeMethod={(e) =>
-                searchFilters(e.query, PrinterList, setFilteredItems)
-              }
-              dropdown
-              placeholder="Search Printer"
-              onChange={(e) => {
-                addData("Printer", index, e.target.value, di_name);
-                setPrinters(e.target.value);
-              }}
-              aria-describedby="cluster-help"
-              disabled={event === "submit" && true}
-            />
-          </div>
-        </Col>
-        <Col sm={2}>
-          <div>
-            <label htmlFor="agency">Printer Process * </label>
-            {/* <MultiSelect
+            <MultiSelect
+              id="printers"
               value={printers}
               onChange={(e) => {
                 addData("Printer_Process", index, e.value, di_name);
@@ -154,7 +128,13 @@ const CloneJobs = ({
               aria-describedby="agency-help"
               disabled={event === "submit" && true}
               placeholder="Select Printer Process"
-            /> */}
+            />
+          </div>
+        </Col>
+        <Col sm={2}>
+          <div>
+            <label htmlFor="agency">Printer Process * </label>
+
             <AutoComplete
               id="printer"
               value={printerProcess}
@@ -196,7 +176,7 @@ const CloneJobs = ({
               disabled={event === "submit" && true}
             />
           </div>
-          {(Substrate === "" || Substrate === undefined) && (
+          {(substrateData === "" || substrateData === undefined) && (
             <span className="error-text-di">Field Remaining</span>
           )}{" "}
         </Col>
@@ -217,12 +197,12 @@ const CloneJobs = ({
           </div>
         </Col>
         <Col sm={3}>
-          <label htmlFor="select"> Print Trail Needed</label>
+          <label htmlFor="printTrailNeeded"> Print Trail Needed</label>
           <div>
             <Checkbox
               onChange={(e) => {
-                addData("Select", index, e.checked, di_name);
-                setChecked(e.checked);
+                addData("printTrailNeeded", index, e.checked, di_name);
+                setPrintTrailNeeded(e.checked);
               }}
               checked={event === "submit" ? true : printTrailNeeded}
               className="margin-right"
