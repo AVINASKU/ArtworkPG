@@ -17,13 +17,14 @@ const breadcrumb = [
 ];
 
 const headerName = "Define Color Development";
-const roleName = "DI_";
+const jobName = "CD_";
 
 function CCD() {
   const dispatch = useDispatch();
   const { defineCD } = useSelector((state) => state.CDReducer);
   const [data, setData] = useState(null);
   const [CD, setCD] = useState([]);
+
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
   let { TaskID, ProjectID } = useParams();
@@ -41,7 +42,8 @@ function CCD() {
 
   useEffect(() => {
     if (defineCD) {
-      setCD(defineCD || []);
+      setCD(defineCD?.Color_Development_Details || []);
+      setData(defineCD || []);
     }
   }, [defineCD]);
   const handleCancel = () => {
@@ -50,7 +52,7 @@ function CCD() {
 
   const handleDelete = (index) => {
     console.log("index", index);
-    const sub = CD.map((item, i) => {
+    const sub = CD?.map((item, i) => {
       if (i === index) {
         item.Action = "delete";
       }
@@ -88,7 +90,7 @@ function CCD() {
   };
 
   const onSelectAll = (checked) => {
-    CD.map((task) => {
+    CD?.map((task) => {
       if (task?.Event !== "submit") {
         task.Select = checked;
       }
@@ -99,7 +101,7 @@ function CCD() {
   };
 
   const onSubmit = () => {
-    let submitOnlySelectedData = CD.filter((task) => task?.Select === true);
+    let submitOnlySelectedData = CD?.filter((task) => task?.Select === true);
     submitOnlySelectedData.map((task) => {
       task.Event = "submit";
     });
@@ -111,7 +113,7 @@ function CCD() {
     // let submitOnlySelectedData = designIntent.filter(
     //   (task) => task?.Event !== "submit"
     // );
-    let submitOnlySelectedData = CD.map((task) => {
+    let submitOnlySelectedData = CD?.map((task) => {
       task.Action = "update";
       if (task?.Action !== "delete" && task?.Design_Job_ID) {
         task.Action = "update";
@@ -151,7 +153,7 @@ function CCD() {
       >
         {<TaskHeader {...data} />}
 
-        {CD?.map((item, index) => {
+        {CD.map((item, index) => {
           if (item && item?.Action !== "delete") {
             return (
               <CloneJobs
@@ -161,7 +163,7 @@ function CCD() {
                 index={index}
                 addData={addData}
                 handleDelete={handleDelete}
-                roleName={roleName}
+                jobName={jobName}
               />
             );
           }
