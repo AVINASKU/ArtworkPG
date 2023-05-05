@@ -4,7 +4,7 @@ import DesignHeader from "../DesignJobs/DesignHeader";
 import FooterButtons from "../DesignJobs/FooterButtons";
 import AddNewDesign from "../DesignJobs/TaskHeader";
 import { ProjectService } from "../../../service/PegaService";
-import ApproveDesignIntentContent from "./ApproveDesignIntentContent";
+import ApproveDesignIntentContent from "../DesignJobs/ApproveDesignIntentContent";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/tasks" },
@@ -34,8 +34,7 @@ const ApproveDesignIntent = () => {
       />
 
       {<AddNewDesign {...data} />}
-      <ApproveDesignIntentContent {...taskData} />
-
+      <ApproveDesignIntentContent {...taskData} upload={true} approve={true}/>
       <FooterButtons />
     </PageLayout>
   );

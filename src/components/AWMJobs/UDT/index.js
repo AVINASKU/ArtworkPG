@@ -8,9 +8,9 @@ import ApproveDesignIntentContent from "../DesignJobs/ApproveDesignIntentContent
 
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
-  { label: "Upload Regional Design Intent" },
+  { label: "Upload Regional Design Template" },
 ];
-const headerName = "Upload Regional Design Intent";
+const headerName = "Upload Regional Design Template";
 
 const UDT = () => {
   const [data, setData] = useState(null);
@@ -34,7 +34,8 @@ const UDT = () => {
       />
 
       {<AddNewDesign {...data} />}
-      <ApproveDesignIntentContent {...taskData} />
+
+      <ApproveDesignIntentContent {...taskData} upload={true} />
 
       <FooterButtons />
     </PageLayout>

@@ -31,7 +31,7 @@ const UPRA = () => {
         label="Upload Production Ready Art"
       />
       {<CloneJobs {...data} />}
-      <ApproveDesignIntentContent {...taskData} />
+      <ApproveDesignIntentContent {...taskData} upload={true} />
       <FooterButtons />
     </PageLayout>
   );
