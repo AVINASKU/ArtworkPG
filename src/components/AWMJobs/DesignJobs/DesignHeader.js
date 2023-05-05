@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Checkbox } from "primereact/checkbox";
 import plusCollapseImg from "../../../assets/images/plusCollapse.svg";
 import filter from "../../../assets/images/filter.svg";
-import { NavLink, useLocation, useRouteMatch } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 const DesignHeader = ({
   setAddNewDesign,
@@ -25,8 +25,10 @@ const DesignHeader = ({
             <ul>
               <li class="p-breadcrumb-chevron pi pi-chevron-right"></li>
               <li class="">
-                <NavLink exact to={mytasks} class="p-menuitem-link">
-                  <span class="p-menuitem-text">My Tasks</span>
+                <NavLink exact to={`/${mytasks}`} class="p-menuitem-link">
+                  <span class="p-menuitem-text">
+                    {url[1] === "MyTasks" ? "My Tasks" : "All Tasks"}
+                  </span>
                 </NavLink>
               </li>
               <li class="p-breadcrumb-chevron pi pi-chevron-right"></li>
