@@ -119,6 +119,7 @@ const AllProjectList = (props) => {
       try {
         // const ProjectData = await ProjectService.getProjectData();
         const ProjectData = _.cloneDeep(allProjectList.allProjects);
+
         if (ProjectData && ProjectData.length) {
           ProjectData.filter((field) => {
             if (field.Artwork_Category) {
@@ -232,6 +233,7 @@ const AllProjectList = (props) => {
   };
 
   const projectNameHeader = (options) => {
+    let splittedCol = options.split("_").join(" ");
     const isFilterActivated =
       (frozenCoulmns &&
         frozenCoulmns.length &&
@@ -246,7 +248,6 @@ const AllProjectList = (props) => {
             alt="Column Filter"
             onClick={(e) => {
               op.current.toggle(e);
-
               setSelectedColumnName(options);
             }}
             className={
@@ -256,7 +257,7 @@ const AllProjectList = (props) => {
             }
           />
           <span className={isFilterActivated && "filter-color-change"}>
-            {options}
+            {splittedCol}
           </span>
         </>
       </div>
@@ -266,18 +267,6 @@ const AllProjectList = (props) => {
   const fullKitReadinessBody = (options, rowData) => {
     let field = rowData.field;
     let projectId = options["Project_ID"];
-    // if (field === "Artwork_Category") {
-    //   categoryNames =
-    //     options[field] &&
-    //     options[field].map((item) => item.Category_Name).join(",");
-    // }
-
-    // if (field === "Artwork_SMO") {
-    //   SMOName = options[field]?.map((item) => item.SMO_Name).join(",");
-    // }
-    // if (field === "Artwork_Brand") {
-    //   brandName = options[field]?.map((item) => item.Brand_Name).join(",");
-    // }
 
     return (
       <>
@@ -411,15 +400,19 @@ const AllProjectList = (props) => {
       "Estimated_AW_Printer",
       "Full Kit Readiness Tracking",
     ];
-    console.log("all column name constant", defaultCol);
-
     setProjectColumnNames(defaultCol);
-
     localStorage.setItem(
       "allColumnNamesAllProjects",
       JSON.stringify(defaultCol)
     );
     setReorderedColumn(false);
+     localStorage.setItem("allProjectColumnWiseFilterData", JSON.stringify({}));
+    localStorage.setItem("allProjectSortingData", JSON.stringify({}));
+    localStorage.setItem("allProjectFrozenData", JSON.stringify({}));
+    setSelectedCities([]);
+    setSortData([]);
+    setFilters([]);
+    setFrozenColumn([]);
   };
 
   const onGlobalFilterChange = (e) => {
@@ -528,7 +521,7 @@ const AllProjectList = (props) => {
   const isFilterEnabled =
     frozenCoulmns?.length || filters?.length || sortData?.length;
 
-  const isResetEnabled = isReorderedColumn;
+  const isResetEnabled = isReorderedColumn || isFilterEnabled;
 
   // console.log("project column name", projectColumnName);
 
