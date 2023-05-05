@@ -1,0 +1,37 @@
+{
+  "data": [
+    {
+      "Color_Development_Details": [
+        {
+          "CD_Job_Name": "CD2",
+          "Printer": [
+            "CORBUS EUROPE LTD~15305162",
+            "ALBEA WARSAW SP ZOO~15252808"
+          ],
+          "CD_Job_ID": "2",
+          "Select": true,
+          "PrintTrail": true,
+          "CDConfirmed": false,
+          "PTConfirmed": false,
+          "Printer_Process": "Digital",
+          "Substrate": "Cartonboard-Coated-Wax",
+          "Additional_Info": "test2"
+        }
+      ],
+      "Etag": "",
+      "Consumed_Buffer": null,
+      "Project_ID": "A-610",
+      "Duration": null,
+      "Brand": [
+        "Pampers",
+        "Huggies"
+      ],
+      "Category": "Fabric",
+      "Project_Name": "TestProject80",
+      "Task_Name": "Color Development",
+      "Start_Date": "",
+      "End_Date": "",
+      "Task_ID": "CPT_Task-12"
+    }
+  ]
+}
