@@ -336,7 +336,17 @@ div.p-selectbutton.p-buttonset.p-component {
   color: "#003DA5" !important;
 }
 
-.p-datatable-scrollable .p-frozen-column {
+.p-datatable-scrollable {
+  &-table > .p-datatable-thead {
+    z-index: 10000;
+  }
+}
+
+.p-frozen-column {
+  z-index: 1000;
+}
+
+.p-frozen-column {
   z-index: 1000;
 }
 
@@ -424,4 +434,12 @@ div.flex.align-items-center.gap-2 {
 .filter-color-change {
   filter: invert(10%) sepia(100%) saturate(1200%) hue-rotate(190deg)
     brightness(70%) contrast(90%);
+}
+.p-overlaypanel,
+.dropdown-menu,
+.p-autocomplete-panel,
+.p-dialog-mask,
+.p-overlaypanel,
+.p-multiselect-panel {
+  z-index: 100000 !important;
 }

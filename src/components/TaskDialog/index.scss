@@ -45,7 +45,7 @@
 #submit {
   padding: 0 !important;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   .p-button {
     width: 93px;
     height: 40px;
@@ -62,4 +62,8 @@
       color: #fff !important;
     }
   }
+}
+.comments-validation {
+  font-size: 12px;
+  padding: 0;
 }
