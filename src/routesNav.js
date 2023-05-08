@@ -11,7 +11,7 @@ import ApproveDesignIntent from "./components/AWMJobs/DDI/ApproveDesignIntent";
 import AllTasksPage from "./AllTaksPage.js";
 import MyTasksPage from "./MyTaskPage.js";
 import DDT from "./components/AWMJobs/DDT/index.js";
-import PRA from "./components/AWMJobs/PRA/index.js";
+import DPRA from "./components/AWMJobs/PRA/index.js";
 import CCD from "./components/AWMJobs/CCD/index.js";
 import DCD from "./components/AWMJobs/DCD/index.js";
 import CNIQ from "./components/AWMJobs/CNIQ/index.js";
@@ -57,8 +57,10 @@ const RoutesNav = () => {
         <Route path="/allTasks/ADT/:TaskID/:ProjectID" element={<ADT />} />
         <Route path="/myTasks/UDT/:TaskID/:ProjectID" element={<UDT />} />
         <Route path="/allTasks/UDT/:TaskID/:ProjectID" element={<UDT />} />
-        <Route path="/myTasks/PRA/:TaskID/:ProjectID" element={<PRA />} />
-        <Route path="/allTasks/PRA/:TaskID/:ProjectID" element={<PRA />} />
+
+        <Route path="/myTasks/DPRA/:TaskID/:ProjectID" element={<DPRA />} />
+        <Route path="/allTasks/DPRA/:TaskID/:ProjectID" element={<DPRA />} />
+
         <Route path="/myTasks/APRA/:TaskID/:ProjectID" element={<APRA />} />
         <Route path="/allTasks/APRA/:TaskID/:ProjectID" element={<APRA />} />
         <Route path="/myTasks/UPRA/:TaskID/:ProjectID" element={<UPRA />} />

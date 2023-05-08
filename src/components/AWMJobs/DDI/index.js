@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PageLayout from "../../PageLayout";
-import AddNewDesign from "../DesignJobs/AddNewDesign";
+import AddNewDesign from "../DesignJobs/TaskHeader";
 import DesignHeader from "../DesignJobs/DesignHeader";
 import AddNewDesignContent from "../DesignJobs/AddNewDesignContent";
 import FooterButtons from "../DesignJobs/FooterButtons";
@@ -144,6 +144,7 @@ function DDI() {
         onSelectAll={onSelectAll}
         breadcrumb={breadcrumb}
         headerName={headerName}
+        label="Define Design Intent"
       />
       <div
         style={{

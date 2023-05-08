@@ -1,25 +1,23 @@
 import React, { useEffect, useState } from "react";
 import PageLayout from "../../PageLayout";
-import AddNewDesign from "../DesignJobs/AddNewDesign";
+import AddNewDesign from "../DesignJobs/TaskHeader";
 import DesignHeader from "../DesignJobs/DesignHeader";
 import AddNewDesignContent from "../DesignJobs/AddNewDesignContent";
 import FooterButtons from "../DesignJobs/FooterButtons";
-import {
-  getDesignIntent,
-  saveDesignIntent,
-} from "../../../apis/designIntentApi";
+// import { saveDesignIntent } from "../../../apis/designIntentApi";
 import "../DesignJobs/index.scss";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { ProjectService } from "../../../service/PegaService";
+import { useSelector } from "react-redux";
+import {
+  AddNavigation,
+} from "../../../utils";
+import { toLower} from "lodash";
+import _ from "lodash";
 
-const breadcrumb = [
-  { label: "My Tasks", url: "/myTasks" },
-  { label: "Define Regional Design Template" },
-];
 
 const headerName = "Define Regional Design Template";
-
 const roleName = "DT_";
 
 function DDT() {
@@ -29,37 +27,34 @@ function DDT() {
   const [submittedDI, setSubmittedDI] = useState([]);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
+  const User = useSelector((state) => state.UserReducer);
+  const userInformation = User.userInformation;
 
-  console.log("task id", TaskID, ProjectID);
+  let breadcrumb = AddNavigation(headerName);
+
+  let bu = userInformation?.bu;
+  // if bu is baby care show tire field else not
+  let checkBU = toLower(bu) === toLower("Home Care") ? true : false;
 
   useEffect(() => {
     let taskId;
     if (TaskID) {
       taskId = TaskID.split("_")[1];
-      console.log("task id-->", taskId[1]);
+      console.log("task id-->", taskId[1], ProjectID);
     }
 
     (async () => {
       try {
-          const data1 = ProjectService.getDIData();
-
+        const data1 =ProjectService.getDIData();
         // const data1 = await getDesignIntent();
         console.log("api data------>", data1);
-        data1 && data1.length && setData(data1[0]);
-        data1 &&
-          data1.length &&
-          setDesignIntent(data1[0]?.Design_Intent_Details);
+        data1 && setData(data1);
+        data1 && setDesignIntent(data1.Design_Intent_Details);
       } catch (err) {
         console.log("error", err);
       }
     })();
-
-    // setData(data1);
-    // let notSubmittedData = data1.DesignIntentList.filter((task)=> task.event !== "submit");
-    // let submittedData = data1.DesignIntentList.filter((task)=> task?.event === "submit");
-    // setDesignIntent(data1?.DesignIntentList);
-    // setSubmittedDI(submittedData);
-  }, []);
+  }, [TaskID, ProjectID]);
 
   const handleCancel = () => {
     return navigate(`/myTasks`);
@@ -73,9 +68,6 @@ function DDT() {
       }
       return item;
     });
-    // console.log("index here", sub1);
-    // const sub = subProject.splice(index,1);
-    console.log("sub", sub);
     setDesignIntent(sub);
   };
 
@@ -95,6 +87,7 @@ function DDT() {
   const addData = (fieldName, index, value, Design_Intent_Name) => {
     let data = designIntent[index];
     data[fieldName] = value;
+    // add here design job name here check it out from API.
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
     setSubmittedDI(submittedDI);
@@ -119,6 +112,7 @@ function DDT() {
       task.Event = "submit";
     });
     console.log("full submit data --->", submitOnlySelectedData);
+    // call submit API here
   };
 
   const onSaveAsDraft = async () => {
@@ -144,8 +138,7 @@ function DDT() {
     let formData = {
       DesignIntentList: submitOnlySelectedData,
     };
-    console.log("full draft data --->", submitOnlySelectedData);
-    await saveDesignIntent(formData);
+    // call save as draft API here below
   };
 
   return (
@@ -155,6 +148,7 @@ function DDT() {
         onSelectAll={onSelectAll}
         breadcrumb={breadcrumb}
         headerName={headerName}
+        label="Define Regional Design Template"
       />
       <div
         style={{
@@ -179,9 +173,10 @@ function DDT() {
                   addData={addData}
                   handleDelete={handleDelete}
                   roleName={roleName}
+                  checkBU={checkBU}
                 />
               );
-            }
+            } else return <>Data Not Found</>;
           })}
         <FooterButtons
           handleCancel={handleCancel}

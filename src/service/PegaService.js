@@ -59,15 +59,45 @@ const filterProjectData = [
 ];
 
 const DI = {
-  projectName: "Paste Mulsaane Oral-B Medical Device Europe",
-  brand: "Fairy",
-  category: "Hand Dish Wash",
-  duration: "15 days",
-  start_date: "20-mar-2023",
-  end_date: "4-apr-23",
-  consumed_buffer: "15",
+  Project_Name: "Paste Mulsaane Oral-B Medical Device Europe",
+  Brand: [
+    {
+      Brand_Name: "Charlie Banana",
+      code: "BV0102",
+    },
+    {
+      Brand_Name: "Pampers",
+      code: "J29",
+    },
+    {
+      Brand_Name: "All Clean",
+      code: "BV0121",
+    },
+    {
+      Brand_Name: "Lines",
+      code: "D76",
+    },
+  ],
+  Category: [
+    {
+      Category_Name: "Baby Care Adjacencies",
+      code: "BCA",
+    },
+    {
+      Category_Name: "Baby Wipes",
+      code: "BW",
+    },
+    {
+      Category_Name: "Diapers",
+      code: "DP",
+    },
+  ],
+  Duration: "15 days",
+  Start_Date: "20-mar-2023",
+  End_Date: "4-apr-23",
+  Consumed_Buffer: "15",
   count: 1,
-  DesignIntentList: [
+  Design_Intent_Details: [
     {
       Design_Intent_Name:
         "DI_FAI-214_Fairy_Hand Dish Wash_Paste Mulsaane Oral-B Medical Device Europe_UK_Test",
@@ -97,12 +127,12 @@ const DI = {
 };
 
 const Approve_di = {
-  projectName: "Paste Mulsaane Oral-B Medical Device Europe",
+  Project_Name: "Paste Mulsaane Oral-B Medical Device Europe",
   brand: "Fairy",
-  category: "Hand Dish Wash",
-  duration: "15 days",
-  start_date: "20-mar-2023",
-  end_date: "4-apr-23",
+  Category: "Hand Dish Wash",
+  Duration: "15 days",
+  Start_Date: "20-mar-2023",
+  End_Date: "4-apr-23",
   consumed_buffer: "15",
   count: 1,
   DesignIntentList: {
@@ -116,6 +146,7 @@ const Approve_di = {
     AdditionalInfo: "Test",
     Select: "true",
     event: "submit",
+    file_name:"DI_FAI-214_Fairy_Hand Dish Wash_Paste Mulsaane"
   },
 };
 

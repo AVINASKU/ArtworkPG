@@ -1,13 +1,15 @@
 import React from "react";
 import { changeDateFormat } from "../../../utils";
 
-function AddNewDesign({
+function TaskHeader({
   Project_Name,
   Start_Date,
   End_Date,
   Duration,
   Consumed_Buffer,
 }) {
+
+console.log("data", Project_Name, Start_Date, End_Date, Duration, Consumed_Buffer);
   const intentName = () => {
     return (
       <div className="actions">
@@ -43,4 +45,4 @@ function AddNewDesign({
   return <div className="content-layout">{intentName()}</div>;
 }
 
-export default AddNewDesign;
+export default TaskHeader;
