@@ -229,7 +229,7 @@ function AddProject(props) {
 
       setDesignScopeList((prevDesignScopeList) => ({
         ...prevDesignScopeList,
-        PRA: parseInt(selectedProjectDetails?.Estimated_No_Of_CICs),
+        CICs: parseInt(selectedProjectDetails?.Estimated_No_Of_CICs),
       }));
       handleCheckboxChange({
         target: {
@@ -658,7 +658,7 @@ function AddProject(props) {
     console.log("form data", formData);
     setFormData(formData);
     if (mode === "create") {
-      const response = await createNewProject(formData);
+      await createNewProject(formData);
       // if (response?.data?.ID) {
       //   showStatus("success", "Success", "Submit Successful", "navigate");
       //   // alert("Submit Successful");
@@ -666,10 +666,10 @@ function AddProject(props) {
       //   showStatus("error", "Error", "Submit Failed");
       //   // alert("Submit failed");
       // }
-    } else if (mode === "edit") {
+    } else if (mode === "edit" || mode === "design") {
       const method = "PATCH";
       const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
-      const response = await editProject(formData, id, method, headers);
+      await editProject(formData, id, method, headers);
       // if (response?.data?.ID) {
       //   showStatus("success", "Success", "Submit Successful", "navigate");
       //   // alert("Submit Successful");
@@ -686,7 +686,7 @@ function AddProject(props) {
     localStorage.setItem("formDraft", JSON.stringify(draftFormData));
     setIsLoading(true);
     if (mode === "create") {
-      const response = await createNewProject(draftFormData);
+      await createNewProject(draftFormData);
       // if (response?.data?.ID) {
       //   showStatus(
       //     "success",
@@ -702,7 +702,7 @@ function AddProject(props) {
     } else if (mode === "edit" || mode === "design") {
       const method = "PUT";
       const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
-      const response = await editProject(draftFormData, id, method, headers);
+      await editProject(draftFormData, id, method, headers);
       // if (response?.data?.ID) {
       //   showStatus(
       //     "success",
@@ -1317,7 +1317,7 @@ function AddProject(props) {
           </Button>
           <Button
             className="button-layout draft-button"
-            disabled={!formValid || mode === "design"}
+            disabled={!formValid}
             type="submit"
           >
             Submit

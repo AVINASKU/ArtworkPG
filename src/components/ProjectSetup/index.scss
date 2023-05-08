@@ -85,3 +85,17 @@ $width: 100%;
   position: absolute !important;
   margin-left: 110px !important;
 }
+#projectActions {
+  height: 32px;
+  width: Hug(98.4px);
+  border-radius: 20px !important;
+  padding: 10px 18px 10px 18px;
+  margin-right: 23px;
+  background-color: #ffffff !important;
+  color: #003DA5;
+  line-height: 12px;
+}
+#projectActions:hover {
+  background-color: #003DA5 !important;
+  color: #ffffff;
+}

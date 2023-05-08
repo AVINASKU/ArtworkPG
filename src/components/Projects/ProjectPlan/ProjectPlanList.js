@@ -23,7 +23,10 @@ import { getProjectPlan } from "../../../apis/projectPlanApi";
 import "./index.scss";
 import TaskDialog from "../../TaskDialog";
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
-import { updateProjectPlanAction } from "../../../store/actions/ProjectPlanActions";
+import {
+  updateProjectPlanAction,
+  updateProjectPlanDesignAction,
+} from "../../../store/actions/ProjectPlanActions";
 import moment from "moment";
 
 const ProjectPlanList = (props) => {
@@ -38,6 +41,7 @@ const ProjectPlanList = (props) => {
   const [showTaskDialog, setShowTaskDialog] = useState(false);
   const [selectedTask, setSelectedTask] = useState([]);
   const [flag, setFlag] = useState("");
+  const [loader, setLoader] = useState(false);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const mode = projectSetup.mode;
@@ -72,12 +76,16 @@ const ProjectPlanList = (props) => {
   useEffect(() => {
     (async () => {
       let restructuredData = [];
+      setLoader(true);
       const apiData =
         mode === "design" && selectedProjectDetails.Project_ID
           ? await getProjectPlan(selectedProjectDetails.Project_ID)
           : [];
-      // console.log("projectPlanApiData::", apiData);
-      restructuredData = apiData.length > 0 ? getRestructuredData(apiData) : [];
+      setLoader(false);
+      console.log("projectPlanApiData::", apiData);
+      apiData && dispatch(updateProjectPlanDesignAction(apiData));
+      restructuredData =
+        apiData?.length > 0 ? getRestructuredData(apiData) : [];
       dispatch(updateProjectPlanAction(restructuredData));
     })();
   }, [mode]);
@@ -102,14 +110,14 @@ const ProjectPlanList = (props) => {
         data: apiData.filter((data) => data.AWM_Task_ID.includes("DDT_")),
       },
       {
-        name: "Upload Design Template",
-        code: "UDT",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("UDT_")),
+        name: "Upload Regional Design Template",
+        code: "URDT",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("URDT_")),
       },
       {
-        name: "Approve Design Template",
-        code: "ADT",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("ADT_")),
+        name: "Approve Regional Design Template",
+        code: "ARDT",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("ARDT_")),
       },
       {
         name: "Confirm Preliminary print feasibility Assessment done (& upload documents - optional)",
@@ -221,7 +229,7 @@ const ProjectPlanList = (props) => {
           tempObj["key"] = dt.AWM_Task_ID;
 
           let dataObj = {};
-          dataObj["Task"] = `${index + 1}. ${dt.Task_Name}`;
+          dataObj["Task"] = `${index + 1}). ${dt.Task_Name}`;
           dataObj["Dependancy"] = dt.Dependency;
           dataObj["Role"] = dt.Role;
           dataObj["RoleOptions"] = dt.RoleOptions;
@@ -486,7 +494,7 @@ const ProjectPlanList = (props) => {
                   className="w-full md:w-14rem"
                 />
 
-                {field === "Owner" && options.key.includes("ADT_") && (
+                {field === "Owner" && options.key.includes("ARDT_") && (
                   <img
                     src={override}
                     alt="Override"
@@ -601,11 +609,58 @@ const ProjectPlanList = (props) => {
     );
   };
 
+  const updateProjectPlanDesign = () => {
+    let arr = [];
+
+    pegadata.forEach((data) => {
+      if (data.children.length === 0) {
+        let obj = {};
+        obj["AWM_Project_ID"] = selectedProjectDetails.Project_ID; //to be changed
+        obj["Help_Needed"] = data.data.HelpNeeded;
+        obj["AWM_Task_ID"] = data.key;
+        obj["End_Date"] = data.data.EndDate;
+        obj["Consumed_Buffer"] = data.data.ConsumedBuffer;
+        obj["Start_Date"] = data.data.StartDate;
+        obj["Assignee"] = data.data.Owner;
+        obj["Duration"] = data.data.Duration;
+        obj["Dependency"] = data.data.Dependancy;
+        obj["Task_Name"] = data.data.Task;
+        obj["Role"] = data.data.Role;
+        obj["State"] = data.data.State;
+        arr.push(obj);
+      } else if (data.children.length > 0) {
+        data.children.forEach((child) => {
+          let tempObj = {};
+          tempObj["AWM_Project_ID"] = selectedProjectDetails.Project_ID;
+          tempObj["Help_Needed"] = child.data.HelpNeeded;
+          tempObj["AWM_Task_ID"] = child.key;
+          tempObj["End_Date"] = child.data.EndDate;
+          tempObj["Consumed_Buffer"] = child.data.ConsumedBuffer;
+          tempObj["Start_Date"] = child.data.StartDate;
+          tempObj["Assignee"] = child.data.Owner;
+          tempObj["Duration"] = child.data.Duration;
+          tempObj["Dependency"] = child.data.Dependancy;
+          tempObj["Task_Name"] = child.data.Task.split("). ")[1];
+          tempObj["Role"] = child.data.Role;
+          tempObj["State"] = child.data.State;
+          arr.push(tempObj);
+        });
+      }
+    });
+    dispatch(updateProjectPlanDesignAction(arr));
+  };
+
+  useEffect(() => {
+    // alert(pegadata);
+    pegadata && updateProjectPlanDesign();
+  }, [pegadata]);
+
   const onDropdownChange = (rowData, { value }, ele) => {
     // Update the data with the new value
     rowData.data[ele] = value.Name;
     console.log("Pegadata: ", pegadata);
     setPegaData([...pegadata]);
+    updateProjectPlanDesign();
   };
 
   const onDurationChange = (rowData, { value }, ele) => {
@@ -672,7 +727,7 @@ const ProjectPlanList = (props) => {
             dataKey="Task"
             reorderableColumns
             value={filters.length ? filters : pegadata}
-            loading={loading}
+            loading={loader}
             className="mt-3 textAlignTreeTable"
             tableStyle={{ minWidth: "119rem", tableLayout: "auto" }}
           >

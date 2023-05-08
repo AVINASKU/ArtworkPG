@@ -18,30 +18,6 @@ function UserLogin() {
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Find the user in the users array with the entered username
-    // const user = RoleUser.users.find(
-    //   (u) => u.username.toLowerCase() === username.toLowerCase()
-    // );
-
-    // if (user && user.password === password) {
-    //   // Save the user's username and role in sessionStorage
-    //   const session = {
-    //     username: user.username,
-    //     role: user.role,
-    //     permissions: user.permissions,
-    //     bu: user.bu,
-    //     region: user.region,
-    //     userid: user.userid,
-    //     loginTime: new Date().toLocaleString(),
-    //   };
-
-    //   // Save the session object in sessionStorage
-    //   sessionStorage.setItem("session", JSON.stringify(session));
-    // Redirect to home page
-    //   navigate("/myProjects");
-    // } else {
-    //   alert("Invalid username or password");
-    // }
     const infoUpdated = await updateUser(username, password);
     setUserInfoUpdated(infoUpdated);
   };
@@ -103,7 +79,7 @@ function UserLogin() {
                 </p>
               )}
             </Form>
-            <Table />
+            {/* <Table /> */}
           </Col>
         </Row>
       </div>

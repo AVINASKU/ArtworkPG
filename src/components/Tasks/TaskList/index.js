@@ -299,7 +299,11 @@ const TaskList = (props) => {
   };
 
   const helpNeededBodyTemplate = (rowData) => {
+
     rowData["Help_Needed"] = rowData["Help_Needed"] != null ? "yes" : "no";
+
+    // rowData["Help_Needed"] = rowData["Help_Needed"] != null ? "yes" : "no";
+
     return (
       <div
         className={`${
@@ -318,6 +322,7 @@ const TaskList = (props) => {
       </div>
     );
   };
+
   const assigneeTemplate = (rowData) => {
     return <div>{rowData?.Assignee}</div>;
   };
