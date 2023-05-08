@@ -4,6 +4,7 @@ import { Row, Col } from "react-bootstrap";
 import { Checkbox } from "primereact/checkbox";
 import deleteIcon from "../../../assets/images/deleteIcon.svg";
 import { MultiSelect } from "primereact/multiselect";
+import { FileUpload } from "primereact/fileupload";
 import {
   SubstrateList,
   PrinterList,
@@ -108,6 +109,18 @@ const CloneJobs = ({
     setFilteredItems(_filteredItems);
   };
   const disabledCPT = pathName === "CPT" ? true : false;
+  const customBase64Uploader = async (event) => {
+    // convert file to base64 encoded
+    const file = event.files[0];
+    const reader = new FileReader();
+    let blob = await fetch(file.objectURL).then((r) => r.blob()); //blob:url
+
+    reader.readAsDataURL(blob);
+
+    reader.onloadend = function () {
+      const base64data = reader.result;
+    };
+  };
   return (
     <div>
       <div className="design-intent-header ">{DesignHeader(di_name)}</div>
@@ -270,7 +283,15 @@ const CloneJobs = ({
           <Col sm={1}>
             <label htmlFor="select"> Upload File</label>
             <div>
-              <InputText type="file" />
+              <FileUpload
+                name="demo[]"
+                url={"/api/upload"}
+                accept="image/*"
+                maxFileSize={1000000}
+                mode="basic"
+                onUpload={customBase64Uploader}
+                chooseLabel="Browse"
+              />
             </div>
           </Col>
         )}

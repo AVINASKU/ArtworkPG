@@ -1,6 +1,6 @@
 import Api from "../../apis";
-const baseURL = "http://localhost:3001/data";
-const CDURL = "http://localhost:3002/data";
+const baseURL = "http://localhost:30010/data";
+const CDURL = "http://localhost:3005/data";
 //pass the taskID and projectId from the my tasks
 
 export const getDefineCD = (taskID, projectId, headers) => {

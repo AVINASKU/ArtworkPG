@@ -10,6 +10,7 @@ import "../DesignJobs/index.scss";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import CloneJobs from "../DesignJobs/CloneJobs";
+import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
 import "./index.scss";
 const breadcrumb = [{ label: "Confirm Color Development & Print Trial" }];
 
@@ -74,12 +75,13 @@ function CPT() {
     setUpdated(!updated);
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     let submitOnlySelectedData = CD?.filter((task) => task?.Select === true);
     submitOnlySelectedData.map((task) => {
       task.Event = "submit";
     });
     console.log("full submit data --->", submitOnlySelectedData);
+    await dispatch(uploadFileAzure());
   };
 
   const onSaveAsDraft = async () => {
