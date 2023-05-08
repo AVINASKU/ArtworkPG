@@ -2,8 +2,24 @@ import Accordion from "react-bootstrap/Accordion";
 import ProjectPlan from "./ProjectPlanList";
 import "primeicons/primeicons.css";
 import "./index.scss";
+import { useSelector } from "react-redux";
+import { activateProjectPlan } from "../../../apis/projectPlanApi";
+import { useNavigate } from "react-router-dom";
 
 function ProjectPlanCompo(props) {
+  const navigate = useNavigate();
+  const projectPlanReducer = useSelector((state) => state.ProjectPlanReducer);
+  const ProjectPlanDesign = projectPlanReducer.projectPlanDesign;
+
+  const activate = async () => {
+    console.log("ProjectPlanDesign: ", ProjectPlanDesign);
+    await activateProjectPlan(
+      ProjectPlanDesign && ProjectPlanDesign[0].AWM_Project_ID,
+      ProjectPlanDesign
+    );
+    navigate("/myProjects");
+  };
+
   return (
     <>
       <Accordion className="projectPlanAccordian" defaultActiveKey="2">
@@ -45,7 +61,7 @@ function ProjectPlanCompo(props) {
           <div>
             <button
               type="button"
-              onClick={() => {}}
+              onClick={activate}
               className="btn btn-success projectPlanCompoButtons projectPlanCompoButtonsColor"
             >
               Activate

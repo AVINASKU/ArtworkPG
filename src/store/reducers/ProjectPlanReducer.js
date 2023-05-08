@@ -4,6 +4,7 @@ const initialState = {
   projectPlan: [],
   loading: true,
   error: null,
+  projectPlanDesign: [],
 };
 
 const projectPlanReducer = (state = initialState, action) => {
@@ -15,6 +16,11 @@ const projectPlanReducer = (state = initialState, action) => {
         projectPlan: action.payload,
         loading: false,
         error: null,
+      };
+    case types.UPDATE_PROJECT_PLAN_DESIGN:
+      return {
+        ...state,
+        projectPlanDesign: action.payload,
       };
     default:
       return state;
