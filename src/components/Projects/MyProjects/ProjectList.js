@@ -37,7 +37,6 @@ const ProjectList = (props) => {
   const [updatedAllColumnNames, setUpdatedAllColumnNames] = useState([]);
   const [isSearch, isSearchSet] = useState(false);
   const [isReorderedColumn, setReorderedColumn] = useState(false);
-
   const myProjectList = useSelector((state) => state.myProject);
   const { loading } = myProjectList;
   const dispatch = useDispatch();
@@ -379,7 +378,7 @@ const ProjectList = (props) => {
     localStorage.setItem("columnWiseFilterData", JSON.stringify({}));
     localStorage.setItem("frozenData", JSON.stringify({}));
     localStorage.setItem("sortingData", JSON.stringify({}));
-    setSelectedCities([]);
+    setSelectedFields([]);
     setSortData([]);
     setFrozenColumn([]);
     setReorderedColumn(false);
