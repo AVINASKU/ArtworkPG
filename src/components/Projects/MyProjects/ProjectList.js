@@ -229,7 +229,7 @@ const ProjectList = (props) => {
   };
 
   const projectNameHeader = (options) => {
-  let splittedCol = options.split("_").join(" ");
+    let splittedCol = options.split("_").join(" ");
     const isFilterActivated =
       (frozenCoulmns &&
         frozenCoulmns.length &&
@@ -293,7 +293,9 @@ const ProjectList = (props) => {
             style={{ color: "#003DA5", cursor: "pointer" }}
             onClick={() => {
               if (field && field.length) {
-                let option = myProjectList.myProject[rowData.rowIndex];
+                let option = myProjectList.myProject.find(
+                  (project) => project.Project_ID === projectId
+                );
                 dispatch(selectedProject(option, "My Projects"));
                 navigate(`/projectPlan/${projectId}`);
               }
@@ -308,7 +310,9 @@ const ProjectList = (props) => {
             style={{ color: "#003DA5", cursor: "pointer" }}
             onClick={() => {
               if (field && field.length) {
-                let option = myProjectList.myProject[rowData.rowIndex];
+                let option = myProjectList.myProject.find(
+                  (project) => project.Project_ID === projectId
+                );
                 dispatch(selectedProject(option, "My Projects"));
                 navigate(`/projectPlan/${projectId}`);
               }
@@ -332,7 +336,7 @@ const ProjectList = (props) => {
   };
 
   const dynamicColumns = () => {
-  console.log("project column name", projectColumnName);
+    console.log("project column name", projectColumnName);
     if (projectColumnName.length) {
       return projectColumnName.map((ele, i) => {
         return (
