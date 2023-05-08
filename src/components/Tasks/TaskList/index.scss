@@ -329,9 +329,14 @@ div.p-selectbutton.p-buttonset.p-component {
     color: "#003DA5" !important;
 }
 
-.p-datatable-scrollable .p-frozen-column {
-    z-index: 1000;
-}
+.p-datatable-scrollable{
+    &-table > .p-datatable-thead{
+        z-index: 10000;
+    }
+    .p-frozen-column {
+        z-index: 1000;
+    }
+} 
 
 .helpneeded_yes,
 .helpneeded_no {
@@ -417,3 +422,7 @@ div.flex.align-items-center.gap-2 {
 .filter-color-change {
     filter: invert(10%) sepia(100%) saturate(1200%) hue-rotate(190deg) brightness(70%) contrast(90%);
 }
+
+// .p-datatable-scrollable .p-frozen-column{
+//     position: static !important;
+//     }

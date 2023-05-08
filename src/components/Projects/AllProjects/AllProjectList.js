@@ -545,6 +545,7 @@ const AllProjectList = (props) => {
           exportCSV={exportCSV}
           isFilterEnabled={isFilterEnabled}
           isResetEnabled={isResetEnabled}
+          allData={pegadata}
         />
 
         <CustomisedView

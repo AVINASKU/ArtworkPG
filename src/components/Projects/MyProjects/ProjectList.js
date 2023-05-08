@@ -29,7 +29,7 @@ const ProjectList = (props) => {
   const [frozenCoulmns, setFrozenColumn] = useState([]);
   const [selectedColumnName, setSelectedColumnName] = useState(null);
   const [projectColumnName, setProjectColumnNames] = useState([]);
-  const [selectedCities, setSelectedCities] = useState([]);
+  const [selectedFields, setSelectedFields] = useState([]);
   const [filters, setFilters] = useState([]);
   const [visible, setVisible] = useState(false);
   const [sortData, setSortData] = useState([]);
@@ -169,7 +169,7 @@ const ProjectList = (props) => {
 
         if (filteredPegaData && filteredPegaData.length) {
           setFilters(filteredPegaData);
-          setSelectedCities(filteredPegaData);
+          setSelectedFields(filteredPegaData);
           setPegaData(ProjectData);
         } else setPegaData(ProjectData);
 
@@ -401,7 +401,7 @@ const ProjectList = (props) => {
 
   const onGlobalFilterChange = (e) => {
     const value = e.value;
-    setSelectedCities(value);
+    setSelectedFields(value);
     setFilters(value);
   };
 
@@ -475,7 +475,7 @@ const ProjectList = (props) => {
     localStorage.setItem("columnWiseFilterData", JSON.stringify({}));
     localStorage.setItem("sortingData", JSON.stringify({}));
     localStorage.setItem("frozenData", JSON.stringify({}));
-    setSelectedCities([]);
+    setSelectedFields([]);
     setSortData([]);
     setFilters([]);
     setFrozenColumn([]);
@@ -510,7 +510,7 @@ const ProjectList = (props) => {
     }
     if (filters && filters.length) {
       localStorage.setItem("columnWiseFilterData", JSON.stringify({}));
-      setSelectedCities([]);
+      setSelectedFields([]);
       setFilters([]);
     }
   };
@@ -519,6 +519,8 @@ const ProjectList = (props) => {
     frozenCoulmns?.length || filters?.length || sortData?.length;
 
   const isResetEnabled = isReorderedColumn;
+
+  console.log("pegadata is is ", pegadata);
 
   return (
     <div className="myProjectAnddAllProjectList">
@@ -530,9 +532,11 @@ const ProjectList = (props) => {
           setVisible={setVisible}
           saveSettings={saveSettings}
           onSearchClick={onSearchClick}
-          exportCSV={exportCSV}
+          // exportCSV={exportCSV}
           isFilterEnabled={isFilterEnabled}
           isResetEnabled={isResetEnabled}
+          allData={pegadata}
+          headers={allColumnNames}
         />
 
         <CustomisedView
@@ -554,7 +558,7 @@ const ProjectList = (props) => {
           onGlobalFilterChange={onGlobalFilterChange}
           selectedColumnName={selectedColumnName}
           ProjectFrozen={ProjectFrozen}
-          selectedCities={selectedCities}
+          selectedFields={selectedFields}
           setFrozenColumn={setFrozenColumn}
           frozenCoulmns={frozenCoulmns}
           sortData={sortData}
