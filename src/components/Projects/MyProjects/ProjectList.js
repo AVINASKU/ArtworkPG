@@ -34,6 +34,7 @@ const ProjectList = (props) => {
   const [visible, setVisible] = useState(false);
   const [sortData, setSortData] = useState([]);
   const [allColumnNames, setAllColumnNames] = useState([]);
+  const [updatedAllColumnNames, setUpdatedAllColumnNames] = useState([]);
   const [isSearch, isSearchSet] = useState(false);
   const [isReorderedColumn, setReorderedColumn] = useState(false);
 
@@ -178,10 +179,12 @@ const ProjectList = (props) => {
         const columnNames = JSON.parse(columnNamesJson);
         if (columnNames != null && columnNames.length) {
           setProjectColumnNames(columnNames);
+          setUpdatedAllColumnNames(columnNames);
         } else {
           const columnNames = ProjectService.getAllColumnNames();
           localStorage.setItem("allColumnNames", JSON.stringify(columnNames));
           setProjectColumnNames(columnNames);
+          setUpdatedAllColumnNames(columnNames);
         }
 
         // const jsonSortingData = await ProjectService.getSortingData();
@@ -525,20 +528,21 @@ const ProjectList = (props) => {
   return (
     <div className="myProjectAnddAllProjectList">
       <Suspense fallback={<div>Loading...</div>}>
-        <ProjectListHeader
-          header={props.header}
-          clearFilters={clearFilters}
-          clearFilter={clearFilter}
-          setVisible={setVisible}
-          saveSettings={saveSettings}
-          onSearchClick={onSearchClick}
-          // exportCSV={exportCSV}
-          isFilterEnabled={isFilterEnabled}
-          isResetEnabled={isResetEnabled}
-          allData={pegadata}
-          headers={allColumnNames}
-        />
-
+        {pegadata !== undefined && (
+          <ProjectListHeader
+            header={props.header}
+            clearFilters={clearFilters}
+            clearFilter={clearFilter}
+            setVisible={setVisible}
+            saveSettings={saveSettings}
+            onSearchClick={onSearchClick}
+            // exportCSV={exportCSV}
+            isFilterEnabled={isFilterEnabled}
+            isResetEnabled={isResetEnabled}
+            allData={pegadata}
+            headers={updatedAllColumnNames}
+          />
+        )}
         <CustomisedView
           visible={visible}
           setProjectColumnNames={setProjectColumnNames}

@@ -47,13 +47,7 @@ const ProjectListHeader = ({
     setDownloadCSV(true);
   };
 
-  console.log("callData allData is", allData);
-  console.log("childheader is  is", headers);
-  // if (actionFlag) {
-  //   dropdown.disabled = false;
-  // } else {
-  //   dropdown.disabled = true;
-  // }
+  
   return (
     <div className="actions">
       <div className="project-title">{header}</div>
@@ -195,7 +189,11 @@ const ProjectListHeader = ({
             {/* {downloadCSV && allData && (
               <ExportSelectedRows selectedRows={selected} allData={allData} />
             )} */}
-            <ExportSelectedRows selectedRows={selected} allData={allData} />
+            <ExportSelectedRows
+              selectedRows={selected}
+              allData={allData}
+              headers={headers}
+            />
 
             <DropdownButton
               id="tasksActions"

@@ -159,11 +159,11 @@ const TaskList = (props) => {
   const op = useRef(null);
   const dt = useRef(null);
   const headerColumns = [
-    "ProjectName",
-    "TaskName",
+    "Project_Name",
+    "Task_Name",
     "Status",
-    "HelpNeeded",
-    "RemainingBuffer",
+    "Help_Needed",
+    "Remaining_Buffer",
   ];
 
   // const exportCSVTasks = (selectionOnly) => {
@@ -391,69 +391,66 @@ const TaskList = (props) => {
   );
 
   return (
-    console.log("headerColumns is is", headerColumns),
-    (
-      <>
-        <div className="my-task-project">
-          <ProjectListHeader
-            // exportCSVTasks={
-            //   selected ? exportCSVTasks(true) : exportCSVTasks(true)
-            // }
-            onSearchClick={onSearchClick}
-            handleDelegateClick={handleDelegateClick}
-            handleHelpNeededClick={handleHelpNeededClick}
-            actionFlag={!selected || selected.length === 0}
-            header="My Tasks"
-            selected={selected}
-            allData={selectedProdSrchList}
-            isFilterEnabled={isFilterEnabled}
-            clearFilter={clearFilter}
-            headers={headerColumns}
-          />
-          <ConfirmationPopUp
-            onSort={onSort}
-            selectedColumnName={selectedColumnName}
-            sortData={sortData}
-            op={op}
-            addFrozenColumns={addFrozenColumns}
-            ProjectFrozen={ProjectFrozen}
-            setProjectFrozen={setProjectFrozen}
-            setFrozenColumn={setFrozenColumn}
-            frozenCoulmns={frozenCoulmns}
-            clearColumnWiseFilter={clearColumnWiseFilter}
-            saveSettings={saveSettings}
-            selectedCities={selectedCities}
-            onGlobalFilterChange={onGlobalFilterChange}
-            projectData={selectedProdSrchList}
-            setFilters={setFilters}
-          />
-          <DataTable
-            resizableColumns
-            value={filters?.length ? filters : selectedProdSrchList}
-            reorderableColumns
-            scrollable
-            selection={selected}
-            onSelectionChange={(e) => setSelected(e.value)}
-            responsiveLayout="scroll"
-            className="mt-3"
-            ref={dt}
-            filterDisplay={isSearch && "row"}
-            tableStyle={{ minWidth: "50rem" }}
-            filters={searchHeader}
-          >
-            {dynamicColumns()}
-          </DataTable>
-        </div>
-        {showTaskDialog && (
-          <TaskDialog
-            onClose={() => setShowTaskDialog(!showTaskDialog)}
-            showTaskDialog={showTaskDialog}
-            selectedTaskData={selectedTask}
-            flag={flag}
-          />
-        )}
-      </>
-    )
+    <>
+      <div className="my-task-project">
+        <ProjectListHeader
+          // exportCSVTasks={
+          //   selected ? exportCSVTasks(true) : exportCSVTasks(true)
+          // }
+          onSearchClick={onSearchClick}
+          handleDelegateClick={handleDelegateClick}
+          handleHelpNeededClick={handleHelpNeededClick}
+          actionFlag={!selected || selected.length === 0}
+          header="My Tasks"
+          selected={selected}
+          allData={selectedProdSrchList}
+          isFilterEnabled={isFilterEnabled}
+          clearFilter={clearFilter}
+          headers={headerColumns}
+        />
+        <ConfirmationPopUp
+          onSort={onSort}
+          selectedColumnName={selectedColumnName}
+          sortData={sortData}
+          op={op}
+          addFrozenColumns={addFrozenColumns}
+          ProjectFrozen={ProjectFrozen}
+          setProjectFrozen={setProjectFrozen}
+          setFrozenColumn={setFrozenColumn}
+          frozenCoulmns={frozenCoulmns}
+          clearColumnWiseFilter={clearColumnWiseFilter}
+          saveSettings={saveSettings}
+          selectedCities={selectedCities}
+          onGlobalFilterChange={onGlobalFilterChange}
+          projectData={selectedProdSrchList}
+          setFilters={setFilters}
+        />
+        <DataTable
+          resizableColumns
+          value={filters?.length ? filters : selectedProdSrchList}
+          reorderableColumns
+          scrollable
+          selection={selected}
+          onSelectionChange={(e) => setSelected(e.value)}
+          responsiveLayout="scroll"
+          className="mt-3"
+          ref={dt}
+          filterDisplay={isSearch && "row"}
+          tableStyle={{ minWidth: "50rem" }}
+          filters={searchHeader}
+        >
+          {dynamicColumns()}
+        </DataTable>
+      </div>
+      {showTaskDialog && (
+        <TaskDialog
+          onClose={() => setShowTaskDialog(!showTaskDialog)}
+          showTaskDialog={showTaskDialog}
+          selectedTaskData={selectedTask}
+          flag={flag}
+        />
+      )}
+    </>
   );
 };
 
