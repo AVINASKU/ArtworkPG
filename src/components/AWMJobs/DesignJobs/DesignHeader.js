@@ -21,20 +21,20 @@ const DesignHeader = ({
       <div className="actions">
         <div>
           {/* <BreadCrumb model={breadcrumb} /> */}
-          <nav class="p-breadcrumb p-component" aria-label="Breadcrumb">
+          <nav className="p-breadcrumb p-component" aria-label="Breadcrumb">
             <ul>
-              <li class="p-breadcrumb-chevron pi pi-chevron-right"></li>
-              <li class="">
-                <NavLink exact to={`/${mytasks}`} class="p-menuitem-link">
-                  <span class="p-menuitem-text">
+              <li className="p-breadcrumb-chevron pi pi-chevron-right"></li>
+              <li className="">
+                <NavLink to={`/${mytasks}`} className="p-menuitem-link">
+                  <span className="p-menuitem-text">
                     {url[1] === "MyTasks" ? "My Tasks" : "All Tasks"}
                   </span>
                 </NavLink>
               </li>
-              <li class="p-breadcrumb-chevron pi pi-chevron-right"></li>
-              <li class="">
-                <a href="#" class="p-menuitem-link">
-                  <span class="p-menuitem-text">{label}</span>
+              <li className="p-breadcrumb-chevron pi pi-chevron-right"></li>
+              <li className="">
+                <a href="#" className="p-menuitem-link">
+                  <span className="p-menuitem-text">{label}</span>
                 </a>
               </li>
             </ul>
