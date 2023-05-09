@@ -234,34 +234,38 @@ const CloneJobs = ({
             </div>
             <label htmlFor="printTrailNeeded">Print Trail Needed</label>
           </div>
-          <div className="print-trial">
-            <div>
-              <Checkbox
-                onChange={(e) => {
-                  setCDConfirmation(e.checked);
-                  setPrintTrailDone(false);
-                }}
-                checked={event === "submit" ? true : CDConfirmation}
-                className="margin-right"
-              ></Checkbox>
-            </div>
+          {disabledCPT && (
+            <>
+              <div className="print-trial">
+                <div>
+                  <Checkbox
+                    onChange={(e) => {
+                      setCDConfirmation(e.checked);
+                      setPrintTrailDone(false);
+                    }}
+                    checked={event === "submit" ? true : CDConfirmation}
+                    className="margin-right"
+                  ></Checkbox>
+                </div>
 
-            <label htmlFor="printTrailNeeded">CD Approved</label>
-          </div>
-          <div className="print-trial">
-            <div>
-              <Checkbox
-                onChange={(e) => {
-                  setPrintTrailDone(e.checked);
-                }}
-                checked={event === "submit" ? true : printTrailDone}
-                className="margin-right"
-                disabled={!CDConfirmation}
-              ></Checkbox>
-            </div>
+                <label htmlFor="printTrailNeeded">CD Approved</label>
+              </div>
+              <div className="print-trial">
+                <div>
+                  <Checkbox
+                    onChange={(e) => {
+                      setPrintTrailDone(e.checked);
+                    }}
+                    checked={event === "submit" ? true : printTrailDone}
+                    className="margin-right"
+                    disabled={!CDConfirmation}
+                  ></Checkbox>
+                </div>
 
-            <label htmlFor="printTrailNeeded">Print Trial Done</label>
-          </div>
+                <label htmlFor="printTrailNeeded">Print Trial Done</label>
+              </div>{" "}
+            </>
+          )}
         </Col>
         {!disabledCPT && (
           <Col sm={1}>

@@ -62,9 +62,9 @@ const AddNewDesignContent = ({
 
   let di_name;
   let clubBrandName =
-    Brand.length && Brand.map((item) => item.Brand_Name).join(",");
+    Brand?.length && Brand.map((item) => item.Brand_Name).join(",");
   let clubCategory =
-    Category.length && Category.map((item) => item.Category_Name).join(",");
+    Category?.length && Category.map((item) => item.Category_Name).join(",");
   if (agencyRef || clusters || additionalInformation) {
     di_name =
       roleName +
