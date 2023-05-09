@@ -1120,7 +1120,7 @@ function AddProject(props) {
                         onChange={(e) => setSOPDate(e.target.value)}
                         dateFormat="d-M-y"
                         showIcon={true}
-                        minDate={sopDate !== "" ? sopDate : minDate}
+                        minDate={minDate}
                         maxDate={sosDate}
                         className={classNames({
                           "p-invalid": fieldState.error,
@@ -1150,7 +1150,7 @@ function AddProject(props) {
                         onChange={(e) => setPrinterDate(e.target.value)}
                         dateFormat="d-M-y"
                         showIcon={true}
-                        minDate={printerDate !== "" ? printerDate : minDate}
+                        minDate={minDate}
                         maxDate={sopDate}
                         className={classNames({
                           "p-invalid": fieldState.error,
@@ -1183,7 +1183,7 @@ function AddProject(props) {
                         onChange={(e) => setReadinessDate(e.target.value)}
                         dateFormat="d-M-y"
                         showIcon={true}
-                        minDate={readinessDate !== "" ? readinessDate : minDate}
+                        minDate={minDate}
                         maxDate={printerDate}
                         className={classNames({
                           "p-invalid": fieldState.error,

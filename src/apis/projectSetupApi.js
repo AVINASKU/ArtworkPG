@@ -20,7 +20,7 @@ export const createNewProject = async (formData, headers = {}) => {
   if (newProjectData?.data?.ID) {
     store.dispatch(createNewProjectAction(formData));
   }
-  console.log("newProjectData", newProjectData);
+
   return newProjectData;
 };
 

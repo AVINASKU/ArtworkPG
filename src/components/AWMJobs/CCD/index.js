@@ -47,7 +47,6 @@ function CCD() {
   };
 
   const handleDelete = (index) => {
-    console.log("index", index);
     const sub = CD?.map((item, i) => {
       if (i === index) {
         item.Action = "delete";
@@ -56,7 +55,7 @@ function CCD() {
     });
     // console.log("index here", sub1);
     // const sub = subProject.splice(index,1);
-    console.log("sub", sub);
+
     setCD(sub);
   };
 

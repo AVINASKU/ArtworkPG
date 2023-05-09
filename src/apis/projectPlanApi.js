@@ -13,7 +13,7 @@ export const getProjectPlan = async (projectId, headers = {}) => {
     url: apiURL,
     method: "GET",
   });
-  //   console.log("projectPlanData: ", projectPlanData);
+
   return projectPlanData?.ArtworkAgilityProjects;
 };
 

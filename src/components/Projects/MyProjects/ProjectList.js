@@ -506,8 +506,6 @@ const ProjectList = (props) => {
 
   const isResetEnabled = isReorderedColumn || isFilterEnabled;
 
-  console.log("pegadata is is ", pegadata);
-
   return (
     <div className="myProjectAnddAllProjectList">
       <Suspense fallback={<div>Loading...</div>}>
