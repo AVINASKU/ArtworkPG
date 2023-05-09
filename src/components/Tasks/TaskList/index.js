@@ -292,7 +292,7 @@ const TaskList = (props) => {
           onChange={() => handleSelect(rowData)}
         />
         <NavLink className="task_name" to={url}>
-          {rowData.Task_Name}-{rowData.AWM_Task_ID}
+          {rowData.Task_Name}
         </NavLink>
       </div>
     );
