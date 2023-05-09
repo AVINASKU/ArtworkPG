@@ -31,11 +31,10 @@ function DCD() {
   }, [data]);
 
   const handleDelete = (index) => {
-    console.log("index", index);
     const sub = designIntent.filter((item, i) => i !== index);
     // console.log("index here", sub1);
     // const sub = subProject.splice(index,1);
-    console.log("sub", sub);
+
     setDesignIntent(sub);
   };
 

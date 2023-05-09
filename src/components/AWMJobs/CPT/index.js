@@ -85,7 +85,6 @@ function CPT() {
   };
 
   const onSaveAsDraft = async () => {
-    console.log("design intent list full", CD);
     // let submitOnlySelectedData = designIntent.filter(
     //   (task) => task?.Event !== "submit"
     // );

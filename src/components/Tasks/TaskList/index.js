@@ -249,7 +249,7 @@ const TaskList = (props) => {
     return (
       <div>
         <>
-          {options === "TaskName" && (
+          {options === "Task_Name" && (
             <input
               type="checkbox"
               checked={selectAllChecked}
@@ -292,22 +292,23 @@ const TaskList = (props) => {
           onChange={() => handleSelect(rowData)}
         />
         <NavLink className="task_name" to={url}>
-          {rowData.Task_Name} - {rowData.AWM_Task_ID}
+          {rowData.Task_Name}
         </NavLink>
       </div>
     );
   };
 
   const helpNeededBodyTemplate = (rowData) => {
-    rowData["Help_Needed"] = rowData["Help_Needed"] != null ? "yes" : "no";
+    // rowData["Help_Needed"] = rowData["Help_Needed"] != null ? "yes" : "no";
+
     return (
       <div
         className={`${
           rowData.Help_Needed ? "helpneeded_no" : "helpneeded_yes"
         }`}
       >
-        {/* {rowData.Help_Needed ? "yes" : "no"} */}
-        {rowData.Help_Needed}
+        {rowData.Help_Needed ? "yes" : "no"}
+        {/* {rowData.Help_Needed} */}
       </div>
     );
   };
@@ -402,7 +403,7 @@ const TaskList = (props) => {
           handleDelegateClick={handleDelegateClick}
           handleHelpNeededClick={handleHelpNeededClick}
           actionFlag={!selected || selected.length === 0}
-          header="My Tasks"
+          header={props.flag === "myTasks" ? "My Tasks" : "All Tasks"}
           selected={selected}
           allData={selectedProdSrchList}
           isFilterEnabled={isFilterEnabled}

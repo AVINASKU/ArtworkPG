@@ -53,7 +53,6 @@ export const AddNavigation = (breadcrumbLabel) => {
     { label: breadcrumbSubLabel, url:  url  },
     { label: breadcrumbLabel },
   ];
-  // alert("location.pathname", currentUrl);
-  console.log("current url", breadcrumbSubLabel);
+
   return breadcrumb;
 };
