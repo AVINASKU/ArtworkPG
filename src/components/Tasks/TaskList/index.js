@@ -292,7 +292,7 @@ const TaskList = (props) => {
           onChange={() => handleSelect(rowData)}
         />
         <NavLink className="task_name" to={url}>
-          {rowData.Task_Name}
+          {rowData.Task_Name}-{rowData.AWM_Task_ID}
         </NavLink>
       </div>
     );
@@ -403,7 +403,7 @@ const TaskList = (props) => {
           handleDelegateClick={handleDelegateClick}
           handleHelpNeededClick={handleHelpNeededClick}
           actionFlag={!selected || selected.length === 0}
-         header={props.flag === "myTasks" ? "My Tasks" : "All Tasks"}
+          header={props.flag === "myTasks" ? "My Tasks" : "All Tasks"}
           selected={selected}
           allData={selectedProdSrchList}
           isFilterEnabled={isFilterEnabled}

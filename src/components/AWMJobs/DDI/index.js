@@ -38,11 +38,11 @@ function DDI() {
 
     (async () => {
       try {
-        const data1 = await getDesignIntent(taskId, ProjectID);
+        const data1 = await getDesignIntent(TaskID, ProjectID);
         console.log("api data------>", data1);
-        data1 && data1.length && setData(data1[0]);
+        data1 && data1?.length && setData(data1[0]);
         data1 &&
-          data1.length &&
+          data1?.length &&
           setDesignIntent(data1[0]?.Design_Intent_Details);
       } catch (err) {
         console.log("error", err);
