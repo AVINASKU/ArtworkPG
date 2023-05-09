@@ -1,15 +1,9 @@
 import Api from ".";
 
-const baseURL =
-  "https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1";
-
+const baseURL = "https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1";
 
 //pass the taskID and projectId from the my tasks
-export const getDesignIntent = async (
-  taskID = "ADT_Task-12",
-  projectId = "A-1000",
-  headers = {}
-) => {
+export const getDesignIntent = async (taskID, projectId, headers = {}) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
   let apiURL = `${baseURL}/DesignIntentDetails/${taskID}/${projectId}`;
