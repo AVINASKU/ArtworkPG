@@ -7,7 +7,7 @@ import BlueFilterIcon from "../../assets/images/BlueFilterIcon.svg";
 const ConfirmationPopUp = ({
   op,
   onSort,
-  selectedCities,
+  selectedFields,
   onGlobalFilterChange,
   setProjectFrozen,
   addFrozenColumns,
@@ -24,7 +24,6 @@ const ConfirmationPopUp = ({
   clearColumnWiseFilter,
 }) => {
   const multiselectOptions = (colName) => {
-    console.log("colName:", colName);
     let optionList = [];
     optionList = projectData?.filter(
       (ele) =>
@@ -136,7 +135,7 @@ const ConfirmationPopUp = ({
         </div>
         <div className="multiSelect">
           <MultiSelect
-            value={selectedCities}
+            value={selectedFields}
             onChange={(e) => onGlobalFilterChange(e)}
             options={multiselectOptions(selectedColumnName)}
             optionLabel={selectedColumnName}
