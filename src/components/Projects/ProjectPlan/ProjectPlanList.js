@@ -451,7 +451,7 @@ const ProjectPlanList = (props) => {
               if (field && field.length) {
                 // dispatch(selectedProject(options.data, "My Projects"));
                 options.redirect === true &&
-                  navigate(`/projectPlan/${options.data[field]}`);
+                  navigate("/myTasks");
               }
             }}
           >

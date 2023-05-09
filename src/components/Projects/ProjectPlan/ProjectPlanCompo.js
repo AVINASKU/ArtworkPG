@@ -62,7 +62,7 @@ function ProjectPlanCompo(props) {
             <button
               type="button"
               onClick={activate}
-              className="btn btn-success projectPlanCompoButtons projectPlanCompoButtonsColor"
+              className="btn btn-success projectPlanCompoButtons projectPlanCompoButtonsColor1"
             >
               Activate
             </button>
