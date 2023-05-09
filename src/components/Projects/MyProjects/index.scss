@@ -211,18 +211,6 @@ img[disabled] {
   padding-right: 10px;
 }
 
-li.p-dropdown-item {
-  &:nth-child(1) {
-    color: orange !important;
-  }
-  &:nth-child(2) {
-    color: red !important;
-  }
-  &:nth-child(3) {
-    color: #003da5 !important;
-  }
-}
-
 div.actions-right {
   display: flex;
   flex-direction: row;

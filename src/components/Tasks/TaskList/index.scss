@@ -249,20 +249,6 @@ img[disabled] {
   padding-right: 10px;
 }
 
-li.p-dropdown-item {
-  &:nth-child(1) {
-    color: orange !important;
-  }
-
-  &:nth-child(2) {
-    color: red !important;
-  }
-
-  &:nth-child(3) {
-    color: #003da5 !important;
-  }
-}
-
 div.actions-right {
   display: flex;
   flex-direction: row;
@@ -349,7 +335,6 @@ div.p-selectbutton.p-buttonset.p-component {
 .p-frozen-column {
   z-index: 1000;
 }
-
 
 .helpneeded_yes,
 .helpneeded_no {
@@ -444,4 +429,3 @@ div.flex.align-items-center.gap-2 {
 .p-multiselect-panel {
   z-index: 100000 !important;
 }
-
