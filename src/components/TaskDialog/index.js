@@ -75,8 +75,8 @@ const TaskDialog = (props) => {
             Task:
             <ul>
               {props?.selectedTaskData?.map((task) => (
-                <li className="active-taskname" key={task.TaskID}>
-                  {task.TaskName}
+                <li className="active-taskname" key={task.AWM_Task_ID}>
+                  {task.Task_Name}
                   <br />
                 </li>
               ))}
@@ -118,6 +118,9 @@ const TaskDialog = (props) => {
         </div>
       </div>
       <div className="p-dialog-footer" id="submit">
+        <p className="comments-validation">
+          * The message will be sent to PM once submit{" "}
+        </p>
         <Button label="Submit" onClick={handleSubmit} disabled={!isFormValid} />
       </div>
     </Dialog>

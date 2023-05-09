@@ -3,235 +3,235 @@ $fontWeight500: 500;
 $fontWeight400: 400;
 
 .content-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 25px 15px 0;
+
+  .actions {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 25px 15px 0;
+    flex-direction: row;
+    justify-content: space-between;
+    width: $width100;
+    align-items: center;
 
-    .actions {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        width: $width100;
-        align-items: center;
+    .action-buttons {
+      display: flex;
+      flex-direction: row;
 
-        .action-buttons {
-            display: flex;
-            flex-direction: row;
-
-            button {
-                margin: 0 16px;
-            }
-        }
+      button {
+        margin: 0 16px;
+      }
     }
+  }
 
-    .tabular-view {
-        width: $width100;
-        display: block;
-        padding: 0 0 0;
+  .tabular-view {
+    width: $width100;
+    display: block;
+    padding: 0 0 0;
 
-        .card {
-            border: 0 !important;
-        }
+    .card {
+      border: 0 !important;
     }
+  }
 }
 
 .p-confirm-popup {
-    position: absolute;
-    top: 12% !important;
-    left: 0% !important;
+  position: absolute;
+  top: 12% !important;
+  left: 0% !important;
 }
 
 // Datepicker for ProjectSetUp component Style Start
 .p-datepicker table td {
-    padding: 0.2px !important;
+  padding: 0.2px !important;
 }
 
 .p-button:focus {
-    box-shadow: none !important;
+  box-shadow: none !important;
 }
 
 // Datepicker for ProjectSetUp component Style End
 .my-task-project tr {
-    position: relative;
-    border: 0 !important;
-    height: 30px !important;
+  position: relative;
+  border: 0 !important;
+  height: 30px !important;
 }
 
 .my-task-project {
-    .p-datatable>.p-datatable-wrapper {
-        overflow: scroll;
-        width: $width100;
-        height: 540px;
-    }
+  .p-datatable > .p-datatable-wrapper {
+    overflow: scroll;
+    width: $width100;
+    height: 540px;
+  }
 
-    .p-datatable-table {
-        line-height: 15px;
-    }
+  .p-datatable-table {
+    line-height: 15px;
+  }
 
-    .p-column-title {
-        font-weight: $fontWeight500;
-    }
+  .p-column-title {
+    font-weight: $fontWeight500;
+  }
 
-    .p-datatable-tbody {
-        font-weight: $fontWeight400;
-    }
+  .p-datatable-tbody {
+    font-weight: $fontWeight400;
+  }
 
-    td,
-    th {
-        position: relative;
+  td,
+  th {
+    position: relative;
 
-        &:after {
-            content: "";
-            display: block;
-            height: 22px;
-            width: 0.8px;
-            background-color: #acacac;
-            position: absolute;
-            top: 25%;
-            right: 0;
-        }
+    &:after {
+      content: "";
+      display: block;
+      height: 22px;
+      width: 0.8px;
+      background-color: #acacac;
+      position: absolute;
+      top: 25%;
+      right: 0;
     }
+  }
 
-    th:last-child,
-    td:last-child {
-        &:after {
-            content: none;
-        }
+  th:last-child,
+  td:last-child {
+    &:after {
+      content: none;
     }
+  }
 
-    .p-datatable-thead>tr>th {     
-        padding: 0 1rem;
-    }
+  .p-datatable-thead > tr > th {
+    padding: 0 1rem;
+  }
 }
 
 .font-bold {
-    font-weight: 700;
+  font-weight: 700;
 }
 
 .p-checkbox {
-    margin: 8px;
+  margin: 8px;
 }
 
-.p-checkbox-checked+label {
-    color: #003da5;
+.p-checkbox-checked + label {
+  color: #003da5;
 }
 
 .ml-2 {
-    font-weight: $fontWeight400;
-    font-size: 14px;
-    line-height: 17px;
+  font-weight: $fontWeight400;
+  font-size: 14px;
+  line-height: 17px;
 }
 
 // ProjectList Styles Start
 .columnFilterIcon {
-    cursor: pointer;
-    margin-right: 12px;
-    width: 11px;
-    height: 16px;
+  cursor: pointer;
+  margin-right: 12px;
+  width: 11px;
+  height: 16px;
 }
 
 .resetToPgDefault {
-    width: 164px;
-    height: 32px;
-    padding: 10px 18px;
-    margin: 0 10px 0 21.82px !important;
-    border-radius: 15px;
-    background-color: #acacac !important;
-    font-weight: $fontWeight500;
-    line-height: 96%;
-    vertical-align: top;
+  width: 164px;
+  height: 32px;
+  padding: 10px 18px;
+  margin: 0 10px 0 21.82px !important;
+  border-radius: 15px;
+  background-color: #acacac !important;
+  font-weight: $fontWeight500;
+  line-height: 96%;
+  vertical-align: top;
 }
 
 .resetToPgDefault:hover {
-    background-color: #868484 !important;
+  background-color: #868484 !important;
 }
 
 .header-icons {
-    cursor: pointer;
-    margin: 8px;
-    font-size: 2rem;
-    color: #003da5;
-    width: 18px;
-    height: 18px;
+  cursor: pointer;
+  margin: 8px;
+  font-size: 2rem;
+  color: #003da5;
+  width: 18px;
+  height: 18px;
 }
 
 // Filter and Save buttons disabled
 img[disabled] {
-    opacity: 0.5;
-    // pointer-events: none;
-    cursor: no-drop;
+  opacity: 0.5;
+  // pointer-events: none;
+  cursor: no-drop;
 }
 
 // ProjectList Styles End
 
 // ConfirmationPopUp Styles Start
 .clearAllFilterMainDiv {
-    display: flex;
-    padding: 10.56px 22px 22px 2px;
+  display: flex;
+  padding: 10.56px 22px 22px 2px;
 }
 
 .clearAllFilterDiv {
-    line-height: 12px;
-    justify-items: end;
-    display: flex;
-    position: absolute;
-    right: 22px;
-    top: 18px;
+  line-height: 12px;
+  justify-items: end;
+  display: flex;
+  position: absolute;
+  right: 22px;
+  top: 18px;
 }
 
 .clearAllFilter {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .clearAllFilterIcon {
-    cursor: pointer;
-    position: absolute;
-    right: 5px;
+  cursor: pointer;
+  position: absolute;
+  right: 5px;
 }
 
 .sortAndFrozen {
-    padding: 0 22px 22px 2px;
-    cursor: pointer;
-    line-height: 12px;
+  padding: 0 22px 22px 2px;
+  cursor: pointer;
+  line-height: 12px;
 }
 
 .multiSelect {
-    padding: 0 22px 22px 2px;
-    cursor: pointer;
-    line-height: 10px;
+  padding: 0 22px 22px 2px;
+  cursor: pointer;
+  line-height: 10px;
 
-    .p-placeholder {
-        // font-size: 8px !important;
-        color: #595959 !important;
-    }
+  .p-placeholder {
+    // font-size: 8px !important;
+    color: #595959 !important;
+  }
 
-    .p-multiselect {
-        width: 124px !important;
-        // height: 16px !important;
-    }
+  .p-multiselect {
+    width: 124px !important;
+    // height: 16px !important;
+  }
 }
 
 .p-overlaypanel {
-    position: absolute !important;
+  position: absolute !important;
 }
 
 .p-multiselect-item {
-    font-size: 10px !important;
-    line-height: 12px !important;
-    padding: 0px 9px !important;
+  font-size: 10px !important;
+  line-height: 12px !important;
+  padding: 0px 9px !important;
 }
 
 .p-inputtext {
-    font-size: 10px !important;
-    line-height: 12px !important;
-    font-family: Montserrat !important;
+  font-size: 10px !important;
+  line-height: 12px !important;
+  font-family: Montserrat !important;
 }
 
 // Container header section
 .action-button {
-    border-radius: 20px;
-    box-shadow: 0 0 0 1px #003da5;
+  border-radius: 20px;
+  box-shadow: 0 0 0 1px #003da5;
 }
 
 // div.p-dropdown-panel {
@@ -242,187 +242,204 @@ img[disabled] {
 //   border: solid 1px #003da5;
 // }
 .p-dropdown-item:hover {
-    background-color: #edf4fa !important;
+  background-color: #edf4fa !important;
 }
 
 .content-layout .actions {
-    padding-right: 10px;
+  padding-right: 10px;
 }
 
 li.p-dropdown-item {
-    &:nth-child(1) {
-        color: orange !important;
-    }
+  &:nth-child(1) {
+    color: orange !important;
+  }
 
-    &:nth-child(2) {
-        color: red !important;
-    }
+  &:nth-child(2) {
+    color: red !important;
+  }
 
-    &:nth-child(3) {
-        color: #003da5 !important;
-    }
+  &:nth-child(3) {
+    color: #003da5 !important;
+  }
 }
 
 div.actions-right {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 
-    &:nth-child(2) {
-        margin-left: 12px;
-    }
+  &:nth-child(2) {
+    margin-left: 12px;
+  }
 }
 
 .justify-content-center,
 .justify-content-center1 {
-    border: none;
+  border: none;
 }
 
 .justify-content-center1 {
-    margin-left: 15px;
+  margin-left: 15px;
 }
 
 div.p-button.p-component:nth-child(1) {
-    border-radius: 12px 0 0 12px;
+  border-radius: 12px 0 0 12px;
 }
 
 div.p-button.p-component:nth-child(2) {
-    background-color: #acacac !important;
-    color: white !important;
-    border-radius: 0 12px 12px 0;
+  background-color: #acacac !important;
+  color: white !important;
+  border-radius: 0 12px 12px 0;
 }
 
 div.p-selectbutton.p-buttonset.p-component {
-    border: none;
+  border: none;
+}
+.p-breadcrumb {
+  a {
+    text-decoration: none;
+    box-sizing: border-box;
+    color: #003da5;
+  }
 }
 
 .p-selectbutton .p-button.p-highlight {
-    border-color: grey !important;
+  border-color: grey !important;
 }
 
 .p-selectbutton .p-button {
-    border-color: grey;
+  border-color: grey;
 }
 
 .reset-to-default-view {
-    padding: 10px 18px;
-    margin: 0 10px 0 21.82px;
-    border-radius: 15px;
-    background-color: #00a3e0;
-    font-weight: $fontWeight500;
-    line-height: 96%;
-    vertical-align: top;
-    cursor: pointer;
+  padding: 10px 18px;
+  margin: 0 10px 0 21.82px;
+  border-radius: 15px;
+  background-color: #00a3e0;
+  font-weight: $fontWeight500;
+  line-height: 96%;
+  vertical-align: top;
+  cursor: pointer;
 }
 
 .save-as-personal-view {
-    padding: 10px 18px;
-    margin: 0 10px 0 21.82px;
-    border-radius: 15px;
-    background-color: #003da5;
-    font-weight: $fontWeight500;
-    line-height: 96%;
-    vertical-align: top;
-    cursor: pointer;
+  padding: 10px 18px;
+  margin: 0 10px 0 21.82px;
+  border-radius: 15px;
+  background-color: #003da5;
+  font-weight: $fontWeight500;
+  line-height: 96%;
+  vertical-align: top;
+  cursor: pointer;
 }
 
 .apply-filter-text {
-    color: "#003DA5" !important;
+  color: "#003DA5" !important;
 }
 
-.p-datatable-scrollable{
-    &-table > .p-datatable-thead{
-        z-index: 1001;
-    }
-    .p-frozen-column {
-        z-index: 1000;
-    }
-} 
+.p-datatable-scrollable {
+  &-table > .p-datatable-thead {
+    z-index: 10000;
+  }
+}
+
+.p-frozen-column {
+  z-index: 1000;
+}
+
+.p-frozen-column {
+  z-index: 1000;
+}
 
 .helpneeded_yes,
 .helpneeded_no {
-    width: 48px;
-    background-color: #01d309;
-    color: white;
-    align-items: center;
-    justify-content: center;
-    line-height: 12px;
-    border-radius: 5px;
-    font-size: 10px;
-    padding: 5px;
-    display: block;
-    margin: 0 auto;
+  width: 48px;
+  background-color: #01d309;
+  color: white;
+  align-items: center;
+  justify-content: center;
+  line-height: 12px;
+  border-radius: 5px;
+  font-size: 10px;
+  padding: 5px;
+  display: block;
+  margin: 0 auto;
 }
 
 .helpneeded_no {
-    background-color: red !important;
+  background-color: red !important;
 }
 
 .p-button.p-button-success {
-    color: white;
-    border: none;
+  color: white;
+  border: none;
 }
 
 .status-value {
-    display: inline-block;
-    background-color: #e6ffe8;
-    color: #006f05;
-    border-radius: 4px;
-    font-size: 10px;
-    padding: 4px 10px;
-    border-radius: 4px;
+  display: inline-block;
+  background-color: #e6ffe8;
+  color: #006f05;
+  border-radius: 4px;
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 4px;
 }
 
 .On-Hold {
-    background: #ffeded !important;
-    color: #d30202 !important;
+  background: #ffeded !important;
+  color: #d30202 !important;
 }
 
 .Awaiting {
-    background: #ffeded !important;
-    color: #d37302;
+  background: #ffeded !important;
+  color: #d37302;
 }
 
 .On-Hold {
-    background: #ffeded !important;
-    color: #d30202;
+  background: #ffeded !important;
+  color: #d30202;
 }
 
 .Available {
-    background: #faeddd !important;
-    color: #d37302;
+  background: #faeddd !important;
+  color: #d37302;
 }
 
 .In Progress {
-    background: #ffeded !important;
-    color: #006f05 !important;
+  background: #ffeded !important;
+  color: #006f05 !important;
 }
 
 thead.p-datatable-thead {
-    max-height: 30px;
+  max-height: 30px;
 }
 
-.p-datatable .p-datatable-thead>tr>th {
-    background: #edf4fa;
-    // height: 30px;
+.p-datatable .p-datatable-thead > tr > th {
+  background: #edf4fa;
+  // height: 30px;
 }
 
 .task_name {
-    position: relative;
-    font-size: 12px;
-    color: #003da5 !important;
-    text-decoration: underline;
+  position: relative;
+  font-size: 12px;
+  color: #003da5 !important;
+  text-decoration: underline;
 }
 
 div.flex.align-items-center.gap-2 {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
 }
 
 .filter-color-change {
-    filter: invert(10%) sepia(100%) saturate(1200%) hue-rotate(190deg) brightness(70%) contrast(90%);
+  filter: invert(10%) sepia(100%) saturate(1200%) hue-rotate(190deg)
+    brightness(70%) contrast(90%);
 }
-
-// .p-datatable-scrollable .p-frozen-column{
-//     position: static !important;
-//     }
+.p-overlaypanel,
+.dropdown-menu,
+.p-autocomplete-panel,
+.p-dialog-mask,
+.p-overlaypanel,
+.p-multiselect-panel {
+  z-index: 100000 !important;
+}

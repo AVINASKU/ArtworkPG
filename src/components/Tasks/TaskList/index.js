@@ -318,6 +318,7 @@ const TaskList = (props) => {
       </div>
     );
   };
+
   const assigneeTemplate = (rowData) => {
     return <div>{rowData?.Assignee}</div>;
   };

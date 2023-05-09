@@ -5,22 +5,55 @@ import "./index.scss";
 
 function ProjectPlanCompo(props) {
   return (
-    <Accordion className="projectPlanAccordian" defaultActiveKey="2">
-      <Accordion.Item eventKey="2">
-        <Accordion.Header>Design</Accordion.Header>
-        <Accordion.Body>
-          <ProjectPlan {...props} />
-        </Accordion.Body>
-      </Accordion.Item>
-      <Accordion.Item eventKey="3">
-        <Accordion.Header>Input</Accordion.Header>
-        <Accordion.Body>Input</Accordion.Body>
-      </Accordion.Item>
-      <Accordion.Item eventKey="4">
-        <Accordion.Header>FA Assembly</Accordion.Header>
-        <Accordion.Body>FA Assembly</Accordion.Body>
-      </Accordion.Item>
-    </Accordion>
+    <>
+      <Accordion className="projectPlanAccordian" defaultActiveKey="2">
+        <Accordion.Item eventKey="2">
+          <Accordion.Header>Design</Accordion.Header>
+          <Accordion.Body>
+            <ProjectPlan {...props} />
+          </Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="3">
+          <Accordion.Header>Input</Accordion.Header>
+          <Accordion.Body>Input</Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="4">
+          <Accordion.Header>FA Assembly</Accordion.Header>
+          <Accordion.Body>FA Assembly</Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
+      <div className="row">
+        <div className="col btn-group btn-group-toggle d-flex justify-content-end">
+          <div>
+            <button
+              type="button"
+              onClick={() => {}}
+              className="btn btn-outline-secondary projectPlanCompoButtons"
+            >
+              Cancel
+            </button>
+          </div>
+          <div>
+            <button
+              type="button"
+              onClick={() => {}}
+              className="btn btn-primary projectPlanCompoButtons projectPlanCompoButtonsColor"
+            >
+              Save
+            </button>
+          </div>
+          <div>
+            <button
+              type="button"
+              onClick={() => {}}
+              className="btn btn-success projectPlanCompoButtons projectPlanCompoButtonsColor"
+            >
+              Activate
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 

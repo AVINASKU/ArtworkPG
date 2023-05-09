@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 const ProjectCreation = () => {
   let location = useLocation();
   return (
-    <div>
+    <div className="projectPlanActionsStyle">
       <PageLayout>
         <ProjectSetup mode={location.state} />
       </PageLayout>
