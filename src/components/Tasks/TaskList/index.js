@@ -159,11 +159,11 @@ const TaskList = (props) => {
   const op = useRef(null);
   const dt = useRef(null);
   const headerColumns = [
-    { title: "ProjectName", field: "ProjectName", csvExport: true },
-    { title: "TaskName", field: "TaskName", csvExport: true },
-    { title: "Status", field: "Status", csvExport: true },
-    { title: "Help_Needed", field: "Help_Needed", csvExport: true },
-    { title: "Remaining_Buffer", field: "Remaining_Buffer", csvExport: true },
+    "Project_Name",
+    "Task_Name",
+    "Status",
+    "Help_Needed",
+    "Remaining_Buffer",
   ];
 
   // const exportCSVTasks = (selectionOnly) => {
@@ -249,7 +249,7 @@ const TaskList = (props) => {
     return (
       <div>
         <>
-          {options === "TaskName" && (
+          {options === "Task_Name" && (
             <input
               type="checkbox"
               checked={selectAllChecked}
@@ -292,20 +292,23 @@ const TaskList = (props) => {
           onChange={() => handleSelect(rowData)}
         />
         <NavLink className="task_name" to={url}>
-          {rowData.Task_Name} - {rowData.AWM_Task_ID}
+          {rowData.Task_Name}
         </NavLink>
       </div>
     );
   };
 
   const helpNeededBodyTemplate = (rowData) => {
+    // rowData["Help_Needed"] = rowData["Help_Needed"] != null ? "yes" : "no";
+
     return (
       <div
         className={`${
           rowData.Help_Needed ? "helpneeded_no" : "helpneeded_yes"
         }`}
       >
-        {rowData.Help_Needed ? "yes" : "No"}
+        {rowData.Help_Needed ? "yes" : "no"}
+        {/* {rowData.Help_Needed} */}
       </div>
     );
   };
@@ -316,6 +319,7 @@ const TaskList = (props) => {
       </div>
     );
   };
+
   const assigneeTemplate = (rowData) => {
     return <div>{rowData?.Assignee}</div>;
   };
@@ -375,7 +379,6 @@ const TaskList = (props) => {
       });
     }
   };
-  // console.log("ProjectData is", ProjectData);
   const isFilterEnabled =
     frozenCoulmns?.length || filters?.length || sortData?.length;
 
@@ -388,11 +391,10 @@ const TaskList = (props) => {
 
     {}
   );
+
   return (
     <>
       <div className="my-task-project">
-        {/* {console.log("TaskService is", TaskService.getProjectData())} */}
-
         <ProjectListHeader
           // exportCSVTasks={
           //   selected ? exportCSVTasks(true) : exportCSVTasks(true)
@@ -402,8 +404,11 @@ const TaskList = (props) => {
           handleHelpNeededClick={handleHelpNeededClick}
           actionFlag={!selected || selected.length === 0}
           header={props.flag === "myTasks" ? "My Tasks" : "All Tasks"}
+          selected={selected}
+          allData={selectedProdSrchList}
           isFilterEnabled={isFilterEnabled}
           clearFilter={clearFilter}
+          headers={headerColumns}
         />
         <ConfirmationPopUp
           onSort={onSort}

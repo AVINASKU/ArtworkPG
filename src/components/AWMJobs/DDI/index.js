@@ -144,6 +144,7 @@ function DDI() {
         onSelectAll={onSelectAll}
         breadcrumb={breadcrumb}
         headerName={headerName}
+        label="Define Design Intent"
       />
       <div
         style={{

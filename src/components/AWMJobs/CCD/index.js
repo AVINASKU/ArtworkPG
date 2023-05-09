@@ -11,10 +11,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import CloneJobs from "../DesignJobs/CloneJobs";
 import "./index.scss";
-const breadcrumb = [
-  { label: "My Tasks", url: "/myTasks" },
-  { label: "Define Color Development" },
-];
+const breadcrumb = [{ label: "Define Color Development" }];
 
 const headerName = "Define Color Development";
 const jobName = "CD_";
@@ -35,7 +32,6 @@ function CCD() {
     let taskId;
     if (TaskID) {
       taskId = TaskID.split("_")[1];
-      console.log("task id-->", TaskID);
     }
     dispatch(getDefineCD(TaskID, ProjectID));
   }, [dispatch, TaskID, ProjectID]);
@@ -51,7 +47,6 @@ function CCD() {
   };
 
   const handleDelete = (index) => {
-    console.log("index", index);
     const sub = CD?.map((item, i) => {
       if (i === index) {
         item.Action = "delete";
@@ -60,7 +55,7 @@ function CCD() {
     });
     // console.log("index here", sub1);
     // const sub = subProject.splice(index,1);
-    console.log("sub", sub);
+
     setCD(sub);
   };
 
@@ -142,6 +137,7 @@ function CCD() {
         onSelectAll={onSelectAll}
         breadcrumb={breadcrumb}
         headerName={headerName}
+        label="Define Color Development"
       />
       <div
         style={{

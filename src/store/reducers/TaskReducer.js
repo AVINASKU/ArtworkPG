@@ -24,7 +24,6 @@ const TaskReducer = (state = initialState, action = {}) => {
       };
 
     case "GET_ALL_TASKS_SUCCESS":
-      console.log(payload);
       return {
         ...state,
         allTasks: payload,

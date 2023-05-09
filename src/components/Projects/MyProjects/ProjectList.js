@@ -29,14 +29,14 @@ const ProjectList = (props) => {
   const [frozenCoulmns, setFrozenColumn] = useState([]);
   const [selectedColumnName, setSelectedColumnName] = useState(null);
   const [projectColumnName, setProjectColumnNames] = useState([]);
-  const [selectedCities, setSelectedCities] = useState([]);
+  const [selectedFields, setSelectedFields] = useState([]);
   const [filters, setFilters] = useState([]);
   const [visible, setVisible] = useState(false);
   const [sortData, setSortData] = useState([]);
   const [allColumnNames, setAllColumnNames] = useState([]);
+  const [updatedAllColumnNames, setUpdatedAllColumnNames] = useState([]);
   const [isSearch, isSearchSet] = useState(false);
   const [isReorderedColumn, setReorderedColumn] = useState(false);
-
   const myProjectList = useSelector((state) => state.myProject);
   const { loading } = myProjectList;
   const dispatch = useDispatch();
@@ -69,7 +69,7 @@ const ProjectList = (props) => {
     const updatedUsers = dispatch(getMyProject(userInformation));
     console.log("my projects", updatedUsers);
     // }
-  }, [dispatch]);
+  }, [dispatch, userInformation]);
 
   const reorderColumns = (columns) => {
     const requiredColumnOrderArray = [
@@ -151,7 +151,6 @@ const ProjectList = (props) => {
         }
 
         if (ProjectData.length) {
-          // console.log(Object.keys(ProjectData[0]));
           setAllColumnNames(reorderColumns(Object.keys(ProjectData[0])));
         }
         // const columnNames = await ProjectService.getAllColumnNames();
@@ -169,7 +168,7 @@ const ProjectList = (props) => {
 
         if (filteredPegaData && filteredPegaData.length) {
           setFilters(filteredPegaData);
-          setSelectedCities(filteredPegaData);
+          setSelectedFields(filteredPegaData);
           setPegaData(ProjectData);
         } else setPegaData(ProjectData);
 
@@ -178,10 +177,12 @@ const ProjectList = (props) => {
         const columnNames = JSON.parse(columnNamesJson);
         if (columnNames != null && columnNames.length) {
           setProjectColumnNames(columnNames);
+          setUpdatedAllColumnNames(columnNames);
         } else {
           const columnNames = ProjectService.getAllColumnNames();
           localStorage.setItem("allColumnNames", JSON.stringify(columnNames));
           setProjectColumnNames(columnNames);
+          setUpdatedAllColumnNames(columnNames);
         }
 
         // const jsonSortingData = await ProjectService.getSortingData();
@@ -230,6 +231,7 @@ const ProjectList = (props) => {
   };
 
   const projectNameHeader = (options) => {
+    let splittedCol = options.split("_").join(" ");
     const isFilterActivated =
       (frozenCoulmns &&
         frozenCoulmns.length &&
@@ -244,7 +246,6 @@ const ProjectList = (props) => {
             alt="Column Filter"
             onClick={(e) => {
               op.current.toggle(e);
-
               setSelectedColumnName(options);
             }}
             className={
@@ -254,7 +255,7 @@ const ProjectList = (props) => {
             }
           />
           <span className={isFilterActivated && "filter-color-change"}>
-            {options}
+            {splittedCol}
           </span>
         </>
       </div>
@@ -264,19 +265,6 @@ const ProjectList = (props) => {
   const fullKitReadinessBody = (options, rowData) => {
     let field = rowData.field;
     let projectId = options["Project_ID"];
-    // if (field === "Artwork_Category") {
-    //   categoryNames =
-    //     options[field] &&
-    //     options[field].map((item) => item.Category_Name).join(",");
-    // }
-
-    // if (field === "Artwork_SMO") {
-    //   SMOName = options[field]?.map((item) => item.SMO_Name).join(",");
-    // }
-    // if (field === "Artwork_Brand") {
-    //   brandName = options[field]?.map((item) => item.Brand_Name).join(",");
-    // }
-
     return (
       <>
         {field === "Project State" && (
@@ -305,34 +293,27 @@ const ProjectList = (props) => {
         {field === "Project_Name" && (
           <span
             style={{ color: "#003DA5", cursor: "pointer" }}
-            // href={`/projectPlan/${projectId}`}
             onClick={() => {
               if (field && field.length) {
-                let option = myProjectList.myProject[rowData.rowIndex];
-                console.log(
-                  "details of selected project (Project_Name): ",
-                  option
+                let option = myProjectList.myProject.find(
+                  (project) => project.Project_ID === projectId
                 );
                 dispatch(selectedProject(option, "My Projects"));
                 navigate(`/projectPlan/${projectId}`);
               }
             }}
           >
-            {" "}
-            {options[field]}{" "}
+            {options[field]}
           </span>
         )}
 
         {field === "Project_ID" && (
           <span
             style={{ color: "#003DA5", cursor: "pointer" }}
-            // href={`/projectPlan/${projectId}`}
             onClick={() => {
               if (field && field.length) {
-                let option = myProjectList.myProject[rowData.rowIndex];
-                console.log(
-                  "details of selected project (Project_Id): ",
-                  option
+                let option = myProjectList.myProject.find(
+                  (project) => project.Project_ID === projectId
                 );
                 dispatch(selectedProject(option, "My Projects"));
                 navigate(`/projectPlan/${projectId}`);
@@ -357,6 +338,7 @@ const ProjectList = (props) => {
   };
 
   const dynamicColumns = () => {
+    console.log("project column name", projectColumnName);
     if (projectColumnName.length) {
       return projectColumnName.map((ele, i) => {
         return (
@@ -380,7 +362,6 @@ const ProjectList = (props) => {
   };
 
   const clearFilters = () => {
-    // localStorage.removeItem("allColumnNames");
     const allColumnNames = [
       "Project_ID",
       "Project_Name",
@@ -394,14 +375,19 @@ const ProjectList = (props) => {
     ];
     setProjectColumnNames(allColumnNames);
     localStorage.setItem("allColumnNames", JSON.stringify(allColumnNames));
-
+    localStorage.setItem("columnWiseFilterData", JSON.stringify({}));
+    localStorage.setItem("frozenData", JSON.stringify({}));
+    localStorage.setItem("sortingData", JSON.stringify({}));
+    setSelectedFields([]);
+    setSortData([]);
+    setFrozenColumn([]);
     setReorderedColumn(false);
     setFilters([]);
   };
 
   const onGlobalFilterChange = (e) => {
     const value = e.value;
-    setSelectedCities(value);
+    setSelectedFields(value);
     setFilters(value);
   };
 
@@ -475,7 +461,7 @@ const ProjectList = (props) => {
     localStorage.setItem("columnWiseFilterData", JSON.stringify({}));
     localStorage.setItem("sortingData", JSON.stringify({}));
     localStorage.setItem("frozenData", JSON.stringify({}));
-    setSelectedCities([]);
+    setSelectedFields([]);
     setSortData([]);
     setFilters([]);
     setFrozenColumn([]);
@@ -510,7 +496,7 @@ const ProjectList = (props) => {
     }
     if (filters && filters.length) {
       localStorage.setItem("columnWiseFilterData", JSON.stringify({}));
-      setSelectedCities([]);
+      setSelectedFields([]);
       setFilters([]);
     }
   };
@@ -518,23 +504,26 @@ const ProjectList = (props) => {
   const isFilterEnabled =
     frozenCoulmns?.length || filters?.length || sortData?.length;
 
-  const isResetEnabled = isReorderedColumn;
+  const isResetEnabled = isReorderedColumn || isFilterEnabled;
 
   return (
     <div className="myProjectAnddAllProjectList">
       <Suspense fallback={<div>Loading...</div>}>
-        <ProjectListHeader
-          header={props.header}
-          clearFilters={clearFilters}
-          clearFilter={clearFilter}
-          setVisible={setVisible}
-          saveSettings={saveSettings}
-          onSearchClick={onSearchClick}
-          exportCSV={exportCSV}
-          isFilterEnabled={isFilterEnabled}
-          isResetEnabled={isResetEnabled}
-        />
-
+        {pegadata !== undefined && (
+          <ProjectListHeader
+            header={props.header}
+            clearFilters={clearFilters}
+            clearFilter={clearFilter}
+            setVisible={setVisible}
+            saveSettings={saveSettings}
+            onSearchClick={onSearchClick}
+            // exportCSV={exportCSV}
+            isFilterEnabled={isFilterEnabled}
+            isResetEnabled={isResetEnabled}
+            allData={pegadata}
+            headers={updatedAllColumnNames}
+          />
+        )}
         <CustomisedView
           visible={visible}
           setProjectColumnNames={setProjectColumnNames}
@@ -554,7 +543,7 @@ const ProjectList = (props) => {
           onGlobalFilterChange={onGlobalFilterChange}
           selectedColumnName={selectedColumnName}
           ProjectFrozen={ProjectFrozen}
-          selectedCities={selectedCities}
+          selectedFields={selectedFields}
           setFrozenColumn={setFrozenColumn}
           frozenCoulmns={frozenCoulmns}
           sortData={sortData}
