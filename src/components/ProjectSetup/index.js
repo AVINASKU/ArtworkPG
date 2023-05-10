@@ -121,14 +121,21 @@ function ProjectSetup(props) {
                         // drop="down-end"
                         align="end"
                       >
-                        <Dropdown.Item onClick={() => getData("On Hold")}>
+                        <Dropdown.Item
+                          onClick={() => getData("On Hold")}
+                          className="dropdownItemPaddingLeft dropdownItemColor"
+                        >
                           On Hold
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={() => getData("Cancel")}>
+                        <Dropdown.Item
+                          onClick={() => getData("Cancel")}
+                          className="dropdownItemPaddingLeft dropdownItemColor1"
+                        >
                           Cancel
                         </Dropdown.Item>
                         <Dropdown.Item
                           onClick={() => getData("Previous State")}
+                          className="dropdownItemPaddingLeft dropdownItemColor2"
                         >
                           Previous State
                         </Dropdown.Item>
