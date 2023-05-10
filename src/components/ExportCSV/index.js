@@ -24,11 +24,11 @@ export const ExportSelectedRows = ({ allData, selectedRows, headers }) => {
 
 const csvTag = (data) => {
   return (
-    <CSVLink {...data}>
+    <CSVLink {...data} style={{ paddingRight: "10px" }}>
       <img
         src={export2excel}
         alt="Export to csv"
-        style={{ marginTop: "8px" }}
+        style={{ paddingTop: "8px", paddingLeft: "11px" }}
       />
     </CSVLink>
   );

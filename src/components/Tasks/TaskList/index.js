@@ -22,8 +22,8 @@ const TaskList = (props) => {
   const [flag, setFlag] = useState("");
   const [frozenCoulmns, setFrozenColumn] = useState([]);
   const [ProjectFrozen, setProjectFrozen] = useState(false);
-  const [projectColumnName, setProjectColumnNames] = useState([]);
-  const [selectedCities, setSelectedCities] = useState([]);
+  const [projectColumnName, setSelectedFields] = useState([]);
+  const [selectedFields, setselectedFields] = useState([]);
   const [sortData, setSortData] = useState([]);
   const [filters, setFilters] = useState([]);
   const [selectedColumnName, setSelectedColumnName] = useState(null);
@@ -47,21 +47,21 @@ const TaskList = (props) => {
 
     if (filteredPegaData && filteredPegaData.length) {
       setFilters(filteredPegaData);
-      setSelectedCities(filteredPegaData);
+      setselectedFields(filteredPegaData);
       setSelectedProdSrchList(myTasksList);
     }
 
     let columnNamesJson = localStorage.getItem("myTasksAllColumnNames");
     const columnNames = JSON.parse(columnNamesJson);
     if (columnNames != null && columnNames.length) {
-      setProjectColumnNames(columnNames);
+      setSelectedFields(columnNames);
     } else {
       const columnNames = TaskService.getMyTaskColumnNames();
       localStorage.setItem(
         "myTasksAllColumnNames",
         JSON.stringify(columnNames)
       );
-      setProjectColumnNames(columnNames);
+      setSelectedFields(columnNames);
     }
   }, [props.myTasks]);
 
@@ -132,14 +132,14 @@ const TaskList = (props) => {
     }
     if (filters && filters.length) {
       localStorage.setItem("columnWiseFilterData", JSON.stringify({}));
-      setSelectedCities([]);
+      setselectedFields([]);
       setFilters([]);
     }
   };
 
   const onGlobalFilterChange = (e) => {
     const value = e.value;
-    setSelectedCities(value);
+    setselectedFields(value);
     setFilters(value);
   };
 
@@ -147,7 +147,7 @@ const TaskList = (props) => {
     localStorage.setItem("columnWiseFilterData", JSON.stringify({}));
     localStorage.setItem("sortingData", JSON.stringify({}));
     localStorage.setItem("frozenData", JSON.stringify({}));
-    setSelectedCities([]);
+    setselectedFields([]);
     setSortData([]);
     setFilters([]);
     setFrozenColumn([]);
@@ -299,16 +299,18 @@ const TaskList = (props) => {
   };
 
   const helpNeededBodyTemplate = (rowData) => {
-    // rowData["Help_Needed"] = rowData["Help_Needed"] != null ? "yes" : "no";
-
+    if (rowData?.Help_Needed === false || rowData?.Help_Needed === null) {
+      rowData.Help_Needed = "No";
+    } else if (rowData?.Help_Needed === true) {
+      rowData.Help_Needed = "Yes";
+    }
     return (
       <div
         className={`${
-          rowData.Help_Needed ? "helpneeded_no" : "helpneeded_yes"
+          rowData?.Help_Needed === "Yes" ? "helpneeded_no" : "helpneeded_yes"
         }`}
       >
-        {rowData.Help_Needed ? "yes" : "no"}
-        {/* {rowData.Help_Needed} */}
+        {rowData?.Help_Needed}
       </div>
     );
   };
@@ -422,7 +424,7 @@ const TaskList = (props) => {
           frozenCoulmns={frozenCoulmns}
           clearColumnWiseFilter={clearColumnWiseFilter}
           saveSettings={saveSettings}
-          selectedCities={selectedCities}
+          selectedFields={selectedFields}
           onGlobalFilterChange={onGlobalFilterChange}
           projectData={selectedProdSrchList}
           setFilters={setFilters}
