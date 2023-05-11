@@ -1,4 +1,3 @@
-$width100: 100%;
 .p-multiselect {
   width: 100%;
   max-width: 208px;
@@ -143,82 +142,6 @@ $width100: 100%;
 .p-inputwrapper-focus {
   .pi-chevron-down {
     transform: rotate(180deg);
-  }
-}
-.form-buttons {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 20px 0 0;
-  button, .btn:disabled {
-    margin: 0 16px 0 0;
-    padding: 10px 24px;
-    width: auto;
-    height: auto;
-    font-size: 12px;
-    line-height: 12px;
-    border: 1px solid transparent;
-    &.cancel-button {
-      color: #003da5;
-      border-color: #003da5;
-      background: #ffffff;
-      &:hover{
-        border-color: #003da5;
-      }
-    }
-    &.save-as-draft-button {  
-      background: #00a3e0;
-    }
-    &.submit-di-button {
-      background: #003da5;
-    }
-    &:hover{
-      border-color: transparent;
-    }
-  }
-}
-.content-layout {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 25px 15px 0;
-  &.task-layout{
-    padding: 0 60px 33px 25px;
-  }
-  .actions {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: $width100;
-    align-items: center;
-    .action-buttons {
-      display: flex;
-      flex-direction: row;
-      gap: 40px;
-      button {
-        margin: 0 16px;
-        padding: 10px 24px;
-        width: auto;
-        height: auto;
-        font-size: 12px;
-        line-height: 12px;
-        border: 1px solid transparent;
-      }
-    }
-  }
-  .tabular-view{
-    .actions .action-buttons{
-      gap: 28px;
-      align-items: center;
-    }
-  }
-  .tabular-view {
-    width: $width100;
-    display: block;
-    padding: 0 0 0;
-    .card {
-      border: 0 !important;
-    }
   }
 }
 .header-icons {

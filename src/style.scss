@@ -9,3 +9,9 @@
 $primary-color: #003da5;
 $white-color: #ffffff;
 $gray-color: "#ACACAC";
+.btn-secondary{
+  background-color: #ACACAC;
+  &:hover{
+    background-color: #868484;
+  }  
+}
