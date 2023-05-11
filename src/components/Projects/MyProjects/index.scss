@@ -2,35 +2,6 @@ $width100: 100%;
 $fontWeight500: 500;
 $fontWeight400: 400;
 
-.content-layout {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 25px 15px;
-  .actions {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: $width100;
-    align-items: center;
-
-    .action-buttons {
-      display: flex;
-      flex-direction: row;
-      button {
-        margin: 0 16px;
-      }
-    }
-  }
-  .tabular-view {
-    width: $width100;
-    display: block;
-    padding: 0 0 0;
-    .card {
-      border: 0 !important;
-    }
-  }
-}
 .p-confirm-popup {
   position: absolute;
   top: 12% !important;
@@ -121,14 +92,6 @@ $fontWeight400: 400;
 .resetToPgDefault:hover {
   background-color: #868484 !important;
 }
-.header-icons {
-  cursor: pointer;
-  margin: 8px;
-  font-size: 2rem;
-  color: #003da5;
-  width: 18px;
-  height: 18px;
-}
 // Filter and Save buttons disabled
 img[disabled] {
   opacity: 0.5;
@@ -205,10 +168,6 @@ img[disabled] {
 // }
 .p-dropdown-item:hover {
   background-color: #edf4fa !important;
-}
-
-.content-layout .actions {
-  padding-right: 10px;
 }
 
 div.actions-right {
@@ -300,8 +259,6 @@ div.p-selectbutton.p-buttonset.p-component {
 }
 
 #tasksActions {
-  width: 110px;
-  height: 32px;
   background: #003da5;
   font-size: 12px;
   text-align: center;
@@ -310,6 +267,7 @@ div.p-selectbutton.p-buttonset.p-component {
   justify-content: space-around;
   border-radius: 20px;
   border: 0;
+  margin: 0;
 }
 .dropdown {
   width: 110px;

@@ -106,8 +106,23 @@ function DDI() {
     );
     submitOnlySelectedData.map((task) => {
       task.Event = "submit";
+      const taskData = [];
+      taskData.Agency_Reference = task.Agency_Reference;
+      taskData.Cluster = task.Cluster;
+      taskData.Additional_Info = task.Additional_Info;
+      taskData.AWM_Project_ID = "";
+      return taskData;
     });
-    console.log("full submit data --->", submitOnlySelectedData);
+    // const pageInstructions = [];
+    // pageInstructions.instruction = "APPEND";
+    // pageInstructions.target = "DesignIntentList";
+    // pageInstructions.content = submitOnlySelectedData;
+
+    let formData = {
+      pageInstructions: submitOnlySelectedData,
+    };
+    console.log("full submit data --->", formData);
+   // await saveDesignIntent(formData);
   };
 
   const onSaveAsDraft = async () => {

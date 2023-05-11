@@ -231,6 +231,7 @@ fieldset:disabled .btn {
 // }
 .p-breadcrumb {
   border: 0;
+  padding: 0 0 12px 0;
 }
 .p-breadcrumb-chevron:first-child {
   display: none;
@@ -250,4 +251,7 @@ fieldset:disabled .btn {
 .p-breadcrumb ul li .p-menuitem-link {
   box-shadow: none !important;
   outline: none !important;
+}
+.margin-top-24{
+  margin-top: 24px;
 }

@@ -3,6 +3,8 @@ import { Checkbox } from "primereact/checkbox";
 import plusCollapseImg from "../../../assets/images/plusCollapse.svg";
 import filter from "../../../assets/images/filter.svg";
 import { NavLink, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import "primeicons/primeicons.css";
 
 const DesignHeader = ({
   setAddNewDesign,
@@ -11,13 +13,15 @@ const DesignHeader = ({
   headerName,
   disabled,
 }) => {
+  const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
   const location = useLocation();
   const locationPath = location?.pathname;
   const url = locationPath?.split("/");
   const mytasks = url[1];
   return (
-    <div className="content-layout">
+    <div className="content-layout task-layout">
+      <i className="pi pi-times" onClick={() => {navigate("/myTasks")}}></i>
       <div className="actions">
         <div>
           {/* <BreadCrumb model={breadcrumb} /> */}
@@ -40,7 +44,6 @@ const DesignHeader = ({
             </ul>
           </nav>
           <div
-            style={{ marginLeft: 7, marginRight: 7 }}
             className="project-title"
           >
             {headerName}
