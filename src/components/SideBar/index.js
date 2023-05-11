@@ -127,7 +127,7 @@ const SideBar = () => {
           </div>
           <Nav
             style={{
-              paddingTop: !isToggle && "10px",
+              paddingTop: !isToggle && "50px",
             }}
           >
             {navItems?.data?.map((item, index) => {
@@ -153,8 +153,7 @@ const SideBar = () => {
                       <div>
                         <img src={item.img} alt="logos" />
                       </div>
-
-                      <div>{item.name}</div>
+                      <div>{isToggle ? item.name : ""}</div>
                     </NavLink>
                     {expandedIndex === index && isToggle && (
                       <ul>
