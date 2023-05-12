@@ -42,7 +42,7 @@ console.log("data", Project_Name, Start_Date, End_Date, Duration, Consumed_Buffe
       </div>
     );
   };
-  return <div className="content-layout">{intentName()}</div>;
+  return <div className="content-layout task-layout">{intentName()}</div>;
 }
 
 export default TaskHeader;

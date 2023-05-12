@@ -437,7 +437,7 @@ const TaskList = (props) => {
           selection={selected}
           onSelectionChange={(e) => setSelected(e.value)}
           responsiveLayout="scroll"
-          className="mt-3"
+          className="margin-top-24"
           ref={dt}
           filterDisplay={isSearch && "row"}
           tableStyle={{ minWidth: "50rem" }}
