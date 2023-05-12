@@ -6,7 +6,7 @@ import { ProjectService } from "../../../service/PegaService";
 import ConfirmationPopUp from "../ConfirmationPopUp";
 import { Toast } from "primereact/toast";
 import filter from "../../../assets/images/filter.svg";
-import { changeDateFormat, onSort } from "../../../utils";
+import { changeDateFormat } from "../../../utils";
 // import { projectPlan } from "../../../store/actions/ProjectActions";
 import BlueFilter from "../../../assets/images/BlueFilterIcon.svg";
 import complete from "../../../assets/images/complete.svg";
@@ -22,12 +22,12 @@ import { InputNumber } from "primereact/inputnumber";
 import { getProjectPlan } from "../../../apis/projectPlanApi";
 import "./index.scss";
 import TaskDialog from "../../TaskDialog";
-import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 import {
   updateProjectPlanAction,
   updateProjectPlanDesignAction,
 } from "../../../store/actions/ProjectPlanActions";
 import moment from "moment";
+import ApproveDesignDialog from "./ApproveDesignDialog";
 
 const ProjectPlanList = (props) => {
   const [pegadata, setPegaData] = useState(null);
@@ -39,7 +39,11 @@ const ProjectPlanList = (props) => {
   const [filters, setFilters] = useState([]);
   const [sortData, setSortData] = useState([]);
   const [showTaskDialog, setShowTaskDialog] = useState(false);
+  const [showApproveDialog, setShowApproveDialog] = useState(false);
   const [selectedTask, setSelectedTask] = useState([]);
+  const [selectedTaskApproveDialog, setSelectedTaskApproveDialog] = useState(
+    []
+  );
   const [flag, setFlag] = useState("");
   const [loader, setLoader] = useState(false);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
@@ -71,6 +75,12 @@ const ProjectPlanList = (props) => {
     setFlag("help");
     let task = [{ TaskID: options.key, TaskName: options.data.Task }];
     setSelectedTask(task);
+  };
+
+  const handleApproveDialog = (options) => {
+    setShowApproveDialog(true);
+    let task = [{ TaskID: options.key, TaskName: options.data.Task }];
+    setSelectedTaskApproveDialog(task);
   };
 
   useEffect(() => {
@@ -255,9 +265,6 @@ const ProjectPlanList = (props) => {
         mainTempArr.push(tempObj);
       }
     });
-
-    // console.log("MainTemp Array: ", mainTempArr);
-
     return mainTempArr; //toBeReplacedWithapiData;
   };
 
@@ -274,7 +281,6 @@ const ProjectPlanList = (props) => {
           setSelectedCities(filteredPegaData);
           setPegaData(ProjectPlanData);
         } else setPegaData(ProjectPlanData);
-
         // according to pathname we need to call api and store column name in local storage
         let columnNamesJson = localStorage.getItem("projectPlanAllColumnNames");
         const columnNames = JSON.parse(columnNamesJson);
@@ -336,6 +342,9 @@ const ProjectPlanList = (props) => {
         frozenCoulmns.includes(options)) ||
       (sortData && sortData.length && sortData[0] === options);
 
+    const optionsCode = options?.split("_").join(" ");
+    console.log("options:", optionsCode);
+
     return (
       <div>
         {isFilterActivated ? (
@@ -349,7 +358,7 @@ const ProjectPlanList = (props) => {
               }}
               className="columnFilterIcon"
             />
-            <span style={{ color: "#003DA5" }}>{options}</span>
+            <span className="columnHeader">{optionsCode}</span>
           </>
         ) : (
           <>
@@ -363,7 +372,7 @@ const ProjectPlanList = (props) => {
               }}
               className="columnFilterIcon"
             />
-            {options}
+            <span className="columnHeader">{optionsCode}</span>
           </>
         )}
       </div>
@@ -431,15 +440,19 @@ const ProjectPlanList = (props) => {
     "Owner",
     "State",
     "Duration",
-    "StartDate",
-    "EndDate",
-    "ConsumedBuffer",
-    "HelpNeeded",
+    "Start_Date",
+    "End_Date",
+    "Consumed_Buffer",
+    "Help_Needed",
   ];
 
   const elementTemplate = (options, rowData) => {
-    // console.log("inside elementTemplate: ", options, rowData);
+    console.log("inside elementTemplate: ", options, rowData);
     const field = rowData.field;
+
+    const key = options?.key;
+    const keyCode = key?.split("_");
+    const url = `${keyCode[0]}/${key}`;
 
     return (
       <>
@@ -450,8 +463,7 @@ const ProjectPlanList = (props) => {
             onClick={() => {
               if (field && field.length) {
                 // dispatch(selectedProject(options.data, "My Projects"));
-                options.redirect === true &&
-                  navigate("/myTasks");
+                options.redirect === true && navigate(url);
               }
             }}
           >
@@ -498,11 +510,12 @@ const ProjectPlanList = (props) => {
                   <img
                     src={override}
                     alt="Override"
+                    onClick={() => handleApproveDialog(options)}
                     // onClick={(e) => {
                     //   op.current.toggle(e);
                     //   setSelectedColumnName(options);
                     // }}
-                    // className="overrideIcon"
+                    className="overrideIcon"
                   />
                 )}
               </div>
@@ -675,7 +688,7 @@ const ProjectPlanList = (props) => {
         return (
           <Column
             key={ele}
-            field={ele}
+            field={ele?.split("_").join("")}
             filterField={ele}
             header={projectNameHeader(ele)}
             expander={ele === "Task"}
@@ -691,28 +704,44 @@ const ProjectPlanList = (props) => {
     }
   };
 
-  const data = () => {
-    const data = pegadata?.map((obj) => obj.data);
-    console.log("data:", data);
-    return data || [];
+  const onSort = (column, direction) => (event) => {
+    const sortedData = [...pegadata].sort((a, b) => {
+      return a[column] > b[column] ? 1 : -1;
+    });
+
+    if (direction === "desc") {
+      sortedData.reverse();
+    }
+
+    setPegaData(sortedData);
+    setSortData([column, direction]);
+    localStorage.setItem("allProjectSortingData", JSON.stringify(sortData));
   };
+
+  const pegadata1 = pegadata?.map((obj) => obj.data);
+
   return (
     <div className="myProjectAnddAllProjectList">
+      {showApproveDialog && (
+        <ApproveDesignDialog
+          onClose={() => setShowApproveDialog(!showApproveDialog)}
+          showTaskDialog={showApproveDialog}
+          selectedTaskData={selectedTaskApproveDialog}
+        />
+      )}
       <Suspense fallback={<div>Loading...</div>}>
         <Toast ref={toast} />
         <div className="card">
           <ConfirmationPopUp
-            onSort={(column, direction) =>
-              onSort(column, direction, pegadata, setPegaData, setSortData)
-            }
+            onSort={onSort}
             setProjectFrozen={setProjectFrozen}
             saveSettings={saveSettings}
-            ProjectPlanData={pegadata}
+            projectData={pegadata1}
             addFrozenColumns={addFrozenColumns}
             onGlobalFilterChange={onGlobalFilterChange}
             selectedColumnName={selectedColumnName}
             ProjectFrozen={ProjectFrozen}
-            selectedCities={selectedCities}
+            selectedFields={selectedCities}
             setFrozenColumn={setFrozenColumn}
             frozenCoulmns={frozenCoulmns}
             sortData={sortData}
