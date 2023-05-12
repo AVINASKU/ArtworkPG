@@ -252,38 +252,6 @@ fieldset:disabled .btn {
   box-shadow: none !important;
   outline: none !important;
 }
-.form-buttons {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 20px 0 0;
-  button, .btn:disabled {
-    margin: 0 16px 0 0;
-    padding: 10px 24px;
-    width: auto;
-    height: auto;
-    font-size: 12px;
-    line-height: 12px;
-    border: 1px solid transparent;
-    &.cancel-button {
-      color: #003da5;
-      border-color: #003da5;
-      background: #ffffff;
-      &:hover{
-        border-color: #003da5;
-      }
-    }
-    &.save-as-draft-button {  
-      background: #00a3e0;
-    }
-    &.submit-di-button {
-      background: #003da5;
-    }
-    &:hover{
-      border-color: transparent;
-    }
-  }
-}
 .content-layout {
   display: flex;
   flex-direction: column;
@@ -309,7 +277,6 @@ fieldset:disabled .btn {
         height: auto;
         font-size: 12px;
         line-height: 12px;
-        border: 1px solid transparent;
         border-radius: 20px;
       }
     }

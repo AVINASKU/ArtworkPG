@@ -1300,9 +1300,10 @@ function AddProject(props) {
             </Row>
           </Col>
         </Row>
-        <Row className="form-buttons">
+        <div className="form-buttons">
           <Button
-            className="button-layout submit-button"
+            className="button-layout"
+            variant="secondary"
             onClick={() => {
               navigate("/myProjects");
             }}
@@ -1310,7 +1311,8 @@ function AddProject(props) {
             Cancel
           </Button>
           <Button
-            className="button-layout submit-button"
+            className="button-layout"
+            variant="secondary"
             onClick={onSaveAsDraft}
           >
             Save as draft
@@ -1322,7 +1324,7 @@ function AddProject(props) {
           >
             Submit
           </Button>
-        </Row>
+        </div>
       </Form>
     </div>
   );
