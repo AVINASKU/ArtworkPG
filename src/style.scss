@@ -9,9 +9,66 @@
 $primary-color: #003da5;
 $white-color: #ffffff;
 $gray-color: "#ACACAC";
-.btn-secondary{
-  background-color: #ACACAC;
-  &:hover{
-    background-color: #868484;
+.btn{
+    background: #003da5;
+    color: #fff;
+    padding: 10px 24px;
+    width: auto;
+    height: auto;
+    font-size: 12px;
+    line-height: 12px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border-radius: 20px;
+  &.btn{
+    &-primary{
+      background-color: #003DA5;
+      border-color: #003DA5;
+      &:hover, &:active{
+        background-color: #003DA5;
+      }  
+    }
+    &-secondary{
+      background-color: #fff;
+      border-color: #003DA5;
+      color: #003DA5;
+      &:hover, &:active{
+        background-color: #fff;
+        border-color: #003DA5;
+        color: #003DA5
+      }  
+    }
+    &-disabled, disabled{
+      background-color: #ACACAC;
+      &:hover, &:active{
+        background-color: #ACACAC;
+      } 
+    }
+    &.border-primary{
+      border-color: #003DA5 !important;      
+    }
+  }
+  &.dropdown-toggle{
+    padding: 10px 18px;
+    &:after{
+      margin-left: 10px;
+    }
+  }
+  &:disabled{
+    font-size: 12px;
+    width: auto;
+    height: auto;
+  }
+}
+.form-buttons{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 20px 0 0;
+  gap: 24px;
+  .btn, .btn:disabled{
+    @extend .btn;
   }  
 }
