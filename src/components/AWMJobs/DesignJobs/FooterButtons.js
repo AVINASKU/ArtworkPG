@@ -1,25 +1,21 @@
 import React from "react";
-import { Button, Row } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 
 const FooterButtons = ({ onSaveAsDraft, onSubmit, handleCancel, approve }) => {
   return (
-    <Row className="form-buttons">
+    <div className="form-buttons">
       <Button
-        className="button-layout cancel-button"
+        className="button-layout"
+        variant="secondary"
         onClick={() => handleCancel()}
       >
         Cancel
       </Button>
       { !approve &&
         <> 
+        <Button className="button-layout" variant="secondary" onClick={() => onSaveAsDraft()}>Save as Draft</Button>        
         <Button
-          onClick={() => onSaveAsDraft()}
-          className="button-layout save-as-draft-button"
-        >
-          Save as Draft
-        </Button>
-        <Button
-          className="button-layout submit-di-button"
+          className="button-layout"
           type="submit"
           onClick={() => onSubmit()}
           disabled = {false}
@@ -29,7 +25,7 @@ const FooterButtons = ({ onSaveAsDraft, onSubmit, handleCancel, approve }) => {
         </>       
       }
       
-    </Row>
+    </div>
   );
 };
 
