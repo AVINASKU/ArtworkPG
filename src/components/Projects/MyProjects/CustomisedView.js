@@ -42,7 +42,7 @@ export default function CustomisedView({
     <>
        <button
           type="button"
-          className="btn btn-secondary reset-to-default-view"
+          className="btn btn-secondary"
            onClick={() => {
           resetToPgDefault(selectedCategories);
           setVisible(false);
@@ -53,7 +53,7 @@ export default function CustomisedView({
 
         <button
           type="button"
-          className="btn btn-secondary save-as-personal-view"
+          className="btn btn-primary"
            onClick={() => saveAsPersonaliDefault(selectedCategories)}
         >
           Save as Personal View
