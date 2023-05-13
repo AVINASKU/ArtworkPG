@@ -417,7 +417,7 @@ const ProjectPlanList = (props) => {
       const index = frozenCoulmns.indexOf(selectedColumnName);
       frozenCoulmns.splice(index, 1);
       setFrozenColumn(frozenCoulmns);
-      setProjectFrozen(!ProjectFrozen);
+      setProjectFrozen(ProjectFrozen);
     }
     let jsonSortItem = localStorage.getItem("sortingData");
     const sortItem = JSON.parse(jsonSortItem);
@@ -710,7 +710,7 @@ const ProjectPlanList = (props) => {
 
   const onSort = (column, direction) => (event) => {
     const sortedData = [...pegadata].sort((a, b) => {
-      return a[column] > b[column] ? 1 : -1;
+      return a['data'][column] > b['data'][column] ? 1 : -1;
     });
 
     if (direction === "desc") {
