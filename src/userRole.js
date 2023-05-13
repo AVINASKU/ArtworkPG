@@ -1,6 +1,24 @@
 export const RoleUser = {
   users: [
     {
+      username: "malashree",
+      password: "mala123",
+      userid: "koley.mk",
+      role: "TaskOwner",
+      bu: "FAB",
+      region: "EUROPE ENTERPRISE",
+      permissions: ["create", "read", "update", "delete"],
+    },
+    {
+      username: "pusan",
+      password: "pusan123",
+      userid: "chatterjee.pc.2",
+      role: "TaskOwner",
+      bu: "FAB",
+      region: "EUROPE ENTERPRISE",
+      permissions: ["create", "read", "update", "delete"],
+    },
+    {
       username: "Izabela",
       password: "iza123",
       userid: "@iza123",

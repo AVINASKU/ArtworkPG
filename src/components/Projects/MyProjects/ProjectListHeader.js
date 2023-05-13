@@ -23,6 +23,7 @@ const ProjectListHeader = ({
   isResetEnabled,
   handleDelegateClick,
   handleHelpNeededClick,
+  handleHelpProvidedClick,
   actionFlag,
   // exportCSVTasks,
   selected,
@@ -41,7 +42,9 @@ const ProjectListHeader = ({
   const handleHelpNeeded = () => {
     handleHelpNeededClick();
   };
-
+  const handleHelpProvided = () => {
+    handleHelpProvidedClick();
+  };
   const handleClick = () => {
     setShowCSV(false);
     setDownloadCSV(true);
@@ -200,10 +203,13 @@ const ProjectListHeader = ({
               id={actionFlag ? "tasksInActive" : "tasksActive"}
               className="dropdown-button-custom"
             >
+              <Dropdown.Item onClick={handleDelegate}>Delegate</Dropdown.Item>
               <Dropdown.Item onClick={handleHelpNeeded}>
                 Help Needed
               </Dropdown.Item>
-              <Dropdown.Item onClick={handleDelegate}>Delegate</Dropdown.Item>
+              <Dropdown.Item onClick={handleHelpProvided}>
+                Help Provided
+              </Dropdown.Item>
             </DropdownButton>
           </>
         )}
