@@ -381,6 +381,9 @@ img[disabled] {
     position: relative !important;
   }
 
+  .accordion-item>.accordion-header>button {
+    height: 25px;
+  }
   .accordion-item>.accordion-header>button::after {
     position: absolute !important;
     margin-left: 110px;
@@ -398,6 +401,23 @@ img[disabled] {
 }
 
 // APrrove Dialog Styles Start
+.approveDesignDialog {
+  width: 722px;
+  height: 429px;
+  border-radius: 20px;
+
+  .p-dialog-content {
+    overflow-y: hidden !important;
+  }
+}
+.columnBorder {
+  background-color: #FAFCFF;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 13px;
+  color: #595959;
+}
+
 .columnBorder>div {
   margin-top: 5px;
   border-right: 0.5px solid #ACACAC;
@@ -412,18 +432,47 @@ img[disabled] {
 .columnBorder1>div {
   margin: 10px 0 0 0;
   text-align: center;
+  color: #595959;
+  font-size: 10px !important;
+  line-height: 10px;
+
   // min-width: fit-content;
+  select {
+    color: #595959;
+    font-size: 10px !important;
+    line-height: 10px;
+    font-weight: 400 !important;
+  }
+  div > label {
+    font-size: 10px !important;
+  }
 }
 
 .columnBorder2>div {
   margin-bottom: 20px;
   text-align: center;
+  color: #595959;
+
   // min-width: fit-content;
+  select {
+    color: #595959;
+    font-size: 10px !important;
+    line-height: 10px;
+    font-weight: 400 !important;
+  }
+  div > label {
+    font-size: 10px !important;
+  }
 }
 
 .submitButton {
   padding-top: 10px !important;
   text-align: right;
+  button {
+  font-weight: 500 !important;
+  height: 32px !important;
+  width: 93px !important;
+  }
 }
 
 .submitButton>button {
@@ -451,4 +500,46 @@ img[disabled] {
   visibility: hidden;
 }
 
+.approveDesignDiv {
+  position: relative;
+  border: 0.5px solid #ACACAC;
+  height: 144px;
+  width: 377.5px;
+  margin-left: 142px;
+  border-radius: 5px;
+  padding: 13px 15px;
+}
+
+.approveDesignDiv::before,
+.approveDesignDiv::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 160px;
+  border: 11px solid transparent;
+  border-bottom-color: #dddddd;
+}
+
+.approveDesignDiv::after {
+  left: 161px;
+  border: 10px solid transparent;
+  border-bottom-color: #ffffff;
+}
+
+.approveDesignDivHeading {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 13.44px;
+  color: #595959;
+  line-height: 33px !important;
+}
+.approveDesignDivData {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 13.44px;
+  color: #595959;
+}
+.approveDesignDiv2Data {
+  margin-top: 11px;
+}
 // APrrove Dialog Styles End

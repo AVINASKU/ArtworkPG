@@ -12,7 +12,7 @@ import BlueFilter from "../../../assets/images/BlueFilterIcon.svg";
 import complete from "../../../assets/images/complete.svg";
 import hyphen from "../../../assets/images/hyphen.svg";
 import inprogress from "../../../assets/images/inprogress.svg";
-import lock from "../../../assets/images/lock.svg";
+import available from "../../../assets/images/available.svg";
 import Awaiting from "../../../assets/images/Awaiting.svg";
 import override from "../../../assets/images/override.svg";
 import { Dropdown } from "primereact/dropdown";
@@ -28,6 +28,8 @@ import {
 } from "../../../store/actions/ProjectPlanActions";
 import moment from "moment";
 import ApproveDesignDialog from "./ApproveDesignDialog";
+import { useLocation } from "react-router-dom";
+import CPPFA from "./../../AWMJobs/CPPFA";
 
 const ProjectPlanList = (props) => {
   const [pegadata, setPegaData] = useState(null);
@@ -169,7 +171,7 @@ const ProjectPlanList = (props) => {
 
         let dataObj = {};
         dataObj["Task"] = task.data[0].Task_Name;
-        dataObj["Dependancy"] = task.data[0].Dependency;
+        dataObj["Dependency"] = task.data[0].Dependency;
         dataObj["Role"] = task.data[0].Role;
         dataObj["RoleOptions"] = task.data[0].RoleOptions;
         dataObj["Assignee"] = task.data[0].Assignee;
@@ -202,7 +204,7 @@ const ProjectPlanList = (props) => {
         tempObj["key"] = task.code;
         let dataObj = {};
         dataObj["Task"] = `${task.name} (X${task.data?.length})`;
-        dataObj["Dependancy"] = task.data[0].Dependency;
+        dataObj["Dependency"] = task.data[0].Dependency;
         dataObj["Role"] = "";
         dataObj["RoleOptions"] = "";
         dataObj["Assignee"] = "";
@@ -240,7 +242,7 @@ const ProjectPlanList = (props) => {
 
           let dataObj = {};
           dataObj["Task"] = `${index + 1}). ${dt.Task_Name}`;
-          dataObj["Dependancy"] = dt.Dependency;
+          dataObj["Dependency"] = dt.Dependency;
           dataObj["Role"] = dt.Role;
           dataObj["RoleOptions"] = dt.RoleOptions;
           dataObj["Assignee"] = dt.Assignee;
@@ -343,7 +345,6 @@ const ProjectPlanList = (props) => {
       (sortData && sortData.length && sortData[0] === options);
 
     const optionsCode = options?.split("_").join(" ");
-    console.log("options:", optionsCode);
 
     return (
       <div>
@@ -435,7 +436,7 @@ const ProjectPlanList = (props) => {
 
   const rowExpansionColumnNames = [
     "Task",
-    "Dependancy",
+    "Dependency",
     "Role",
     "Owner",
     "State",
@@ -445,14 +446,14 @@ const ProjectPlanList = (props) => {
     "Consumed_Buffer",
     "Help_Needed",
   ];
-
+  const location = useLocation();
   const elementTemplate = (options, rowData) => {
-    console.log("inside elementTemplate: ", options, rowData);
     const field = rowData.field;
-
+    const currentUrl = location.pathname;
+    let currentUrlLastSeg = currentUrl.split("/")[2];
     const key = options?.key;
     const keyCode = key?.split("_");
-    const url = `${keyCode[0]}/${key}`;
+    const url = `MyTasks/${keyCode[0]}/${key}/${currentUrlLastSeg}`;
 
     return (
       <>
@@ -461,9 +462,12 @@ const ProjectPlanList = (props) => {
             className={`${options.redirect === true ? "task-link" : "task"}`}
             // style={{ color: "#003DA5", cursor: "pointer" }}
             onClick={() => {
-              if (field && field.length) {
+              if (field && field.length && keyCode[0] !== "CPPFA") {
                 // dispatch(selectedProject(options.data, "My Projects"));
-                options.redirect === true && navigate(url);
+                options.redirect === true &&
+                  navigate(`../${url}`, { replace: true });
+              } else {
+                handleApproveDialogCPPFA(options);
               }
             }}
           >
@@ -554,7 +558,7 @@ const ProjectPlanList = (props) => {
             ) : field === "State" && options.data[field] === "Available" ? (
               <>
                 <img
-                  src={lock}
+                  src={available}
                   alt="Lock"
                   onClick={(e) => {
                     op.current.toggle(e);
@@ -636,7 +640,7 @@ const ProjectPlanList = (props) => {
         obj["Start_Date"] = data.data.StartDate;
         obj["Assignee"] = data.data.Owner;
         obj["Duration"] = data.data.Duration;
-        obj["Dependency"] = data.data.Dependancy;
+        obj["Dependency"] = data.data.Dependency;
         obj["Task_Name"] = data.data.Task;
         obj["Role"] = data.data.Role;
         obj["State"] = data.data.State;
@@ -652,7 +656,7 @@ const ProjectPlanList = (props) => {
           tempObj["Start_Date"] = child.data.StartDate;
           tempObj["Assignee"] = child.data.Owner;
           tempObj["Duration"] = child.data.Duration;
-          tempObj["Dependency"] = child.data.Dependancy;
+          tempObj["Dependency"] = child.data.Dependency;
           tempObj["Task_Name"] = child.data.Task.split("). ")[1];
           tempObj["Role"] = child.data.Role;
           tempObj["State"] = child.data.State;
@@ -720,6 +724,16 @@ const ProjectPlanList = (props) => {
 
   const pegadata1 = pegadata?.map((obj) => obj.data);
 
+  const [showApproveDialogCPPFA, setShowApproveDialogCPPFA] = useState(false);
+  const [selectedTaskApproveDialogCPPFA, setSelectedTaskApproveDialogCPPFA] = useState(
+    []
+  );
+  const handleApproveDialogCPPFA = (options) => {
+    setShowApproveDialogCPPFA(true);
+    // let task = [{ TaskID: options.key, TaskName: options.data.Task }];
+    // setSelectedTaskApproveDialogCPPFA(task);
+  };
+
   return (
     <div className="myProjectAnddAllProjectList">
       {showApproveDialog && (
@@ -727,6 +741,13 @@ const ProjectPlanList = (props) => {
           onClose={() => setShowApproveDialog(!showApproveDialog)}
           showTaskDialog={showApproveDialog}
           selectedTaskData={selectedTaskApproveDialog}
+        />
+      )}
+      {showApproveDialogCPPFA && (
+        <CPPFA
+          onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
+          showTaskDialog={showApproveDialogCPPFA}
+          selectedTaskData={selectedTaskApproveDialogCPPFA}
         />
       )}
       <Suspense fallback={<div>Loading...</div>}>

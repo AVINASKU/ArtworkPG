@@ -39,7 +39,10 @@ function ProjectPlanCompo(props) {
         </Accordion.Item>
       </Accordion>
       <div className="row">
-        <div className="col btn-group btn-group-toggle d-flex justify-content-end">
+        <div
+          className="col btn-group btn-group-toggle d-flex justify-content-end"
+          style={{ marginTop: "35px", marginBottom: "11px" }}
+        >
           <div>
             <button
               type="button"
