@@ -3,7 +3,6 @@ import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Col, Row } from "react-bootstrap";
 import { BreadCrumb } from "primereact/breadcrumb";
-import UploadFile from "../DesignJobs/UploadFile";
 import "./index.scss";
 
 const CPPFA = (props) => {
@@ -101,7 +100,7 @@ const CPPFA = (props) => {
                 <label className="radioLabel">High Risk</label>
               </div>
             </Col>
-            <Col>{/* <UploadFile /> */}</Col>
+            <Col>UploadFile</Col>
             <Col></Col>
           </Row>
         </div>

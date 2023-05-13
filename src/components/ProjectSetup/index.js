@@ -83,7 +83,7 @@ function ProjectSetup(props) {
               >
                 <div className="col projectPlanButtons">
                   <label
-                    className={` btn border border-secondary projectPlanButtonsRadius1 ${
+                    className={` btn border border-secondary ${
                       toggleButtons === "GanttChart"
                         ? "ganttChartTabular active"
                         : ""
@@ -93,7 +93,7 @@ function ProjectSetup(props) {
                     Gantt Chart
                   </label>
                   <label
-                    className={` btn border border-secondary projectPlanButtonsRadius2 ${
+                    className={` btn border border-secondary ${
                       toggleButtons === "Tabular"
                         ? "ganttChartTabular active"
                         : ""
