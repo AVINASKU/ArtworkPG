@@ -66,33 +66,34 @@ $width: 100%;
 }
 .projectPlanButtons {
   display: flex;
-  justify-content:end;
+  justify-content: end;
   margin-right: 13px;
-  & label{
+  & label {
     padding: 8px 18px;
-    &:first-child{
+    &:first-child {
       border-radius: 20px 0 0 20px;
     }
-    &:last-child{
+    &:last-child {
       border-radius: 0 20px 20px 0;
     }
   }
-  & label.btn-secondary{
-    background-color: #003DA5 ;
+  & label.btn-secondary {
+    background-color: #003da5;
     color: #fff;
-    &:hover{
-      background-color: #003DA5 ;
+    &:hover {
+      background-color: #003da5;
       color: #fff;
     }
   }
-  & label.active{
+
+  & label.active {
     background-color: #fff;
-    color: #003DA5;
-    &:hover{
-      background-color: #fff;
-      color: #003DA5;
+    color: #003da5;
+    &:hover {
+      background-color: #003da5;
+      color: #003da5;
     }
-}
+  }
 }
 .ActionsDropdown {
   background-color: #003da5;
@@ -100,19 +101,23 @@ $width: 100%;
 .AccordionIndent > .accordion > .accordion-item > .accordion-header {
   position: relative !important;
 }
-.AccordionIndent > .accordion > .accordion-item > .accordion-header > button::after {
+.AccordionIndent
+  > .accordion
+  > .accordion-item
+  > .accordion-header
+  > button::after {
   position: absolute !important;
   margin-left: 110px !important;
 }
 .dropdownItemPaddingLeft {
-    padding-left: 16px;
+  padding-left: 16px;
 }
 .dropdownItemColor {
-  color: #D37302;
+  color: #d37302;
 }
 .dropdownItemColor1 {
-  color: #FF0000;
+  color: #ff0000;
 }
 .dropdownItemColor2 {
-  color: #003DA5;
+  color: #003da5;
 }

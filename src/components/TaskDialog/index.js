@@ -83,45 +83,52 @@ const TaskDialog = (props) => {
             </ul>
           </label>
         </div>
-        {props.flag === "delegate" && (
-          <div className="p-field">
-            <label htmlFor="priority">Delegate To *</label>
 
-            <AutoComplete
-              value={selectedItem}
-              suggestions={filteredItems}
-              completeMethod={searchItems}
-              field="label"
-              dropdown
-              placeholder="Search user"
+        <div className="p-field">
+          <label htmlFor="priority">Delegate To *</label>
+          <AutoComplete
+            value={selectedItem}
+            suggestions={filteredItems}
+            completeMethod={searchItems}
+            field="label"
+            dropdown
+            placeholder="Search user"
+            onChange={(e) => {
+              setSelectedItem(e.value);
+              setIsFormValid(!!e.value && comment.trim().length > 0);
+            }}
+          />
+        </div>
+        {props.flag === "help" && (
+          <div className="p-field">
+            <label htmlFor="comment">Add Comment *</label>
+            <InputTextarea
+              id="comment"
+              value={comment}
               onChange={(e) => {
-                setSelectedItem(e.value);
-                setIsFormValid(!!e.value && comment.trim().length > 0);
+                setComment(e.target.value);
+                setIsFormValid(
+                  !!selectedItem && e.target.value.trim().length > 0
+                );
               }}
+              rows={3}
+              className="p-inputtext p-component"
             />
           </div>
         )}
-        <div className="p-field">
-          <label htmlFor="comment">Add Comment *</label>
-          <InputTextarea
-            id="comment"
-            value={comment}
-            onChange={(e) => {
-              setComment(e.target.value);
-              setIsFormValid(
-                !!selectedItem && e.target.value.trim().length > 0
-              );
-            }}
-            rows={3}
-            className="p-inputtext p-component"
-          />
-        </div>
       </div>
       <div className="p-dialog-footer" id="submit">
-        <p className="comments-validation">
-          * The message will be sent to PM once submit{" "}
-        </p>
-        <Button label="Submit" onClick={handleSubmit} disabled={!isFormValid} />
+        {props.flag === "help" && (
+          <p className="comments-validation">
+            * The message will be sent to PM once submit{" "}
+          </p>
+        )}
+        <Button
+          label="Submit"
+          className="button-layout btn btn-primary"
+          onClick={handleSubmit}
+          disabled={!isFormValid}
+        />
       </div>
     </Dialog>
   );

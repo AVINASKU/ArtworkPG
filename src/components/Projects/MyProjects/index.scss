@@ -246,3 +246,36 @@ div.p-selectbutton.p-buttonset.p-component {
 .dropdown-menu {
   padding: 0;
 }
+
+#tasksInActive {
+  background-color: #fff !important;
+  border-color: #003da5 !important;
+  color: #003da5 !important;
+  opacity: 1;
+}
+
+.dropdown-button-custom #tasksInActive::after {
+  content: "";
+  display: inline-block;
+  width: 12px;
+  height: 8px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M10 2L6.70707 5.2929C6.31818 5.68179 5.68182 5.68179 5.29293 5.2929L2 2' stroke='%23003DA5' stroke-miterlimit='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
+  border: 0;
+}
+.dropdown-button-custom .btn[aria-expanded="true"]::after,
+.dropdown-button-custom .btn[aria-expanded="false"]::after {
+  content: "";
+  display: inline-block;
+  width: 12px;
+  height: 8px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M2 6L5.29293 2.7071C5.68182 2.31821 6.31818 2.31821 6.70707 2.7071L10 6' stroke='white' stroke-miterlimit='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
+  border: 0;
+  transform: rotate(0deg);
+}
+.dropdown-button-custom .btn[aria-expanded="false"]::after {
+  transform: rotate(180deg);
+}
