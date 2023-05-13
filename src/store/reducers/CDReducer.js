@@ -6,7 +6,6 @@ const initialState = {
 };
 
 const CDReducer = (state = initialState, action) => {
-  console.log("tstssss.........", action.payload);
   switch (action.type) {
     case "GET_DEFINE_CD_REQUEST":
       return { ...state, loading: true };

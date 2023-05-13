@@ -11,6 +11,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import CloneJobs from "../DesignJobs/CloneJobs";
 import "./index.scss";
+import CDHeader from "../DesignJobs/CDHeader";
 const breadcrumb = [{ label: "Define Color Development" }];
 
 const headerName = "Define Color Development";
@@ -21,7 +22,7 @@ function CCD() {
   const { defineCD } = useSelector((state) => state.CDReducer);
   const [data, setData] = useState(null);
   const [CD, setCD] = useState([]);
-
+  const [formValid, setFormValid] = useState(true);
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
   let { TaskID, ProjectID } = useParams();
@@ -38,8 +39,8 @@ function CCD() {
 
   useEffect(() => {
     if (defineCD) {
-      setCD(defineCD?.Color_Development_Details || []);
-      setData(defineCD || []);
+      setCD(defineCD[0]?.DesignJobDetails || []);
+      setData(defineCD[0] || []);
     }
   }, [defineCD]);
   const handleCancel = () => {
@@ -63,13 +64,20 @@ function CCD() {
     const newDesignIntent = [
       ...CD,
       {
-        CD_Job_ID: CD.length + 1,
+        Design_Job_ID: CD.length + 1,
         isNew: true,
-        CD_Job_Name: "",
-        Printer_Process: "",
+        Print_Trial_Done: null,
+        Tier: "",
+        Cluster: "",
+        Agency_Reference: "",
+        Printer: "",
+        Printing_Process: "",
+        Design_Job_Name: "",
         Substrate: "",
         Additional_Info: "",
-        Select: false,
+        CD_Approved: null,
+        Select: null,
+        Print_Trial_Needed: null,
       },
     ];
     setCD(newDesignIntent);
@@ -104,7 +112,6 @@ function CCD() {
   };
 
   const onSaveAsDraft = async () => {
-    console.log("design intent list full", CD);
     // let submitOnlySelectedData = designIntent.filter(
     //   (task) => task?.Event !== "submit"
     // );
@@ -132,7 +139,7 @@ function CCD() {
 
   return (
     <PageLayout>
-      <DesignHeader
+      <CDHeader
         setAddNewDesign={addNewEmptyDesign}
         onSelectAll={onSelectAll}
         breadcrumb={breadcrumb}
@@ -153,13 +160,14 @@ function CCD() {
           if (item && item?.Action !== "delete") {
             return (
               <CloneJobs
-                key={item.CD_Job_ID}
+                key={item.Design_Job_ID}
                 {...data}
                 item={item}
                 index={index}
                 addData={addData}
                 handleDelete={handleDelete}
                 jobName={jobName}
+                setFormValid={setFormValid}
               />
             );
           }
@@ -168,6 +176,7 @@ function CCD() {
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}
+          formValid={formValid}
         />
       </div>
     </PageLayout>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { InputText } from "primereact/inputtext";
 import { Row, Col } from "react-bootstrap";
 import { Checkbox } from "primereact/checkbox";
@@ -14,22 +14,25 @@ import { AutoComplete } from "primereact/autocomplete";
 import { useLocation } from "react-router-dom";
 const CloneJobs = ({
   index,
-  Brand,
-  Category,
+  Artwork_Brand,
+  Artwork_Category,
   Project_Name,
   handleDelete,
   item,
   addData,
   jobName,
   disabled,
+  setFormValid,
 }) => {
   const {
-    Printer_Process,
+    Printing_Process,
     Additional_Info,
     event,
     Select,
     Printer,
     Substrate,
+    Design_Job_ID,
+    Design_Job_Name,
     PrintTrail,
     CDConfirmed,
     PTConfirmed,
@@ -39,7 +42,7 @@ const CloneJobs = ({
   const [printTrailNeeded, setPrintTrailNeeded] = useState(false);
   const [CDConfirmation, setCDConfirmation] = useState(false);
   const [printTrailDone, setPrintTrailDone] = useState(false);
-  const [printerProcess, setPrinterProcess] = useState(Printer_Process);
+  const [printerProcess, setPrinterProcess] = useState(Printing_Process);
   const [substrateData, setSubstarteData] = useState(Substrate);
   const [printers, setPrinters] = useState(Printer);
   const [additionalInformation, setAdditionalInfo] = useState(Additional_Info);
@@ -47,6 +50,7 @@ const CloneJobs = ({
   const locationPath = location?.pathname;
   const url = locationPath?.split("/");
   const pathName = url[2];
+  const disabledCPT = pathName === "CPT" ? true : false;
   useEffect(() => {
     setChecked(Select);
   }, [Select]);
@@ -57,24 +61,47 @@ const CloneJobs = ({
     setPrintTrailDone(PTConfirmed);
   }, [PrintTrail, CDConfirmed, PTConfirmed]);
 
+  useEffect(() => {
+    if (!disabledCPT) {
+      if (printerProcess && substrateData && printTrailNeeded && checked) {
+        setFormValid(false);
+      } else {
+        setFormValid(true);
+      }
+    } else {
+      if (CDConfirmation) {
+        setFormValid(false);
+      } else {
+        setFormValid(true);
+      }
+    }
+  }, [
+    printerProcess,
+    substrateData,
+    printTrailNeeded,
+    checked,
+    CDConfirmation,
+    setFormValid,
+  ]);
+
   const DesignHeader = (di_name) => {
     return (
       <>
         <div
           style={{
             marginLeft: 20,
-            padding: 5,
           }}
           className="font-color"
         >
-          {/* {di_name} */}
-          {!di_name ? `Design Intent ${index + 1}` : di_name}
+          {!di_name
+            ? `CD_Printer_Printing Process_Substrate_Brand_Category_Project name_Additional info`
+            : di_name}
         </div>
         <img
           src={deleteIcon}
           alt="filter logo"
           onClick={() => handleDelete(index)}
-          className="header-icons"
+          className={`delete-icons ${disabledCPT && "disabled-add"}`}
           disabled={event === "submit" && disabled}
         />
       </>
@@ -83,16 +110,23 @@ const CloneJobs = ({
 
   let di_name;
 
-  if (printerProcess || printers || substrateData || printers || Brand) {
+  if (
+    printerProcess ||
+    printers ||
+    substrateData ||
+    printers ||
+    Artwork_Category ||
+    Artwork_Brand
+  ) {
     di_name =
       jobName +
       (printers ? printers + "_" : "Printer" + "_") +
       (printerProcess ? printerProcess + "_" : "Printing Process" + "_") +
       (substrateData ? substrateData + "_" : "Substrate" + "_") +
-      Brand.map((obj) => obj) +
-      "_" +
-      Category +
-      "_" +
+      (Artwork_Brand ? Artwork_Brand?.map((obj) => obj) : "Brand" + "_") +
+      (Artwork_Category
+        ? Artwork_Category?.map((obj) => obj)
+        : "Category" + "_") +
       Project_Name +
       "_" +
       (additionalInformation ? additionalInformation : "Additional info");
@@ -108,7 +142,7 @@ const CloneJobs = ({
     }
     setFilteredItems(_filteredItems);
   };
-  const disabledCPT = pathName === "CPT" ? true : false;
+
   const customBase64Uploader = async (event) => {
     // convert file to base64 encoded
     const file = event.files[0];
@@ -121,6 +155,7 @@ const CloneJobs = ({
       const base64data = reader.result;
     };
   };
+
   return (
     <div>
       <div className="design-intent-header ">{DesignHeader(di_name)}</div>
@@ -158,7 +193,9 @@ const CloneJobs = ({
         </Col>
         <Col sm={2}>
           <div>
-            <label htmlFor="agency">Printer Process * </label>
+            <label htmlFor="agency">
+              Printer Process <sup> *</sup>
+            </label>
             <AutoComplete
               id="printer"
               value={printerProcess}
@@ -176,13 +213,15 @@ const CloneJobs = ({
               disabled={disabledCPT}
             />
           </div>
-          {(printers === "" || printers === undefined) && (
+          {/* {(printers === "" || printers === undefined) && (
             <div className="error-text-di">Field Remaining</div>
-          )}
+          )} */}
         </Col>
         <Col sm={2}>
           <div>
-            <label htmlFor="cluster">Substrate * </label>
+            <label htmlFor="cluster">
+              Substrate <sup> *</sup>{" "}
+            </label>
             <AutoComplete
               id="substrate"
               value={substrateData}
@@ -200,9 +239,9 @@ const CloneJobs = ({
               disabled={disabledCPT}
             />
           </div>
-          {(substrateData === "" || substrateData === undefined) && (
+          {/* {(substrateData === "" || substrateData === undefined) && (
             <span className="error-text-di">Field Remaining</span>
-          )}
+          )} */}
         </Col>
         <Col sm={2}>
           <div>
@@ -220,52 +259,68 @@ const CloneJobs = ({
           </div>
         </Col>
         <Col sm={2}>
-          <div className="print-trial">
-            <div>
-              <Checkbox
-                onChange={(e) => {
-                  addData("printTrailNeeded", index, e.checked, di_name);
-                  setPrintTrailNeeded(e.checked);
-                }}
-                checked={event === "submit" ? true : printTrailNeeded}
-                className="margin-right"
-                disabled={disabledCPT}
-              ></Checkbox>
-            </div>
-            <label htmlFor="printTrailNeeded">Print Trail Needed</label>
-          </div>
-          {disabledCPT && (
-            <>
-              <div className="print-trial">
-                <div>
-                  <Checkbox
-                    onChange={(e) => {
-                      setCDConfirmation(e.checked);
-                      setPrintTrailDone(false);
-                    }}
-                    checked={event === "submit" ? true : CDConfirmation}
-                    className="margin-right"
-                  ></Checkbox>
-                </div>
-
-                <label htmlFor="printTrailNeeded">CD Approved</label>
+          <div>
+            <div className="print-trial">
+              <div>
+                <Checkbox
+                  onChange={(e) => {
+                    addData("printTrailNeeded", index, e.checked, di_name);
+                    setPrintTrailNeeded(e.checked);
+                    e.checked && setFormValid(false);
+                  }}
+                  checked={event === "submit" ? true : printTrailNeeded}
+                  disabled={disabledCPT}
+                  className={disabledCPT && "disabled-text"}
+                ></Checkbox>
               </div>
-              <div className="print-trial">
-                <div>
-                  <Checkbox
-                    onChange={(e) => {
-                      setPrintTrailDone(e.checked);
-                    }}
-                    checked={event === "submit" ? true : printTrailDone}
-                    className="margin-right"
-                    disabled={!CDConfirmation}
-                  ></Checkbox>
-                </div>
+              <label
+                htmlFor="printTrailNeeded"
+                className={disabledCPT && "disabled-text"}
+              >
+                Print Trail Needed
+              </label>
+            </div>
+            {disabledCPT && (
+              <>
+                <div className="print-trial">
+                  <div>
+                    <Checkbox
+                      onChange={(e) => {
+                        setCDConfirmation(e.checked);
+                        setPrintTrailDone(false);
+                      }}
+                      checked={event === "submit" ? true : CDConfirmation}
+                      className="margin-right"
+                    ></Checkbox>
+                  </div>
 
-                <label htmlFor="printTrailNeeded">Print Trial Done</label>
-              </div>{" "}
-            </>
-          )}
+                  <label htmlFor="printTrailNeeded">CD Approved</label>
+                </div>
+                <div className="print-trial">
+                  <div>
+                    <Checkbox
+                      onChange={(e) => {
+                        setPrintTrailDone(e.checked);
+                        disabledCPT && e.checked && setFormValid(false);
+                      }}
+                      checked={event === "submit" ? true : printTrailDone}
+                      className="margin-right"
+                      disabled={!CDConfirmation}
+                    ></Checkbox>
+                  </div>
+
+                  <label
+                    htmlFor="printTrailNeeded"
+                    className={
+                      !CDConfirmation ? "disabled-text" : "enabled-text"
+                    }
+                  >
+                    Print Trial Done
+                  </label>
+                </div>
+              </>
+            )}
+          </div>
         </Col>
         {!disabledCPT && (
           <Col sm={1}>
@@ -283,19 +338,20 @@ const CloneJobs = ({
             </div>
           </Col>
         )}
+
         {disabledCPT && (
           <Col sm={1}>
-            <label htmlFor="select"> Upload File</label>
             <div>
-              <FileUpload
-                name="demo[]"
-                url={"/api/upload"}
-                accept="image/*"
-                maxFileSize={1000000}
-                mode="basic"
-                onUpload={customBase64Uploader}
-                chooseLabel="Browse"
-              />
+              <label htmlFor="select"> Upload File</label>
+
+              <div>
+                <FileUpload
+                  name="demo[]"
+                  accept="image/*"
+                  maxFileSize={1000000}
+                  emptyTemplate={<p className="m-0"></p>}
+                />
+              </div>
             </div>
           </Col>
         )}

@@ -1,7 +1,13 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 
-const FooterButtons = ({ onSaveAsDraft, onSubmit, handleCancel, approve }) => {
+const FooterButtons = ({
+  onSaveAsDraft,
+  onSubmit,
+  handleCancel,
+  approve,
+  formValid,
+}) => {
   return (
     <div className="form-buttons">
       <Button
@@ -11,20 +17,25 @@ const FooterButtons = ({ onSaveAsDraft, onSubmit, handleCancel, approve }) => {
       >
         Cancel
       </Button>
-      { !approve &&
-        <> 
-        <Button className="button-layout" variant="secondary" onClick={() => onSaveAsDraft()}>Save as Draft</Button>        
-        <Button
-          className="button-layout"
-          type="submit"
-          onClick={() => onSubmit()}
-          disabled = {false}
-        >
-          Submit
-        </Button>
-        </>       
-      }
-      
+      {!approve && (
+        <>
+          <Button
+            className="button-layout"
+            variant="secondary"
+            onClick={() => onSaveAsDraft()}
+          >
+            Save as Draft
+          </Button>
+          <Button
+            className="button-layout"
+            type="submit"
+            onClick={() => onSubmit()}
+            disabled={formValid}
+          >
+            Submit
+          </Button>
+        </>
+      )}
     </div>
   );
 };

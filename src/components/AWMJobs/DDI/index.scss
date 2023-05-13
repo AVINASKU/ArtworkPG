@@ -28,17 +28,9 @@
   font-weight: 400;
 }
 
-.approve-design-intent{
-.p-button.p-button-rounded {
+.approve-design-intent {
+  .p-button.p-button-rounded {
     border: hidden !important;
+  }
+  padding: 10px;
 }
-padding: 10px;
-}
-
-.error-text-di{
-
-    color: red;
-    font-weight: 800;
-    font-size: 8px;
-}
-

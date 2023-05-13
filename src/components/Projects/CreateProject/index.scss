@@ -54,11 +54,12 @@
   font-weight: 900;
 }
 .p-checkbox .p-checkbox-box {
-  border: 1px solid #acacac;
-  width: 13px;
-  height: 13px;
+  border: 1px solid #595959;
+  width: 16px;
+  height: 16px;
   color: #acacac;
   border-radius: 3px;
+  padding: 7px;
 }
 
 .p-multiselect-panel .p-multiselect-items .p-multiselect-item.p-highlight {
@@ -153,7 +154,7 @@
 }
 .project-content {
   font-size: 12px;
-  label{
+  label {
     font-weight: 700;
     padding-bottom: 7px;
   }

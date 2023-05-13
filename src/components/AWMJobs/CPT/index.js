@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import CloneJobs from "../DesignJobs/CloneJobs";
 import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
 import "./index.scss";
+import CDHeader from "../DesignJobs/CDHeader";
 const breadcrumb = [{ label: "Confirm Color Development & Print Trial" }];
 
 const headerName = "Confirm Color Development & Print Trial";
@@ -22,7 +23,7 @@ function CPT() {
   const { confirmCD } = useSelector((state) => state.CDReducer);
   const [data, setData] = useState(null);
   const [CD, setCD] = useState([]);
-
+  const [formValid, setFormValid] = useState(true);
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
   let { TaskID, ProjectID } = useParams();
@@ -39,8 +40,8 @@ function CPT() {
 
   useEffect(() => {
     if (confirmCD) {
-      setCD(confirmCD?.Color_Development_Details || []);
-      setData(confirmCD || []);
+      setCD(confirmCD[0]?.DesignJobDetails || []);
+      setData(confirmCD[0] || []);
     }
   }, [confirmCD]);
   const handleCancel = () => {
@@ -112,7 +113,7 @@ function CPT() {
 
   return (
     <PageLayout>
-      <DesignHeader
+      <CDHeader
         setAddNewDesign={addNewEmptyDesign}
         onSelectAll={onSelectAll}
         breadcrumb={breadcrumb}
@@ -138,6 +139,7 @@ function CPT() {
                 item={item}
                 index={index}
                 jobName={jobName}
+                setFormValid={setFormValid}
               />
             );
           }
@@ -146,6 +148,7 @@ function CPT() {
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}
+          formValid={formValid}
         />
       </div>
     </PageLayout>
