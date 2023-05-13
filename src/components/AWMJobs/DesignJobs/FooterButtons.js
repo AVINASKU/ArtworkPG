@@ -1,29 +1,42 @@
 import React from "react";
-import { Button, Row } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 
-const FooterButtons = ({ onSaveAsDraft, onSubmit, handleCancel }) => {
+const FooterButtons = ({
+  onSaveAsDraft,
+  onSubmit,
+  handleCancel,
+  approve,
+  formValid,
+}) => {
   return (
-    <Row className="form-buttons">
+    <div className="form-buttons">
       <Button
-        className="button-layout cancel-button"
+        className="button-layout"
+        variant="secondary"
         onClick={() => handleCancel()}
       >
         Cancel
       </Button>
-      <Button
-        onClick={() => onSaveAsDraft()}
-        className="button-layout save-as-draft-button"
-      >
-        Save as Draft
-      </Button>
-      <Button
-        className="button-layout submit-di-button"
-        type="submit"
-        onClick={() => onSubmit()}
-      >
-        Submit
-      </Button>
-    </Row>
+      {!approve && (
+        <>
+          <Button
+            className="button-layout"
+            variant="secondary"
+            onClick={() => onSaveAsDraft()}
+          >
+            Save as Draft
+          </Button>
+          <Button
+            className="button-layout"
+            type="submit"
+            onClick={() => onSubmit()}
+            disabled={formValid}
+          >
+            Submit
+          </Button>
+        </>
+      )}
+    </div>
   );
 };
 

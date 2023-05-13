@@ -3,7 +3,11 @@ import Api from ".";
 const baseURL = "https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1";
 
 //pass the taskID and projectId from the my tasks
-export const getDesignIntent = async (taskID, projectId, headers = {}) => {
+export const getDesignIntent = async (taskID, projectId, headers = {
+  "Access-Control-Allow-Headers" : "Content-Type",
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+}) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
   let apiURL = `${baseURL}/DesignIntentDetails/${taskID}/${projectId}`;
@@ -15,7 +19,11 @@ export const getDesignIntent = async (taskID, projectId, headers = {}) => {
   return designIntent?.data?.ArtworkAgilityProjects;
 };
 
-export const saveDesignIntent = async (formData, headers = {}) => {
+export const saveDesignIntent = async (formData, headers = {
+  "Access-Control-Allow-Headers" : "Content-Type",
+  "Access-Control-Allow-Origin": "http://localhost:3000/",
+  "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+}) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
   let apiURL = `${baseURL}/UpdateDesignIntentJob`;
