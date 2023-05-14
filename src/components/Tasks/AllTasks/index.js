@@ -15,7 +15,11 @@ const AllTasks = () => {
 
   return (
     <>
-      <TaskList myTasks={allTasks} flag="allTasks" />
+      <TaskList
+        myTasks={allTasks}
+        flag="allTasks"
+        userInformation={userInformation}
+      />
     </>
   );
 };

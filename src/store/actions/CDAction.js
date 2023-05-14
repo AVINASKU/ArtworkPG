@@ -1,7 +1,5 @@
 import Api from "../../apis";
-
-const baseURL =
-  "https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1/TaskDetails";
+import { DEVURL, SITURL, PRODURL } from "../../apis/envUrl";
 //pass the taskID and projectId from the my tasks
 
 export const getDefineCD = (taskID, projectId) => {
@@ -16,7 +14,7 @@ export const getDefineCD = (taskID, projectId) => {
           "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
         },
       });
-      let apiURL = `${baseURL}/${taskID}/${projectId}`;
+      let apiURL = `${DEVURL}/TaskDetails/${taskID}/${projectId}`;
       const defineCD = await axiosInstance({
         url: apiURL,
         method: "GET",
@@ -36,7 +34,7 @@ export const getConfirmCD = (taskID, projectId, headers) => {
     try {
       const api = new Api();
       const axiosInstance = await api.init({ headers });
-      let apiURL = `${baseURL}/${taskID}/${projectId}`;
+      let apiURL = `${DEVURL}/TaskDetails/${taskID}/${projectId}`;
       const defineCD = await axiosInstance({
         url: apiURL,
         method: "GET",
@@ -53,7 +51,7 @@ export const getConfirmCD = (taskID, projectId, headers) => {
 export const saveDesignIntent = async (formData, headers = {}) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${baseURL}/UpdateDesignIntentJob`;
+  let apiURL = `${DEVURL}/TaskDetails/UpdateDesignIntentJob`;
   const designIntent = await axiosInstance({
     url: apiURL,
     method: "POST",

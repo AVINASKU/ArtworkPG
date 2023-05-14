@@ -1,14 +1,13 @@
 import axios from "axios";
 import * as types from "./../types/types";
+import { DEVURL, SITURL, PRODURL } from "../../apis/envUrl";
 
 export const getTasks = (userInformation) => async (dispatch) => {
-  let username = userInformation?.username;
+  let userid = userInformation?.userid;
   // let userName = sessionStorage.getItem("username");
   try {
     //here need to add url and pass PM name
-    const res = await axios.get(
-      `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/MyTasks/${username}`
-    );
+    const res = await axios.get(`${DEVURL}/MyTasks/${userid}`);
 
     if (res?.data === null) {
       dispatch({
@@ -39,9 +38,7 @@ export const getAllTasks = (userInformation) => async (dispatch) => {
   let bu = userInformation?.bu;
   try {
     //here need to add url and pass PM name
-    const res = await axios.get(
-      `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/AllTasks/${bu}/${region}`
-    );
+    const res = await axios.get(`${DEVURL}/AllTasks/${bu}/${region}`);
 
     if (res?.data === null) {
       dispatch({

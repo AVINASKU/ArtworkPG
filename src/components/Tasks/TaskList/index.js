@@ -12,8 +12,12 @@ import { onSortData } from "../../../utils";
 import ConfirmationPopUp from "../../Projects/ConfirmationPopUp";
 import TaskDialog from "../../TaskDialog";
 import CPPFA from "../../AWMJobs/CPPFA";
+import { HelpNeededAction } from "../../../store/actions/HelpNeededAction";
+import { useDispatch } from "react-redux";
+import { getTasks, getAllTasks } from "../../../store/actions/TaskActions";
 
 const TaskList = (props) => {
+  const dispatch = useDispatch();
   const [selectAllChecked, setSelectAllChecked] = useState(false);
   const [selected, setSelected] = useState([]);
   const [isSearch, isSearchSet] = useState(false);
@@ -167,23 +171,6 @@ const TaskList = (props) => {
     "Remaining_Buffer",
   ];
 
-  // const exportCSVTasks = (selectionOnly) => {
-  //   const columnNames = headerColumns.map((col) => col.title);
-  //   if (selectionOnly || dt.current.getSelectedData().length === 0) {
-  //     dt.current.exportCSV({
-  //       selectionOnly: true,
-  //       fileName: "selected_data.csv",
-  //       columnNames: columnNames,
-  //       data: selected,
-  //     });
-  //   } else {
-  //     dt.current.exportCSV({
-  //       fileName: "all_data.csv",
-  //       columnNames: columnNames,
-  //     });
-  //   }
-  // };
-
   const handleSelectAll = (e) => {
     if (e.target.checked) {
       setSelected(selectedProdSrchList);
@@ -224,6 +211,26 @@ const TaskList = (props) => {
     setFlag("delegate");
     if (selectedTask.length > 0) {
       setSelectedTask(selected);
+    }
+  };
+  const handleHelpProvidedClick = async (options) => {
+    if (selectedTask.length > 0) {
+      setSelectedTask(selected);
+    }
+    const helpResolvedData = {
+      comments: "",
+      Help_Needed: false,
+      ArtworkAgilityTasks: selected
+        ?.map((task) => ({
+          AWM_Task_ID: task.AWM_Task_ID,
+        }))
+        .filter((task) => task.AWM_Task_ID),
+    };
+    await dispatch(HelpNeededAction(helpResolvedData));
+    if (props.flag === "myTasks") {
+      await dispatch(getTasks(props?.userInformation));
+    } else {
+      await dispatch(getAllTasks(props?.userInformation));
     }
   };
 
@@ -310,21 +317,20 @@ const TaskList = (props) => {
   };
 
   const helpNeededBodyTemplate = (rowData) => {
-    if (rowData?.Help_Needed === false || rowData?.Help_Needed === null) {
+    let className = "";
+    if (rowData?.Help_Needed === null) {
       rowData.Help_Needed = "No";
+      className = "helpneeded_no";
     } else if (rowData?.Help_Needed === true) {
-      rowData.Help_Needed = "Yes";
+      rowData.Help_Needed = "Yes, In process";
+      className = "helpneeded_inprocess";
+    } else if (rowData?.Help_Needed === false) {
+      rowData.Help_Needed = "Yes, Done";
+      className = "helpneeded_done";
     }
-    return (
-      <div
-        className={`${
-          rowData?.Help_Needed === "Yes" ? "helpneeded_no" : "helpneeded_yes"
-        }`}
-      >
-        {rowData?.Help_Needed}
-      </div>
-    );
+    return <span className={className}>{rowData.Help_Needed}</span>;
   };
+
   const statusTemplate = (rowData) => {
     return (
       <div className={`status-value ${getStatusClassName(rowData.Status)}`}>
@@ -431,6 +437,7 @@ const TaskList = (props) => {
           onSearchClick={onSearchClick}
           handleDelegateClick={handleDelegateClick}
           handleHelpNeededClick={handleHelpNeededClick}
+          handleHelpProvidedClick={handleHelpProvidedClick}
           actionFlag={!selected || selected.length === 0}
           header={props.flag === "myTasks" ? "My Tasks" : "All Tasks"}
           selected={selected}
@@ -479,6 +486,8 @@ const TaskList = (props) => {
           showTaskDialog={showTaskDialog}
           selectedTaskData={selectedTask}
           flag={flag}
+          path={props.flag}
+          userInformation={props.userInformation}
         />
       )}
     </>

@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as types from "./../types/types";
+import { DEVURL, SITURL, PRODURL } from "../../apis/envUrl";
 import { useSelector } from "react-redux";
 const sessionData = sessionStorage.getItem("session");
 
@@ -420,9 +421,7 @@ export const getMyProject = (userInformation) => async (dispatch) => {
 
   try {
     //here need to add url and pass PM name
-    const res = await axios.get(
-      `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1/MyProjects/${PM}`
-    );
+    const res = await axios.get(`${DEVURL}/MyProjects/${PM}`);
 
     if (res?.data === null) {
       dispatch({
@@ -453,9 +452,7 @@ export const getAllProject = (userInformation) => async (dispatch) => {
   let bu = userInformation?.bu;
   try {
     //here need to add url and pass PM name
-    const res = await axios.get(
-      `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1/AllProjects/${bu}/${region}`
-    );
+    const res = await axios.get(`${DEVURL}/AllProjects/${bu}/${region}`);
 
     if (res?.data === null) {
       dispatch({
