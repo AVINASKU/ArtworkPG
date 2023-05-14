@@ -377,3 +377,54 @@ div.flex.align-items-center.gap-2 {
 .p-multiselect-panel {
   z-index: 100000 !important;
 }
+.p-autocomplete {
+  box-shadow: none !important;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  border: 1px solid #acacac !important;
+  width: 150px;
+}
+
+.p-autocomplete-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: auto;
+  width: 15.5%;
+  padding: 0;
+  box-shadow: none !important;
+  border: 1px solid #acacac;
+  border-radius: 0;
+}
+.p-autocomplete-panel .p-autocomplete-items {
+  padding: 0;
+  width: 100%;
+}
+.p-autocomplete-items {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  box-shadow: none !important;
+}
+.p-autocomplete-panel .p-autocomplete-items .p-autocomplete-item {
+  margin: 0;
+  /* padding: 0.75rem 1.25rem; */
+  border: 0 none;
+  color: #495057;
+  background: transparent;
+  transition: box-shadow 0.2s;
+  border-radius: 0;
+}
+.p-button-icon-only {
+  background: transparent;
+  color: #acacac;
+  border: 0;
+  height: 33px;
+}
+.p-button:enabled:hover,
+.p-button:not(button):not(a):not(.p-disabled):hover {
+  background: transparent;
+}

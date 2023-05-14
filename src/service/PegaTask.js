@@ -1,6 +1,6 @@
 const myTaskColumnNames = [
+  "Task",
   "Project_Name",
-  "Task_Name",
   "Status",
   "Help_Needed",
   "Remaining_Buffer",

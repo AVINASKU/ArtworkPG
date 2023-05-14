@@ -47,7 +47,6 @@ const ProjectListHeader = ({
     setDownloadCSV(true);
   };
 
-  
   return (
     <div className="actions">
       <div className="project-title">{header}</div>
@@ -196,9 +195,10 @@ const ProjectListHeader = ({
             />
 
             <DropdownButton
-              id="tasksActions"
               title="Action"
               disabled={actionFlag}
+              id={actionFlag ? "tasksInActive" : "tasksActive"}
+              className="dropdown-button-custom"
             >
               <Dropdown.Item onClick={handleHelpNeeded}>
                 Help Needed

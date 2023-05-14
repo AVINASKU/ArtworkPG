@@ -161,7 +161,7 @@ const TaskList = (props) => {
   const dt = useRef(null);
   const headerColumns = [
     "Project_Name",
-    "Task_Name",
+    "Task",
     "Status",
     "Help_Needed",
     "Remaining_Buffer",
@@ -250,7 +250,7 @@ const TaskList = (props) => {
     return (
       <div>
         <>
-          {options === "Task_Name" && (
+          {options === "Task" && (
             <input
               type="checkbox"
               checked={selectAllChecked}
@@ -342,7 +342,7 @@ const TaskList = (props) => {
       return TaskService.getMyTaskColumnNames()
         .slice(0, 5)
         .map((ele, i) => {
-          const checkBoxAdded = ele === "Task_Name" ? "checkbox-added" : "";
+          const checkBoxAdded = ele === "Task" ? "checkbox-added" : "";
           return (
             <Column
               key={ele}
@@ -355,7 +355,7 @@ const TaskList = (props) => {
               classNme={checkBoxAdded}
               filterPlaceholder="Search"
               body={
-                (ele === "Task_Name" && taskBodyTemplate) ||
+                (ele === "Task" && taskBodyTemplate) ||
                 (ele === "Help_Needed" && helpNeededBodyTemplate) ||
                 (ele === "Status" && statusTemplate)
               }
@@ -368,7 +368,7 @@ const TaskList = (props) => {
       TaskService.getMyTaskColumnNames().length
     ) {
       return TaskService.getMyTaskColumnNames().map((ele, i) => {
-        const checkBoxAdded = ele === "Task_Name" ? "checkbox-added" : "";
+        const checkBoxAdded = ele === "Task" ? "checkbox-added" : "";
         return (
           <Column
             key={ele}
@@ -381,7 +381,7 @@ const TaskList = (props) => {
             classNme={checkBoxAdded}
             filterPlaceholder="Search"
             body={
-              (ele === "Task_Name" && taskBodyTemplate) ||
+              (ele === "Task" && taskBodyTemplate) ||
               (ele === "Help_Needed" && helpNeededBodyTemplate) ||
               (ele === "Status" && statusTemplate) ||
               (ele === "PM" && assigneeTemplate)
