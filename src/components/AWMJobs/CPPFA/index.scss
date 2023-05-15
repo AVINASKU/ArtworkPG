@@ -1,0 +1,44 @@
+.ppfaDialog {
+    width: 765px;
+    // height: 423px;
+    .p-dialog-header {
+      padding: 10px 18px !important;
+    }
+    .p-dialog-header1 {
+      padding: 0 10px 9px !important;
+    }
+    .ppfaDialogBreadCrumb {
+      padding-bottom: 12px !important;
+    }
+  }
+  .ppfaDialogBorder {
+    border: 1px solid #ACACAC;
+    padding: 24px;
+    border-radius: 4px;
+  }
+  .confirmPPFA {
+    padding: 16px 0 1px 0 !important;
+    text-align: right;
+    .p-button {
+      margin: 0 !important;
+    }
+  }
+  .confirmPPFA>button {
+    background-color: #003DA5 !important;
+    width: 93px;
+    height: 40px;
+    color: #fff !important;
+    font-size: 12px;
+    border-radius: 20px;
+    padding: 16px 24px;
+  }
+  .ppfaDialogTextColor {
+    color: red;
+    text-align: center;
+  }
+  .radioLabel {
+    margin-left: 8px !important;
+  }
+  .p-fileupload-content {
+  padding: 0 1rem !important;
+  }

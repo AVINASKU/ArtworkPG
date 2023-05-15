@@ -11,6 +11,7 @@ import { NavLink } from "react-router-dom";
 import { onSortData } from "../../../utils";
 import ConfirmationPopUp from "../../Projects/ConfirmationPopUp";
 import TaskDialog from "../../TaskDialog";
+import CPPFA from "../../AWMJobs/CPPFA";
 import { HelpNeededAction } from "../../../store/actions/HelpNeededAction";
 import { useDispatch } from "react-redux";
 import { getTasks, getAllTasks } from "../../../store/actions/TaskActions";
@@ -299,9 +300,19 @@ const TaskList = (props) => {
           checked={selected?.includes(rowData)}
           onChange={() => handleSelect(rowData)}
         />
-        <NavLink className="task_name" to={url}>
-          {rowData.Task_Name}
-        </NavLink>
+        {TaskCode[0] !== "CPPFA" ? (
+          <NavLink className="task_name" to={url}>
+            {rowData.Task_Name}
+          </NavLink>
+        ) : (
+          <NavLink
+            className="task_name"
+            to=""
+            onClick={() => handleApproveDialogCPPFA(rowData)}
+          >
+            {rowData.Task_Name}
+          </NavLink>
+        )}
       </div>
     );
   };
@@ -410,9 +421,25 @@ const TaskList = (props) => {
     {}
   );
 
+  const [showApproveDialogCPPFA, setShowApproveDialogCPPFA] = useState(false);
+  const [selectedTaskApproveDialogCPPFA, setSelectedTaskApproveDialogCPPFA] =
+    useState([]);
+  const handleApproveDialogCPPFA = (options) => {
+    setShowApproveDialogCPPFA(true);
+    // let task = [{ TaskID: options.key, TaskName: options.data.Task }];
+    // setSelectedTaskApproveDialogCPPFA(task);
+  };
+
   return (
     <>
       <div className="my-task-project">
+        {showApproveDialogCPPFA && (
+          <CPPFA
+            onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
+            showTaskDialog={showApproveDialogCPPFA}
+            selectedTaskData={selectedTaskApproveDialogCPPFA}
+          />
+        )}
         <ProjectListHeader
           // exportCSVTasks={
           //   selected ? exportCSVTasks(true) : exportCSVTasks(true)

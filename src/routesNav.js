@@ -71,7 +71,6 @@ const RoutesNav = () => {
         <Route path="/allTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
         <Route path="/myTasks/CNIQ/:TaskID/:ProjectID" element={<CNIQ />} />
         <Route path="/allTasks/CNIQ/:TaskID/:ProjectID" element={<CNIQ />} />
-        <Route path="/myTasks/CPPFA/:TaskID/:ProjectID" element={<CPPFA />} />
         <Route path="/allTasks/CPPFA/:TaskID/:ProjectID" element={<CPPFA />} />
         <Route path="/myTasks/CPT/:TaskID/:ProjectID" element={<CPT />} />
         <Route path="/allTasks/CPT/:TaskID/:ProjectID" element={<CPT />} />

@@ -4,7 +4,6 @@ import { TreeTable } from "primereact/treetable";
 import { Column } from "primereact/column";
 import { ProjectService } from "../../../service/PegaService";
 import ConfirmationPopUp from "../ConfirmationPopUp";
-import { Toast } from "primereact/toast";
 import filter from "../../../assets/images/filter.svg";
 import { changeDateFormat } from "../../../utils";
 // import { projectPlan } from "../../../store/actions/ProjectActions";
@@ -12,7 +11,7 @@ import BlueFilter from "../../../assets/images/BlueFilterIcon.svg";
 import complete from "../../../assets/images/complete.svg";
 import hyphen from "../../../assets/images/hyphen.svg";
 import inprogress from "../../../assets/images/inprogress.svg";
-import lock from "../../../assets/images/lock.svg";
+import available from "../../../assets/images/available.svg";
 import Awaiting from "../../../assets/images/Awaiting.svg";
 import override from "../../../assets/images/override.svg";
 import { Dropdown } from "primereact/dropdown";
@@ -28,13 +27,15 @@ import {
 } from "../../../store/actions/ProjectPlanActions";
 import moment from "moment";
 import ApproveDesignDialog from "./ApproveDesignDialog";
+import { useLocation } from "react-router-dom";
+import CPPFA from "./../../AWMJobs/CPPFA";
 
 const ProjectPlanList = (props) => {
   const [pegadata, setPegaData] = useState(null);
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
   const [selectedColumnName, setSelectedColumnName] = useState(null);
-  const [projectColumnName, setProjectColumnNames] = useState([]);
+  const [projectColumnName, setProjectColumnNames] = useState([""]);
   const [selectedCities, setSelectedCities] = useState([]);
   const [filters, setFilters] = useState([]);
   const [sortData, setSortData] = useState([]);
@@ -58,16 +59,6 @@ const ProjectPlanList = (props) => {
   const navigate = useNavigate();
 
   const op = useRef(null);
-  const toast = useRef(null);
-
-  const showSuccess = () => {
-    toast.current.show({
-      severity: "success",
-      summary: "Success",
-      detail: "Saved Successfully",
-      life: 3000,
-    });
-  };
 
   const handleHelpNeededClick = (options) => {
     console.log("handleHelpNeededClick rowData: ", options);
@@ -169,7 +160,7 @@ const ProjectPlanList = (props) => {
 
         let dataObj = {};
         dataObj["Task"] = task.data[0].Task_Name;
-        dataObj["Dependancy"] = task.data[0].Dependency;
+        dataObj["Dependency"] = task.data[0].Dependency;
         dataObj["Role"] = task.data[0].Role;
         dataObj["RoleOptions"] = task.data[0].RoleOptions;
         dataObj["Assignee"] = task.data[0].Assignee;
@@ -202,7 +193,7 @@ const ProjectPlanList = (props) => {
         tempObj["key"] = task.code;
         let dataObj = {};
         dataObj["Task"] = `${task.name} (X${task.data?.length})`;
-        dataObj["Dependancy"] = task.data[0].Dependency;
+        dataObj["Dependency"] = task.data[0].Dependency;
         dataObj["Role"] = "";
         dataObj["RoleOptions"] = "";
         dataObj["Assignee"] = "";
@@ -240,7 +231,7 @@ const ProjectPlanList = (props) => {
 
           let dataObj = {};
           dataObj["Task"] = `${index + 1}). ${dt.Task_Name}`;
-          dataObj["Dependancy"] = dt.Dependency;
+          dataObj["Dependency"] = dt.Dependency;
           dataObj["Role"] = dt.Role;
           dataObj["RoleOptions"] = dt.RoleOptions;
           dataObj["Assignee"] = dt.Assignee;
@@ -343,7 +334,6 @@ const ProjectPlanList = (props) => {
       (sortData && sortData.length && sortData[0] === options);
 
     const optionsCode = options?.split("_").join(" ");
-    console.log("options:", optionsCode);
 
     return (
       <div>
@@ -396,7 +386,6 @@ const ProjectPlanList = (props) => {
       "projectPlanAllColumnNames",
       JSON.stringify(projectColumnName)
     );
-    showSuccess();
   };
 
   const clearColumnWiseFilter = () => {
@@ -433,26 +422,15 @@ const ProjectPlanList = (props) => {
     }
   };
 
-  const rowExpansionColumnNames = [
-    "Task",
-    "Dependancy",
-    "Role",
-    "Owner",
-    "State",
-    "Duration",
-    "Start_Date",
-    "End_Date",
-    "Consumed_Buffer",
-    "Help_Needed",
-  ];
+  const location = useLocation();
 
   const elementTemplate = (options, rowData) => {
-    console.log("inside elementTemplate: ", options, rowData);
     const field = rowData.field;
-
+    const currentUrl = location.pathname;
+    let currentUrlLastSeg = currentUrl.split("/")[2];
     const key = options?.key;
     const keyCode = key?.split("_");
-    const url = `${keyCode[0]}/${key}`;
+    const url = `MyTasks/${keyCode[0]}/${key}/${currentUrlLastSeg}`;
 
     return (
       <>
@@ -461,9 +439,12 @@ const ProjectPlanList = (props) => {
             className={`${options.redirect === true ? "task-link" : "task"}`}
             // style={{ color: "#003DA5", cursor: "pointer" }}
             onClick={() => {
-              if (field && field.length) {
+              if (field && field.length && keyCode[0] !== "CPPFA") {
                 // dispatch(selectedProject(options.data, "My Projects"));
-                options.redirect === true && navigate(url);
+                options.redirect === true &&
+                  navigate(`../${url}`, { replace: true });
+              } else {
+                handleApproveDialogCPPFA(options);
               }
             }}
           >
@@ -554,7 +535,7 @@ const ProjectPlanList = (props) => {
             ) : field === "State" && options.data[field] === "Available" ? (
               <>
                 <img
-                  src={lock}
+                  src={available}
                   alt="Lock"
                   onClick={(e) => {
                     op.current.toggle(e);
@@ -636,7 +617,7 @@ const ProjectPlanList = (props) => {
         obj["Start_Date"] = data.data.StartDate;
         obj["Assignee"] = data.data.Owner;
         obj["Duration"] = data.data.Duration;
-        obj["Dependency"] = data.data.Dependancy;
+        obj["Dependency"] = data.data.Dependency;
         obj["Task_Name"] = data.data.Task;
         obj["Role"] = data.data.Role;
         obj["State"] = data.data.State;
@@ -652,7 +633,7 @@ const ProjectPlanList = (props) => {
           tempObj["Start_Date"] = child.data.StartDate;
           tempObj["Assignee"] = child.data.Owner;
           tempObj["Duration"] = child.data.Duration;
-          tempObj["Dependency"] = child.data.Dependancy;
+          tempObj["Dependency"] = child.data.Dependency;
           tempObj["Task_Name"] = child.data.Task.split("). ")[1];
           tempObj["Role"] = child.data.Role;
           tempObj["State"] = child.data.State;
@@ -683,8 +664,8 @@ const ProjectPlanList = (props) => {
   };
 
   const rowExpansionColumns = () => {
-    if (rowExpansionColumnNames.length) {
-      return rowExpansionColumnNames.map((ele, i) => {
+    if (projectColumnName.length) {
+      return projectColumnName.map((ele, i) => {
         return (
           <Column
             key={ele}
@@ -695,7 +676,9 @@ const ProjectPlanList = (props) => {
             columnKey={ele || i}
             frozen={frozenCoulmns.includes(ele)}
             alignFrozen="left"
-            className={frozenCoulmns.includes(ele) ? "font-bold" : ""}
+            className={
+              frozenCoulmns.includes(ele) ? "fontBoldcolor" : "cursorMove"
+            }
             showFilterMenu={false}
             body={elementTemplate}
           />
@@ -706,7 +689,7 @@ const ProjectPlanList = (props) => {
 
   const onSort = (column, direction) => (event) => {
     const sortedData = [...pegadata].sort((a, b) => {
-      return a[column] > b[column] ? 1 : -1;
+      return a["data"][column] > b["data"][column] ? 1 : -1;
     });
 
     if (direction === "desc") {
@@ -720,6 +703,30 @@ const ProjectPlanList = (props) => {
 
   const pegadata1 = pegadata?.map((obj) => obj.data);
 
+  const [showApproveDialogCPPFA, setShowApproveDialogCPPFA] = useState(false);
+  const [selectedTaskApproveDialogCPPFA, setSelectedTaskApproveDialogCPPFA] =
+    useState([]);
+  const handleApproveDialogCPPFA = (options) => {
+    setShowApproveDialogCPPFA(true);
+    // let task = [{ TaskID: options.key, TaskName: options.data.Task }];
+    // setSelectedTaskApproveDialogCPPFA(task);
+  };
+
+  const storeReorderedColumns = (e) => {
+    const dragColumnName = projectColumnName[e?.dragIndex];
+    const index = projectColumnName.indexOf(dragColumnName);
+    if (index > -1) {
+      // only splice array when item is found
+      projectColumnName.splice(index, 1); // 2nd parameter means remove one item only
+      projectColumnName.splice(e?.dropIndex, 0, dragColumnName);
+    }
+    localStorage.setItem(
+      "projectPlanAllColumnNames",
+      JSON.stringify(projectColumnName)
+    );
+    setProjectColumnNames(projectColumnName);
+  };
+
   return (
     <div className="myProjectAnddAllProjectList">
       {showApproveDialog && (
@@ -729,8 +736,14 @@ const ProjectPlanList = (props) => {
           selectedTaskData={selectedTaskApproveDialog}
         />
       )}
+      {showApproveDialogCPPFA && (
+        <CPPFA
+          onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
+          showTaskDialog={showApproveDialogCPPFA}
+          selectedTaskData={selectedTaskApproveDialogCPPFA}
+        />
+      )}
       <Suspense fallback={<div>Loading...</div>}>
-        <Toast ref={toast} />
         <div className="card">
           <ConfirmationPopUp
             onSort={onSort}
@@ -755,6 +768,7 @@ const ProjectPlanList = (props) => {
             resizableColumns
             dataKey="Task"
             reorderableColumns
+            onColReorder={storeReorderedColumns}
             value={filters.length ? filters : pegadata}
             loading={loader}
             className="mt-3 textAlignTreeTable"
