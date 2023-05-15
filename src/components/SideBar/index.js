@@ -163,10 +163,11 @@ const SideBar = () => {
                         </>
                       ) : (
                         <OverlayTrigger
+                          defaultShow={true}
                           placement="right"
                           overlay={
                             <Tooltip className="tooltip">
-                              <div>{item.name}</div>
+                              <div className="toolname">{item.name}</div>
                             </Tooltip>
                           }
                         >

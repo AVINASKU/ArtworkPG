@@ -191,10 +191,12 @@
   }
 }
 
-// .tooltip {
-//   left: 58px;
-//   top: 20px;
-//   border-radius: 2px;
-//   background: #e1edf8;
-//   border-radius: 2px;
-// }
+.tooltip {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+.toolname {
+  color: #007bff;
+  background: #e1edf8;
+}
