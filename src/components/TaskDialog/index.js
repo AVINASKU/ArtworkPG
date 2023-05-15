@@ -47,11 +47,11 @@ const TaskDialog = (props) => {
         return;
       }
       const helpNeededData = {
-        comments: comment,
-        Help_Needed: true,
         ArtworkAgilityTasks: props?.selectedTaskData
           ?.map((task) => ({
             AWM_Task_ID: task.AWM_Task_ID,
+            Help_Needed: true,
+            Comments: comment,
           }))
           .filter((task) => task.AWM_Task_ID),
       };
@@ -113,7 +113,9 @@ const TaskDialog = (props) => {
         </div>
 
         <div className="p-field">
-          <label htmlFor="priority">Delegate To *</label>
+          {props.flag !== "help" && (
+            <label htmlFor="priority">Delegate To *</label>
+          )}
           <AutoComplete
             value={selectedItem}
             suggestions={filteredItems}
@@ -146,7 +148,10 @@ const TaskDialog = (props) => {
           </div>
         )}
       </div>
-      <div className="p-dialog-footer" id="submit">
+      <div
+        className="p-dialog-footer"
+        id={props.flag === "help" ? "help-submit" : "delegate-submit"}
+      >
         {props.flag === "help" && (
           <p className="comments-validation">
             * The message will be sent to PM once submit{" "}

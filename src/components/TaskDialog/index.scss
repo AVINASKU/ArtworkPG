@@ -42,26 +42,16 @@
     color: #adadad;
   }
 }
-#submit {
+#delegate-submit,
+#help-submit {
   padding: 0 !important;
   display: flex;
+}
+#delegate-submit {
   justify-content: flex-end;
-  // .p-button {
-  //   width: 93px;
-  //   height: 40px;
-  //   background: #003da5 !important;
-  //   padding: 0 !important;
-  //   color: #fff !important;
-  //   font-size: 12px;
-  //   text-align: center;
-  //   display: flex;
-  //   align-items: center;
-  //   justify-content: space-around;
-  //   border-radius: 20px;
-  //   span {
-  //     color: #fff !important;
-  //   }
-  // }
+}
+#help-submit {
+  justify-content: space-between;
 }
 .comments-validation {
   font-size: 12px;
