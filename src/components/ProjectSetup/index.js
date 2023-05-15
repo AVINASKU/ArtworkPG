@@ -37,7 +37,7 @@ function ProjectSetup(props) {
     setActiveKey(key);
   };
 
-  const [toggleButtons, setToggleButtons] = useState("GanttChart");
+  const [toggleButtons, setToggleButtons] = useState("Tabular");
   const [option, setOption] = useState("");
   const [visible, setVisible] = useState(false);
 
@@ -72,7 +72,71 @@ function ProjectSetup(props) {
       )}
       <div className="actions">
         <div className="breadCrumbParent">
-          <BreadCrumb model={items} />
+          <div className="displayFlex">
+            <div className="width50">
+              <BreadCrumb model={items} />
+            </div>
+            <div className="width50">
+              <div
+                className="btn-group btn-group-toggle d-flex justify-content-end"
+                data-toggle="buttons"
+              >
+                <div className="col projectPlanButtons">
+                  <label
+                    className={` btn border border-secondary ${
+                      toggleButtons === "GanttChart"
+                        ? "ganttChartTabular active"
+                        : ""
+                    }`}
+                    onClick={() => setToggleButtons("GanttChart")}
+                  >
+                    Gantt Chart
+                  </label>
+                  <label
+                    className={` btn border border-secondary ${
+                      toggleButtons === "Tabular"
+                        ? "ganttChartTabular active"
+                        : ""
+                    }`}
+                    onClick={() => setToggleButtons("Tabular")}
+                  >
+                    Tabular
+                  </label>
+                </div>
+                {/* {shouldShowResetButton && ( */}
+                {
+                  <DropdownButton
+                    id="projectActions"
+                    title="Actions"
+                    // disabled={false}
+                    // disabled={actionFlag}
+                    // data-popper-placement="bottom-end"
+                    // drop="down-end"
+                    align="end"
+                  >
+                    <Dropdown.Item
+                      onClick={() => getData("On Hold")}
+                      className="dropdownItemPaddingLeft dropdownItemColor"
+                    >
+                      On Hold
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => getData("Cancel")}
+                      className="dropdownItemPaddingLeft dropdownItemColor1"
+                    >
+                      Cancel
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => getData("Previous State")}
+                      className="dropdownItemPaddingLeft dropdownItemColor2"
+                    >
+                      Previous State
+                    </Dropdown.Item>
+                  </DropdownButton>
+                }
+              </div>
+            </div>
+          </div>
 
           {/* {`--------${mode}`} */}
           {mode !== "create" && (
@@ -80,69 +144,6 @@ function ProjectSetup(props) {
               <div className="col">
                 <div className="project-name">
                   {selectedProjectDetails.Project_Name}
-                </div>
-              </div>
-              <div className="col">
-                <div className="row">
-                  <div
-                    className="col btn-group btn-group-toggle d-flex justify-content-end projectPlanStyle"
-                    data-toggle="buttons"
-                  >
-                    <div className="col projectPlanButtons">
-                      <label
-                        className={` btn border border-primary ${
-                          toggleButtons === "GanttChart"
-                            ? "active"
-                            : "btn-secondary"
-                        }`}
-                        onClick={() => setToggleButtons("GanttChart")}
-                      >
-                        Gantt Chart
-                      </label>
-                      <label
-                        className={` btn border border-primary ${
-                          toggleButtons === "Tabular"
-                            ? "active"
-                            : "btn-secondary"
-                        }`}
-                        onClick={() => setToggleButtons("Tabular")}
-                      >
-                        Tabular View
-                      </label>
-                    </div>
-                    {/* {shouldShowResetButton && ( */}
-                    {
-                      <DropdownButton
-                        id="projectActions"
-                        variant="primary"
-                        title="Actions"
-                        // disabled={false}
-                        // disabled={actionFlag}
-                        // data-popper-placement="bottom-end"
-                        // drop="down-end"
-                        align="end"
-                      >
-                        <Dropdown.Item
-                          onClick={() => getData("On Hold")}
-                          className="dropdownItemPaddingLeft dropdownItemColor"
-                        >
-                          On Hold
-                        </Dropdown.Item>
-                        <Dropdown.Item
-                          onClick={() => getData("Cancel")}
-                          className="dropdownItemPaddingLeft dropdownItemColor1"
-                        >
-                          Cancel
-                        </Dropdown.Item>
-                        <Dropdown.Item
-                          onClick={() => getData("Previous State")}
-                          className="dropdownItemPaddingLeft dropdownItemColor2"
-                        >
-                          Previous State
-                        </Dropdown.Item>
-                      </DropdownButton>
-                    }
-                  </div>
                 </div>
               </div>
             </div>

@@ -38,11 +38,12 @@ const ApproveDesignDialog = (props) => {
     { name: "Istanbul", code: "IST" },
     { name: "Paris", code: "PRS" },
   ];
+  const [overRule, setOverRule] = useState("");
 
   return (
     <Dialog
       visible={visible}
-      style={{ width: "50vw" }}
+      className="approveDesignDialog"
       onHide={hideDialog}
       header="Approve Design Template 2"
     >
@@ -56,7 +57,10 @@ const ApproveDesignDialog = (props) => {
           </Row>
           <Row className="columnBorder1">
             <Col>
-              <select className="dropdownStyles">
+              <div className="visuallyHidden">
+                <label for="Approver0">0</label>
+              </div>
+              <select name="Approver0" className="dropdownStyles">
                 <option value="">Select</option>
                 {cities.map((obj, index) => (
                   <option key={index + 1} value={obj.code}>
@@ -95,7 +99,14 @@ const ApproveDesignDialog = (props) => {
               <div className="visuallyHidden">
                 <label for="Approver1">2</label>
               </div>
-               <input type="radio" id="html" name="fav_language" value="HTML" />
+               
+              <input
+                type="radio"
+                id="overRuleId"
+                name="overRule"
+                value="overRule1"
+                onChange={(e) => setOverRule(e.target?.value)}
+              />
             </Col>
           </Row>
           <Row className="columnBorder2">
@@ -130,13 +141,42 @@ const ApproveDesignDialog = (props) => {
               <div className="visuallyHidden">
                 <label for="Approver1">4</label>
               </div>
-               <input type="radio" id="html" name="fav_language" value="HTML" />
+              <input
+                type="radio"
+                id="overRuleId"
+                name="overRule"
+                value="overRule2"
+                onChange={(e) => setOverRule(e.target?.value)}
+              />
+            </Col>
+          </Row>
+        </div>
+        <div className="approveDesignDiv">
+          <Row className="">
+            <Col className="approveDesignDivHeading">Single</Col>
+            <Col className="approveDesignDivData">Approver 1</Col>
+          </Row>
+          <Row className="">
+            <Col className="approveDesignDivHeading">Sequential</Col>
+            <Col className="approveDesignDivData">
+              <span>Approver 1</span>&nbsp;&nbsp;<span>Approver 2</span>
+            </Col>
+          </Row>
+          <Row className="">
+            <Col className="approveDesignDivHeading">Sequential</Col>
+            <Col className="approveDesignDivData">
+              <div>Approver 1</div>
+              <div className="approveDesignDiv2Data">Approver 2</div>
             </Col>
           </Row>
         </div>
       </div>
       <div className="p-dialog-footer submitButton">
-        <Button label="Submit" onClick={handleSubmit} />
+        <Button
+          label="Submit"
+          onClick={handleSubmit}
+          disabled={overRule === ""}
+        />
       </div>
     </Dialog>
   );
