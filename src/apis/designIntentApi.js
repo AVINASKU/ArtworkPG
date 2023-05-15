@@ -10,13 +10,13 @@ export const getDesignIntent = async (taskID, projectId, headers = {
 }) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${baseURL}/DesignIntentDetails/${taskID}/${projectId}`;
+  let apiURL = `${baseURL}/TaskDetails/${taskID}/${projectId}`;
   const designIntent = await axiosInstance({
     url: apiURL,
     method: "GET",
   });
 
-  return designIntent?.data?.ArtworkAgilityProjects;
+  return designIntent?.data;
 };
 
 export const saveDesignIntent = async (formData, headers = {
