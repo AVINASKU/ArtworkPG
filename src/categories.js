@@ -66,7 +66,7 @@ export const categories = {
 export const businessUnits = [
   {
     name: "Baby Care",
-    code: "BABY",
+    code: "BBY",
     categories: [
       {
         Category_Name: "Baby & Feminine Care No Detail",
@@ -96,7 +96,7 @@ export const businessUnits = [
   },
   {
     name: "Fabric Care",
-    code: "FAM",
+    code: "FAB",
     categories: [
       {
         Category_Name: "Bleach",

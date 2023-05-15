@@ -2,35 +2,6 @@ $width100: 100%;
 $fontWeight500: 500;
 $fontWeight400: 400;
 
-.content-layout {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 25px 15px;
-  .actions {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: $width100;
-    align-items: center;
-
-    .action-buttons {
-      display: flex;
-      flex-direction: row;
-      button {
-        margin: 0 16px;
-      }
-    }
-  }
-  .tabular-view {
-    width: $width100;
-    display: block;
-    padding: 0 0 0;
-    .card {
-      border: 0 !important;
-    }
-  }
-}
 .p-confirm-popup {
   position: absolute;
   top: 12% !important;
@@ -105,29 +76,6 @@ $fontWeight400: 400;
   margin-right: 12px;
   width: 11px;
   height: 16px;
-}
-.resetToPgDefault {
-  width: 164px;
-  height: 32px;
-  padding: 10px 18px;
-  margin: 0 10px 0 21.82px !important;
-  border-radius: 15px;
-  background-color: #acacac !important;
-  font-weight: $fontWeight500;
-  line-height: 96%;
-  vertical-align: top;
-  font-size: 12px;
-}
-.resetToPgDefault:hover {
-  background-color: #868484 !important;
-}
-.header-icons {
-  cursor: pointer;
-  margin: 8px;
-  font-size: 2rem;
-  color: #003da5;
-  width: 18px;
-  height: 18px;
 }
 // Filter and Save buttons disabled
 img[disabled] {
@@ -207,10 +155,6 @@ img[disabled] {
   background-color: #edf4fa !important;
 }
 
-.content-layout .actions {
-  padding-right: 10px;
-}
-
 div.actions-right {
   display: flex;
   flex-direction: row;
@@ -247,28 +191,6 @@ div.p-selectbutton.p-buttonset.p-component {
 .p-selectbutton .p-button {
   border-color: grey;
 }
-.reset-to-default-view {
-  padding: 10px 18px;
-  margin: 0 10px 0 21.82px;
-  border-radius: 15px;
-  background-color: #00a3e0;
-  font-weight: $fontWeight500;
-  line-height: 96%;
-  vertical-align: top;
-  cursor: pointer;
-}
-
-.save-as-personal-view {
-  padding: 10px 18px;
-  margin: 0 10px 0 21.82px;
-  border-radius: 15px;
-  background-color: #003da5;
-  font-weight: $fontWeight500;
-  line-height: 96%;
-  vertical-align: top;
-  cursor: pointer;
-}
-
 .apply-filter-text {
   color: "#003DA5" !important;
 }
@@ -282,17 +204,6 @@ div.p-selectbutton.p-buttonset.p-component {
     brightness(70%) contrast(90%);
 }
 
-.reset-to-default-view {
-  width: 170px;
-  height: 32px;
-  padding: 10px 18px;
-  margin: 0 10px 0 21.82px !important;
-  border-radius: 15px;
-  background-color: #003da5;
-  font-weight: $fontWeight500;
-  line-height: 96%;
-  vertical-align: top;
-}
 .checkbox-columnnames {
   display: flex;
   align-items: center;
@@ -300,8 +211,6 @@ div.p-selectbutton.p-buttonset.p-component {
 }
 
 #tasksActions {
-  width: 110px;
-  height: 32px;
   background: #003da5;
   font-size: 12px;
   text-align: center;
@@ -310,6 +219,7 @@ div.p-selectbutton.p-buttonset.p-component {
   justify-content: space-around;
   border-radius: 20px;
   border: 0;
+  margin: 0;
 }
 .dropdown {
   width: 110px;
@@ -335,4 +245,37 @@ div.p-selectbutton.p-buttonset.p-component {
 }
 .dropdown-menu {
   padding: 0;
+}
+
+#tasksInActive {
+  background-color: #fff !important;
+  border-color: #003da5 !important;
+  color: #003da5 !important;
+  opacity: 1;
+}
+
+.dropdown-button-custom #tasksInActive::after {
+  content: "";
+  display: inline-block;
+  width: 12px;
+  height: 8px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M10 2L6.70707 5.2929C6.31818 5.68179 5.68182 5.68179 5.29293 5.2929L2 2' stroke='%23003DA5' stroke-miterlimit='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
+  border: 0;
+}
+.dropdown-button-custom .btn[aria-expanded="true"]::after,
+.dropdown-button-custom .btn[aria-expanded="false"]::after {
+  content: "";
+  display: inline-block;
+  width: 12px;
+  height: 8px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M2 6L5.29293 2.7071C5.68182 2.31821 6.31818 2.31821 6.70707 2.7071L10 6' stroke='white' stroke-miterlimit='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
+  border: 0;
+  transform: rotate(0deg);
+}
+.dropdown-button-custom .btn[aria-expanded="false"]::after {
+  transform: rotate(180deg);
 }

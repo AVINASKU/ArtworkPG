@@ -22,8 +22,6 @@ const UDT = () => {
     setTaskData(data1.DesignIntentList);
   }, [data]);
 
-  console.log("task data", taskData);
-
   return (
     <PageLayout>
       <DesignHeader

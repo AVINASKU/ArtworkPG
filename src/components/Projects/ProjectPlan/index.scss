@@ -2,40 +2,6 @@ $width100: 100%;
 $fontWeight500: 500;
 $fontWeight400: 400;
 
-.content-layout {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 25px 15px;
-
-  .actions {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: $width100;
-    align-items: center;
-
-    .action-buttons {
-      display: flex;
-      flex-direction: row;
-
-      button {
-        margin: 0 16px;
-      }
-    }
-  }
-
-  .tabular-view {
-    width: $width100;
-    display: block;
-    padding: 0 0 0;
-
-    .card {
-      border: 0 !important;
-    }
-  }
-}
-
 .p-confirm-popup {
   position: absolute;
   top: 12% !important;
@@ -66,7 +32,8 @@ $fontWeight400: 400;
   .p-column-title {
     font-weight: $fontWeight500;
   }
-  .p-column-title > div {
+
+  .p-column-title>div {
     display: flex;
   }
 
@@ -100,6 +67,7 @@ $fontWeight400: 400;
     border-radius: 5px;
     text-align: center;
   }
+
   .form-control:focus,
   .p-inputwrapper-filled {
     border: none;
@@ -130,32 +98,6 @@ $fontWeight400: 400;
   margin-right: 12px;
   width: 11px;
   height: 16px;
-}
-
-.resetToPgDefault {
-  font-size: 11px;
-  width: 164px;
-  height: 32px;
-  padding: 10px 18px;
-  margin: 0 10px 0 21.82px !important;
-  border-radius: 15px;
-  background-color: #acacac !important;
-  font-weight: $fontWeight500;
-  line-height: 96%;
-  vertical-align: top;
-}
-
-.resetToPgDefault:hover {
-  background-color: #868484 !important;
-}
-
-.header-icons {
-  cursor: pointer;
-  margin: 8px;
-  font-size: 2rem;
-  color: #003da5;
-  width: 18px;
-  height: 18px;
 }
 
 // Filter and Save buttons disabled
@@ -228,28 +170,6 @@ img[disabled] {
   font-size: 10px !important;
   line-height: 12px !important;
   font-family: Montserrat !important;
-}
-
-.reset-to-default-view {
-  padding: 10px 18px;
-  margin: 0 10px 0 21.82px;
-  border-radius: 15px;
-  background-color: #00a3e0;
-  font-weight: $fontWeight500;
-  line-height: 96%;
-  vertical-align: top;
-  cursor: pointer;
-}
-
-.save-as-personal-view {
-  padding: 10px 18px;
-  margin: 0 10px 0 21.82px;
-  border-radius: 15px;
-  background-color: #003da5;
-  font-weight: $fontWeight500;
-  line-height: 96%;
-  vertical-align: top;
-  cursor: pointer;
 }
 
 .apply-filter-text {
@@ -329,13 +249,6 @@ img[disabled] {
 .textAlignTreeTable>div>.p-treetable-table>.p-treetable-tbody>tr>td {
   min-width: 100px;
 }
-.projectPlanActionsStyle {
-  .projectPlanStyle {
-    .dropdown {
-      // margin-right: 18px !important;
-    }
-  }
-}
 
 .projectPlanCompoButtons {
   height: 32px;
@@ -355,9 +268,15 @@ img[disabled] {
   color: #ffffff;
   background-color: #00A3E0;
 }
+
 .projectPlanCompoButtonsColor1 {
   color: #ffffff;
   background-color: #003DA5;
+}
+
+.overrideIcon {
+  cursor: pointer;
+  margin-left: 5px;
 }
 
 // ProjectPlan Styles End
@@ -390,3 +309,64 @@ img[disabled] {
     cursor: pointer;
   }
 }
+
+.columnHeader {
+  display: flex;
+  width: max-content;
+}
+
+// APrrove Dialog Styles Start
+.columnBorder>div {
+  margin-top: 5px;
+  border-right: 0.5px solid #ACACAC;
+  text-align: center;
+  min-width: fit-content;
+}
+
+.columnBorder>div:last-child {
+  border-right: none;
+}
+
+.columnBorder1>div {
+  margin: 10px 0 0 0;
+  text-align: center;
+  // min-width: fit-content;
+}
+
+.columnBorder2>div {
+  margin-bottom: 20px;
+  text-align: center;
+  // min-width: fit-content;
+}
+
+.submitButton {
+  padding-top: 10px !important;
+  text-align: right;
+}
+
+.submitButton>button {
+  background-color: #003DA5 !important;
+  width: 93px;
+  height: 40px;
+  color: #fff !important;
+  font-size: 12px;
+  border-radius: 20px;
+  padding: 10px 24px;
+}
+
+.dropdownStyles {
+  width: inherit;
+  border-color: #ACACAC;
+  padding: 4px 5px;
+  border-radius: 8px;
+}
+
+.textAlignLeft {
+  text-align: left;
+}
+
+.visuallyHidden {
+  visibility: hidden;
+}
+
+// APrrove Dialog Styles End

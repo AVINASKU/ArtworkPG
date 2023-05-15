@@ -6,7 +6,13 @@ export default class Api {
   constructor() {
     this.axiosInstace = axios.create();
   }
-  async init({ headers = {} } = {}) {
+  async init({
+    headers = {
+      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+    },
+  }) {
     //interceptors request
     this.axiosInstace.interceptors.request.use(async (config) => {
       if (Object.keys(headers).length) {

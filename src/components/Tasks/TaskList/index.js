@@ -11,8 +11,12 @@ import { NavLink } from "react-router-dom";
 import { onSortData } from "../../../utils";
 import ConfirmationPopUp from "../../Projects/ConfirmationPopUp";
 import TaskDialog from "../../TaskDialog";
+import { HelpNeededAction } from "../../../store/actions/HelpNeededAction";
+import { useDispatch } from "react-redux";
+import { getTasks, getAllTasks } from "../../../store/actions/TaskActions";
 
 const TaskList = (props) => {
+  const dispatch = useDispatch();
   const [selectAllChecked, setSelectAllChecked] = useState(false);
   const [selected, setSelected] = useState([]);
   const [isSearch, isSearchSet] = useState(false);
@@ -160,28 +164,11 @@ const TaskList = (props) => {
   const dt = useRef(null);
   const headerColumns = [
     "Project_Name",
-    "Task_Name",
+    "Task",
     "Status",
     "Help_Needed",
     "Remaining_Buffer",
   ];
-
-  // const exportCSVTasks = (selectionOnly) => {
-  //   const columnNames = headerColumns.map((col) => col.title);
-  //   if (selectionOnly || dt.current.getSelectedData().length === 0) {
-  //     dt.current.exportCSV({
-  //       selectionOnly: true,
-  //       fileName: "selected_data.csv",
-  //       columnNames: columnNames,
-  //       data: selected,
-  //     });
-  //   } else {
-  //     dt.current.exportCSV({
-  //       fileName: "all_data.csv",
-  //       columnNames: columnNames,
-  //     });
-  //   }
-  // };
 
   const handleSelectAll = (e) => {
     if (e.target.checked) {
@@ -225,6 +212,26 @@ const TaskList = (props) => {
       setSelectedTask(selected);
     }
   };
+  const handleHelpProvidedClick = async (options) => {
+    if (selectedTask.length > 0) {
+      setSelectedTask(selected);
+    }
+    const helpResolvedData = {
+      ArtworkAgilityTasks: selected
+        ?.map((task) => ({
+          AWM_Task_ID: task.AWM_Task_ID,
+          Help_Needed: false,
+          Comments: "",
+        }))
+        .filter((task) => task.AWM_Task_ID),
+    };
+    await dispatch(HelpNeededAction(helpResolvedData));
+    if (props.flag === "myTasks") {
+      await dispatch(getTasks(props?.userInformation));
+    } else {
+      await dispatch(getAllTasks(props?.userInformation));
+    }
+  };
 
   function getStatusClassName(status) {
     switch (status) {
@@ -249,7 +256,7 @@ const TaskList = (props) => {
     return (
       <div>
         <>
-          {options === "Task_Name" && (
+          {options === "Task" && (
             <input
               type="checkbox"
               checked={selectAllChecked}
@@ -299,21 +306,29 @@ const TaskList = (props) => {
   };
 
   const helpNeededBodyTemplate = (rowData) => {
-    if (rowData?.Help_Needed === false || rowData?.Help_Needed === null) {
-      rowData.Help_Needed = "No";
-    } else if (rowData?.Help_Needed === true) {
-      rowData.Help_Needed = "Yes";
+    let className = "";
+    let helpNeeded = rowData?.Help_Needed;
+    switch (helpNeeded) {
+      case null:
+        helpNeeded = "No";
+        className = "helpneeded_no";
+        break;
+      case true:
+        helpNeeded = "Yes, In process";
+        className = "helpneeded_inprocess";
+        break;
+      case false:
+        helpNeeded = "Yes, Done";
+        className = "helpneeded_done";
+        break;
+      default:
+        // handle any other cases here
+        break;
     }
-    return (
-      <div
-        className={`${
-          rowData?.Help_Needed === "Yes" ? "helpneeded_no" : "helpneeded_yes"
-        }`}
-      >
-        {rowData?.Help_Needed}
-      </div>
-    );
+
+    return <span className={className}>{helpNeeded}</span>;
   };
+
   const statusTemplate = (rowData) => {
     return (
       <div className={`status-value ${getStatusClassName(rowData.Status)}`}>
@@ -331,7 +346,7 @@ const TaskList = (props) => {
       return TaskService.getMyTaskColumnNames()
         .slice(0, 5)
         .map((ele, i) => {
-          const checkBoxAdded = ele === "Task_Name" ? "checkbox-added" : "";
+          const checkBoxAdded = ele === "Task" ? "checkbox-added" : "";
           return (
             <Column
               key={ele}
@@ -344,7 +359,7 @@ const TaskList = (props) => {
               classNme={checkBoxAdded}
               filterPlaceholder="Search"
               body={
-                (ele === "Task_Name" && taskBodyTemplate) ||
+                (ele === "Task" && taskBodyTemplate) ||
                 (ele === "Help_Needed" && helpNeededBodyTemplate) ||
                 (ele === "Status" && statusTemplate)
               }
@@ -357,7 +372,7 @@ const TaskList = (props) => {
       TaskService.getMyTaskColumnNames().length
     ) {
       return TaskService.getMyTaskColumnNames().map((ele, i) => {
-        const checkBoxAdded = ele === "Task_Name" ? "checkbox-added" : "";
+        const checkBoxAdded = ele === "Task" ? "checkbox-added" : "";
         return (
           <Column
             key={ele}
@@ -370,7 +385,7 @@ const TaskList = (props) => {
             classNme={checkBoxAdded}
             filterPlaceholder="Search"
             body={
-              (ele === "Task_Name" && taskBodyTemplate) ||
+              (ele === "Task" && taskBodyTemplate) ||
               (ele === "Help_Needed" && helpNeededBodyTemplate) ||
               (ele === "Status" && statusTemplate) ||
               (ele === "PM" && assigneeTemplate)
@@ -404,6 +419,7 @@ const TaskList = (props) => {
           onSearchClick={onSearchClick}
           handleDelegateClick={handleDelegateClick}
           handleHelpNeededClick={handleHelpNeededClick}
+          handleHelpProvidedClick={handleHelpProvidedClick}
           actionFlag={!selected || selected.length === 0}
           header={props.flag === "myTasks" ? "My Tasks" : "All Tasks"}
           selected={selected}
@@ -437,7 +453,7 @@ const TaskList = (props) => {
           selection={selected}
           onSelectionChange={(e) => setSelected(e.value)}
           responsiveLayout="scroll"
-          className="mt-3"
+          className="margin-top-24"
           ref={dt}
           filterDisplay={isSearch && "row"}
           tableStyle={{ minWidth: "50rem" }}
@@ -452,6 +468,8 @@ const TaskList = (props) => {
           showTaskDialog={showTaskDialog}
           selectedTaskData={selectedTask}
           flag={flag}
+          path={props.flag}
+          userInformation={props.userInformation}
         />
       )}
     </>
