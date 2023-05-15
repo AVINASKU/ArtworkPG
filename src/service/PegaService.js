@@ -15,15 +15,6 @@ const projectPlanAllColumnNames = [
   "EndDate",
   "ConsumedBuffer",
   "HelpNeeded",
-  // "Project_ID",
-  // "Project_Name",
-  // "Artwork_Category",
-  // "Artwork_SMO",
-  // "Project_State",
-  // "Artwork_Brand",
-  // "Buffer_To_Work",
-  // "Estimated_AW_Printer",
-  // "Full Kit Readiness Tracking",
 ];
 const allColumnNames = [
   "Project_ID",
