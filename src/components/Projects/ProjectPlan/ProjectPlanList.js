@@ -121,6 +121,21 @@ const ProjectPlanList = (props) => {
         data: apiData.filter((data) => data.AWM_Task_ID.includes("ARDT_")),
       },
       {
+        name: "Define Production Ready Art",
+        code: "DPRA",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("DPRA_")),
+      },
+      {
+        name: "Upload Production Ready Art",
+        code: "UPRA",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("UPRA_")),
+      },
+      {
+        name: "Approve Production Ready Art",
+        code: "APRA",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("APRA_")),
+      },
+      {
         name: "Confirm Preliminary print feasibility Assessment done (& upload documents - optional)",
         code: "CPPFA",
         data: apiData.filter((data) => data.AWM_Task_ID.includes("CPPFA_")),
