@@ -239,6 +239,17 @@ img[disabled] {
   cursor: pointer;
 }
 
+.textAlignTreeTable .p-treetable-thead {
+  .cursorMove {
+    cursor: move;
+  }
+
+  .fontBoldcolor {
+    font-weight: bold;
+    color: #145392;
+  }
+}
+
 .textAlignTreeTable>div>.p-treetable-table>.p-treetable-tbody>tr>td:first-child {
   text-align: left !important;
   display: flex;
@@ -302,6 +313,7 @@ img[disabled] {
   .accordion-item>.accordion-header>button {
     height: 25px;
   }
+
   .accordion-item>.accordion-header>button::after {
     position: absolute !important;
     margin-left: 110px;
@@ -329,6 +341,7 @@ img[disabled] {
     overflow-y: hidden !important;
   }
 }
+
 .columnBorder {
   background-color: #FAFCFF;
   font-size: 14px;
@@ -362,7 +375,8 @@ img[disabled] {
     line-height: 10px;
     font-weight: 400 !important;
   }
-  div > label {
+
+  div>label {
     font-size: 10px !important;
   }
 }
@@ -379,7 +393,8 @@ img[disabled] {
     line-height: 10px;
     font-weight: 400 !important;
   }
-  div > label {
+
+  div>label {
     font-size: 10px !important;
   }
 }
@@ -387,10 +402,11 @@ img[disabled] {
 .submitButton {
   padding-top: 10px !important;
   text-align: right;
+
   button {
-  font-weight: 500 !important;
-  height: 32px !important;
-  width: 93px !important;
+    font-weight: 500 !important;
+    height: 32px !important;
+    width: 93px !important;
   }
 }
 
@@ -452,13 +468,16 @@ img[disabled] {
   color: #595959;
   line-height: 33px !important;
 }
+
 .approveDesignDivData {
   font-weight: 400;
   font-size: 14px;
   line-height: 13.44px;
   color: #595959;
 }
+
 .approveDesignDiv2Data {
   margin-top: 11px;
 }
+
 // APrrove Dialog Styles End

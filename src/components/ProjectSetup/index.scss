@@ -81,39 +81,51 @@ $width: 100%;
   display: flex;
   justify-content: end;
   margin-right: 13px;
+
   & label {
     padding: 8px 18px;
+
     &:first-child {
       border-radius: 20px 0 0 20px;
     }
+
     &:last-child {
       border-radius: 0 20px 20px 0;
     }
   }
-  & label.btn-secondary {
-    background-color: #003da5;
-    color: #fff;
-    &:hover {
-      background-color: #003da5;
-      color: #fff;
-    }
+
+  // & label.btn-secondary {
+  //   background-color: #003da5;
+  //   color: #fff;
+  //   &:hover {
+  //     background-color: #003da5;
+  //     color: #fff;
+  //   }
+  // }
+
+  // & label.active {
+  //   background-color: #fff;
+  //   color: #003da5;
+  //   &:hover {
+  //     background-color: #003da5;
+  //     color: #003da5;
+  //   }
+  // }
+
+  .btn {
+    background-color: #ffffff;
+    color: #003da5;
+    border-color: #003da5 !important;
   }
 
-  & label.active {
-    background-color: #fff;
-    color: #003da5;
-    &:hover {
-      background-color: #003da5;
-      color: #003da5;
-    }
+  .btn:hover {
+    background-color: #003da5;
+    color: #ffffff;
   }
 }
 
 .ganttChartTabular {
   background-color: #003DA5 !important;
-  font-weight: 500;
-  font-size: 12px;
-  // line-height: 15px;
   color: #ffffff !important;
 }
 
@@ -125,15 +137,11 @@ $width: 100%;
   position: relative !important;
 }
 
-.AccordionIndent
- >.accordion>.accordion-item>.accordion-header>button {
+.AccordionIndent>.accordion>.accordion-item>.accordion-header>button {
   height: 25px;
 }
 
-.AccordionIndent>.accordion
- >.accordion-item
- >.accordion-header
- >button::after {
+.AccordionIndent>.accordion>.accordion-item>.accordion-header>button::after {
   position: absolute !important;
   margin-left: 110px !important;
 }
@@ -173,6 +181,7 @@ $width: 100%;
   padding-left: 8px;
   border-bottom: none;
 }
+
 .dropdownItemColor {
   color: #d37302;
 }

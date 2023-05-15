@@ -676,7 +676,9 @@ const ProjectPlanList = (props) => {
             columnKey={ele || i}
             frozen={frozenCoulmns.includes(ele)}
             alignFrozen="left"
-            className={frozenCoulmns.includes(ele) ? "font-bold" : ""}
+            className={
+              frozenCoulmns.includes(ele) ? "fontBoldcolor" : "cursorMove"
+            }
             showFilterMenu={false}
             body={elementTemplate}
           />
