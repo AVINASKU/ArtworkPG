@@ -105,9 +105,25 @@ function DDI() {
       (task) => task?.Select === true
     );
     submitOnlySelectedData.map((task) => {
-      task.Event = "submit";
+      task.Action = "add";
+      task.AWM_Project_ID = TaskID;
+      const taskData = [];
+      taskData.Agency_Reference = task.Agency_Reference;
+      taskData.Cluster = task.Cluster;
+      taskData.Additional_Info = task.Additional_Info;      
+      return taskData;
     });
-    console.log("full submit data --->", submitOnlySelectedData);
+    const pageInstructions = [];
+    pageInstructions.instruction = "APPEND";
+    pageInstructions.target = "DesignIntentList";
+    pageInstructions.content = submitOnlySelectedData;
+
+    let formData = {
+      pageInstructions: pageInstructions,
+    };
+    
+    console.log("full submit data --->", formData);
+   // await saveDesignIntent(formData);
   };
 
   const onSaveAsDraft = async () => {

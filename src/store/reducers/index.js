@@ -6,6 +6,8 @@ import TaskReducer from "./TaskReducer";
 import UserReducer from "./UserReducer";
 import CDReducer from "./CDReducer";
 import azureFileUpload from "./AzureFileReducer";
+import delegateReducer from "./DelegateReducer";
+import helpNeededReducer from "./HelpNeededReducer";
 
 export default combineReducers({
   myProject: ProjectReducer,
@@ -15,4 +17,6 @@ export default combineReducers({
   UserReducer,
   CDReducer,
   uploadedUrl: azureFileUpload,
+  delegateReducer,
+  helpNeededReducer,
 });

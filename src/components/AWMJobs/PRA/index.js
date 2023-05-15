@@ -14,7 +14,7 @@ import { toLower } from "lodash";
 import {
   convertCategoryIntoString,
   convertBrandIntoString,
-  AddNavigation
+  AddNavigation,
 } from "../../../utils";
 
 const headerName = "Define Production Ready Art";
@@ -42,7 +42,6 @@ function DPRA() {
     let taskId;
     if (TaskID) {
       taskId = TaskID.split("_")[1];
-      console.log("task id-->", taskId[1], ProjectID);
     }
 
     (async () => {
@@ -154,7 +153,7 @@ function DPRA() {
         onSelectAll={onSelectAll}
         breadcrumb={breadcrumb}
         headerName={headerName}
-        label = "Define Roduction Ready Art"
+        label="Define Roduction Ready Art"
       />
       <div
         style={{

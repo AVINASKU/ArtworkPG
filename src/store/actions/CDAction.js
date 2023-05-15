@@ -1,22 +1,27 @@
 import Api from "../../apis";
-const baseURL = "http://localhost:30010/data";
-const CDURL = "http://localhost:3005/data";
+import { DEVURL, SITURL, PRODURL } from "../../apis/envUrl";
 //pass the taskID and projectId from the my tasks
 
-export const getDefineCD = (taskID, projectId, headers) => {
+export const getDefineCD = (taskID, projectId) => {
   return async (dispatch) => {
     dispatch({ type: "GET_DEFINE_CD_REQUEST" });
     try {
       const api = new Api();
-      const axiosInstance = await api.init({ headers });
-      let apiURL = `${baseURL}`;
+      const axiosInstance = await api.init({
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+        },
+      });
+      let apiURL = `${DEVURL}/TaskDetails/${taskID}/${projectId}`;
       const defineCD = await axiosInstance({
         url: apiURL,
         method: "GET",
       });
       dispatch({
         type: "GET_DEFINE_CD_SUCCESS",
-        payload: defineCD?.data[0],
+        payload: defineCD?.data?.ArtworkAgilityTasks,
       });
     } catch (error) {
       dispatch({ type: "GET_DEFINE_CD_FAILURE", payload: error });
@@ -29,14 +34,14 @@ export const getConfirmCD = (taskID, projectId, headers) => {
     try {
       const api = new Api();
       const axiosInstance = await api.init({ headers });
-      let apiURL = `${CDURL}`;
+      let apiURL = `${DEVURL}/TaskDetails/${taskID}/${projectId}`;
       const defineCD = await axiosInstance({
         url: apiURL,
         method: "GET",
       });
       dispatch({
         type: "GET_CONFIRM_CD_SUCCESS",
-        payload: defineCD?.data[0],
+        payload: defineCD?.data?.ArtworkAgilityTasks,
       });
     } catch (error) {
       dispatch({ type: "GET_CONFIRM_CD_FAILURE", payload: error });
@@ -46,8 +51,7 @@ export const getConfirmCD = (taskID, projectId, headers) => {
 export const saveDesignIntent = async (formData, headers = {}) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${baseURL}/UpdateDesignIntentJob`;
-  console.log("api url", apiURL);
+  let apiURL = `${DEVURL}/TaskDetails/UpdateDesignIntentJob`;
   const designIntent = await axiosInstance({
     url: apiURL,
     method: "POST",

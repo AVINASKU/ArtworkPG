@@ -6,7 +6,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "primeicons/primeicons.css";
 
-const DesignHeader = ({
+const CDHeader = ({
   setAddNewDesign,
   onSelectAll,
   label,
@@ -60,12 +60,12 @@ const DesignHeader = ({
               }}
               checked={checked}
               className="margin-right"
-              disabled={!onSelectAll && true}
+              disabled={disabled}
             ></Checkbox>
             <div className="icon-label">
               <label className={disabled && "disable-buttons"}>
                 {" "}
-                Select All
+                Select All{" "}
               </label>
             </div>
           </div>
@@ -83,7 +83,9 @@ const DesignHeader = ({
             <img
               src={plusCollapseImg}
               onClick={() => setAddNewDesign && setAddNewDesign()}
-              className="add-new-design-intent-icon"
+              className={`add-new-design-intent-icon ${
+                disabled && "disabled-add"
+              }`}
               alt=""
               disabled={!setAddNewDesign && true}
             />
@@ -99,4 +101,4 @@ const DesignHeader = ({
   );
 };
 
-export default DesignHeader;
+export default CDHeader;

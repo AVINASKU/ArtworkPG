@@ -90,30 +90,31 @@ function ProjectSetup(props) {
                   >
                     <div className="col projectPlanButtons">
                       <label
-                        className={` btn border border-secondary projectPlanButtonsRadius1 ${
+                        className={` btn border border-primary ${
                           toggleButtons === "GanttChart"
-                            ? "btn-secondary active"
-                            : ""
+                            ? "active"
+                            : "btn-secondary"
                         }`}
                         onClick={() => setToggleButtons("GanttChart")}
                       >
                         Gantt Chart
                       </label>
                       <label
-                        className={` btn border border-secondary projectPlanButtonsRadius2 ${
+                        className={` btn border border-primary ${
                           toggleButtons === "Tabular"
-                            ? "btn-secondary active"
-                            : ""
+                            ? "active"
+                            : "btn-secondary"
                         }`}
                         onClick={() => setToggleButtons("Tabular")}
                       >
-                        Tabular
+                        Tabular View
                       </label>
                     </div>
                     {/* {shouldShowResetButton && ( */}
                     {
                       <DropdownButton
                         id="projectActions"
+                        variant="primary"
                         title="Actions"
                         // disabled={false}
                         // disabled={actionFlag}
@@ -121,14 +122,21 @@ function ProjectSetup(props) {
                         // drop="down-end"
                         align="end"
                       >
-                        <Dropdown.Item onClick={() => getData("On Hold")}>
+                        <Dropdown.Item
+                          onClick={() => getData("On Hold")}
+                          className="dropdownItemPaddingLeft dropdownItemColor"
+                        >
                           On Hold
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={() => getData("Cancel")}>
+                        <Dropdown.Item
+                          onClick={() => getData("Cancel")}
+                          className="dropdownItemPaddingLeft dropdownItemColor1"
+                        >
                           Cancel
                         </Dropdown.Item>
                         <Dropdown.Item
                           onClick={() => getData("Previous State")}
+                          className="dropdownItemPaddingLeft dropdownItemColor2"
                         >
                           Previous State
                         </Dropdown.Item>

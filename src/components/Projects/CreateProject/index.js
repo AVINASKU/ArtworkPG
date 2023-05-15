@@ -85,6 +85,11 @@ function AddProject(props) {
   const [checkedItems, setCheckedItems] = useState(defaultCheckedItems);
   const [textBoxEnabled, setTextBoxEnabled] = useState(defaultTextBoxEnabled);
   const [POA, setPOA] = useState("1");
+  const [projectNameAlert, setProjectNameAlert] = useState(false);
+  const [businessUnitAlert, setBusinessUnitAlert] = useState(false);
+  const [regionAlert, setRegionAlert] = useState(false);
+  const [PMAlert, setPMAlert] = useState(false);
+  const [fieldAlert, setFieldAlert] = useState(false);
   const [designScopeList, setDesignScopeList] = useState({
     DI: "",
     DT: "",
@@ -409,6 +414,7 @@ function AddProject(props) {
   };
 
   const handleRegionChange = (e) => {
+    e.target.value.length === 0 ? setRegionAlert(true) : setRegionAlert(false);
     const selectedRegion = regionList.find((r) => r.name === e.target.value);
     setRegion(selectedRegion);
     setSmo(null);
@@ -422,6 +428,9 @@ function AddProject(props) {
   const smoOptions = getSmoOptions();
 
   const handleBuChange = (e) => {
+    e.target.value.length === 0
+      ? setBusinessUnitAlert(true)
+      : setBusinessUnitAlert(false);
     setBu(e.target.value);
     setSubCategories([]);
   };
@@ -508,6 +517,7 @@ function AddProject(props) {
         break;
       case "DT":
         // when Design Template is selected, user cannot select PRA
+        console.log("checkedItems.PRA is", checkedItems.PRA);
         if (isChecked && checkedItems.PRA) {
           setCheckedItems((prevCheckedItems) => ({
             ...prevCheckedItems,
@@ -516,6 +526,15 @@ function AddProject(props) {
           setTextBoxEnabled((prevTextBoxEnabled) => ({
             ...prevTextBoxEnabled,
             PRA: false,
+          }));
+        } else if (!isChecked && !checkedItems.PRA && checkedItems.DI) {
+          setCheckedItems((prevCheckedItems) => ({
+            ...prevCheckedItems,
+            PRA: true,
+          }));
+          setTextBoxEnabled((prevTextBoxEnabled) => ({
+            ...prevTextBoxEnabled,
+            PRA: true,
           }));
         }
         break;
@@ -529,6 +548,15 @@ function AddProject(props) {
           setTextBoxEnabled((prevTextBoxEnabled) => ({
             ...prevTextBoxEnabled,
             DT: false,
+          }));
+        } else if (!isChecked && !checkedItems.DT && checkedItems.DI) {
+          setCheckedItems((prevCheckedItems) => ({
+            ...prevCheckedItems,
+            DT: true,
+          }));
+          setTextBoxEnabled((prevTextBoxEnabled) => ({
+            ...prevTextBoxEnabled,
+            DT: true,
           }));
         }
         break;
@@ -773,6 +801,7 @@ function AddProject(props) {
     setPs(e.target.value);
   };
   const handlePM = (e) => {
+    e.target.value.length === 0 ? setPMAlert(true) : setPMAlert(false);
     setPm(e.target.value);
   };
   const handleIL = (e) => {
@@ -797,20 +826,30 @@ function AddProject(props) {
           <Col>
             <Row>
               <Form.Group
-                className={`mb-3 ${projectName === "" && "error-valid"}`}
+                className={`mb-3 ${projectNameAlert ? "error-text" : ""}`}
                 controlId="projectName.ControlInput1"
               >
-                <Form.Label>Project Name * </Form.Label>
+                <Form.Label>
+                  Project Name <sup>*</sup>
+                </Form.Label>
                 <input
                   type="text"
                   className="form-control"
                   placeholder="Enter Project Name"
-                  onChange={(e) => setProjectName(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setProjectName(value);
+                    if (value.trim() === "") {
+                      setProjectNameAlert(true);
+                    } else if (value.trim() !== "") {
+                      setProjectNameAlert(false);
+                    }
+                  }}
                   value={projectName}
                 />
-                {projectName === "" && (
+                {/* {projectName === "" && (
                   <span className="error-text">Field Remaining</span>
-                )}
+                )} */}
               </Form.Group>
             </Row>
             <Row>
@@ -849,7 +888,9 @@ function AddProject(props) {
                 className={`mb-3 ${bu === "" && "error-valid"}`}
                 controlId="bu.SelectMultiple"
               >
-                <Form.Label>Business Unit*</Form.Label>
+                <Form.Label className={businessUnitAlert ? "error-text" : ""}>
+                  Business Unit<sup>*</sup>
+                </Form.Label>
                 <div>
                   <Form.Select
                     value={bu}
@@ -864,9 +905,9 @@ function AddProject(props) {
                     ))}
                   </Form.Select>
                 </div>
-                {bu === "" && (
+                {/* {bu === "" && (
                   <span className="error-text">Field Remaining</span>
-                )}
+                )} */}
               </Form.Group>
             </Row>
             <Row>
@@ -894,7 +935,9 @@ function AddProject(props) {
                 className={`mb-3 ${brand?.length < 1 && "error-valid"}`}
                 controlId="brand.SelectMultiple"
               >
-                <Form.Label>Brand *</Form.Label>
+                <Form.Label>
+                  Brand <sup>*</sup>
+                </Form.Label>
                 <div>
                   <MultiSelect
                     value={brand}
@@ -908,9 +951,9 @@ function AddProject(props) {
                     required
                   />
                 </div>
-                {brand?.length < 1 && (
+                {/* {brand?.length < 1 && (
                   <span className="error-text">Field Remaining</span>
-                )}
+                )} */}
               </Form.Group>
             </Row>
           </Col>
@@ -922,7 +965,9 @@ function AddProject(props) {
                 }`}
                 controlId="smo.SelectMultiple"
               >
-                <Form.Label>Region *</Form.Label>
+                <Form.Label className={regionAlert ? "error-text" : ""}>
+                  Region <sup>*</sup>
+                </Form.Label>
                 <div>
                   <Form.Select
                     value={region?.name || ""}
@@ -937,9 +982,9 @@ function AddProject(props) {
                     ))}
                   </Form.Select>
                 </div>
-                {(!region || Object.keys(region).length < 1) && (
+                {/* {(!region || Object.keys(region).length < 1) && (
                   <span className="error-text">Field Remaining</span>
-                )}
+                )} */}
               </Form.Group>
             </Row>
             <Row>
@@ -947,7 +992,9 @@ function AddProject(props) {
                 className={`mb-3 ${(!smo || smo?.length < 1) && "error-valid"}`}
                 controlId="smo.SelectMultiple"
               >
-                <Form.Label>SMO *</Form.Label>
+                <Form.Label>
+                  SMO <sup>*</sup>
+                </Form.Label>
                 <div>
                   <MultiSelect
                     value={smo}
@@ -961,9 +1008,9 @@ function AddProject(props) {
                     disabled={!region}
                   />
                 </div>
-                {(!smo || smo?.length < 1) && (
+                {/* {(!smo || smo?.length < 1) && (
                   <span className="error-text">Field Remaining</span>
-                )}
+                )} */}
               </Form.Group>
             </Row>
             <Row>
@@ -1024,10 +1071,13 @@ function AddProject(props) {
                           type="number"
                           value={designScopeList[option.value]}
                           onChange={(e) => {
-                            setDesignScopeList((prevDesignScopeList) => ({
-                              ...prevDesignScopeList,
-                              [option.value]: parseInt(e.target.value),
-                            }));
+                            const inputValue = parseInt(e.target.value, 10);
+                            if (inputValue >= 1) {
+                              setDesignScopeList((prevDesignScopeList) => ({
+                                ...prevDesignScopeList,
+                                [option.value]: parseInt(e.target.value),
+                              }));
+                            }
                           }}
                           disabled={!textBoxEnabled[option.value]}
                           style={{
@@ -1056,7 +1106,12 @@ function AddProject(props) {
                       type="number"
                       value={POA}
                       required
-                      onChange={(e) => setPOA(e.target.value)}
+                      onChange={(e) => {
+                        const inputValue = parseInt(e.target.value, 10);
+                        if (inputValue >= 1) {
+                          setPOA(inputValue);
+                        }
+                      }}
                       // disabled={!textBoxEnabled[option.value]}
                       style={{
                         width: 40,
@@ -1136,7 +1191,11 @@ function AddProject(props) {
                 className={`mb-3 ${!printerDate && "error-valid"}`}
                 controlId="sop.readiness"
               >
-                <Form.Label>Estimated AW @ Printer *</Form.Label>
+
+                <Form.Label>
+                  Estimated AW@Printer<sup>*</sup>{" "}
+                </Form.Label>
+
                 <Controller
                   name="date"
                   control={form.control}
@@ -1159,9 +1218,9 @@ function AddProject(props) {
                     </>
                   )}
                 />
-                {!printerDate && (
+                {/* {!printerDate && (
                   <span className="error-text">Field Remaining</span>
-                )}
+                )} */}
               </Form.Group>
             </Row>
             <Row>
@@ -1169,7 +1228,9 @@ function AddProject(props) {
                 className={`mb-3 ${!readinessDate && "error-valid"}`}
                 controlId="sop.readiness"
               >
-                <Form.Label>Estimated AW Readiness *</Form.Label>
+                <Form.Label>
+                  Estimated AW Readiness <sup>*</sup>
+                </Form.Label>
                 <Controller
                   name="date"
                   control={form.control}
@@ -1192,9 +1253,9 @@ function AddProject(props) {
                     </>
                   )}
                 />
-                {!readinessDate && (
+                {/* {!readinessDate && (
                   <span className="error-text">Field Remaining</span>
-                )}
+                )} */}
               </Form.Group>
             </Row>
             <Row>
@@ -1207,7 +1268,9 @@ function AddProject(props) {
             </Row>
             <Row>
               <Form.Group className="mb-4" controlId="pm.SelectMultiple">
-                <Form.Label>PM *</Form.Label>
+                <Form.Label className={PMAlert ? "error-text" : ""}>
+                  PM <sup>*</sup>
+                </Form.Label>
                 <div>
                   <Form.Control
                     value={pm}
@@ -1300,9 +1363,10 @@ function AddProject(props) {
             </Row>
           </Col>
         </Row>
-        <Row className="form-buttons">
+        <div className="form-buttons">
           <Button
-            className="button-layout submit-button"
+            className="button-layout"
+            variant="secondary"
             onClick={() => {
               navigate("/myProjects");
             }}
@@ -1310,7 +1374,8 @@ function AddProject(props) {
             Cancel
           </Button>
           <Button
-            className="button-layout submit-button"
+            className="button-layout"
+            variant="secondary"
             onClick={onSaveAsDraft}
           >
             Save as draft
@@ -1322,7 +1387,7 @@ function AddProject(props) {
           >
             Submit
           </Button>
-        </Row>
+        </div>
       </Form>
     </div>
   );

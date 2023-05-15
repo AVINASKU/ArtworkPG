@@ -17,7 +17,7 @@ export default function CustomisedView({
   const [selectedCategories, setSelectedCategories] = useState([]);
 
   const numColumns = 4;
-  const numRows = Math.ceil(allColumnNames.length / (numColumns));
+  const numRows = Math.ceil(allColumnNames.length / numColumns);
 
   useEffect(() => {
     setSelectedCategories(projectColumnName);
@@ -40,27 +40,34 @@ export default function CustomisedView({
 
   const footerContent = (
     <>
-       <button
-          type="button"
-          className="btn btn-secondary reset-to-default-view"
-           onClick={() => {
+      <button
+        type="button"
+        className="btn btn-secondary"
+        onClick={() => {
           resetToPgDefault(selectedCategories);
           setVisible(false);
         }}
-        >
-          Reset to Default View
-        </button>
+      >
+        Reset to Default View
+      </button>
 
-        <button
-          type="button"
-          className="btn btn-secondary save-as-personal-view"
-           onClick={() => saveAsPersonaliDefault(selectedCategories)}
-        >
-          Save as Personal View
-        </button>
-
+      <button
+        type="button"
+        className="btn btn-primary"
+        onClick={() => saveAsPersonaliDefault(selectedCategories)}
+      >
+        Save as Personal View
+      </button>
     </>
   );
+
+  const capitalizeFirstLetter = (str) => {
+    let colNames = str
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+    return colNames;
+  };
 
   return (
     <>
@@ -83,7 +90,7 @@ export default function CustomisedView({
                 const startIndex =
                   colIndex * 8 * numRows + rowIndex * 2 * numColumns;
                 return (
-                  <Col sm={3} key={rowIndex} >
+                  <Col sm={3} key={rowIndex}>
                     {" "}
                     {allColumnNames
                       .slice(startIndex, startIndex + 2 * numColumns)
@@ -99,7 +106,15 @@ export default function CustomisedView({
                             )}
                           />
                           <label htmlFor={category} className="ml-2">
-                             {category && category.split("_").join(" ")}
+                            {/* {category && category.split("_").join(" ")} */}
+                            {category === "Artwork_SMO" && "SMO"}
+                            {category === "Artwork_Category" && "Category"}
+                            {category === "Artwork_Brand" && "Brand"}
+                            {category &&
+                              category !== "Artwork_SMO" &&
+                              category !== "Artwork_Category" &&
+                              category !== "Artwork_Brand" &&
+                              capitalizeFirstLetter(category)}
                           </label>
                         </div>
                       ))}

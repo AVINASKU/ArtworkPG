@@ -37,7 +37,7 @@ const ADT = () => {
 
       <ApproveDesignIntentContent {...taskData} approve={true} />
 
-      <FooterButtons />
+      <FooterButtons approve={true} />
     </PageLayout>
   );
 };

@@ -23,6 +23,7 @@ const ProjectListHeader = ({
   isResetEnabled,
   handleDelegateClick,
   handleHelpNeededClick,
+  handleHelpProvidedClick,
   actionFlag,
   // exportCSVTasks,
   selected,
@@ -41,13 +42,14 @@ const ProjectListHeader = ({
   const handleHelpNeeded = () => {
     handleHelpNeededClick();
   };
-
+  const handleHelpProvided = () => {
+    handleHelpProvidedClick();
+  };
   const handleClick = () => {
     setShowCSV(false);
     setDownloadCSV(true);
   };
 
-  
   return (
     <div className="actions">
       <div className="project-title">{header}</div>
@@ -145,7 +147,7 @@ const ProjectListHeader = ({
               className={
                 isResetEnabled
                   ? "btn btn-secondary reset-to-default-view"
-                  : " btn btn-secondary resetToPgDefault"
+                  : " btn btn-secondary"
               }
               onClick={() => clearFilters()}
             >
@@ -196,14 +198,18 @@ const ProjectListHeader = ({
             />
 
             <DropdownButton
-              id="tasksActions"
               title="Action"
               disabled={actionFlag}
+              id={actionFlag ? "tasksInActive" : "tasksActive"}
+              className="dropdown-button-custom"
             >
+              <Dropdown.Item onClick={handleDelegate}>Delegate</Dropdown.Item>
               <Dropdown.Item onClick={handleHelpNeeded}>
                 Help Needed
               </Dropdown.Item>
-              <Dropdown.Item onClick={handleDelegate}>Delegate</Dropdown.Item>
+              <Dropdown.Item onClick={handleHelpProvided}>
+                Help Provided
+              </Dropdown.Item>
             </DropdownButton>
           </>
         )}

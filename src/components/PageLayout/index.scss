@@ -44,5 +44,44 @@
     background: #ffffff;
     // border: 0.5px solid #acacac;
     border-radius: 24px;
+    & > .content-layout {
+      padding-top: 24px;
+      padding-bottom: 32px;
+      position: relative;
+      .pi-times {
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        right: 41px;
+        top: 23px;
+        cursor: pointer;
+      }
+      .icon-items {
+        .filter-icon {
+          cursor: pointer;
+          color: #003da5;
+          width: 14px;
+          height: 19px;
+          margin-top: 8px;
+        }
+        .add-new-design-intent-icon {
+          cursor: pointer;
+          color: #003da5;
+          width: 18px;
+          height: 18px;
+          margin-top: 9px;
+        }
+
+        .icon-label {
+          font-size: 10px;
+          color: #003da5;
+          line-height: 13px;
+          padding-top: 8px;
+        }
+        .p-checkbox + .icon-label {
+          padding-top: 3px;
+        }
+      }
+    }
   }
 }

@@ -5,6 +5,7 @@ import "./index.scss";
 import { useSelector } from "react-redux";
 import { activateProjectPlan } from "../../../apis/projectPlanApi";
 import { useNavigate } from "react-router-dom";
+import { Button } from "react-bootstrap";
 
 function ProjectPlanCompo(props) {
   const navigate = useNavigate();
@@ -38,36 +39,34 @@ function ProjectPlanCompo(props) {
           <Accordion.Body>FA Assembly</Accordion.Body>
         </Accordion.Item>
       </Accordion>
-      <div className="row">
-        <div className="col btn-group btn-group-toggle d-flex justify-content-end">
-          <div>
-            <button
-              type="button"
-              onClick={() => {}}
-              className="btn btn-outline-secondary projectPlanCompoButtons"
-            >
-              Cancel
-            </button>
-          </div>
-          <div>
-            <button
-              type="button"
-              onClick={() => {}}
-              className="btn btn-primary projectPlanCompoButtons projectPlanCompoButtonsColor"
-            >
-              Save
-            </button>
-          </div>
-          <div>
-            <button
-              type="button"
-              onClick={activate}
-              className="btn btn-success projectPlanCompoButtons projectPlanCompoButtonsColor1"
-            >
-              Activate
-            </button>
-          </div>
-        </div>
+      <div className="form-buttons">
+        
+          
+          <Button
+            className="button-layout"
+            variant="secondary"
+            onClick={() => {}}
+          >
+            Cancel
+          </Button>
+         
+          <Button
+            className="button-layout"
+            variant="secondary"
+            onClick={() => {}}
+          >
+            Save
+          </Button>
+         
+          <Button
+            className="button-layout"
+            variant="primary"
+            onClick={activate}
+          >
+            Activate
+          </Button>
+          
+        
       </div>
     </>
   );

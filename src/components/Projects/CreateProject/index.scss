@@ -54,11 +54,12 @@
   font-weight: 900;
 }
 .p-checkbox .p-checkbox-box {
-  border: 1px solid #acacac;
-  width: 13px;
-  height: 13px;
+  border: 1px solid #595959;
+  width: 16px;
+  height: 16px;
   color: #acacac;
   border-radius: 3px;
+  padding: 7px;
 }
 
 .p-multiselect-panel .p-multiselect-items .p-multiselect-item.p-highlight {
@@ -144,27 +145,22 @@
     transform: rotate(180deg);
   }
 }
-.form-buttons {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 20px 0 0;
-  button {
-    margin: 0 16px 0 0;
+.header-icons {
+  cursor: pointer;
+  font-size: 2rem;
+  color: #003da5;
+  width: 18px;
+  height: 18px;
+}
+.project-content {
+  font-size: 12px;
+  label {
+    font-weight: 700;
+    padding-bottom: 7px;
   }
 }
 .mb-3 {
   position: relative;
-}
-.cancel-button {
-  background: #ffffff !important;
-  border-radius: 20px;
-  color: #003da5 !important;
-  border: 1px solid #003da5 !important;
-  box-shadow: none !important;
-  font-weight: bold;
-  text-shadow: none !important;
-  opacity: 1 !important;
 }
 .p-dialog-title {
   font-weight: 900;
@@ -180,27 +176,20 @@
   padding: 15px 30px 15px !important;
 }
 
-.error-text {
+sup {
   color: red;
-  font-weight: 800;
-  font-size: 8px;
-  display: flex;
-  justify-content: flex-end;
-  // align-items: flex-end !important;
-
-  // position: absolute;
 }
-.error-valid {
+.error-text {
   label {
-    color: red;
+    color: red !important;
   }
   .form-control,
-  .form-select,
-  .p-inputwrapper,
-  .p-multiselect {
+  select,
+  input {
     border: 1px solid red !important;
   }
 }
+
 .tabular-add-project {
   padding: 15px;
   overflow-y: auto;
@@ -339,8 +328,10 @@
   }
   .form-control:focus,
   .p-inputwrapper-filled {
-    border: 1px solid #003da5 !important;
+    border: 1px solid #003da5;
     color: #003da5 !important;
+    box-shadow: none !important;
+    outline: none !important;
   }
   .form-label {
     font-size: 12px;
@@ -369,22 +360,9 @@
     justify-content: flex-end;
     align-items: center;
     padding: 20px 0 0;
-    button {
-      margin: 0 16px 0 0;
-    }
   }
   .mb-3 {
     position: relative;
-  }
-  .cancel-button {
-    background: #ffffff !important;
-    border-radius: 20px;
-    color: #003da5 !important;
-    border: 1px solid #003da5 !important;
-    box-shadow: none !important;
-    font-weight: bold;
-    text-shadow: none !important;
-    opacity: 1 !important;
   }
   .p-dialog-title {
     font-weight: 900;
@@ -398,28 +376,6 @@
 
   .p-dialog-content {
     padding: 15px 30px 15px !important;
-  }
-
-  .error-text {
-    color: red;
-    font-weight: 800;
-    font-size: 8px;
-    display: flex;
-    justify-content: flex-end;
-    // align-items: flex-end !important;
-
-    // position: absolute;
-  }
-  .error-valid {
-    label {
-      color: red;
-    }
-    .form-control,
-    .form-select,
-    .p-inputwrapper,
-    .p-multiselect {
-      border: 1px solid red !important;
-    }
   }
 
   .form-check {
