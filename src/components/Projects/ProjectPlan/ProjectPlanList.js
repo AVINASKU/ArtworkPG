@@ -4,7 +4,6 @@ import { TreeTable } from "primereact/treetable";
 import { Column } from "primereact/column";
 import { ProjectService } from "../../../service/PegaService";
 import ConfirmationPopUp from "../ConfirmationPopUp";
-import { Toast } from "primereact/toast";
 import filter from "../../../assets/images/filter.svg";
 import { changeDateFormat } from "../../../utils";
 // import { projectPlan } from "../../../store/actions/ProjectActions";
@@ -36,7 +35,7 @@ const ProjectPlanList = (props) => {
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
   const [selectedColumnName, setSelectedColumnName] = useState(null);
-  const [projectColumnName, setProjectColumnNames] = useState([]);
+  const [projectColumnName, setProjectColumnNames] = useState([""]);
   const [selectedCities, setSelectedCities] = useState([]);
   const [filters, setFilters] = useState([]);
   const [sortData, setSortData] = useState([]);
@@ -60,16 +59,6 @@ const ProjectPlanList = (props) => {
   const navigate = useNavigate();
 
   const op = useRef(null);
-  const toast = useRef(null);
-
-  const showSuccess = () => {
-    toast.current.show({
-      severity: "success",
-      summary: "Success",
-      detail: "Saved Successfully",
-      life: 3000,
-    });
-  };
 
   const handleHelpNeededClick = (options) => {
     console.log("handleHelpNeededClick rowData: ", options);
@@ -397,7 +386,6 @@ const ProjectPlanList = (props) => {
       "projectPlanAllColumnNames",
       JSON.stringify(projectColumnName)
     );
-    showSuccess();
   };
 
   const clearColumnWiseFilter = () => {
@@ -417,7 +405,7 @@ const ProjectPlanList = (props) => {
       const index = frozenCoulmns.indexOf(selectedColumnName);
       frozenCoulmns.splice(index, 1);
       setFrozenColumn(frozenCoulmns);
-      setProjectFrozen(ProjectFrozen);
+      setProjectFrozen(!ProjectFrozen);
     }
     let jsonSortItem = localStorage.getItem("sortingData");
     const sortItem = JSON.parse(jsonSortItem);
@@ -434,19 +422,8 @@ const ProjectPlanList = (props) => {
     }
   };
 
-  const rowExpansionColumnNames = [
-    "Task",
-    "Dependency",
-    "Role",
-    "Owner",
-    "State",
-    "Duration",
-    "Start_Date",
-    "End_Date",
-    "Consumed_Buffer",
-    "Help_Needed",
-  ];
   const location = useLocation();
+
   const elementTemplate = (options, rowData) => {
     const field = rowData.field;
     const currentUrl = location.pathname;
@@ -687,8 +664,8 @@ const ProjectPlanList = (props) => {
   };
 
   const rowExpansionColumns = () => {
-    if (rowExpansionColumnNames.length) {
-      return rowExpansionColumnNames.map((ele, i) => {
+    if (projectColumnName.length) {
+      return projectColumnName.map((ele, i) => {
         return (
           <Column
             key={ele}
@@ -710,7 +687,7 @@ const ProjectPlanList = (props) => {
 
   const onSort = (column, direction) => (event) => {
     const sortedData = [...pegadata].sort((a, b) => {
-      return a['data'][column] > b['data'][column] ? 1 : -1;
+      return a["data"][column] > b["data"][column] ? 1 : -1;
     });
 
     if (direction === "desc") {
@@ -725,13 +702,27 @@ const ProjectPlanList = (props) => {
   const pegadata1 = pegadata?.map((obj) => obj.data);
 
   const [showApproveDialogCPPFA, setShowApproveDialogCPPFA] = useState(false);
-  const [selectedTaskApproveDialogCPPFA, setSelectedTaskApproveDialogCPPFA] = useState(
-    []
-  );
+  const [selectedTaskApproveDialogCPPFA, setSelectedTaskApproveDialogCPPFA] =
+    useState([]);
   const handleApproveDialogCPPFA = (options) => {
     setShowApproveDialogCPPFA(true);
     // let task = [{ TaskID: options.key, TaskName: options.data.Task }];
     // setSelectedTaskApproveDialogCPPFA(task);
+  };
+
+  const storeReorderedColumns = (e) => {
+    const dragColumnName = projectColumnName[e?.dragIndex];
+    const index = projectColumnName.indexOf(dragColumnName);
+    if (index > -1) {
+      // only splice array when item is found
+      projectColumnName.splice(index, 1); // 2nd parameter means remove one item only
+      projectColumnName.splice(e?.dropIndex, 0, dragColumnName);
+    }
+    localStorage.setItem(
+      "projectPlanAllColumnNames",
+      JSON.stringify(projectColumnName)
+    );
+    setProjectColumnNames(projectColumnName);
   };
 
   return (
@@ -751,7 +742,6 @@ const ProjectPlanList = (props) => {
         />
       )}
       <Suspense fallback={<div>Loading...</div>}>
-        <Toast ref={toast} />
         <div className="card">
           <ConfirmationPopUp
             onSort={onSort}
@@ -776,6 +766,7 @@ const ProjectPlanList = (props) => {
             resizableColumns
             dataKey="Task"
             reorderableColumns
+            onColReorder={storeReorderedColumns}
             value={filters.length ? filters : pegadata}
             loading={loader}
             className="mt-3 textAlignTreeTable"

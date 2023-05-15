@@ -238,6 +238,12 @@ div.p-selectbutton.p-buttonset.p-component {
   background: #edf4fa !important;
   color: #003da5;
 }
+.dropdown-item:hover:first-child {
+  border-radius: 8px 8px 0 0;
+}
+.dropdown-item:hover:last-child {
+  border-radius: 0 0 8px 8px;
+}
 .dropdown-item {
   font-size: 12px;
   padding: 10px;
