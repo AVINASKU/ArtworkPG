@@ -238,15 +238,20 @@ img[disabled] {
   color: #003da5;
   cursor: pointer;
 }
-
-.textAlignTreeTable .p-treetable-thead {
-  .cursorMove {
-    cursor: move;
+.textAlignTreeTable {
+  .p-treetable-thead {
+    .cursorMove {
+      cursor: move;
+    }
+    .fontBoldcolor {
+      color: #145392;
+    }
   }
 
-  .fontBoldcolor {
-    font-weight: bold;
-    color: #145392;
+  .p-treetable-tbody {
+    .fontBoldcolor {
+      font-weight: bold;
+    }
   }
 }
 
