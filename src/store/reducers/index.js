@@ -4,7 +4,7 @@ import ProjectPlanReducer from "./ProjectPlanReducer";
 import ProjectSetupReducer from "./ProjectSetupReducer";
 import TaskReducer from "./TaskReducer";
 import UserReducer from "./UserReducer";
-import CDReducer from "./CDReducer";
+import TaskDetailsReducer from "./TaskDetailsReducer";
 import azureFileUpload from "./AzureFileReducer";
 import delegateReducer from "./DelegateReducer";
 import helpNeededReducer from "./HelpNeededReducer";
@@ -15,7 +15,7 @@ export default combineReducers({
   ProjectSetupReducer,
   TaskReducer,
   UserReducer,
-  CDReducer,
+  TaskDetailsReducer,
   uploadedUrl: azureFileUpload,
   delegateReducer,
   helpNeededReducer,

@@ -2,9 +2,9 @@ import Api from "../../apis";
 import { DEVURL, SITURL, PRODURL } from "../../apis/envUrl";
 //pass the taskID and projectId from the my tasks
 
-export const getDefineCD = (taskID, projectId) => {
+export const getTaskDetails = (taskID, projectId) => {
   return async (dispatch) => {
-    dispatch({ type: "GET_DEFINE_CD_REQUEST" });
+    dispatch({ type: "GET_TASK_DETAILS_REQUEST" });
     try {
       const api = new Api();
       const axiosInstance = await api.init({
@@ -15,36 +15,16 @@ export const getDefineCD = (taskID, projectId) => {
         },
       });
       let apiURL = `${DEVURL}/TaskDetails/${taskID}/${projectId}`;
-      const defineCD = await axiosInstance({
+      const TaskDetailsData = await axiosInstance({
         url: apiURL,
         method: "GET",
       });
       dispatch({
-        type: "GET_DEFINE_CD_SUCCESS",
-        payload: defineCD?.data?.ArtworkAgilityTasks,
+        type: "GET_TASK_DETAILS_SUCCESS",
+        payload: TaskDetailsData?.data,
       });
     } catch (error) {
-      dispatch({ type: "GET_DEFINE_CD_FAILURE", payload: error });
-    }
-  };
-};
-export const getConfirmCD = (taskID, projectId, headers) => {
-  return async (dispatch) => {
-    dispatch({ type: "GET_CONFIRM_CD_REQUEST" });
-    try {
-      const api = new Api();
-      const axiosInstance = await api.init({ headers });
-      let apiURL = `${DEVURL}/TaskDetails/${taskID}/${projectId}`;
-      const defineCD = await axiosInstance({
-        url: apiURL,
-        method: "GET",
-      });
-      dispatch({
-        type: "GET_CONFIRM_CD_SUCCESS",
-        payload: defineCD?.data?.ArtworkAgilityTasks,
-      });
-    } catch (error) {
-      dispatch({ type: "GET_CONFIRM_CD_FAILURE", payload: error });
+      dispatch({ type: "GET_TASK_DETAILS_FAILURE", payload: error });
     }
   };
 };

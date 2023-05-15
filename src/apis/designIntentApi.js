@@ -20,7 +20,7 @@ export const getDesignIntent = async (
     method: "GET",
   });
 
-  return designIntent?.data?.ArtworkAgilityProjects;
+  return designIntent?.data;
 };
 
 export const saveDesignIntent = async (
