@@ -58,7 +58,7 @@
   }
 
   a {
-    padding: 15px 2px 0px;
+    padding: 10px 2px 0px;
     color: #acacac;
     position: relative;
     align-items: center;
@@ -126,7 +126,7 @@
   //     padding-left: 15px;
   //   }
   .nav-item {
-    padding: 18px 0 0;
+    padding: 30px 0 0;
     font-size: 14px;
   }
 
@@ -142,7 +142,7 @@
   }
 }
 .titleCollapse {
-  font-size: 12px;
+  font-size: 14px;
   padding: 10px 0px 15px;
   font-weight: 500;
   color: #595959;
@@ -171,3 +171,30 @@
   margin: auto;
   padding: 40px;
 }
+
+.addProjectExpand {
+  border-top: 0.5px solid #acacac;
+  text-align: center;
+  width: 100%;
+  margin: 20px auto 0;
+  //   .collapse-img {
+  //     padding-left: 15px;
+  //   }
+  // .nav-item {
+  //   padding: 18px 0 0;
+  //   font-size: 14px;
+  // }
+  img {
+    width: 21px;
+    height: 25px;
+    cursor: pointer;
+  }
+}
+
+// .tooltip {
+//   left: 58px;
+//   top: 20px;
+//   border-radius: 2px;
+//   background: #e1edf8;
+//   border-radius: 2px;
+// }
