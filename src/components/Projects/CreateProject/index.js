@@ -20,6 +20,7 @@ import {
   brandList,
   ProductionStrategy,
   Tier,
+  PMValues,
 } from "../../../categories";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -89,7 +90,8 @@ function AddProject(props) {
   const [businessUnitAlert, setBusinessUnitAlert] = useState(false);
   const [regionAlert, setRegionAlert] = useState(false);
   const [PMAlert, setPMAlert] = useState(false);
-  const [fieldAlert, setFieldAlert] = useState(false);
+  const [SMOAlert, setSMOAlert] = useState(false);
+  const [brandAlert, setBrandAlert] = useState(false);
   const [designScopeList, setDesignScopeList] = useState({
     DI: "",
     DT: "",
@@ -368,13 +370,11 @@ function AddProject(props) {
       });
       selectedSmoOptions.push(temp);
     });
-    // console.log("selectedSmoOptions:", selectedSmoOptions);
     return selectedSmoOptions;
   };
 
   const getProjectBrand = () => {
     const selectedBrandOptions = [];
-    // console.log("brand:", brand);
 
     brand.forEach((obj) => {
       let temp = {};
@@ -383,13 +383,11 @@ function AddProject(props) {
       temp.content = obj;
       selectedBrandOptions.push(temp);
     });
-    // console.log("selectedBrandOptions:", selectedBrandOptions);
     return selectedBrandOptions;
   };
 
   const getProjectCategory = () => {
     const selectedCategoriesOptions = [];
-    // console.log("subCategories:", subCategories);
 
     subCategories.forEach((obj) => {
       let temp = {};
@@ -398,7 +396,6 @@ function AddProject(props) {
       temp.content = obj;
       selectedCategoriesOptions.push(temp);
     });
-    // console.log("selectedCategoriesOptions:", selectedCategoriesOptions);
     return selectedCategoriesOptions;
   };
 
@@ -452,7 +449,6 @@ function AddProject(props) {
   //   }
   //   return [];
   // }, [bu, categories]);
-  // console.log("subCategoriesOptions: ", subCategoriesOptions);
 
   useEffect(() => {
     bu &&
@@ -517,7 +513,10 @@ function AddProject(props) {
         break;
       case "DT":
         // when Design Template is selected, user cannot select PRA
-        console.log("checkedItems.PRA is", checkedItems.PRA);
+        setDesignScopeList((prevDesignScopeList) => ({
+          ...prevDesignScopeList,
+          PRA: "", // or DT: null
+        }));
         if (isChecked && checkedItems.PRA) {
           setCheckedItems((prevCheckedItems) => ({
             ...prevCheckedItems,
@@ -532,6 +531,7 @@ function AddProject(props) {
             ...prevCheckedItems,
             PRA: true,
           }));
+
           setTextBoxEnabled((prevTextBoxEnabled) => ({
             ...prevTextBoxEnabled,
             PRA: true,
@@ -540,6 +540,10 @@ function AddProject(props) {
         break;
       case "PRA":
         // when Production Ready Art is selected, user cannot select DT
+        setDesignScopeList((prevDesignScopeList) => ({
+          ...prevDesignScopeList,
+          DT: "", // or DT: null
+        }));
         if (isChecked && checkedItems.DT) {
           setCheckedItems((prevCheckedItems) => ({
             ...prevCheckedItems,
@@ -683,7 +687,6 @@ function AddProject(props) {
 
   const onSubmit = async () => {
     const formData = collectFormData("Active", mode);
-    console.log("form data", formData);
     setFormData(formData);
     if (mode === "create") {
       await createNewProject(formData);
@@ -710,7 +713,6 @@ function AddProject(props) {
   };
   const onSaveAsDraft = async () => {
     const draftFormData = collectFormData("Draft", mode);
-    console.log("draft form data", draftFormData);
     localStorage.setItem("formDraft", JSON.stringify(draftFormData));
     setIsLoading(true);
     if (mode === "create") {
@@ -834,6 +836,7 @@ function AddProject(props) {
                 </Form.Label>
                 <input
                   type="text"
+                  style={{ fontSize: "10px" }}
                   className="form-control"
                   placeholder="Enter Project Name"
                   onChange={(e) => {
@@ -875,7 +878,7 @@ function AddProject(props) {
                 <Form.Label>Project Description</Form.Label>
                 <textarea
                   type="text"
-                  style={{ height: "114px" }}
+                  style={{ height: "97px" }}
                   className="form-control"
                   placeholder="Enter Project Description"
                   onChange={(e) => setProjectDesc(e.target.value)}
@@ -885,10 +888,11 @@ function AddProject(props) {
             </Row>
             <Row>
               <Form.Group
-                className={`mb-3 ${bu === "" && "error-valid"}`}
+                // className={`mb-3 ${bu === "" && "error-valid"}`}
+                className={`mb-3 ${businessUnitAlert ? "error-text" : ""}`}
                 controlId="bu.SelectMultiple"
               >
-                <Form.Label className={businessUnitAlert ? "error-text" : ""}>
+                <Form.Label>
                   Business Unit<sup>*</sup>
                 </Form.Label>
                 <div>
@@ -932,7 +936,8 @@ function AddProject(props) {
             </Row>
             <Row>
               <Form.Group
-                className={`mb-3 ${brand?.length < 1 && "error-valid"}`}
+                // className={`mb-3 ${brand?.length < 1 && "error-valid"}`}
+                className={brandAlert ? "error-text" : ""}
                 controlId="brand.SelectMultiple"
               >
                 <Form.Label>
@@ -941,7 +946,12 @@ function AddProject(props) {
                 <div>
                   <MultiSelect
                     value={brand}
-                    onChange={(e) => setBrand(e.value)}
+                    onChange={(e) => {
+                      e.target.value.length === 0
+                        ? setBrandAlert(true)
+                        : setBrandAlert(false);
+                      setBrand(e.value);
+                    }}
                     options={brandList}
                     optionLabel="Brand_Name"
                     filter
@@ -960,12 +970,13 @@ function AddProject(props) {
           <Col>
             <Row>
               <Form.Group
-                className={`mb-3 ${
-                  (!region || Object.keys(region).length < 1) && "error-valid"
-                }`}
+                // className={`mb-3 ${
+                //   (!region || Object.keys(region).length < 1) && "error-valid"
+                // }`}
+                className={`mb-3 ${regionAlert ? "error-text" : ""}`}
                 controlId="smo.SelectMultiple"
               >
-                <Form.Label className={regionAlert ? "error-text" : ""}>
+                <Form.Label>
                   Region <sup>*</sup>
                 </Form.Label>
                 <div>
@@ -973,6 +984,8 @@ function AddProject(props) {
                     value={region?.name || ""}
                     onChange={handleRegionChange}
                     placeholder="Select Region"
+                    // className="form-control"
+                    // style={{ color: "pink" }}
                   >
                     <option value="">Select Region</option>
                     {regionList.map((r) => (
@@ -989,7 +1002,8 @@ function AddProject(props) {
             </Row>
             <Row>
               <Form.Group
-                className={`mb-3 ${(!smo || smo?.length < 1) && "error-valid"}`}
+                // className={`mb-3 ${(!smo || smo?.length < 1) && "error-valid"}`}
+                className={`mb-3 ${SMOAlert ? "error-text" : ""}`}
                 controlId="smo.SelectMultiple"
               >
                 <Form.Label>
@@ -998,7 +1012,12 @@ function AddProject(props) {
                 <div>
                   <MultiSelect
                     value={smo}
-                    onChange={(e) => setSmo(e.value)}
+                    onChange={(e) => {
+                      e.target.value.length === 0
+                        ? setSMOAlert(true)
+                        : setSMOAlert(false);
+                      setSmo(e.value);
+                    }}
                     options={smoOptions}
                     optionLabel="label"
                     filter
@@ -1080,6 +1099,7 @@ function AddProject(props) {
                             }
                           }}
                           disabled={!textBoxEnabled[option.value]}
+                          // style={textBoxEnabled[option.value] ? {} : { opacity: 0.5 }}
                           style={{
                             width: 40,
                             height: 27,
@@ -1087,6 +1107,9 @@ function AddProject(props) {
                             paddingRight: 0,
                             fontSize: "10px",
                             marginRight: "10px",
+                            ...(!textBoxEnabled[option.value]
+                              ? { backgroundColor: "#e9ecef" }
+                              : {}),
                           }}
                         />
                       )}
@@ -1112,7 +1135,6 @@ function AddProject(props) {
                           setPOA(inputValue);
                         }
                       }}
-                      // disabled={!textBoxEnabled[option.value]}
                       style={{
                         width: 40,
                         height: 27,
@@ -1149,7 +1171,11 @@ function AddProject(props) {
                         dateFormat="d-M-y"
                         showIcon={true}
                         minDate={sosDate !== "" ? sosDate : minDate}
-                        style={{ width: 208 }}
+                        style={{
+                          width: 208,
+                          fontSize: "12px",
+                          fontWeight: 1500,
+                        }}
                         className={classNames({
                           "p-invalid": fieldState.error,
                         })}
@@ -1180,6 +1206,10 @@ function AddProject(props) {
                         className={classNames({
                           "p-invalid": fieldState.error,
                         })}
+                        style={{
+                          fontSize: "12px",
+                          fontWeight: 1500,
+                        }}
                       />
                     </>
                   )}
@@ -1265,16 +1295,23 @@ function AddProject(props) {
               </Form.Group>
             </Row>
             <Row>
-              <Form.Group className="mb-4" controlId="pm.SelectMultiple">
+              <Form.Group className={PMAlert ? "error-text" : ""}>
                 <Form.Label className={PMAlert ? "error-text" : ""}>
                   PM <sup>*</sup>
                 </Form.Label>
                 <div>
-                  <Form.Control
+                  <Form.Select
                     value={pm}
                     onChange={handlePM}
-                    disabled
-                  ></Form.Control>
+                    disabled={mode === "edit" ? true : false}
+                  >
+                    <option value="">Select PM</option>
+                    {PMValues.map((r) => (
+                      <option key={r.label} value={r.value}>
+                        {r.value}
+                      </option>
+                    ))}
+                  </Form.Select>
                 </div>
               </Form.Group>
             </Row>
@@ -1319,7 +1356,7 @@ function AddProject(props) {
               <Form.Group className="mb-3" controlId="bve.SelectMultiple">
                 <Form.Label>
                   {(region?.code === "EUF" || region?.code === "EUE") &&
-                    bu === "BABY" &&
+                    bu === "BBY" &&
                     "Tier"}
                   {(region?.code === "EUF" || region?.code === "EUE") &&
                     bu === "HC" &&
@@ -1327,7 +1364,7 @@ function AddProject(props) {
                 </Form.Label>
                 <div>
                   {(region?.code === "EUF" || region?.code === "EUE") &&
-                    bu === "BABY" && (
+                    bu === "BBY" && (
                       <Form.Select
                         {...register("Teir", { required: false })}
                         placeholder="Select Teir"

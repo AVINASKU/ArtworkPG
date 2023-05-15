@@ -256,6 +256,33 @@ export const designScope = [
   // { label: "POA's", value: "POAs" },
 ];
 
+export const PMValues = [
+  {
+    label: "Izabela",
+    value: "Izabela",
+  },
+  {
+    label: "Karol",
+    value: "Karol",
+  },
+  {
+    label: "Luca",
+    value: "Luca",
+  },
+  {
+    label: "Cherry",
+    value: "Cherry",
+  },
+  {
+    label: "Nora",
+    value: "Nora",
+  },
+  {
+    label: "Gabriel",
+    value: "Gabriel",
+  },
+];
+
 export const scaleList = [
   { name: "A", code: "A" },
   { name: "B", code: "B" },
