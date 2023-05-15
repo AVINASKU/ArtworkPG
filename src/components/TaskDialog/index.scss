@@ -12,6 +12,8 @@
     ul {
       list-style: none;
       padding: 0 5px;
+      max-height: 100px;
+      overflow-y: auto;
     }
   }
   .p-inputwrapper-filled {
@@ -22,7 +24,7 @@
   .p-inputtext {
     border: 0;
     background: #ffffff; /* Light Grey */
-
+    height: 30px;
     box-shadow: none !important;
     outline: none !important;
   }
@@ -30,6 +32,9 @@
     width: 200px;
     border: 1px solid #acacac;
     border-radius: 4px;
+  }
+  .help-user {
+    margin-top: 10px;
   }
   .p-inputtextarea {
     width: 100%;
@@ -63,4 +68,16 @@
 }
 .popup-details {
   min-height: 300px;
+}
+.row-fields {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.p-dialog .p-dialog-header .p-dialog-header-icon:enabled:hover {
+  color: #343a40;
+  border-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }

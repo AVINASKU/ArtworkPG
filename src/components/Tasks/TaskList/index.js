@@ -226,6 +226,7 @@ const TaskList = (props) => {
         .filter((task) => task.AWM_Task_ID),
     };
     await dispatch(HelpNeededAction(helpResolvedData));
+    setSelected([]);
     if (props.flag === "myTasks") {
       await dispatch(getTasks(props?.userInformation));
     } else {
@@ -470,6 +471,7 @@ const TaskList = (props) => {
           flag={flag}
           path={props.flag}
           userInformation={props.userInformation}
+          setSelected={setSelected}
         />
       )}
     </>

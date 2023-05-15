@@ -9,6 +9,7 @@ import { HelpNeededAction } from "../../store/actions/HelpNeededAction";
 import "./index.scss";
 import { useDispatch } from "react-redux";
 import { getTasks, getAllTasks } from "../../store/actions/TaskActions";
+const helpOptions = ["Others", "Risk", "High"];
 
 const TaskDialog = (props) => {
   const dispatch = useDispatch();
@@ -17,10 +18,18 @@ const TaskDialog = (props) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [filteredItems, setFilteredItems] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
-  const userOptions = RoleUser?.users?.map((user) => ({
-    label: user.username,
-    value: user.userid,
-  }));
+  let userOptions;
+  if (props.flag !== "help") {
+    userOptions = RoleUser?.users?.map((user) => ({
+      label: user.username,
+      value: user.userid,
+    }));
+  } else {
+    userOptions = helpOptions?.map((item) => ({
+      label: item,
+      value: item,
+    }));
+  }
 
   const searchItems = (event) => {
     //in a real application, make a request to a remote url with the query and return filtered results, for demo purposes we filter at client side
@@ -43,8 +52,14 @@ const TaskDialog = (props) => {
 
   const handleSubmit = async () => {
     try {
-      if (!selectedItem || filteredItems?.length === 0) {
-        return;
+      if (props.flag !== "help") {
+        if (!selectedItem && filteredItems?.length === 0) {
+          return;
+        }
+      } else {
+        if (!selectedItem && filteredItems?.length === 0 && comment === "") {
+          return;
+        }
       }
       const helpNeededData = {
         ArtworkAgilityTasks: props?.selectedTaskData
@@ -68,6 +83,7 @@ const TaskDialog = (props) => {
       if (props.flag === "help") {
         await dispatch(HelpNeededAction(helpNeededData));
         props.onClose();
+        props.setSelected([]);
         if (props.path === "myTasks") {
           await dispatch(getTasks(props?.userInformation));
         } else {
@@ -78,6 +94,7 @@ const TaskDialog = (props) => {
         // const response = await dispatch(DelegateAction(delegateData));
         // if (response.status === 200) {
         props.onClose();
+        props.setSelected([]);
         // }
       }
     } catch (error) {
@@ -98,37 +115,38 @@ const TaskDialog = (props) => {
       header={`${props.flag === "help" ? "Help Needed" : "Delegate Task"}`}
     >
       <div className="p-fluid popup-details">
-        <div className="p-field">
-          <label htmlFor="taskName" className="tasksname">
-            Task:
-            <ul>
-              {props?.selectedTaskData?.map((task) => (
-                <li className="active-taskname" key={task.AWM_Task_ID}>
-                  {task.Task_Name}
-                  <br />
-                </li>
-              ))}
-            </ul>
-          </label>
-        </div>
-
-        <div className="p-field">
-          {props.flag !== "help" && (
-            <label htmlFor="priority">Delegate To *</label>
+        <div className="row-fields">
+          <div className="p-field">
+            <label htmlFor="taskName" className="tasksname">
+              Task:
+              <ul>
+                {props?.selectedTaskData?.map((task) => (
+                  <li className="active-taskname" key={task.AWM_Task_ID}>
+                    {task.Task_Name}
+                    <br />
+                  </li>
+                ))}
+              </ul>
+            </label>
+          </div>
+          {props.flag === "help" && (
+            <div className="p-field">
+              <AutoComplete
+                value={selectedItem}
+                suggestions={filteredItems}
+                completeMethod={searchItems}
+                field="label"
+                dropdown
+                placeholder="Search reason"
+                className={props.flag === "help" && "help-user"}
+                onChange={(e) => {
+                  setSelectedItem(e.value);
+                  setIsFormValid(!!e.value);
+                }}
+              />
+              {filteredItems?.length === 0 && <div>No results found</div>}
+            </div>
           )}
-          <AutoComplete
-            value={selectedItem}
-            suggestions={filteredItems}
-            completeMethod={searchItems}
-            field="label"
-            dropdown
-            placeholder="Search user"
-            onChange={(e) => {
-              setSelectedItem(e.value);
-              setIsFormValid(!!e.value);
-            }}
-          />
-          {filteredItems?.length === 0 && <div>No results found</div>}
         </div>
         {props.flag === "help" && (
           <div className="p-field">
@@ -145,6 +163,26 @@ const TaskDialog = (props) => {
               rows={3}
               className="p-inputtext p-component"
             />
+          </div>
+        )}
+
+        {props.flag !== "help" && (
+          <div className="p-field">
+            <label htmlFor="priority">Delegate To *</label>
+
+            <AutoComplete
+              value={selectedItem}
+              suggestions={filteredItems}
+              completeMethod={searchItems}
+              field="label"
+              dropdown
+              placeholder="Search user"
+              onChange={(e) => {
+                setSelectedItem(e.value);
+                setIsFormValid(!!e.value);
+              }}
+            />
+            {filteredItems?.length === 0 && <div>No results found</div>}
           </div>
         )}
       </div>
