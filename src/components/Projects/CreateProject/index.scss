@@ -176,27 +176,20 @@
   padding: 15px 30px 15px !important;
 }
 
-.error-text {
+sup {
   color: red;
-  font-weight: 800;
-  font-size: 8px;
-  display: flex;
-  justify-content: flex-end;
-  // align-items: flex-end !important;
-
-  // position: absolute;
 }
-.error-valid {
+.error-text {
   label {
-    color: red;
+    color: red !important;
   }
   .form-control,
-  .form-select,
-  .p-inputwrapper,
-  .p-multiselect {
+  select,
+  input {
     border: 1px solid red !important;
   }
 }
+
 .tabular-add-project {
   padding: 15px;
   overflow-y: auto;
@@ -335,8 +328,10 @@
   }
   .form-control:focus,
   .p-inputwrapper-filled {
-    border: 1px solid #003da5 !important;
+    border: 1px solid #003da5;
     color: #003da5 !important;
+    box-shadow: none !important;
+    outline: none !important;
   }
   .form-label {
     font-size: 12px;
@@ -381,28 +376,6 @@
 
   .p-dialog-content {
     padding: 15px 30px 15px !important;
-  }
-
-  .error-text {
-    color: red;
-    font-weight: 800;
-    font-size: 8px;
-    display: flex;
-    justify-content: flex-end;
-    // align-items: flex-end !important;
-
-    // position: absolute;
-  }
-  .error-valid {
-    label {
-      color: red;
-    }
-    .form-control,
-    .form-select,
-    .p-inputwrapper,
-    .p-multiselect {
-      border: 1px solid red !important;
-    }
   }
 
   .form-check {

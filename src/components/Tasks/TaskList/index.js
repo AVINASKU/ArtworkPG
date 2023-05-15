@@ -218,11 +218,11 @@ const TaskList = (props) => {
       setSelectedTask(selected);
     }
     const helpResolvedData = {
-      comments: "",
-      Help_Needed: false,
       ArtworkAgilityTasks: selected
         ?.map((task) => ({
           AWM_Task_ID: task.AWM_Task_ID,
+          Help_Needed: false,
+          Comments: "",
         }))
         .filter((task) => task.AWM_Task_ID),
     };
@@ -318,17 +318,26 @@ const TaskList = (props) => {
 
   const helpNeededBodyTemplate = (rowData) => {
     let className = "";
-    if (rowData?.Help_Needed === null) {
-      rowData.Help_Needed = "No";
-      className = "helpneeded_no";
-    } else if (rowData?.Help_Needed === true) {
-      rowData.Help_Needed = "Yes, In process";
-      className = "helpneeded_inprocess";
-    } else if (rowData?.Help_Needed === false) {
-      rowData.Help_Needed = "Yes, Done";
-      className = "helpneeded_done";
+    let helpNeeded = rowData?.Help_Needed;
+    switch (helpNeeded) {
+      case null:
+        helpNeeded = "No";
+        className = "helpneeded_no";
+        break;
+      case true:
+        helpNeeded = "Yes, In process";
+        className = "helpneeded_inprocess";
+        break;
+      case false:
+        helpNeeded = "Yes, Done";
+        className = "helpneeded_done";
+        break;
+      default:
+        // handle any other cases here
+        break;
     }
-    return <span className={className}>{rowData.Help_Needed}</span>;
+
+    return <span className={className}>{helpNeeded}</span>;
   };
 
   const statusTemplate = (rowData) => {

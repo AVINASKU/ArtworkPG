@@ -13,6 +13,7 @@ import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import _ from "lodash";
+import ProjectNameHeader from "../MyProjects/ProjectNameHeader";
 
 const CustomisedView = React.lazy(() => import("../MyProjects/CustomisedView"));
 
@@ -94,7 +95,7 @@ const AllProjectList = (props) => {
       "Estimated_No_Of_POAs",
       "Estimated_SOS",
       "Estimated_SOP",
-      "Estimated_AW_Printer",
+      "Estimated_AW @ Printer",
       "Estimated_AW_Readiness",
       "IL",
       "PM",
@@ -102,6 +103,7 @@ const AllProjectList = (props) => {
       "Project_Type",
       "Production_Strategy",
       "Tier",
+      "Full Kit Readiness Tracking",
     ];
 
     let reorderedColumns = [];
@@ -147,8 +149,10 @@ const AllProjectList = (props) => {
           });
         }
 
-        if (ProjectData.length) {
-          setAllColumnNames(reorderColumns(Object.keys(ProjectData[0])));
+         if (ProjectData.length) {
+          let allCol = Object.keys(ProjectData[0]);
+          allCol.push("Full Kit Readiness Tracking");
+          setAllColumnNames(reorderColumns(allCol));
         }
         // const columnNames = await ProjectService.getAllColumnNames();
         // localStorage.setItem("allColumnNames", JSON.stringify(columnNames));
@@ -234,38 +238,6 @@ const AllProjectList = (props) => {
     }
   };
 
-  const projectNameHeader = (options) => {
-    let splittedCol = options.split("_").join(" ");
-    const isFilterActivated =
-      (frozenCoulmns &&
-        frozenCoulmns.length &&
-        frozenCoulmns.includes(options)) ||
-      (sortData && sortData.length && sortData[0] === options);
-
-    return (
-      <div>
-        <>
-          <img
-            src={filter}
-            alt="Column Filter"
-            onClick={(e) => {
-              op.current.toggle(e);
-              setSelectedColumnName(options);
-            }}
-            className={
-              isFilterActivated
-                ? "columnFilterIcon filter-color-change"
-                : "columnFilterIcon"
-            }
-          />
-          <span className={isFilterActivated && "filter-color-change"}>
-            {splittedCol}
-          </span>
-        </>
-      </div>
-    );
-  };
-
   const fullKitReadinessBody = (options, rowData) => {
     let field = rowData.field;
     let projectId = options["Project_ID"];
@@ -337,6 +309,11 @@ const AllProjectList = (props) => {
     );
   };
 
+  const projectNameOnClick = (e, options) => {
+    op.current.toggle(e);
+    setSelectedColumnName(options);
+  };
+
   const dynamicColumns = (projectColumnName) => {
     if (projectColumnName.length) {
       return projectColumnName.map((ele, i) => {
@@ -345,7 +322,12 @@ const AllProjectList = (props) => {
             key={i}
             field={ele}
             filterField={ele}
-            header={projectNameHeader(ele)}
+            header={ProjectNameHeader(
+              ele,
+              frozenCoulmns,
+              sortData,
+              projectNameOnClick
+            )}
             columnKey={i}
             frozen={frozenCoulmns.includes(ele)}
             alignFrozen="left"

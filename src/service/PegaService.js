@@ -24,8 +24,8 @@ const allColumnNames = [
   "Artwork_SMO",
   "Project_State",
   "Buffer_To_Work",
-  "Estimated_AW_Printer",
-  // "Full Kit Readiness Tracking",
+  "Estimated_AW @ Printer",
+  "Full Kit Readiness Tracking",
 ];
 
 const allColumnNamesAllProjects = [
@@ -36,9 +36,9 @@ const allColumnNamesAllProjects = [
   "Artwork_SMO",
   "Project_State",
   "Buffer_To_Work",
-  "Estimated_AW_Printer",
+  "Estimated_AW @ Printer",
   "PM",
-  // "Full Kit Readiness Tracking",
+  "Full Kit Readiness Tracking",
 ];
 
 const filterProjectData = [
