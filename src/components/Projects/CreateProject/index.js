@@ -1136,7 +1136,7 @@ function AddProject(props) {
                 className={`mb-3 ${!printerDate && "error-valid"}`}
                 controlId="sop.readiness"
               >
-                <Form.Label>Estimated AW@Printer *</Form.Label>
+                <Form.Label>Estimated AW @ Printer *</Form.Label>
                 <Controller
                   name="date"
                   control={form.control}

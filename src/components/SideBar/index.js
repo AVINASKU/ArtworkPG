@@ -37,7 +37,7 @@ const SideBar = () => {
     //   setExpandedIndex(null);
     // }
   };
-  const sidebarWidth = isToggle ? "220px" : "100px";
+  const sidebarWidth = isToggle ? "112px" : "68px";
   function toggleSubMenu(index) {
     setIsToggle(true);
 
@@ -123,11 +123,13 @@ const SideBar = () => {
               alt="PG LOGO"
               className={`pg-logo ${!isToggle && "toggle-logo"}`}
             />
-            <p className="logo-title">Artwork Agility Suite</p>
+            <p className={!isToggle ? "titleCollapse" : "titleExpand"}>
+              Artwork Agility Suite
+            </p>
           </div>
           <Nav
             style={{
-              paddingTop: !isToggle && "50px",
+              paddingTop: !isToggle && "15px",
             }}
           >
             {navItems?.data?.map((item, index) => {
@@ -209,10 +211,10 @@ const SideBar = () => {
                       dispatch(updateMode("create"));
                     }}
                   >
-                    <Button className="button-layout">
+                    {/* <Button className="button-layout">
                       <img src={PlusImg} alt={PlusImg} />
                       Create Project
-                    </Button>
+                    </Button> */}
                   </NavLink>
                 )}
               </NavItem>
@@ -221,8 +223,11 @@ const SideBar = () => {
                   <img src={LogoutImg} className="collapse-img" alt="" />
                 ) : (
                   <NavLink to="/" className="nav-link">
-                    <img src={LogoutImg} alt="logout" />
-                    {isToggle && <span className="logout">Logout</span>}
+                    {isToggle && (
+                      <span className="logout">
+                        <img src={LogoutImg} alt="logout" />
+                      </span>
+                    )}
                   </NavLink>
                 )}
               </NavItem>

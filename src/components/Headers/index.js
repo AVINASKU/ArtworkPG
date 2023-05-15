@@ -11,8 +11,7 @@ const sessionObj = JSON.parse(sessionData);
 
 //for userid and username
 
-const time = sessionObj?.loginTime;
-
+// const time = sessionObj?.loginTime;
 
 //for userid and username
 const username = sessionObj?.username;
@@ -21,25 +20,25 @@ const userid = sessionObj?.userid;
 
 // For date
 
-const loginTime = sessionObj?.loginTime;
+// const loginTime = sessionObj?.loginTime;
 
-const formattedDate = (loginTime) => {
-  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const time = moment.tz(loginTime, timezone);
-  const zone = moment.tz(loginTime, timezone).zoneAbbr();
-  return time.clone().tz(zone).format("DD, MMMM,  YYYY");
-};
+// const formattedDate = (loginTime) => {
+//   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+//   const time = moment.tz(loginTime, timezone);
+//   const zone = moment.tz(loginTime, timezone).zoneAbbr();
+//   return time.clone().tz(zone).format("DD, MMMM,  YYYY");
+// };
 
 //for time
 
-const formattedTime = (loginTime) => {
-  // console.log("loginTime: ", loginTime);
-  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const time = moment.tz(loginTime, timezone);
-  const zone = moment.tz(loginTime, timezone).zoneAbbr();
-  // console.log("zone: ", zone);
-  return time.clone().tz(zone).format("h:mm a ([GMT]Z)");
-};
+// const formattedTime = (loginTime) => {
+//   // console.log("loginTime: ", loginTime);
+//   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+//   const time = moment.tz(loginTime, timezone);
+//   const zone = moment.tz(loginTime, timezone).zoneAbbr();
+//   // console.log("zone: ", zone);
+//   return time.clone().tz(zone).format("h:mm a ([GMT]Z)");
+// };
 
 const Header = () => {
   const User = useSelector((state) => state.UserReducer);
@@ -48,10 +47,10 @@ const Header = () => {
     <div className="header">
       <div>
         <h1>Welcome Back, {userInformation.username}!</h1>
-        <div className="user-date-time">
+        {/* <div className="user-date-time">
           <p>{formattedDate(userInformation.loginTime)}</p>
           <p>{formattedTime(userInformation.loginTime)}</p>
-        </div>
+        </div> */}
       </div>
       <div className="user-profile">
         <img
