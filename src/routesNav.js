@@ -11,7 +11,7 @@ import ApproveDesignIntent from "./components/AWMJobs/DDI/ApproveDesignIntent";
 import AllTasksPage from "./AllTaksPage.js";
 import MyTasksPage from "./MyTaskPage.js";
 import DDT from "./components/AWMJobs/DDT/index.js";
-import DPRA from "./components/AWMJobs/PRA/index.js";
+import DPRA from "./components/AWMJobs/DPRA/index.js";
 import CCD from "./components/AWMJobs/CCD/index.js";
 import DCD from "./components/AWMJobs/DCD/index.js";
 import CNIQ from "./components/AWMJobs/CNIQ/index.js";

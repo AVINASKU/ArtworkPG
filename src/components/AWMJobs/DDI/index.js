@@ -29,7 +29,7 @@ function DDI() {
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { TaskDetailsData } = useSelector((state) => state.TaskDetailsReducer);
+  const { TaskDetailsData, loading } = useSelector((state) => state.TaskDetailsReducer);
 
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
@@ -37,7 +37,8 @@ function DDI() {
 
   useEffect(() => {
     if (TaskDetailsData) {
-      setDesignIntent(TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails);
+      setDesignIntent(TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
+      setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
     }
   },[TaskDetailsData]);
 
@@ -145,6 +146,7 @@ function DDI() {
   };
 
   return (
+    console.log("designIntent", designIntent), 
     <PageLayout>
       <DesignHeader
         setAddNewDesign={addNewEmptyDesign}
@@ -163,8 +165,10 @@ function DDI() {
       >
         {<AddNewDesign {...data} />}
 
-        {designIntent &&
-          designIntent.length &&
+        {loading || designIntent === null ? 
+          <i className="pi pi-spin pi-spinner" style={{ fontSize: '2rem' }}></i>
+          : designIntent &&
+          designIntent.length > 0 &&
           designIntent.map((item, index) => {
             if (item && item?.Action !== "delete") {
               return (
@@ -180,12 +184,12 @@ function DDI() {
               );
             }
           })}
-        <FooterButtons
+      </div>
+      <FooterButtons
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}
         />
-      </div>
     </PageLayout>
   );
 }
