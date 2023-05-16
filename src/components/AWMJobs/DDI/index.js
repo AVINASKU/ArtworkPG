@@ -9,8 +9,9 @@ import {
   saveDesignIntent,
 } from "../../../apis/designIntentApi";
 import "../DesignJobs/index.scss";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { getTaskDetails } from "../../../store/actions/taskDetailAction";
+import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
@@ -27,28 +28,19 @@ function DDI() {
   const [submittedDI, setSubmittedDI] = useState([]);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { TaskDetailsData, loading } = useSelector((state) => state.TaskDetailsReducer);
 
   useEffect(() => {
-    // const data1 = ProjectService.getDIData();
-    let taskId;
-    if (TaskID) {
-      taskId = TaskID.split("_")[1];
-      console.log("task id-->", taskId[1]);
-    }
+    dispatch(getTaskDetails(TaskID, ProjectID));
+  }, [dispatch, TaskID, ProjectID]);
 
-    (async () => {
-      try {
-        const data1 = await getDesignIntent(TaskID, ProjectID);
-        console.log("api data------>", data1);
-        data1 && data1?.length && setData(data1[0]);
-        data1 &&
-          data1?.length &&
-          setDesignIntent(data1[0]?.Design_Intent_Details);
-      } catch (err) {
-        console.log("error", err);
-      }
-    })();
-  }, []);
+  useEffect(() => {
+    if (TaskDetailsData) {
+      setDesignIntent(TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
+      setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
+    }
+  },[TaskDetailsData]);
 
   const handleCancel = () => {
     return navigate(`/myTasks`);
@@ -154,6 +146,7 @@ function DDI() {
   };
 
   return (
+    console.log("designIntent", designIntent), 
     <PageLayout>
       <DesignHeader
         setAddNewDesign={addNewEmptyDesign}
@@ -172,8 +165,10 @@ function DDI() {
       >
         {<AddNewDesign {...data} />}
 
-        {designIntent &&
-          designIntent.length &&
+        {loading || designIntent === null ? 
+          <i className="pi pi-spin pi-spinner" style={{ fontSize: '2rem' }}></i>
+          : designIntent &&
+          designIntent.length > 0 &&
           designIntent.map((item, index) => {
             if (item && item?.Action !== "delete") {
               return (
@@ -189,12 +184,12 @@ function DDI() {
               );
             }
           })}
-        <FooterButtons
+      </div>
+      <FooterButtons
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}
         />
-      </div>
     </PageLayout>
   );
 }

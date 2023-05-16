@@ -5,7 +5,7 @@ import DesignHeader from "../DesignJobs/DesignHeader";
 import FooterButtons from "../DesignJobs/FooterButtons";
 import { saveDesignIntent } from "../../../apis/designIntentApi";
 import { useDispatch, useSelector } from "react-redux";
-import { getDefineCD } from "../../../store/actions/CDAction";
+import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import "../DesignJobs/index.scss";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -19,7 +19,7 @@ const jobName = "CD_";
 
 function CCD() {
   const dispatch = useDispatch();
-  const { defineCD } = useSelector((state) => state.CDReducer);
+  const { TaskDetailsData } = useSelector((state) => state.TaskDetailsReducer);
   const [data, setData] = useState(null);
   const [CD, setCD] = useState([]);
   const [formValid, setFormValid] = useState(true);
@@ -34,15 +34,15 @@ function CCD() {
     if (TaskID) {
       taskId = TaskID.split("_")[1];
     }
-    dispatch(getDefineCD(TaskID, ProjectID));
+    dispatch(getTaskDetails(TaskID, ProjectID));
   }, [dispatch, TaskID, ProjectID]);
 
   useEffect(() => {
-    if (defineCD) {
-      setCD(defineCD[0]?.DesignJobDetails || []);
-      setData(defineCD[0] || []);
+    if (TaskDetailsData) {
+      setCD(TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
+      setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
     }
-  }, [defineCD]);
+  }, [TaskDetailsData]);
   const handleCancel = () => {
     return navigate(`/myTasks`);
   };

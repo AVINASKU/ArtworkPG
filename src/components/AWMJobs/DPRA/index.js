@@ -6,16 +6,16 @@ import AddNewDesignContent from "../DesignJobs/AddNewDesignContent";
 import FooterButtons from "../DesignJobs/FooterButtons";
 import { saveDesignIntent } from "../../../apis/designIntentApi";
 import "../DesignJobs/index.scss";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { ProjectService } from "../../../service/PegaService";
-import { useSelector } from "react-redux";
 import { toLower } from "lodash";
 import {
   convertCategoryIntoString,
   convertBrandIntoString,
   AddNavigation,
 } from "../../../utils";
+import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 
 const headerName = "Define Production Ready Art";
 
@@ -28,6 +28,8 @@ function DPRA() {
   const [submittedDI, setSubmittedDI] = useState([]);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { TaskDetailsData, loading } = useSelector((state) => state.TaskDetailsReducer);
 
   let breadcrumb = AddNavigation(headerName);
 
@@ -39,27 +41,15 @@ function DPRA() {
   let checkBU = toLower(bu) === toLower("Home Care") ? true : false;
 
   useEffect(() => {
-    let taskId;
-    if (TaskID) {
-      taskId = TaskID.split("_")[1];
+    dispatch(getTaskDetails(TaskID, ProjectID));
+  }, [dispatch, TaskID, ProjectID]);
+
+  useEffect(() => {
+    if (TaskDetailsData) {
+      setDesignIntent(TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
+      setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
     }
-
-    (async () => {
-      try {
-        const data1 = ProjectService.getDIData();
-        console.log("api data------>", data1);
-
-        // if (data1 && data1.Category && data1.Brand) {
-        //   data1.Category = convertCategoryIntoString(data1.Category);
-        //   data1.Brand = convertBrandIntoString(data1.Brand);
-        // }
-        data1 && setData(data1);
-        data1 && setDesignIntent(data1.Design_Intent_Details);
-      } catch (err) {
-        console.log("error", err);
-      }
-    })();
-  }, []);
+  },[TaskDetailsData]);
 
   const handleCancel = () => {
     return navigate(`/myTasks`);
@@ -165,7 +155,9 @@ function DPRA() {
       >
         {<AddNewDesign {...data} />}
 
-        {designIntent &&
+        {loading || designIntent === null ? 
+          <i className="pi pi-spin pi-spinner" style={{ fontSize: '2rem' }}></i>
+          : designIntent &&
           designIntent.length &&
           designIntent.map((item, index) => {
             if (item && item?.Action !== "delete") {
