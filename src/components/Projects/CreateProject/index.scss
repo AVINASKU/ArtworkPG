@@ -180,9 +180,22 @@ sup {
   color: red;
 }
 .error-text {
+  color: red !important;
+  font-weight: 400;
+  font-size: 12px;
   label {
     color: red !important;
   }
+  div {
+   border-radius: 0.375rem;
+    border: 1px solid red !important;
+  }
+  .tabular-add-project .form-control:focus, .tabular-add-project .p-inputwrapper-filled {
+     border: none; 
+    color: none;
+    // box-shadow: none !important; */
+    //  outline: none !important; */
+}
   .form-control,
   select,
   input {
@@ -420,6 +433,11 @@ sup {
   .form-select {
     max-width: 208px;
     min-height: 32px;
+    color: #595959;
+    font-size: 12px;
+  &:focus{
+    box-shadow: none;
+  }
   }
 
   .p-breadcrumb ul .pi-chevron-right:nth-child(3) {
@@ -436,4 +454,14 @@ sup {
       font-size: 10px;
     }
   }
+}
+
+.p-multiselect .p-multiselect-label.p-placeholder{
+  color:#595959;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.mb-4{
+  margin-bottom: 14px !important;
 }
