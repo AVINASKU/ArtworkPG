@@ -110,10 +110,12 @@ export default function CustomisedView({
                             {category === "Artwork_SMO" && "SMO"}
                             {category === "Artwork_Category" && "Category"}
                             {category === "Artwork_Brand" && "Brand"}
+                            {category === "Project_region" && "Region"}
                             {category &&
                               category !== "Artwork_SMO" &&
                               category !== "Artwork_Category" &&
                               category !== "Artwork_Brand" &&
+                              category !== "Project_region" &&
                               capitalizeFirstLetter(category)}
                           </label>
                         </div>
