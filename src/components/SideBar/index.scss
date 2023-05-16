@@ -7,14 +7,13 @@
   margin-left: -10px;
   margin-right: -8px;
   .active {
-    background: rgba(1, 104, 191, 0.05);
+    // background: rgba(1, 104, 191, 0.05);
     border-radius: 10px 0px 0px 10px;
     position: relative;
     color: #003da5;
     font-weight: 700;
-    
+
     img {
-      
       filter: invert(10%) sepia(100%) saturate(1200%) hue-rotate(190deg)
         brightness(90%) contrast(90%);
     }
@@ -23,10 +22,13 @@
     background: rgba(1, 104, 191, 0.07);
   }
 
-  .parent-link{
-  display: flex;
-  justify-content: space-evenly;
-  margin-left: -15px;
+  .parent-link {
+    display: flex;
+    justify-content: space-evenly;
+    margin-left: 5px !important;
+    flex-direction: column;
+    align-items: center; // center align icon and text horizontally
+    margin-left: -15px;
   }
   .parent-link.active {
     &::after {
@@ -43,25 +45,24 @@
 }
 
 .pg-logo {
-  width: 100px;
-  height: 100px;
+  width: 70px;
+  height: 66px;
 }
 .nav-item {
   width: 100%;
   ul {
     margin: 0;
   }
-  &:nth-child(3){ margin-top: 30px}
-  
+  &:nth-child(3) {
+    margin-top: 20px;
+  }
+
   a {
-    padding: 3px 6px 4px;
+    padding: 10px 2px 0px;
     color: #acacac;
     position: relative;
     align-items: center;
     justify-content: center;
-    
-    
-
   }
   &:nth-child(6) {
     a {
@@ -97,25 +98,24 @@
 .toggle-collapsed,
 .toggle-expanded {
   position: absolute;
-  right: 5%;
+  right: -12%;
   z-index: 1000;
   width: 200px;
   height: 44px;
   cursor: pointer;
   width: 24px;
   height: 24px;
-  top: 15px;
+  top: 30px;
   background: #fff;
-  
 }
 .toggle-collapsed {
-  right: -10% !important;
+  right: -16% !important;
+  top: 30px;
   height: auto;
-  top: 3%;
   transform: rotate(180deg);
 }
 .nav {
-  padding-top: 30px;
+  padding-top: 0px;
 }
 .add-project {
   border-top: 0.5px solid #acacac;
@@ -126,38 +126,40 @@
   //     padding-left: 15px;
   //   }
   .nav-item {
-    padding: 15px 0 0;
+    padding: 30px 0 0;
     font-size: 14px;
   }
-  .logout {
-    
-    color: #FF0000;
-    font-size: 16px;
-    font-weight: 400;
-    text-align: center;
-  }
+
   .button-layout {
     margin-left: 20px;
-    background: #003DA5;
+    background: #003da5;
     border-radius: 20px;
     padding: 16px 5px;
-    
+
     img {
       margin: 0 -10px 0 0;
     }
   }
 }
-.logo-title {
+.titleCollapse {
   font-size: 14px;
-  padding: 10px 0 0;
+  padding: 10px 0px 15px;
   font-weight: 500;
   color: #595959;
-  line-height: 1;
+  line-height: 1.5;
 }
-.logo{
-padding-top: 20px;
+.titleExpand {
+  margin-top: 10px;
+  font-size: 14px;
+  padding: 10px 10px -1px;
+  font-weight: 500;
+  color: #595959;
+  line-height: 1.5;
 }
-.add-project{
+.logo {
+  padding-top: 20px;
+}
+.add-project {
   img {
     width: 21px;
     height: 25px;
@@ -165,4 +167,36 @@ padding-top: 20px;
   }
 }
 
+.isToggle {
+  margin: auto;
+  padding: 40px;
+}
 
+.addProjectExpand {
+  border-top: 0.5px solid #acacac;
+  text-align: center;
+  width: 100%;
+  margin: 20px auto 0;
+  //   .collapse-img {
+  //     padding-left: 15px;
+  //   }
+  // .nav-item {
+  //   padding: 18px 0 0;
+  //   font-size: 14px;
+  // }
+  img {
+    width: 21px;
+    height: 25px;
+    cursor: pointer;
+  }
+}
+
+.tooltip {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+.toolname {
+  color: #007bff;
+  background: #e1edf8;
+}

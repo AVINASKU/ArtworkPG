@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { updateMode } from "../../store/actions/ProjectSetupActions";
 import { updateUser } from "../../apis/userApi";
+import { Tooltip, OverlayTrigger } from "react-bootstrap";
 
 const SideBar = () => {
   const location = useLocation();
@@ -37,7 +38,7 @@ const SideBar = () => {
     //   setExpandedIndex(null);
     // }
   };
-  const sidebarWidth = isToggle ? "220px" : "100px";
+  const sidebarWidth = isToggle ? "112px" : "68px";
   function toggleSubMenu(index) {
     setIsToggle(true);
 
@@ -68,6 +69,7 @@ const SideBar = () => {
     updateUser("", "");
     navigate("/");
   };
+
   const navItems = {
     data: [
       {
@@ -123,11 +125,13 @@ const SideBar = () => {
               alt="PG LOGO"
               className={`pg-logo ${!isToggle && "toggle-logo"}`}
             />
-            <p className="logo-title">Artwork Agility Suite</p>
+            <p className={!isToggle ? "titleCollapse" : "titleExpand"}>
+              Artwork Agility Suite
+            </p>
           </div>
           <Nav
             style={{
-              paddingTop: !isToggle && "10px",
+              paddingTop: !isToggle && "30px",
             }}
           >
             {navItems?.data?.map((item, index) => {
@@ -146,17 +150,35 @@ const SideBar = () => {
                     }
                   >
                     <NavLink
-                      // onClick={() => toggleSubMenu(index)}
                       className={`nav-link ${isToggle && "parent-link"}`}
                       to={item.url}
                     >
-                      <div>
-                        <img src={item.img} alt="logos" />
-                      </div>
+                      {isToggle ? (
+                        <>
+                          <div>
+                            <img src={item.img} alt="logos" />
+                          </div>
 
-                      <div>{item.name}</div>
+                          <div>{isToggle ? item.name : ""}</div>
+                        </>
+                      ) : (
+                        <OverlayTrigger
+                          defaultShow={true}
+                          placement="right"
+                          overlay={
+                            <Tooltip className="tooltip">
+                              <div className="toolname">{item.name}</div>
+                            </Tooltip>
+                          }
+                        >
+                          <div>
+                            <img src={item.img} alt="logos" />
+                          </div>
+                        </OverlayTrigger>
+                      )}
                     </NavLink>
-                    {expandedIndex === index && isToggle && (
+
+                    {/* {expandedIndex === index && isToggle && (
                       <ul>
                         {item.items.map((subItem, subIndex) => (
                           <NavItem
@@ -173,12 +195,12 @@ const SideBar = () => {
                           </NavItem>
                         ))}
                       </ul>
-                    )}
+                    )} */}
                   </NavItem>
                 );
               }
             })}
-            <div className="add-project">
+            <div className={!isToggle ? "add-project" : "addProjectExpand"}>
               <NavItem
                 to="/projectPlan"
                 state={{ mode: "create" }}
@@ -210,10 +232,11 @@ const SideBar = () => {
                       dispatch(updateMode("create"));
                     }}
                   >
-                    <Button className="button-layout">
-                      <img src={PlusImg} alt={PlusImg} />
-                      Create Project
-                    </Button>
+                    <img
+                      src={plusCollapseImg}
+                      className="collapse-img"
+                      alt=""
+                    ></img>
                   </NavLink>
                 )}
               </NavItem>
@@ -222,8 +245,11 @@ const SideBar = () => {
                   <img src={LogoutImg} className="collapse-img" alt="" />
                 ) : (
                   <NavLink to="/" className="nav-link">
-                    <img src={LogoutImg} alt="logout" />
-                    {isToggle && <span className="logout">Logout</span>}
+                    {isToggle && (
+                      <span className="logout">
+                        <img src={LogoutImg} alt="logout" />
+                      </span>
+                    )}
                   </NavLink>
                 )}
               </NavItem>
