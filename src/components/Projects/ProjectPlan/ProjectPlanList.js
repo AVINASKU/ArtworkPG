@@ -441,6 +441,7 @@ const ProjectPlanList = (props) => {
 
   const elementTemplate = (options, rowData) => {
     const field = rowData.field;
+    const optionsData = options.data;
     const currentUrl = location.pathname;
     let currentUrlLastSeg = currentUrl.split("/")[2];
     const key = options?.key;
@@ -451,19 +452,22 @@ const ProjectPlanList = (props) => {
       <>
         {field === "Task" && (
           <span
-            className={`${options.redirect === true ? "task-link" : "task"}`}
-            // style={{ color: "#003DA5", cursor: "pointer" }}
+            className={`${
+              options.redirect === true || optionsData.Task
+                ? "task-link"
+                : "task"
+            }`}
             onClick={() => {
               if (field && field.length && keyCode[0] !== "CPPFA") {
-                // dispatch(selectedProject(options.data, "My Projects"));
-                options.redirect === true &&
+                // dispatch(selectedProject(optionsData, "My Projects"));
+                (options.redirect === true || optionsData.Task) &&
                   navigate(`../${url}`, { replace: true });
               } else {
                 handleApproveDialogCPPFA(options);
               }
             }}
           >
-            {options.data[field]}
+            {optionsData[field]}
           </span>
         )}
 
@@ -492,9 +496,9 @@ const ProjectPlanList = (props) => {
                   onChange={(e) => onDropdownChange(options, e, field)}
                   options={
                     field === "Role"
-                      ? options.data["RoleOptions"]
+                      ? optionsData["RoleOptions"]
                       : field === "Owner"
-                      ? options.data["OwnerOptions"]
+                      ? optionsData["OwnerOptions"]
                       : []
                   }
                   optionLabel="Name"
@@ -516,7 +520,7 @@ const ProjectPlanList = (props) => {
                 )}
               </div>
             )}
-            {field === "State" && options.data[field] === "Complete" ? (
+            {field === "State" && optionsData[field] === "Complete" ? (
               <>
                 <img
                   src={complete}
@@ -527,10 +531,10 @@ const ProjectPlanList = (props) => {
                   className="iconsStyle"
                 />
                 <span className="iconsTextStyle" onClick={() => {}}>
-                  {options.data[field]}
+                  {optionsData[field]}
                 </span>
               </>
-            ) : field === "State" && options.data[field] === "In Progress" ? (
+            ) : field === "State" && optionsData[field] === "In Progress" ? (
               <>
                 <img
                   src={inprogress}
@@ -544,10 +548,10 @@ const ProjectPlanList = (props) => {
                   className="iconsTextStyle iconInprogress"
                   onClick={() => {}}
                 >
-                  {options.data[field]}
+                  {optionsData[field]}
                 </span>
               </>
-            ) : field === "State" && options.data[field] === "Available" ? (
+            ) : field === "State" && optionsData[field] === "Available" ? (
               <>
                 <img
                   src={available}
@@ -558,10 +562,10 @@ const ProjectPlanList = (props) => {
                   className="iconsStyle"
                 />
                 <span className="iconsTextStyle iconLock" onClick={() => {}}>
-                  {options.data[field]}
+                  {optionsData[field]}
                 </span>
               </>
-            ) : field === "State" && options.data[field] === "Awaiting" ? (
+            ) : field === "State" && optionsData[field] === "Awaiting" ? (
               <>
                 <img
                   src={Awaiting}
@@ -575,11 +579,11 @@ const ProjectPlanList = (props) => {
                   className="iconsTextStyle iconAwaiting"
                   onClick={() => {}}
                 >
-                  {options.data[field]}
+                  {optionsData[field]}
                 </span>
               </>
             ) : (
-              <>{field === "State" && options.data[field]}</>
+              <>{field === "State" && optionsData[field]}</>
             )}
             {field === "Duration" && (
               <InputNumber
@@ -598,13 +602,13 @@ const ProjectPlanList = (props) => {
             onClick={() => handleHelpNeededClick(options)}
             className="btn btn-success helpNeeded"
           >
-            {options.data[field] === "true" ? "YES" : "NO"}
+            {optionsData[field] === "true" ? "YES" : "NO"}
           </button>
         )}
 
-        {field === "StartDate" && changeDateFormat(options.data[field])}
+        {field === "StartDate" && changeDateFormat(optionsData[field])}
         {field === "EndDate" && (
-          <span>{changeDateFormat(options.data[field])}</span>
+          <span>{changeDateFormat(optionsData[field])}</span>
         )}
         {field !== "Task" &&
           field !== "Role" &&
@@ -613,7 +617,7 @@ const ProjectPlanList = (props) => {
           field !== "StartDate" &&
           field !== "EndDate" &&
           field !== "Duration" &&
-          field !== "HelpNeeded" && <>{options.data[field]}</>}
+          field !== "HelpNeeded" && <>{optionsData[field]}</>}
       </>
     );
   };
