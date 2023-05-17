@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import Accordion from "react-bootstrap/Accordion";
 import ProjectPlan from "./ProjectPlanList";
 import "primeicons/primeicons.css";
@@ -19,7 +20,10 @@ function ProjectPlanCompo(props) {
       ProjectPlanDesign
     );
     navigate("/myProjects");
+    setActiveFlag(!activeFlag);
   };
+
+  const [activeFlag, setActiveFlag] = useState(true);
 
   return (
     <>
@@ -40,33 +44,32 @@ function ProjectPlanCompo(props) {
         </Accordion.Item>
       </Accordion>
       <div className="form-buttons">
-        
-          
-          <Button
-            className="button-layout"
-            variant="secondary"
-            onClick={() => {}}
-          >
-            Cancel
-          </Button>
-         
-          <Button
-            className="button-layout"
-            variant="secondary"
-            onClick={() => {}}
-          >
-            Save
-          </Button>
-         
-          <Button
-            className="button-layout"
-            variant="primary"
-            onClick={activate}
-          >
-            Activate
-          </Button>
-          
-        
+        <Button
+          className="button-layout"
+          variant="secondary"
+          onClick={() => {}}
+        >
+          Cancel
+        </Button>
+
+        <Button
+          className="button-layout"
+          variant="secondary"
+          onClick={() => {
+            setActiveFlag(!activeFlag);
+          }}
+        >
+          Save
+        </Button>
+
+        <Button
+          className="button-layout"
+          variant="primary"
+          onClick={activate}
+          disabled={activeFlag}
+        >
+          Activate
+        </Button>
       </div>
     </>
   );
