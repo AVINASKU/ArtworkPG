@@ -109,6 +109,7 @@ const SideBar = () => {
         className="left-grid"
         style={{
           width: sidebarWidth,
+          padding: 0,
           transition: "width 0.3s ease-in-out",
         }}
       >
@@ -236,7 +237,7 @@ const SideBar = () => {
                       className="collapse-img"
                       alt=""
                     ></img>
-                    <br />
+
                     <p className="create"> Create Project </p>
                   </NavLink>
                 )}
