@@ -7,7 +7,7 @@ import MyProjects from "./components/Projects/MyProjects/index.js";
 import ProjectCreation from "./projectCreation.js";
 import Login from "./login.js";
 import DDI from "./components/AWMJobs/DDI/index.js";
-import ApproveDesignIntent from "./components/AWMJobs/DDI/ApproveDesignIntent";
+import UADI from "./components/AWMJobs/UADI";
 import AllTasksPage from "./AllTaksPage.js";
 import MyTasksPage from "./MyTaskPage.js";
 import DDT from "./components/AWMJobs/DDT/index.js";
@@ -45,11 +45,11 @@ const RoutesNav = () => {
         />
         <Route
           path="/myTasks/UADI/:TaskID/:ProjectID"
-          element={<ApproveDesignIntent />}
+          element={<UADI />}
         />
         <Route
           path="/allTasks/UADI/:TaskID/:ProjectID"
-          element={<ApproveDesignIntent />}
+          element={<UADI />}
         />
         <Route path="/myTasks/DDT/:TaskID/:ProjectID" element={<DDT />} />
         <Route path="/allTasks/DDT/:TaskID/:ProjectID" element={<DDT />} />
