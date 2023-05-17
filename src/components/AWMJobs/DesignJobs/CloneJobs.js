@@ -50,7 +50,25 @@ const CloneJobs = ({
   const locationPath = location?.pathname;
   const url = locationPath?.split("/");
   const pathName = url[2];
-  const disabledCPT = pathName === "CPT" ? true : false;
+  let showPage;
+  switch (pathName) {
+    case "DNPF":
+      showPage = "DNPF";
+      // Code to execute when pathName is 'DNPF'
+      break;
+    case "CCD":
+      showPage = "CCD";
+      // Code to execute when pathName is 'CCD'
+      break;
+    case "CPT":
+      showPage = "CPT";
+      // Code to execute when pathName is 'CPT'
+      break;
+    default:
+      // Code to execute when pathName is none of the specified values
+      break;
+  }
+
   useEffect(() => {
     setChecked(Select);
   }, [Select]);
@@ -62,7 +80,7 @@ const CloneJobs = ({
   }, [PrintTrail, CDConfirmed, PTConfirmed]);
 
   useEffect(() => {
-    if (!disabledCPT) {
+    if (showPage === "CCD" || showPage === "CPT") {
       if (printerProcess && substrateData && printTrailNeeded && checked) {
         setFormValid(false);
       } else {
@@ -101,7 +119,9 @@ const CloneJobs = ({
           src={deleteIcon}
           alt="filter logo"
           onClick={() => handleDelete(index)}
-          className={`delete-icons ${disabledCPT && "disabled-add"}`}
+          className={`delete-icons ${
+            showPage === "CCD" || (showPage === "CPT" && "disabled-add")
+          }`}
           disabled={event === "submit" && disabled}
         />
       </>
@@ -186,7 +206,7 @@ const CloneJobs = ({
               optionLabel="label"
               filter
               aria-describedby="agency-help"
-              disabled={disabledCPT}
+              disabled={(showPage === "CCD" || showPage === "CPT") && true}
               placeholder="Select Printer Process"
             />
           </div>
@@ -210,7 +230,7 @@ const CloneJobs = ({
                 setPrinterProcess(e.target.value);
               }}
               aria-describedby="cluster-help"
-              disabled={disabledCPT}
+              disabled={(showPage === "CCD" || showPage === "CPT") && true}
             />
           </div>
           {/* {(printers === "" || printers === undefined) && (
@@ -236,7 +256,7 @@ const CloneJobs = ({
                 setSubstarteData(e.target.value);
               }}
               aria-describedby="cluster-help"
-              disabled={disabledCPT}
+              disabled={(showPage === "CCD" || showPage === "CPT") && true}
             />
           </div>
           {/* {(substrateData === "" || substrateData === undefined) && (
@@ -254,7 +274,7 @@ const CloneJobs = ({
                 setAdditionalInfo(e.target.value);
               }}
               aria-describedby="info-help"
-              disabled={disabledCPT}
+              disabled={(showPage === "CCD" || showPage === "CPT") && true}
             />
           </div>
         </Col>
@@ -269,18 +289,23 @@ const CloneJobs = ({
                     e.checked && setFormValid(false);
                   }}
                   checked={event === "submit" ? true : printTrailNeeded}
-                  disabled={disabledCPT}
-                  className={disabledCPT && "disabled-text"}
+                  disabled={(showPage === "CCD" || showPage === "CPT") && true}
+                  className={
+                    (showPage === "CCD" || showPage === "CPT") &&
+                    "disabled-text"
+                  }
                 ></Checkbox>
               </div>
               <label
                 htmlFor="printTrailNeeded"
-                className={disabledCPT && "disabled-text"}
+                className={
+                  (showPage === "CCD" || showPage === "CPT") && "disabled-text"
+                }
               >
                 Print Trail Needed
               </label>
             </div>
-            {disabledCPT && (
+            {(showPage === "CCD" || showPage === "CPT") && (
               <>
                 <div className="print-trial">
                   <div>
@@ -301,7 +326,9 @@ const CloneJobs = ({
                     <Checkbox
                       onChange={(e) => {
                         setPrintTrailDone(e.checked);
-                        disabledCPT && e.checked && setFormValid(false);
+                        (showPage === "CCD" || showPage === "CPT") &&
+                          e.checked &&
+                          setFormValid(false);
                       }}
                       checked={event === "submit" ? true : printTrailDone}
                       className="margin-right"
@@ -322,7 +349,7 @@ const CloneJobs = ({
             )}
           </div>
         </Col>
-        {!disabledCPT && (
+        {showPage === "DNPF" && (
           <Col sm={1}>
             <label htmlFor="select"> Select</label>
             <div>
@@ -339,7 +366,7 @@ const CloneJobs = ({
           </Col>
         )}
 
-        {disabledCPT && (
+        {(showPage === "CCD" || showPage === "CPT") && (
           <Col sm={1}>
             <div>
               <label htmlFor="select"> Upload File</label>

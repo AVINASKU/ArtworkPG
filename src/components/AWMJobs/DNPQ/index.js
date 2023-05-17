@@ -10,12 +10,11 @@ import "../DesignJobs/index.scss";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import CloneJobs from "../DesignJobs/CloneJobs";
-import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
 import "./index.scss";
 import CDHeader from "../DesignJobs/CDHeader";
-const breadcrumb = [{ label: "Confirm Color Development & Print Trial" }];
+const breadcrumb = [{ label: "Define Color Development" }];
 
-const headerName = "Confirm Color Development & Print Trial";
+const headerName = "Define Color Development";
 const jobName = "CD_";
 
 function CCD() {
@@ -48,21 +47,49 @@ function CCD() {
     return navigate(`/myTasks`);
   };
 
+  const handleDelete = (index) => {
+    const sub = CD?.map((item, i) => {
+      if (i === index) {
+        item.Action = "delete";
+      }
+      return item;
+    });
+    // console.log("index here", sub1);
+    // const sub = subProject.splice(index,1);
+
+    setCD(sub);
+  };
+
   const addNewEmptyDesign = () => {
     const newDesignIntent = [
       ...CD,
       {
-        CD_Job_ID: CD.length + 1,
+        Design_Job_ID: CD.length + 1,
         isNew: true,
-        CD_Job_Name: "",
-        Printer_Process: "",
+        Print_Trial_Done: null,
+        Tier: "",
+        Cluster: "",
+        Agency_Reference: "",
+        Printer: "",
+        Printing_Process: "",
+        Design_Job_Name: "",
         Substrate: "",
         Additional_Info: "",
-        Select: false,
+        CD_Approved: null,
+        Select: null,
+        Print_Trial_Needed: null,
       },
     ];
     setCD(newDesignIntent);
     setUpdated(!updated);
+  };
+
+  const addData = (fieldName, index, value, Design_Intent_Name) => {
+    let data = CD[index];
+    data[fieldName] = value;
+    data["CD_Job_Name"] = Design_Intent_Name;
+    submittedDI.push(data);
+    setSubmittedDI(submittedDI);
   };
 
   const onSelectAll = (checked) => {
@@ -76,13 +103,12 @@ function CCD() {
     setUpdated(!updated);
   };
 
-  const onSubmit = async () => {
+  const onSubmit = () => {
     let submitOnlySelectedData = CD?.filter((task) => task?.Select === true);
     submitOnlySelectedData.map((task) => {
       task.Event = "submit";
     });
     console.log("full submit data --->", submitOnlySelectedData);
-    await dispatch(uploadFileAzure());
   };
 
   const onSaveAsDraft = async () => {
@@ -118,8 +144,7 @@ function CCD() {
         onSelectAll={onSelectAll}
         breadcrumb={breadcrumb}
         headerName={headerName}
-        label="Confirm Color Development"
-        disabled={true}
+        label="Define Color Development"
       />
       <div
         style={{
@@ -130,14 +155,17 @@ function CCD() {
         }}
       >
         {<TaskHeader {...data} />}
+
         {CD.map((item, index) => {
           if (item && item?.Action !== "delete") {
             return (
               <CloneJobs
-                key={item.CD_Job_ID}
+                key={item.Design_Job_ID}
                 {...data}
                 item={item}
                 index={index}
+                addData={addData}
+                handleDelete={handleDelete}
                 jobName={jobName}
                 setFormValid={setFormValid}
               />

@@ -878,7 +878,7 @@ function AddProject(props) {
                 <Form.Label>Project Description</Form.Label>
                 <textarea
                   type="text"
-                  style={{ height: "97px" }}
+                  style={{ height: "105px" }}
                   className="form-control"
                   placeholder="Enter Project Description"
                   onChange={(e) => setProjectDesc(e.target.value)}
@@ -1221,7 +1221,6 @@ function AddProject(props) {
                 className={`mb-3 ${!printerDate && "error-valid"}`}
                 controlId="sop.readiness"
               >
-
                 <Form.Label>
                   Estimated AW@Printer<sup>*</sup>{" "}
                 </Form.Label>
@@ -1305,7 +1304,7 @@ function AddProject(props) {
                   <Form.Select
                     value={pm}
                     onChange={handlePM}
-                    disabled={mode === "edit" ? true : false}
+                    disabled={mode === "create" && true}
                   >
                     <option value="">Select PM</option>
                     {PMValues.map((r) => (
@@ -1324,7 +1323,7 @@ function AddProject(props) {
                 <Form.Label>Comments</Form.Label>
                 <textarea
                   type="text"
-                  style={{ height: "114px" }}
+                  style={{ height: "108px" }}
                   className="form-control"
                   placeholder="Add Comments"
                   onChange={(e) => setComments(e.target.value)}

@@ -38,7 +38,6 @@ const TaskList = (props) => {
     });
 
     if (!myTasks || myTasks.length === 0) {
-      console.log("No records found");
       return [];
     }
     return myTasks;
@@ -165,7 +164,7 @@ const TaskList = (props) => {
   const dt = useRef(null);
   const headerColumns = [
     "Project_Name",
-    "Task",
+    "Task_Name",
     "Status",
     "Help_Needed",
     "Remaining_Buffer",
@@ -258,7 +257,7 @@ const TaskList = (props) => {
     return (
       <div>
         <>
-          {options === "Task" && (
+          {options === "Task_Name" && (
             <input
               type="checkbox"
               checked={selectAllChecked}
@@ -281,7 +280,7 @@ const TaskList = (props) => {
               isFilterActivated && "filter-color-change"
             }`}
           >
-            {options?.replace(/_/g, " ")}
+            {options === "Task_Name" ? "Task" : options?.replace(/_/g, " ")}
           </span>
         </>
       </div>
@@ -319,18 +318,28 @@ const TaskList = (props) => {
 
   const helpNeededBodyTemplate = (rowData) => {
     let className = "";
-    let helpNeeded = rowData?.Help_Needed;
-    switch (helpNeeded) {
-      case null:
+    let helpNeeded;
+
+    if (rowData) {
+      rowData["Help_Needed"] =
+        rowData["Help_Needed"] === null
+          ? "No"
+          : rowData["Help_Needed"] === true
+          ? "Yes, In process"
+          : "Yes, Done";
+    }
+
+    switch (rowData?.Help_Needed) {
+      case "No":
         helpNeeded = "No";
         className = "helpneeded_no";
         break;
-      case true:
+      case "Yes, In process":
         helpNeeded = "Yes, In process";
         className = "helpneeded_inprocess";
         break;
-      case false:
-        helpNeeded = "Yes, Done";
+      case "Yes, Done":
+        rowData["Help_Needed"] = "Yes, Done";
         className = "helpneeded_done";
         break;
       default:
@@ -338,7 +347,7 @@ const TaskList = (props) => {
         break;
     }
 
-    return <span className={className}>{helpNeeded}</span>;
+    return <span className={className}>{rowData["Help_Needed"]}</span>;
   };
 
   const statusTemplate = (rowData) => {
@@ -358,7 +367,7 @@ const TaskList = (props) => {
       return TaskService.getMyTaskColumnNames()
         .slice(0, 5)
         .map((ele, i) => {
-          const checkBoxAdded = ele === "Task" ? "checkbox-added" : "";
+          const checkBoxAdded = ele === "Task_Name" ? "checkbox-added" : "";
           return (
             <Column
               key={ele}
@@ -371,7 +380,7 @@ const TaskList = (props) => {
               classNme={checkBoxAdded}
               filterPlaceholder="Search"
               body={
-                (ele === "Task" && taskBodyTemplate) ||
+                (ele === "Task_Name" && taskBodyTemplate) ||
                 (ele === "Help_Needed" && helpNeededBodyTemplate) ||
                 (ele === "Status" && statusTemplate)
               }
@@ -384,7 +393,7 @@ const TaskList = (props) => {
       TaskService.getMyTaskColumnNames().length
     ) {
       return TaskService.getMyTaskColumnNames().map((ele, i) => {
-        const checkBoxAdded = ele === "Task" ? "checkbox-added" : "";
+        const checkBoxAdded = ele === "Task_Name" ? "checkbox-added" : "";
         return (
           <Column
             key={ele}
@@ -397,7 +406,7 @@ const TaskList = (props) => {
             classNme={checkBoxAdded}
             filterPlaceholder="Search"
             body={
-              (ele === "Task" && taskBodyTemplate) ||
+              (ele === "Task_Name" && taskBodyTemplate) ||
               (ele === "Help_Needed" && helpNeededBodyTemplate) ||
               (ele === "Status" && statusTemplate) ||
               (ele === "PM" && assigneeTemplate)

@@ -146,8 +146,8 @@ const ProjectListHeader = ({
               type="button"
               className={
                 isResetEnabled
-                  ? "btn btn-secondary reset-to-default-view"
-                  : " btn btn-secondary"
+                  ? "btn btn-primary reset-to-default-view"
+                  : "btn btn-secondary"
               }
               onClick={() => clearFilters()}
             >
