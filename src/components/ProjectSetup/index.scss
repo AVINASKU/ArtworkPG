@@ -79,7 +79,7 @@ $width: 100%;
 
 .projectPlanButtons {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   margin-right: 13px;
 
   & label {
@@ -125,7 +125,7 @@ $width: 100%;
 }
 
 .ganttChartTabular {
-  background-color: #003DA5 !important;
+  background-color: #003da5 !important;
   color: #ffffff !important;
 }
 
@@ -133,15 +133,19 @@ $width: 100%;
   background-color: #003da5;
 }
 
-.AccordionIndent>.accordion>.accordion-item>.accordion-header {
+.AccordionIndent > .accordion > .accordion-item > .accordion-header {
   position: relative !important;
 }
 
-.AccordionIndent>.accordion>.accordion-item>.accordion-header>button {
+.AccordionIndent > .accordion > .accordion-item > .accordion-header > button {
   height: 25px;
 }
 
-.AccordionIndent>.accordion>.accordion-item>.accordion-header>button::after {
+.AccordionIndent
+  > .accordion
+  > .accordion-item
+  > .accordion-header
+  > button::after {
   position: absolute !important;
   margin-left: 110px !important;
 }
@@ -153,18 +157,18 @@ $width: 100%;
   padding: 10px 18px 10px 18px;
   margin-right: 9px;
   background-color: #ffffff !important;
-  color: #003DA5;
+  color: #003da5;
   line-height: 12px;
 }
 
 #projectActions:hover {
-  background-color: #003DA5 !important;
+  background-color: #003da5 !important;
   color: #ffffff;
 }
 
 .breadCrumbParent {
   .dropdown-menu.show {
-    border: 0.5px solid #003DA5 !important;
+    border: 0.5px solid #003da5 !important;
     border-radius: 8px;
     margin-top: 8px !important;
     box-shadow: 0 6px 16px 0 rgba(89, 89, 89, 0.24);

@@ -1,0 +1,54 @@
+#printer,
+#substrate,
+#printers {
+  box-shadow: none !important;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  border: 1px solid #acacac !important;
+  width: 150px;
+  .p-inputtext {
+    background: #ffffff;
+    border: 0;
+    width: 100%;
+    font-size: 12px;
+  }
+  input {
+    border-radius: 5px;
+    box-shadow: none !important;
+  }
+  .p-button.p-button-icon-only {
+    background: transparent;
+    color: #acacac;
+    border: 0;
+    height: 33px;
+  }
+}
+.label-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  label {
+    font-size: 12px;
+  }
+  .pi {
+    font-size: 12px;
+  }
+  .p-multiselect .p-multiselect-trigger,
+  .p-multiselect .p-multiselect-label {
+    font-size: 12px;
+  }
+  .p-multiselect-label-container {
+    height: 34px;
+  }
+}
+.print-trial {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.print-trial:nth-child(1) {
+  margin-top: 20px;
+}

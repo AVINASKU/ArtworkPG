@@ -16,6 +16,7 @@ import CCD from "./components/AWMJobs/CCD/index.js";
 import DCD from "./components/AWMJobs/DCD/index.js";
 import CNIQ from "./components/AWMJobs/CNIQ/index.js";
 import CPT from "./components/AWMJobs/CPT/index.js";
+import DNPF from "./components/AWMJobs/DNPF/index.js";
 import ADT from "./components/AWMJobs/ADT/index.js";
 import APRA from "./components/AWMJobs/APRA/index.js";
 import UPRA from "./components/AWMJobs/UPRA/index.js";
@@ -35,14 +36,8 @@ const RoutesNav = () => {
         {/* <Route path="/createProject" element={<AddProject />} /> */}
         <Route path="/projectPlan" element={<ProjectCreation />} />
         <Route path="/projectPlan/:ProjectID" element={<ProjectCreation />} />
-        <Route
-          path="/myTasks/DDI/:TaskID/:ProjectID"
-          element={<DDI />}
-        />
-        <Route
-          path="/allTasks/DDI/:TaskID/:ProjectID"
-          element={<DDI />}
-        />
+        <Route path="/myTasks/DDI/:TaskID/:ProjectID" element={<DDI />} />
+        <Route path="/allTasks/DDI/:TaskID/:ProjectID" element={<DDI />} />
         <Route
           path="/myTasks/UADI/:TaskID/:ProjectID"
           element={<ApproveDesignIntent />}
@@ -57,10 +52,8 @@ const RoutesNav = () => {
         <Route path="/allTasks/ADT/:TaskID/:ProjectID" element={<ADT />} />
         <Route path="/myTasks/UDT/:TaskID/:ProjectID" element={<UDT />} />
         <Route path="/allTasks/UDT/:TaskID/:ProjectID" element={<UDT />} />
-
         <Route path="/myTasks/DPRA/:TaskID/:ProjectID" element={<DPRA />} />
         <Route path="/allTasks/DPRA/:TaskID/:ProjectID" element={<DPRA />} />
-
         <Route path="/myTasks/APRA/:TaskID/:ProjectID" element={<APRA />} />
         <Route path="/allTasks/APRA/:TaskID/:ProjectID" element={<APRA />} />
         <Route path="/myTasks/UPRA/:TaskID/:ProjectID" element={<UPRA />} />
@@ -74,6 +67,8 @@ const RoutesNav = () => {
         <Route path="/allTasks/CPPFA/:TaskID/:ProjectID" element={<CPPFA />} />
         <Route path="/myTasks/CPT/:TaskID/:ProjectID" element={<CPT />} />
         <Route path="/allTasks/CPT/:TaskID/:ProjectID" element={<CPT />} />
+        <Route path="/myTasks/DNPF/:TaskID/:ProjectID" element={<DNPF />} />
+        <Route path="/allTasks/DNPF/:TaskID/:ProjectID" element={<DNPF />} />
         <Route path="/myTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
         <Route path="/allTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
         {/* <Route path="/reports" element={<Reports />} /> */}

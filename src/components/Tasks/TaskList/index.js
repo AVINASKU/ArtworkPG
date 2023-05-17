@@ -164,7 +164,7 @@ const TaskList = (props) => {
   const dt = useRef(null);
   const headerColumns = [
     "Project_Name",
-    "Task",
+    "Task_Name",
     "Status",
     "Help_Needed",
     "Remaining_Buffer",
@@ -257,7 +257,7 @@ const TaskList = (props) => {
     return (
       <div>
         <>
-          {options === "Task" && (
+          {options === "Task_Name" && (
             <input
               type="checkbox"
               checked={selectAllChecked}
@@ -280,7 +280,7 @@ const TaskList = (props) => {
               isFilterActivated && "filter-color-change"
             }`}
           >
-            {options?.replace(/_/g, " ")}
+            {options === "Task_Name" ? "Task" : options?.replace(/_/g, " ")}
           </span>
         </>
       </div>
@@ -367,7 +367,7 @@ const TaskList = (props) => {
       return TaskService.getMyTaskColumnNames()
         .slice(0, 5)
         .map((ele, i) => {
-          const checkBoxAdded = ele === "Task" ? "checkbox-added" : "";
+          const checkBoxAdded = ele === "Task_Name" ? "checkbox-added" : "";
           return (
             <Column
               key={ele}
@@ -380,7 +380,7 @@ const TaskList = (props) => {
               classNme={checkBoxAdded}
               filterPlaceholder="Search"
               body={
-                (ele === "Task" && taskBodyTemplate) ||
+                (ele === "Task_Name" && taskBodyTemplate) ||
                 (ele === "Help_Needed" && helpNeededBodyTemplate) ||
                 (ele === "Status" && statusTemplate)
               }
@@ -393,7 +393,7 @@ const TaskList = (props) => {
       TaskService.getMyTaskColumnNames().length
     ) {
       return TaskService.getMyTaskColumnNames().map((ele, i) => {
-        const checkBoxAdded = ele === "Task" ? "checkbox-added" : "";
+        const checkBoxAdded = ele === "Task_Name" ? "checkbox-added" : "";
         return (
           <Column
             key={ele}
@@ -406,7 +406,7 @@ const TaskList = (props) => {
             classNme={checkBoxAdded}
             filterPlaceholder="Search"
             body={
-              (ele === "Task" && taskBodyTemplate) ||
+              (ele === "Task_Name" && taskBodyTemplate) ||
               (ele === "Help_Needed" && helpNeededBodyTemplate) ||
               (ele === "Status" && statusTemplate) ||
               (ele === "PM" && assigneeTemplate)
