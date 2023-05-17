@@ -187,15 +187,16 @@ sup {
     color: red !important;
   }
   div {
-   border-radius: 0.375rem;
+    border-radius: 0.375rem;
     border: 1px solid red !important;
   }
-  .tabular-add-project .form-control:focus, .tabular-add-project .p-inputwrapper-filled {
-     border: none; 
+  .tabular-add-project .form-control:focus,
+  .tabular-add-project .p-inputwrapper-filled {
+    border: none;
     color: none;
     // box-shadow: none !important; */
     //  outline: none !important; */
-}
+  }
   .form-control,
   select,
   input {
@@ -435,9 +436,9 @@ sup {
     min-height: 32px;
     color: #595959;
     font-size: 12px;
-  &:focus{
-    box-shadow: none;
-  }
+    &:focus {
+      box-shadow: none;
+    }
   }
 
   .p-breadcrumb ul .pi-chevron-right:nth-child(3) {
@@ -456,12 +457,12 @@ sup {
   }
 }
 
-.p-multiselect .p-multiselect-label.p-placeholder{
-  color:#595959;
+.p-multiselect .p-multiselect-label.p-placeholder {
+  color: #595959;
   font-size: 12px;
   font-weight: 500;
 }
 
-.mb-4{
+.mb-4 {
   margin-bottom: 14px !important;
 }

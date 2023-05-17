@@ -45,8 +45,8 @@
 }
 
 .pg-logo {
-  width: 70px;
-  height: 66px;
+  width: 38px;
+  height: 36px;
 }
 .nav-item {
   width: 100%;
@@ -105,14 +105,16 @@
   cursor: pointer;
   width: 24px;
   height: 24px;
-  top: 30px;
-  background: #fff;
+  top: 95px;
+  background: #ffffff;
+  border-radius: 99px;
 }
 .toggle-collapsed {
   right: -16% !important;
-  top: 30px;
+  top: 95px;
   height: auto;
   transform: rotate(180deg);
+  border-radius: 99px;
 }
 .nav {
   padding-top: 0px;
@@ -142,16 +144,16 @@
   }
 }
 .titleCollapse {
-  font-size: 14px;
+  font-size: 11px;
   padding: 10px 0px 15px;
   font-weight: 500;
   color: #595959;
   line-height: 1.5;
 }
 .titleExpand {
-  margin-top: 10px;
+  margin-top: 4px;
   font-size: 14px;
-  padding: 10px 10px -1px;
+  // padding: 10px 10px -1px;
   font-weight: 500;
   color: #595959;
   line-height: 1.5;
@@ -185,18 +187,44 @@
   //   font-size: 14px;
   // }
   img {
-    width: 21px;
-    height: 25px;
+    width: 24px;
+    height: 24px;
     cursor: pointer;
   }
 }
 
+//=============================================//tooltip
+
 .tooltip {
   color: #fff;
-  background-color: #007bff;
+  background-color: transparent;
   border-color: #007bff;
+  margin-top: 0%;
+  margin-left: -2%;
+  z-index: 10000000 !important;
+}
+.tooltip-inner {
+  background-color: #e1edf8;
 }
 .toolname {
-  color: #007bff;
-  background: #e1edf8;
+  color: #003da5;
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  background: transparent;
+}
+.bs-tooltip-end .tooltip-arrow::before,
+.bs-tooltip-auto[data-popper-placement^="right"] .tooltip-arrow::before {
+  border-right-color: #e1edf8;
+}
+.create {
+  color: #595959;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: "Montserrat";
+  font-style: normal;
+
+  padding-top: 10px;
+  margin-left: 7px;
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Nav, NavItem, Button } from "react-bootstrap";
+import { Nav, NavItem, Button, FormLabel } from "react-bootstrap";
 import { NavLink, useLocation } from "react-router-dom";
 import PgLogo from "../../assets/images/logo.svg";
 import ReportsImg from "../../assets/images/projects.svg";
@@ -131,7 +131,7 @@ const SideBar = () => {
           </div>
           <Nav
             style={{
-              paddingTop: !isToggle && "30px",
+              paddingTop: !isToggle && "15px",
             }}
           >
             {navItems?.data?.map((item, index) => {
@@ -163,7 +163,6 @@ const SideBar = () => {
                         </>
                       ) : (
                         <OverlayTrigger
-                          defaultShow={true}
                           placement="right"
                           overlay={
                             <Tooltip className="tooltip">
@@ -237,6 +236,8 @@ const SideBar = () => {
                       className="collapse-img"
                       alt=""
                     ></img>
+                    <br />
+                    <p className="create"> Create Project </p>
                   </NavLink>
                 )}
               </NavItem>
