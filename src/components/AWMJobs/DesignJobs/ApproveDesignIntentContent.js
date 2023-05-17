@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { FileUpload } from "primereact/fileupload";
 import { Image } from "primereact/image";
 import { Tag } from "primereact/tag";
@@ -8,7 +8,32 @@ const ApproveDesignIntentContent = ({
   upload,
   approve,
   file_name,
+  customBase64Uploader
 }) => {
+  const [totalSize, setTotalSize] = useState(0);
+  const fileUploadRef = useRef(null);
+
+  const onTemplateUpload = (e) => {
+    let _totalSize = 0;
+
+    e.files.forEach((file) => {
+      _totalSize += file.size || 0;
+    });
+
+    setTotalSize(_totalSize);
+   
+  };
+  const onTemplateSelect = (e) => {
+    let _totalSize = totalSize;
+    let files = e.files;
+
+    Object.keys(files).forEach((key) => {
+      _totalSize += files[key].size || 0;
+    });
+
+    setTotalSize(_totalSize);
+  };
+
   const DesignHeader = (di_name) => {
     return (
       <>
@@ -39,40 +64,10 @@ const ApproveDesignIntentContent = ({
     );
   };
 
-  const customBase64Uploader = async (event) => {
-    console.log("hello pranali");
-    // convert file to base64 encoded
-    const file = event.files[0];
-    const reader = new FileReader();
-    let blob = await fetch(file.objectURL).then((r) => r.blob()); //blob:url
-
-    reader.readAsDataURL(blob);
-    console.log("file", reader);
-
-    reader.onloadend = function () {
-      const base64data = reader.result;
-      console.log("base 64", base64data);
-    };
-  };
-
-  const chooseOptions = {
-    icon: "pi pi-fw pi-upload",
-    iconOnly: true,
-    className: "custom-choose-btn p-button-rounded p-button-outlined",
-  };
-
-  const onTemplateUpload = (e) => {
-    let _totalSize = 0;
-
-    e.files.forEach((file) => {
-      _totalSize += file.size || 0;
-    });
-
-    // setTotalSize(_totalSize);
-    // toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
-  };
+  
 
   return (
+    
     <div>
       <div className="design-intent-header">
         {DesignHeader(Design_Intent_Name)}
@@ -87,14 +82,16 @@ const ApproveDesignIntentContent = ({
           >
             <div>Upload</div>
             <FileUpload
+              ref={fileUploadRef}
               name="demo[]"
-              url={"/api/upload"}
+              url="/api/upload"
               accept="image/*"
               maxFileSize={1000000}
-              mode="basic"
+              customUpload
+              uploadHandler={(e) => customBase64Uploader(e)}
               onUpload={onTemplateUpload}
-              chooseLabel="Browse"
-            />{" "}
+              onSelect={onTemplateSelect}
+            />
           </div>
         )}
         {approve && (
@@ -112,10 +109,10 @@ const ApproveDesignIntentContent = ({
             />
             <div
               style={{
-                color: "#003DA5",
+                color: '#003DA5',
                 fontSize: 12,
                 width: 150,
-                cursor: "pointer",
+                cursor: 'pointer',
               }}
             >
               {file_name}

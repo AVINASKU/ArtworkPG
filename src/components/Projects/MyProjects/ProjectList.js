@@ -553,7 +553,9 @@ const ProjectList = (props) => {
           filters={searchHeader}
           filterDisplay={isSearch && "row"}
           ref={dt}
-          tableStyle={{ minWidth: "50rem" }}
+          // tableStyle={{ minWidth: "50rem" }}
+          tableStyle={{ width: "max-content" }}
+          autoLayout={true}
         >
           {dynamicColumns()}
         </DataTable>
