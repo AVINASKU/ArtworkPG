@@ -38,7 +38,6 @@ const TaskList = (props) => {
     });
 
     if (!myTasks || myTasks.length === 0) {
-      console.log("No records found");
       return [];
     }
     return myTasks;
@@ -319,18 +318,28 @@ const TaskList = (props) => {
 
   const helpNeededBodyTemplate = (rowData) => {
     let className = "";
-    let helpNeeded = rowData?.Help_Needed;
-    switch (helpNeeded) {
-      case null:
+    let helpNeeded;
+
+    if (rowData) {
+      rowData["Help_Needed"] =
+        rowData["Help_Needed"] === null
+          ? "No"
+          : rowData["Help_Needed"] === true
+          ? "Yes, In process"
+          : "Yes, Done";
+    }
+
+    switch (rowData?.Help_Needed) {
+      case "No":
         helpNeeded = "No";
         className = "helpneeded_no";
         break;
-      case true:
+      case "Yes, In process":
         helpNeeded = "Yes, In process";
         className = "helpneeded_inprocess";
         break;
-      case false:
-        helpNeeded = "Yes, Done";
+      case "Yes, Done":
+        rowData["Help_Needed"] = "Yes, Done";
         className = "helpneeded_done";
         break;
       default:
@@ -338,7 +347,7 @@ const TaskList = (props) => {
         break;
     }
 
-    return <span className={className}>{helpNeeded}</span>;
+    return <span className={className}>{rowData["Help_Needed"]}</span>;
   };
 
   const statusTemplate = (rowData) => {

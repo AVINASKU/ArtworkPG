@@ -336,7 +336,7 @@ sup {
     appearance: none;
     border-radius: 4px;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    // height: 40px;
+    height: 32px;
     box-shadow: none !important;
     outline: none !important;
   }
@@ -415,20 +415,21 @@ sup {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     border: 0 !important;
-    height: 32px;
+    height: 30px;
   }
   .p-button,
   .p-button:hover {
     color: #adadad !important;
     background: #fff !important;
     border-radius: 6px;
-    height: 32px;
+    height: 30px;
     border: 0;
   }
   .p-calendar {
     border-radius: 4px;
     border: 1px solid #adadad;
     min-width: 208px;
+    height: 32px;
   }
 
   .form-select {
@@ -461,6 +462,7 @@ sup {
   color: #595959;
   font-size: 12px;
   font-weight: 500;
+  height: 32px;
 }
 
 .mb-4 {
