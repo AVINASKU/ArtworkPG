@@ -1304,7 +1304,7 @@ function AddProject(props) {
                   <Form.Select
                     value={pm}
                     onChange={handlePM}
-                    disabled={mode === "edit" ? true : false}
+                    disabled={mode === "create" && true}
                   >
                     <option value="">Select PM</option>
                     {PMValues.map((r) => (
