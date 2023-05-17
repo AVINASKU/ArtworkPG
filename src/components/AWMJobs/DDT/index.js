@@ -6,15 +6,15 @@ import AddNewDesignContent from "../DesignJobs/AddNewDesignContent";
 import FooterButtons from "../DesignJobs/FooterButtons";
 // import { saveDesignIntent } from "../../../apis/designIntentApi";
 import "../DesignJobs/index.scss";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { ProjectService } from "../../../service/PegaService";
-import { useSelector } from "react-redux";
 import {
   AddNavigation,
 } from "../../../utils";
 import { toLower} from "lodash";
 import _ from "lodash";
+import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 
 
 const headerName = "Define Regional Design Template";
@@ -27,8 +27,10 @@ function DDT() {
   const [submittedDI, setSubmittedDI] = useState([]);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const User = useSelector((state) => state.UserReducer);
   const userInformation = User.userInformation;
+  const { TaskDetailsData, loading } = useSelector((state) => state.TaskDetailsReducer);
 
   let breadcrumb = AddNavigation(headerName);
 
@@ -37,24 +39,15 @@ function DDT() {
   let checkBU = toLower(bu) === toLower("Home Care") ? true : false;
 
   useEffect(() => {
-    let taskId;
-    if (TaskID) {
-      taskId = TaskID.split("_")[1];
-      console.log("task id-->", taskId[1], ProjectID);
-    }
+    dispatch(getTaskDetails(TaskID, ProjectID));
+  }, [dispatch, TaskID, ProjectID]);
 
-    (async () => {
-      try {
-        const data1 =ProjectService.getDIData();
-        // const data1 = await getDesignIntent();
-        console.log("api data------>", data1);
-        data1 && setData(data1);
-        data1 && setDesignIntent(data1.Design_Intent_Details);
-      } catch (err) {
-        console.log("error", err);
-      }
-    })();
-  }, [TaskID, ProjectID]);
+  useEffect(() => {
+    if (TaskDetailsData) {
+      setDesignIntent(TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
+      setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
+    }
+  },[TaskDetailsData]);
 
   const handleCancel = () => {
     return navigate(`/myTasks`);
@@ -87,7 +80,6 @@ function DDT() {
   const addData = (fieldName, index, value, Design_Intent_Name) => {
     let data = designIntent[index];
     data[fieldName] = value;
-    // add here design job name here check it out from API.
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
     setSubmittedDI(submittedDI);
@@ -160,7 +152,9 @@ function DDT() {
       >
         {<AddNewDesign {...data} />}
 
-        {designIntent &&
+        {loading || designIntent === null ? 
+          <i className="pi pi-spin pi-spinner" style={{ fontSize: '2rem' }}></i>
+          : designIntent &&
           designIntent.length &&
           designIntent.map((item, index) => {
             if (item && item?.Action !== "delete") {
