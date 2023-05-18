@@ -130,7 +130,7 @@ const ConfirmationPopUp = ({
           {frozenCoulmns.includes(selectedColumnName) ? (
             <div style={{ color: "#003DA5" }}>Frozen </div>
           ) : (
-            <div> Frozen</div>
+            <div> Freeze</div>
           )}
         </div>
         <div className="multiSelect">
