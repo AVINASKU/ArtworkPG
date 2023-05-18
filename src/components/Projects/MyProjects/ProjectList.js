@@ -277,7 +277,7 @@ const ProjectList = (props) => {
                   (project) => project.Project_ID === projectId
                 );
                 dispatch(selectedProject(option, "My Projects"));
-                navigate(`/projectPlan/${projectId}`);
+                navigate(`/myProjects/projectPlan/${projectId}`);
               }
             }}
           >
@@ -294,7 +294,7 @@ const ProjectList = (props) => {
                   (project) => project.Project_ID === projectId
                 );
                 dispatch(selectedProject(option, "My Projects"));
-                navigate(`/projectPlan/${projectId}`);
+                navigate(`/myProjects/projectPlan/${projectId}`);
               }
             }}
           >
