@@ -42,8 +42,10 @@ $gray-color: "#ACACAC";
     }
     &-disabled, disabled{
       background-color: #ACACAC;
+      color: #fff;
       &:hover, &:active{
         background-color: #ACACAC;
+        color: #fff;
       } 
     }
     &.border-primary{
