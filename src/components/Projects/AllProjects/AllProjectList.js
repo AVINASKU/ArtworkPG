@@ -274,7 +274,7 @@ const AllProjectList = (props) => {
               if (field && field.length) {
                 let option = allProjectList.allProjects[rowData.rowIndex];
                 dispatch(selectedProject(option, "All Projects"));
-                navigate(`/projectPlan/${projectId}`);
+                navigate(`/myProjects/projectPlan/${projectId}`);
               }
             }}
           >
@@ -289,7 +289,7 @@ const AllProjectList = (props) => {
               if (field && field.length) {
                 let option = allProjectList.allProjects[rowData.rowIndex];
                 dispatch(selectedProject(option, "All Projects"));
-                navigate(`/projectPlan/${projectId}`);
+                navigate(`/myProjects/projectPlan/${projectId}`);
               }
             }}
           >
