@@ -36,8 +36,8 @@ const defaultCheckedItems = {
 const defaultTextBoxEnabled = {
   DI: false,
   DT: false,
-  PRA: false,
   PF: false,
+  PRA: false,
   IQ: false,
   CICs: false,
 };
@@ -564,7 +564,23 @@ function AddProject(props) {
           }));
         }
         break;
-
+      case "PF":
+        // when Design Intent is selected, user must select DT or PRA
+        if (isChecked) {
+          setCheckedItems((prevCheckedItems) => ({
+            ...prevCheckedItems,
+            PF: true,
+          }));
+          setTextBoxEnabled((prevTextBoxEnabled) => ({
+            ...prevTextBoxEnabled,
+            PF: true,
+          }));
+          setDesignScopeList((prevDesignScopeList) => ({
+            ...prevDesignScopeList,
+            PF: "1", // or DT: null
+          }));
+        }
+        break;
       default:
         break;
     }

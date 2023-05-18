@@ -149,7 +149,7 @@ const AllProjectList = (props) => {
           });
         }
 
-         if (ProjectData.length) {
+        if (ProjectData.length) {
           let allCol = Object.keys(ProjectData[0]);
           allCol.push("Full Kit Readiness Tracking");
           setAllColumnNames(reorderColumns(allCol));

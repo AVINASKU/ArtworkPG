@@ -115,7 +115,7 @@ const SideBar = () => {
       >
         <div className="sidebar">
           <img
-            src={!isToggle ? ExpandImg : ExpandImg}
+            src={ExpandImg}
             alt="logos"
             onClick={toggleSidebar}
             className={!isToggle ? "toggle-collapsed" : "toggle-expanded"}
