@@ -555,7 +555,6 @@ const ProjectList = (props) => {
           ref={dt}
           // tableStyle={{ minWidth: "50rem" }}
           tableStyle={{ width: "max-content" }}
-          autoLayout={true}
         >
           {dynamicColumns()}
         </DataTable>
