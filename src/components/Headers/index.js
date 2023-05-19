@@ -62,7 +62,7 @@ const Header = () => {
           {userInformation.username}
           <span>{userInformation.userid}</span>
         </p>
-        <img src={user} alt="user profile" className="userProfile" />
+        {/* <img src={user} alt="user profile" className="userProfile" /> */}
       </div>
     </div>
   );
