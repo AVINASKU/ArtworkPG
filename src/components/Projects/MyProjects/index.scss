@@ -30,6 +30,9 @@ $fontWeight400: 400;
   .p-datatable-tbody {
     font-weight: $fontWeight400;
   }
+  .p-datatable .p-datatable-tbody > tr > td {
+    padding: 0 6px !important;
+  }
 
   th:after,
   td:after {
