@@ -6,7 +6,7 @@ const sortingData = ["Record ID#", "desc"];
 
 const projectPlanAllColumnNames = [
   "Task",
-  "Dependancy",
+  "Dependency",
   "Role",
   "Owner",
   "State",

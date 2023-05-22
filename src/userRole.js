@@ -38,10 +38,10 @@ export const RoleUser = {
     },
     {
       username: "Luca",
-      password: "luca123",
+      password: "pg123",
       userid: "@luca123",
       role: "PM",
-      bu: "OC",
+      bu: "FAB",
       region: "EUROPE ENTERPRISE",
       permissions: ["read", "view"],
     },
