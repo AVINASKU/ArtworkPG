@@ -38,6 +38,8 @@ const AllProjectList = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // setSavedColumnWidth(saveColumnWidth);
+
   const searchHeader = projectColumnName.reduce(
     (acc, curr) => ({
       ...acc,
@@ -314,12 +316,21 @@ const AllProjectList = (props) => {
     setSelectedColumnName(options);
   };
 
-  const dynamicColumns = (projectColumnName) => {
+  const dynamicColumns = () => {
     if (projectColumnName.length) {
       return projectColumnName.map((ele, i) => {
+        let jsonColumnWidthMyProject = localStorage.getItem(
+          "columnWidthAllProject"
+        );
+        const columnWidthMyProject = JSON.parse(jsonColumnWidthMyProject);
+        let checkWidth = [];
+        if (columnWidthMyProject) {
+          checkWidth = Object.keys(columnWidthMyProject);
+        }
+
         return (
           <Column
-            key={i}
+            key={ele}
             field={ele}
             filterField={ele}
             header={ProjectNameHeader(
@@ -328,7 +339,7 @@ const AllProjectList = (props) => {
               sortData,
               projectNameOnClick
             )}
-            columnKey={i}
+            columnKey={ele || i}
             frozen={frozenCoulmns.includes(ele)}
             alignFrozen="left"
             className={frozenCoulmns.includes(ele) ? "font-bold" : ""}
@@ -336,6 +347,13 @@ const AllProjectList = (props) => {
             showFilterMenu={false}
             filterPlaceholder={ele}
             body={fullKitReadinessBody}
+            // {... checkWidth.includes(ele) && }
+            style={{
+              width:
+                checkWidth.length && checkWidth.includes(ele)
+                  ? columnWidthMyProject[ele]
+                  : "",
+            }}
           />
         );
       });
@@ -405,13 +423,28 @@ const AllProjectList = (props) => {
   };
 
   const onColumnResizeEnd = (event) => {
-    // const updatedColumns = [...columns];
-    // const resizedColumn = updatedColumns.find(
-    //   (col) => col.field === event.element.getAttribute("data-pr-field")
-    // );
-    // resizedColumn.width = event.width;
-    // console.log("resized columns", resizedColumn);
-    // setColumns(updatedColumns);
+    // console.log("updated column name", event.column, event?.element?.clientWidth);
+    // console.log("width", event.element.offsetWidth, event.column);
+
+    let columnWidthMyProject = {};
+    let jsonColumnWidthMyProject = localStorage.getItem(
+      "columnWidthAllProject"
+    );
+    if (jsonColumnWidthMyProject) {
+      columnWidthMyProject = JSON.parse(jsonColumnWidthMyProject);
+    }
+    const updatedColumns = [...projectColumnName];
+    // let saveColumnWidth = {};
+    const resizedColumn = updatedColumns.find(
+      (col) => col === event.column.props.field
+    );
+    columnWidthMyProject[event.column.props.field] = event.element.offsetWidth;
+
+    localStorage.setItem(
+      "columnWidthAllProject",
+      JSON.stringify(columnWidthMyProject)
+    );
+    setProjectColumnNames(projectColumnName);
   };
 
   const exportCSV = (selectionOnly) => {
