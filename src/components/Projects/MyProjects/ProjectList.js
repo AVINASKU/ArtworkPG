@@ -265,6 +265,8 @@ const ProjectList = (props) => {
               backgroundColor: "white",
               color: "gray",
               border: "1px solid",
+              padding: "0.15rem 0.4rem",
+              margin: "2px 0"
             }}
           ></Tag>
         )}
