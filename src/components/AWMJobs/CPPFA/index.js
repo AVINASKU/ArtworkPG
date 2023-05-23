@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Col, Row } from "react-bootstrap";
-import { BreadCrumb } from "primereact/breadcrumb";
 import "./index.scss";
+import { NavLink, useLocation } from "react-router-dom";
 
 const CPPFA = (props) => {
   const [visible, setVisible] = useState(props.showTaskDialog);
@@ -24,14 +24,28 @@ const CPPFA = (props) => {
         ?.map((task) => task.TaskName)
         .join(", "),
     };
+    setHighRiskYesOrNo("selectYesOrNo");
   };
 
   const hideDialog = () => {
     setVisible(false);
     props.onClose();
   };
+  const location = useLocation();
+  const locationPath = location?.pathname;
+  const url = locationPath?.split("/");
 
-  const items = [{ label: "Project Setup" }, { label: "Project Plan" }];
+  const [riskLevel, setRiskLevel] = useState("lowRisk");
+  const [highRiskYesOrNo, setHighRiskYesOrNo] = useState("");
+  const [yesOrNo, setYesOrNo] = useState("");
+
+  const setRiskLevelFunc = (level) => {
+    setRiskLevel(level);
+    if (level === "lowRisk") {
+      setHighRiskYesOrNo("");
+      setYesOrNo("");
+    }
+  };
 
   return (
     <Dialog
@@ -41,7 +55,32 @@ const CPPFA = (props) => {
       header={
         <div>
           <div>
-            <BreadCrumb model={items} className="ppfaDialogBreadCrumb" />
+            <nav className="p-breadcrumb p-component" aria-label="Breadcrumb">
+              <ul>
+                <li className="p-breadcrumb-chevron pi pi-chevron-right"></li>
+                <li className="">
+                  <NavLink
+                    to={`/${url[1]}`}
+                    className="p-menuitem-link"
+                    onClick={() => hideDialog()}
+                  >
+                    <span className="p-menuitem-text">
+                      {url[1] === "projectPlan"
+                        ? "Project Setup"
+                        : "All Projects"}
+                    </span>
+                  </NavLink>
+                </li>
+                <li className="p-breadcrumb-chevron pi pi-chevron-right"></li>
+                <li className="">
+                  <a href="#" className="p-menuitem-link">
+                    <span className="p-menuitem-text">
+                      {url[1] === "projectPlan" ? "Project Plan" : ""}
+                    </span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
           </div>
           <div className="p-dialog-header1">
             Paste Mulsanne Oral-B Medical Device Europe
@@ -77,7 +116,8 @@ const CPPFA = (props) => {
                   type="radio"
                   id="html"
                   name="fav_language"
-                  value="HTML"
+                  value="lowRisk"
+                  onChange={(e) => setRiskLevelFunc(e.target.value)}
                 />
                 <label className="radioLabel">Low Risk</label>
               </div>
@@ -86,7 +126,8 @@ const CPPFA = (props) => {
                   type="radio"
                   id="html"
                   name="fav_language"
-                  value="HTML"
+                  value="mediumRisk"
+                  onChange={(e) => setRiskLevelFunc(e.target.value)}
                 />
                 <label className="radioLabel">Medium Risk</label>
               </div>
@@ -95,13 +136,58 @@ const CPPFA = (props) => {
                   type="radio"
                   id="html"
                   name="fav_language"
-                  value="HTML"
+                  value="highRisk"
+                  onChange={(e) => setRiskLevelFunc(e.target.value)}
                 />
                 <label className="radioLabel">High Risk</label>
               </div>
             </Col>
             <Col>UploadFile</Col>
             <Col></Col>
+          </Row>
+          <Row
+            hidden={riskLevel === "lowRisk"}
+            className={
+              (riskLevel !== "lowRisk" && highRiskYesOrNo === "" || yesOrNo !== "")
+                ? "highRiskDataPaddingBottom"
+                : ""
+            }
+          >
+            <Col
+              className={`highRiskData ${
+                yesOrNo === "" && highRiskYesOrNo !== "" ? "highRiskErrorBorderColor" : ""
+              }`}
+            >
+              <div className="highRiskDataColor">
+                Print Feasibility Assessment is High Risk whereas there is no
+                Color Development in scope of this project. Do you want to add
+                Color Development to the project scope?
+              </div>
+              <div className="highRiskButtons">
+                <button
+                  type="button"
+                  className={`btn highRiskButton ${yesOrNo === "yes" ? "yesOrNoButtonsColor" : "btn-secondary"}`}
+                  onClick={() => setYesOrNo("yes")}
+                >
+                  Yes
+                </button>
+                <button
+                  type="button"
+                  className={`btn highRiskButton ${yesOrNo === "no" ? "yesOrNoButtonsColor" : "btn-secondary"}`}
+                  onClick={() => setYesOrNo("no")}
+                >
+                  No
+                </button>
+              </div>
+            </Col>
+            <Col></Col>
+            <Col></Col>
+            <Col></Col>
+          </Row>
+          <Row hidden={riskLevel === "lowRisk" || yesOrNo !== "" || highRiskYesOrNo === ""}>
+            <Col className="highRiskError">
+              *Please select Yes/No in order to proceed further.
+            </Col>
           </Row>
         </div>
       </div>

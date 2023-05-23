@@ -29,6 +29,7 @@ import moment from "moment";
 import ApproveDesignDialog from "./ApproveDesignDialog";
 import { useLocation } from "react-router-dom";
 import CPPFA from "./../../AWMJobs/CPPFA";
+import { getMyProject } from "../../../store/actions/ProjectActions";
 
 const ProjectPlanList = (props) => {
   const [pegadata, setPegaData] = useState(null);
@@ -465,6 +466,7 @@ const ProjectPlanList = (props) => {
                   navigate(`../${url}`, { replace: true });
               } else {
                 handleApproveDialogCPPFA(options);
+                setTaskData(optionsData);
               }
             }}
           >
@@ -746,6 +748,14 @@ const ProjectPlanList = (props) => {
     );
     setProjectColumnNames(projectColumnName);
   };
+
+  const [taskData, setTaskData] = useState({});
+  useEffect(() => {
+    // if (!myProjectList.myProject.length) {
+    const updatedUsers = dispatch(getMyProject(taskData));
+    console.log("my projects", updatedUsers);
+    // }
+  }, [dispatch, taskData]);
 
   return (
     <div className="myProjectAnddAllProjectList">
