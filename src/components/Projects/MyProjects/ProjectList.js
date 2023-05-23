@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { ProjectService } from "../../../service/PegaService";
@@ -43,7 +43,8 @@ const ProjectList = (props) => {
   const { loading } = myProjectList;
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const history = useHistory();
+  const location = useLocation();
+  const currentUrl = location.pathname;
 
   const searchHeader = projectColumnName.reduce(
     (acc, curr) => ({
@@ -277,7 +278,7 @@ const ProjectList = (props) => {
                   (project) => project.Project_ID === projectId
                 );
                 dispatch(selectedProject(option, "My Projects"));
-                navigate(`/projectPlan/${projectId}`);
+                navigate(`${currentUrl}/projectPlan/${projectId}`);
               }
             }}
           >
@@ -294,7 +295,7 @@ const ProjectList = (props) => {
                   (project) => project.Project_ID === projectId
                 );
                 dispatch(selectedProject(option, "My Projects"));
-                navigate(`/projectPlan/${projectId}`);
+                navigate(`${currentUrl}/projectPlan/${projectId}`);
               }
             }}
           >
