@@ -18,7 +18,7 @@ import { InputNumber } from "primereact/inputnumber";
 import "./index.scss";
 import TaskDialog from "../../TaskDialog";
 import ApproveDesignDialog from "./ApproveDesignDialog";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import CPPFA from "./../../AWMJobs/CPPFA";
 
 const ProjectPlanList = ({ projectPlan, selectedProject, projectPlanDesign, pegadata, setPegaData, setUpdatedProjectPlanDesignData, setActiveSave }) => {
@@ -510,8 +510,8 @@ const ProjectPlanList = ({ projectPlan, selectedProject, projectPlanDesign, pega
     useState([]);
   const handleApproveDialogCPPFA = (options) => {
     setShowApproveDialogCPPFA(true);
-    // let task = [{ TaskID: options.key, TaskName: options.data.Task }];
-    // setSelectedTaskApproveDialogCPPFA(task);
+    let task = { TaskID: options.key, ProjectID: ProjectID };
+    setSelectedTaskApproveDialogCPPFA(task);
   };
 
   const storeReorderedColumns = (e) => {
