@@ -5,6 +5,8 @@ import FooterButtons from "../DesignJobs/FooterButtons";
 import AddNewDesign from "../DesignJobs/TaskHeader";
 import { ProjectService } from "../../../service/PegaService";
 import ApproveDesignIntentContent from "../DesignJobs/ApproveDesignIntentContent";
+import { UploadFileToServer } from "../../../store/actions/ProofScopeActions";
+
 
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
