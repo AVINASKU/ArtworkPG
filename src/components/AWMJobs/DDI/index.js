@@ -31,17 +31,19 @@ function DDI() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { TaskDetailsData, loading } = useSelector((state) => state.TaskDetailsReducer);
-  
+
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
   }, [dispatch, TaskID, ProjectID]);
 
   useEffect(() => {
     if (TaskDetailsData) {
-      setDesignIntent(TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
+      setDesignIntent(
+        TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []
+      );
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
     }
-  },[TaskDetailsData]);
+  }, [TaskDetailsData]);
 
   // useEffect(() => {
   //   console.log("useEffect designIntent",designIntent);
@@ -111,7 +113,7 @@ function DDI() {
       const taskData = [];
       taskData.Agency_Reference = task.Agency_Reference;
       taskData.Cluster = task.Cluster;
-      taskData.Additional_Info = task.Additional_Info;      
+      taskData.Additional_Info = task.Additional_Info;
       return taskData;
     });
     const pageInstructions = [];
@@ -122,9 +124,9 @@ function DDI() {
     let formData = {
       pageInstructions: pageInstructions,
     };
-    
+
     console.log("full submit data --->", formData);
-   // await saveDesignIntent(formData);
+    // await saveDesignIntent(formData);
   };
 
   const onSaveAsDraft = async () => {
@@ -162,9 +164,15 @@ function DDI() {
     console.log("full draft data --->", formData);
     await saveDesignIntent(formData);
   };
+  let Brand = [];
+  let Category = [];
+
+  if (TaskDetailsData.ArtworkAgilityPage) {
+    Brand = TaskDetailsData.ArtworkAgilityPage.Artwork_Brand;
+    Category = TaskDetailsData.ArtworkAgilityPage.Artwork_SMO;
+  }
 
   return (
-    console.log("designIntent", designIntent), 
     <PageLayout>
       <DesignHeader
         setAddNewDesign={addNewEmptyDesign}
@@ -194,6 +202,8 @@ function DDI() {
                   key={item.Design_Job_ID}
                   {...data}
                   item={item}
+                  Brand={Brand}
+                  Category={Category}
                   index={index}
                   addData={addData}
                   handleDelete={handleDelete}
@@ -210,7 +220,8 @@ function DDI() {
           onSubmit={onSubmit}
           formValid={submitActive}
         />
-    </PageLayout>
+      </PageLayout>
+    
   );
 }
 

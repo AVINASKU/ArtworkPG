@@ -220,7 +220,7 @@ const TaskList = (props) => {
       ArtworkAgilityTasks: selected
         ?.map((task) => ({
           AWM_Task_ID: task.AWM_Task_ID,
-          Help_Needed: false,
+          Help_Needed: "Yes, done",
           Comments: "",
         }))
         .filter((task) => task.AWM_Task_ID),
@@ -324,7 +324,7 @@ const TaskList = (props) => {
       rowData["Help_Needed"] =
         rowData["Help_Needed"] === null
           ? "No"
-          : rowData["Help_Needed"] === true
+          : rowData["Help_Needed"] === "Yes, In process"
           ? "Yes, In process"
           : "Yes, Done";
     }
@@ -493,7 +493,9 @@ const TaskList = (props) => {
           className="margin-top-24"
           ref={dt}
           filterDisplay={isSearch && "row"}
-          tableStyle={{ minWidth: "50rem" }}
+          // tableStyle={{ minWidth: "50rem" }}          
+          tableStyle={{ width: "max-content" }}
+          autoLayout={true}
           filters={searchHeader}
         >
           {dynamicColumns()}
