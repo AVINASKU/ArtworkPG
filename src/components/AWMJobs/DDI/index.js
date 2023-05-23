@@ -29,7 +29,9 @@ function DDI() {
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { TaskDetailsData, loading } = useSelector((state) => state.TaskDetailsReducer);
+  const { TaskDetailsData, loading } = useSelector(
+    (state) => state.TaskDetailsReducer
+  );
 
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
@@ -37,10 +39,12 @@ function DDI() {
 
   useEffect(() => {
     if (TaskDetailsData) {
-      setDesignIntent(TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
+      setDesignIntent(
+        TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []
+      );
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
     }
-  },[TaskDetailsData]);
+  }, [TaskDetailsData]);
 
   const handleCancel = () => {
     return navigate(`/myTasks`);
@@ -102,7 +106,7 @@ function DDI() {
       const taskData = [];
       taskData.Agency_Reference = task.Agency_Reference;
       taskData.Cluster = task.Cluster;
-      taskData.Additional_Info = task.Additional_Info;      
+      taskData.Additional_Info = task.Additional_Info;
       return taskData;
     });
     const pageInstructions = [];
@@ -113,9 +117,9 @@ function DDI() {
     let formData = {
       pageInstructions: pageInstructions,
     };
-    
+
     console.log("full submit data --->", formData);
-   // await saveDesignIntent(formData);
+    // await saveDesignIntent(formData);
   };
 
   const onSaveAsDraft = async () => {
@@ -145,52 +149,70 @@ function DDI() {
     await saveDesignIntent(formData);
   };
 
-  return (
-    console.log("designIntent", designIntent), 
-    <PageLayout>
-      <DesignHeader
-        setAddNewDesign={addNewEmptyDesign}
-        onSelectAll={onSelectAll}
-        breadcrumb={breadcrumb}
-        headerName={headerName}
-        label="Define Design Intent"
-      />
-      <div
-        style={{
-          overflowY: "scroll",
-          overflowX: "hidden",
-          width: "100%",
-          height: "400px",
-        }}
-      >
-        {<AddNewDesign {...data} />}
+  console.log("data", data);
+  let Brand = [];
+  let Category = [];
 
-        {loading || designIntent === null ? 
-          <i className="pi pi-spin pi-spinner" style={{ fontSize: '2rem' }}></i>
-          : designIntent &&
-          designIntent.length > 0 &&
-          designIntent.map((item, index) => {
-            if (item && item?.Action !== "delete") {
-              return (
-                <AddNewDesignContent
-                  key={item.Design_Job_ID}
-                  {...data}
-                  item={item}
-                  index={index}
-                  addData={addData}
-                  handleDelete={handleDelete}
-                  roleName={roleName}
-                />
-              );
-            }
-          })}
-      </div>
-      <FooterButtons
+  if (TaskDetailsData.ArtworkAgilityPage) {
+    Brand = TaskDetailsData.ArtworkAgilityPage.Artwork_Brand;
+    Category = TaskDetailsData.ArtworkAgilityPage.Artwork_SMO;
+  }
+
+  return (
+    console.log("designIntent", designIntent),
+    (
+      <PageLayout>
+        <DesignHeader
+          setAddNewDesign={addNewEmptyDesign}
+          onSelectAll={onSelectAll}
+          breadcrumb={breadcrumb}
+          headerName={headerName}
+          label="Define Design Intent"
+        />
+        <div
+          style={{
+            overflowY: "scroll",
+            overflowX: "hidden",
+            width: "100%",
+            height: "400px",
+          }}
+        >
+          {<AddNewDesign {...data} />}
+
+          {loading || designIntent === null ? (
+            <i
+              className="pi pi-spin pi-spinner"
+              style={{ fontSize: "2rem" }}
+            ></i>
+          ) : (
+            designIntent &&
+            designIntent.length > 0 &&
+            designIntent.map((item, index) => {
+              if (item && item?.Action !== "delete") {
+                return (
+                  <AddNewDesignContent
+                    key={item.Design_Job_ID}
+                    {...data}
+                    item={item}
+                    Brand={Brand}
+                    Category={Category}
+                    index={index}
+                    addData={addData}
+                    handleDelete={handleDelete}
+                    roleName={roleName}
+                  />
+                );
+              }
+            })
+          )}
+        </div>
+        <FooterButtons
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}
         />
-    </PageLayout>
+      </PageLayout>
+    )
   );
 }
 

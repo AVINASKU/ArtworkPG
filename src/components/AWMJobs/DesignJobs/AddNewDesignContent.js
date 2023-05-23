@@ -90,6 +90,19 @@ const AddNewDesignContent = ({
           marginTop: 5,
         }}
       >
+        <Col sm={1}>
+          <label htmlFor="select"> Select</label>
+          <div>
+            <Checkbox
+              onChange={(e) => {
+                addData("Select", index, e.checked, di_name);
+                setChecked(e.checked);
+              }}
+              checked={event === "submit" ? true : checked}
+              className="margin-right"
+            ></Checkbox>
+          </div>
+        </Col>
         <Col sm={2}>
           <div>
             <label htmlFor="agency">Agency Reference * </label>
@@ -151,19 +164,6 @@ const AddNewDesignContent = ({
               }}
               aria-describedby="info-help"
             />
-          </div>
-        </Col>
-        <Col sm={1}>
-          <label htmlFor="select"> Select</label>
-          <div>
-            <Checkbox
-              onChange={(e) => {
-                addData("Select", index, e.checked, di_name);
-                setChecked(e.checked);
-              }}
-              checked={event === "submit" ? true : checked}
-              className="margin-right"
-            ></Checkbox>
           </div>
         </Col>
       </Row>
