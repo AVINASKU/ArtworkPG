@@ -11,7 +11,7 @@ import filter from "../../../assets/images/filter.svg";
 import { getAllProject } from "../../../store/actions/ProjectActions";
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import _ from "lodash";
 import ProjectNameHeader from "../MyProjects/ProjectNameHeader";
 
@@ -35,6 +35,8 @@ const AllProjectList = (props) => {
   const [isReorderedColumn, setReorderedColumn] = useState(false);
   const allProjectList = useSelector((state) => state.myProject);
   const { loading } = allProjectList;
+  const location = useLocation();
+  const currentUrl = location.pathname;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -274,7 +276,7 @@ const AllProjectList = (props) => {
               if (field && field.length) {
                 let option = allProjectList.allProjects[rowData.rowIndex];
                 dispatch(selectedProject(option, "All Projects"));
-                navigate(`/projectPlan/${projectId}`);
+                navigate(`${currentUrl}/projectPlan/${projectId}`);
               }
             }}
           >
@@ -289,7 +291,7 @@ const AllProjectList = (props) => {
               if (field && field.length) {
                 let option = allProjectList.allProjects[rowData.rowIndex];
                 dispatch(selectedProject(option, "All Projects"));
-                navigate(`/projectPlan/${projectId}`);
+                navigate(`${currentUrl}/projectPlan/${projectId}`);
               }
             }}
           >

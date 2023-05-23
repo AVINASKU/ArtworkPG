@@ -23,16 +23,27 @@ export const getProjectPlan = async (
   return projectPlanData?.ArtworkAgilityProjects;
 };
 
-export const activateProjectPlan = async (projectId, data, headers = {}) => {
+export const activateProjectPlan = async (projectId, headers = {}) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${DEVURL}/V1/Activate/${projectId}`;
+  let apiURL = `${DEVURL}/Activate/${projectId}`;
   const activateResponse = await axiosInstance({
     url: apiURL,
-    method: "POST",
-    data: data,
+    method: "POST"
   });
-
-  // console.log("activateResponse", activateResponse);
   return activateResponse;
+};
+
+export const saveProjectPlanAction = async (formData, id, headers = {}) => {
+  const api = new Api();
+  const axiosInstance = await api.init(headers);
+  let apiURL;
+  apiURL = `${DEVURL}/Save/${id}`;
+
+  const saveProjectPlanActionData = await axiosInstance({
+    url: apiURL,
+    method: "POST",
+    data: formData,
+  });
+  return saveProjectPlanActionData;
 };
