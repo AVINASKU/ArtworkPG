@@ -8,10 +8,29 @@ const ApproveDesignIntentContent = ({
   upload,
   approve,
   file_name,
-  customBase64Uploader
+  setformattedValue,
+  setFileName,
+  setMappedFiles,
+  setAzureFile,
+  item,
+  roleName,
+  ArtworkAgilityPage,
+  version
 }) => {
+  console.log("item", item.Consumed_Buffer);
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
+  let di_name;
+    di_name =
+      roleName +
+      (item.Consumed_Buffer + "_") +
+      ArtworkAgilityPage.Artwork_Brand[0].Brand_Name +
+      "_" +
+      ArtworkAgilityPage.Artwork_Category[0].Category_Name +
+      "_" +
+      item.Project_Name +
+      "_" +
+      version;
 
   const onTemplateUpload = (e) => {
     let _totalSize = 0;
@@ -23,6 +42,19 @@ const ApproveDesignIntentContent = ({
     setTotalSize(_totalSize);
    
   };
+  const itemTemplate = (file, props) => {
+    setformattedValue(props.formatSize);
+    setFileName(file.name);
+    setAzureFile(file);
+    return (
+        <div className="upload-row">
+            <img alt={file.name} role="presentation" src={file.objectURL} width={50} />
+            <div className="flex flex-column text-left ml-3">
+                {file.name}
+            </div>
+        </div>
+    );
+};
   const onTemplateSelect = (e) => {
     let _totalSize = totalSize;
     let files = e.files;
@@ -70,7 +102,7 @@ const ApproveDesignIntentContent = ({
     
     <div>
       <div className="design-intent-header">
-        {DesignHeader(Design_Intent_Name)}
+        {DesignHeader(di_name)}
       </div>
       <div className="approve-design-intent">
         {upload && (
@@ -86,11 +118,10 @@ const ApproveDesignIntentContent = ({
               name="demo[]"
               url="/api/upload"
               accept="image/*"
-              maxFileSize={1000000}
               customUpload
-              uploadHandler={(e) => customBase64Uploader(e)}
               onUpload={onTemplateUpload}
               onSelect={onTemplateSelect}
+              itemTemplate={itemTemplate}
             />
           </div>
         )}

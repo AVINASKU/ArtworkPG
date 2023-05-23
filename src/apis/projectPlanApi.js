@@ -14,7 +14,7 @@ export const getProjectPlan = async (
   const api = new Api();
   const axiosInstance = await api.init({ headers });
   // let apiURL = `${baseURL}/V1/ProjectPlan/PG-AAS-WORK A-544`;
-  let apiURL = `${DEVURL}/ProjectPlan/${projectId}`;
+  let apiURL = `${DEVURL}/v1/ProjectPlan/${projectId}`;
   const { data: projectPlanData } = await axiosInstance({
     url: apiURL,
     method: "GET",
@@ -26,7 +26,7 @@ export const getProjectPlan = async (
 export const activateProjectPlan = async (projectId, headers = {}) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${DEVURL}/Activate/${projectId}`;
+  let apiURL = `${DEVURL}/v1/Activate/${projectId}`;
   const activateResponse = await axiosInstance({
     url: apiURL,
     method: "POST"
@@ -38,7 +38,7 @@ export const saveProjectPlanAction = async (formData, id, headers = {}) => {
   const api = new Api();
   const axiosInstance = await api.init(headers);
   let apiURL;
-  apiURL = `${DEVURL}/Save/${id}`;
+  apiURL = `${DEVURL}/v1/Save/${id}`;
 
   const saveProjectPlanActionData = await axiosInstance({
     url: apiURL,

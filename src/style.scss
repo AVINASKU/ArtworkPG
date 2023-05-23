@@ -74,3 +74,11 @@ $gray-color: "#ACACAC";
     @extend .btn;
   }  
 }
+.p-fileupload{
+  .p-fileupload-row{
+    .upload-row{
+      padding: 0;
+      margin-top: 60px;
+    }
+  }
+}
