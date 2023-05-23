@@ -65,7 +65,7 @@ const TaskDialog = (props) => {
         ArtworkAgilityTasks: props?.selectedTaskData
           ?.map((task) => ({
             AWM_Task_ID: task.AWM_Task_ID,
-            Help_Needed: true,
+            Help_Needed: "Yes,in Process",
             Comments: comment,
           }))
           .filter((task) => task.AWM_Task_ID),
