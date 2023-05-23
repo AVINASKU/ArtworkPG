@@ -2,34 +2,55 @@ import React, { useState, useEffect } from "react";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Col, Row } from "react-bootstrap";
+import { BreadCrumb } from "primereact/breadcrumb";
+import { useDispatch, useSelector } from "react-redux";
+import { getTaskDetails } from "../../../store/actions/taskDetailAction";
+import { changeDateFormat } from "../../../utils";
+import { FileUpload } from "primereact/fileupload";
+
 import "./index.scss";
 import { NavLink, useLocation } from "react-router-dom";
 
-const CPPFA = (props) => {
-  const [visible, setVisible] = useState(props.showTaskDialog);
+const CPPFA = ({ showTaskDialog, selectedTaskData, onClose }) => {
+  const [visible, setVisible] = useState(showTaskDialog);
+  const [designIntent, setDesignIntent] = useState([]);
+
+  const dispatch = useDispatch();
+  const { TaskDetailsData, loading } = useSelector(
+    (state) => state.TaskDetailsReducer
+  );
+  console.log("props", TaskDetailsData);
+
+  const { TaskID, ProjectID } = selectedTaskData;
 
   useEffect(() => {
-    setVisible(props.showTaskDialog);
-  }, [props.showTaskDialog]);
+    setVisible(showTaskDialog);
+  }, [showTaskDialog]);
+
+  useEffect(() => {
+    dispatch(getTaskDetails(TaskID, ProjectID));
+  }, [dispatch, TaskID, ProjectID]);
+
+  useEffect(() => {
+    if (TaskDetailsData) {
+      setDesignIntent(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
+    }
+  }, [TaskDetailsData]);
 
   const handleSubmit = () => {
     // Code to handle form submission
     const helpNeededData = {
-      taskName: props?.selectedTaskData
-        ?.map((task) => task.TaskName)
-        .join(", "),
+      taskName: selectedTaskData?.map((task) => task.TaskName).join(", "),
     };
     const delegateData = {
-      taskName: props?.selectedTaskData
-        ?.map((task) => task.TaskName)
-        .join(", "),
+      taskName: selectedTaskData?.map((task) => task.TaskName).join(", "),
     };
     setHighRiskYesOrNo("selectYesOrNo");
   };
 
   const hideDialog = () => {
     setVisible(false);
-    props.onClose();
+    onClose();
   };
   const location = useLocation();
   const locationPath = location?.pathname;
@@ -82,9 +103,7 @@ const CPPFA = (props) => {
               </ul>
             </nav>
           </div>
-          <div className="p-dialog-header1">
-            Paste Mulsanne Oral-B Medical Device Europe
-          </div>
+          <div className="p-dialog-header1">{designIntent.Task_Name}</div>
         </div>
       }
     >
@@ -97,15 +116,17 @@ const CPPFA = (props) => {
             <Col>Consumed Buffer</Col>
           </Row>
           <Row>
-            <Col>15 Days</Col>
-            <Col>20-Mar-23</Col>
-            <Col>04-Apr-23</Col>
-            <Col className="ppfaDialogTextColor">+2</Col>
+            <Col>{designIntent.Duration}</Col>
+            <Col>{changeDateFormat(designIntent.Start_Date)}</Col>
+            <Col>{changeDateFormat(designIntent.End_Date)}</Col>
+            <Col className="ppfaDialogTextColor">
+              {designIntent.Consumed_Buffer}
+            </Col>
           </Row>
           <br />
           <Row>
             <Col>Risk Level*</Col>
-            <Col>Upload (optional)</Col>
+            {/* <Col>Upload (optional)</Col> */}
             <Col></Col>
             <Col></Col>
           </Row>
@@ -142,46 +163,18 @@ const CPPFA = (props) => {
                 <label className="radioLabel">High Risk</label>
               </div>
             </Col>
-            <Col>UploadFile</Col>
-            <Col></Col>
-          </Row>
-          <Row
-            hidden={riskLevel === "lowRisk"}
-            className={
-              (riskLevel !== "lowRisk" && highRiskYesOrNo === "" || yesOrNo !== "")
-                ? "highRiskDataPaddingBottom"
-                : ""
-            }
-          >
-            <Col
-              className={`highRiskData ${
-                yesOrNo === "" && highRiskYesOrNo !== "" ? "highRiskErrorBorderColor" : ""
-              }`}
-            >
-              <div className="highRiskDataColor">
-                Print Feasibility Assessment is High Risk whereas there is no
-                Color Development in scope of this project. Do you want to add
-                Color Development to the project scope?
-              </div>
-              <div className="highRiskButtons">
-                <button
-                  type="button"
-                  className={`btn highRiskButton ${yesOrNo === "yes" ? "yesOrNoButtonsColor" : "btn-secondary"}`}
-                  onClick={() => setYesOrNo("yes")}
-                >
-                  Yes
-                </button>
-                <button
-                  type="button"
-                  className={`btn highRiskButton ${yesOrNo === "no" ? "yesOrNoButtonsColor" : "btn-secondary"}`}
-                  onClick={() => setYesOrNo("no")}
-                >
-                  No
-                </button>
-              </div>
+            <Col>
+              <FileUpload
+                name="demo[]"
+                url={"/api/upload"}
+                multiple
+                accept="image/*"
+                maxFileSize={1000000}
+                emptyTemplate={
+                  <p className="m-0">Drag and drop files to here to upload.</p>
+                }
+              />
             </Col>
-            <Col></Col>
-            <Col></Col>
             <Col></Col>
           </Row>
           <Row hidden={riskLevel === "lowRisk" || yesOrNo !== "" || highRiskYesOrNo === ""}>

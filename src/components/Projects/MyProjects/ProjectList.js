@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { ProjectService } from "../../../service/PegaService";
@@ -43,7 +43,8 @@ const ProjectList = (props) => {
   const { loading } = myProjectList;
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const history = useHistory();
+  const location = useLocation();
+  const currentUrl = location.pathname;
 
   const searchHeader = projectColumnName.reduce(
     (acc, curr) => ({
@@ -279,7 +280,7 @@ const ProjectList = (props) => {
                   (project) => project.Project_ID === projectId
                 );
                 dispatch(selectedProject(option, "My Projects"));
-                navigate(`/projectPlan/${projectId}`);
+                navigate(`${currentUrl}/projectPlan/${projectId}`);
               }
             }}
           >
@@ -296,7 +297,7 @@ const ProjectList = (props) => {
                   (project) => project.Project_ID === projectId
                 );
                 dispatch(selectedProject(option, "My Projects"));
-                navigate(`/projectPlan/${projectId}`);
+                navigate(`${currentUrl}/projectPlan/${projectId}`);
               }
             }}
           >
@@ -320,6 +321,15 @@ const ProjectList = (props) => {
   const dynamicColumns = () => {
     if (projectColumnName.length) {
       return projectColumnName.map((ele, i) => {
+        let jsonColumnWidthMyProject = localStorage.getItem(
+          "columnWidthMyProject"
+        );
+        const columnWidthMyProject = JSON.parse(jsonColumnWidthMyProject);
+        let checkWidth = [];
+        if (columnWidthMyProject) {
+          checkWidth = Object.keys(columnWidthMyProject);
+        }
+
         return (
           <Column
             key={ele}
@@ -339,6 +349,13 @@ const ProjectList = (props) => {
             showFilterMenu={false}
             filterPlaceholder={ele}
             body={fullKitReadinessBody}
+            // {... checkWidth.includes(ele) && }
+            style={{
+              width:
+                checkWidth.length && checkWidth.includes(ele)
+                  ? columnWidthMyProject[ele]
+                  : "",
+            }}
           />
         );
       });
@@ -375,18 +392,29 @@ const ProjectList = (props) => {
     setFilters(value);
   };
 
-  const onColumnResizeEnd = (event) => {
-    console.log("updated column name", event, event?.element?.clientWidth);
+    const onColumnResizeEnd = (event) => {
+    // console.log("updated column name", event.column, event?.element?.clientWidth);
+    // console.log("width", event.element.offsetWidth, event.column);
 
-    // const updatedColumns = [...columns];
-    // const resizedColumn = updatedColumns.find(
-    //   (col) => col.field === event.element.getAttribute("data-pr-field")
-    // );
-    // resizedColumn.width = event.width;
+    let columnWidthMyProject = {};
+    let jsonColumnWidthMyProject = localStorage.getItem(
+      "columnWidthMyProject"
+    );
+    if (jsonColumnWidthMyProject) {
+      columnWidthMyProject = JSON.parse(jsonColumnWidthMyProject);
+    }
+    const updatedColumns = [...projectColumnName];
+    // let saveColumnWidth = {};
+    const resizedColumn = updatedColumns.find(
+      (col) => col === event.column.props.field
+    );
+    columnWidthMyProject[event.column.props.field] = event.element.offsetWidth;
 
-    // console.log("resized columns", resizedColumn);
-
-    // setColumns(updatedColumns);
+    localStorage.setItem(
+      "columnWidthMyProject",
+      JSON.stringify(columnWidthMyProject)
+    );
+    setProjectColumnNames(projectColumnName);
   };
 
   const exportCSV = (selectionOnly) => {
@@ -505,7 +533,7 @@ const ProjectList = (props) => {
             isFilterEnabled={isFilterEnabled}
             isResetEnabled={isResetEnabled}
             allData={pegadata}
-            headers={updatedAllColumnNames}
+            headers={allColumnNames}
           />
         )}
         <CustomisedView

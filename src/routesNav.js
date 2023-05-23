@@ -35,7 +35,8 @@ const RoutesNav = () => {
          <Route path="/AllTasks" element={<AllTasksPage />} />
         {/* <Route path="/createProject" element={<AddProject />} /> */}
         <Route path="/projectPlan" element={<ProjectCreation />} />
-        <Route path="/projectPlan/:ProjectID" element={<ProjectCreation />} />
+        <Route path="/myProjects/projectPlan/:ProjectID" element={<ProjectCreation />} />
+        <Route path="/allProjects/projectPlan/:ProjectID" element={<ProjectCreation />} />
         <Route path="/myTasks/DDI/:TaskID/:ProjectID" element={<DDI />} />
         <Route path="/allTasks/DDI/:TaskID/:ProjectID" element={<DDI />} />
         <Route
