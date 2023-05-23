@@ -321,6 +321,15 @@ const ProjectList = (props) => {
   const dynamicColumns = () => {
     if (projectColumnName.length) {
       return projectColumnName.map((ele, i) => {
+        let jsonColumnWidthMyProject = localStorage.getItem(
+          "columnWidthMyProject"
+        );
+        const columnWidthMyProject = JSON.parse(jsonColumnWidthMyProject);
+        let checkWidth = [];
+        if (columnWidthMyProject) {
+          checkWidth = Object.keys(columnWidthMyProject);
+        }
+
         return (
           <Column
             key={ele}
@@ -340,6 +349,13 @@ const ProjectList = (props) => {
             showFilterMenu={false}
             filterPlaceholder={ele}
             body={fullKitReadinessBody}
+            // {... checkWidth.includes(ele) && }
+            style={{
+              width:
+                checkWidth.length && checkWidth.includes(ele)
+                  ? columnWidthMyProject[ele]
+                  : "",
+            }}
           />
         );
       });
@@ -376,18 +392,29 @@ const ProjectList = (props) => {
     setFilters(value);
   };
 
-  const onColumnResizeEnd = (event) => {
-    console.log("updated column name", event, event?.element?.clientWidth);
+    const onColumnResizeEnd = (event) => {
+    // console.log("updated column name", event.column, event?.element?.clientWidth);
+    // console.log("width", event.element.offsetWidth, event.column);
 
-    // const updatedColumns = [...columns];
-    // const resizedColumn = updatedColumns.find(
-    //   (col) => col.field === event.element.getAttribute("data-pr-field")
-    // );
-    // resizedColumn.width = event.width;
+    let columnWidthMyProject = {};
+    let jsonColumnWidthMyProject = localStorage.getItem(
+      "columnWidthMyProject"
+    );
+    if (jsonColumnWidthMyProject) {
+      columnWidthMyProject = JSON.parse(jsonColumnWidthMyProject);
+    }
+    const updatedColumns = [...projectColumnName];
+    // let saveColumnWidth = {};
+    const resizedColumn = updatedColumns.find(
+      (col) => col === event.column.props.field
+    );
+    columnWidthMyProject[event.column.props.field] = event.element.offsetWidth;
 
-    // console.log("resized columns", resizedColumn);
-
-    // setColumns(updatedColumns);
+    localStorage.setItem(
+      "columnWidthMyProject",
+      JSON.stringify(columnWidthMyProject)
+    );
+    setProjectColumnNames(projectColumnName);
   };
 
   const exportCSV = (selectionOnly) => {
