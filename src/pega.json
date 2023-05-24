@@ -441,7 +441,7 @@
         {
             "Task": "Define Design Intent",
             "SubTask": [],
-            "Dependancy": "Project active & task in scope",
+            "Dependency": "Project active & task in scope",
             "Role": ["Design Manager", "Project Manager"],
             "Owner": ["Paleczna", "Sriram"],
             "State": "Completed",
@@ -453,7 +453,7 @@
             "SubTask": [
                 {
                     "Task": "Define Design Intent",
-                    "Dependancy": "Project active & task in scope",
+                    "Dependency": "Project active & task in scope",
                     "Role": ["Design Manager", "Project Manager"],
                     "Owner": ["Paleczna", "Sriram"],
                     "State": "Completed",
@@ -461,7 +461,7 @@
                     "Start Date": "20230411T000000.000 GMT"
                 }
             ],
-            "Dependancy": "Project active & task in scope",
+            "Dependency": "Project active & task in scope",
             "Role": ["Design Manager", "Project Manager"],
             "Owner": ["Paleczna", "Sriram"],
             "State": "Completed",

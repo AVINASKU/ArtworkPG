@@ -78,69 +78,23 @@ const ProjectListHeader = ({
         />
 
         {!shouldShowResetButton && (
-          // <>
-          //   {(selected.length === 0) ? (
-          //     // <img src="/user-profile.jpg" alt="User Profile" />
-          //     <img
-          //     src={export2excel}
-          //     alt="download file"
-          //     // onClick={() => exportCSV(false)}
-          //     onClick={handleClick}
-          //     className="pi pi-file-excel header-icons"
-          //     style={{ display: 'none'}}
-          //   />
-          //   {downloadCSV && (
-          //     <ExportSelectedRows selectedRows={selected} allData={allData}
-          //   ) : (
-          //     // <img src="/default-profile.jpg" alt="Default Profile" />
-          //     <img
-          //     src={export2excel}
-          //     alt="download file"
-          //     // onClick={() => exportCSV(false)}
-          //     onClick={handleClick}
-          //     className="pi pi-file-excel header-icons"
-          //   />
-          //   {downloadCSV && (
-          //     <ExportSelectedRows selectedRows={selected} allData={allData}
-          //   )}
-          //    />
-          //   )}
           <>
-            <img
-              src={customizedFields}
-              alt="alternate img"
-              onClick={() => setVisible(true)}
-              className="header-icons"
-            />
-
-            {
-              // showCSV && (
-              //   // (selected.length = 0 ? (
-              //   // <img
-              //   //   src={export2excel}
-              //   //   alt="download file"
-              //   //   onClick={handleClick}
-              //   //   className="pi pi-file-excel header-icons"
-              //   // />
-              // )
-              // ) : (
-              // <img
-              //   src={export2excel}
-              //   alt="download file"
-              //   onClick={handleClick}
-              //   className="pi pi-file-excel header-icons"
-              // style={{ display: "none" }}
-              // />
-              // ))
-            }
-            {/* {downloadCSV && allData && (
-              <ExportSelectedRows allData={allData} selectedRows={selected} />
-            )} */}
             <ExportSelectedRows
               allData={allData}
               selectedRows={selected}
               headers={headers}
             />
+            <button
+              type="button"
+              className={
+                isResetEnabled
+                  ? "btn btn-primary reset-to-default-view"
+                  : "btn btn-secondary"
+              }
+              onClick={() => setVisible(true)}
+            >
+              Customize View
+            </button>
 
             <button
               type="button"
@@ -154,44 +108,10 @@ const ProjectListHeader = ({
             >
               Reset to Default
             </button>
-
-            {/* {
-              // (selected.length = 0 ? (
-              <img
-                src={export2excel}
-                alt="download file"
-                onClick={handleClick}
-                className="pi pi-file-excel header-icons"
-              />
-              // ) : (
-              // <img
-              //   src={export2excel}
-              //   alt="download file"
-              //   onClick={handleClick}
-              //   className="pi pi-file-excel header-icons"
-              // style={{ display: "none" }}
-
-              // />
-              // ))
-            }
-            {downloadCSV && allData && (
-              <ExportSelectedRows allData={allData} selectedRows={selected} />
-            )} */}
           </>
         )}
         {shouldShowResetButton && (
           <>
-            {/* <img
-              src={export2excel}
-              // alt="download file"
-              // onClick={exportCSVTasks}
-              onClick={handleClick}
-              // onClick={hiddenLink.current.link.click()}
-              className="pi pi-file-excel header-icons"
-            /> */}
-            {/* {downloadCSV && allData && (
-              <ExportSelectedRows selectedRows={selected} allData={allData} />
-            )} */}
             <ExportSelectedRows
               selectedRows={selected}
               allData={allData}

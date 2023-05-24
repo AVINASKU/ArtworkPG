@@ -8,7 +8,7 @@ export const getMyProject = (userInformation) => async (dispatch) => {
 
   try {
     //here need to add url and pass PM name
-    const res = await axios.get(`${DEVURL}/MyProjects/${PM}`);
+    const res = await axios.get(`${DEVURL}/v1/MyProjects/${PM}`);
 
     if (res?.data === null) {
       dispatch({
@@ -17,7 +17,7 @@ export const getMyProject = (userInformation) => async (dispatch) => {
       });
     } else {
       if (res.status === 200) {
-        const orderByData = _.orderBy(res.data.ArtworkAgilityProjects, ['Project_ID'], ['desc'])
+        const orderByData = _.orderBy(res.data.ArtworkAgilityProjects, ['Timestamp'], ['desc'])
         dispatch({
           type: types.GET_PROJECT_DETAILS_SUCCESS,
           payload: orderByData,
@@ -40,7 +40,7 @@ export const getAllProject = (userInformation) => async (dispatch) => {
   let bu = userInformation?.bu;
   try {
     //here need to add url and pass PM name
-    const res = await axios.get(`${DEVURL}/AllProjects/${bu}/${region}`);
+    const res = await axios.get(`${DEVURL}/v1/AllProjects/${bu}/${region}`);
 
     if (res?.data === null) {
       dispatch({
@@ -49,9 +49,10 @@ export const getAllProject = (userInformation) => async (dispatch) => {
       });
     } else {
       if (res.status === 200) {
+        const orderByData = _.orderBy(res.data.ArtworkAgilityProjects, ['Timestamp'], ['desc'])
         dispatch({
           type: types.GET_ALL_PROJECT_DETAILS_SUCCESS,
-          payload: res.data.ArtworkAgilityProjects,
+          payload: orderByData,
         });
       } else {
         dispatch({
