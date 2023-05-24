@@ -167,7 +167,7 @@ function DDI() {
   let Brand = [];
   let Category = [];
 
-  if (TaskDetailsData.ArtworkAgilityPage) {
+  if (TaskDetailsData?.ArtworkAgilityPage) {
     Brand = TaskDetailsData.ArtworkAgilityPage.Artwork_Brand;
     Category = TaskDetailsData.ArtworkAgilityPage.Artwork_SMO;
   }
