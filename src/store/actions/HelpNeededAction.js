@@ -13,7 +13,7 @@ export const HelpNeededAction = (formData) => {
           "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
         },
       });
-      let apiURL = `${DEVURL}/HelpNeeded`;
+      let apiURL = `${DEVURL}/v1/HelpNeeded`;
 
       const response = await axiosInstance.post(apiURL, formData);
       dispatch({

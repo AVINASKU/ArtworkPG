@@ -4,7 +4,7 @@ import { BlobServiceClient } from "@azure/storage-blob";
 // Define your Azure Blob Storage configuration variables here
 const containerName = "ArtworkFolder";
 const sasToken =
-  "sp=racwo&st=2023-03-03T13:19:28Z&se=2023-03-31T21:19:28Z&spr=https&sv=2021-06-08&sr=d&sig=hAlsHYS%2Bb%2B3G9eWsv59CjY5xLCvhXNQUfqw%2BtI2gdsc%3D&sdd=1";
+  "sp=racw&st=2023-05-05T17:22:57Z&se=2023-06-30T01:22:57Z&spr=https&sv=2022-11-02&sr=d&sig=xhkLAgoVQMtLBE7e5utB1rN1Tbpy%2BjR4GJzKww9yyto%3D&sdd=1";
 const storageAccountName = "artworkagilityadlsdev";
 
 // Create a BlobServiceClient instance using the configuration variables

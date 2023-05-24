@@ -14,7 +14,7 @@ export const getTaskDetails = (taskID, projectId) => {
           "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
         },
       });
-      let apiURL = `${DEVURL}/TaskDetails/${taskID}/${projectId}`;
+      let apiURL = `${DEVURL}/v1/TaskDetails/${taskID}/${projectId}`;
       const TaskDetailsData = await axiosInstance({
         url: apiURL,
         method: "GET",
@@ -33,11 +33,13 @@ export const submitUploadApproveDesignIntent = async (formData, id, headers = {}
   const api = new Api();
   const axiosInstance = await api.init({ headers });
   let apiURL;
+  //https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v2/assignments/ASSIGN-WORKLIST PG-AAS-WORK U-5708!UPLOADAPPROVEDESIGNINTENT_FLOW/actions/UploadApproveDesignIntent
+  
   apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!UPLOADAPPROVEDESIGNINTENT_FLOW/actions/UploadApproveDesignIntent`;
 
   const submitUploadApproveDesignIntentData = await axiosInstance({
     url: apiURL,
-    method: "POST",
+    method: "PATCH",
     data: formData,
   });
   // if (submitUploadApproveDesignIntentData?.data?.ID) {
@@ -49,7 +51,7 @@ export const submitUploadApproveDesignIntent = async (formData, id, headers = {}
 export const saveDesignIntent = async (formData, headers = {}) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${DEVURL}/TaskDetails/UpdateDesignIntentJob`;
+  let apiURL = `${DEVURL}/v1/TaskDetails/UpdateDesignIntentJob`;
   const designIntent = await axiosInstance({
     url: apiURL,
     method: "POST",

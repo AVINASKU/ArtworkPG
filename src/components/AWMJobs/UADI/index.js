@@ -8,6 +8,7 @@ import {
   getTaskDetails,
   submitUploadApproveDesignIntent,
 } from '../../../store/actions/taskDetailAction';
+import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -19,16 +20,20 @@ const headerName = 'Upload Approved Design Intent';
 
 const UADI = () => {
   const [data, setData] = useState(null);
-  const [base64data, setBase64data] = useState(null);
   const [designIntent, setDesignIntent] = useState(null);
+  const [formattedValue, setformattedValue] = useState(0);
+  const [mappedFiles, setMappedFiles] = useState([]);
+  const [fileName, setFileName] = useState("");
+  const [azureFile, setAzureFile] = useState("");
   let { TaskID, ProjectID } = useParams();
   const { TaskDetailsData, loading } = useSelector(
     (state) => state.TaskDetailsReducer
   );
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const id = `PG-AAS-WORK ${TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID}`;
-
+  const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
+  const roleName = "DI_";
+  const version = "V1";
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
   }, [dispatch, TaskID, ProjectID]);
@@ -49,55 +54,27 @@ const UADI = () => {
   const onSaveAsDraft = () => {
     console.log('design intent onSaveAsDraft');
   };
-  const customBase64Uploader = async (event) => {
-    const file = event.files[0];
-    const reader = new FileReader();
-    let blob = await fetch(file.objectURL).then((r) => r.blob()); //blob:url
-
-    reader.readAsDataURL(blob);
-    reader.onloadend = function () {
-      setBase64data(reader.result);
-    };
-  };
 
   const onSubmit = async () => {
-    let mainDiv = document.getElementsByClassName('p-fileupload-buttonbar');
-    mainDiv[0].getElementsByTagName('button')[0].click();
-    console.log('base 64', base64data);
-
-    const Size = document
-      .getElementsByClassName('p-fileupload-row')[0]
-      .getElementsByTagName('div')[0]
-      .getElementsByTagName('span')[0].innerHTML;
-
-    const Filename = document
-      .getElementsByClassName('p-fileupload-row')[0]
-      .getElementsByTagName('div')[0]
-      .getElementsByTagName('div')[0].innerHTML;
-
     const headers = {
       key: 'If-Match',
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-    const Timestamp = Date.now();
-
+    console.log("azureFile", azureFile);
     const formData = {
       caseTypeID: 'PG-AAS-Work-UploadApprovedDesignIntent',
       content: {
-        AWMTaskID: 'UADI_Task-244',
-        AWMProjectID: 'A-827',
-        Filename,
-        Version: 'v 1.0',
-        Size,
-        Timestamp,
+        AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
+        AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
+        Size : formattedValue,
+        Version: version,
+        Filename: fileName
       },
     };
-    console.log('formData', formData);
+    await dispatch(uploadFileAzure(azureFile));
+    //console.log('formData', formData, "id", id);
     await submitUploadApproveDesignIntent(formData, id, headers);
   };
-
-  console.log('task data project-content', designIntent);
-
   return (
     <PageLayout>
       <DesignHeader
@@ -115,14 +92,21 @@ const UADI = () => {
           <ApproveDesignIntentContent
             {...designIntent}
             upload={true}
-            customBase64Uploader={customBase64Uploader}
+            setformattedValue={setformattedValue}
+            setAzureFile={setAzureFile}
+            setFileName={setFileName}
+            setMappedFiles={setMappedFiles}
+            item={data}
+            roleName={roleName}
+            ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
+            version={version}
           />
         )
       )}
       <FooterButtons
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
-        onSubmit={onSubmit}
+        onSubmit={onSubmit}        
       />
     </PageLayout>
   );
