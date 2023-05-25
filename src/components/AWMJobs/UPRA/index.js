@@ -15,12 +15,16 @@ const headerName = "Upload Production Ready Art";
 const UPRA = () => {
   const [data, setData] = useState(null);
   const [taskData, setTaskData] = useState(null);
+    const [fileName, setFileName] = useState("");
+  const [azureFile, setAzureFile] = useState("");
 
   useEffect(() => {
     const data1 = ProjectService.getApproveDI();
     setData(data1);
     setTaskData(data1.DesignIntentList);
   }, [data]);
+
+  console.log("file name and azure file", fileName,azureFile);
 
   return (
     <PageLayout>
@@ -30,8 +34,8 @@ const UPRA = () => {
         disabled={true}
         label="Upload Production Ready Art"
       />
-      {<CloneJobs {...data} />}
-      <ApproveDesignIntentContent {...taskData} upload={true} />
+      {/* {<CloneJobs {...data} />} */}
+      <ApproveDesignIntentContent {...taskData} upload={true} setAzureFile={setAzureFile} setFileName={setFileName} />
       <FooterButtons />
     </PageLayout>
   );
