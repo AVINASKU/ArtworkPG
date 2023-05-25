@@ -17,18 +17,18 @@ const ApproveDesignIntentContent = ({
   ArtworkAgilityPage,
   version
 }) => {
-  console.log("item", item.Consumed_Buffer);
+  console.log("item", item?.Consumed_Buffer);
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
   let di_name;
     di_name =
       roleName +
-      (item.Consumed_Buffer + "_") +
-      ArtworkAgilityPage.Artwork_Brand[0].Brand_Name +
+      (item?.Consumed_Buffer + "_") +
+      ArtworkAgilityPage?.Artwork_Brand[0]?.Brand_Name +
       "_" +
-      ArtworkAgilityPage.Artwork_Category[0].Category_Name +
+      ArtworkAgilityPage?.Artwork_Category[0]?.Category_Name +
       "_" +
-      item.Project_Name +
+      item?.Project_Name +
       "_" +
       version;
 
