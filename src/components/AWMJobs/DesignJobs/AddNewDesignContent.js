@@ -14,8 +14,7 @@ const AddNewDesignContent = ({
   item,
   addData,
   roleName,
-  checkBU,
-  setSubmitActive
+  checkBU
 }) => {
   const { Agency_Reference, Additional_Info, event, Select, Cluster } = item;
 
@@ -23,7 +22,7 @@ const AddNewDesignContent = ({
   const [agencyRef, setAgency] = useState(Agency_Reference);
   const [clusters, setCluster] = useState(Cluster);
   const [additionalInformation, setAdditionalInfo] = useState(Additional_Info);
-  const [tire, setTire] = useState("");
+  const [tier, setTier] = useState("");
   const [items, setItems] = useState([]);
 
   const search = (event) => {
@@ -98,7 +97,6 @@ const AddNewDesignContent = ({
               onChange={(e) => {
                 addData("Select", index, e.checked, di_name);
                 setChecked(e.checked);
-                setSubmitActive(e.checked ? false: true)
               }}
               checked={event === "submit" ? true : checked}
               className="margin-right"
@@ -142,12 +140,12 @@ const AddNewDesignContent = ({
         {checkBU && (
           <Col sm={2} className="set-autocomplete-height">
             <div>
-              <label htmlFor="cluster">Tire </label>
+              <label htmlFor="cluster">Tier </label>
               <AutoComplete
-                value={tire}
+                value={tier}
                 suggestions={items}
                 completeMethod={search}
-                onChange={(e) => setTire(e.value)}
+                onChange={(e) => setTier(e.value)}
                 dropdown
               />
             </div>
