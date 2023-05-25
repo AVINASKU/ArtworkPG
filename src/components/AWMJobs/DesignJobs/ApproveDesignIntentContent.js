@@ -15,22 +15,22 @@ const ApproveDesignIntentContent = ({
   item,
   roleName,
   ArtworkAgilityPage,
-  version
+  version,
 }) => {
-  // console.log("item", item.Consumed_Buffer);
+  console.log("item", item?.Consumed_Buffer);
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
   let di_name;
-    di_name =
-      roleName +
-      (item.Consumed_Buffer + "_") +
-      ArtworkAgilityPage.Artwork_Brand[0].Brand_Name +
-      "_" +
-      ArtworkAgilityPage.Artwork_Category[0].Category_Name +
-      "_" +
-      item.Project_Name +
-      "_" +
-      version;
+  di_name =
+    roleName +
+    (item?.Consumed_Buffer + "_") +
+    ArtworkAgilityPage?.Artwork_Brand[0]?.Brand_Name +
+    "_" +
+    ArtworkAgilityPage?.Artwork_Category[0]?.Category_Name +
+    "_" +
+    item?.Project_Name +
+    "_" +
+    version;
 
   const onTemplateUpload = (e) => {
     let _totalSize = 0;
@@ -40,21 +40,23 @@ const ApproveDesignIntentContent = ({
     });
 
     setTotalSize(_totalSize);
-   
   };
   const itemTemplate = (file, props) => {
     setformattedValue(props.formatSize);
     setFileName(file.name);
     setAzureFile(file);
     return (
-        <div className="upload-row">
-            <img alt={file.name} role="presentation" src={file.objectURL} width={50} />
-            <div className="flex flex-column text-left ml-3">
-                {file.name}
-            </div>
-        </div>
+      <div className="upload-row">
+        <img
+          alt={file.name}
+          role="presentation"
+          src={file.objectURL}
+          width={50}
+        />
+        <div className="flex flex-column text-left ml-3">{file.name}</div>
+      </div>
     );
-};
+  };
   const onTemplateSelect = (e) => {
     let _totalSize = totalSize;
     let files = e.files;
@@ -96,14 +98,9 @@ const ApproveDesignIntentContent = ({
     );
   };
 
-  
-
   return (
-    
     <div>
-      <div className="design-intent-header">
-        {DesignHeader(di_name)}
-      </div>
+      <div className="design-intent-header">{DesignHeader(di_name)}</div>
       <div className="approve-design-intent">
         {upload && (
           <div
@@ -140,10 +137,10 @@ const ApproveDesignIntentContent = ({
             />
             <div
               style={{
-                color: '#003DA5',
+                color: "#003DA5",
                 fontSize: 12,
                 width: 150,
-                cursor: 'pointer',
+                cursor: "pointer",
               }}
             >
               {file_name}

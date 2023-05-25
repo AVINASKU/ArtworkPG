@@ -8,8 +8,9 @@ import {
   getTaskDetails,
   submitUploadApproveDesignIntent,
 } from '../../../store/actions/taskDetailAction';
+import { postSaveDesignIntent } from '../../../apis/uploadSaveAsDraft'
 import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 const breadcrumb = [
@@ -34,6 +35,8 @@ const UADI = () => {
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
   const roleName = "DI_";
   const version = "V1";
+  const location = useLocation();
+  const currentUrl = location.pathname;
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
   }, [dispatch, TaskID, ProjectID]);
@@ -51,8 +54,16 @@ const UADI = () => {
     return navigate(`/myTasks`);
   };
 
-  const onSaveAsDraft = () => {
-    console.log('design intent onSaveAsDraft');
+  const onSaveAsDraft = async () => {
+    const formData = {
+        AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
+        AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
+        Size : '1',
+        Version: version,
+        Filename: fileName
+    };
+    await dispatch(uploadFileAzure(azureFile));
+    await postSaveDesignIntent(formData);
   };
 
   const onSubmit = async () => {
@@ -66,14 +77,15 @@ const UADI = () => {
       content: {
         AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
         AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
-        Size : formattedValue,
+        Size : '1',
         Version: version,
         Filename: fileName
       },
     };
     await dispatch(uploadFileAzure(azureFile));
-    //console.log('formData', formData, "id", id);
+   // console.log('formData', formData, "id", id);
     await submitUploadApproveDesignIntent(formData, id, headers);
+    navigate(`/${currentUrl?.split("/")[1]}`);
   };
   return (
     <PageLayout>
