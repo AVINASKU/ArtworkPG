@@ -2,14 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Col, Row } from "react-bootstrap";
-import { BreadCrumb } from "primereact/breadcrumb";
 import { useDispatch, useSelector } from "react-redux";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { changeDateFormat } from "../../../utils";
 import { FileUpload } from "primereact/fileupload";
-
-import "./index.scss";
 import { NavLink, useLocation } from "react-router-dom";
+import "./index.scss";
 
 const CPPFA = ({ showTaskDialog, selectedTaskData, onClose }) => {
   const [visible, setVisible] = useState(showTaskDialog);
@@ -177,7 +175,59 @@ const CPPFA = ({ showTaskDialog, selectedTaskData, onClose }) => {
             </Col>
             <Col></Col>
           </Row>
-          <Row hidden={riskLevel === "lowRisk" || yesOrNo !== "" || highRiskYesOrNo === ""}>
+          <Row
+            hidden={riskLevel === "lowRisk"}
+            className={
+              (riskLevel !== "lowRisk" && highRiskYesOrNo === "") ||
+              yesOrNo !== ""
+                ? "highRiskDataPaddingBottom"
+                : ""
+            }
+          >
+            <Col
+              className={`highRiskData ${
+                yesOrNo === "" && highRiskYesOrNo !== ""
+                  ? "highRiskErrorBorderColor"
+                  : ""
+              }`}
+            >
+              <div className="highRiskDataColor">
+                Print Feasibility Assessment is High Risk whereas there is no
+                Color Development in scope of this project. Do you want to add
+                Color Development to the project scope?
+              </div>
+              <div className="highRiskButtons">
+                <button
+                  type="button"
+                  className={`btn highRiskButton ${
+                    yesOrNo === "yes" ? "yesOrNoButtonsColor" : "btn-secondary"
+                  }`}
+                  onClick={() => setYesOrNo("yes")}
+                >
+                  Yes
+                </button>
+                <button
+                  type="button"
+                  className={`btn highRiskButton ${
+                    yesOrNo === "no" ? "yesOrNoButtonsColor" : "btn-secondary"
+                  }`}
+                  onClick={() => setYesOrNo("no")}
+                >
+                  No
+                </button>
+              </div>
+            </Col>
+            <Col></Col>
+            <Col></Col>
+            <Col></Col>
+          </Row>
+          <Row
+            hidden={
+              riskLevel === "lowRisk" ||
+              yesOrNo !== "" ||
+              highRiskYesOrNo === ""
+            }
+          >
             <Col className="highRiskError">
               *Please select Yes/No in order to proceed further.
             </Col>
