@@ -10,7 +10,7 @@ const projectPlanAllColumnNames = [
   "Role",
   "Owner",
   "State",
-  "Duration",
+  "Duration(Days)",
   "StartDate",
   "EndDate",
   "ConsumedBuffer",

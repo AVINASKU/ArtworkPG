@@ -266,7 +266,7 @@ const ProjectList = (props) => {
               color: "gray",
               border: "1px solid",
               padding: "0.15rem 0.4rem",
-              margin: "2px 0"
+              margin: "2px 0",
             }}
           ></Tag>
         )}
@@ -392,14 +392,12 @@ const ProjectList = (props) => {
     setFilters(value);
   };
 
-    const onColumnResizeEnd = (event) => {
+  const onColumnResizeEnd = (event) => {
     // console.log("updated column name", event.column, event?.element?.clientWidth);
     // console.log("width", event.element.offsetWidth, event.column);
 
     let columnWidthMyProject = {};
-    let jsonColumnWidthMyProject = localStorage.getItem(
-      "columnWidthMyProject"
-    );
+    let jsonColumnWidthMyProject = localStorage.getItem("columnWidthMyProject");
     if (jsonColumnWidthMyProject) {
       columnWidthMyProject = JSON.parse(jsonColumnWidthMyProject);
     }

@@ -21,7 +21,15 @@ import ApproveDesignDialog from "./ApproveDesignDialog";
 import { useLocation, useParams } from "react-router-dom";
 import CPPFA from "./../../AWMJobs/CPPFA";
 
-const ProjectPlanList = ({ projectPlan, selectedProject, projectPlanDesign, pegadata, setPegaData, setUpdatedProjectPlanDesignData, setActiveSave }) => {
+const ProjectPlanList = ({
+  projectPlan,
+  selectedProject,
+  projectPlanDesign,
+  pegadata,
+  setPegaData,
+  setUpdatedProjectPlanDesignData,
+  setActiveSave,
+}) => {
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
   const [selectedColumnName, setSelectedColumnName] = useState(null);
@@ -58,8 +66,7 @@ const ProjectPlanList = ({ projectPlan, selectedProject, projectPlanDesign, pega
 
   useEffect(() => {
     (async () => {
-      try {      
-
+      try {
         let filteredPegaDataJson = localStorage.getItem("columnWiseFilterData");
         const filteredPegaData = JSON.parse(filteredPegaDataJson);
 
@@ -69,7 +76,7 @@ const ProjectPlanList = ({ projectPlan, selectedProject, projectPlanDesign, pega
           setPegaData(projectPlan);
         } else {
           setPegaData(projectPlan);
-        };
+        }
         // according to pathname we need to call api and store column name in local storage
         let columnNamesJson = localStorage.getItem("projectPlanAllColumnNames");
         const columnNames = JSON.parse(columnNamesJson);
@@ -455,7 +462,7 @@ const ProjectPlanList = ({ projectPlan, selectedProject, projectPlanDesign, pega
     console.log("Pegadata: ", pegadata);
     setPegaData([...pegadata]);
     setActiveSave(false);
-   //updateProjectPlanDesign();
+    //updateProjectPlanDesign();
   };
 
   const onDurationChange = (rowData, { value }, ele) => {
@@ -574,7 +581,10 @@ const ProjectPlanList = ({ projectPlan, selectedProject, projectPlanDesign, pega
             value={filters.length ? filters : pegadata}
             loading={loader}
             className="mt-3 textAlignTreeTable"
-            tableStyle={{ minWidth: "119rem", tableLayout: "auto" }}
+            tableStyle={{
+              minWidth: "119rem",
+              tableLayout: "auto",
+            }}
           >
             {/* <Column header="" expander={true}></Column> */}
             {rowExpansionColumns()}
