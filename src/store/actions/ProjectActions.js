@@ -8,7 +8,7 @@ export const getMyProject = (userInformation) => async (dispatch) => {
 
   try {
     //here need to add url and pass PM name
-    const res = await axios.get(`${DEVURL}/MyProjects/${PM}`);
+    const res = await axios.get(`${DEVURL}/v1/MyProjects/${PM}`);
 
     if (res?.data === null) {
       dispatch({
@@ -40,7 +40,7 @@ export const getAllProject = (userInformation) => async (dispatch) => {
   let bu = userInformation?.bu;
   try {
     //here need to add url and pass PM name
-    const res = await axios.get(`${DEVURL}/AllProjects/${bu}/${region}`);
+    const res = await axios.get(`${DEVURL}/v1/AllProjects/${bu}/${region}`);
 
     if (res?.data === null) {
       dispatch({

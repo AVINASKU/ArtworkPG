@@ -26,12 +26,11 @@ function DDI() {
   const [designIntent, setDesignIntent] = useState([]);
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
+  const [submitActive, setSubmitActive] = useState(true);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { TaskDetailsData, loading } = useSelector(
-    (state) => state.TaskDetailsReducer
-  );
+  const { TaskDetailsData, loading } = useSelector((state) => state.TaskDetailsReducer);
 
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
@@ -45,6 +44,14 @@ function DDI() {
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
     }
   }, [TaskDetailsData]);
+
+  // useEffect(() => {
+  //   console.log("useEffect designIntent",designIntent);
+  //   if(!submitActive){
+  //     const checkboxCheck = designIntent.some((task) => task?.Select === true);
+  //     setSubmitActive(checkboxCheck ? false : true);
+  //   }
+  // }, [submitActive])
 
   const handleCancel = () => {
     return navigate(`/myTasks`);
@@ -123,96 +130,98 @@ function DDI() {
   };
 
   const onSaveAsDraft = async () => {
+    let updatedData = [];
     console.log("design intent list full", designIntent);
     // let submitOnlySelectedData = designIntent.filter(
     //   (task) => task?.Event !== "submit"
     // );
-    let submitOnlySelectedData = designIntent.map((task) => {
-      task.Action = "update";
-      if (task?.Action !== "delete" && task?.Design_Job_ID) {
-        task.Action = "update";
-      } else if (task?.Action !== "delete" && task?.isNew === true)
-        task.Action = "add";
-
+    designIntent.filter((task) => {
       if (task?.isNew) {
         task.Design_Job_ID = "";
       }
+        task.Action = "update";
+        if (task?.Action !== "delete" && task?.Design_Job_ID) {
+          task.Action = "update";
+        } else if (task?.Action !== "delete" && task?.isNew === true)
+          task.Action = "add";
 
-      task.Event = "draft";
-      task.AWM_Project_ID = "A-1000";
-      return task;
+          updatedData.push({        
+            Design_Job_Name: task.Design_Job_Name,
+            Design_Job_ID: task.Design_Job_ID,
+            AWM_Project_ID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
+            Agency_Reference: task.Agency_Reference,
+            Cluster: task.Cluster,
+            Additional_Info:task.Additional_Info,
+            Select: task.Select ? task.Select : false,
+            Action: task.Action
+          });
+      return console.log('updatedData', updatedData);
     });
+   
     let formData = {
-      DesignIntentList: submitOnlySelectedData,
+      DesignIntentList: updatedData,
     };
-    console.log("full draft data --->", submitOnlySelectedData);
+    console.log("full draft data --->", formData);
     await saveDesignIntent(formData);
   };
-
-  console.log("data", data);
   let Brand = [];
   let Category = [];
 
-  if (TaskDetailsData.ArtworkAgilityPage) {
+  if (TaskDetailsData?.ArtworkAgilityPage) {
     Brand = TaskDetailsData.ArtworkAgilityPage.Artwork_Brand;
     Category = TaskDetailsData.ArtworkAgilityPage.Artwork_SMO;
   }
 
   return (
-    console.log("designIntent", designIntent),
-    (
-      <PageLayout>
-        <DesignHeader
-          setAddNewDesign={addNewEmptyDesign}
-          onSelectAll={onSelectAll}
-          breadcrumb={breadcrumb}
-          headerName={headerName}
-          label="Define Design Intent"
-        />
-        <div
-          style={{
-            overflowY: "scroll",
-            overflowX: "hidden",
-            width: "100%",
-            height: "400px",
-          }}
-        >
-          {<AddNewDesign {...data} />}
+    <PageLayout>
+      <DesignHeader
+        setAddNewDesign={addNewEmptyDesign}
+        onSelectAll={onSelectAll}
+        breadcrumb={breadcrumb}
+        headerName={headerName}
+        label="Define Design Intent"
+      />
+      <div
+        style={{
+          overflowY: "scroll",
+          overflowX: "hidden",
+          width: "100%",
+          height: "400px",
+        }}
+      >
+        {<AddNewDesign {...data} />}
 
-          {loading || designIntent === null ? (
-            <i
-              className="pi pi-spin pi-spinner"
-              style={{ fontSize: "2rem" }}
-            ></i>
-          ) : (
-            designIntent &&
-            designIntent.length > 0 &&
-            designIntent.map((item, index) => {
-              if (item && item?.Action !== "delete") {
-                return (
-                  <AddNewDesignContent
-                    key={item.Design_Job_ID}
-                    {...data}
-                    item={item}
-                    Brand={Brand}
-                    Category={Category}
-                    index={index}
-                    addData={addData}
-                    handleDelete={handleDelete}
-                    roleName={roleName}
-                  />
-                );
-              }
-            })
-          )}
-        </div>
-        <FooterButtons
+        {loading || designIntent === null ? 
+          <i className="pi pi-spin pi-spinner" style={{ fontSize: '2rem' }}></i>
+          : designIntent &&
+          designIntent.length > 0 &&
+          designIntent.map((item, index) => {
+            if (item && item?.Action !== "delete") {
+              return (
+                <AddNewDesignContent
+                  key={item.Design_Job_ID}
+                  {...data}
+                  item={item}
+                  Brand={Brand}
+                  Category={Category}
+                  index={index}
+                  addData={addData}
+                  handleDelete={handleDelete}
+                  roleName={roleName}
+                  setSubmitActive={setSubmitActive}
+                />
+              );
+            }
+          })}
+      </div>
+      <FooterButtons
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}
+          formValid={submitActive}
         />
       </PageLayout>
-    )
+    
   );
 }
 

@@ -47,7 +47,7 @@ const ProjectPlanList = ({
   const [loader, setLoader] = useState(false);
   //projectPlanDesign
   const navigate = useNavigate();
-
+  let { ProjectID } = useParams();
   const op = useRef(null);
 
   const handleHelpNeededClick = (options) => {

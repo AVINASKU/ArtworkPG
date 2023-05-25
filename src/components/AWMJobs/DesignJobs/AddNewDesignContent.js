@@ -15,6 +15,7 @@ const AddNewDesignContent = ({
   addData,
   roleName,
   checkBU,
+  setSubmitActive
 }) => {
   const { Agency_Reference, Additional_Info, event, Select, Cluster } = item;
 
@@ -97,6 +98,7 @@ const AddNewDesignContent = ({
               onChange={(e) => {
                 addData("Select", index, e.checked, di_name);
                 setChecked(e.checked);
+                setSubmitActive(e.checked ? false: true)
               }}
               checked={event === "submit" ? true : checked}
               className="margin-right"
