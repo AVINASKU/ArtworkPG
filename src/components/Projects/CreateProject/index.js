@@ -54,7 +54,9 @@ function AddProject(props) {
   const id = `PG-AAS-WORK ${selectedProjectDetails.Project_ID}`;
   const prePopuSmo = [];
   selectedProjectDetails?.Artwork_SMO?.forEach((obj) => {
-    prePopuSmo.push(obj.code);
+    if (obj.code !== "") {
+      prePopuSmo.push(obj.code);
+    }
   });
 
   const [projectName, setProjectName] = useState("");
@@ -73,7 +75,7 @@ function AddProject(props) {
   const [printerDate, setPrinterDate] = useState("");
   const [sosDate, setSOSDate] = useState("");
   const [region, setRegion] = useState({});
-  const [smo, setSmo] = useState(null);
+  const [smo, setSmo] = useState([]);
   const [bu, setBu] = useState("");
   const [subCategories, setSubCategories] = useState([]);
   const [brand, setBrand] = useState([]);
@@ -129,8 +131,28 @@ function AddProject(props) {
       setGroupName(selectedProjectDetails?.Initiative_Group_Name || "");
       setProjectDesc(selectedProjectDetails?.Project_Description || "");
       setBu(selectedProjectDetails?.BU || "");
-      setSubCategories(selectedProjectDetails?.Artwork_Category || []);
-      setBrand(selectedProjectDetails?.Artwork_Brand || []);
+      if (selectedProjectDetails?.Artwork_Category?.length > 0) {
+        selectedProjectDetails?.Artwork_Category.forEach((catg) => {
+          if (catg.code !== "") {
+            setSubCategories(selectedProjectDetails?.Artwork_Category);
+          } else {
+            setSubCategories([]);
+          }
+        });
+      } else {
+        setSubCategories([]);
+      }
+      if (selectedProjectDetails?.Artwork_Brand?.length > 0) {
+        selectedProjectDetails?.Artwork_Brand.forEach((brand) => {
+          if (brand.code !== "") {
+            setBrand(selectedProjectDetails?.Artwork_Brand);
+          } else {
+            setBrand([]);
+          }
+        });
+      } else {
+        setBrand([]);
+      }
       setRegion(
         (selectedProjectDetails &&
           regionList.find(
@@ -138,7 +160,7 @@ function AddProject(props) {
           )) ||
           {}
       );
-      setSmo(prePopuSmo || null);
+      setSmo(prePopuSmo || []);
       setCluster(selectedProjectDetails?.cluster || "");
       setScale(
         (selectedProjectDetails &&
@@ -256,7 +278,7 @@ function AddProject(props) {
       setSubCategories([]);
       setBrand([]);
       setRegion({});
-      setSmo(null);
+      setSmo([]);
       setCluster("");
       setScale([]);
       setSOSDate("");
@@ -414,12 +436,12 @@ function AddProject(props) {
     e.target.value.length === 0 ? setRegionAlert(true) : setRegionAlert(false);
     const selectedRegion = regionList.find((r) => r.name === e.target.value);
     setRegion(selectedRegion);
-    setSmo(null);
+    setSmo([]);
   };
   const handleScaleChange = (e) => {
     const selectedScale = scaleList.find((r) => r.code === e.target.value);
     setRegion(selectedScale);
-    setSmo(null);
+    setSmo([]);
   };
 
   const smoOptions = getSmoOptions();
@@ -990,7 +1012,7 @@ function AddProject(props) {
                 //   (!region || Object.keys(region).length < 1) && "error-valid"
                 // }`}
                 className={`mb-3 ${regionAlert ? "error-text" : ""}`}
-                controlId="smo.SelectMultiple"
+                controlId="reg.SelectMultiple"
               >
                 <Form.Label>
                   Region <sup>*</sup>
@@ -1107,10 +1129,15 @@ function AddProject(props) {
                           value={designScopeList[option.value]}
                           onChange={(e) => {
                             const inputValue = parseInt(e.target.value, 10);
-                            if (inputValue >= 1) {
+                            if (inputValue > 0) {
                               setDesignScopeList((prevDesignScopeList) => ({
                                 ...prevDesignScopeList,
                                 [option.value]: parseInt(e.target.value),
+                              }));
+                            } else {
+                              setDesignScopeList((prevDesignScopeList) => ({
+                                ...prevDesignScopeList,
+                                [option.value]: parseInt(""),
                               }));
                             }
                           }}
@@ -1147,8 +1174,10 @@ function AddProject(props) {
                       required
                       onChange={(e) => {
                         const inputValue = parseInt(e.target.value, 10);
-                        if (inputValue >= 1) {
+                        if (inputValue > 0) {
                           setPOA(inputValue);
+                        } else {
+                          setPOA("");
                         }
                       }}
                       style={{
@@ -1248,7 +1277,7 @@ function AddProject(props) {
                   render={({ field, fieldState }) => (
                     <>
                       <Calendar
-                        // placeholder="Select Estimated AW@Printer"
+                        placeholder="Select Estimated AW@Printer"
                         inputId={field.name}
                         value={printerDate}
                         onChange={(e) => setPrinterDate(e.target.value)}
@@ -1283,7 +1312,7 @@ function AddProject(props) {
                   render={({ field, fieldState }) => (
                     <>
                       <Calendar
-                        // placeholder="Select Estimated AW Readiness"
+                        placeholder="Select Estimated AW Readiness"
                         inputId={field.name}
                         value={readinessDate}
                         onChange={(e) => setReadinessDate(e.target.value)}
@@ -1307,7 +1336,11 @@ function AddProject(props) {
               <Form.Group className="mb-4" controlId="il.SelectMultiple">
                 <Form.Label>IL</Form.Label>
                 <div>
-                  <Form.Control value={iL} onChange={handleIL}></Form.Control>
+                  <Form.Control
+                    placeholder="Enter IL"
+                    value={iL}
+                    onChange={handleIL}
+                  ></Form.Control>
                 </div>
               </Form.Group>
             </Row>
