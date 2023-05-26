@@ -20,8 +20,8 @@ import DNPF from "./components/AWMJobs/DNPF/index.js";
 import ADT from "./components/AWMJobs/ADT/index.js";
 import APRA from "./components/AWMJobs/APRA/index.js";
 import UPRA from "./components/AWMJobs/UPRA/index.js";
+import URDT from "./components/AWMJobs/URDT/index.js";
 import CPPFA from "./components/AWMJobs/CPPFA/index.js";
-import UDT from "./components/AWMJobs/UDT/index.js";
 
 const RoutesNav = () => {
   return (
@@ -51,8 +51,6 @@ const RoutesNav = () => {
         <Route path="/allTasks/DDT/:TaskID/:ProjectID" element={<DDT />} />
         <Route path="/myTasks/ADT/:TaskID/:ProjectID" element={<ADT />} />
         <Route path="/allTasks/ADT/:TaskID/:ProjectID" element={<ADT />} />
-        <Route path="/myTasks/UDT/:TaskID/:ProjectID" element={<UDT />} />
-        <Route path="/allTasks/UDT/:TaskID/:ProjectID" element={<UDT />} />
         <Route path="/myTasks/DPRA/:TaskID/:ProjectID" element={<DPRA />} />
         <Route path="/allTasks/DPRA/:TaskID/:ProjectID" element={<DPRA />} />
         <Route path="/myTasks/APRA/:TaskID/:ProjectID" element={<APRA />} />
