@@ -11,7 +11,7 @@ import {
 import { postSaveDesignIntent } from '../../../apis/uploadSaveAsDraft';
 import { submitUploadApproveDesignIntent } from '../../../apis/uploadSubmitAPIs';
 import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 const breadcrumb = [
@@ -52,7 +52,7 @@ const UADI = () => {
   }, [TaskDetailsData]);
 
   const handleCancel = () => {
-    return navigate(`/myTasks`);
+   return navigate(`/${currentUrl?.split("/")[1]}`);
   };
 
   const onSaveAsDraft = async () => {

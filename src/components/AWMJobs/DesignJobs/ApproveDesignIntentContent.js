@@ -17,7 +17,7 @@ const ApproveDesignIntentContent = ({
   ArtworkAgilityPage,
   version
 }) => {
-  console.log("item", item?.Consumed_Buffer);
+  // console.log("item", item.Consumed_Buffer);
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
   let di_name;

@@ -17,6 +17,7 @@ const DesignHeader = ({
   const [checked, setChecked] = useState(false);
   const location = useLocation();
   const locationPath = location?.pathname;
+
   const url = locationPath?.split("/");
   const mytasks = url[1];
   return (
@@ -24,7 +25,7 @@ const DesignHeader = ({
       <i
         className="pi pi-times"
         onClick={() => {
-          navigate("/myTasks");
+          navigate(`/${locationPath?.split("/")[1]}`);
         }}
       ></i>
       <div className="actions">
