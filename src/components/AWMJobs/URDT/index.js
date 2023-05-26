@@ -50,7 +50,7 @@ const URDT = () => {
   }, [TaskDetailsData]);
 
   const handleCancel = () => {
-    return navigate(`/myTasks`);
+    navigate(`/${currentUrl?.split("/")[1]}`);
   };
 
   const onSaveAsDraft = async () => {
