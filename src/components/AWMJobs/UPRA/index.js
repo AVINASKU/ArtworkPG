@@ -26,7 +26,7 @@ const UPRA = () => {
   const [azureFile, setAzureFile] = useState("");
   const [formattedValue, setformattedValue] = useState(0);
   const [mappedFiles, setMappedFiles] = useState([]);
-    const location = useLocation();
+  const location = useLocation();
   const locationPath = location?.pathname;
   const url = locationPath?.split("/");
 
@@ -69,7 +69,7 @@ const UPRA = () => {
   };
 
   const handleCancel = () => {
-    return navigate(url[0] === "myTasks" ?`/myTasks`:"/allTasks");
+    return navigate(url[0] === "myTasks" ? `/myTasks` : "/allTasks");
   };
 
   const onSubmit = async () => {
@@ -93,8 +93,6 @@ const UPRA = () => {
     await submitUploadApproveDesignIntent(formData, id, headers);
   };
 
-  console.log("file name and azure file", fileName,azureFile);
-
   return (
     <PageLayout>
       <DesignHeader
@@ -103,11 +101,6 @@ const UPRA = () => {
         disabled={true}
         label="Upload Production Ready Art"
       />
-<<<<<<< HEAD
-      {/* {<CloneJobs {...data} />} */}
-      <ApproveDesignIntentContent {...taskData} upload={true} setAzureFile={setAzureFile} setFileName={setFileName} />
-      <FooterButtons />
-=======
       {<AddNewDesign {...data} />}
       {loading ? (
         <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
@@ -132,7 +125,6 @@ const UPRA = () => {
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
       />
->>>>>>> 837c120a3adb0c09fe25e5fa28a74db1f2e2bc95
     </PageLayout>
   );
 };
