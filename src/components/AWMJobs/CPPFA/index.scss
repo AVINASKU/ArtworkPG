@@ -13,6 +13,18 @@
   .ppfaDialogBreadCrumb {
     padding-bottom: 12px !important;
   }
+
+  .p-fileupload-content {
+    top: 100% !important;
+  }
+
+  .p-fluid .p-fileupload .p-button {
+    padding: 0
+  }
+
+  .p-fileupload {
+    padding: 0;
+  }
 }
 
 .ppfaDialogBorder {
@@ -102,11 +114,23 @@
   line-height: 10px;
   margin: 4px 0 10px 0;
 }
+
 .yesOrNoButtonsColor {
   background-color: #003DA5;
   color: #ffffff !important;
 }
+
 .yesOrNoButtonsColor:hover {
   background-color: #003DA5;
   color: black !important;
+}
+
+.uploadIcon {
+  background-color: #fff;
+}
+
+.fileSupportedData {
+  font-size: 8px;
+  line-height: 9.75px;
+  color: #5B5959;
 }

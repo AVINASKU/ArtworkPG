@@ -551,6 +551,7 @@ const ProjectPlanList = ({
           onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
           showTaskDialog={showApproveDialogCPPFA}
           selectedTaskData={selectedTaskApproveDialogCPPFA}
+          pegadata={pegadata1}
         />
       )}
       <Suspense fallback={<div>Loading...</div>}>
