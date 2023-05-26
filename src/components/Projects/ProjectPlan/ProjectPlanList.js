@@ -176,9 +176,14 @@ const ProjectPlanList = ({
   };
 
   const onGlobalFilterChange = (e) => {
-    const value = e.value;
+    let value = e.value;
+    const value1 = pegadata.filter((pegaObj) => {
+      return value.some((obj) => {
+         return pegaObj.data.Task === obj.Task;
+       });
+     });
     setSelectedCities(value);
-    setFilters(value);
+    setFilters(value1);
   };
 
   const saveSettings = () => {
