@@ -1,5 +1,5 @@
 import Api from ".";
-
+import { DEVURL, SITURL, PRODURL } from "./envUrl";
 const baseURL = "https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1";
 
 //pass the taskID and projectId from the my tasks
@@ -33,7 +33,7 @@ export const saveDesignIntent = async (
 ) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${baseURL}/UpdateDesignIntentJob`;
+  let apiURL = `${DEVURL}/v1/UpdateDesignIntentJob`;
   console.log("api url", apiURL);
   const designIntent = await axiosInstance({
     url: apiURL,
@@ -44,4 +44,23 @@ export const saveDesignIntent = async (
   console.log("response", designIntent, formData);
 
   return true;
+};
+
+export const submitDesignIntent = async (formData, id, headers = {}) => {
+  const api = new Api();
+  const axiosInstance = await api.init({ headers });
+  let apiURL;
+  //https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v2/assignments/ASSIGN-WORKLIST PG-AAS-WORK D-111!DESIGNINTENT_FLOW/actions/DefineDesignIntent
+  
+  apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!DESIGNINTENT_FLOW/actions/DefineDesignIntent`;
+
+  const submitDesignIntentData = await axiosInstance({
+    url: apiURL,
+    method: "PATCH",
+    data: formData,
+  });
+  // if (submitDesignIntentData?.data?.ID) {
+  //   App.dispatchToStore(editProjectAction(formData));
+  // }
+  return submitDesignIntentData;
 };
