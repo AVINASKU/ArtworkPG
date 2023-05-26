@@ -64,7 +64,7 @@ const UPRA = () => {
     };
     console.log("azureFile", azureFile);
     const formData = {
-      caseTypeID: 'PG-AAS-Work-UploadApprovedDesignIntent',
+      caseTypeID: "PG-AAS-Work-UploadProductionReadyArt",
       content: {
         AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
         AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
@@ -73,11 +73,10 @@ const UPRA = () => {
         Filename: fileName
       },
     };
-    await dispatch(UploadFileToServer(azureFile, filePath));
+    // await dispatch(UploadFileToServer(azureFile, filePath));
     console.log('formData', formData, "id", id);
-    // await submitUploadApproveDesignIntent(formData, id, headers);
+    await submitUploadApproveDesignIntent(formData, id, headers);
   };
-
 
   return (
     <PageLayout>
