@@ -44,18 +44,25 @@ const ApproveDesignIntentContent = ({
   };
   const itemTemplate = (file, props) => {
     setformattedValue(props.formatSize);
-    setFileName(file.name);
-    setAzureFile(file);
+    // setFileName(file.name);
+    // setAzureFile(file);
     return (
         <div className="upload-row">
             <img alt={file.name} role="presentation" src={file.objectURL} width={50} />
             <div className="flex flex-column text-left ml-3">
-                {file.name}
+                {di_name}
             </div>
         </div>
     );
 };
   const onTemplateSelect = (e) => {
+  console.log("hello", e.files[0]);
+  const uploadedFile = e.files[0];
+  const renamedFile = {
+      ...uploadedFile,
+      name:  di_name// Set your desired custom name here
+    };
+    console.log("renamed file", renamedFile);
     let _totalSize = totalSize;
     let files = e.files;
 
@@ -64,6 +71,8 @@ const ApproveDesignIntentContent = ({
     });
 
     setTotalSize(_totalSize);
+    setAzureFile(renamedFile);
+    setFileName(di_name);
   };
 
   const DesignHeader = (di_name) => {
