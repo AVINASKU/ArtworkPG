@@ -70,13 +70,14 @@ function App(props) {
 
   useEffect(() => {
     getConfig();
-    if (process.env.NODE_ENV === "production") {
+    // if (process.env.NODE_ENV === "production") {
+
       getUserInfo();
-    } else {
-      getGroups([], true);
+    // } else {
+      // getGroups([], true);
       // setDevCookies();
-      devSetUser();
-    }
+      // devSetUser();
+    // }
   }, [getConfig]);
 
   function getUserInfo() {
@@ -111,7 +112,7 @@ function App(props) {
   function getAuthenticationUrl() {
     axios
       .post(process.env.REACT_APP_PINGURL + "getAuthorizationUrl", {
-        applicationName: "Artwork",
+        applicationName: "PIMA",
       })
       .then((res) => {
         window.location.href = res.data;
@@ -125,7 +126,7 @@ function App(props) {
     axios
       .post(process.env.REACT_APP_PINGURL + "getaccesstoken", {
         code: code,
-        applicationName: "Artwork",
+        applicationName: "PIMA",
       })
       .then((res) => {
         console.log(res);
@@ -214,9 +215,10 @@ function App(props) {
 
   return (
     <div>
-      {process.env.NODE_ENV === "production"
+      {/* {process.env.NODE_ENV === "production"
         ? setContentOfPage()
-        : setHomepageContent()}
+        : setHomepageContent()} */}
+        {setContentOfPage()}
     </div>
   );
 
