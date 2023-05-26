@@ -322,34 +322,25 @@ const TaskList = (props) => {
     let className = "";
     let helpNeeded;
 
-    if (rowData) {
-      rowData["Help_Needed"] =
-        rowData["Help_Needed"] === null
-          ? "No"
-          : rowData["Help_Needed"] === "Yes, In process"
-          ? "Yes, In process"
-          : "Yes, Done";
-    }
-
     switch (rowData?.Help_Needed) {
-      case "No":
-        helpNeeded = "No";
-        className = "helpneeded_no";
-        break;
-      case "Yes, In process":
-        helpNeeded = "Yes, In process";
+      case "Yes, in Process":
+        helpNeeded = "Yes, in Process";
         className = "helpneeded_inprocess";
+        rowData["Help_Needed"] = helpNeeded;
         break;
       case "Yes, Done":
-        rowData["Help_Needed"] = "Yes, Done";
+        helpNeeded = "Yes, Done";
         className = "helpneeded_done";
+        rowData["Help_Needed"] = helpNeeded;
         break;
       default:
-        // handle any other cases here
+        helpNeeded = "No";
+        className = "helpneeded_no";
+        rowData["Help_Needed"] = helpNeeded;
         break;
     }
 
-    return <span className={className}>{rowData["Help_Needed"]}</span>;
+    return <span className={className}>{helpNeeded}</span>;
   };
 
   const statusTemplate = (rowData) => {
