@@ -493,8 +493,8 @@ const TaskList = (props) => {
           className="margin-top-24"
           ref={dt}
           filterDisplay={isSearch && "row"}
-          // tableStyle={{ minWidth: "50rem" }}          
-          tableStyle={{ width: "max-content" }}
+          // tableStyle={{ minWidth: "50rem" }}
+          // tableStyle={{ width: "max-content" }}
           autoLayout={true}
           filters={searchHeader}
         >

@@ -4,9 +4,12 @@ import AddNewDesign from "../DesignJobs/TaskHeader";
 import DesignHeader from "../DesignJobs/DesignHeader";
 import AddNewDesignContent from "../DesignJobs/AddNewDesignContent";
 import FooterButtons from "../DesignJobs/FooterButtons";
-// import { saveDesignIntent } from "../../../apis/designIntentApi";
+import {
+  saveDefineRegionalDesignTemplate,
+  submitDefineRegionalDesignTemplate
+} from "../../../apis/defineRegionalDesignTemplate";
 import "../DesignJobs/index.scss";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { ProjectService } from "../../../service/PegaService";
 import {
@@ -25,12 +28,17 @@ function DDT() {
   const [designIntent, setDesignIntent] = useState([]);
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
+  const[projectData, setProjectData] = useState([]);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const User = useSelector((state) => state.UserReducer);
   const userInformation = User.userInformation;
   const { TaskDetailsData, loading } = useSelector((state) => state.TaskDetailsReducer);
+  const { allProjects } = useSelector((state) => state.myProject);
+  const location = useLocation();
+  const currentUrl = location.pathname;
+  const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
 
   let breadcrumb = AddNavigation(headerName);
 
@@ -41,6 +49,13 @@ function DDT() {
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
   }, [dispatch, TaskID, ProjectID]);
+
+  useEffect(()=> {
+    let projectData = allProjects.find(
+      (project) => project.Project_ID === ProjectID
+    );
+    setProjectData(projectData);
+  },[projectData]);
 
   useEffect(() => {
     if (TaskDetailsData) {
@@ -96,41 +111,92 @@ function DDT() {
     setUpdated(!updated);
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
+    let updatedData = {};
+    let updatedDataList = [];
+    const headers = {
+      key: 'If-Match',
+      value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
+    };
+    
     let submitOnlySelectedData = designIntent.filter(
       (task) => task?.Select === true
     );
     submitOnlySelectedData.map((task) => {
-      task.Event = "submit";
-    });
-    console.log("full submit data --->", submitOnlySelectedData);
-    // call submit API here
-  };
-
-  const onSaveAsDraft = async () => {
-    console.log("design intent list full", designIntent);
-    // let submitOnlySelectedData = designIntent.filter(
-    //   (task) => task?.Event !== "submit"
-    // );
-    let submitOnlySelectedData = designIntent.map((task) => {
+      if (task?.isNew) {
+        task.Design_Job_ID = "";
+      }
       task.Action = "update";
       if (task?.Action !== "delete" && task?.Design_Job_ID) {
         task.Action = "update";
       } else if (task?.Action !== "delete" && task?.isNew === true)
         task.Action = "add";
+    
+      updatedData.DesignJobName= task.Design_Job_Name;
+      updatedData.DesignJobID= task.Design_Job_ID;
+      updatedData.AgencyReference= task.Agency_Reference;
+      updatedData.Cluster= task.Cluster;
+      updatedData.AdditionalInfo =task.Additional_Info;
+      updatedData.Tier = task.Tier;
+      updatedData.Select= task.Select ? task.Select : false;
+      updatedData.Action=task.Action;
+      
+        updatedDataList.push({
+          instruction: "APPEND",
+          target : "DesignTemplateList",
+          content: updatedData
+        })
+        return console.log('updatedDataList', updatedDataList);
+    });
+    
+    let formData = {
+      caseTypeID: "PG-AAS-Work-DefineRegionalDesignTemplate",
+      content: {
+        AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
+        AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID
+      },
+      pageInstructions: updatedDataList,
+    };
+    console.log('formData', formData)
+    await submitDefineRegionalDesignTemplate(formData, id, headers);
+    navigate(`/${currentUrl?.split("/")[1]}`);
+  };
 
+  const onSaveAsDraft = async () => {
+    let updatedData = [];
+    designIntent.filter((task) => {
       if (task?.isNew) {
         task.Design_Job_ID = "";
       }
+        task.Action = "update";
+        if (task?.Action !== "delete" && task?.Design_Job_ID) {
+          task.Action = "update";
+        } else if (task?.Action !== "delete" && task?.isNew === true)
+          task.Action = "add";
 
-      task.Event = "draft";
-      task.AWM_Project_ID = "A-1000";
-      return task;
+          updatedData.push({        
+            Design_Job_Name: task.Design_Job_Name,
+            Design_Job_ID: task.Design_Job_ID,
+            Agency_Reference: task.Agency_Reference,
+            Cluster: task.Cluster,
+            Tier: task.Tier,
+            Additional_Info:task.Additional_Info,
+            Select: task.Select ? task.Select : false,
+            Action: task.Action
+          });
+      return console.log('updatedData', updatedData);
     });
+   
     let formData = {
-      DesignIntentList: submitOnlySelectedData,
+      AWM_Project_ID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
+      AWM_Task_ID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
+      Project_Name: TaskDetailsData?.ArtworkAgilityTasks[0]?.Project_Name,
+      BU: projectData?.BU,
+      Region: projectData?.Project_region,
+      DesignTemplateList: updatedData,
     };
-    // call save as draft API here below
+    console.log("full draft data --->", formData);
+   await saveDefineRegionalDesignTemplate(formData);
   };
 
   return (
