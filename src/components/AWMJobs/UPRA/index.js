@@ -2,18 +2,15 @@ import React, { useEffect, useState } from "react";
 import PageLayout from "../../PageLayout";
 import DesignHeader from "../DesignJobs/DesignHeader";
 import FooterButtons from "../DesignJobs/FooterButtons";
-import CloneJobs from "../DesignJobs/CloneJobs";
-import { ProjectService } from "../../../service/PegaService";
 import ApproveDesignIntentContent from "../DesignJobs/ApproveDesignIntentContent";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getTaskDetails,
-  submitUploadApproveDesignIntent,
-} from "../../../store/actions/taskDetailAction";
+import { getTaskDetails } from "../../../store/actions/taskDetailAction";
+import { submitUploadApproveDesignIntent } from "../../../apis/uploadSubmitAPIs";
+
 import AddNewDesign from "../DesignJobs/TaskHeader";
 import { UploadFileToServer } from "../../../store/actions/ProofScopeActions";
-
+import { postSaveDesignIntent } from "../../../apis/uploadSaveAsDraft";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
@@ -29,6 +26,9 @@ const UPRA = () => {
   const [azureFile, setAzureFile] = useState("");
   const [formattedValue, setformattedValue] = useState(0);
   const [mappedFiles, setMappedFiles] = useState([]);
+    const location = useLocation();
+  const locationPath = location?.pathname;
+  const url = locationPath?.split("/");
 
   const { TaskDetailsData, loading } = useSelector(
     (state) => state.TaskDetailsReducer
@@ -54,12 +54,27 @@ const UPRA = () => {
     }
   }, [TaskDetailsData]);
 
-  console.log("file name and azure file", fileName, azureFile);
   const filePath = "cloudflow://PP_FILE_STORE/aacdata/" + fileName;
 
-    const onSubmit = async () => {
+  const onSaveAsDraft = async () => {
+    const formData = {
+      AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
+      AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
+      Size: "1",
+      Version: version,
+      Filename: fileName,
+    };
+    // await dispatch(UploadFileToServer(azureFile, filePath));
+    await postSaveDesignIntent(formData);
+  };
+
+  const handleCancel = () => {
+    return navigate(url[0] === "myTasks" ?`/myTasks`:"/allTasks");
+  };
+
+  const onSubmit = async () => {
     const headers = {
-      key: 'If-Match',
+      key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
     console.log("azureFile", azureFile);
@@ -68,13 +83,13 @@ const UPRA = () => {
       content: {
         AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
         AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
-        Size : formattedValue,
+        Size: formattedValue,
         Version: version,
-        Filename: fileName
+        Filename: fileName,
       },
     };
     // await dispatch(UploadFileToServer(azureFile, filePath));
-    console.log('formData', formData, "id", id);
+    console.log("formData", formData, "id", id);
     await submitUploadApproveDesignIntent(formData, id, headers);
   };
 
@@ -105,7 +120,11 @@ const UPRA = () => {
           />
         )
       )}{" "}
-      <FooterButtons onSubmit={onSubmit} />
+      <FooterButtons
+        onSubmit={onSubmit}
+        handleCancel={handleCancel}
+        onSaveAsDraft={onSaveAsDraft}
+      />
     </PageLayout>
   );
 };
