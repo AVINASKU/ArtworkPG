@@ -35,18 +35,18 @@ const RoutesNav = () => {
          <Route path="/AllTasks" element={<AllTasksPage />} />
         {/* <Route path="/createProject" element={<AddProject />} /> */}
         <Route path="/projectPlan" element={<ProjectCreation />} />
-        <Route path="/myProjects/projectPlan/:ProjectID" element={<ProjectCreation />} />
-        <Route path="/allProjects/projectPlan/:ProjectID" element={<ProjectCreation />} />
+        <Route
+          path="/myProjects/projectPlan/:ProjectID"
+          element={<ProjectCreation />}
+        />
+        <Route
+          path="/allProjects/projectPlan/:ProjectID"
+          element={<ProjectCreation />}
+        />
         <Route path="/myTasks/DDI/:TaskID/:ProjectID" element={<DDI />} />
         <Route path="/allTasks/DDI/:TaskID/:ProjectID" element={<DDI />} />
-        <Route
-          path="/myTasks/UADI/:TaskID/:ProjectID"
-          element={<UADI />}
-        />
-        <Route
-          path="/allTasks/UADI/:TaskID/:ProjectID"
-          element={<UADI />}
-        />
+        <Route path="/myTasks/UADI/:TaskID/:ProjectID" element={<UADI />} />
+        <Route path="/allTasks/UADI/:TaskID/:ProjectID" element={<UADI />} />
         <Route path="/myTasks/DDT/:TaskID/:ProjectID" element={<DDT />} />
         <Route path="/allTasks/DDT/:TaskID/:ProjectID" element={<DDT />} />
         <Route path="/myTasks/ADT/:TaskID/:ProjectID" element={<ADT />} />
@@ -55,6 +55,8 @@ const RoutesNav = () => {
         <Route path="/allTasks/DPRA/:TaskID/:ProjectID" element={<DPRA />} />
         <Route path="/myTasks/APRA/:TaskID/:ProjectID" element={<APRA />} />
         <Route path="/allTasks/APRA/:TaskID/:ProjectID" element={<APRA />} />
+        <Route path="/myTasks/URDT/:TaskID/:ProjectID" element={<URDT />} />
+        <Route path="/allTasks/URDT/:TaskID/:ProjectID" element={<URDT />} />
         <Route path="/myTasks/UPRA/:TaskID/:ProjectID" element={<UPRA />} />
         <Route path="/allTasks/UPRA/:TaskID/:ProjectID" element={<UPRA />} />
         <Route path="/myTasks/CCD/:TaskID/:ProjectID" element={<CCD />} />
