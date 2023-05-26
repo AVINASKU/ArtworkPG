@@ -64,7 +64,7 @@ const UPRA = () => {
       Version: version,
       Filename: fileName,
     };
-    // await dispatch(UploadFileToServer(azureFile, filePath));
+    await dispatch(UploadFileToServer(azureFile, filePath));
     await postSaveDesignIntent(formData);
   };
 
