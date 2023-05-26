@@ -6,7 +6,7 @@ import AddNewDesignContent from "../DesignJobs/AddNewDesignContent";
 import FooterButtons from "../DesignJobs/FooterButtons";
 import {
   saveDesignIntent,
-  submitDesignIntent
+  submitDesignIntent,
 } from "../../../apis/designIntentApi";
 import "../DesignJobs/index.scss";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
@@ -26,11 +26,13 @@ function DDI() {
   const [designIntent, setDesignIntent] = useState([]);
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
-  const[projectData, setProjectData] = useState([]);
+  const [projectData, setProjectData] = useState([]);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { TaskDetailsData, loading } = useSelector((state) => state.TaskDetailsReducer);
+  const { TaskDetailsData, loading } = useSelector(
+    (state) => state.TaskDetailsReducer
+  );
   const myProjectList = useSelector((state) => state.myProject);
   const location = useLocation();
   const currentUrl = location.pathname;
@@ -40,12 +42,12 @@ function DDI() {
     dispatch(getTaskDetails(TaskID, ProjectID));
   }, [dispatch, TaskID, ProjectID]);
 
-  useEffect(()=> {
+  useEffect(() => {
     let projectData = myProjectList.myProject.find(
       (project) => project.Project_ID === ProjectID
     );
     setProjectData(projectData);
-  },[projectData]);
+  }, [projectData]);
 
   useEffect(() => {
     if (TaskDetailsData) {
@@ -110,10 +112,10 @@ function DDI() {
     let updatedData = {};
     let updatedDataList = [];
     const headers = {
-      key: 'If-Match',
+      key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-    
+
     let submitOnlySelectedData = designIntent.filter(
       (task) => task?.Select === true
     );
@@ -126,32 +128,32 @@ function DDI() {
         task.Action = "update";
       } else if (task?.Action !== "delete" && task?.isNew === true)
         task.Action = "add";
-    
-      updatedData.Design_Job_Name= task.Design_Job_Name;
-      updatedData.Design_Job_ID= task.Design_Job_ID;
-      updatedData.Agency_Reference= task.Agency_Reference;
-      updatedData.Cluster= task.Cluster;
-      updatedData.Additional_Info =task.Additional_Info;
-      updatedData.Select= task.Select ? task.Select : false;
-      updatedData.Action=task.Action;
-      
-        updatedDataList.push({
-          instruction: "APPEND",
-          target : "DesignIntentList",
-          content: updatedData
-        })
-        return console.log('updatedDataList', updatedDataList);
+
+      updatedData.DesignJobName = task.Design_Job_Name;
+      updatedData.DesignJobID = task.Design_Job_ID;
+      updatedData.AgencyReference = task.Agency_Reference;
+      updatedData.Cluster = task.Cluster;
+      updatedData.AdditionalInfo = task.Additional_Info;
+      updatedData.Select = `${task.Select ? task.Select : false}`;
+      updatedData.Action = task.Action;
+
+      updatedDataList.push({
+        instruction: "APPEND",
+        target: "DesignIntentList",
+        content: updatedData,
+      });
+      return console.log("updatedDataList", updatedDataList);
     });
-    
+
     let formData = {
       caseTypeID: "PG-AAS-Work-DefineDesignIntent",
       content: {
         AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
-        AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID
+        AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
       },
       pageInstructions: updatedDataList,
     };
-    console.log('formData', formData)
+    console.log("formData", formData);
     await submitDesignIntent(formData, id, headers);
     navigate(`/${currentUrl?.split("/")[1]}`);
   };
@@ -163,24 +165,24 @@ function DDI() {
       if (task?.isNew) {
         task.Design_Job_ID = "";
       }
+      task.Action = "update";
+      if (task?.Action !== "delete" && task?.Design_Job_ID) {
         task.Action = "update";
-        if (task?.Action !== "delete" && task?.Design_Job_ID) {
-          task.Action = "update";
-        } else if (task?.Action !== "delete" && task?.isNew === true)
-          task.Action = "add";
+      } else if (task?.Action !== "delete" && task?.isNew === true)
+        task.Action = "add";
 
-          updatedData.push({        
-            Design_Job_Name: task.Design_Job_Name,
-            Design_Job_ID: task.Design_Job_ID,
-            Agency_Reference: task.Agency_Reference,
-            Cluster: task.Cluster,
-            Additional_Info:task.Additional_Info,
-            Select: task.Select ? task.Select : false,
-            Action: task.Action
-          });
-      return console.log('updatedData', updatedData);
+      updatedData.push({
+        Design_Job_Name: task.Design_Job_Name,
+        Design_Job_ID: task.Design_Job_ID,
+        Agency_Reference: task.Agency_Reference,
+        Cluster: task.Cluster,
+        Additional_Info: task.Additional_Info,
+        Select: task.Select ? task.Select : false,
+        Action: task.Action,
+      });
+      return console.log("updatedData", updatedData);
     });
-   
+
     let formData = {
       AWM_Project_ID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
       AWM_Task_ID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
@@ -218,9 +220,10 @@ function DDI() {
       >
         {<AddNewDesign {...data} />}
 
-        {loading || designIntent === null ? 
-          <i className="pi pi-spin pi-spinner" style={{ fontSize: '2rem' }}></i>
-          : designIntent &&
+        {loading || designIntent === null ? (
+          <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
+        ) : (
+          designIntent &&
           designIntent.length > 0 &&
           designIntent.map((item, index) => {
             if (item && item?.Action !== "delete") {
@@ -238,15 +241,15 @@ function DDI() {
                 />
               );
             }
-          })}
+          })
+        )}
       </div>
       <FooterButtons
-          handleCancel={handleCancel}
-          onSaveAsDraft={onSaveAsDraft}
-          onSubmit={onSubmit}
-        />
-      </PageLayout>
-    
+        handleCancel={handleCancel}
+        onSaveAsDraft={onSaveAsDraft}
+        onSubmit={onSubmit}
+      />
+    </PageLayout>
   );
 }
 
