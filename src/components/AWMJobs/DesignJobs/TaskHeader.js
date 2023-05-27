@@ -31,10 +31,12 @@ function TaskHeader({
           </div>
           <div className="project-content">
             <label className="project-header-spacing">Consumed Buffer</label>
-            <div style={{ textAlign: "center", color: "red" }}>
-              {" "}
-              + {Consumed_Buffer}
-            </div>
+            {Consumed_Buffer && (
+              <div style={{ textAlign: "center", color: "red" }}>
+                {" "}
+                + {Consumed_Buffer}
+              </div>
+            )}
           </div>
         </div>
       </div>

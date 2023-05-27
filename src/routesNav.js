@@ -14,6 +14,7 @@ import DDT from "./components/AWMJobs/DDT/index.js";
 import DPRA from "./components/AWMJobs/DPRA/index.js";
 import CCD from "./components/AWMJobs/CCD/index.js";
 import DCD from "./components/AWMJobs/DCD/index.js";
+import DNIQ from "./components/AWMJobs/DNIQ/index.js";
 import CNIQ from "./components/AWMJobs/CNIQ/index.js";
 import CPT from "./components/AWMJobs/CPT/index.js";
 import DNPF from "./components/AWMJobs/DNPF/index.js";
@@ -65,6 +66,8 @@ const RoutesNav = () => {
         <Route path="/allTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
         <Route path="/myTasks/CNIQ/:TaskID/:ProjectID" element={<CNIQ />} />
         <Route path="/allTasks/CNIQ/:TaskID/:ProjectID" element={<CNIQ />} />
+        <Route path="/myTasks/DNIQ/:TaskID/:ProjectID" element={<DNIQ />} />
+        <Route path="/allTasks/DNIQ/:TaskID/:ProjectID" element={<DNIQ />} />
         <Route path="/allTasks/CPPFA/:TaskID/:ProjectID" element={<CPPFA />} />
         <Route path="/myTasks/CPT/:TaskID/:ProjectID" element={<CPT />} />
         <Route path="/allTasks/CPT/:TaskID/:ProjectID" element={<CPT />} />
