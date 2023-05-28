@@ -12,7 +12,7 @@ import "../DesignJobs/index.scss";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
+import "./index.scss";
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
   { label: "Define Design Intent" },
@@ -27,6 +27,7 @@ function DDI() {
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
   const [projectData, setProjectData] = useState([]);
+  const [enableSubmit, setEnableSubmit] = useState(false);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -47,7 +48,7 @@ function DDI() {
       (project) => project.Project_ID === ProjectID
     );
     setProjectData(projectData);
-  }, [projectData]);
+  }, [projectData, ProjectID, myProjectList.myProject]);
 
   useEffect(() => {
     if (TaskDetailsData) {
@@ -59,7 +60,7 @@ function DDI() {
   }, [TaskDetailsData]);
 
   const handleCancel = () => {
-    return navigate(`/myTasks`);
+    return navigate(currentUrl === "myTasks" ? `/myTasks` : "/allTasks");
   };
 
   const handleDelete = (index) => {
@@ -94,6 +95,10 @@ function DDI() {
     data[fieldName] = value;
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
+    const hasValues = designIntent.every(
+      (item) => item.Agency_Reference !== "" && item.Cluster !== ""
+    );
+    setEnableSubmit(hasValues);
     setSubmittedDI(submittedDI);
   };
 
@@ -104,6 +109,12 @@ function DDI() {
       }
       return task;
     });
+
+     const hasValues = designIntent.every(
+      (item) => item.Agency_Reference !== "" && item.Cluster !== ""
+    );
+
+    setEnableSubmit(hasValues);
     setDesignIntent(designIntent);
     setUpdated(!updated);
   };
@@ -155,12 +166,11 @@ function DDI() {
     };
     console.log("formData", formData);
     await submitDesignIntent(formData, id, headers);
-    navigate(`/${currentUrl?.split("/")[1]}`);
+    // navigate(`/${currentUrl?.split("/")[1]}`);
   };
 
   const onSaveAsDraft = async () => {
     let updatedData = [];
-    console.log("design intent list full", designIntent);
     designIntent.filter((task) => {
       if (task?.isNew) {
         task.Design_Job_ID = "";
@@ -201,6 +211,8 @@ function DDI() {
     Brand = TaskDetailsData.ArtworkAgilityPage.Artwork_Brand;
     Category = TaskDetailsData.ArtworkAgilityPage.Artwork_SMO;
   }
+
+
   return (
     <PageLayout>
       <DesignHeader
@@ -221,7 +233,12 @@ function DDI() {
         {<AddNewDesign {...data} />}
 
         {loading || designIntent === null ? (
-          <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
+          <div className="align-item-center">
+            <i
+              className="pi pi-spin pi-spinner"
+              style={{ fontSize: "2rem" }}
+            ></i>
+          </div>
         ) : (
           designIntent &&
           designIntent.length > 0 &&
@@ -248,6 +265,7 @@ function DDI() {
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
         onSubmit={onSubmit}
+        enableSubmit={enableSubmit}
       />
     </PageLayout>
   );
