@@ -308,9 +308,12 @@ const ProjectList = (props) => {
 
         {field === "Estimated_SOP" && changeDateFormat(options[field])}
         {field === "Estimated_AW_Printer" && changeDateFormat(options[field])}
-
+        {field === "Estimated_AW_Readiness" && changeDateFormat(options[field])}
+        {field === "Estimated_SOS" && changeDateFormat(options[field])}
         {field !== "Full Kit Readiness Tracking" &&
           field !== "Estimated_SOP" &&
+          field !== "Estimated_SOS" &&
+          field !== "Estimated_AW_Readiness" &&
           field !== "Estimated_AW_Printer" &&
           field !== "Project_Name" &&
           field !== "Project_ID" && <> {options[field]}</>}
