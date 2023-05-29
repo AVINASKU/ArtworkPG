@@ -21,7 +21,15 @@ import ApproveDesignDialog from "./ApproveDesignDialog";
 import { useLocation, useParams } from "react-router-dom";
 import CPPFA from "./../../AWMJobs/CPPFA";
 
-const ProjectPlanList = ({ projectPlan, selectedProject, projectPlanDesign, pegadata, setPegaData, setUpdatedProjectPlanDesignData, setActiveSave }) => {
+const ProjectPlanList = ({
+  projectPlan,
+  selectedProject,
+  projectPlanDesign,
+  pegadata,
+  setPegaData,
+  setUpdatedProjectPlanDesignData,
+  setActiveSave,
+}) => {
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
   const [selectedColumnName, setSelectedColumnName] = useState(null);
@@ -59,8 +67,7 @@ const ProjectPlanList = ({ projectPlan, selectedProject, projectPlanDesign, pega
 
   useEffect(() => {
     (async () => {
-      try {      
-
+      try {
         let filteredPegaDataJson = localStorage.getItem("columnWiseFilterData");
         const filteredPegaData = JSON.parse(filteredPegaDataJson);
 
@@ -70,7 +77,7 @@ const ProjectPlanList = ({ projectPlan, selectedProject, projectPlanDesign, pega
           setPegaData(projectPlan);
         } else {
           setPegaData(projectPlan);
-        };
+        }
         // according to pathname we need to call api and store column name in local storage
         let columnNamesJson = localStorage.getItem("projectPlanAllColumnNames");
         const columnNames = JSON.parse(columnNamesJson);
@@ -169,9 +176,14 @@ const ProjectPlanList = ({ projectPlan, selectedProject, projectPlanDesign, pega
   };
 
   const onGlobalFilterChange = (e) => {
-    const value = e.value;
+    let value = e.value;
+    const value1 = pegadata.filter((pegaObj) => {
+      return value.some((obj) => {
+         return pegaObj.data.Task === obj.Task;
+       });
+     });
     setSelectedCities(value);
-    setFilters(value);
+    setFilters(value1);
   };
 
   const saveSettings = () => {
@@ -456,7 +468,7 @@ const ProjectPlanList = ({ projectPlan, selectedProject, projectPlanDesign, pega
     console.log("Pegadata: ", pegadata);
     setPegaData([...pegadata]);
     setActiveSave(false);
-   //updateProjectPlanDesign();
+    //updateProjectPlanDesign();
   };
 
   const onDurationChange = (rowData, { value }, ele) => {
@@ -509,6 +521,7 @@ const ProjectPlanList = ({ projectPlan, selectedProject, projectPlanDesign, pega
   const [showApproveDialogCPPFA, setShowApproveDialogCPPFA] = useState(false);
   const [selectedTaskApproveDialogCPPFA, setSelectedTaskApproveDialogCPPFA] =
     useState([]);
+
   const handleApproveDialogCPPFA = (options) => {
     setShowApproveDialogCPPFA(true);
     let task = { TaskID: options.key, ProjectID: ProjectID };
@@ -544,6 +557,7 @@ const ProjectPlanList = ({ projectPlan, selectedProject, projectPlanDesign, pega
           onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
           showTaskDialog={showApproveDialogCPPFA}
           selectedTaskData={selectedTaskApproveDialogCPPFA}
+          pegadata={pegadata1}
         />
       )}
       <Suspense fallback={<div>Loading...</div>}>
