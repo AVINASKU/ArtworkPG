@@ -32,10 +32,10 @@
 
 import React, { useEffect } from "react";
 import { Provider } from "react-redux";
-import store from "./store/store";
+import { store } from "./store/store";
 import { BrowserRouter } from "react-router-dom";
 import "./App.scss";
-// import RoutesNav from "./routesNav";
+import RoutesNav from "./routesNav";
 import axios from "axios";
 import {
   getConfig,
@@ -45,7 +45,7 @@ import {
   setUserGroups,
 } from "./store/actions/HomeActions";
 //react-cookies
-import { withCookies } from "react-cookie/cjs";
+import { withCookies, CookiesProvider } from "react-cookie/cjs";
 import { connect } from "react-redux";
 // import ErrorPage from "./Error";
 import NotAuthorizedPage from "./NotAuthorizedPage";
@@ -72,11 +72,11 @@ function App(props) {
     getConfig();
     // if (process.env.NODE_ENV === "production") {
 
-      getUserInfo();
+    getUserInfo();
     // } else {
-      // getGroups([], true);
-      // setDevCookies();
-      // devSetUser();
+    // getGroups([], true);
+    // setDevCookies();
+    // devSetUser();
     // }
   }, [getConfig]);
 
@@ -112,8 +112,9 @@ function App(props) {
   function getAuthenticationUrl() {
     axios
       .post(process.env.REACT_APP_PINGURL + "getAuthorizationUrl", {
-        applicationName: "PIMA",
+        applicationName: "AWM",
       })
+
       .then((res) => {
         window.location.href = res.data;
       })
@@ -126,8 +127,9 @@ function App(props) {
     axios
       .post(process.env.REACT_APP_PINGURL + "getaccesstoken", {
         code: code,
-        applicationName: "PIMA",
+        applicationName: "AWM",
       })
+
       .then((res) => {
         console.log(res);
         cookies.set("tokenNumber", res.data);
@@ -207,7 +209,7 @@ function App(props) {
   function setHomepageContent() {
     return (
       <div>
-      home page
+        home page
         {/* <RoutesNav /> */}
       </div>
     );
@@ -218,34 +220,43 @@ function App(props) {
       {/* {process.env.NODE_ENV === "production"
         ? setContentOfPage()
         : setHomepageContent()} */}
-        {setContentOfPage()}
+      {setContentOfPage()}
     </div>
   );
 
-  // return (
-  //   <>
-  //     <CookiesProvider>
-  //       <Provider store={store}>
-  //         <React.StrictMode>
-  //           <BrowserRouter>
-  //             <RoutesNav />
-  //           </BrowserRouter>
-  //         </React.StrictMode>
-  //       </Provider>
-  //     </CookiesProvider>
-  //   </>
-  // );
+  //   return (
+  //     <>
+  //       <CookiesProvider>
+  //         <Provider store={store}>
+  //           <React.StrictMode>
+  //             <BrowserRouter>
+  //               <RoutesNav />
+  //             </BrowserRouter>
+  //           </React.StrictMode>
+  //         </Provider>
+  //       </CookiesProvider>
+  //     </>
+  //   );
 }
 
-export default App;
+// export default App;
 
-// const mapStateToProps = () => ({});
+const mapStateToProps = () => ({});
 
-// const mapDispatchToProps = {
-//   setUserGroups,
-//   setUser,
-//   getConfig,
-//   setPGGlobalGroups,
-// };
+const mapDispatchToProps = {
+  setUserGroups,
+  setUser,
+  getConfig,
+};
 
-// export default withCookies(connect(mapStateToProps, mapDispatchToProps)(App));
+const ConnectedApp = withCookies(
+  connect(mapStateToProps, mapDispatchToProps)(App)
+);
+
+const AppWithRedux = () => (
+  <Provider store={store}>
+    <ConnectedApp />
+  </Provider>
+);
+
+export default AppWithRedux;
