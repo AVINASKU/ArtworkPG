@@ -271,15 +271,11 @@ function ProjectPlanCompo(props) {
   };
 
   const activate = async () => {
-    
     await activateProjectPlan(selectedProject.Project_ID);
-    navigate("/myProjects");
   };
 
   return (
     console.log('projectPlan: ', projectPlan),
-    // console.log('projectPlanDesignData local: ', projectPlanDesignData),
-    // console.log('updatedProjectPlanDesignData local: ', updatedProjectPlanDesignData),
     <>
       <Accordion className="projectPlanAccordian" defaultActiveKey="2">
         <Accordion.Item eventKey="2">
