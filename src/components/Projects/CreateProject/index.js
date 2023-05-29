@@ -748,6 +748,7 @@ function AddProject(props) {
       // }
     }
     navigate("/myProjects");
+    props.setTabName("ProjectPlan");
   };
   const onSaveAsDraft = async () => {
     const draftFormData = collectFormData("Draft", mode);

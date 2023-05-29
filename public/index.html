@@ -16,6 +16,9 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -40,5 +43,70 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script>
+      // var triggerTabList = [].slice.call(document.querySelectorAll("#myTab a"));
+      // triggerTabList.forEach(function (triggerEl) {
+      //   var tabTrigger = new bootstrap.Tab(triggerEl);
+
+      //   triggerEl.addEventListener("click", function (event) {
+      //     event.preventDefault();
+      //     tabTrigger.show();
+      //   });
+      // });
+
+      // var triggerEl = document.querySelector('#myTab a[href="#profile"]');
+      // bootstrap.Tab.getInstance(triggerEl).show(); // Select tab by name
+
+      // var triggerFirstTabEl = document.querySelector("#myTab li:first-child a");
+      // bootstrap.Tab.getInstance(triggerFirstTabEl).show(); // Select first tab
+
+      // var firstTabEl = document.querySelector("#myTab li:last-child a");
+      // var firstTab = new bootstrap.Tab(firstTabEl);
+      // firstTab.show()
+      jQuery(document).ready(function($) {
+    var tabwrapWidth= $('.tabs-wrapper').outerWidth();
+    var totalWidth=0;
+    jQuery("ul li").each(function() { 
+      totalWidth += jQuery(this).outerWidth(); 
+    });
+    if(totalWidth > tabwrapWidth){
+      $('.scroller-btn').removeClass('inactive');
+    }
+    else{
+      $('.scroller-btn').addClass('inactive');
+    }
+
+    if($("#scroller").scrollLeft() == 0 ){
+      $('.scroller-btn.left').addClass('inactive');
+    }
+    else{
+       $('.scroller-btn.left').removeClass('inactive');
+    }
+		var liWidth= $('#scroller li').outerWidth();
+		var liCount= $('#scroller li').length;
+		var scrollWidth = liWidth * liCount;
+
+				$('.right').on('click', function(){
+          $('.nav-tabs').animate({scrollLeft: '+=200px'}, 300);
+          console.log($("#scroller").scrollLeft() + " px");
+				});
+				
+				$('.left').on('click', function(){
+					$('.nav-tabs').animate({scrollLeft: '-=200px'}, 300);
+				});
+      scrollerHide()
+     
+      function scrollerHide(){
+        var scrollLeftPrev = 0;
+        $('#scroller').scroll(function () {
+            var $elem=$('#scroller');
+            var newScrollLeft = $elem.scrollLeft(),
+                width=$elem.outerWidth(),
+                scrollWidth=$elem.get(0).scrollWidth;
+            scrollLeftPrev = newScrollLeft;
+        });
+      }
+	});
+    </script>
   </body>
 </html>

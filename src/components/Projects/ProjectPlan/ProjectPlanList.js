@@ -588,7 +588,8 @@ const ProjectPlanList = ({
             onColReorder={storeReorderedColumns}
             value={filters.length ? filters : pegadata}
             loading={loader}
-            className="mt-3 textAlignTreeTable"
+            // className="mt-3 textAlignTreeTable"
+            className="textAlignTreeTable"
             tableStyle={{ minWidth: "119rem", tableLayout: "auto" }}
           >
             {/* <Column header="" expander={true}></Column> */}
