@@ -31,7 +31,7 @@ export const ExportSelectedRows = ({ allData, selectedRows, headers }) => {
     const csvReport = {
       data: allData,
       headers: headers,
-      filename: "all_Rows.csv",
+      filename: "Project_Records.csv",
     };
     return (
       <>{allData !== null && allData !== undefined && csvTag(csvReport)}</>
