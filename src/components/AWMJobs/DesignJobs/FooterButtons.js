@@ -37,7 +37,7 @@ const FooterButtons = ({
             className="button-layout"
             type="submit"
             onClick={() => onSubmit()}
-            disabled={!formValid}
+            disabled={formValid}
           >
             Submit
           </Button>
