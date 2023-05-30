@@ -267,7 +267,6 @@ function DDI() {
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
         onSubmit={onSubmit}
-        formValid={!enableSubmit}
       />
     </PageLayout>
   );
