@@ -18,7 +18,7 @@ import DNIQ from "./components/AWMJobs/DNIQ/index.js";
 import CNIQ from "./components/AWMJobs/CNIQ/index.js";
 import CPT from "./components/AWMJobs/CPT/index.js";
 import DNPF from "./components/AWMJobs/DNPF/index.js";
-import ADT from "./components/AWMJobs/ADT/index.js";
+import ARDT from "./components/AWMJobs/ARDT/index.js";
 import APRA from "./components/AWMJobs/APRA/index.js";
 import UPRA from "./components/AWMJobs/UPRA/index.js";
 import URDT from "./components/AWMJobs/URDT/index.js";
@@ -50,8 +50,8 @@ const RoutesNav = () => {
         <Route path="/allTasks/UADI/:TaskID/:ProjectID" element={<UADI />} />
         <Route path="/myTasks/DDT/:TaskID/:ProjectID" element={<DDT />} />
         <Route path="/allTasks/DDT/:TaskID/:ProjectID" element={<DDT />} />
-        <Route path="/myTasks/ADT/:TaskID/:ProjectID" element={<ADT />} />
-        <Route path="/allTasks/ADT/:TaskID/:ProjectID" element={<ADT />} />
+        <Route path="/myTasks/ARDT/:TaskID/:ProjectID" element={<ARDT />} />
+        <Route path="/allTasks/ARDT/:TaskID/:ProjectID" element={<ARDT />} />
         <Route path="/myTasks/DPRA/:TaskID/:ProjectID" element={<DPRA />} />
         <Route path="/allTasks/DPRA/:TaskID/:ProjectID" element={<DPRA />} />
         <Route path="/myTasks/APRA/:TaskID/:ProjectID" element={<APRA />} />
