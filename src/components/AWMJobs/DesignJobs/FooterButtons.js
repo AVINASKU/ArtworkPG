@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "react-bootstrap";
+import { useLocation } from "react-router-dom";
 
 const FooterButtons = ({
   onSaveAsDraft,
@@ -8,6 +9,10 @@ const FooterButtons = ({
   approve,
   formValid,
 }) => {
+  const location = useLocation();
+  const locationPath = location?.pathname;
+  const url = locationPath?.split("/");
+  const pathName = url[2];
   return (
     <div className="form-buttons">
       <Button
@@ -19,13 +24,15 @@ const FooterButtons = ({
       </Button>
       {!approve && (
         <>
-          <Button
-            className="button-layout"
-            variant="secondary"
-            onClick={() => onSaveAsDraft()}
-          >
-            Save as Draft
-          </Button>
+          {pathName !== "CNIQ" && (
+            <Button
+              className="button-layout"
+              variant="secondary"
+              onClick={() => onSaveAsDraft()}
+            >
+              Save as Draft
+            </Button>
+          )}
           <Button
             className="button-layout"
             type="submit"

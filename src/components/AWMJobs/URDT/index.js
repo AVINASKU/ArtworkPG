@@ -5,22 +5,20 @@ import FooterButtons from '../DesignJobs/FooterButtons';
 import AddNewDesign from '../DesignJobs/TaskHeader';
 import ApproveDesignIntentContent from '../DesignJobs/ApproveDesignIntentContent';
 import {
-  getTaskDetails,
- 
+  getTaskDetails
 } from '../../../store/actions/taskDetailAction';
-import { postSaveDesignIntent } from '../../../apis/uploadSaveAsDraft';
-import { submitUploadApproveDesignIntent } from '../../../apis/uploadSubmitAPIs';
-import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
-import { useParams, useNavigate, useLocation, NavLink } from 'react-router-dom';
+import { submitUploadRegionalDesignIntent } from '../../../apis/uploadSubmitAPIs';
+import { postSaveDesignIntent } from '../../../apis/uploadSaveAsDraft'
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 const breadcrumb = [
   { label: 'My Tasks', url: '/tasks' },
-  { label: 'Upload Approved Design Intent' },
+  { label: 'Upload Regional Design Template' },
 ];
-const headerName = 'Upload Approved Design Intent';
+const headerName = 'Upload Regional Design Template';
 
-const UADI = () => {
+const URDT = () => {
   const [data, setData] = useState(null);
   const [designIntent, setDesignIntent] = useState(null);
   const [formattedValue, setformattedValue] = useState(0);
@@ -52,7 +50,7 @@ const UADI = () => {
   }, [TaskDetailsData]);
 
   const handleCancel = () => {
-   return navigate(`/${currentUrl?.split("/")[1]}`);
+    navigate(`/${currentUrl?.split("/")[1]}`);
   };
 
   const onSaveAsDraft = async () => {
@@ -63,7 +61,6 @@ const UADI = () => {
         Version: version,
         Filename: fileName
     };
-    await dispatch(uploadFileAzure(azureFile));
     await postSaveDesignIntent(formData);
   };
 
@@ -74,7 +71,7 @@ const UADI = () => {
     };
     console.log("azureFile", azureFile);
     const formData = {
-      caseTypeID: 'PG-AAS-Work-UploadApprovedDesignIntent',
+      caseTypeID: 'PG-AAS-Work-UploadRegionalDesignTemplate',
       content: {
         AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
         AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
@@ -83,10 +80,8 @@ const UADI = () => {
         Filename: fileName
       },
     };
-    await dispatch(uploadFileAzure(azureFile));
-    // console.log('formData', formData, "id", id);
-   await submitUploadApproveDesignIntent(formData, id, headers);
-    
+   // console.log('formData', formData, "id", id);
+   await submitUploadRegionalDesignIntent(formData, id, headers);
     navigate(`/${currentUrl?.split("/")[1]}`);
   };
   return (
@@ -125,4 +120,4 @@ const UADI = () => {
     </PageLayout>
   );
 };
-export default UADI;
+export default URDT;

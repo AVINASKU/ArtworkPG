@@ -12,7 +12,7 @@ const breadcrumb = [
 ];
 const headerName = "Approve Regional Design Template";
 
-const ADT = () => {
+const ARDT = () => {
   const [data, setData] = useState(null);
   const [taskData, setTaskData] = useState(null);
 
@@ -41,4 +41,4 @@ const ADT = () => {
     </PageLayout>
   );
 };
-export default ADT;
+export default ARDT;

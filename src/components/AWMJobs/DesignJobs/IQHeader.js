@@ -6,18 +6,18 @@ import { NavLink, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "primeicons/primeicons.css";
 
-const DesignHeader = ({
+const IQHeader = ({
   setAddNewDesign,
   onSelectAll,
   label,
   headerName,
   disabled,
+  showPage,
 }) => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
   const location = useLocation();
   const locationPath = location?.pathname;
-
   const url = locationPath?.split("/");
   const mytasks = url[1];
   return (
@@ -25,7 +25,7 @@ const DesignHeader = ({
       <i
         className="pi pi-times"
         onClick={() => {
-          navigate(`/${locationPath?.split("/")[1]}`);
+          navigate("/myTasks");
         }}
       ></i>
       <div className="actions">
@@ -61,12 +61,12 @@ const DesignHeader = ({
               }}
               checked={checked}
               className="margin-right"
-              disabled={!onSelectAll && true}
+              disabled={showPage === "CNIQ" && true}
             ></Checkbox>
             <div className="icon-label">
               <label className={disabled && "disable-buttons"}>
                 {" "}
-                Select All
+                Select All{" "}
               </label>
             </div>
           </div>
@@ -75,22 +75,33 @@ const DesignHeader = ({
               src={filter}
               alt="filter logo"
               className="filter-icon filter-color-change"
+              disabled={showPage === "CNIQ" && true}
             />
             <div>
-              <label className="icon-label">filter</label>
+              <label
+                className="icon-label"
+                disabled={showPage === "CNIQ" && true}
+              >
+                filter
+              </label>
             </div>
           </div>
           <div className="icon-items">
             <img
               src={plusCollapseImg}
               onClick={() => setAddNewDesign && setAddNewDesign()}
-              className="add-new-design-intent-icon"
+              className={`add-new-design-intent-icon ${
+                showPage === "CNIQ" && "disabled-add"
+              }`}
               alt=""
-              disabled={!setAddNewDesign && true}
+              disabled={showPage === "CNIQ" && true}
             />
             <div className="icon-label">
-              <label className={disabled && "disable-buttons"}>
-                Add Design Intent
+              <label
+                className={showPage === "CNIQ" && "disable-buttons"}
+                disabled={showPage === "CNIQ" && true}
+              >
+                Add Ink Qualification
               </label>
             </div>
           </div>
@@ -100,4 +111,4 @@ const DesignHeader = ({
   );
 };
 
-export default DesignHeader;
+export default IQHeader;

@@ -956,3 +956,13 @@ export const SubstrateList = [
   "Rubber-SBR Styrene Butadiene Rubber",
   "Synthetic Materials-Oils",
 ];
+
+export const PantoneList = [
+  "Dropdown",
+  "Art",
+  "Digital",
+  "Flexo",
+  "Gravure",
+  "Primography",
+  "Printing",
+];

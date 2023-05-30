@@ -5,14 +5,14 @@ import DesignHeader from "../DesignJobs/DesignHeader";
 import AddNewDesignContent from "../DesignJobs/AddNewDesignContent";
 import FooterButtons from "../DesignJobs/FooterButtons";
 import {
-  getDesignIntent,
   saveDesignIntent,
+  submitDesignIntent,
 } from "../../../apis/designIntentApi";
 import "../DesignJobs/index.scss";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
+import "./index.scss";
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
   { label: "Define Design Intent" },
@@ -26,15 +26,29 @@ function DDI() {
   const [designIntent, setDesignIntent] = useState([]);
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
-  const [submitActive, setSubmitActive] = useState(true);
+  const [projectData, setProjectData] = useState([]);
+  const [enableSubmit, setEnableSubmit] = useState(false);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { TaskDetailsData, loading } = useSelector((state) => state.TaskDetailsReducer);
+  const { TaskDetailsData, loading } = useSelector(
+    (state) => state.TaskDetailsReducer
+  );
+  const myProjectList = useSelector((state) => state.myProject);
+  const location = useLocation();
+  const currentUrl = location.pathname;
+  const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
 
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
   }, [dispatch, TaskID, ProjectID]);
+
+  useEffect(() => {
+    let projectData = myProjectList.myProject.find(
+      (project) => project.Project_ID === ProjectID
+    );
+    setProjectData(projectData);
+  }, [projectData, ProjectID, myProjectList.myProject]);
 
   useEffect(() => {
     if (TaskDetailsData) {
@@ -45,16 +59,8 @@ function DDI() {
     }
   }, [TaskDetailsData]);
 
-  // useEffect(() => {
-  //   console.log("useEffect designIntent",designIntent);
-  //   if(!submitActive){
-  //     const checkboxCheck = designIntent.some((task) => task?.Select === true);
-  //     setSubmitActive(checkboxCheck ? false : true);
-  //   }
-  // }, [submitActive])
-
   const handleCancel = () => {
-    return navigate(`/myTasks`);
+    return navigate(currentUrl === "myTasks" ? `/myTasks` : "/allTasks");
   };
 
   const handleDelete = (index) => {
@@ -89,6 +95,10 @@ function DDI() {
     data[fieldName] = value;
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
+    const hasValues = designIntent.every(
+      (item) => item.Agency_Reference !== "" && item.Cluster !== ""
+    );
+    setEnableSubmit(hasValues);
     setSubmittedDI(submittedDI);
   };
 
@@ -99,66 +109,98 @@ function DDI() {
       }
       return task;
     });
+
+     const hasValues = designIntent.every(
+      (item) => item.Agency_Reference !== "" && item.Cluster !== ""
+    );
+
+    setEnableSubmit(hasValues);
     setDesignIntent(designIntent);
     setUpdated(!updated);
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
+    let updatedData = {};
+    let updatedDataList = [];
+    const headers = {
+      key: "If-Match",
+      value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
+    };
+
     let submitOnlySelectedData = designIntent.filter(
       (task) => task?.Select === true
     );
     submitOnlySelectedData.map((task) => {
-      task.Action = "add";
-      task.AWM_Project_ID = TaskID;
-      const taskData = [];
-      taskData.Agency_Reference = task.Agency_Reference;
-      taskData.Cluster = task.Cluster;
-      taskData.Additional_Info = task.Additional_Info;
-      return taskData;
+      updatedData = {};
+      console.log("Design_Job_ID", task.Design_Job_ID);
+      if (task?.isNew) {
+        task.Design_Job_ID = "";
+      }
+      task.Action = "update";
+      if (task?.Action !== "delete" && task?.Design_Job_ID) {
+        task.Action = "update";
+      } else if (task?.Action !== "delete" && task?.isNew === true)
+        task.Action = "add";
+     
+      updatedData.DesignJobName = task.Design_Job_Name;
+      updatedData.DesignJobID = task.Design_Job_ID;
+      updatedData.AgencyReference = task.Agency_Reference;
+      updatedData.Cluster = task.Cluster;
+      updatedData.AdditionalInfo = task.Additional_Info;
+      updatedData.Select = `${task.Select ? task.Select : false}`;
+      updatedData.Action = task.Action;
+
+      updatedDataList.push({
+        instruction: "APPEND",
+        target: "DesignIntentList",
+        content: updatedData,
+      });
+      return console.log("updatedDataList", updatedDataList);
     });
-    const pageInstructions = [];
-    pageInstructions.instruction = "APPEND";
-    pageInstructions.target = "DesignIntentList";
-    pageInstructions.content = submitOnlySelectedData;
 
     let formData = {
-      pageInstructions: pageInstructions,
+      caseTypeID: "PG-AAS-Work-DefineDesignIntent",
+      content: {
+        AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
+        AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
+      },
+      pageInstructions: updatedDataList,
     };
-
-    console.log("full submit data --->", formData);
-    // await saveDesignIntent(formData);
+    console.log("formData", formData);
+    await submitDesignIntent(formData, id, headers);
+    navigate(`/AllTasks`);
   };
 
   const onSaveAsDraft = async () => {
     let updatedData = [];
-    console.log("design intent list full", designIntent);
-    // let submitOnlySelectedData = designIntent.filter(
-    //   (task) => task?.Event !== "submit"
-    // );
     designIntent.filter((task) => {
       if (task?.isNew) {
         task.Design_Job_ID = "";
       }
+      task.Action = "update";
+      if (task?.Action !== "delete" && task?.Design_Job_ID) {
         task.Action = "update";
-        if (task?.Action !== "delete" && task?.Design_Job_ID) {
-          task.Action = "update";
-        } else if (task?.Action !== "delete" && task?.isNew === true)
-          task.Action = "add";
+      } else if (task?.Action !== "delete" && task?.isNew === true)
+        task.Action = "add";
 
-          updatedData.push({        
-            Design_Job_Name: task.Design_Job_Name,
-            Design_Job_ID: task.Design_Job_ID,
-            AWM_Project_ID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
-            Agency_Reference: task.Agency_Reference,
-            Cluster: task.Cluster,
-            Additional_Info:task.Additional_Info,
-            Select: task.Select ? task.Select : false,
-            Action: task.Action
-          });
-      return console.log('updatedData', updatedData);
+      updatedData.push({
+        Design_Job_Name: task.Design_Job_Name,
+        Design_Job_ID: task.Design_Job_ID,
+        Agency_Reference: task.Agency_Reference,
+        Cluster: task.Cluster,
+        Additional_Info: task.Additional_Info,
+        Select: task.Select ? task.Select : false,
+        Action: task.Action,
+      });
+      return console.log("updatedData", updatedData);
     });
-   
+
     let formData = {
+      AWM_Project_ID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
+      AWM_Task_ID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
+      Project_Name: TaskDetailsData?.ArtworkAgilityTasks[0]?.Project_Name,
+      BU: projectData?.BU,
+      Region: projectData?.Project_region,
       DesignIntentList: updatedData,
     };
     console.log("full draft data --->", formData);
@@ -171,6 +213,7 @@ function DDI() {
     Brand = TaskDetailsData.ArtworkAgilityPage.Artwork_Brand;
     Category = TaskDetailsData.ArtworkAgilityPage.Artwork_SMO;
   }
+
 
   return (
     <PageLayout>
@@ -191,9 +234,15 @@ function DDI() {
       >
         {<AddNewDesign {...data} />}
 
-        {loading || designIntent === null ? 
-          <i className="pi pi-spin pi-spinner" style={{ fontSize: '2rem' }}></i>
-          : designIntent &&
+        {loading || designIntent === null ? (
+          <div className="align-item-center">
+            <i
+              className="pi pi-spin pi-spinner"
+              style={{ fontSize: "2rem" }}
+            ></i>
+          </div>
+        ) : (
+          designIntent &&
           designIntent.length > 0 &&
           designIntent.map((item, index) => {
             if (item && item?.Action !== "delete") {
@@ -208,20 +257,18 @@ function DDI() {
                   addData={addData}
                   handleDelete={handleDelete}
                   roleName={roleName}
-                  setSubmitActive={setSubmitActive}
                 />
               );
             }
-          })}
+          })
+        )}
       </div>
       <FooterButtons
-          handleCancel={handleCancel}
-          onSaveAsDraft={onSaveAsDraft}
-          onSubmit={onSubmit}
-          formValid={submitActive}
-        />
-      </PageLayout>
-    
+        handleCancel={handleCancel}
+        onSaveAsDraft={onSaveAsDraft}
+        onSubmit={onSubmit}
+      />
+    </PageLayout>
   );
 }
 
