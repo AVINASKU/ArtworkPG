@@ -121,6 +121,7 @@ function DPRA() {
       (task) => task?.Select === true
     );
     submitOnlySelectedData.map((task) => {
+      updatedData = {};
       if (task?.isNew) {
         task.Design_Job_ID = "";
       }
