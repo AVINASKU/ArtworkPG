@@ -29,16 +29,7 @@ const ApproveDesignIntentContent = ({
   };
 
   let di_name;
-  di_name =
-    roleName +
-    (item?.Consumed_Buffer + "_") +
-    ArtworkAgilityPage?.Artwork_Brand[0]?.Brand_Name +
-    "_" +
-    ArtworkAgilityPage?.Artwork_Category[0]?.Category_Name +
-    "_" +
-    item?.Project_Name +
-    "_" +
-    version;
+  di_name = item?.Task_Name;
 
   const onTemplateUpload = (e) => {
     let _totalSize = 0;
@@ -52,7 +43,7 @@ const ApproveDesignIntentContent = ({
   const itemTemplate = (file, props) => {
     setformattedValue(props.formatSize);
     // setFileName(file.name);
-    // setAzureFile(file);
+      setAzureFile(file);
     return (
       <div className="upload-row">
         <img
