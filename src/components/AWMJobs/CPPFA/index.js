@@ -18,7 +18,7 @@ import "./index.scss";
 const CPPFA = ({ showTaskDialog, selectedTaskData, onClose, pegadata }) => {
   const [visible, setVisible] = useState(showTaskDialog);
   const [designIntent, setDesignIntent] = useState({});
-  const version = "V1";
+  const [version, setVersion] = useState("V1");
 
   const dispatch = useDispatch();
   const { TaskDetailsData, loading } = useSelector(
@@ -39,6 +39,11 @@ const CPPFA = ({ showTaskDialog, selectedTaskData, onClose, pegadata }) => {
   useEffect(() => {
     if (TaskDetailsData) {
       setDesignIntent(TaskDetailsData?.ArtworkAgilityTasks[0] || {});
+    }
+    if (designIntent) {
+      designIntent.FileMetaDataList?.find((el) => {
+        setVersion(el.Version);
+      });
     }
   }, [TaskDetailsData]);
 
@@ -106,7 +111,7 @@ const CPPFA = ({ showTaskDialog, selectedTaskData, onClose, pegadata }) => {
         AWMTaskID: selectedTaskData.TaskID,
         AWMProjectID: selectedTaskData.ProjectID,
         Size: formattedValue,
-        Version: version,
+        Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
         Filename: fileName,
       },
     };
@@ -127,7 +132,6 @@ const CPPFA = ({ showTaskDialog, selectedTaskData, onClose, pegadata }) => {
     iconOnly: false,
     className: "",
   };
-
   return (
     <Dialog
       visible={visible}
