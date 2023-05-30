@@ -605,7 +605,7 @@ const AllProjectList = (props) => {
           filters={searchHeader}
           filterDisplay={isSearch && "row"}
           // tableStyle={{ minWidth: "50rem" }}
-          tableStyle={{ width: "max-content" }}
+          tableStyle={{ width: "max-content", minWidth: "100%" }}
           autoLayout={true}
           ref={dt}
           // selectionMode="single"
