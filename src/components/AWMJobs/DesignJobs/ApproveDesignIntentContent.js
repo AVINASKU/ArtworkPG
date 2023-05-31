@@ -5,20 +5,22 @@ import { Tag } from "primereact/tag";
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
 
 const ApproveDesignIntentContent = ({
+  designIntent,
   Design_Intent_Name,
   upload,
   approve,
   file_name,
   setformattedValue,
   setFileName,
+  fileName,
   setMappedFiles,
   setAzureFile,
   item,
   roleName,
   ArtworkAgilityPage,
   version,
+  date
 }) => {
-  // console.log("item", item.Consumed_Buffer);
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
   const viewProofScopeFile = useProofScopeURL();
@@ -29,8 +31,8 @@ const ApproveDesignIntentContent = ({
   };
 
   let di_name;
-  di_name = item?.Task_Name;
-
+  di_name = version !== "V0" || designIntent[0]?.FileMetaDataList[0]?.Timestamp !== "" ? `${item?.Task_Name}_${version}_${date}` : `${item?.Task_Name}`;
+  
   const onTemplateUpload = (e) => {
     let _totalSize = 0;
 
@@ -40,38 +42,36 @@ const ApproveDesignIntentContent = ({
 
     setTotalSize(_totalSize);
   };
-  const itemTemplate = (file, props) => {
-    setformattedValue(props.formatSize);
-    // setFileName(file.name);
-      setAzureFile(file);
+  const itemTemplate = (file) => {
+    setformattedValue(file.size);    
     return (
       <div className="upload-row">
         <img
-          alt={file.name}
           role="presentation"
           src={file.objectURL}
           width={50}
         />
-        <a
+        <div
           className="flex flex-column text-left ml-3"
-          onClick={(event) => handleViewProofScopeClick(event, di_name)}
         >
           {di_name}
-        </a>
+        </div>
       </div>
     );
   };
   const onTemplateSelect = (e) => {
-    console.log("hello", e.files[0]);
-    const uploadedFile = e.files[0];
     const renamedFile = {
-      ...uploadedFile,
-      name: di_name, // Set your desired custom name here
+      "objectURL" :  e.files[0].objectURL,
+      "lastModified" :  e.files[0].lastModified,
+      "lastModifiedDate" :  e.files[0].lastModifiedDate,
+      "name" : di_name,
+      "size" :  e.files[0].size,
+      "type" :  e.files[0].type,
+      "webkitRelativePath" :  e.files[0].webkitRelativePath,
     };
-    console.log("renamed file", renamedFile);
+    setAzureFile(renamedFile);
     let _totalSize = totalSize;
     let files = e.files;
-
     Object.keys(files).forEach((key) => {
       _totalSize += files[key].size || 0;
     });
@@ -110,7 +110,6 @@ const ApproveDesignIntentContent = ({
       </>
     );
   };
-
   return (
     <div>
       <div className="design-intent-header">{DesignHeader(di_name)}</div>
@@ -133,6 +132,7 @@ const ApproveDesignIntentContent = ({
               onSelect={onTemplateSelect}
               itemTemplate={itemTemplate}
             />
+           <div> {fileName === "" && version !== "" && di_name}</div>
           </div>
         )}
         {approve && (

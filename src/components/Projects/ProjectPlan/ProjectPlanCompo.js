@@ -41,8 +41,7 @@ function ProjectPlanCompo(props) {
     }
   },[projectPlanDesign]);
 
-  useEffect(() => {
-    (async () => {
+  const getProjectPlanApi = async () => {
       let restructuredData = [];
       setLoader(true);
       const apiData =
@@ -54,7 +53,10 @@ function ProjectPlanCompo(props) {
       restructuredData =
         apiData?.length > 0 ? getRestructuredData(apiData) : [];
       dispatch(updateProjectPlanAction(restructuredData));
-    })();
+  }
+
+  useEffect(() => {
+    getProjectPlanApi()
   }, [mode]);
 
   const getRestructuredData = (apiData) => {
@@ -272,6 +274,7 @@ function ProjectPlanCompo(props) {
 
   const activate = async () => {
     await activateProjectPlan(selectedProject.Project_ID);
+    getProjectPlanApi();
   };
 
   return (
