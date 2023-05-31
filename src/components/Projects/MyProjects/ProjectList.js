@@ -8,7 +8,6 @@ import ConfirmationPopUp from "../ConfirmationPopUp";
 import { FilterMatchMode } from "primereact/api";
 import ProjectListHeader from "./ProjectListHeader";
 import { Tag } from "primereact/tag";
-import filter from "../../../assets/images/filter.svg";
 import {
   getMyProject,
   // updateProject,
@@ -408,11 +407,11 @@ const ProjectList = (props) => {
     if (jsonColumnWidthMyProject) {
       columnWidthMyProject = JSON.parse(jsonColumnWidthMyProject);
     }
-    const updatedColumns = [...projectColumnName];
+    // const updatedColumns = [...projectColumnName];
     // let saveColumnWidth = {};
-    const resizedColumn = updatedColumns.find(
-      (col) => col === event.column.props.field
-    );
+    // const resizedColumn = updatedColumns.find(
+    //   (col) => col === event.column.props.field
+    // );
     columnWidthMyProject[event.column.props.field] = event.element.offsetWidth;
 
     localStorage.setItem(
@@ -424,9 +423,9 @@ const ProjectList = (props) => {
 
   };
 
-  const exportCSV = (selectionOnly) => {
-    dt.current.exportCSV({ selectionOnly });
-  };
+  // const exportCSV = (selectionOnly) => {
+  //   dt.current.exportCSV({ selectionOnly });
+  // };
 
   const saveSettings = () => {
     localStorage.setItem("columnWiseFilterData", JSON.stringify(filters));
@@ -530,7 +529,7 @@ const ProjectList = (props) => {
     "columnWidthMyProject"
   );
   const jsonColumnWidth = JSON.parse(columnWidth);
-  const isResetEnabled = isReorderedColumn || isFilterEnabled || jsonColumnWidth && !(Object.keys(jsonColumnWidth).length === 0);
+  const isResetEnabled = isReorderedColumn || isFilterEnabled || (jsonColumnWidth && !(Object.keys(jsonColumnWidth).length === 0));
 
   return (
     <div className="myProjectAnddAllProjectList">
@@ -547,7 +546,7 @@ const ProjectList = (props) => {
             isFilterEnabled={isFilterEnabled}
             isResetEnabled={isResetEnabled}
             allData={pegadata}
-            headers={allColumnNames}
+            headers={updatedAllColumnNames}
           />
         )}
         <CustomisedView

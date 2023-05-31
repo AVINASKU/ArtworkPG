@@ -1,22 +1,19 @@
-import React, { useState } from "react";
-import { CSVLink } from "react-csv";
+import React from "react";
 
-import export2excel from "../../../assets/images/export2excel.svg";
 import searchMyProjects from "../../../assets/images/searchMyProjects.svg";
 import filter from "../../../assets/images/filter.svg";
 import BlueFilterIcon from "../../../assets/images/BlueFilterIcon.svg";
-import customizedFields from "../../../assets/images/customizedFields.svg";
 import { useLocation } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import ExportCSV, { ExportSelectedRows } from "../../ExportCSV";
+import { ExportSelectedRows } from "../../ExportCSV";
 
 const ProjectListHeader = ({
   header,
   clearFilter,
   clearFilters,
   setVisible,
-  saveSettings,
+  // saveSettings,
   onSearchClick,
   // exportCSV,
   isFilterEnabled,
@@ -31,8 +28,8 @@ const ProjectListHeader = ({
   headers,
 }) => {
   const location = useLocation();
-  const [downloadCSV, setDownloadCSV] = useState(false);
-  const [showCSV, setShowCSV] = useState(true);
+  // const [downloadCSV, setDownloadCSV] = useState(false);
+  // const [showCSV, setShowCSV] = useState(true);
   const shouldShowResetButton =
     location.pathname.includes("/AllTasks") ||
     location.pathname.includes("/MyTasks");
@@ -45,10 +42,10 @@ const ProjectListHeader = ({
   const handleHelpProvided = () => {
     handleHelpProvidedClick();
   };
-  const handleClick = () => {
-    setShowCSV(false);
-    setDownloadCSV(true);
-  };
+  // const handleClick = () => {
+  //   setShowCSV(false);
+  //   setDownloadCSV(true);
+  // };
 
   return (
     <div className="actions">
