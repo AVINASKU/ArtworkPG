@@ -382,11 +382,15 @@ const ProjectList = (props) => {
     localStorage.setItem("columnWiseFilterData", JSON.stringify({}));
     localStorage.setItem("frozenData", JSON.stringify({}));
     localStorage.setItem("sortingData", JSON.stringify({}));
+    localStorage.setItem(
+      "columnWidthMyProject", JSON.stringify({})
+    );
     setSelectedFields([]);
     setSortData([]);
     setFrozenColumn([]);
     setReorderedColumn(false);
     setFilters([]);
+    setVisible(false);
   };
 
   const onGlobalFilterChange = (e) => {
@@ -416,6 +420,8 @@ const ProjectList = (props) => {
       JSON.stringify(columnWidthMyProject)
     );
     setProjectColumnNames(projectColumnName);
+    setVisible(false);
+
   };
 
   const exportCSV = (selectionOnly) => {
@@ -453,7 +459,11 @@ const ProjectList = (props) => {
 
     localStorage.setItem("allColumnNames", JSON.stringify({}));
     localStorage.setItem("allColumnNames", JSON.stringify(allColumnNames));
-    setProjectColumnNames(allColumnNames);
+    localStorage.setItem(
+      "columnWidthMyProject",
+      JSON.stringify({})
+    );
+    setProjectColumnNames(projectColumnName);
     setVisible(false);
   };
 
@@ -516,8 +526,11 @@ const ProjectList = (props) => {
 
   const isFilterEnabled =
     frozenCoulmns?.length || filters?.length || sortData?.length;
-
-  const isResetEnabled = isReorderedColumn || isFilterEnabled;
+  let columnWidth = localStorage.getItem(
+    "columnWidthMyProject"
+  );
+  const jsonColumnWidth = JSON.parse(columnWidth);
+  const isResetEnabled = isReorderedColumn || isFilterEnabled || !(Object.keys(jsonColumnWidth).length === 0);
 
   return (
     <div className="myProjectAnddAllProjectList">

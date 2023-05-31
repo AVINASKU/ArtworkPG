@@ -86,11 +86,6 @@ const ProjectListHeader = ({
             />
             <button
               type="button"
-              className={
-                isResetEnabled
-                  ? "btn btn-primary reset-to-default-view"
-                  : "btn btn-secondary"
-              }
               onClick={() => setVisible(true)}
             >
               Customize View
