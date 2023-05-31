@@ -280,7 +280,6 @@ function ProjectPlanCompo(props) {
 
   const activate = async () => {
     await activateProjectPlan(selectedProject.Project_ID);
-    navigate("/myProjects");
   };
 
   return (

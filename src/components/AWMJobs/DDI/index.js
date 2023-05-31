@@ -131,6 +131,8 @@ function DDI() {
       (task) => task?.Select === true
     );
     submitOnlySelectedData.map((task) => {
+      updatedData = {};
+      console.log("Design_Job_ID", task.Design_Job_ID);
       if (task?.isNew) {
         task.Design_Job_ID = "";
       }
@@ -139,7 +141,7 @@ function DDI() {
         task.Action = "update";
       } else if (task?.Action !== "delete" && task?.isNew === true)
         task.Action = "add";
-
+     
       updatedData.DesignJobName = task.Design_Job_Name;
       updatedData.DesignJobID = task.Design_Job_ID;
       updatedData.AgencyReference = task.Agency_Reference;
@@ -166,7 +168,7 @@ function DDI() {
     };
     console.log("formData", formData);
     await submitDesignIntent(formData, id, headers);
-    // navigate(`/${currentUrl?.split("/")[1]}`);
+    navigate(`/AllTasks`);
   };
 
   const onSaveAsDraft = async () => {
@@ -265,7 +267,6 @@ function DDI() {
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
         onSubmit={onSubmit}
-        formValid={enableSubmit}
       />
     </PageLayout>
   );

@@ -14,11 +14,12 @@ import { FileUpload } from "primereact/fileupload";
 import { NavLink, useLocation } from "react-router-dom";
 import upload1 from "../../../assets/images/upload1.svg";
 import "./index.scss";
+import { getProjectPlan } from "../../../apis/projectPlanApi";
 
 const CPPFA = ({ showTaskDialog, selectedTaskData, onClose, pegadata }) => {
   const [visible, setVisible] = useState(showTaskDialog);
   const [designIntent, setDesignIntent] = useState({});
-  const version = "V1";
+  const [version, setVersion] = useState("V0");
 
   const dispatch = useDispatch();
   const { TaskDetailsData, loading } = useSelector(
@@ -39,6 +40,13 @@ const CPPFA = ({ showTaskDialog, selectedTaskData, onClose, pegadata }) => {
   useEffect(() => {
     if (TaskDetailsData) {
       setDesignIntent(TaskDetailsData?.ArtworkAgilityTasks[0] || {});
+    }
+    if (designIntent) {
+      designIntent.FileMetaDataList?.find((el) => {
+        if (el.Version !== "" && el.Version !== null) {
+          setVersion(el.Version);
+        }
+      });
     }
   }, [TaskDetailsData]);
 
@@ -106,7 +114,7 @@ const CPPFA = ({ showTaskDialog, selectedTaskData, onClose, pegadata }) => {
         AWMTaskID: selectedTaskData.TaskID,
         AWMProjectID: selectedTaskData.ProjectID,
         Size: formattedValue,
-        Version: version,
+        Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
         Filename: fileName,
       },
     };
@@ -120,6 +128,11 @@ const CPPFA = ({ showTaskDialog, selectedTaskData, onClose, pegadata }) => {
 
     setHighRiskYesOrNo("selectYesOrNo");
     hideDialog();
+    (async () => {
+      if (selectedTaskData.ProjectID) {
+        await getProjectPlan(selectedTaskData.ProjectID);
+      }
+    })();
   };
 
   const chooseOptions = {
@@ -127,7 +140,6 @@ const CPPFA = ({ showTaskDialog, selectedTaskData, onClose, pegadata }) => {
     iconOnly: false,
     className: "",
   };
-
   return (
     <Dialog
       visible={visible}
