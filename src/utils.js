@@ -37,20 +37,20 @@ export const convertCategoryIntoString = (array) => {
   return categoryString;
 };
 
-export const convertBrandIntoString = (Brand) =>{
+export const convertBrandIntoString = (Brand) => {
   let brandString = Brand.map((item) => item.Brand_Name).join(",");
   return brandString;
-}
+};
 
 export const AddNavigation = (breadcrumbLabel) => {
   const location = useLocation();
   const currentUrl = location.pathname;
   let url = currentUrl.split("/")[1];
-  let breadcrumbSubLabel = url === "AllTasks" ? "All Tasks": "My Tasks";
-  url = "/"+url;
+  let breadcrumbSubLabel = url === "AllTasks" ? "All Tasks" : "My Tasks";
+  url = "/" + url;
 
   const breadcrumb = [
-    { label: breadcrumbSubLabel, url:  url  },
+    { label: breadcrumbSubLabel, url: url },
     { label: breadcrumbLabel },
   ];
 
