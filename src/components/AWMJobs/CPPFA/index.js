@@ -14,11 +14,12 @@ import { FileUpload } from "primereact/fileupload";
 import { NavLink, useLocation } from "react-router-dom";
 import upload1 from "../../../assets/images/upload1.svg";
 import "./index.scss";
+import { getProjectPlan } from "../../../apis/projectPlanApi";
 
 const CPPFA = ({ showTaskDialog, selectedTaskData, onClose, pegadata }) => {
   const [visible, setVisible] = useState(showTaskDialog);
   const [designIntent, setDesignIntent] = useState({});
-  const [version, setVersion] = useState("V1");
+  const [version, setVersion] = useState("V0");
 
   const dispatch = useDispatch();
   const { TaskDetailsData, loading } = useSelector(
@@ -42,7 +43,9 @@ const CPPFA = ({ showTaskDialog, selectedTaskData, onClose, pegadata }) => {
     }
     if (designIntent) {
       designIntent.FileMetaDataList?.find((el) => {
-        setVersion(el.Version);
+        if (el.Version !== "" && el.Version !== null) {
+          setVersion(el.Version);
+        }
       });
     }
   }, [TaskDetailsData]);
@@ -125,6 +128,11 @@ const CPPFA = ({ showTaskDialog, selectedTaskData, onClose, pegadata }) => {
 
     setHighRiskYesOrNo("selectYesOrNo");
     hideDialog();
+    (async () => {
+      if (selectedTaskData.ProjectID) {
+        await getProjectPlan(selectedTaskData.ProjectID);
+      }
+    })();
   };
 
   const chooseOptions = {
