@@ -99,7 +99,7 @@ const AllProjectList = (props) => {
       "Estimated_No_Of_POAs",
       "Estimated_SOS",
       "Estimated_SOP",
-      "Estimated_AW @ Printer",
+      "Estimated_AW_Printer",
       "Estimated_AW_Readiness",
       "IL",
       "PM",
@@ -548,7 +548,7 @@ const AllProjectList = (props) => {
     "columnWidthAllProject"
   );
   const jsonColumnWidth = JSON.parse(columnWidth);
-  const isResetEnabled = isReorderedColumn || isFilterEnabled || !(Object.keys(jsonColumnWidth).length === 0);
+  const isResetEnabled = isReorderedColumn || isFilterEnabled || jsonColumnWidth && !(Object.keys(jsonColumnWidth).length === 0);
 
   return (
     <div className="myProjectAnddAllProjectList">
