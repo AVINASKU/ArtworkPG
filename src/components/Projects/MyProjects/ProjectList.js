@@ -585,7 +585,7 @@ const ProjectList = (props) => {
           filterDisplay={isSearch && "row"}
           ref={dt}
           // tableStyle={{ minWidth: "50rem" }}
-          tableStyle={{ width: "max-content" }}
+          tableStyle={{ width: "max-content", minWidth: "100%" }}
         >
           {dynamicColumns()}
         </DataTable>
