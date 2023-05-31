@@ -266,7 +266,7 @@ const ProjectList = (props) => {
               color: "gray",
               border: "1px solid",
               padding: "0.15rem 0.4rem",
-              margin: "2px 0"
+              margin: "2px 0",
             }}
           ></Tag>
         )}
@@ -308,9 +308,12 @@ const ProjectList = (props) => {
 
         {field === "Estimated_SOP" && changeDateFormat(options[field])}
         {field === "Estimated_AW_Printer" && changeDateFormat(options[field])}
-
+        {field === "Estimated_AW_Readiness" && changeDateFormat(options[field])}
+        {field === "Estimated_SOS" && changeDateFormat(options[field])}
         {field !== "Full Kit Readiness Tracking" &&
           field !== "Estimated_SOP" &&
+          field !== "Estimated_SOS" &&
+          field !== "Estimated_AW_Readiness" &&
           field !== "Estimated_AW_Printer" &&
           field !== "Project_Name" &&
           field !== "Project_ID" && <> {options[field]}</>}
@@ -392,14 +395,12 @@ const ProjectList = (props) => {
     setFilters(value);
   };
 
-    const onColumnResizeEnd = (event) => {
+  const onColumnResizeEnd = (event) => {
     // console.log("updated column name", event.column, event?.element?.clientWidth);
     // console.log("width", event.element.offsetWidth, event.column);
 
     let columnWidthMyProject = {};
-    let jsonColumnWidthMyProject = localStorage.getItem(
-      "columnWidthMyProject"
-    );
+    let jsonColumnWidthMyProject = localStorage.getItem("columnWidthMyProject");
     if (jsonColumnWidthMyProject) {
       columnWidthMyProject = JSON.parse(jsonColumnWidthMyProject);
     }
@@ -584,7 +585,7 @@ const ProjectList = (props) => {
           filterDisplay={isSearch && "row"}
           ref={dt}
           // tableStyle={{ minWidth: "50rem" }}
-          tableStyle={{ width: "max-content" }}
+          tableStyle={{ width: "max-content", minWidth: "100%" }}
         >
           {dynamicColumns()}
         </DataTable>
