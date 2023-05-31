@@ -25,7 +25,7 @@ const UploadDesignIntentProofscope = ({
     const viewProofScopeFile = useProofScopeURL();
 
     useEffect(() => {
-    console.log("item ----", item)
+        console.log("item ----", item)
         if (item?.DesignJobDetails[0]?.FileMetaDataList[0]) {
             console.log("here here", item?.DesignJobDetails[0]?.FileMetaDataList[0]);
             let uploadedFileName = item?.DesignJobDetails[0]?.FileMetaDataList[0]?.File_Name;
@@ -39,8 +39,8 @@ const UploadDesignIntentProofscope = ({
 
     };
 
-   let di_name;
-  di_name = item?.Task_Name;
+    let di_name;
+    di_name = item?.Task_Name;
 
     const onTemplateUpload = (e) => {
         let _totalSize = 0;
@@ -154,6 +154,16 @@ const UploadDesignIntentProofscope = ({
                     </div>
                 )}
 
+                {updatedImg &&
+
+                    <a
+                        className="flex flex-column text-left ml-3"
+                        onClick={(event) => handleViewProofScopeClick(event, updatedImg)}
+                    >
+                        {updatedImg}
+                    </a>
+                }
+
                 {approve && (
                     <div
                         style={{
@@ -165,8 +175,8 @@ const UploadDesignIntentProofscope = ({
                         <a
                             className="flex flex-column text-left ml-3"
                             onClick={(event) => handleViewProofScopeClick(event, "pranali-test-proofscope.png")}
-                        >                        
-                        {updatedImg}
+                        >
+                            {updatedImg}
                         </a>
                         {/* <Image
                             src="https://primefaces.org/cdn/primereact/images/galleria/galleria7.jpg"

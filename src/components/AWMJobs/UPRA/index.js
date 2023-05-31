@@ -9,7 +9,7 @@ import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { submitUploadApproveDesignIntent } from "../../../apis/uploadSubmitAPIs";
 
 import AddNewDesign from "../DesignJobs/TaskHeader";
-// import { UploadFileToServer } from "../../../store/actions/ProofScopeActions";
+import { UploadFileToServer } from "../../../store/actions/ProofScopeActions";
 import { postSaveDesignIntent } from "../../../apis/uploadSaveAsDraft";
 
 const breadcrumb = [
@@ -63,7 +63,7 @@ const UPRA = () => {
       Filename: fileName,
     };
     console.log("azure file details", azureFile, fileName, filePath);
-    // await dispatch(UploadFileToServer(azureFile, filePath));
+    await dispatch(UploadFileToServer(azureFile, filePath));
     await postSaveDesignIntent(formData);
   };
 
@@ -88,7 +88,7 @@ const UPRA = () => {
         Filename: fileName,
       },
     };
-    // await dispatch(UploadFileToServer(azureFile, filePath));
+    await dispatch(UploadFileToServer(azureFile, filePath));
     console.log("formData", formData, "id", id);
     await submitUploadApproveDesignIntent(formData, id, headers);
   };
