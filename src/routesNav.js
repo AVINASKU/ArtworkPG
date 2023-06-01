@@ -29,11 +29,11 @@ const RoutesNav = () => {
     <Routes>
       <Route path="/" element={<Outlet />}>
         <Route index element={<Login />} />
-        <Route index element={<Home />} />
+        {/* <Route index element={<Home />} /> */}
         <Route path="/myProjects" element={<MyProjects />} />
         <Route path="/allProjects" element={<AllProjects />} />
         <Route path="/myTasks" element={<MyTasksPage />} />
-         <Route path="/AllTasks" element={<AllTasksPage />} />
+        <Route path="/AllTasks" element={<AllTasksPage />} />
         {/* <Route path="/createProject" element={<AddProject />} /> */}
         <Route path="/projectPlan" element={<ProjectCreation />} />
         <Route

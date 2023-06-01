@@ -10,7 +10,7 @@ function Login() {
 
   useEffect(() => {
     if (userInformation?.username) {
-      navigate("/myProjects");
+      // navigate("/myProjects");
     }
   }, [userInformation]);
 
