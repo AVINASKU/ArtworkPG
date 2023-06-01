@@ -44,10 +44,14 @@
     background: #ffffff;
     // border: 0.5px solid #acacac;
     border-radius: 24px;
+    overflow: hidden;
+    height: 100%;
     & > .content-layout {
       padding-top: 24px;
       padding-bottom: 32px;
       position: relative;
+      overflow: hidden;
+      height: 100%;
       .pi-times {
         position: absolute;
         width: 14px;

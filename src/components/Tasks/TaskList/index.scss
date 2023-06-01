@@ -29,7 +29,12 @@ $fontWeight400: 400;
     width: $width100;
     display: block;
     padding: 0 0 0;
-
+    overflow: hidden;
+    height: 100%;
+    .myProjectAnddAllProjectList{
+      height: 100%;
+      overflow: hidden;
+    }
     .card {
       border: 0 !important;
     }
@@ -62,7 +67,6 @@ $fontWeight400: 400;
   .p-datatable > .p-datatable-wrapper {
     overflow: scroll;
     width: $width100;
-    height: 540px;
   }
 
   .p-datatable-table {

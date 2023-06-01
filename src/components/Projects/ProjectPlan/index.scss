@@ -22,7 +22,6 @@ $fontWeight400: 400;
   .p-datatable>.p-datatable-wrapper {
     overflow: scroll;
     width: $width100;
-    height: 65vh;
   }
 
   .p-datatable-table {
@@ -312,11 +311,6 @@ img[disabled] {
       background-color: #f7f7f7 !important;
     }
   }
-
-  .accordion-item {
-    margin-left: 10px;
-  }
-
   .accordion-item>.accordion-header {
     position: relative !important;
   }
