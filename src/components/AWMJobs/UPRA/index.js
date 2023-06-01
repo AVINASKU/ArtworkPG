@@ -26,8 +26,6 @@ const UPRA = () => {
   const [fileName, setFileName] = useState("");
   const [azureFile, setAzureFile] = useState("");
   const [formattedValue, setformattedValue] = useState(0);
-  const [date, setDate] = useState("");
-  const [version, setVersion] = useState("V0");
   const location = useLocation();
   const locationPath = location?.pathname;
   const url = locationPath?.split("/");
