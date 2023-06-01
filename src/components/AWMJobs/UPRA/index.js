@@ -103,7 +103,9 @@ const UPRA = () => {
       />
       {<AddNewDesign {...data} />}
       {loading ? (
-        <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
+        <div className="align-item-center">
+          <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
+        </div>
       ) : (
         designIntent && (
           <UploadDesignIntentProofscope
