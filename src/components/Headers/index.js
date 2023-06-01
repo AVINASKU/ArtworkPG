@@ -46,20 +46,22 @@ const Header = () => {
   return (
     <div className="header">
       <div>
-        <h1>Welcome Back, {userInformation.username}!</h1>
+        <h1>
+          Welcome Back, {userInformation.username} ({userInformation.role})!
+        </h1>
         {/* <div className="user-date-time">
           <p>{formattedDate(userInformation.loginTime)}</p>
           <p>{formattedTime(userInformation.loginTime)}</p>
         </div> */}
       </div>
       <div className="user-profile">
-        <img
+        {/* <img
           src={Notificaitons}
           alt="notificaitons"
           className="notificaitons"
-        />
+        /> */}
         <p>
-          {userInformation.username}
+          {userInformation.role}
           <span>{userInformation.userid}</span>
         </p>
         {/* <img src={user} alt="user profile" className="userProfile" /> */}
