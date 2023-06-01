@@ -198,6 +198,13 @@ function DPRA() {
     console.log("full draft data --->", formData);
    await saveDefineProductionReadyArt(formData);
   };
+    let Brand = [];
+  let Category = [];
+
+  if (TaskDetailsData?.ArtworkAgilityPage) {
+    Brand = TaskDetailsData.ArtworkAgilityPage.Artwork_Brand;
+    Category = TaskDetailsData.ArtworkAgilityPage.Artwork_SMO;
+  }
 
   return (
     <PageLayout>
@@ -234,6 +241,8 @@ function DPRA() {
                   handleDelete={handleDelete}
                   roleName={roleName}
                   checkBU={checkBU}
+                  Brand={Brand}
+                  Category={Category}
                 />
               );
             } else return <>Data Not Found</>;
