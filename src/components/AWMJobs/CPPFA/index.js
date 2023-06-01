@@ -14,9 +14,14 @@ import { FileUpload } from "primereact/fileupload";
 import { NavLink, useLocation } from "react-router-dom";
 import upload1 from "../../../assets/images/upload1.svg";
 import "./index.scss";
-import { getProjectPlan } from "../../../apis/projectPlanApi";
 
-const CPPFA = ({ showTaskDialog, selectedTaskData, onClose, pegadata }) => {
+const CPPFA = ({
+  showTaskDialog,
+  selectedTaskData,
+  onClose,
+  pegadata,
+  getProjectPlanApi,
+}) => {
   const [visible, setVisible] = useState(showTaskDialog);
   const [designIntent, setDesignIntent] = useState({});
   const [version, setVersion] = useState("V0");
@@ -119,20 +124,18 @@ const CPPFA = ({ showTaskDialog, selectedTaskData, onClose, pegadata }) => {
       },
     };
 
-    await dispatch(uploadFileAzure(azureFile));
-    await submitCPPFA(
-      formData,
-      `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`,
-      headers
-    );
-
-    setHighRiskYesOrNo("selectYesOrNo");
-    hideDialog();
-    (async () => {
-      if (selectedTaskData.ProjectID) {
-        await getProjectPlan(selectedTaskData.ProjectID);
-      }
-    })();
+    if (riskLevel !== "Low" && !cppfaDialogFlag && yesOrNo === "") {
+      setHighRiskYesOrNo("selectYesOrNo");
+    } else {
+      await dispatch(uploadFileAzure(azureFile));
+      await submitCPPFA(
+        formData,
+        `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`,
+        headers
+      );
+      hideDialog();
+      getProjectPlanApi();
+    }
   };
 
   const chooseOptions = {
@@ -215,6 +218,7 @@ const CPPFA = ({ showTaskDialog, selectedTaskData, onClose, pegadata }) => {
                   type="radio"
                   id="html"
                   name="fav_language"
+                  defaultChecked={riskLevel === "Low"}
                   value="Low"
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
                 />

@@ -49,20 +49,21 @@ function ProjectPlanCompo(props) {
     }
   }, [projectPlanDesign]);
 
+  const getProjectPlanApi = async () => {
+    let restructuredData = [];
+    setLoader(true);
+    const apiData =
+      mode === "design" && selectedProject.Project_ID
+        ? await getProjectPlan(selectedProject.Project_ID)
+        : [];
+    setLoader(false);
+    apiData && dispatch(updateProjectPlanDesignAction(apiData));
+    restructuredData = apiData?.length > 0 ? getRestructuredData(apiData) : [];
+    dispatch(updateProjectPlanAction(restructuredData));
+  };
+
   useEffect(() => {
-    (async () => {
-      let restructuredData = [];
-      setLoader(true);
-      const apiData =
-        mode === "design" && selectedProject.Project_ID
-          ? await getProjectPlan(selectedProject.Project_ID)
-          : [];
-      setLoader(false);
-      apiData && dispatch(updateProjectPlanDesignAction(apiData));
-      restructuredData =
-        apiData?.length > 0 ? getRestructuredData(apiData) : [];
-      dispatch(updateProjectPlanAction(restructuredData));
-    })();
+    getProjectPlanApi();
   }, [mode]);
 
   const getRestructuredData = (apiData) => {
@@ -280,6 +281,7 @@ function ProjectPlanCompo(props) {
 
   const activate = async () => {
     await activateProjectPlan(selectedProject.Project_ID);
+    getProjectPlanApi();
   };
 
   return (
@@ -312,16 +314,16 @@ function ProjectPlanCompo(props) {
           Save
         </Button>
 
-        <Button
-          className="button-layout"
-          variant="primary"
-          onClick={activate}
-          disabled={activeFlag}
-        >
-          Activate
-        </Button>
-      </div>
-    </>
+          <Button
+            className="button-layout"
+            variant="primary"
+            onClick={activate}
+            disabled={activeFlag}
+          >
+            Activate
+          </Button>
+        </div>
+      </>
   );
 }
 

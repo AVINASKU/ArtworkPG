@@ -29,6 +29,7 @@ const ProjectPlanList = ({
   setPegaData,
   setUpdatedProjectPlanDesignData,
   setActiveSave,
+  getProjectPlanApi,
 }) => {
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
@@ -47,7 +48,7 @@ const ProjectPlanList = ({
   const [loader, setLoader] = useState(false);
   //projectPlanDesign
   const navigate = useNavigate();
-    let {ProjectID } = useParams();
+  let { ProjectID } = useParams();
 
   const op = useRef(null);
 
@@ -179,9 +180,9 @@ const ProjectPlanList = ({
     let value = e.value;
     const value1 = pegadata.filter((pegaObj) => {
       return value.some((obj) => {
-         return pegaObj.data.Task === obj.Task;
-       });
-     });
+        return pegaObj.data.Task === obj.Task;
+      });
+    });
     setSelectedCities(value);
     setFilters(value1);
   };
@@ -558,6 +559,7 @@ const ProjectPlanList = ({
           showTaskDialog={showApproveDialogCPPFA}
           selectedTaskData={selectedTaskApproveDialogCPPFA}
           pegadata={pegadata1}
+          getProjectPlanApi={getProjectPlanApi}
         />
       )}
       <Suspense fallback={<div>Loading...</div>}>
