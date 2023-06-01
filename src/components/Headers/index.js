@@ -61,7 +61,7 @@ const Header = () => {
           className="notificaitons"
         /> */}
         <p>
-          {userInformation.role}
+          {userInformation.username}
           <span>{userInformation.userid}</span>
         </p>
         {/* <img src={user} alt="user profile" className="userProfile" /> */}
