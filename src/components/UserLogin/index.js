@@ -6,11 +6,12 @@ import PgLogo from "../../assets/images/logo.svg";
 import { updateUser } from "../../apis/userApi";
 import "./index.scss";
 import { useSelector } from "react-redux";
-import Table from "./Table";
+import { getAccessDetails } from "../../utils";
 
 function UserLogin() {
   const User = useSelector((state) => state.UserReducer);
   const userInformation = User.userInformation;
+  const { accessMatrix } = useSelector((state) => state?.accessMatrixReducer);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [credentialsValid, setCredentialsValid] = useState(true);
@@ -21,12 +22,24 @@ function UserLogin() {
     const infoUpdated = await updateUser(username, password);
     setUserInfoUpdated(infoUpdated);
   };
-
   useEffect(() => {
     if (userInfoUpdated) {
       if (userInformation?.username) {
         setCredentialsValid(true);
-        navigate("/myProjects");
+        const accessDetails = getAccessDetails(
+          userInformation.role,
+          accessMatrix
+        );
+        if (
+          accessDetails &&
+          userInformation.role === "ProjectManager" &&
+          accessDetails.pages.length > 0
+        ) {
+          navigate("/myProjects");
+        } else {
+          // Set the redirect URL to AllProjects page for other roles or if the user doesn't have access to the "myProjects" page
+          navigate("/allProjects");
+        }
       } else {
         // alert("Invalid username or password");
         setCredentialsValid(false);

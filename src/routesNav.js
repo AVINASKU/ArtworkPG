@@ -28,25 +28,25 @@ const RoutesNav = () => {
     <Routes>
       <Route path="/" element={<Outlet />}>
         <Route index element={<Login />} />
-        <Route index element={<Home />} />
+        {/* <Route index element={<Home />} /> */}
         <Route path="/myProjects" element={<MyProjects />} />
         <Route path="/allProjects" element={<AllProjects />} />
         <Route path="/myTasks" element={<MyTasksPage />} />
-         <Route path="/AllTasks" element={<AllTasksPage />} />
+        <Route path="/AllTasks" element={<AllTasksPage />} />
         {/* <Route path="/createProject" element={<AddProject />} /> */}
         <Route path="/projectPlan" element={<ProjectCreation />} />
-        <Route path="/myProjects/projectPlan/:ProjectID" element={<ProjectCreation />} />
-        <Route path="/allProjects/projectPlan/:ProjectID" element={<ProjectCreation />} />
+        <Route
+          path="/myProjects/projectPlan/:ProjectID"
+          element={<ProjectCreation />}
+        />
+        <Route
+          path="/allProjects/projectPlan/:ProjectID"
+          element={<ProjectCreation />}
+        />
         <Route path="/myTasks/DDI/:TaskID/:ProjectID" element={<DDI />} />
         <Route path="/allTasks/DDI/:TaskID/:ProjectID" element={<DDI />} />
-        <Route
-          path="/myTasks/UADI/:TaskID/:ProjectID"
-          element={<UADI />}
-        />
-        <Route
-          path="/allTasks/UADI/:TaskID/:ProjectID"
-          element={<UADI />}
-        />
+        <Route path="/myTasks/UADI/:TaskID/:ProjectID" element={<UADI />} />
+        <Route path="/allTasks/UADI/:TaskID/:ProjectID" element={<UADI />} />
         <Route path="/myTasks/DDT/:TaskID/:ProjectID" element={<DDT />} />
         <Route path="/allTasks/DDT/:TaskID/:ProjectID" element={<DDT />} />
         <Route path="/myTasks/ADT/:TaskID/:ProjectID" element={<ADT />} />
