@@ -285,9 +285,19 @@ function ProjectPlanCompo(props) {
   };
 
   return (
-    (
-      <>
-        <Accordion className="projectPlanAccordian" defaultActiveKey="2">
+    <>
+      <ProjectPlan
+        {...props}
+        projectPlan={projectPlan}
+        selectedProject={selectedProject}
+        projectPlanDesign={projectPlanDesign}
+        setPegaData={setPegaData}
+        pegadata={pegadata}
+        setUpdatedProjectPlanDesignData={setUpdatedProjectPlanDesignData}
+        setActiveSave={setActiveSave}
+        getProjectPlanApi={getProjectPlanApi}
+      />
+      {/* <Accordion className="projectPlanAccordian" defaultActiveKey="2">
           <Accordion.Item eventKey="2">
             <Accordion.Header>Design</Accordion.Header>
             <Accordion.Body>
@@ -314,36 +324,35 @@ function ProjectPlanCompo(props) {
             <Accordion.Header>FA Assembly</Accordion.Header>
             <Accordion.Body>FA Assembly</Accordion.Body>
           </Accordion.Item>
-        </Accordion>
-        <div className="form-buttons">
-          <Button
-            className="button-layout"
-            variant="secondary"
-            onClick={() => navigate("/myProjects")}
-          >
-            Cancel
-          </Button>
+        </Accordion> */}
+      <div className="form-buttons">
+        <Button
+          className="button-layout"
+          variant="secondary"
+          onClick={() => navigate("/myProjects")}
+        >
+          Cancel
+        </Button>
 
-          <Button
-            className={activeSave ? "btn btn-disabled" : "button-layout"}
-            variant="secondary"
-            onClick={onSave}
-            disabled={activeSave}
-          >
-            Save
-          </Button>
+        <Button
+          className={activeSave ? "btn btn-disabled" : "button-layout"}
+          variant="secondary"
+          onClick={onSave}
+          disabled={activeSave}
+        >
+          Save
+        </Button>
 
-          <Button
-            className="button-layout"
-            variant="primary"
-            onClick={activate}
-            disabled={activeFlag}
-          >
-            Activate
-          </Button>
-        </div>
-      </>
-    )
+        <Button
+          className="button-layout"
+          variant="primary"
+          onClick={activate}
+          disabled={activeFlag}
+        >
+          Activate
+        </Button>
+      </div>
+    </>
   );
 }
 
