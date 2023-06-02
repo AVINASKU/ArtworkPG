@@ -24,7 +24,7 @@ const allColumnNames = [
   "Artwork_SMO",
   "Project_State",
   "Buffer_To_Work",
-  "Estimated_AW @ Printer",
+  "Estimated_AW_Printer",
   "Full Kit Readiness Tracking",
 ];
 
@@ -36,7 +36,7 @@ const allColumnNamesAllProjects = [
   "Artwork_SMO",
   "Project_State",
   "Buffer_To_Work",
-  "Estimated_AW @ Printer",
+  "Estimated_AW_Printer",
   "PM",
   "Full Kit Readiness Tracking",
 ];

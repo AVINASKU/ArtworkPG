@@ -8,9 +8,9 @@ import ApproveDesignIntentContent from "../DesignJobs/ApproveDesignIntentContent
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
 import { Button } from "react-bootstrap";
 import UploadDesignIntentProofscope from "../DesignJobs/UploadDesignIntentProofscope";
-import { useNavigate,useParams, useLocation } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
@@ -53,9 +53,10 @@ const ADT = () => {
 
   const handleViewProofScopeClick = (event, fileUrl) => {
     event.preventDefault();
-    viewProofScopeFile(`cloudflow://PP_FILE_STORE/aacdata/DI__Pampers__Artwork project 2_V1`);
+    viewProofScopeFile(
+      `cloudflow://PP_FILE_STORE/aacdata/DI__Pampers__Artwork project 2_V1`
+    );
   };
-
 
   return (
     <PageLayout>
@@ -67,7 +68,9 @@ const ADT = () => {
       />
       {<AddNewDesign {...data} />}
       {loading ? (
-        <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
+        <div className="align-item-center">
+          <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
+        </div>
       ) : (
         designIntent && (
           <UploadDesignIntentProofscope
@@ -85,9 +88,9 @@ const ADT = () => {
         )
       )}{" "}
       <FooterButtons
-        // onSubmit={onSubmit}
-        // handleCancel={handleCancel}
-        // onSaveAsDraft={onSaveAsDraft}
+      // onSubmit={onSubmit}
+      // handleCancel={handleCancel}
+      // onSaveAsDraft={onSaveAsDraft}
       />
     </PageLayout>
   );

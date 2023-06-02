@@ -4,7 +4,10 @@ import DesignHeader from "../DesignJobs/DesignHeader";
 import AddNewDesign from "../DesignJobs/TaskHeader";
 import AddNewDesignContent from "../DesignJobs/AddNewDesignContent";
 import FooterButtons from "../DesignJobs/FooterButtons";
-import { saveDefineProductionReadyArt, submitDefineProductionReadyArt } from "../../../apis/defineProductionReadyArt";
+import {
+  saveDefineProductionReadyArt,
+  submitDefineProductionReadyArt,
+} from "../../../apis/defineProductionReadyArt";
 import "../DesignJobs/index.scss";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,11 +29,13 @@ function DPRA() {
   const [designIntent, setDesignIntent] = useState([]);
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
-  const[projectData, setProjectData] = useState([]);
+  const [projectData, setProjectData] = useState([]);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { TaskDetailsData, loading } = useSelector((state) => state.TaskDetailsReducer);
+  const { TaskDetailsData, loading } = useSelector(
+    (state) => state.TaskDetailsReducer
+  );
   const { allProjects } = useSelector((state) => state.myProject);
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
 
@@ -49,17 +54,19 @@ function DPRA() {
 
   useEffect(() => {
     if (TaskDetailsData) {
-      setDesignIntent(TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
+      setDesignIntent(
+        TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []
+      );
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
     }
-  },[TaskDetailsData]);
+  }, [TaskDetailsData]);
 
-  useEffect(()=> {
+  useEffect(() => {
     let projectData = allProjects.find(
       (project) => project.Project_ID === ProjectID
     );
     setProjectData(projectData);
-  },[projectData]);
+  }, [projectData]);
 
   const handleCancel = () => {
     return navigate(`/myTasks`);
@@ -113,10 +120,10 @@ function DPRA() {
     let updatedData = {};
     let updatedDataList = [];
     const headers = {
-      key: 'If-Match',
+      key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-    
+
     let submitOnlySelectedData = designIntent.filter(
       (task) => task?.Select === true
     );
@@ -130,34 +137,34 @@ function DPRA() {
         task.Action = "update";
       } else if (task?.Action !== "delete" && task?.isNew === true)
         task.Action = "add";
-    
-      updatedData.DesignJobName= task.Design_Job_Name;
-      updatedData.DesignJobID= task.Design_Job_ID;
-      updatedData.AgencyReference= task.Agency_Reference;
-      updatedData.Cluster= task.Cluster;
-      updatedData.AdditionalInfo =task.Additional_Info;
-      updatedData.Select= task.Select ? task.Select : false;
-      updatedData.Tier = task.Tier;      
-      updatedData.Action=task.Action;
-      
-        updatedDataList.push({
-          instruction: "APPEND",
-          target : "PRAList",
-          content: updatedData
-        })
-        return console.log('updatedDataList', updatedDataList);
+
+      updatedData.DesignJobName = task.Design_Job_Name;
+      updatedData.DesignJobID = task.Design_Job_ID;
+      updatedData.AgencyReference = task.Agency_Reference;
+      updatedData.Cluster = task.Cluster;
+      updatedData.AdditionalInfo = task.Additional_Info;
+      updatedData.Select = task.Select ? task.Select : false;
+      updatedData.Tier = task.Tier;
+      updatedData.Action = task.Action;
+
+      updatedDataList.push({
+        instruction: "APPEND",
+        target: "PRAList",
+        content: updatedData,
+      });
+      return console.log("updatedDataList", updatedDataList);
     });
-    
+
     let formData = {
       caseTypeID: "PG-AAS-Work-DefineProductionReadyArt",
       content: {
         AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
         AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
-        Project_Name: TaskDetailsData?.ArtworkAgilityTasks[0]?.Project_Name
+        Project_Name: TaskDetailsData?.ArtworkAgilityTasks[0]?.Project_Name,
       },
       pageInstructions: updatedDataList,
     };
-    console.log('formData', formData)
+    console.log("formData", formData);
     await submitDefineProductionReadyArt(formData, id, headers);
     // navigate(`/${currentUrl?.split("/")[1]}`);
   };
@@ -168,25 +175,25 @@ function DPRA() {
       if (task?.isNew) {
         task.Design_Job_ID = "";
       }
+      task.Action = "update";
+      if (task?.Action !== "delete" && task?.Design_Job_ID) {
         task.Action = "update";
-        if (task?.Action !== "delete" && task?.Design_Job_ID) {
-          task.Action = "update";
-        } else if (task?.Action !== "delete" && task?.isNew === true)
-          task.Action = "add";
+      } else if (task?.Action !== "delete" && task?.isNew === true)
+        task.Action = "add";
 
-          updatedData.push({        
-            Design_Job_Name: task.Design_Job_Name,
-            Design_Job_ID: task.Design_Job_ID,
-            Agency_Reference: task.Agency_Reference,
-            Cluster: task.Cluster,            
-            Additional_Info:task.Additional_Info,
-            Select: task.Select ? task.Select : false,
-            Tier: task.Tier,
-            Action: task.Action
-          });
-      return console.log('updatedData', updatedData);
+      updatedData.push({
+        Design_Job_Name: task.Design_Job_Name,
+        Design_Job_ID: task.Design_Job_ID,
+        Agency_Reference: task.Agency_Reference,
+        Cluster: task.Cluster,
+        Additional_Info: task.Additional_Info,
+        Select: task.Select ? task.Select : false,
+        Tier: task.Tier,
+        Action: task.Action,
+      });
+      return console.log("updatedData", updatedData);
     });
-   
+
     let formData = {
       AWM_Project_ID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
       AWM_Task_ID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
@@ -196,9 +203,9 @@ function DPRA() {
       ProductionReadyArtList: updatedData,
     };
     console.log("full draft data --->", formData);
-   await saveDefineProductionReadyArt(formData);
+    await saveDefineProductionReadyArt(formData);
   };
-    let Brand = [];
+  let Brand = [];
   let Category = [];
 
   if (TaskDetailsData?.ArtworkAgilityPage) {
@@ -225,9 +232,15 @@ function DPRA() {
       >
         {<AddNewDesign {...data} />}
 
-        {loading || designIntent === null ? 
-          <i className="pi pi-spin pi-spinner" style={{ fontSize: '2rem' }}></i>
-          : designIntent &&
+        {loading || designIntent === null ? (
+          <div className="align-item-center">
+            <i
+              className="pi pi-spin pi-spinner"
+              style={{ fontSize: "2rem" }}
+            ></i>
+          </div>
+        ) : (
+          designIntent &&
           designIntent.length &&
           designIntent.map((item, index) => {
             if (item && item?.Action !== "delete") {
@@ -246,13 +259,14 @@ function DPRA() {
                 />
               );
             } else return <>Data Not Found</>;
-          })}
-        <FooterButtons
-          handleCancel={handleCancel}
-          onSaveAsDraft={onSaveAsDraft}
-          onSubmit={onSubmit}
-        />
+          })
+        )}
       </div>
+      <FooterButtons
+        handleCancel={handleCancel}
+        onSaveAsDraft={onSaveAsDraft}
+        onSubmit={onSubmit}
+      />
     </PageLayout>
   );
 }
