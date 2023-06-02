@@ -21,7 +21,16 @@ import ApproveDesignDialog from "./ApproveDesignDialog";
 import { useLocation, useParams } from "react-router-dom";
 import CPPFA from "./../../AWMJobs/CPPFA";
 
-const ProjectPlanList = ({ projectPlan, selectedProject, projectPlanDesign, pegadata, setPegaData, setUpdatedProjectPlanDesignData, setActiveSave }) => {
+const ProjectPlanList = ({
+  projectPlan,
+  selectedProject,
+  projectPlanDesign,
+  pegadata,
+  setPegaData,
+  setUpdatedProjectPlanDesignData,
+  setActiveSave,
+  isAccessEmpty,
+}) => {
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
   const [selectedColumnName, setSelectedColumnName] = useState(null);
@@ -58,8 +67,7 @@ const ProjectPlanList = ({ projectPlan, selectedProject, projectPlanDesign, pega
 
   useEffect(() => {
     (async () => {
-      try {      
-
+      try {
         let filteredPegaDataJson = localStorage.getItem("columnWiseFilterData");
         const filteredPegaData = JSON.parse(filteredPegaDataJson);
 
@@ -69,7 +77,7 @@ const ProjectPlanList = ({ projectPlan, selectedProject, projectPlanDesign, pega
           setPegaData(projectPlan);
         } else {
           setPegaData(projectPlan);
-        };
+        }
         // according to pathname we need to call api and store column name in local storage
         let columnNamesJson = localStorage.getItem("projectPlanAllColumnNames");
         const columnNames = JSON.parse(columnNamesJson);
@@ -454,15 +462,25 @@ const ProjectPlanList = ({ projectPlan, selectedProject, projectPlanDesign, pega
     rowData.data[ele] = value.Name;
     console.log("Pegadata: ", pegadata);
     setPegaData([...pegadata]);
-    setActiveSave(false);
-   //updateProjectPlanDesign();
+
+    if (isAccessEmpty) {
+      setActiveSave(true);
+    } else {
+      setActiveSave(false);
+    }
+    //updateProjectPlanDesign();
   };
 
   const onDurationChange = (rowData, { value }, ele) => {
     rowData.data[ele] = value < 1 ? "0" : value?.toString();
     console.log("Pegadata: ", pegadata);
     setPegaData([...pegadata]);
-    setActiveSave(false);
+
+    if (isAccessEmpty) {
+      setActiveSave(true);
+    } else {
+      setActiveSave(false);
+    }
   };
 
   const rowExpansionColumns = () => {

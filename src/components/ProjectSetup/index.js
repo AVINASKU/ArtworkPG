@@ -8,11 +8,28 @@ import "./index.scss";
 import { useSelector } from "react-redux";
 import ProjectPlanCompo from "../Projects/ProjectPlan/ProjectPlanCompo";
 import ConfirmationDialog from "./confirmationDialog";
+import { getUnAuthoirzedAccess } from "../../utils";
 
 function ProjectSetup(props) {
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const { mode, rootBreadCrumb } = projectSetup;
+  const User = useSelector((state) => state.UserReducer);
+  const userInformation = User.userInformation;
+  const { accessMatrix } = useSelector((state) => state?.accessMatrixReducer);
+  let path = "";
+  if (window?.location?.pathname.includes("projectPlan")) {
+    path = "/projectPlan";
+  }
+
+  const accessDetails = getUnAuthoirzedAccess(
+    userInformation.role,
+    accessMatrix,
+    path
+  );
+
+  // Check if access is empty for the user's role and page
+  const isAccessEmpty = accessDetails === null || accessDetails.length === 0;
   const [activeKey, setActiveKey] = useState("0");
   const items = [{ label: rootBreadCrumb }];
   activeKey === "0" && items.push({ label: "Project Setup" });
@@ -151,16 +168,19 @@ function ProjectSetup(props) {
         </div>
       </div>
       <div className="tabular-view AccordionIndent">
-        <Accordion defaultActiveKey="0" activeKey={activeKey}>
-          <Accordion.Item eventKey="0">
-            <Accordion.Header onClick={() => handleActiveKeyChange("0")}>
-              Project Setup
-            </Accordion.Header>
-            <Accordion.Body>
-              <AddProject {...props} projectMode={mode} />
-            </Accordion.Body>
-          </Accordion.Item>
-
+        <Accordion defaultActiveKey="1" activeKey={activeKey}>
+          {!isAccessEmpty && (
+            <>
+              <Accordion.Item eventKey="0">
+                <Accordion.Header onClick={() => handleActiveKeyChange("0")}>
+                  Project Setup
+                </Accordion.Header>
+                <Accordion.Body>
+                  <AddProject {...props} projectMode={mode} />
+                </Accordion.Body>
+              </Accordion.Item>
+            </>
+          )}
           <Accordion.Item eventKey="1">
             <Accordion.Header onClick={() => handleActiveKeyChange("1")}>
               Project Plan

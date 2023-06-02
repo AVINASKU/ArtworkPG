@@ -4,7 +4,7 @@ export const RoleUser = {
       username: "malashree",
       password: "mala123",
       userid: "koley.mk",
-      role: "TaskOwner",
+      role: "CapacityManager",
       bu: "FAB",
       region: "EUROPE ENTERPRISE",
       permissions: ["create", "read", "update", "delete"],

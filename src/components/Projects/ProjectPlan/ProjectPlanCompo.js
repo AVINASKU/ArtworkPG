@@ -9,14 +9,18 @@ import {
 import "primeicons/primeicons.css";
 import "./index.scss";
 import { useSelector, useDispatch } from "react-redux";
-import { activateProjectPlan, saveProjectPlanAction } from "../../../apis/projectPlanApi";
+import {
+  activateProjectPlan,
+  saveProjectPlanAction,
+} from "../../../apis/projectPlanApi";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import moment from "moment";
-
+import { getUnAuthoirzedAccess } from "../../../utils";
 function ProjectPlanCompo(props) {
   const [projectPlanDesignData, setProjectPlanDesignData] = useState([]);
-  const [updatedProjectPlanDesignData, setUpdatedProjectPlanDesignData] = useState([]);
+  const [updatedProjectPlanDesignData, setUpdatedProjectPlanDesignData] =
+    useState([]);
   const [pegadata, setPegaData] = useState(null);
   const [activeSave, setActiveSave] = useState(true);
   const [activeFlag, setActiveFlag] = useState(false);
@@ -24,22 +28,47 @@ function ProjectPlanCompo(props) {
   const [updatedList, setUpdatedList] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const User = useSelector((state) => state.UserReducer);
+  const userInformation = User.userInformation;
+  const { accessMatrix } = useSelector((state) => state?.accessMatrixReducer);
+  let path = "";
+  if (window?.location?.pathname.includes("projectPlan")) {
+    path = "/projectPlan";
+  }
 
-  const { projectPlanDesign, projectPlan, loading } = useSelector((state) => state.ProjectPlanReducer);
-  const { selectedProject, mode } = useSelector((state) => state.ProjectSetupReducer);
+  const accessDetails = getUnAuthoirzedAccess(
+    userInformation.role,
+    accessMatrix,
+    path
+  );
+  // Check if access is empty for the user's role and page
+  const isAccessEmpty = accessDetails === null || accessDetails.length === 0;
+  useEffect(() => {
+    if (isAccessEmpty) {
+      setActiveSave(true);
+      setActiveFlag(true);
+    }
+  }, [isAccessEmpty, activeFlag]);
+
+  const { projectPlanDesign, projectPlan, loading } = useSelector(
+    (state) => state.ProjectPlanReducer
+  );
+  const { selectedProject, mode } = useSelector(
+    (state) => state.ProjectSetupReducer
+  );
 
   useEffect(() => {
     if (updatedProjectPlanDesignData) {
       setProjectPlanDesignData(updatedProjectPlanDesignData || []);
     }
-  },[updatedProjectPlanDesignData]);
+  }, [updatedProjectPlanDesignData]);
 
   useEffect(() => {
     setActiveFlag(false);
     if (projectPlanDesign) {
       setActiveFlag(projectPlanDesign[0]?.Project_State === "Available");
     }
-  },[projectPlanDesign]);
+  }, [projectPlanDesign]);
 
   useEffect(() => {
     (async () => {
@@ -241,12 +270,12 @@ function ProjectPlanCompo(props) {
         projectPlanDesign.some((object2) => {
           if (
             AWM_Task_ID === object2.AWM_Task_ID &&
-            ((Role !== undefined && Role !== '' && Role !== object2.Role) ||
+            ((Role !== undefined && Role !== "" && Role !== object2.Role) ||
               (Assignee !== undefined &&
-                Assignee !== '' &&
+                Assignee !== "" &&
                 Assignee !== object2.Assignee) ||
               (Duration !== undefined &&
-                Duration !== '' &&
+                Duration !== "" &&
                 Duration !== object2.Duration))
           ) {
             updatedData.push({
@@ -256,7 +285,7 @@ function ProjectPlanCompo(props) {
               Role: Role,
               Duration: Duration,
             });
-            return console.log('updatedData', updatedData);
+            return console.log("updatedData", updatedData);
           }
         })
     );
@@ -271,69 +300,74 @@ function ProjectPlanCompo(props) {
   };
 
   const activate = async () => {
-    
     await activateProjectPlan(selectedProject.Project_ID);
     navigate("/myProjects");
   };
 
   return (
-    console.log('projectPlan: ', projectPlan),
-    // console.log('projectPlanDesignData local: ', projectPlanDesignData),
-    // console.log('updatedProjectPlanDesignData local: ', updatedProjectPlanDesignData),
-    <>
-      <Accordion className="projectPlanAccordian" defaultActiveKey="2">
-        <Accordion.Item eventKey="2">
-          <Accordion.Header>Design</Accordion.Header>
-          <Accordion.Body>
-            <ProjectPlan
-              {...props}
-              projectPlan={projectPlan}
-              selectedProject={selectedProject}
-              projectPlanDesign={projectPlanDesign}
-              setPegaData={setPegaData}
-              pegadata={pegadata}
-              setUpdatedProjectPlanDesignData={setUpdatedProjectPlanDesignData}
-              setActiveSave={setActiveSave}
-            />
-          </Accordion.Body>
-        </Accordion.Item>
-        <Accordion.Item eventKey="3">
-          <Accordion.Header>Input</Accordion.Header>
-          <Accordion.Body>Input</Accordion.Body>
-        </Accordion.Item>
-        <Accordion.Item eventKey="4">
-          <Accordion.Header>FA Assembly</Accordion.Header>
-          <Accordion.Body>FA Assembly</Accordion.Body>
-        </Accordion.Item>
-      </Accordion>
-      <div className="form-buttons">
-        <Button
-          className="button-layout"
-          variant="secondary"
-          onClick={() => navigate("/myProjects")}
-        >
-          Cancel
-        </Button>
+    console.log("projectPlan: ", projectPlan),
+    (
+      // console.log('projectPlanDesignData local: ', projectPlanDesignData),
+      // console.log('updatedProjectPlanDesignData local: ', updatedProjectPlanDesignData),
+      <>
+        <Accordion className="projectPlanAccordian" defaultActiveKey="2">
+          <Accordion.Item eventKey="2">
+            <Accordion.Header>Design</Accordion.Header>
+            <Accordion.Body>
+              <ProjectPlan
+                {...props}
+                projectPlan={projectPlan}
+                selectedProject={selectedProject}
+                projectPlanDesign={projectPlanDesign}
+                setPegaData={setPegaData}
+                pegadata={pegadata}
+                setUpdatedProjectPlanDesignData={
+                  setUpdatedProjectPlanDesignData
+                }
+                setActiveSave={setActiveSave}
+                isAccessEmpty={isAccessEmpty}
+              />
+            </Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="3">
+            <Accordion.Header>Input</Accordion.Header>
+            <Accordion.Body>Input</Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="4">
+            <Accordion.Header>FA Assembly</Accordion.Header>
+            <Accordion.Body>FA Assembly</Accordion.Body>
+          </Accordion.Item>
+        </Accordion>
+        <div className="form-buttons">
+          <Button
+            className={isAccessEmpty ? "btn btn-disabled" : "button-layout"}
+            variant="secondary"
+            onClick={() => navigate("/myProjects")}
+            disabled={isAccessEmpty}
+          >
+            Cancel
+          </Button>
 
-        <Button
-          className={activeSave ? 'btn btn-disabled' : 'button-layout'}
-          variant="secondary"
-          onClick={onSave}
-          disabled={activeSave}
-        >
-          Save
-        </Button>
+          <Button
+            className={activeSave ? "btn btn-disabled" : "button-layout"}
+            variant="secondary"
+            onClick={onSave}
+            disabled={activeSave}
+          >
+            Save
+          </Button>
 
-        <Button
-          className="button-layout"
-          variant="primary"
-          onClick={activate}
-          disabled={activeFlag}
-        >
-          Activate
-        </Button>
-      </div>
-    </>
+          <Button
+            className="button-layout"
+            variant="primary"
+            onClick={activate}
+            disabled={activeFlag}
+          >
+            Activate
+          </Button>
+        </div>
+      </>
+    )
   );
 }
 
