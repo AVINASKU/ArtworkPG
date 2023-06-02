@@ -14,7 +14,9 @@ const AddNewDesignContent = ({
   item,
   addData,
   roleName,
-  checkBU
+  checkBU,
+  setSubmitActive,
+  checkReadWriteAccess,
 }) => {
   const { Agency_Reference, Additional_Info, event, Select, Cluster } = item;
 
@@ -50,12 +52,15 @@ const AddNewDesignContent = ({
         >
           {!di_name ? `Design Intent ${index + 1}` : di_name}
         </div>
-        <img
-          src={deleteIcon}
-          alt="filter logo"
-          onClick={() => handleDelete(index)}
-          className="header-icons"
-        />
+        <div>
+          <img
+            src={deleteIcon}
+            alt="filter logo"
+            onClick={() => !checkReadWriteAccess && handleDelete(index)}
+            className="header-icons"
+            disabled={checkReadWriteAccess}
+          />
+        </div>
       </>
     );
   };
@@ -97,6 +102,7 @@ const AddNewDesignContent = ({
               onChange={(e) => {
                 addData("Select", index, e.checked, di_name);
                 setChecked(e.checked);
+                setSubmitActive(e.checked ? false : true);
               }}
               checked={event === "submit" ? true : checked}
               className="margin-right"

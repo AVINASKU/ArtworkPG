@@ -12,7 +12,8 @@ import "../DesignJobs/index.scss";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import "./index.scss";
+import {CheckReadOnlyAccess} from "../../../utils";
+
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
   { label: "Define Design Intent" },
@@ -34,10 +35,10 @@ function DDI() {
   const { TaskDetailsData, loading } = useSelector(
     (state) => state.TaskDetailsReducer
   );
-  const myProjectList = useSelector((state) => state.myProject);
-  const location = useLocation();
-  const currentUrl = location.pathname;
-  const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
+
+  console.log("checkReadWriteAccess in footer here here", CheckReadOnlyAccess());
+
+  const checkReadWriteAccess = CheckReadOnlyAccess();
 
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
@@ -186,6 +187,7 @@ function DDI() {
       updatedData.push({
         Design_Job_Name: task.Design_Job_Name,
         Design_Job_ID: task.Design_Job_ID,
+        AWM_Project_ID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
         Agency_Reference: task.Agency_Reference,
         Cluster: task.Cluster,
         Additional_Info: task.Additional_Info,
@@ -223,6 +225,7 @@ function DDI() {
         breadcrumb={breadcrumb}
         headerName={headerName}
         label="Define Design Intent"
+        checkReadWriteAccess={checkReadWriteAccess}
       />
       <div
         style={{
@@ -232,7 +235,7 @@ function DDI() {
           height: "400px",
         }}
       >
-        {<AddNewDesign {...data} />}
+        {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
 
         {loading || designIntent === null ? (
           <div className="align-item-center">
@@ -257,6 +260,8 @@ function DDI() {
                   addData={addData}
                   handleDelete={handleDelete}
                   roleName={roleName}
+                  setSubmitActive={setSubmitActive}
+                  checkReadWriteAccess={checkReadWriteAccess}
                 />
               );
             }
@@ -267,6 +272,8 @@ function DDI() {
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
         onSubmit={onSubmit}
+        formValid={submitActive}
+        checkReadWriteAccess={checkReadWriteAccess}
       />
     </PageLayout>
   );

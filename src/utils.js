@@ -1,5 +1,9 @@
+import React, {useEffect} from "react";
 import moment from "moment";
 import { useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchAccessMatrix } from "./store/actions/RoleBasedActions";
+
 
 export const changeDateFormat = (value) => {
   let newDate = value
@@ -87,4 +91,36 @@ export const getUnAuthoirzedAccess = (role, accessMatrix, pathname) => {
   }
   const hasAccess = pageDetails.access.length > 0;
   return hasAccess ? pageDetails.access : null;
+};
+
+export const CheckReadOnlyAccess = () => {
+  const dispatch1 = useDispatch();
+  const { accessMatrix } = useSelector((state) => state?.accessMatrixReducer);
+  const User = useSelector((state) => state.UserReducer);
+  const userInformation = User.userInformation;
+  const location = useLocation();
+  // if read only access then returns true otherwise return false
+  useEffect(() => {
+    dispatch1(fetchAccessMatrix());
+  }, [dispatch1]);
+
+
+  const accessDetails = getAccessDetails(userInformation.role, accessMatrix);
+  const currentUrl = location.pathname;
+  let url = currentUrl.split("/")[1];
+
+  console.log("access details", accessDetails, url);
+  let checkReadOnlyAccess = false;
+  accessDetails.pages.forEach((page, index) => {
+    if (page.name === url) {
+      console.log("page", page);
+      let checkAccess = page?.access;
+      checkReadOnlyAccess =
+        checkAccess && checkAccess.length === 1 && checkAccess.includes("Read")
+          ? true
+          : false;
+    }
+  });
+  console.log("url", url, checkReadOnlyAccess)
+  return checkReadOnlyAccess;
 };
