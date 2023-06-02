@@ -12,6 +12,7 @@ import "../DesignJobs/index.scss";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import {CheckReadOnlyAccess} from "../../../utils";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
@@ -30,7 +31,13 @@ function DDI() {
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { TaskDetailsData, loading } = useSelector((state) => state.TaskDetailsReducer);
+  const { TaskDetailsData, loading } = useSelector(
+    (state) => state.TaskDetailsReducer
+  );
+
+  console.log("checkReadWriteAccess in footer here here", CheckReadOnlyAccess());
+
+  const checkReadWriteAccess = CheckReadOnlyAccess();
 
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
@@ -139,25 +146,25 @@ function DDI() {
       if (task?.isNew) {
         task.Design_Job_ID = "";
       }
+      task.Action = "update";
+      if (task?.Action !== "delete" && task?.Design_Job_ID) {
         task.Action = "update";
-        if (task?.Action !== "delete" && task?.Design_Job_ID) {
-          task.Action = "update";
-        } else if (task?.Action !== "delete" && task?.isNew === true)
-          task.Action = "add";
+      } else if (task?.Action !== "delete" && task?.isNew === true)
+        task.Action = "add";
 
-          updatedData.push({        
-            Design_Job_Name: task.Design_Job_Name,
-            Design_Job_ID: task.Design_Job_ID,
-            AWM_Project_ID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
-            Agency_Reference: task.Agency_Reference,
-            Cluster: task.Cluster,
-            Additional_Info:task.Additional_Info,
-            Select: task.Select ? task.Select : false,
-            Action: task.Action
-          });
-      return console.log('updatedData', updatedData);
+      updatedData.push({
+        Design_Job_Name: task.Design_Job_Name,
+        Design_Job_ID: task.Design_Job_ID,
+        AWM_Project_ID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
+        Agency_Reference: task.Agency_Reference,
+        Cluster: task.Cluster,
+        Additional_Info: task.Additional_Info,
+        Select: task.Select ? task.Select : false,
+        Action: task.Action,
+      });
+      return console.log("updatedData", updatedData);
     });
-   
+
     let formData = {
       DesignIntentList: updatedData,
     };
@@ -180,6 +187,7 @@ function DDI() {
         breadcrumb={breadcrumb}
         headerName={headerName}
         label="Define Design Intent"
+        checkReadWriteAccess={checkReadWriteAccess}
       />
       <div
         style={{
@@ -189,11 +197,12 @@ function DDI() {
           height: "400px",
         }}
       >
-        {<AddNewDesign {...data} />}
+        {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
 
-        {loading || designIntent === null ? 
-          <i className="pi pi-spin pi-spinner" style={{ fontSize: '2rem' }}></i>
-          : designIntent &&
+        {loading || designIntent === null ? (
+          <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
+        ) : (
+          designIntent &&
           designIntent.length > 0 &&
           designIntent.map((item, index) => {
             if (item && item?.Action !== "delete") {
@@ -209,19 +218,21 @@ function DDI() {
                   handleDelete={handleDelete}
                   roleName={roleName}
                   setSubmitActive={setSubmitActive}
+                  checkReadWriteAccess={checkReadWriteAccess}
                 />
               );
             }
-          })}
+          })
+        )}
       </div>
       <FooterButtons
-          handleCancel={handleCancel}
-          onSaveAsDraft={onSaveAsDraft}
-          onSubmit={onSubmit}
-          formValid={submitActive}
-        />
-      </PageLayout>
-    
+        handleCancel={handleCancel}
+        onSaveAsDraft={onSaveAsDraft}
+        onSubmit={onSubmit}
+        formValid={submitActive}
+        checkReadWriteAccess={checkReadWriteAccess}
+      />
+    </PageLayout>
   );
 }
 
