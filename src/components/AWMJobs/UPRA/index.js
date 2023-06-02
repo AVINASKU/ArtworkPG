@@ -11,6 +11,7 @@ import { submitUploadApproveDesignIntent } from "../../../apis/uploadSubmitAPIs"
 import AddNewDesign from "../DesignJobs/TaskHeader";
 import { UploadFileToServer } from "../../../store/actions/ProofScopeActions";
 import { postSaveDesignIntent } from "../../../apis/uploadSaveAsDraft";
+import { CheckReadOnlyAccess } from "../../../utils";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
@@ -38,6 +39,8 @@ const UPRA = () => {
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
   const roleName = "DI_";
   const version = "V1";
+
+    const checkReadWriteAccess = CheckReadOnlyAccess();
 
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));

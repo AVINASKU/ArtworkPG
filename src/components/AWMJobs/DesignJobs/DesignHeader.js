@@ -62,12 +62,12 @@ const DesignHeader = ({
               }}
               checked={checked}
               className="margin-right"
-              disabled={(!onSelectAll && true) || checkReadWriteAccess}
+              disabled={(!onSelectAll && true) || !checkReadWriteAccess}
             ></Checkbox>
             <div className="icon-label">
               <label
                 className={disabled && "disable-buttons"}
-                disabled={checkReadWriteAccess}
+                disabled={!checkReadWriteAccess}
               >
                 {" "}
                 Select All
@@ -88,11 +88,11 @@ const DesignHeader = ({
             <img
               src={plusCollapseImg}
               onClick={() =>
-                !checkReadWriteAccess && setAddNewDesign && setAddNewDesign()
+                checkReadWriteAccess && setAddNewDesign && setAddNewDesign()
               }
               className="add-new-design-intent-icon"
               alt=""
-              disabled={(!setAddNewDesign && true) || checkReadWriteAccess}
+              disabled={(!setAddNewDesign && true) || !checkReadWriteAccess}
             />
             <div className="icon-label">
               <label className={disabled && "disable-buttons"}>

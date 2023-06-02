@@ -56,9 +56,9 @@ const AddNewDesignContent = ({
           <img
             src={deleteIcon}
             alt="filter logo"
-            onClick={() => !checkReadWriteAccess && handleDelete(index)}
+            onClick={() => checkReadWriteAccess && handleDelete(index)}
             className="header-icons"
-            disabled={checkReadWriteAccess}
+            disabled={!checkReadWriteAccess}
           />
         </div>
       </>

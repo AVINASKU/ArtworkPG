@@ -20,7 +20,7 @@ console.log("checkReadWriteAccess in footer", checkReadWriteAccess);
       <Button
         className="button-layout"
         variant="secondary"
-        disabled={checkReadWriteAccess}
+        disabled={!checkReadWriteAccess}
         onClick={() => handleCancel()}
       >
         Cancel
@@ -31,7 +31,7 @@ console.log("checkReadWriteAccess in footer", checkReadWriteAccess);
             className="button-layout"
             variant="secondary"
             onClick={() => onSaveAsDraft()}
-            disabled={checkReadWriteAccess}
+            disabled={!checkReadWriteAccess}
           >
             Save as Draft
           </Button>
@@ -39,7 +39,7 @@ console.log("checkReadWriteAccess in footer", checkReadWriteAccess);
             className="button-layout"
             type="submit"
             onClick={() => onSubmit()}
-            disabled={formValid || checkReadWriteAccess}
+            disabled={formValid || !checkReadWriteAccess}
           >
             Submit
           </Button>
