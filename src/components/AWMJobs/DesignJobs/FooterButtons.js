@@ -7,12 +7,16 @@ const FooterButtons = ({
   handleCancel,
   approve,
   formValid,
+  checkReadWriteAccess,
 }) => {
+
+console.log("checkReadWriteAccess in footer", checkReadWriteAccess);
   return (
     <div className="form-buttons">
       <Button
         className="button-layout"
         variant="secondary"
+        disabled={checkReadWriteAccess}
         onClick={() => handleCancel()}
       >
         Cancel
@@ -23,6 +27,7 @@ const FooterButtons = ({
             className="button-layout"
             variant="secondary"
             onClick={() => onSaveAsDraft()}
+            disabled={checkReadWriteAccess}
           >
             Save as Draft
           </Button>
@@ -30,7 +35,7 @@ const FooterButtons = ({
             className="button-layout"
             type="submit"
             onClick={() => onSubmit()}
-            disabled={formValid}
+            disabled={formValid || checkReadWriteAccess}
           >
             Submit
           </Button>

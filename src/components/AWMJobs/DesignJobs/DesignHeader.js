@@ -12,6 +12,7 @@ const DesignHeader = ({
   label,
   headerName,
   disabled,
+  checkReadWriteAccess,
 }) => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
@@ -60,10 +61,13 @@ const DesignHeader = ({
               }}
               checked={checked}
               className="margin-right"
-              disabled={!onSelectAll && true}
+              disabled={(!onSelectAll && true) || checkReadWriteAccess}
             ></Checkbox>
             <div className="icon-label">
-              <label className={disabled && "disable-buttons"}>
+              <label
+                className={disabled && "disable-buttons"}
+                disabled={checkReadWriteAccess}
+              >
                 {" "}
                 Select All
               </label>
@@ -82,10 +86,12 @@ const DesignHeader = ({
           <div className="icon-items">
             <img
               src={plusCollapseImg}
-              onClick={() => setAddNewDesign && setAddNewDesign()}
+              onClick={() =>
+                !checkReadWriteAccess && setAddNewDesign && setAddNewDesign()
+              }
               className="add-new-design-intent-icon"
               alt=""
-              disabled={!setAddNewDesign && true}
+              disabled={(!setAddNewDesign && true) || checkReadWriteAccess}
             />
             <div className="icon-label">
               <label className={disabled && "disable-buttons"}>
