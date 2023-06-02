@@ -8,14 +8,14 @@ import {
   saveDefineRegionalDesignTemplate,
   submitDefineRegionalDesignTemplate,
 } from "../../../apis/defineRegionalDesignTemplate";
-import "../DesignJobs/index.scss";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { ProjectService } from "../../../service/PegaService";
 import { AddNavigation } from "../../../utils";
 import { toLower } from "lodash";
 import _ from "lodash";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
+import { CheckReadOnlyAccess } from "../../../utils";
+import "../DesignJobs/index.scss";
 
 const headerName = "Define Regional Design Template";
 const roleName = "DT_";
@@ -45,6 +45,8 @@ function DDT() {
   // if bu is baby care show tire field else not
   let checkBU = toLower(bu) === toLower("Home Care") ? true : false;
 
+  const checkReadWriteAccess = CheckReadOnlyAccess();
+
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
   }, [dispatch, TaskID, ProjectID]);
@@ -66,7 +68,7 @@ function DDT() {
   }, [TaskDetailsData]);
 
   const handleCancel = () => {
-    return navigate(`/myTasks`);
+    return navigate(currentUrl === "myTasks" ? `/myTasks` : "/allTasks");
   };
 
   const handleDelete = (index) => {
@@ -201,6 +203,14 @@ function DDT() {
     await saveDefineRegionalDesignTemplate(formData);
   };
 
+  let Brand = [];
+  let Category = [];
+
+  if (TaskDetailsData?.ArtworkAgilityPage) {
+    Brand = TaskDetailsData.ArtworkAgilityPage.Artwork_Brand;
+    Category = TaskDetailsData.ArtworkAgilityPage.Artwork_Category;
+  }
+
   return (
     <PageLayout>
       <DesignHeader
@@ -209,6 +219,7 @@ function DDT() {
         breadcrumb={breadcrumb}
         headerName={headerName}
         label="Define Regional Design Template"
+        checkReadWriteAccess={checkReadWriteAccess}
       />
       <div
         style={{
@@ -218,7 +229,7 @@ function DDT() {
           height: "400px",
         }}
       >
-        {<AddNewDesign {...data} />}
+        {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
 
         {loading || designIntent === null ? (
           <div className="align-item-center">
@@ -242,6 +253,9 @@ function DDT() {
                   handleDelete={handleDelete}
                   roleName={roleName}
                   checkBU={checkBU}
+                  Brand={Brand}
+                  Category={Category}
+                  checkReadWriteAccess={checkReadWriteAccess}
                 />
               );
             } else return <>Data Not Found</>;
@@ -252,6 +266,7 @@ function DDT() {
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
         onSubmit={onSubmit}
+        checkReadWriteAccess={checkReadWriteAccess}
       />
     </PageLayout>
   );

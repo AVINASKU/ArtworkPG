@@ -12,7 +12,7 @@ import "../DesignJobs/index.scss";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {CheckReadOnlyAccess} from "../../../utils";
+import { CheckReadOnlyAccess } from "../../../utils";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
@@ -35,8 +35,10 @@ function DDI() {
   const { TaskDetailsData, loading } = useSelector(
     (state) => state.TaskDetailsReducer
   );
-
-  console.log("checkReadWriteAccess in footer here here", CheckReadOnlyAccess());
+  const myProjectList = useSelector((state) => state.myProject);
+  const location = useLocation();
+  const currentUrl = location.pathname;
+  const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
 
   const checkReadWriteAccess = CheckReadOnlyAccess();
 
@@ -111,7 +113,7 @@ function DDI() {
       return task;
     });
 
-     const hasValues = designIntent.every(
+    const hasValues = designIntent.every(
       (item) => item.Agency_Reference !== "" && item.Cluster !== ""
     );
 
@@ -142,7 +144,7 @@ function DDI() {
         task.Action = "update";
       } else if (task?.Action !== "delete" && task?.isNew === true)
         task.Action = "add";
-     
+
       updatedData.DesignJobName = task.Design_Job_Name;
       updatedData.DesignJobID = task.Design_Job_ID;
       updatedData.AgencyReference = task.Agency_Reference;
@@ -169,7 +171,7 @@ function DDI() {
     };
     console.log("formData", formData);
     await submitDesignIntent(formData, id, headers);
-    navigate(`/AllTasks`);
+    // navigate(`/AllTasks`);
   };
 
   const onSaveAsDraft = async () => {
@@ -208,6 +210,7 @@ function DDI() {
     console.log("full draft data --->", formData);
     await saveDesignIntent(formData);
   };
+
   let Brand = [];
   let Category = [];
 
@@ -215,7 +218,6 @@ function DDI() {
     Brand = TaskDetailsData.ArtworkAgilityPage.Artwork_Brand;
     Category = TaskDetailsData.ArtworkAgilityPage.Artwork_SMO;
   }
-
 
   return (
     <PageLayout>
@@ -260,7 +262,6 @@ function DDI() {
                   addData={addData}
                   handleDelete={handleDelete}
                   roleName={roleName}
-                  setSubmitActive={setSubmitActive}
                   checkReadWriteAccess={checkReadWriteAccess}
                 />
               );
@@ -272,7 +273,7 @@ function DDI() {
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
         onSubmit={onSubmit}
-        formValid={submitActive}
+        // formValid={submitActive}
         checkReadWriteAccess={checkReadWriteAccess}
       />
     </PageLayout>

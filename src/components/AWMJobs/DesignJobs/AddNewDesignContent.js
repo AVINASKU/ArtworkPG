@@ -70,6 +70,11 @@ const AddNewDesignContent = ({
     Brand?.length && Brand.map((item) => item.Brand_Name).join(",");
   let clubCategory =
     Category?.length && Category.map((item) => item.Category_Name).join(",");
+
+    if(clubBrandName === "" || Brand===undefined) clubBrandName = "Brand";
+
+    if(clubCategory === "" || Category ===undefined) clubCategory = "Category";
+
   if (agencyRef || clusters || additionalInformation) {
     di_name =
       roleName +
@@ -102,7 +107,7 @@ const AddNewDesignContent = ({
               onChange={(e) => {
                 addData("Select", index, e.checked, di_name);
                 setChecked(e.checked);
-                setSubmitActive(e.checked ? false : true);
+                // setSubmitActive(e.checked ? false : true);
               }}
               checked={event === "submit" ? true : checked}
               className="margin-right"
