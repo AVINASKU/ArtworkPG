@@ -14,7 +14,10 @@ const FooterButtons = ({
   const url = locationPath?.split("/");
   const pathName = url[2];
   return (
-    <div className="form-buttons footer-buttons">
+    <div
+      className="form-buttons"
+      style={{ padding: 15, background: "#FAFAFA" }}
+    >
       <Button
         className="button-layout"
         variant="secondary"
