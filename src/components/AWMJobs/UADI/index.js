@@ -11,6 +11,7 @@ import { submitUploadApproveDesignIntent } from "../../../apis/uploadSubmitAPIs"
 import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { CheckReadOnlyAccess } from "../../../utils";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/tasks" },
@@ -37,6 +38,8 @@ const UADI = () => {
   const roleName = "DI_";
   const location = useLocation();
   const currentUrl = location.pathname;
+  const checkReadWriteAccess = CheckReadOnlyAccess();
+
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
   }, [dispatch, TaskID, ProjectID]);
@@ -108,9 +111,10 @@ const UADI = () => {
         headerName={headerName}
         disabled={true}
         label="Upload Approved Design Intent"
+        checkReadWriteAccess={checkReadWriteAccess}
       />
 
-      {<AddNewDesign {...data} />}
+      {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
       {loading ? (
         <div className="align-item-center">
           <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
@@ -131,6 +135,7 @@ const UADI = () => {
             ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
             version={version}
             date={date}
+            checkReadWriteAccess={checkReadWriteAccess}
           />
         )
       )}
@@ -138,6 +143,7 @@ const UADI = () => {
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
         onSubmit={onSubmit}
+        checkReadWriteAccess={checkReadWriteAccess}
       />
     </PageLayout>
   );

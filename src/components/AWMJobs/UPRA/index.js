@@ -39,8 +39,7 @@ const UPRA = () => {
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
   const roleName = "DI_";
   const version = "V1";
-
-    const checkReadWriteAccess = CheckReadOnlyAccess();
+  const checkReadWriteAccess = CheckReadOnlyAccess();
 
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
@@ -103,6 +102,7 @@ const UPRA = () => {
         headerName={headerName}
         disabled={true}
         label="Upload Production Ready Art"
+        checkReadWriteAccess={checkReadWriteAccess}
       />
       {<AddNewDesign {...data} />}
       {loading ? (
@@ -121,6 +121,7 @@ const UPRA = () => {
             roleName={roleName}
             ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
             version={version}
+            checkReadWriteAccess={checkReadWriteAccess}
           />
         )
       )}{" "}
@@ -128,6 +129,7 @@ const UPRA = () => {
         onSubmit={onSubmit}
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
+        checkReadWriteAccess={checkReadWriteAccess}
       />
     </PageLayout>
   );
