@@ -1,7 +1,7 @@
 import Api from ".";
 import { updateProjectPlanAction } from "../store/actions/ProjectPlanActions";
 import { store } from "../store/store";
-import { DEVURL, SITURL, PRODURL } from "./envUrl";
+import { GETURL, DEVURL, SITURL, PRODURL } from "./envUrl";
 
 export const getProjectPlan = async (
   projectId,
@@ -14,7 +14,7 @@ export const getProjectPlan = async (
   const api = new Api();
   const axiosInstance = await api.init({ headers });
   // let apiURL = `${baseURL}/V1/ProjectPlan/PG-AAS-WORK A-544`;
-  let apiURL = `${DEVURL}/v1/ProjectPlan/${projectId}`;
+  let apiURL = `${GETURL}/projectplan/${projectId}`;
   const { data: projectPlanData } = await axiosInstance({
     url: apiURL,
     method: "GET",
