@@ -1,22 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import PageLayout from '../../PageLayout';
-import DesignHeader from '../DesignJobs/DesignHeader';
-import FooterButtons from '../DesignJobs/FooterButtons';
-import AddNewDesign from '../DesignJobs/TaskHeader';
-import ApproveDesignIntentContent from '../DesignJobs/ApproveDesignIntentContent';
-import {
-  getTaskDetails
-} from '../../../store/actions/taskDetailAction';
-import { submitUploadRegionalDesignIntent } from '../../../apis/uploadSubmitAPIs';
-import { postSaveDesignIntent } from '../../../apis/uploadSaveAsDraft'
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import PageLayout from "../../PageLayout";
+import DesignHeader from "../DesignJobs/DesignHeader";
+import FooterButtons from "../DesignJobs/FooterButtons";
+import AddNewDesign from "../DesignJobs/TaskHeader";
+import ApproveDesignIntentContent from "../DesignJobs/ApproveDesignIntentContent";
+import { getTaskDetails } from "../../../store/actions/taskDetailAction";
+import { submitUploadRegionalDesignIntent } from "../../../apis/uploadSubmitAPIs";
+import { postSaveDesignIntent } from "../../../apis/uploadSaveAsDraft";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 const breadcrumb = [
-  { label: 'My Tasks', url: '/tasks' },
-  { label: 'Upload Regional Design Template' },
+  { label: "My Tasks", url: "/tasks" },
+  { label: "Upload Regional Design Template" },
 ];
-const headerName = 'Upload Regional Design Template';
+const headerName = "Upload Regional Design Template";
 
 const URDT = () => {
   const [data, setData] = useState(null);
@@ -55,33 +53,33 @@ const URDT = () => {
 
   const onSaveAsDraft = async () => {
     const formData = {
-        AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
-        AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
-        Size : '1',
-        Version: version,
-        Filename: fileName
+      AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
+      AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
+      Size: "1",
+      Version: version,
+      Filename: fileName,
     };
     await postSaveDesignIntent(formData);
   };
 
   const onSubmit = async () => {
     const headers = {
-      key: 'If-Match',
+      key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
     console.log("azureFile", azureFile);
     const formData = {
-      caseTypeID: 'PG-AAS-Work-UploadRegionalDesignTemplate',
+      caseTypeID: "PG-AAS-Work-UploadRegionalDesignTemplate",
       content: {
         AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
         AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
-        Size : '1',
+        Size: "1",
         Version: version,
-        Filename: fileName
+        Filename: fileName,
       },
     };
-   // console.log('formData', formData, "id", id);
-   await submitUploadRegionalDesignIntent(formData, id, headers);
+    // console.log('formData', formData, "id", id);
+    await submitUploadRegionalDesignIntent(formData, id, headers);
     navigate(`/${currentUrl?.split("/")[1]}`);
   };
   return (
@@ -95,7 +93,9 @@ const URDT = () => {
 
       {<AddNewDesign {...data} />}
       {loading ? (
-        <i className="pi pi-spin pi-spinner" style={{ fontSize: '2rem' }}></i>
+        <div className="align-item-center">
+          <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
+        </div>
       ) : (
         designIntent && (
           <ApproveDesignIntentContent
@@ -115,7 +115,7 @@ const URDT = () => {
       <FooterButtons
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
-        onSubmit={onSubmit}        
+        onSubmit={onSubmit}
       />
     </PageLayout>
   );
