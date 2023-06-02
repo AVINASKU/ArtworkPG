@@ -8,6 +8,9 @@ import "./index.scss";
 import { useSelector } from "react-redux";
 import ProjectPlanCompo from "../Projects/ProjectPlan/ProjectPlanCompo";
 import ConfirmationDialog from "./confirmationDialog";
+import { Navigate, useHistory } from "react-router-dom";
+
+import { useNavigate } from "react-router-dom";
 
 function ProjectSetup(props) {
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
@@ -17,6 +20,7 @@ function ProjectSetup(props) {
   const items = [{ label: rootBreadCrumb }];
   activeKey === "0" && items.push({ label: "Project Setup" });
   activeKey === "1" && items.push({ label: "Project Plan" });
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (mode === "create") {
@@ -46,8 +50,9 @@ function ProjectSetup(props) {
     setOption(option);
   };
   const accept = () => {
-    console.log("accept");
+    return navigate("/myProjects");
   };
+
   const reject = () => {
     console.log("reject");
   };
@@ -60,7 +65,7 @@ function ProjectSetup(props) {
           onHide={setVisible}
           message={
             <>
-              Are you sure <span style={{ color: "red" }}>{option}</span> the
+              Are you sure to <span style={{ color: "red" }}>{option}</span> the
               project?
             </>
           }

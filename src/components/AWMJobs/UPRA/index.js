@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PageLayout from "../../PageLayout";
 import DesignHeader from "../DesignJobs/DesignHeader";
 import FooterButtons from "../DesignJobs/FooterButtons";
-import ApproveDesignIntentContent from "../DesignJobs/ApproveDesignIntentContent";
+import UploadDesignIntentProofscope from "../DesignJobs/UploadDesignIntentProofscope";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
@@ -21,12 +21,10 @@ const headerName = "Upload Production Ready Art";
 const UPRA = () => {
   const [data, setData] = useState(null);
   const [designIntent, setDesignIntent] = useState(null);
-  const [taskData, setTaskData] = useState(null);
   const [fileName, setFileName] = useState("");
   const [azureFile, setAzureFile] = useState("");
   const [formattedValue, setformattedValue] = useState(0);
-  const [mappedFiles, setMappedFiles] = useState([]);
-    const location = useLocation();
+  const location = useLocation();
   const locationPath = location?.pathname;
   const url = locationPath?.split("/");
 
@@ -64,15 +62,17 @@ const UPRA = () => {
       Version: version,
       Filename: fileName,
     };
+    console.log("azure file details", azureFile, fileName, filePath);
     await dispatch(UploadFileToServer(azureFile, filePath));
     await postSaveDesignIntent(formData);
   };
 
   const handleCancel = () => {
-    return navigate(url[0] === "myTasks" ?`/myTasks`:"/allTasks");
+    return navigate(url[0] === "myTasks" ? `/myTasks` : "/allTasks");
   };
 
   const onSubmit = async () => {
+    console.log("TaskDetailsData", TaskDetailsData);
     const headers = {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
@@ -88,7 +88,7 @@ const UPRA = () => {
         Filename: fileName,
       },
     };
-    // await dispatch(UploadFileToServer(azureFile, filePath));
+    await dispatch(UploadFileToServer(azureFile, filePath));
     console.log("formData", formData, "id", id);
     await submitUploadApproveDesignIntent(formData, id, headers);
   };
@@ -103,16 +103,17 @@ const UPRA = () => {
       />
       {<AddNewDesign {...data} />}
       {loading ? (
-        <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
+        <div className="align-item-center">
+          <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
+        </div>
       ) : (
         designIntent && (
-          <ApproveDesignIntentContent
+          <UploadDesignIntentProofscope
             {...designIntent}
             upload={true}
             setformattedValue={setformattedValue}
             setAzureFile={setAzureFile}
             setFileName={setFileName}
-            setMappedFiles={setMappedFiles}
             item={data}
             roleName={roleName}
             ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}

@@ -7,7 +7,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { FilterMatchMode } from "primereact/api";
 import filter from "../../../assets/images/filter.svg";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { onSortData } from "../../../utils";
 import ConfirmationPopUp from "../../Projects/ConfirmationPopUp";
 import TaskDialog from "../../TaskDialog";
@@ -32,6 +32,8 @@ const TaskList = (props) => {
   const [sortData, setSortData] = useState([]);
   const [filters, setFilters] = useState([]);
   const [selectedColumnName, setSelectedColumnName] = useState(null);
+  let { ProjectID } = useParams();
+
   const getMyTasks = (myTasksList) => {
     const myTasks = myTasksList?.map((element) => {
       return element;
@@ -318,27 +320,25 @@ const TaskList = (props) => {
 
   const helpNeededBodyTemplate = (rowData) => {
     let className = "";
-    let helpNeeded;
 
     switch (rowData?.Help_Needed) {
-      case "Yes, in Process":
-        helpNeeded = "Yes, in Process";
+      case "Yes,in Process":
         className = "helpneeded_inprocess";
-        rowData["Help_Needed"] = helpNeeded;
+        rowData["Help_Needed"] = "Yes,in Process";
         break;
-      case "Yes, Done":
-        helpNeeded = "Yes, Done";
+      case "Yes, done":
         className = "helpneeded_done";
-        rowData["Help_Needed"] = helpNeeded;
+        rowData["Help_Needed"] = "Yes, done";
+        break;
+      case "":
+        className = "helpneeded_no";
+        rowData["Help_Needed"] = "No";
         break;
       default:
-        helpNeeded = "No";
-        className = "helpneeded_no";
-        rowData["Help_Needed"] = helpNeeded;
         break;
     }
 
-    return <span className={className}>{helpNeeded}</span>;
+    return <span className={className}>{rowData?.Help_Needed}</span>;
   };
 
   const statusTemplate = (rowData) => {
@@ -426,8 +426,8 @@ const TaskList = (props) => {
     useState([]);
   const handleApproveDialogCPPFA = (options) => {
     setShowApproveDialogCPPFA(true);
-    // let task = [{ TaskID: options.key, TaskName: options.data.Task }];
-    // setSelectedTaskApproveDialogCPPFA(task);
+    let task = [{ TaskID: options.key, ProjectID: ProjectID }];
+    setSelectedTaskApproveDialogCPPFA(task);
   };
 
   return (
