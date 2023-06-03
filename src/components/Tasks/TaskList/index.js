@@ -44,6 +44,7 @@ const TaskList = (props) => {
     }
     return myTasks;
   };
+
   useEffect(() => {
     const myTasksList = getMyTasks(props?.myTasks);
     setSelectedProdSrchList(myTasksList);
@@ -70,6 +71,8 @@ const TaskList = (props) => {
       setSelectedFields(columnNames);
     }
   }, [props.myTasks]);
+
+  // Find the role that matches the logged-in user's role
 
   useEffect(() => {
     if (

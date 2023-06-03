@@ -8,20 +8,16 @@ import {
   saveDefineProductionReadyArt,
   submitDefineProductionReadyArt,
 } from "../../../apis/defineProductionReadyArt";
-import "../DesignJobs/index.scss";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { ProjectService } from "../../../service/PegaService";
 import { toLower } from "lodash";
-import {
-  convertCategoryIntoString,
-  convertBrandIntoString,
-  AddNavigation,
-} from "../../../utils";
+import { AddNavigation } from "../../../utils";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
+import { CheckReadOnlyAccess } from "../../../utils";
+import { useLocation } from "react-router-dom";
+import "../DesignJobs/index.scss";
 
 const headerName = "Define Production Ready Art";
-
 const roleName = "PRA_";
 
 function DPRA() {
@@ -47,6 +43,10 @@ function DPRA() {
   let bu = userInformation?.bu;
   // if bu is home care show tire field else not
   let checkBU = toLower(bu) === toLower("Home Care") ? true : false;
+  const checkReadWriteAccess = CheckReadOnlyAccess();
+
+  const location = useLocation();
+  const currentUrl = location.pathname;
 
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
@@ -69,7 +69,7 @@ function DPRA() {
   }, [projectData]);
 
   const handleCancel = () => {
-    return navigate(`/myTasks`);
+    return navigate(currentUrl === "myTasks" ? `/myTasks` : "/allTasks");
   };
 
   const handleDelete = (index) => {
@@ -221,6 +221,7 @@ function DPRA() {
         breadcrumb={breadcrumb}
         headerName={headerName}
         label="Define Roduction Ready Art"
+        checkReadWriteAccess={checkReadWriteAccess}
       />
       <div
         style={{
@@ -230,7 +231,7 @@ function DPRA() {
           height: "400px",
         }}
       >
-        {<AddNewDesign {...data} />}
+        {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
 
         {loading || designIntent === null ? (
           <div className="align-item-center">
@@ -256,6 +257,7 @@ function DPRA() {
                   checkBU={checkBU}
                   Brand={Brand}
                   Category={Category}
+                  checkReadWriteAccess={checkReadWriteAccess}
                 />
               );
             } else return <>Data Not Found</>;
@@ -266,6 +268,7 @@ function DPRA() {
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
         onSubmit={onSubmit}
+        checkReadWriteAccess={checkReadWriteAccess}
       />
     </PageLayout>
   );
