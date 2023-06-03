@@ -23,7 +23,11 @@ console.log("checkReadWriteAccess in footer", checkReadWriteAccess);
       style={{ padding: 15, background: "#FAFAFA" }}
     >
       <Button
-        className="button-layout"
+        className={
+          checkReadWriteAccess
+            ? "button-layout"
+            : "btn btn-disabled"
+        }        
         variant="secondary"
         disabled={!checkReadWriteAccess}
         onClick={() => handleCancel()}
@@ -33,7 +37,11 @@ console.log("checkReadWriteAccess in footer", checkReadWriteAccess);
       {!approve && (
         <>
           <Button
-            className="button-layout"
+            className={
+              checkReadWriteAccess
+                ? "button-layout"
+                : "btn btn-disabled"
+            } 
             variant="secondary"
             onClick={() => onSaveAsDraft()}
             disabled={!checkReadWriteAccess}
