@@ -19,14 +19,29 @@ $fontWeight400: 400;
   .p-datatable > .p-datatable-wrapper {
     overflow: scroll;
     width: $width100;
-    height: calc( 100vh - 220px );
+    height: calc(100vh - 220px);
   }
   .p-datatable-table {
     line-height: 15px;
   }
   .p-column-title {
-    font-weight: $fontWeight500;
+    // font-weight: $fontWeight500;
+    display: flex;
+    align-items: center;
+    img {
+      width: 10px;
+    }
+    span {
+      font-size: 14px;
+      /* width: 10px; */
+      display: flex;
+      margin-left: 10px;
+      position: relative;
+      vertical-align: middle;
+      align-items: center;
+    }
   }
+
   .p-datatable-tbody {
     font-weight: $fontWeight400;
   }
@@ -226,7 +241,7 @@ div.p-selectbutton.p-buttonset.p-component {
 }
 .dropdown {
   width: 110px;
-  height: 32px;
+  // height: 32px;
   background: transparent;
   font-size: 12px;
   text-align: center;
