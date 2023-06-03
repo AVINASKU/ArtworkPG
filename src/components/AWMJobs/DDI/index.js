@@ -99,15 +99,20 @@ function DDI() {
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
     let values = false;
-    console.log("designIntent", designIntent);
     const hasValues = designIntent.every(
       (item) => {        
         setEnableSubmit(true);
-        if(item.Select){
-          values = item.Agency_Reference !== "" && item.Cluster !== ""
-        } 
+       if(item.Select){
+          values = item.Agency_Reference !== "" && item.Cluster !== "";
+      } 
         // else{
-        //   values = item.Agency_Reference === "" && item.Cluster === ""
+        //   values = designIntent.some(item => {
+        //     console.log("else select", item)
+        //     if(item.Select){
+        //       values = item.Agency_Reference !== "" && item.Cluster !== ""
+        //     }
+        //   });
+        //   console.log("value else", values)
         // }
         return values
       }
@@ -234,14 +239,7 @@ function DDI() {
         label="Define Design Intent"
         checkReadWriteAccess={checkReadWriteAccess}
       />
-      <div
-        style={{
-          overflowY: "scroll",
-          overflowX: "hidden",
-          width: "100%",
-          height: "400px",
-        }}
-      >
+      <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
 
         {loading || designIntent === null ? (
@@ -281,6 +279,7 @@ function DDI() {
         formValid={enableSubmit}
         // formValid={submitActive}
         checkReadWriteAccess={checkReadWriteAccess}
+        bottomFixed={true}
       />
     </PageLayout>
   );

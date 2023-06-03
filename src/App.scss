@@ -306,6 +306,19 @@ fieldset:disabled .btn {
     }
   }
 }
+.task-details{
+  overflow: hidden scroll;
+  width: 100%;
+  height: calc( 100vh - 220px);
+  padding-bottom: 120px;
+  &+.form-buttons{
+    &.bottom-fixed{
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+  }
+}
 .p-dialog {
   border-radius: 20px;
   .p-dialog-header {

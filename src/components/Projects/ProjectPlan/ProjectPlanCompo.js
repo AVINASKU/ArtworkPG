@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Accordion from "react-bootstrap/Accordion";
+import { Toast } from 'primereact/toast';
 import ProjectPlan from "./ProjectPlanList";
 import { getProjectPlan } from "../../../apis/projectPlanApi";
 import {
@@ -18,6 +19,7 @@ import { Button } from "react-bootstrap";
 import moment from "moment";
 
 function ProjectPlanCompo(props) {
+  const toast = useRef(null);
   const [projectPlanDesignData, setProjectPlanDesignData] = useState([]);
   const [updatedProjectPlanDesignData, setUpdatedProjectPlanDesignData] =
     useState([]);
@@ -282,11 +284,13 @@ function ProjectPlanCompo(props) {
   const activate = async () => {
     await activateProjectPlan(selectedProject.Project_ID);
     getProjectPlanApi();
+    toast.current.show({severity:'success', summary: 'Success', detail:'Project activated successfully!', life: 3000});
   };
 
   return (
     (
       <>
+        <Toast ref={toast}></Toast>
         <Accordion className="projectPlanAccordian" defaultActiveKey="2">
           <Accordion.Item eventKey="2">
             <Accordion.Header>Design</Accordion.Header>
