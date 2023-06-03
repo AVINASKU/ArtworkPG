@@ -33,7 +33,7 @@ const AddNewDesignContent = ({
       setCluster(Cluster);
       setAdditionalInfo(Additional_Info);
     }
-  }, [item]);
+  }, [item, Agency_Reference, Cluster, Additional_Info]);
 
   const search = (event) => {
     let _items = [...Array(10).keys()];
@@ -79,9 +79,9 @@ const AddNewDesignContent = ({
   let clubCategory =
     Category?.length && Category.map((item) => item.Category_Name).join(",");
 
-    if(clubBrandName === "" || Brand===undefined) clubBrandName = "Brand";
+  if (clubBrandName === "" || Brand === undefined) clubBrandName = "Brand";
 
-    if(clubCategory === "" || Category ===undefined) clubCategory = "Category";
+  if (clubCategory === "" || Category === undefined) clubCategory = "Category";
 
   if (agencyRef || clusters || additionalInformation) {
     di_name =
@@ -118,6 +118,7 @@ const AddNewDesignContent = ({
                 // setSubmitActive(e.checked ? false : true);
               }}
               checked={event === "submit" ? true : checked}
+              disabled={!checkReadWriteAccess}
               className="margin-right"
             ></Checkbox>
           </div>
@@ -132,6 +133,7 @@ const AddNewDesignContent = ({
                 addData("Agency_Reference", index, e.target.value, di_name);
                 setAgency(e.target.value);
               }}
+              disabled={!checkReadWriteAccess}
               aria-describedby="agency-help"
             />
           </div>
@@ -149,6 +151,7 @@ const AddNewDesignContent = ({
                 addData("Cluster", index, e.target.value, di_name);
                 setCluster(e.target.value);
               }}
+              disabled={!checkReadWriteAccess}
               aria-describedby="cluster-help"
             />
           </div>
@@ -166,6 +169,7 @@ const AddNewDesignContent = ({
                 completeMethod={search}
                 onChange={(e) => setTier(e.value)}
                 dropdown
+                disabled={!checkReadWriteAccess}
               />
             </div>
           </Col>
@@ -181,6 +185,7 @@ const AddNewDesignContent = ({
                 addData("Additional_Info", index, e.target.value, di_name);
                 setAdditionalInfo(e.target.value);
               }}
+              disabled={!checkReadWriteAccess}
               aria-describedby="info-help"
             />
           </div>
