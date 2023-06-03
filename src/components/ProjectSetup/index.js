@@ -8,7 +8,7 @@ import "./index.scss";
 import { useSelector } from "react-redux";
 import ProjectPlanCompo from "../Projects/ProjectPlan/ProjectPlanCompo";
 import ConfirmationDialog from "./confirmationDialog";
-import { getUnAuthoirzedAccess } from "../../utils";
+import { getUnAuthoirzedAccess, CheckReadOnlyAccess } from "../../utils";
 import { Navigate, useHistory } from "react-router-dom";
 
 import { useNavigate } from "react-router-dom";
@@ -33,6 +33,7 @@ function ProjectSetup(props) {
 
   // Check if access is empty for the user's role and page
   const isAccessEmpty = accessDetails === null || accessDetails.length === 0;
+  const isReadOnly = CheckReadOnlyAccess();
   const [activeKey, setActiveKey] = useState("0");
   const items = [{ label: rootBreadCrumb }];
   activeKey === "0" && items.push({ label: "Project Setup" });
@@ -135,6 +136,7 @@ function ProjectSetup(props) {
                     // data-popper-placement="bottom-end"
                     // drop="down-end"
                     align="end"
+                    disabled={!isReadOnly}
                   >
                     <Dropdown.Item
                       onClick={() => getData("On Hold")}

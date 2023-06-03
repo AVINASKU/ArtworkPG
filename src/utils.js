@@ -105,9 +105,12 @@ export const CheckReadOnlyAccess = () => {
 
   const accessDetails = getAccessDetails(userInformation.role, accessMatrix);
   const currentUrl = location.pathname;
-  let url = currentUrl.split("/")[1];
-
-  console.log("access details", accessDetails, url);
+  let url;
+  if (currentUrl.includes("projectPlan")) {
+    url = currentUrl.split("/")[2]; // Extract the project plan ID from URL
+  } else {
+    url = currentUrl.split("/")[1]; // Extract the URL without project plan
+  }
   let checkReadOnlyAccess = true;
   accessDetails.pages.forEach((page, index) => {
     if (page.name === url) {
@@ -122,6 +125,5 @@ export const CheckReadOnlyAccess = () => {
       if (checkAccess.length === 0) checkReadOnlyAccess = false;
     }
   });
-  console.log("url", url, checkReadOnlyAccess);
   return checkReadOnlyAccess;
 };

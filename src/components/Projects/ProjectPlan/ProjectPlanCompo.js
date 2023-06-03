@@ -30,7 +30,6 @@ function ProjectPlanCompo(props) {
   const dispatch = useDispatch();
   // Check if access is empty for the user's role and page
   const isAccessEmpty = CheckReadOnlyAccess();
-
   useEffect(() => {
     if (!isAccessEmpty) {
       setActiveSave(true);
