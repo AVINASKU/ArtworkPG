@@ -463,7 +463,7 @@ const ProjectPlanList = ({
     console.log("Pegadata: ", pegadata);
     setPegaData([...pegadata]);
 
-    if (isAccessEmpty) {
+    if (!isAccessEmpty) {
       setActiveSave(true);
     } else {
       setActiveSave(false);
@@ -476,10 +476,8 @@ const ProjectPlanList = ({
     console.log("Pegadata: ", pegadata);
     setPegaData([...pegadata]);
 
-    if (isAccessEmpty) {
+    if (!isAccessEmpty) {
       setActiveSave(true);
-    } else {
-      setActiveSave(false);
     }
   };
 

@@ -16,7 +16,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import moment from "moment";
-import { getUnAuthoirzedAccess } from "../../../utils";
+import { CheckReadOnlyAccess } from "../../../utils";
 function ProjectPlanCompo(props) {
   const [projectPlanDesignData, setProjectPlanDesignData] = useState([]);
   const [updatedProjectPlanDesignData, setUpdatedProjectPlanDesignData] =
@@ -28,23 +28,11 @@ function ProjectPlanCompo(props) {
   const [updatedList, setUpdatedList] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const User = useSelector((state) => state.UserReducer);
-  const userInformation = User.userInformation;
-  const { accessMatrix } = useSelector((state) => state?.accessMatrixReducer);
-  let path = "";
-  if (window?.location?.pathname.includes("projectPlan")) {
-    path = "/projectPlan";
-  }
-
-  const accessDetails = getUnAuthoirzedAccess(
-    userInformation.role,
-    accessMatrix,
-    path
-  );
   // Check if access is empty for the user's role and page
-  const isAccessEmpty = accessDetails === null || accessDetails.length === 0;
+  const isAccessEmpty = CheckReadOnlyAccess();
+
   useEffect(() => {
-    if (isAccessEmpty) {
+    if (!isAccessEmpty) {
       setActiveSave(true);
       setActiveFlag(true);
     }
@@ -340,10 +328,10 @@ function ProjectPlanCompo(props) {
         </Accordion>
         <div className="form-buttons">
           <Button
-            className={isAccessEmpty ? "btn btn-disabled" : "button-layout"}
+            className={!isAccessEmpty ? "btn btn-disabled" : "button-layout"}
             variant="secondary"
             onClick={() => navigate("/myProjects")}
-            disabled={isAccessEmpty}
+            disabled={!isAccessEmpty}
           >
             Cancel
           </Button>
