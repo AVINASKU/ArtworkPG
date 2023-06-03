@@ -12,7 +12,8 @@ import "../DesignJobs/index.scss";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import "./index.scss";
+import { CheckReadOnlyAccess } from "../../../utils";
+
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
   { label: "Define Design Intent" },
@@ -38,6 +39,8 @@ function DDI() {
   const location = useLocation();
   const currentUrl = location.pathname;
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
+
+  const checkReadWriteAccess = CheckReadOnlyAccess();
 
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
@@ -96,6 +99,7 @@ function DDI() {
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
     let values = false;
+    console.log("designIntent", designIntent);
     const hasValues = designIntent.every(
       (item) => {        
         setEnableSubmit(true);
@@ -145,7 +149,7 @@ function DDI() {
         task.Action = "update";
       } else if (task?.Action !== "delete" && task?.isNew === true)
         task.Action = "add";
-     
+
       updatedData.DesignJobName = task.Design_Job_Name;
       updatedData.DesignJobID = task.Design_Job_ID;
       updatedData.AgencyReference = task.Agency_Reference;
@@ -172,7 +176,7 @@ function DDI() {
     };
     console.log("formData", formData);
     await submitDesignIntent(formData, id, headers);
-    navigate(`/AllTasks`);
+    // navigate(`/AllTasks`);
   };
 
   const onSaveAsDraft = async () => {
@@ -190,6 +194,7 @@ function DDI() {
       updatedData.push({
         Design_Job_Name: task.Design_Job_Name,
         Design_Job_ID: task.Design_Job_ID,
+        AWM_Project_ID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
         Agency_Reference: task.Agency_Reference,
         Cluster: task.Cluster,
         Additional_Info: task.Additional_Info,
@@ -210,6 +215,7 @@ function DDI() {
     console.log("full draft data --->", formData);
     await saveDesignIntent(formData);
   };
+
   let Brand = [];
   let Category = [];
 
@@ -217,7 +223,6 @@ function DDI() {
     Brand = TaskDetailsData.ArtworkAgilityPage.Artwork_Brand;
     Category = TaskDetailsData.ArtworkAgilityPage.Artwork_SMO;
   }
-
 
   return (
     <PageLayout>
@@ -227,6 +232,7 @@ function DDI() {
         breadcrumb={breadcrumb}
         headerName={headerName}
         label="Define Design Intent"
+        checkReadWriteAccess={checkReadWriteAccess}
       />
       <div
         style={{
@@ -236,7 +242,7 @@ function DDI() {
           height: "400px",
         }}
       >
-        {<AddNewDesign {...data} />}
+        {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
 
         {loading || designIntent === null ? (
           <div className="align-item-center">
@@ -261,6 +267,7 @@ function DDI() {
                   addData={addData}
                   handleDelete={handleDelete}
                   roleName={roleName}
+                  checkReadWriteAccess={checkReadWriteAccess}
                 />
               );
             }
@@ -272,6 +279,8 @@ function DDI() {
         onSaveAsDraft={onSaveAsDraft}
         onSubmit={onSubmit}
         formValid={enableSubmit}
+        // formValid={submitActive}
+        checkReadWriteAccess={checkReadWriteAccess}
       />
     </PageLayout>
   );

@@ -15,7 +15,9 @@ import MyProject from "../../assets/images/MyProject.svg";
 import "./index.scss";
 import { Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAccessMatrix } from "../../store/actions/RoleBasedActions";
+import { getAccessDetails } from "../../utils";
 import { updateMode } from "../../store/actions/ProjectSetupActions";
 import { updateUser } from "../../apis/userApi";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
@@ -24,12 +26,17 @@ const SideBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { accessMatrix } = useSelector((state) => state?.accessMatrixReducer);
+  const User = useSelector((state) => state.UserReducer);
+  const userInformation = User.userInformation;
   const [isToggle, setIsToggle] = useState(
     JSON.parse(sessionStorage.getItem("sideBarOpen"))
   );
   const [expandedItems, setExpandedItems] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState(null);
-
+  useEffect(() => {
+    dispatch(fetchAccessMatrix());
+  }, [dispatch]);
   const toggleSidebar = () => {
     sessionStorage.setItem("sideBarOpen", JSON.stringify(!isToggle));
     setIsToggle(!isToggle);
@@ -69,6 +76,8 @@ const SideBar = () => {
     updateUser("", "");
     navigate("/");
   };
+  // Replace with the actual location path
+  const accessDetails = getAccessDetails(userInformation.role, accessMatrix);
 
   const navItems = {
     data: [
@@ -102,6 +111,9 @@ const SideBar = () => {
       },
     ],
   };
+  const projectPlanPage = accessDetails.pages.find(
+    (page) => page.path === "/ProjectPlan"
+  );
   return (
     <>
       <Col
@@ -137,111 +149,98 @@ const SideBar = () => {
           >
             {navItems?.data?.map((item, index) => {
               if (item.items) {
-                return (
-                  <NavItem
-                    key={index}
-                    className={
-                      location.pathname === item.url ||
-                      item.items?.some(
-                        (subItem) => location.pathname === subItem.url
-                      ) ||
-                      expandedItems.includes(index)
-                        ? "active"
-                        : ""
-                    }
-                  >
-                    <NavLink
-                      className={`nav-link ${isToggle && "parent-link"}`}
-                      to={item.url}
+                const pageAccess = accessDetails.pages.find(
+                  (page) => page.path === item.url
+                );
+                if (pageAccess && pageAccess.access.length > 0) {
+                  return (
+                    <NavItem
+                      key={index}
+                      className={
+                        item.items?.some(
+                          (subItem) => location.pathname === subItem.url
+                        ) || expandedItems.includes(index)
+                          ? "active"
+                          : ""
+                      }
                     >
-                      {isToggle ? (
-                        <>
-                          <div>
-                            <img src={item.img} alt="logos" />
-                          </div>
-
-                          <div>{isToggle ? item.name : ""}</div>
-                        </>
-                      ) : (
-                        <OverlayTrigger
-                          placement="right"
-                          overlay={
-                            <Tooltip className="tooltip">
-                              <div className="toolname">{item.name}</div>
-                            </Tooltip>
-                          }
-                        >
-                          <div>
-                            <img src={item.img} alt="logos" />
-                          </div>
-                        </OverlayTrigger>
-                      )}
-                    </NavLink>
-
-                    {/* {expandedIndex === index && isToggle && (
-                      <ul>
-                        {item.items.map((subItem, subIndex) => (
-                          <NavItem
-                            key={subIndex}
-                            className={
-                              location.pathname === subItem.url
-                                ? "active subactive"
-                                : ""
+                      <NavLink
+                        className={`nav-link ${isToggle && "parent-link"}`}
+                        to={item.url}
+                      >
+                        {isToggle ? (
+                          <>
+                            <div>
+                              <img src={item.img} alt="logos" />
+                            </div>
+                            <div>{isToggle ? item.name : ""}</div>
+                          </>
+                        ) : (
+                          <OverlayTrigger
+                            placement="right"
+                            overlay={
+                              <Tooltip className="tooltip">
+                                <div className="toolname">{item.name}</div>
+                              </Tooltip>
                             }
                           >
-                            <NavLink to={subItem.url} className="nav-link">
-                              {subItem.name}
-                            </NavLink>
-                          </NavItem>
-                        ))}
-                      </ul>
-                    )} */}
-                  </NavItem>
-                );
+                            <div>
+                              <img src={item.img} alt="logos" />
+                            </div>
+                          </OverlayTrigger>
+                        )}
+                      </NavLink>
+                    </NavItem>
+                  );
+                } else {
+                  return null; // Hide the link if access is empty
+                }
               }
             })}
-            <div className={!isToggle ? "add-project" : "addProjectExpand"}>
-              <NavItem
-                to="/projectPlan"
-                state={{ mode: "create" }}
-                onClick={() => {
-                  dispatch(updateMode("create"));
-                }}
-              >
-                {!isToggle ? (
-                  <NavLink
-                    to="/projectPlan"
-                    state={{ mode: "create" }}
-                    className="nav-link"
-                    onClick={() => {
-                      dispatch(updateMode("create"));
-                    }}
-                  >
-                    <img
-                      src={plusCollapseImg}
-                      className="collapse-img"
-                      alt=""
-                    />
-                  </NavLink>
-                ) : (
-                  <NavLink
-                    to="/projectPlan"
-                    state={{ mode: "create" }}
-                    className="nav-link"
-                    onClick={() => {
-                      dispatch(updateMode("create"));
-                    }}
-                  >
-                    <img
-                      src={plusCollapseImg}
-                      className="collapse-img"
-                      alt=""
-                    ></img>
 
-                    <p className="create"> Create Project </p>
-                  </NavLink>
-                )}
-              </NavItem>
+            <div className={!isToggle ? "add-project" : "addProjectExpand"}>
+              {projectPlanPage && projectPlanPage.access.length > 0 && (
+                <NavItem
+                  to="/projectPlan"
+                  state={{ mode: "create" }}
+                  onClick={() => {
+                    dispatch(updateMode("create"));
+                  }}
+                >
+                  {!isToggle ? (
+                    <NavLink
+                      to="/projectPlan"
+                      state={{ mode: "create" }}
+                      className="nav-link"
+                      onClick={() => {
+                        dispatch(updateMode("create"));
+                      }}
+                    >
+                      <img
+                        src={plusCollapseImg}
+                        className="collapse-img"
+                        alt=""
+                      />
+                    </NavLink>
+                  ) : (
+                    <NavLink
+                      to="/projectPlan"
+                      state={{ mode: "create" }}
+                      className="nav-link"
+                      onClick={() => {
+                        dispatch(updateMode("create"));
+                      }}
+                    >
+                      <img
+                        src={plusCollapseImg}
+                        className="collapse-img"
+                        alt=""
+                      />
+                      <p className="create"> Create Project </p>
+                    </NavLink>
+                  )}
+                </NavItem>
+              )}
               <NavItem onClick={handleLogout}>
                 {!isToggle ? (
                   <img src={LogoutImg} className="collapse-img" alt="" />
