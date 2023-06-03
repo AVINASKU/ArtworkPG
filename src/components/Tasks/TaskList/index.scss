@@ -428,3 +428,9 @@ div.flex.align-items-center.gap-2 {
 .p-button:not(button):not(a):not(.p-disabled):hover {
   background: transparent;
 }
+
+.unauthorized-user {
+  text-align: center;
+  font-size: 20px;
+  color: red;
+}

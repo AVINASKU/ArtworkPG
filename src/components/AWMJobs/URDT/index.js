@@ -9,6 +9,7 @@ import { submitUploadRegionalDesignIntent } from "../../../apis/uploadSubmitAPIs
 import { postSaveDesignIntent } from "../../../apis/uploadSaveAsDraft";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { CheckReadOnlyAccess } from "../../../utils";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/tasks" },
@@ -34,6 +35,8 @@ const URDT = () => {
   const version = "V1";
   const location = useLocation();
   const currentUrl = location.pathname;
+  const checkReadWriteAccess = CheckReadOnlyAccess();
+
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
   }, [dispatch, TaskID, ProjectID]);
@@ -89,9 +92,10 @@ const URDT = () => {
         headerName={headerName}
         disabled={true}
         label={data?.Task_Name}
+        checkReadWriteAccess={checkReadWriteAccess}
       />
 
-      {<AddNewDesign {...data} />}
+      {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
       {loading ? (
         <div className="align-item-center">
           <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
@@ -109,6 +113,7 @@ const URDT = () => {
             roleName={roleName}
             ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
             version={version}
+            checkReadWriteAccess={checkReadWriteAccess}
           />
         )
       )}
@@ -116,6 +121,7 @@ const URDT = () => {
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
         onSubmit={onSubmit}
+        checkReadWriteAccess={checkReadWriteAccess}
       />
     </PageLayout>
   );
