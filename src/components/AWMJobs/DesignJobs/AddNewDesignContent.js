@@ -79,9 +79,9 @@ const AddNewDesignContent = ({
   let clubCategory =
     Category?.length && Category.map((item) => item.Category_Name).join(",");
 
-    if(clubBrandName === "" || Brand===undefined) clubBrandName = "Brand";
+  if (clubBrandName === "" || Brand === undefined) clubBrandName = "Brand";
 
-    if(clubCategory === "" || Category ===undefined) clubCategory = "Category";
+  if (clubCategory === "" || Category === undefined) clubCategory = "Category";
 
   if (agencyRef || clusters || additionalInformation) {
     di_name =

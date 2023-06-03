@@ -11,8 +11,7 @@ const FooterButtons = ({
   checkReadWriteAccess,
   bottomFixed
 }) => {
-
-console.log("checkReadWriteAccess in footer", checkReadWriteAccess);
+  console.log("checkReadWriteAccess in footer", checkReadWriteAccess);
   return (
     <div
       className={

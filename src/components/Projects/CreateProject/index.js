@@ -753,7 +753,7 @@ function AddProject(props) {
         Project_region: region?.Region_Name,
         Project_Code: ProjectCode,
         ProjectType: projectType,
-        Project_State: "",
+        Project_State: "Draft",
         Buffer_To_Work: "",
         ProjectStatus: status,
       },
@@ -1213,7 +1213,7 @@ function AddProject(props) {
                         onChange={(e) => setSOSDate(e.target.value)}
                         dateFormat="d-M-y"
                         showIcon={true}
-                        minDate={sosDate !== "" ? sosDate : minDate}
+                        minDate={sopDate !== "" ? sopDate : minDate}
                         style={{
                           width: 208,
                           fontSize: "12px",
@@ -1244,7 +1244,7 @@ function AddProject(props) {
                         onChange={(e) => setSOPDate(e.target.value)}
                         dateFormat="d-M-y"
                         showIcon={true}
-                        minDate={minDate}
+                        minDate={printerDate !== "" ? printerDate : minDate}
                         maxDate={sosDate}
                         className={classNames({
                           "p-invalid": fieldState.error,
@@ -1281,7 +1281,7 @@ function AddProject(props) {
                         onChange={(e) => setPrinterDate(e.target.value)}
                         dateFormat="d-M-y"
                         showIcon={true}
-                        minDate={minDate}
+                        minDate={readinessDate !== "" ? readinessDate : minDate}
                         maxDate={sopDate}
                         className={classNames({
                           "p-invalid": fieldState.error,
