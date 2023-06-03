@@ -7,7 +7,6 @@ import { FilterMatchMode } from "primereact/api";
 import ProjectListHeader from "../MyProjects/ProjectListHeader";
 import { Tag } from "primereact/tag";
 import { changeDateFormat } from "../../../utils";
-import filter from "../../../assets/images/filter.svg";
 import { getAllProject } from "../../../store/actions/ProjectActions";
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 import { useDispatch, useSelector } from "react-redux";
@@ -72,8 +71,8 @@ const AllProjectList = (props) => {
   };
 
   useEffect(() => {
-    const updatedUsers = dispatch(getAllProject(userInformation));
-  }, [dispatch]);
+    dispatch(getAllProject(userInformation));
+  }, [dispatch, userInformation]);
 
   const reorderColumns = (columns) => {
     const requiredColumnOrderArray = [
@@ -99,7 +98,7 @@ const AllProjectList = (props) => {
       "Estimated_No_Of_POAs",
       "Estimated_SOS",
       "Estimated_SOP",
-      "Estimated_AW @ Printer",
+      "Estimated_AW_Printer",
       "Estimated_AW_Readiness",
       "IL",
       "PM",
@@ -384,6 +383,10 @@ const AllProjectList = (props) => {
     setProjectColumnNames(defaultColName);
     // const columnNames = ProjectService.getAllColumnNamesAllProjects();
     localStorage.setItem(
+      "columnWidthAllProject",
+      JSON.stringify({})
+    );
+    localStorage.setItem(
       "allColumnNamesAllProjects",
       JSON.stringify(defaultColName)
     );
@@ -403,7 +406,6 @@ const AllProjectList = (props) => {
       "Estimated_AW_Printer",
       "Full Kit Readiness Tracking",
     ];
-    setProjectColumnNames(defaultCol);
     localStorage.setItem(
       "allColumnNamesAllProjects",
       JSON.stringify(defaultCol)
@@ -412,10 +414,15 @@ const AllProjectList = (props) => {
     localStorage.setItem("allProjectColumnWiseFilterData", JSON.stringify({}));
     localStorage.setItem("allProjectSortingData", JSON.stringify({}));
     localStorage.setItem("allProjectFrozenData", JSON.stringify({}));
+    localStorage.setItem(
+      "columnWidthAllProject", JSON.stringify({})
+    );
+    setProjectColumnNames(defaultCol);
     setSelectedFields([]);
     setSortData([]);
     setFilters([]);
     setFrozenColumn([]);
+    setVisible(false);
   };
 
   const onGlobalFilterChange = (e) => {
@@ -435,11 +442,10 @@ const AllProjectList = (props) => {
     if (jsonColumnWidthMyProject) {
       columnWidthMyProject = JSON.parse(jsonColumnWidthMyProject);
     }
-    const updatedColumns = [...projectColumnName];
-    // let saveColumnWidth = {};
-    const resizedColumn = updatedColumns.find(
-      (col) => col === event.column.props.field
-    );
+    // const updatedColumns = [...projectColumnName];
+    // const resizedColumn = updatedColumns.find(
+    //   (col) => col === event.column.props.field
+    // );
     columnWidthMyProject[event.column.props.field] = event.element.offsetWidth;
 
     localStorage.setItem(
@@ -447,6 +453,7 @@ const AllProjectList = (props) => {
       JSON.stringify(columnWidthMyProject)
     );
     setProjectColumnNames(projectColumnName);
+    setVisible(false);
   };
 
   const exportCSV = (selectionOnly) => {
@@ -535,9 +542,11 @@ const AllProjectList = (props) => {
   const isFilterEnabled =
     frozenCoulmns?.length || filters?.length || sortData?.length;
 
-  const isResetEnabled = isReorderedColumn || isFilterEnabled;
-
-  // console.log("project column name", projectColumnName);
+  let columnWidth = localStorage.getItem(
+    "columnWidthAllProject"
+  );
+  const jsonColumnWidth = JSON.parse(columnWidth);
+  const isResetEnabled = isReorderedColumn || isFilterEnabled || (jsonColumnWidth && !(Object.keys(jsonColumnWidth).length === 0));
 
   return (
     <div className="myProjectAnddAllProjectList">
@@ -605,13 +614,13 @@ const AllProjectList = (props) => {
           filters={searchHeader}
           filterDisplay={isSearch && "row"}
           // tableStyle={{ minWidth: "50rem" }}
-          tableStyle={{ width: "max-content" }}
+          tableStyle={{ width: "max-content", minWidth: "100%" }}
           autoLayout={true}
           ref={dt}
-          // selectionMode="single"
-          // onSelectionChange={(e) => {
-          //   navigate(`/projectPlan/${e.value.ProjectID}`);
-          // }}
+        // selectionMode="single"
+        // onSelectionChange={(e) => {
+        //   navigate(`/projectPlan/${e.value.ProjectID}`);
+        // }}
         >
           {dynamicColumns(projectColumnName)}
         </DataTable>

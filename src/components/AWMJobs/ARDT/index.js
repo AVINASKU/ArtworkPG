@@ -5,6 +5,8 @@ import FooterButtons from "../DesignJobs/FooterButtons";
 import AddNewDesign from "../DesignJobs/TaskHeader";
 import { ProjectService } from "../../../service/PegaService";
 import ApproveDesignIntentContent from "../DesignJobs/ApproveDesignIntentContent";
+import { CheckReadOnlyAccess } from "../../../utils";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
@@ -12,17 +14,23 @@ const breadcrumb = [
 ];
 const headerName = "Approve Regional Design Template";
 
-const ADT = () => {
+const ARDT = () => {
   const [data, setData] = useState(null);
   const [taskData, setTaskData] = useState(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const currentUrl = location.pathname;
+  const checkReadWriteAccess = CheckReadOnlyAccess();
+
+  const handleCancel = () => {
+    navigate(`/${currentUrl?.split("/")[1]}`);
+  };
 
   useEffect(() => {
     const data1 = ProjectService.getApproveDI();
     setData(data1);
     setTaskData(data1.DesignIntentList);
   }, [data]);
-
-
 
   return (
     <PageLayout>
@@ -31,14 +39,23 @@ const ADT = () => {
         headerName={headerName}
         disabled={true}
         label="Approve Regional Design Template"
+        checkReadWriteAccess={checkReadWriteAccess}
       />
 
       {<AddNewDesign {...data} />}
 
-      <ApproveDesignIntentContent {...taskData} approve={true} />
+      <ApproveDesignIntentContent
+        {...taskData}
+        approve={true}
+        checkReadWriteAccess={checkReadWriteAccess}
+      />
 
-      <FooterButtons approve={true} />
+      <FooterButtons
+        handleCancel={handleCancel}
+        approve={true}
+        checkReadWriteAccess={checkReadWriteAccess}
+      />
     </PageLayout>
   );
 };
-export default ADT;
+export default ARDT;

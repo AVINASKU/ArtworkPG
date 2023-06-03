@@ -2,43 +2,39 @@ import React, { useEffect, useState } from "react";
 import PageLayout from "../../PageLayout";
 import DesignHeader from "../DesignJobs/DesignHeader";
 import FooterButtons from "../DesignJobs/FooterButtons";
-import UploadDesignIntentProofscope from "../DesignJobs/UploadDesignIntentProofscope";
+import AddNewDesign from "../DesignJobs/TaskHeader";
+import ApproveDesignIntentContent from "../DesignJobs/ApproveDesignIntentContent";
+import { getTaskDetails } from "../../../store/actions/taskDetailAction";
+import { submitUploadRegionalDesignIntent } from "../../../apis/uploadSubmitAPIs";
+import { postSaveDesignIntent } from "../../../apis/uploadSaveAsDraft";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getTaskDetails } from "../../../store/actions/taskDetailAction";
-import { submitUploadApproveDesignIntent } from "../../../apis/uploadSubmitAPIs";
-
-import AddNewDesign from "../DesignJobs/TaskHeader";
-import { UploadFileToServer } from "../../../store/actions/ProofScopeActions";
-import { postSaveDesignIntent } from "../../../apis/uploadSaveAsDraft";
 import { CheckReadOnlyAccess } from "../../../utils";
 
 const breadcrumb = [
-  { label: "My Tasks", url: "/myTasks" },
-  { label: "Upload Production Ready Art" },
+  { label: "My Tasks", url: "/tasks" },
+  { label: "Upload Regional Design Template" },
 ];
-const headerName = "Upload Production Ready Art";
+const headerName = "Upload Regional Design Template";
 
-const UPRA = () => {
+const URDT = () => {
   const [data, setData] = useState(null);
   const [designIntent, setDesignIntent] = useState(null);
+  const [formattedValue, setformattedValue] = useState(0);
+  const [mappedFiles, setMappedFiles] = useState([]);
   const [fileName, setFileName] = useState("");
   const [azureFile, setAzureFile] = useState("");
-  const [formattedValue, setformattedValue] = useState(0);
-  const location = useLocation();
-  const locationPath = location?.pathname;
-  const url = locationPath?.split("/");
-
+  let { TaskID, ProjectID } = useParams();
   const { TaskDetailsData, loading } = useSelector(
     (state) => state.TaskDetailsReducer
   );
-  let { TaskID, ProjectID } = useParams();
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
   const roleName = "DI_";
   const version = "V1";
+  const location = useLocation();
+  const currentUrl = location.pathname;
   const checkReadWriteAccess = CheckReadOnlyAccess();
 
   useEffect(() => {
@@ -54,7 +50,9 @@ const UPRA = () => {
     }
   }, [TaskDetailsData]);
 
-  const filePath = "cloudflow://PP_FILE_STORE/aacdata/" + fileName;
+  const handleCancel = () => {
+    navigate(`/${currentUrl?.split("/")[1]}`);
+  };
 
   const onSaveAsDraft = async () => {
     const formData = {
@@ -64,59 +62,53 @@ const UPRA = () => {
       Version: version,
       Filename: fileName,
     };
-    console.log("azure file details", azureFile, fileName, filePath);
-    await dispatch(UploadFileToServer(azureFile, filePath));
     await postSaveDesignIntent(formData);
   };
 
-  const handleCancel = () => {
-    return navigate(url[0] === "myTasks" ? `/myTasks` : "/allTasks");
-  };
-
   const onSubmit = async () => {
-    console.log("TaskDetailsData", TaskDetailsData);
     const headers = {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
     console.log("azureFile", azureFile);
     const formData = {
-      caseTypeID: "PG-AAS-Work-UploadProductionReadyArt",
+      caseTypeID: "PG-AAS-Work-UploadRegionalDesignTemplate",
       content: {
         AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
         AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
-        Size: formattedValue,
+        Size: "1",
         Version: version,
         Filename: fileName,
       },
     };
-    await dispatch(UploadFileToServer(azureFile, filePath));
-    console.log("formData", formData, "id", id);
-    await submitUploadApproveDesignIntent(formData, id, headers);
+    // console.log('formData', formData, "id", id);
+    await submitUploadRegionalDesignIntent(formData, id, headers);
+    navigate(`/${currentUrl?.split("/")[1]}`);
   };
-
   return (
     <PageLayout>
       <DesignHeader
         breadcrumb={breadcrumb}
         headerName={headerName}
         disabled={true}
-        label="Upload Production Ready Art"
+        label={data?.Task_Name}
         checkReadWriteAccess={checkReadWriteAccess}
       />
-      {<AddNewDesign {...data} />}
+
+      {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
       {loading ? (
         <div className="align-item-center">
           <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
         </div>
       ) : (
         designIntent && (
-          <UploadDesignIntentProofscope
+          <ApproveDesignIntentContent
             {...designIntent}
             upload={true}
             setformattedValue={setformattedValue}
             setAzureFile={setAzureFile}
             setFileName={setFileName}
+            setMappedFiles={setMappedFiles}
             item={data}
             roleName={roleName}
             ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
@@ -124,14 +116,14 @@ const UPRA = () => {
             checkReadWriteAccess={checkReadWriteAccess}
           />
         )
-      )}{" "}
+      )}
       <FooterButtons
-        onSubmit={onSubmit}
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
+        onSubmit={onSubmit}
         checkReadWriteAccess={checkReadWriteAccess}
       />
     </PageLayout>
   );
 };
-export default UPRA;
+export default URDT;

@@ -3,7 +3,10 @@ import PageLayout from "../../PageLayout";
 import TaskHeader from "../DesignJobs/TaskHeader";
 import DesignHeader from "../DesignJobs/DesignHeader";
 import FooterButtons from "../DesignJobs/FooterButtons";
-import { saveDesignIntent } from "../../../apis/designIntentApi";
+import {
+  saveInkQualification,
+  submitInkQualification,
+} from "../../../apis/inkQualificationApi";
 import { useDispatch, useSelector } from "react-redux";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import "../DesignJobs/index.scss";
@@ -12,17 +15,20 @@ import { useNavigate } from "react-router-dom";
 import CloneJobs from "../DesignJobs/CloneJobs";
 import "./index.scss";
 import CDHeader from "../DesignJobs/CDHeader";
-const breadcrumb = [{ label: "Define Color Development" }];
+import IQHeader from "../DesignJobs/IQHeader";
+const breadcrumb = [{ label: "Define Ink Qualification" }];
 
-const headerName = "Define Color Development";
-const jobName = "CD_";
+const headerName = "Define Ink Qualification";
+const jobName = "IQ_";
 
-function CCD() {
+function DNIQ() {
   const dispatch = useDispatch();
   const { TaskDetailsData } = useSelector((state) => state.TaskDetailsReducer);
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
   const [data, setData] = useState(null);
-  const [CD, setCD] = useState([]);
-  const [formValid, setFormValid] = useState(true);
+  const [IQ, setIQ] = useState([]);
+  const [formValid, setFormValid] = useState(false);
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
   let { TaskID, ProjectID } = useParams();
@@ -39,7 +45,8 @@ function CCD() {
 
   useEffect(() => {
     if (TaskDetailsData) {
-      setCD(TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
+      console.log("TaskDetailsData: ", TaskDetailsData);
+      setIQ(TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
     }
   }, [TaskDetailsData]);
@@ -48,7 +55,7 @@ function CCD() {
   };
 
   const handleDelete = (index) => {
-    const sub = CD?.map((item, i) => {
+    const sub = IQ?.map((item, i) => {
       if (i === index) {
         item.Action = "delete";
       }
@@ -57,94 +64,147 @@ function CCD() {
     // console.log("index here", sub1);
     // const sub = subProject.splice(index,1);
 
-    setCD(sub);
+    setIQ(sub);
   };
 
   const addNewEmptyDesign = () => {
     const newDesignIntent = [
-      ...CD,
+      ...IQ,
       {
-        Design_Job_ID: CD.length + 1,
+        Design_Job_ID: IQ.length + 1,
         isNew: true,
-        Print_Trial_Done: null,
-        Tier: "",
-        Cluster: "",
-        Agency_Reference: "",
+        Pantone: "",
         Printer: "",
-        Printing_Process: "",
         Design_Job_Name: "",
-        Substrate: "",
         Additional_Info: "",
         CD_Approved: null,
         Select: null,
-        Print_Trial_Needed: null,
       },
     ];
-    setCD(newDesignIntent);
+    setIQ(newDesignIntent);
     setUpdated(!updated);
   };
 
   const addData = (fieldName, index, value, Design_Intent_Name) => {
-    let data = CD[index];
+    let data = IQ[index];
     data[fieldName] = value;
-    data["CD_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
     setSubmittedDI(submittedDI);
+    checkFormValidity();
   };
 
   const onSelectAll = (checked) => {
-    CD?.map((task) => {
+    IQ?.map((task) => {
       if (task?.Event !== "submit") {
         task.Select = checked;
       }
       return task;
     });
-    setCD(CD);
+    setIQ(IQ);
     setUpdated(!updated);
   };
 
-  const onSubmit = () => {
-    let submitOnlySelectedData = CD?.filter((task) => task?.Select === true);
-    submitOnlySelectedData.map((task) => {
-      task.Event = "submit";
+  const onSubmit = async () => {
+    let pageInstructions = [];
+
+    let submitOnlySelectedData = IQ?.filter((task) => task?.Select === true);
+    submitOnlySelectedData.forEach((task) => {
+      let taskAction = "update";
+      if (task?.Action !== "delete" && task?.Design_Job_ID) {
+        taskAction = "update";
+      }
+      if (task?.Action !== "delete" && task?.isNew === true) {
+        taskAction = "add";
+      }
+      let taskDesignJobID = task?.Design_Job_ID;
+      if (task?.isNew) {
+        taskDesignJobID = "";
+      }
+      let temp = {};
+      temp["instruction"] = "Append";
+      temp["target"] = "IQList";
+      temp["content"] = {
+        DesignJobName: "DCINF",
+        DesignJobID: taskDesignJobID,
+        AdditionalInfo: task?.Additional_Info,
+        Pantone: task?.Pantone,
+        Printer: task?.Printer,
+        Select: task?.Select,
+        Action: taskAction,
+      };
+      pageInstructions.push(temp);
     });
-    console.log("full submit data --->", submitOnlySelectedData);
+    let formData = {
+      caseTypeID: "PG-AAS-Work-DefineInkQualification",
+      content: {
+        AWMTaskID: data.Task_ID,
+        AWMProjectID: selectedProjectDetails.Project_ID,
+      },
+      pageInstructions: pageInstructions,
+    };
+    console.log("full submit data --->", formData);
+    let id = `PG-AAS-WORK ${selectedProjectDetails.Project_ID}`;
+    const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
+
+    await submitInkQualification(formData, id, headers);
   };
 
   const onSaveAsDraft = async () => {
     // let submitOnlySelectedData = designIntent.filter(
     //   (task) => task?.Event !== "submit"
     // );
-    let submitOnlySelectedData = CD?.map((task) => {
+    let counter = 0;
+    let submitOnlySelectedData = IQ?.map((task) => {
+      counter++;
       task.Action = "update";
       if (task?.Action !== "delete" && task?.Design_Job_ID) {
         task.Action = "update";
-      } else if (task?.Action !== "delete" && task?.isNew === true)
+      }
+      if (task?.Action !== "delete" && task?.isNew === true) {
         task.Action = "add";
+      }
 
       if (task?.isNew) {
         task.Design_Job_ID = "";
       }
 
-      task.Event = "draft";
-      task.AWM_Project_ID = "A-1000";
+      task.Design_Job_Name = `IQ${counter}`;
+
       return task;
     });
+
     let formData = {
-      DesignIntentList: submitOnlySelectedData,
+      AWM_Project_ID: selectedProjectDetails.Project_ID,
+      AWM_Task_ID: data.Task_ID,
+      Project_Name: selectedProjectDetails.Project_Name,
+      BU: selectedProjectDetails.BU,
+      Region: selectedProjectDetails.Project_region,
+      IQList: submitOnlySelectedData,
     };
-    console.log("full draft data --->", submitOnlySelectedData);
-    await saveDesignIntent(formData);
+    console.log("full draft data --->", formData);
+    // await saveInkQualification(formData);
+  };
+
+  const checkFormValidity = () => {
+    const validTasks = IQ?.filter((task) => {
+      return task?.Printer && task?.Pantone && task?.Select;
+    });
+    if (validTasks.length > 0) {
+      setFormValid(true);
+    } else {
+      setFormValid(false);
+    }
   };
 
   return (
     <PageLayout>
-      <CDHeader
+      <IQHeader
         setAddNewDesign={addNewEmptyDesign}
         onSelectAll={onSelectAll}
         breadcrumb={breadcrumb}
         headerName={headerName}
-        label="Define Color Development"
+        label="Define Ink Qualification"
+        showPage="DNIQ"
       />
       <div
         style={{
@@ -156,7 +216,7 @@ function CCD() {
       >
         {<TaskHeader {...data} />}
 
-        {CD.map((item, index) => {
+        {IQ.map((item, index) => {
           if (item && item?.Action !== "delete") {
             return (
               <CloneJobs
@@ -183,4 +243,4 @@ function CCD() {
   );
 }
 
-export default CCD;
+export default DNIQ;

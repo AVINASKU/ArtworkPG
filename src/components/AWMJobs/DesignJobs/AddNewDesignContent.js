@@ -24,7 +24,7 @@ const AddNewDesignContent = ({
   const [agencyRef, setAgency] = useState(Agency_Reference);
   const [clusters, setCluster] = useState(Cluster);
   const [additionalInformation, setAdditionalInfo] = useState(Additional_Info);
-  const [tire, setTire] = useState("");
+  const [tier, setTier] = useState("");
   const [items, setItems] = useState([]);
 
   const search = (event) => {
@@ -56,9 +56,9 @@ const AddNewDesignContent = ({
           <img
             src={deleteIcon}
             alt="filter logo"
-            onClick={() => !checkReadWriteAccess && handleDelete(index)}
+            onClick={() => checkReadWriteAccess && handleDelete(index)}
             className="header-icons"
-            disabled={checkReadWriteAccess}
+            disabled={!checkReadWriteAccess}
           />
         </div>
       </>
@@ -70,6 +70,11 @@ const AddNewDesignContent = ({
     Brand?.length && Brand.map((item) => item.Brand_Name).join(",");
   let clubCategory =
     Category?.length && Category.map((item) => item.Category_Name).join(",");
+
+  if (clubBrandName === "" || Brand === undefined) clubBrandName = "Brand";
+
+  if (clubCategory === "" || Category === undefined) clubCategory = "Category";
+
   if (agencyRef || clusters || additionalInformation) {
     di_name =
       roleName +
@@ -102,7 +107,7 @@ const AddNewDesignContent = ({
               onChange={(e) => {
                 addData("Select", index, e.checked, di_name);
                 setChecked(e.checked);
-                setSubmitActive(e.checked ? false : true);
+                // setSubmitActive(e.checked ? false : true);
               }}
               checked={event === "submit" ? true : checked}
               className="margin-right"
@@ -146,12 +151,12 @@ const AddNewDesignContent = ({
         {checkBU && (
           <Col sm={2} className="set-autocomplete-height">
             <div>
-              <label htmlFor="cluster">Tire </label>
+              <label htmlFor="cluster">Tier </label>
               <AutoComplete
-                value={tire}
+                value={tier}
                 suggestions={items}
                 completeMethod={search}
-                onChange={(e) => setTire(e.value)}
+                onChange={(e) => setTier(e.value)}
                 dropdown
               />
             </div>

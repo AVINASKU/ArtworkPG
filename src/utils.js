@@ -1,9 +1,8 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import moment from "moment";
 import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchAccessMatrix } from "./store/actions/RoleBasedActions";
-
 
 export const changeDateFormat = (value) => {
   let newDate = value
@@ -104,23 +103,25 @@ export const CheckReadOnlyAccess = () => {
     dispatch1(fetchAccessMatrix());
   }, [dispatch1]);
 
-
   const accessDetails = getAccessDetails(userInformation.role, accessMatrix);
   const currentUrl = location.pathname;
   let url = currentUrl.split("/")[1];
 
   console.log("access details", accessDetails, url);
-  let checkReadOnlyAccess = false;
+  let checkReadOnlyAccess = true;
   accessDetails.pages.forEach((page, index) => {
     if (page.name === url) {
       console.log("page", page);
       let checkAccess = page?.access;
-      checkReadOnlyAccess =
-        checkAccess && checkAccess.length === 1 && checkAccess.includes("Read")
-          ? true
-          : false;
+      if (
+        checkAccess &&
+        checkAccess.length === 1 &&
+        checkAccess.includes("Read")
+      )
+        checkReadOnlyAccess = false;
+      if (checkAccess.length === 0) checkReadOnlyAccess = false;
     }
   });
-  console.log("url", url, checkReadOnlyAccess)
+  console.log("url", url, checkReadOnlyAccess);
   return checkReadOnlyAccess;
 };

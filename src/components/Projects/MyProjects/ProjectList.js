@@ -8,7 +8,6 @@ import ConfirmationPopUp from "../ConfirmationPopUp";
 import { FilterMatchMode } from "primereact/api";
 import ProjectListHeader from "./ProjectListHeader";
 import { Tag } from "primereact/tag";
-import filter from "../../../assets/images/filter.svg";
 import {
   getMyProject,
   // updateProject,
@@ -98,7 +97,7 @@ const ProjectList = (props) => {
       "Estimated_No_Of_POAs",
       "Estimated_SOS",
       "Estimated_SOP",
-      "Estimated AW @ Printer",
+      "Estimated_AW_Printer",
       "Estimated_AW_Readiness",
       "IL",
       "Comments",
@@ -266,7 +265,7 @@ const ProjectList = (props) => {
               color: "gray",
               border: "1px solid",
               padding: "0.15rem 0.4rem",
-              margin: "2px 0"
+              margin: "2px 0",
             }}
           ></Tag>
         )}
@@ -308,9 +307,12 @@ const ProjectList = (props) => {
 
         {field === "Estimated_SOP" && changeDateFormat(options[field])}
         {field === "Estimated_AW_Printer" && changeDateFormat(options[field])}
-
+        {field === "Estimated_AW_Readiness" && changeDateFormat(options[field])}
+        {field === "Estimated_SOS" && changeDateFormat(options[field])}
         {field !== "Full Kit Readiness Tracking" &&
           field !== "Estimated_SOP" &&
+          field !== "Estimated_SOS" &&
+          field !== "Estimated_AW_Readiness" &&
           field !== "Estimated_AW_Printer" &&
           field !== "Project_Name" &&
           field !== "Project_ID" && <> {options[field]}</>}
@@ -379,11 +381,15 @@ const ProjectList = (props) => {
     localStorage.setItem("columnWiseFilterData", JSON.stringify({}));
     localStorage.setItem("frozenData", JSON.stringify({}));
     localStorage.setItem("sortingData", JSON.stringify({}));
+    localStorage.setItem(
+      "columnWidthMyProject", JSON.stringify({})
+    );
     setSelectedFields([]);
     setSortData([]);
     setFrozenColumn([]);
     setReorderedColumn(false);
     setFilters([]);
+    setVisible(false);
   };
 
   const onGlobalFilterChange = (e) => {
@@ -392,22 +398,20 @@ const ProjectList = (props) => {
     setFilters(value);
   };
 
-    const onColumnResizeEnd = (event) => {
+  const onColumnResizeEnd = (event) => {
     // console.log("updated column name", event.column, event?.element?.clientWidth);
     // console.log("width", event.element.offsetWidth, event.column);
 
     let columnWidthMyProject = {};
-    let jsonColumnWidthMyProject = localStorage.getItem(
-      "columnWidthMyProject"
-    );
+    let jsonColumnWidthMyProject = localStorage.getItem("columnWidthMyProject");
     if (jsonColumnWidthMyProject) {
       columnWidthMyProject = JSON.parse(jsonColumnWidthMyProject);
     }
-    const updatedColumns = [...projectColumnName];
+    // const updatedColumns = [...projectColumnName];
     // let saveColumnWidth = {};
-    const resizedColumn = updatedColumns.find(
-      (col) => col === event.column.props.field
-    );
+    // const resizedColumn = updatedColumns.find(
+    //   (col) => col === event.column.props.field
+    // );
     columnWidthMyProject[event.column.props.field] = event.element.offsetWidth;
 
     localStorage.setItem(
@@ -415,11 +419,13 @@ const ProjectList = (props) => {
       JSON.stringify(columnWidthMyProject)
     );
     setProjectColumnNames(projectColumnName);
+    setVisible(false);
+
   };
 
-  const exportCSV = (selectionOnly) => {
-    dt.current.exportCSV({ selectionOnly });
-  };
+  // const exportCSV = (selectionOnly) => {
+  //   dt.current.exportCSV({ selectionOnly });
+  // };
 
   const saveSettings = () => {
     localStorage.setItem("columnWiseFilterData", JSON.stringify(filters));
@@ -452,7 +458,11 @@ const ProjectList = (props) => {
 
     localStorage.setItem("allColumnNames", JSON.stringify({}));
     localStorage.setItem("allColumnNames", JSON.stringify(allColumnNames));
-    setProjectColumnNames(allColumnNames);
+    localStorage.setItem(
+      "columnWidthMyProject",
+      JSON.stringify({})
+    );
+    setProjectColumnNames(projectColumnName);
     setVisible(false);
   };
 
@@ -515,8 +525,11 @@ const ProjectList = (props) => {
 
   const isFilterEnabled =
     frozenCoulmns?.length || filters?.length || sortData?.length;
-
-  const isResetEnabled = isReorderedColumn || isFilterEnabled;
+  let columnWidth = localStorage.getItem(
+    "columnWidthMyProject"
+  );
+  const jsonColumnWidth = JSON.parse(columnWidth);
+  const isResetEnabled = isReorderedColumn || isFilterEnabled || (jsonColumnWidth && !(Object.keys(jsonColumnWidth).length === 0));
 
   return (
     <div className="myProjectAnddAllProjectList">
@@ -533,7 +546,7 @@ const ProjectList = (props) => {
             isFilterEnabled={isFilterEnabled}
             isResetEnabled={isResetEnabled}
             allData={pegadata}
-            headers={allColumnNames}
+            headers={updatedAllColumnNames}
           />
         )}
         <CustomisedView
@@ -584,7 +597,7 @@ const ProjectList = (props) => {
           filterDisplay={isSearch && "row"}
           ref={dt}
           // tableStyle={{ minWidth: "50rem" }}
-          tableStyle={{ width: "max-content" }}
+          tableStyle={{ width: "max-content", minWidth: "100%" }}
         >
           {dynamicColumns()}
         </DataTable>

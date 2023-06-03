@@ -30,6 +30,7 @@ const ProjectPlanList = ({
   setUpdatedProjectPlanDesignData,
   setActiveSave,
   isAccessEmpty,
+  getProjectPlanApi,
 }) => {
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
@@ -49,6 +50,7 @@ const ProjectPlanList = ({
   //projectPlanDesign
   const navigate = useNavigate();
   let { ProjectID } = useParams();
+
   const op = useRef(null);
 
   const handleHelpNeededClick = (options) => {
@@ -176,9 +178,14 @@ const ProjectPlanList = ({
   };
 
   const onGlobalFilterChange = (e) => {
-    const value = e.value;
+    let value = e.value;
+    const value1 = pegadata.filter((pegaObj) => {
+      return value.some((obj) => {
+        return pegaObj.data.Task === obj.Task;
+      });
+    });
     setSelectedCities(value);
-    setFilters(value);
+    setFilters(value1);
   };
 
   const saveSettings = () => {
@@ -524,6 +531,7 @@ const ProjectPlanList = ({
   const [showApproveDialogCPPFA, setShowApproveDialogCPPFA] = useState(false);
   const [selectedTaskApproveDialogCPPFA, setSelectedTaskApproveDialogCPPFA] =
     useState([]);
+
   const handleApproveDialogCPPFA = (options) => {
     setShowApproveDialogCPPFA(true);
     let task = { TaskID: options.key, ProjectID: ProjectID };
@@ -559,6 +567,8 @@ const ProjectPlanList = ({
           onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
           showTaskDialog={showApproveDialogCPPFA}
           selectedTaskData={selectedTaskApproveDialogCPPFA}
+          pegadata={pegadata1}
+          getProjectPlanApi={getProjectPlanApi}
         />
       )}
       <Suspense fallback={<div>Loading...</div>}>

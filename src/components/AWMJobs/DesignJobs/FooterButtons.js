@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "react-bootstrap";
+import { useLocation } from "react-router-dom";
 
 const FooterButtons = ({
   onSaveAsDraft,
@@ -9,14 +10,16 @@ const FooterButtons = ({
   formValid,
   checkReadWriteAccess,
 }) => {
-
-console.log("checkReadWriteAccess in footer", checkReadWriteAccess);
+  console.log("checkReadWriteAccess in footer", checkReadWriteAccess);
   return (
-    <div className="form-buttons">
+    <div
+      className="form-buttons"
+      style={{ padding: 15, background: "#FAFAFA" }}
+    >
       <Button
         className="button-layout"
         variant="secondary"
-        disabled={checkReadWriteAccess}
+        disabled={!checkReadWriteAccess}
         onClick={() => handleCancel()}
       >
         Cancel
@@ -27,7 +30,7 @@ console.log("checkReadWriteAccess in footer", checkReadWriteAccess);
             className="button-layout"
             variant="secondary"
             onClick={() => onSaveAsDraft()}
-            disabled={checkReadWriteAccess}
+            disabled={!checkReadWriteAccess}
           >
             Save as Draft
           </Button>
@@ -35,7 +38,7 @@ console.log("checkReadWriteAccess in footer", checkReadWriteAccess);
             className="button-layout"
             type="submit"
             onClick={() => onSubmit()}
-            disabled={formValid || checkReadWriteAccess}
+            disabled={formValid || !checkReadWriteAccess}
           >
             Submit
           </Button>
