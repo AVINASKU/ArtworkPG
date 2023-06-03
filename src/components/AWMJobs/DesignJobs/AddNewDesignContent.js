@@ -27,6 +27,14 @@ const AddNewDesignContent = ({
   const [tier, setTier] = useState("");
   const [items, setItems] = useState([]);
 
+  useEffect(() => {
+    if (item) {
+      setAgency(Agency_Reference);
+      setCluster(Cluster);
+      setAdditionalInfo(Additional_Info);
+    }
+  }, [item]);
+
   const search = (event) => {
     let _items = [...Array(10).keys()];
     setItems(

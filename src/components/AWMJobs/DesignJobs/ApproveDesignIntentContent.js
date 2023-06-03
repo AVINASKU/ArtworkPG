@@ -32,7 +32,7 @@ const ApproveDesignIntentContent = ({
 
   let di_name;
   di_name =
-    version !== "V0" || designIntent[0]?.FileMetaDataList[0]?.Timestamp !== ""
+    version !== "V0" && designIntent[0]?.FileMetaDataList[0]?.Timestamp !== ""
       ? `${item?.Task_Name}_${version}_${date}`
       : `${item?.Task_Name}`;
 
@@ -45,6 +45,8 @@ const ApproveDesignIntentContent = ({
 
     setTotalSize(_totalSize);
   };
+
+
   const itemTemplate = (file) => {
     setformattedValue(file.size);
     return (
@@ -106,7 +108,8 @@ const ApproveDesignIntentContent = ({
     );
   };
   return (
-    <div style={{ height: "300px" }}>
+    console.log("fileName version ", fileName === "", version !== "", fileName, version),
+    <div>
       <div className="design-intent-header">{DesignHeader(di_name)}</div>
       <div className="approve-design-intent">
         {upload && (
@@ -127,7 +130,9 @@ const ApproveDesignIntentContent = ({
               onSelect={onTemplateSelect}
               itemTemplate={itemTemplate}
             />
-            <div> {fileName === "" && version !== "" && di_name}</div>
+            <div>
+              {designIntent[0]?.FileMetaDataList[0]?.File_Name === "" ? (fileName === "" ? `No files uploaded yet please upload file!` : ``) : (fileName === "" ? di_name : '')}
+            </div>
           </div>
         )}
         {approve && (

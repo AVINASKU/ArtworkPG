@@ -82,6 +82,7 @@ const UADI = () => {
   };
 
   const onSubmit = async () => {
+    const fileSize = Math.round(formattedValue / 1000000);
     const headers = {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
@@ -92,7 +93,7 @@ const UADI = () => {
       content: {
         AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
         AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
-        Size: "1",
+        Size: fileSize === 0 ? "1" : fileSize,
         Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
         Filename: fileName,
       },
@@ -112,37 +113,41 @@ const UADI = () => {
         label="Upload Approved Design Intent"
         checkReadWriteAccess={checkReadWriteAccess}
       />
+      <div className="task-details">
+        {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
+          {loading ? (
+            <div className="align-item-center">
+              <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
+            </div>
+          ) : (
+            designIntent && (
+              <ApproveDesignIntentContent
+                {...designIntent}
+                designIntent={designIntent}
+                upload={true}
+                setformattedValue={setformattedValue}
+                setAzureFile={setAzureFile}
+                setFileName={setFileName}
+                fileName={fileName}
+                setMappedFiles={setMappedFiles}
+                item={data}
+                roleName={roleName}
+                ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
+                version={version}
+                date={date}
+                checkReadWriteAccess={checkReadWriteAccess}
+              />
+            )
+          )}
+      </div>
 
-      {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
-      {loading ? (
-        <div className="align-item-center">
-          <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
-        </div>
-      ) : (
-        designIntent && (
-          <ApproveDesignIntentContent
-            {...designIntent}
-            designIntent={designIntent}
-            upload={true}
-            setformattedValue={setformattedValue}
-            setAzureFile={setAzureFile}
-            setFileName={setFileName}
-            fileName={fileName}
-            setMappedFiles={setMappedFiles}
-            item={data}
-            roleName={roleName}
-            ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
-            version={version}
-            date={date}
-            checkReadWriteAccess={checkReadWriteAccess}
-          />
-        )
-      )}
+      
       <FooterButtons
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
         onSubmit={onSubmit}
         checkReadWriteAccess={checkReadWriteAccess}
+        bottomFixed={true}
       />
     </PageLayout>
   );
