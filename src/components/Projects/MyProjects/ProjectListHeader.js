@@ -5,6 +5,7 @@ import filter from "../../../assets/images/filter.svg";
 import BlueFilterIcon from "../../../assets/images/BlueFilterIcon.svg";
 import { useLocation } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
+import { Button } from "react-bootstrap";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import { ExportSelectedRows } from "../../ExportCSV";
 
@@ -81,12 +82,13 @@ const ProjectListHeader = ({
               selectedRows={selected}
               headers={headers}
             />
-            <button
-              type="button"
+            <Button
+              className="button-layout"
+              variant="secondary"
               onClick={() => setVisible(true)}
             >
               Customize View
-            </button>
+            </Button>
 
             <button
               type="button"

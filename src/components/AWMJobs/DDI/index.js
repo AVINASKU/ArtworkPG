@@ -28,7 +28,7 @@ function DDI() {
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
   const [projectData, setProjectData] = useState([]);
-  const [enableSubmit, setEnableSubmit] = useState(false);
+  const [enableSubmit, setEnableSubmit] = useState(true);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -93,15 +93,26 @@ function DDI() {
     setUpdated(!updated);
   };
 
-  const addData = (fieldName, index, value, Design_Intent_Name) => {
+  const addData = (fieldName, index, value, Design_Intent_Name) => {    
     let data = designIntent[index];
     data[fieldName] = value;
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
+    let values = false;
+    console.log("designIntent", designIntent);
     const hasValues = designIntent.every(
-      (item) => item.Agency_Reference !== "" && item.Cluster !== ""
+      (item) => {        
+        setEnableSubmit(true);
+        if(item.Select){
+          values = item.Agency_Reference !== "" && item.Cluster !== ""
+        } 
+        // else{
+        //   values = item.Agency_Reference === "" && item.Cluster === ""
+        // }
+        return values
+      }
     );
-    setEnableSubmit(hasValues);
+    setEnableSubmit(!hasValues);  
     setSubmittedDI(submittedDI);
   };
 
@@ -112,12 +123,6 @@ function DDI() {
       }
       return task;
     });
-
-    const hasValues = designIntent.every(
-      (item) => item.Agency_Reference !== "" && item.Cluster !== ""
-    );
-
-    setEnableSubmit(hasValues);
     setDesignIntent(designIntent);
     setUpdated(!updated);
   };
@@ -273,6 +278,7 @@ function DDI() {
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
         onSubmit={onSubmit}
+        formValid={enableSubmit}
         // formValid={submitActive}
         checkReadWriteAccess={checkReadWriteAccess}
       />
