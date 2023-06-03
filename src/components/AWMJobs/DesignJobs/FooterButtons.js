@@ -22,7 +22,11 @@ const FooterButtons = ({
       style={{ padding: 15, background: "#FAFAFA" }}
     >
       <Button
-        className="button-layout"
+        className={
+          checkReadWriteAccess
+            ? "button-layout"
+            : "btn btn-disabled"
+        }        
         variant="secondary"
         disabled={!checkReadWriteAccess}
         onClick={() => handleCancel()}
@@ -32,7 +36,11 @@ const FooterButtons = ({
       {!approve && (
         <>
           <Button
-            className="button-layout"
+            className={
+              checkReadWriteAccess
+                ? "button-layout"
+                : "btn btn-disabled"
+            } 
             variant="secondary"
             onClick={() => onSaveAsDraft()}
             disabled={!checkReadWriteAccess}
