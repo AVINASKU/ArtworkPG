@@ -2,9 +2,11 @@
 @media (min-width: 1200px) {
   /* Your CSS code for 2K and 4K displays goes here */
 }
+
 @media screen and (min-width: 1472px) and (min-height: 864px) {
   /* Your CSS code for the layout goes here */
 }
+
 .container-fluid,
 .row-fluid {
   width: 100%;
@@ -12,6 +14,7 @@
   display: flex;
   padding: 0;
   margin: 0;
+
   .left-grid {
     height: 100%;
     // padding: 25px 0 25px 25px;
@@ -20,6 +23,7 @@
     background-color: #ffffff;
     border-right: 0.5px solid #acacac;
   }
+
   .right-grid {
     height: 100vh;
     flex-grow: 9;
@@ -32,18 +36,20 @@
     flex-direction: column;
   }
 }
+
 .main-container {
   overflow: auto;
   width: 100%;
   height: 100%;
   padding: 16px;
   background: rgba(1, 104, 191, 0.07);
+
   .wrapper {
     width: 100%;
     // min-height: 100%;
-    background: #ffffff;
+    // background: #ffffff;
     // border: 0.5px solid #acacac;
-    border-radius: 24px;
+    // border-radius: 24px;
     overflow: hidden;
     height: 100%;
     position: relative;
@@ -53,6 +59,7 @@
       position: relative;
       overflow: hidden;
       height: 100%;
+
       .pi-times {
         position: absolute;
         width: 14px;
@@ -61,6 +68,7 @@
         top: 23px;
         cursor: pointer;
       }
+
       .icon-items {
         .filter-icon {
           cursor: pointer;
@@ -69,6 +77,7 @@
           height: 19px;
           margin-top: 8px;
         }
+
         .add-new-design-intent-icon {
           cursor: pointer;
           color: #003da5;
@@ -83,7 +92,8 @@
           line-height: 13px;
           padding-top: 8px;
         }
-        .p-checkbox + .icon-label {
+
+        .p-checkbox+.icon-label {
           padding-top: 3px;
         }
       }
