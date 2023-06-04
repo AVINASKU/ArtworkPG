@@ -309,7 +309,7 @@ function ProjectSetup(props) {
         />
       )}
 
-      <div className="tabular-view AccordionIndent">
+      <div className="tabular-view">
         <TabsComponent
           tabName={tabName}
           setTabName={setTabName}

@@ -53,8 +53,10 @@
     overflow: hidden;
     height: 100%;
     position: relative;
-    & > .content-layout {
-      padding-top: 24px;
+
+    &>.content-layout {
+      // padding-top: 24px;
+      padding-top: 8px;
       padding-bottom: 32px;
       position: relative;
       overflow: hidden;
@@ -97,7 +99,8 @@
           padding-top: 3px;
         }
       }
-      &.task-layout{
+
+      &.task-layout {
         height: auto;
       }
     }
