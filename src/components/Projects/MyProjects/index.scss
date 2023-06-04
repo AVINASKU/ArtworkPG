@@ -17,7 +17,7 @@ $fontWeight400: 400;
 // Datepicker for ProjectSetUp component Style End
 .myProjectAnddAllProjectList {
   .p-datatable > .p-datatable-wrapper {
-    overflow: scroll;
+    overflow: auto;
     width: $width100;
     height: calc(100vh - 180px);
   }
