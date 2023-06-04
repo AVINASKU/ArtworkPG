@@ -19,7 +19,7 @@ $fontWeight400: 400;
 
 // Datepicker for ProjectSetUp component Style End
 .myProjectAnddAllProjectList {
-  .p-datatable > .p-datatable-wrapper {
+  .p-datatable>.p-datatable-wrapper {
     overflow: scroll;
     width: $width100;
   }
@@ -32,7 +32,7 @@ $fontWeight400: 400;
     font-weight: $fontWeight500;
   }
 
-  .p-column-title > div {
+  .p-column-title>div {
     display: flex;
   }
 
@@ -53,7 +53,7 @@ $fontWeight400: 400;
   }
 
   td,
-  table .p-datatable .p-datatable-tbody > tr > td,
+  table .p-datatable .p-datatable-tbody>tr>td,
   th,
   tr {
     position: relative;
@@ -61,7 +61,7 @@ $fontWeight400: 400;
     // height: 40px;
   }
 
-  .input-duration > input {
+  .input-duration>input {
     max-width: 70px;
     border-radius: 5px;
     text-align: center;
@@ -71,6 +71,17 @@ $fontWeight400: 400;
   .form-control:focus,
   .p-inputwrapper-filled {
     border: none;
+  }
+
+  .task-link {
+    color: #003da5;
+    cursor: pointer;
+    line-height: 15px;
+  }
+
+  .textAlignTreeTable {
+    height: 200px;
+    overflow: scroll;
   }
 }
 
@@ -82,7 +93,7 @@ $fontWeight400: 400;
   margin: 8px;
 }
 
-.p-checkbox-checked + label {
+.p-checkbox-checked+label {
   color: #003da5;
 }
 
@@ -238,11 +249,13 @@ img[disabled] {
   color: #003da5;
   cursor: pointer;
 }
+
 .textAlignTreeTable {
   .p-treetable-thead {
     .cursorMove {
       cursor: move;
     }
+
     .fontBoldcolor {
       color: #145392;
     }
@@ -255,22 +268,18 @@ img[disabled] {
   }
 }
 
-.textAlignTreeTable
-  > div
-  > .p-treetable-table
-  > .p-treetable-tbody
-  > tr
-  > td:first-child {
+.textAlignTreeTable>div>.p-treetable-table>.p-treetable-tbody>tr>td:first-child {
   text-align: left !important;
   display: flex;
   height: auto;
   border-bottom: none !important;
 }
 
-.textAlignTreeTable > div > .p-treetable-table > .p-treetable-tbody > tr > td {
+.textAlignTreeTable>div>.p-treetable-table>.p-treetable-tbody>tr>td {
   min-width: 100px;
   padding: 2px 6px;
   align-items: center;
+
   .p-dropdown {
     height: 25px;
   }
@@ -309,30 +318,25 @@ img[disabled] {
 .accordion.projectPlanAccordian {
   margin: 0px;
 
-  .accordion-item > .accordion-header {
+  .accordion-item>.accordion-header {
     background-color: #f7f7f7;
 
     .accordion-button {
       background-color: #f7f7f7 !important;
     }
   }
-  .accordion-item > .accordion-header {
+
+  .accordion-item>.accordion-header {
     position: relative !important;
   }
 
-  .accordion-item > .accordion-header > button {
+  .accordion-item>.accordion-header>button {
     height: 25px;
   }
 
-  .accordion-item > .accordion-header > button::after {
+  .accordion-item>.accordion-header>button::after {
     position: absolute !important;
     margin-left: 110px;
-  }
-
-  .task-link {
-    color: #003da5;
-    cursor: pointer;
-    line-height: 15px;
   }
 }
 
@@ -360,18 +364,18 @@ img[disabled] {
   color: #595959;
 }
 
-.columnBorder > div {
+.columnBorder>div {
   margin-top: 5px;
   border-right: 0.5px solid #acacac;
   text-align: center;
   min-width: fit-content;
 }
 
-.columnBorder > div:last-child {
+.columnBorder>div:last-child {
   border-right: none;
 }
 
-.columnBorder1 > div {
+.columnBorder1>div {
   margin: 10px 0 0 0;
   text-align: center;
   color: #595959;
@@ -386,12 +390,12 @@ img[disabled] {
     font-weight: 400 !important;
   }
 
-  div > label {
+  div>label {
     font-size: 10px !important;
   }
 }
 
-.columnBorder2 > div {
+.columnBorder2>div {
   margin-bottom: 20px;
   text-align: center;
   color: #595959;
@@ -404,7 +408,7 @@ img[disabled] {
     font-weight: 400 !important;
   }
 
-  div > label {
+  div>label {
     font-size: 10px !important;
   }
 }
@@ -420,7 +424,7 @@ img[disabled] {
   }
 }
 
-.submitButton > button {
+.submitButton>button {
   background-color: #003da5 !important;
   width: 93px;
   height: 40px;

@@ -368,6 +368,7 @@ function ProjectPlanCompo(props) {
           Activate
         </Button>
       </div>
+      <br />
     </>
   );
 }

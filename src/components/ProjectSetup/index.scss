@@ -129,23 +129,6 @@ $width: 100%;
 .ActionsDropdown {
   background-color: #003da5;
 }
-.content-layout .tabular-view.AccordionIndent{
-  overflow: hidden scroll;
-  height: calc( 100vh - 220px);
-}
-
-.AccordionIndent>.accordion>.accordion-item>.accordion-header {
-  position: relative !important;
-}
-
-.AccordionIndent>.accordion>.accordion-item>.accordion-header>button {
-  height: 25px;
-}
-
-.AccordionIndent>.accordion>.accordion-item>.accordion-header>button::after {
-  position: absolute !important;
-  margin-left: 110px !important;
-}
 
 #projectActions {
   height: 32px;
@@ -212,6 +195,14 @@ $width: 100%;
 
 
 // TabsComponent Styles Start 
+.tab-content {
+  .nav-link {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+  }
+}
+
 .tab-content>.active {
   padding: 10px 20px;
   display: contents !important;
@@ -253,6 +244,21 @@ ul.nav.nav-tabs {
 
 .tabs-wrapper {
   position: relative;
+
+  .nav-tabs li.active {
+    border-bottom: 2.5px solid rgba(0, 61, 165, 1);
+  }
+
+  .nav-tabs li>a {
+    color: rgba(172, 172, 172, 1);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17.07px
+  }
+
+  .nav-tabs li.active>a {
+    color: rgba(0, 61, 165, 1);
+  }
 }
 
 span.left,
