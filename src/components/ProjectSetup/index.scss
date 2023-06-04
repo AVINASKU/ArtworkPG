@@ -6,7 +6,14 @@ $width: 100%;
   line-height: 29px;
   color: #003da5;
   // padding: 0 15px 22px 15px;
-  padding: 0 15px 10px 15px;
+  // padding: 0 15px 10px 15px;
+  padding: 0 15px 0px 13px;
+}
+
+.subNav {
+  .nav {
+    padding-left: 13px;
+  }
 }
 
 .accordion {
@@ -180,7 +187,8 @@ $width: 100%;
 
 .content-layout .actions {
   .p-breadcrumb {
-    padding: 0 1rem !important;
+    // padding: 0 1rem !important;
+    padding: 0 1rem 0 0 !important;
   }
 }
 
