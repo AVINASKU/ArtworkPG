@@ -122,7 +122,7 @@ function ProjectPlanCompo(props) {
       },
 
       {
-        name: "Confirm Preliminary print feasibility Assessment done (& upload documents - optional)",
+        name: "Confirm Preliminary print feasibility Assessment",
         code: "CPPFA",
         data: apiData.filter((data) => data.AWM_Task_ID.includes("CPPFA_")),
       },
@@ -132,22 +132,22 @@ function ProjectPlanCompo(props) {
         data: apiData.filter((data) => data.AWM_Task_ID.includes("DNPF_")),
       },
       {
-        name: "Color Confirm Development done (& upload documents - optional) (can be multiple)",
+        name: "Confirm Color Development",
         code: "CCD",
         data: apiData.filter((data) => data.AWM_Task_ID.includes("CCD_")),
       },
       {
-        name: "Confirm Print Trial (if applicable) done (& upload documents - optional) (can be multiple)",
+        name: "Confirm Print Trial",
         code: "CPT",
         data: apiData.filter((data) => data.AWM_Task_ID.includes("CPT_")),
       },
       {
-        name: "Define New Link Ink Qualification scope",
+        name: "Define New Ink Qualification scope",
         code: "DNIQ",
         data: apiData.filter((data) => data.AWM_Task_ID.includes("DNIQ_")),
       },
       {
-        name: "Confirm New Ink Qualification done (& upload documents - optional) (can be multiple)",
+        name: "Confirm New Ink Qualification done",
         code: "CNIQ",
         data: apiData.filter((data) => data.AWM_Task_ID.includes("CNIQ_")),
       },
@@ -158,7 +158,7 @@ function ProjectPlanCompo(props) {
         tempObj["key"] = task.data[0].AWM_Task_ID;
 
         let dataObj = {};
-        dataObj["Task"] = task.data[0].Task_Name;
+        dataObj["Task"] = task.data[0].AWM_Task_ID.includes("CCD_") ? "Confirm Color Development" : task.data[0].AWM_Task_ID.includes("CPT_") ? "Confirm Print Trial"  : task.data[0].Task_Name;
         dataObj["Dependency"] = task.data[0].Dependency;
         dataObj["Role"] = task.data[0].Role;
         dataObj["RoleOptions"] = task.data[0].RoleOptions;

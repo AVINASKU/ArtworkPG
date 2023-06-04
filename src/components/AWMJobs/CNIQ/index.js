@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import LoadingOverlay from "react-loading-overlay";
 import PageLayout from "../../PageLayout";
 import TaskHeader from "../DesignJobs/TaskHeader";
 import DesignHeader from "../DesignJobs/DesignHeader";
@@ -37,6 +38,7 @@ function CNIQ() {
   const [formattedValue, setformattedValue] = useState(0);
   const [fileName, setFileName] = useState("");
   const [azureFile, setAzureFile] = useState("");
+  const [loader, setLoader] = useState(false);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
 
@@ -50,82 +52,11 @@ function CNIQ() {
   }, [dispatch, TaskID, ProjectID]);
 
   useEffect(() => {
-    // if (TaskDetailsData) {
-    //   console.log("TaskDetailsData: ", TaskDetailsData);
-    //   setIQ(TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
-    //   setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
-    // }
-    let TaskDetailData = {
-      ArtworkAgilityTasks: [
-        {
-          Consumed_Buffer: "",
-          DesignJobDetails: [
-            {
-              Print_Trial_Done: null,
-              Tier: "",
-              Cluster: "",
-              Agency_Reference: "",
-              Printer: ["ALL4LABELS ITALY NMS S R L~15144637"],
-              Printing_Process: "",
-              Design_Job_Name: "IQ1",
-              Substrate: "",
-              Additional_Info: "test1",
-              Pantone: "Dropdown",
-              Design_Job_ID: "IQ_DJob-213",
-              CD_Approved: null,
-              Select: true,
-              Print_Trial_Needed: null,
-            },
-          ],
-          IDDSampleApproved: null,
-          Task_Key: "",
-          Duration: "",
-          Project_Name: "For Color",
-          Start_Date: "",
-          End_Date: "",
-          Task_Name: "Confirm New Ink Qualification done",
-          Task_ID: "CNIQ_Task-228",
-          RiskLevel: "",
-          IDDSampleLabTestApproved: null,
-        },
-      ],
-      ArtworkAgilityPage: {
-        Artwork_Category: [
-          {
-            code: "BFCND",
-            Category_Name: "Baby & Feminine Care No Detail",
-          },
-          {
-            code: "BCA",
-            Category_Name: "Baby Care Adjacencies",
-          },
-        ],
-        AWM_Project_ID: "A-1167",
-        Artwork_Brand: [
-          {
-            code: "J29",
-            Brand_Name: "Pampers",
-          },
-          {
-            code: "BV0102",
-            Brand_Name: "Charlie Banana",
-          },
-        ],
-        Artwork_SMO: [
-          {
-            code: "DEU",
-            SMO_Name: "Germany",
-          },
-          {
-            code: "FRA",
-            SMO_Name: "France",
-          },
-        ],
-      },
-    };
-    console.log("TaskDetailData: ", TaskDetailData);
-    setIQ(TaskDetailData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
-    setData(TaskDetailData?.ArtworkAgilityTasks[0] || []);
+    if (TaskDetailsData) {
+      console.log("TaskDetailsData: ", TaskDetailsData);
+      setIQ(TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
+      setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
+    }
   }, [TaskDetailsData]);
   const handleCancel = () => {
     return navigate(`/myTasks`);
@@ -201,6 +132,7 @@ function CNIQ() {
   }, [data]);
 
   const onSubmit = async () => {
+    setLoader(true);
     let IDDSampleApproved = "";
     let IDDSampleLabTestApproved = "";
     let Timestamp;
@@ -214,7 +146,7 @@ function CNIQ() {
       caseTypeID: "PG-AAS-Work-ConfirmInkQualification",
       content: {
         AWMTaskID: data.Task_ID,
-        AWMProjectID: selectedProjectDetails.Project_ID,
+        AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
         IDDSampleApproved: data.IDDSampleApproved,
         IDDSampleLabTestApproved: data.IDDSampleLabTestApproved,
         Size: formattedValue,
@@ -224,10 +156,11 @@ function CNIQ() {
       },
     };
     console.log("full submit data --->", formData);
-    let id = `PG-AAS-WORK ${selectedProjectDetails.Project_ID}`;
-    const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
+    let id = data.Task_Key;
+    const headers = { key: "If-Match", value: TaskDetailsData?.ArtworkAgilityPage?.Etag };
 
     await submitConfirmInkQualification(formData, id, headers);
+    setLoader(false);
   };
 
   const onSaveAsDraft = async () => {
@@ -289,6 +222,7 @@ function CNIQ() {
   };
 
   return (
+    <LoadingOverlay active={loader} spinner text="">
     <PageLayout>
       <IQHeader
         setAddNewDesign={addNewEmptyDesign}
@@ -304,6 +238,7 @@ function CNIQ() {
           overflowX: "hidden",
           width: "100%",
           height: "400px",
+          display: "grid",
         }}
       >
         {<TaskHeader {...data} />}
@@ -335,9 +270,11 @@ function CNIQ() {
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}
           formValid={formValid}
+          checkReadWriteAccess = {true}
         />
       </div>
     </PageLayout>
+    </LoadingOverlay>
   );
 }
 
