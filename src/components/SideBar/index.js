@@ -209,7 +209,7 @@ const SideBar = () => {
                 >
                   {!isToggle ? (
                     <NavLink
-                      to="/projectPlan"
+                      to="/projectPlan#ProjectSetup"
                       state={{ mode: "create" }}
                       className="nav-link"
                       onClick={() => {
@@ -224,7 +224,7 @@ const SideBar = () => {
                     </NavLink>
                   ) : (
                     <NavLink
-                      to="/projectPlan"
+                      to="/projectPlan#ProjectSetup"
                       state={{ mode: "create" }}
                       className="nav-link"
                       onClick={() => {
