@@ -25,6 +25,7 @@ function DPRA() {
   const [designIntent, setDesignIntent] = useState([]);
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
+  const [enableSubmit, setEnableSubmit] = useState(true);
   const [projectData, setProjectData] = useState([]);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
@@ -102,6 +103,26 @@ function DPRA() {
     // add here design job name here check it out from API.
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
+    let values = false;
+    const hasValues = designIntent.every(
+      (item) => {        
+        setEnableSubmit(true);
+       if(item.Select){
+          values = item.Agency_Reference !== "" && item.Cluster !== "";
+      } 
+        // else{
+        //   values = designIntent.some(item => {
+        //     console.log("else select", item)
+        //     if(item.Select){
+        //       values = item.Agency_Reference !== "" && item.Cluster !== ""
+        //     }
+        //   });
+        //   console.log("value else", values)
+        // }
+        return values
+      }
+    );
+    setEnableSubmit(!hasValues);  
     setSubmittedDI(submittedDI);
   };
 
@@ -223,14 +244,7 @@ function DPRA() {
         label="Define Roduction Ready Art"
         checkReadWriteAccess={checkReadWriteAccess}
       />
-      <div
-        style={{
-          overflowY: "scroll",
-          overflowX: "hidden",
-          width: "100%",
-          height: "400px",
-        }}
-      >
+      <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
 
         {loading || designIntent === null ? (
@@ -269,6 +283,8 @@ function DPRA() {
         onSaveAsDraft={onSaveAsDraft}
         onSubmit={onSubmit}
         checkReadWriteAccess={checkReadWriteAccess}
+        bottomFixed={true}
+        formValid={enableSubmit}
       />
     </PageLayout>
   );

@@ -8,16 +8,13 @@ import { useNavigate } from "react-router-dom";
 import { createNewProject, editProject } from "../../../apis/projectSetupApi";
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 import { updateProjectPlanAction } from "../../../store/actions/ProjectPlanActions";
+import { getDropDownValues } from "../../../store/actions/dropDownValuesAction";
 import moment from "moment-timezone";
 import { Toast } from "primereact/toast";
 import "./index.scss";
 import {
-  businessUnits,
-  regionList,
   designScope,
   scaleList,
-  projectTypeList,
-  brandList,
   ProductionStrategy,
   Tier,
   PMValues,
@@ -94,6 +91,13 @@ function AddProject(props) {
   const [PMAlert, setPMAlert] = useState(false);
   const [SMOAlert, setSMOAlert] = useState(false);
   const [brandAlert, setBrandAlert] = useState(false);
+  const [projectSetupPageDropDownValues, setProjectSetupPageDropDownValues]  = useState([]);
+  const [bUs, setbUs]  = useState([]);
+  const [brands, setBrands]  = useState([]);
+  const [regions, setRegions]  = useState([]);
+  const [smos, setSmos]  = useState([]);
+  const [scales, setScales]  = useState([]);
+  const [projectTypeList, setProjectTypeList]  = useState([]);
   const [designScopeList, setDesignScopeList] = useState({
     DI: "",
     DT: "",
@@ -102,6 +106,8 @@ function AddProject(props) {
     IQ: "",
     CICs: "",
   });
+
+  const { DropDownValuesData, loading } = useSelector((state) => state.DropDownValuesReducer);
 
   const showStatus = (severity, summary, detail, redirect) => {
     toast.current.show({
@@ -126,15 +132,33 @@ function AddProject(props) {
   };
 
   useEffect(() => {
+    dispatch(getDropDownValues());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (DropDownValuesData) {
+      setProjectSetupPageDropDownValues(
+        DropDownValuesData?.ArtWorkProjectSetupPage || []
+      );
+    }
+  }, [DropDownValuesData]);
+
+  useEffect(() => {
     if (mode === "edit" || mode === "design") {
       setProjectName(selectedProjectDetails?.Project_Name || "");
       setGroupName(selectedProjectDetails?.Initiative_Group_Name || "");
       setProjectDesc(selectedProjectDetails?.Project_Description || "");
       setBu(selectedProjectDetails?.BU || "");
+
+      let data = [];
       if (selectedProjectDetails?.Artwork_Category?.length > 0) {
-        selectedProjectDetails?.Artwork_Category.forEach((catg) => {
-          if (catg.code !== "") {
-            setSubCategories(selectedProjectDetails?.Artwork_Category);
+        selectedProjectDetails?.Artwork_Category?.forEach((category) => {
+          let temp = {}
+          if (category.code !== "") {
+              temp.code = category['code']
+              temp.Label_Name = category['Category_Name'];
+              data.push(temp)
+            setSubCategories(data);
           } else {
             setSubCategories([]);
           }
@@ -142,6 +166,7 @@ function AddProject(props) {
       } else {
         setSubCategories([]);
       }
+
       if (selectedProjectDetails?.Artwork_Brand?.length > 0) {
         selectedProjectDetails?.Artwork_Brand.forEach((brand) => {
           if (brand.code !== "") {
@@ -155,19 +180,19 @@ function AddProject(props) {
       }
       setRegion(
         (selectedProjectDetails &&
-          regionList.find(
-            (r) => r.name === selectedProjectDetails.Project_region
+          regions.find(
+            (r) => r.Region_Name === selectedProjectDetails.Project_region
           )) ||
           {}
       );
       setSmo(prePopuSmo || []);
-      setCluster(selectedProjectDetails?.cluster || "");
+      setCluster(selectedProjectDetails?.Cluster || "");
       setScale(
         (selectedProjectDetails &&
-          scaleList.find(
+          scales.find(
             (r) => r.code === selectedProjectDetails.Project_Scale
           ) &&
-          scaleList.find((r) => r.code === selectedProjectDetails.Project_Scale)
+          scales.find((r) => r.code === selectedProjectDetails.Project_Scale)
             .code) ||
           []
       );
@@ -368,11 +393,9 @@ function AddProject(props) {
   }, [mode]);
 
   const getSmoOptions = () => {
-    if (!region?.countries) return [];
-
-    return region.countries.map((country) => ({
-      label: country.name,
-      value: country.code,
+    return smos.map((smo) => ({
+      label: smo.SMO_Name,
+      value: smo.code,
     }));
   };
 
@@ -410,8 +433,9 @@ function AddProject(props) {
 
   const getProjectCategory = () => {
     const selectedCategoriesOptions = [];
-
     subCategories.forEach((obj) => {
+      obj.Category_Name = obj['Label_Name'];
+      delete obj.Label_Name;
       let temp = {};
       temp.instruction = "APPEND";
       temp.target = "ProjectCategory";
@@ -425,7 +449,7 @@ function AddProject(props) {
     const projName = getValues("projectType");
     let projCode;
     projectTypeList.forEach((pt) => {
-      if (pt.name === projName) {
+      if (pt.ProjectType_Name === projName) {
         projCode = pt.code;
       }
     });
@@ -434,9 +458,8 @@ function AddProject(props) {
 
   const handleRegionChange = (e) => {
     e.target.value.length === 0 ? setRegionAlert(true) : setRegionAlert(false);
-    const selectedRegion = regionList.find((r) => r.name === e.target.value);
+    const selectedRegion = regions.find((r) => r.Region_Name === e.target.value);
     setRegion(selectedRegion);
-    setSmo([]);
   };
   const handleScaleChange = (e) => {
     const selectedScale = scaleList.find((r) => r.code === e.target.value);
@@ -452,34 +475,53 @@ function AddProject(props) {
       : setBusinessUnitAlert(false);
     setBu(e.target.value);
     setSubCategories([]);
+    setSubCategoriesOptions([]);
   };
 
   // const bUs = Object.keys(categories).map((bu) => ({ code: bu, name: bu }));
-  const bUs = businessUnits.map((bu) => {
-    return {
-      name: bu.name,
-      code: bu.code,
-    };
-  });
+  useEffect(() => {
+    if(projectSetupPageDropDownValues !== undefined && projectSetupPageDropDownValues.length !== 0){
+      setbUs(projectSetupPageDropDownValues.Artwork_BU);
+      setBrands(projectSetupPageDropDownValues.Artwork_Brand);
+      setRegions(projectSetupPageDropDownValues.Artwork_Region);
+      setSmos(projectSetupPageDropDownValues.Artwork_SMO);
+      setScales(projectSetupPageDropDownValues.Artwork_Scale);
+      setProjectTypeList(projectSetupPageDropDownValues.Artwork_ProjectType);
+    }
+  },[projectSetupPageDropDownValues]);
+
+  // const bUs = businessUnits.map((bu) => {
+  //   return {
+  //     name: bu.BU_Name,
+  //     code: bu.code,
+  //   };
+  // });
   const handleSubCategoryChange = (e) => {
-    setSubCategories(e.value);
+    setSubCategories(e.value); 
+       
   };
 
-  // const subCategoriesOptions = useMemo(() => {
-  //   if (bu && categories[bu]) {
-  //     return categories[bu].map((subCat) => ({ label: subCat, value: subCat }));
-  //   }
-  //   return [];
-  // }, [bu, categories]);
 
   useEffect(() => {
     bu &&
-      businessUnits.forEach((obj) => {
-        if (obj.code === bu) {
-          setSubCategoriesOptions(obj.categories);
+    bUs.forEach((obj) => {
+      obj.Artwork_Picklist.forEach((pickList)=> {
+        if(bu === obj.code){  
+          setSubCategoriesOptions(pickList.Labels);
         }
+      })
       });
-  }, [bu]);
+  }, [bu, bUs]);
+
+  useEffect(() => {
+    setRegion(
+      (selectedProjectDetails &&
+        regions.find(
+          (r) => r.Region_Name === selectedProjectDetails.Project_region
+        )) ||
+        {}
+    );
+  },[regions])
 
   const form = useForm({ date: null });
   let today = new Date();
@@ -708,10 +750,10 @@ function AddProject(props) {
         Cluster: cluster,
         ProjectDescription: projectDesc,
         ProjectName: projectName,
-        Project_region: region.name,
+        Project_region: region?.Region_Name,
         Project_Code: ProjectCode,
         ProjectType: projectType,
-        Project_State: "",
+        Project_State: "Draft",
         Buffer_To_Work: "",
         ProjectStatus: status,
       },
@@ -795,45 +837,6 @@ function AddProject(props) {
     const outputDate = new Date(outputDateString);
     return outputDate;
   };
-
-  // useEffect(() => {
-  //   //get api call
-  //   const formDraft = JSON.parse(localStorage?.getItem("formDraft"));
-  //   if (formDraft) {
-  //     Object.entries(formDraft).forEach(([name, value]) => {
-  //       //
-  //       if (name === "sopDate") {
-  //         let outputDate = changeDateFormat(value);
-  //         setSOPDate(outputDate);
-  //       }
-  //       if (name === "sosDate") {
-  //         let outputDate = changeDateFormat(value);
-  //         setSOSDate(outputDate);
-  //       }
-  //       if (name === "readinessDate") {
-  //         let outputDate = changeDateFormat(value);
-  //         setReadinessDate(outputDate);
-  //       }
-  //       if (name === "printerDate") {
-  //         let outputDate = changeDateFormat(value);
-  //         setPrinterDate(outputDate);
-  //       }
-  //       if (name === "bu") {
-  //         setBu(value);
-  //       }
-  //       if (name === "region") {
-  //         setRegion(value);
-  //       }
-  //       if (name === "smo") {
-  //         setSmo(value);
-  //       }
-  //       if (name === "category") {
-  //         setSubCategories(value);
-  //       }
-  //       setValue(name, value);
-  //     });
-  //   }
-  // }, [setValue]);
   const handleTierChange = (e) => {
     setTier(e.target.value);
   };
@@ -942,7 +945,7 @@ function AddProject(props) {
                     <option value="">Select BU</option>
                     {bUs.map((bu) => (
                       <option key={bu.code} value={bu.code}>
-                        {bu.name}
+                        {bu.BU_Name}
                       </option>
                     ))}
                   </Form.Select>
@@ -965,7 +968,7 @@ function AddProject(props) {
                   value={subCategories}
                   onChange={handleSubCategoryChange}
                   options={subCategoriesOptions}
-                  optionLabel="Category_Name"
+                  optionLabel="Label_Name"
                   filter
                   placeholder="Select Categories"
                   className="w-full md:w-20rem"
@@ -990,7 +993,7 @@ function AddProject(props) {
                         : setBrandAlert(false);
                       setBrand(e.value);
                     }}
-                    options={brandList}
+                    options={brands}
                     optionLabel="Brand_Name"
                     filter
                     placeholder="Select Brand"
@@ -1019,16 +1022,16 @@ function AddProject(props) {
                 </Form.Label>
                 <div>
                   <Form.Select
-                    value={region?.name || ""}
+                    value={region?.Region_Name || ""}
                     onChange={handleRegionChange}
                     placeholder="Select Region"
                     // className="form-control"
                     // style={{ color: "pink" }}
                   >
                     <option value="">Select Region</option>
-                    {regionList.map((r) => (
-                      <option key={r.code} value={r.name}>
-                        {r.name}
+                    {regions.map((r) => (
+                      <option key={r.code} value={r.Region_Name}>
+                        {r.Region_Name}
                       </option>
                     ))}
                   </Form.Select>
@@ -1061,8 +1064,8 @@ function AddProject(props) {
                     filter
                     placeholder="Select SMO"
                     className="w-full md:w-20rem"
-                    required={!!region}
-                    disabled={!region}
+                    // required={!!region}
+                    // disabled={!region}
                   />
                 </div>
                 {/* {(!smo || smo?.length < 1) && (
@@ -1074,16 +1077,11 @@ function AddProject(props) {
               <Form.Group className="mb-4" controlId="cluster.SelectMultiple">
                 <Form.Label>Cluster</Form.Label>
                 <div>
-                  <Form.Select
+                  <Form.Control
+                    placeholder="Enter Cluster"
                     value={cluster}
                     onChange={(e) => setCluster(e.target.value)}
-                    placeholder="Select Cluster"
-                  >
-                    <option value="" style={{ maxWidth: "208px" }}>
-                      Select Cluster
-                    </option>
-                    <option value="cluster1">Cluster1</option>
-                  </Form.Select>
+                  ></Form.Control>
                 </div>
               </Form.Group>
             </Row>
@@ -1097,9 +1095,9 @@ function AddProject(props) {
                     placeholder="Select Scale"
                   >
                     <option value="">Select Scale</option>
-                    {scaleList.map((bu) => (
+                    {scales.map((bu) => (
                       <option key={bu.code} value={bu.code}>
-                        {bu.name}
+                        {bu.Scale_Name}
                       </option>
                     ))}
                   </Form.Select>
@@ -1215,7 +1213,7 @@ function AddProject(props) {
                         onChange={(e) => setSOSDate(e.target.value)}
                         dateFormat="d-M-y"
                         showIcon={true}
-                        minDate={sosDate !== "" ? sosDate : minDate}
+                        minDate={sopDate !== "" ? sopDate : minDate}
                         style={{
                           width: 208,
                           fontSize: "12px",
@@ -1246,7 +1244,7 @@ function AddProject(props) {
                         onChange={(e) => setSOPDate(e.target.value)}
                         dateFormat="d-M-y"
                         showIcon={true}
-                        minDate={minDate}
+                        minDate={printerDate !== "" ? printerDate : minDate}
                         maxDate={sosDate}
                         className={classNames({
                           "p-invalid": fieldState.error,
@@ -1283,7 +1281,7 @@ function AddProject(props) {
                         onChange={(e) => setPrinterDate(e.target.value)}
                         dateFormat="d-M-y"
                         showIcon={true}
-                        minDate={minDate}
+                        minDate={readinessDate !== "" ? readinessDate : minDate}
                         maxDate={sopDate}
                         className={classNames({
                           "p-invalid": fieldState.error,
@@ -1395,7 +1393,7 @@ function AddProject(props) {
                     <option value="">Select Project Type</option>
                     {projectTypeList.map((pt) => (
                       <option key={pt.code} value={pt.code}>
-                        {pt.name}
+                        {pt.ProjectType_Name}
                       </option>
                     ))}
                   </Form.Select>
@@ -1467,7 +1465,7 @@ function AddProject(props) {
           </Button>
           <Button
             className="button-layout draft-button"
-            disabled={!formValid}
+            disabled={mode === "design"}
             type="submit"
           >
             Submit

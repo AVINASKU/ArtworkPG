@@ -9,7 +9,7 @@ import {
   getTaskDetails,
   submitCPPFA,
 } from "../../../store/actions/taskDetailAction";
-import { changeDateFormat } from "../../../utils";
+import { changeDateFormat, CheckReadOnlyAccess } from "../../../utils";
 import { FileUpload } from "primereact/fileupload";
 import { NavLink, useLocation } from "react-router-dom";
 import upload1 from "../../../assets/images/upload1.svg";
@@ -25,7 +25,7 @@ const CPPFA = ({
   const [visible, setVisible] = useState(showTaskDialog);
   const [designIntent, setDesignIntent] = useState({});
   const [version, setVersion] = useState("V0");
-
+  const isAccessEmpty = CheckReadOnlyAccess();
   const dispatch = useDispatch();
   const { TaskDetailsData, loading } = useSelector(
     (state) => state.TaskDetailsReducer
@@ -221,6 +221,7 @@ const CPPFA = ({
                   defaultChecked={riskLevel === "Low"}
                   value="Low"
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
+                  disabled={!isAccessEmpty}
                 />
                 <label className="radioLabel">Low Risk</label>
               </div>
@@ -231,6 +232,7 @@ const CPPFA = ({
                   name="fav_language"
                   value="Medium"
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
+                  disabled={!isAccessEmpty}
                 />
                 <label className="radioLabel">Medium Risk</label>
               </div>
@@ -241,6 +243,7 @@ const CPPFA = ({
                   name="fav_language"
                   value="High"
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
+                  disabled={!isAccessEmpty}
                 />
                 <label className="radioLabel">High Risk</label>
               </div>
@@ -262,6 +265,7 @@ const CPPFA = ({
                     </span>
                   </p>
                 }
+                disabled={!isAccessEmpty}
               />
             </Col>
             <Col></Col>
@@ -293,6 +297,7 @@ const CPPFA = ({
                     yesOrNo === "yes" ? "yesOrNoButtonsColor" : "btn-secondary"
                   }`}
                   onClick={() => setYesOrNo("yes")}
+                  disabled={!isAccessEmpty}
                 >
                   Yes
                 </button>
@@ -302,6 +307,7 @@ const CPPFA = ({
                     yesOrNo === "no" ? "yesOrNoButtonsColor" : "btn-secondary"
                   }`}
                   onClick={() => setYesOrNo("no")}
+                  disabled={!isAccessEmpty}
                 >
                   No
                 </button>
@@ -323,7 +329,11 @@ const CPPFA = ({
         </div>
       </div>
       <div className="p-dialog-footer confirmPPFA">
-        <Button label="Confirm PPFA" onClick={handleSubmit} />
+        <Button
+          label="Confirm PPFA"
+          onClick={handleSubmit}
+          disabled={!isAccessEmpty}
+        />
       </div>
     </Dialog>
   );

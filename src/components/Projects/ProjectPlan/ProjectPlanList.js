@@ -29,7 +29,9 @@ const ProjectPlanList = ({
   setPegaData,
   setUpdatedProjectPlanDesignData,
   setActiveSave,
+  isAccessEmpty,
   getProjectPlanApi,
+  activeSave,
 }) => {
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
@@ -235,6 +237,27 @@ const ProjectPlanList = ({
   };
 
   const location = useLocation();
+  const formatHelpNeeded = (help) => {
+    let className = "";
+    let helpNeeded = help;
+    switch (helpNeeded) {
+      case "Yes, in process":
+        className = "helpneeded_inprocess";
+        helpNeeded = "Yes, in process";
+        break;
+      case "Yes, done":
+        className = "helpneeded_done";
+        helpNeeded = "Yes, done";
+        break;
+      case "":
+        className = "helpneeded_no";
+        helpNeeded = "No";
+        break;
+      default:
+        break;
+    }
+    return <span className={className}>{helpNeeded}</span>;
+  };
 
   const elementTemplate = (options, rowData) => {
     const field = rowData.field;
@@ -244,7 +267,6 @@ const ProjectPlanList = ({
     const key = options?.key;
     const keyCode = key?.split("_");
     const url = `MyTasks/${keyCode[0]}/${key}/${currentUrlLastSeg}`;
-
     return (
       <>
         {field === "Task" && (
@@ -300,6 +322,7 @@ const ProjectPlanList = ({
                   optionLabel="Name"
                   placeholder={`Select ${field}`}
                   className="w-full md:w-14rem"
+                  disabled={!isAccessEmpty}
                 />
 
                 {field === "Owner" && options.key.includes("ARDT_") && (
@@ -387,20 +410,13 @@ const ProjectPlanList = ({
                 inputId="integeronly"
                 value={options?.data[field]}
                 onValueChange={(e) => onDurationChange(options, e, field)}
+                disabled={!isAccessEmpty}
               />
             )}
           </>
         )}
 
-        {field === "HelpNeeded" && (
-          <button
-            type="button"
-            onClick={() => handleHelpNeededClick(options)}
-            className="btn btn-success helpNeeded"
-          >
-            {optionsData[field] === "true" ? "YES" : "NO"}
-          </button>
-        )}
+        {field === "HelpNeeded" && formatHelpNeeded(optionsData[field])}
 
         {field === "StartDate" && changeDateFormat(optionsData[field])}
         {field === "EndDate" && (
@@ -468,7 +484,12 @@ const ProjectPlanList = ({
     rowData.data[ele] = value.Name;
     console.log("Pegadata: ", pegadata);
     setPegaData([...pegadata]);
-    setActiveSave(false);
+
+    if (!isAccessEmpty) {
+      setActiveSave(true);
+    } else {
+      setActiveSave(false);
+    }
     //updateProjectPlanDesign();
   };
 
@@ -476,7 +497,10 @@ const ProjectPlanList = ({
     rowData.data[ele] = value < 1 ? "0" : value?.toString();
     console.log("Pegadata: ", pegadata);
     setPegaData([...pegadata]);
-    setActiveSave(false);
+
+    if (!isAccessEmpty) {
+      setActiveSave(true);
+    }
   };
 
   const rowExpansionColumns = () => {

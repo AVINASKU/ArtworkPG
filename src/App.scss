@@ -86,6 +86,10 @@ fieldset:disabled .btn {
   margin-top: 18px;
 }
 // ProjectPlanList Styles Start
+.p-datatable{
+  height: 100%;
+  overflow: hidden;
+}
 .rowExpansionTemplate {
   // table {
   //   // width: 100% !important;
@@ -299,6 +303,19 @@ fieldset:disabled .btn {
     padding: 0 0 0;
     .card {
       border: 0 !important;
+    }
+  }
+}
+.task-details{
+  overflow: hidden scroll;
+  width: 100%;
+  height: calc( 100vh - 220px);
+  padding-bottom: 120px;
+  &+.form-buttons{
+    &.bottom-fixed{
+      position: absolute;
+      bottom: 0;
+      width: 100%;
     }
   }
 }

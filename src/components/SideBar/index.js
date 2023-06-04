@@ -112,7 +112,7 @@ const SideBar = () => {
     ],
   };
   const projectPlanPage = accessDetails.pages.find(
-    (page) => page.path === "/ProjectPlan"
+    (page) => page.path === "/projectPlan"
   );
   return (
     <>

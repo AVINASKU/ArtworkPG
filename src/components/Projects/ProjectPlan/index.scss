@@ -19,10 +19,9 @@ $fontWeight400: 400;
 
 // Datepicker for ProjectSetUp component Style End
 .myProjectAnddAllProjectList {
-  .p-datatable>.p-datatable-wrapper {
+  .p-datatable > .p-datatable-wrapper {
     overflow: scroll;
     width: $width100;
-    height: 65vh;
   }
 
   .p-datatable-table {
@@ -33,7 +32,7 @@ $fontWeight400: 400;
     font-weight: $fontWeight500;
   }
 
-  .p-column-title>div {
+  .p-column-title > div {
     display: flex;
   }
 
@@ -54,7 +53,7 @@ $fontWeight400: 400;
   }
 
   td,
-  table .p-datatable .p-datatable-tbody>tr>td,
+  table .p-datatable .p-datatable-tbody > tr > td,
   th,
   tr {
     position: relative;
@@ -62,7 +61,7 @@ $fontWeight400: 400;
     // height: 40px;
   }
 
-  .input-duration>input {
+  .input-duration > input {
     max-width: 70px;
     border-radius: 5px;
     text-align: center;
@@ -83,7 +82,7 @@ $fontWeight400: 400;
   margin: 8px;
 }
 
-.p-checkbox-checked+label {
+.p-checkbox-checked + label {
   color: #003da5;
 }
 
@@ -256,20 +255,25 @@ img[disabled] {
   }
 }
 
-.textAlignTreeTable>div>.p-treetable-table>.p-treetable-tbody>tr>td:first-child {
+.textAlignTreeTable
+  > div
+  > .p-treetable-table
+  > .p-treetable-tbody
+  > tr
+  > td:first-child {
   text-align: left !important;
   display: flex;
   height: auto;
   border-bottom: none !important;
 }
 
-.textAlignTreeTable>div>.p-treetable-table>.p-treetable-tbody>tr>td {
+.textAlignTreeTable > div > .p-treetable-table > .p-treetable-tbody > tr > td {
   min-width: 100px;
   padding: 2px 6px;
   align-items: center;
   .p-dropdown {
     height: 25px;
-}
+  }
 }
 
 .projectPlanCompoButtons {
@@ -282,18 +286,18 @@ img[disabled] {
   font-weight: 500;
   font-size: 12px;
   // background-color: #acacac !important;
-  color: #003DA5;
+  color: #003da5;
   line-height: 12px;
 }
 
 .projectPlanCompoButtonsColor {
   color: #ffffff;
-  background-color: #00A3E0;
+  background-color: #00a3e0;
 }
 
 .projectPlanCompoButtonsColor1 {
   color: #ffffff;
-  background-color: #003DA5;
+  background-color: #003da5;
 }
 
 .overrideIcon {
@@ -305,27 +309,22 @@ img[disabled] {
 .accordion.projectPlanAccordian {
   margin: 0px;
 
-  .accordion-item>.accordion-header {
+  .accordion-item > .accordion-header {
     background-color: #f7f7f7;
 
     .accordion-button {
       background-color: #f7f7f7 !important;
     }
   }
-
-  .accordion-item {
-    margin-left: 10px;
-  }
-
-  .accordion-item>.accordion-header {
+  .accordion-item > .accordion-header {
     position: relative !important;
   }
 
-  .accordion-item>.accordion-header>button {
+  .accordion-item > .accordion-header > button {
     height: 25px;
   }
 
-  .accordion-item>.accordion-header>button::after {
+  .accordion-item > .accordion-header > button::after {
     position: absolute !important;
     margin-left: 110px;
   }
@@ -354,25 +353,25 @@ img[disabled] {
 }
 
 .columnBorder {
-  background-color: #FAFCFF;
+  background-color: #fafcff;
   font-size: 14px;
   font-weight: 500;
   line-height: 13px;
   color: #595959;
 }
 
-.columnBorder>div {
+.columnBorder > div {
   margin-top: 5px;
-  border-right: 0.5px solid #ACACAC;
+  border-right: 0.5px solid #acacac;
   text-align: center;
   min-width: fit-content;
 }
 
-.columnBorder>div:last-child {
+.columnBorder > div:last-child {
   border-right: none;
 }
 
-.columnBorder1>div {
+.columnBorder1 > div {
   margin: 10px 0 0 0;
   text-align: center;
   color: #595959;
@@ -387,12 +386,12 @@ img[disabled] {
     font-weight: 400 !important;
   }
 
-  div>label {
+  div > label {
     font-size: 10px !important;
   }
 }
 
-.columnBorder2>div {
+.columnBorder2 > div {
   margin-bottom: 20px;
   text-align: center;
   color: #595959;
@@ -405,7 +404,7 @@ img[disabled] {
     font-weight: 400 !important;
   }
 
-  div>label {
+  div > label {
     font-size: 10px !important;
   }
 }
@@ -421,8 +420,8 @@ img[disabled] {
   }
 }
 
-.submitButton>button {
-  background-color: #003DA5 !important;
+.submitButton > button {
+  background-color: #003da5 !important;
   width: 93px;
   height: 40px;
   color: #fff !important;
@@ -433,7 +432,7 @@ img[disabled] {
 
 .dropdownStyles {
   width: inherit;
-  border-color: #ACACAC;
+  border-color: #acacac;
   padding: 4px 5px;
   border-radius: 8px;
 }
@@ -448,7 +447,7 @@ img[disabled] {
 
 .approveDesignDiv {
   position: relative;
-  border: 0.5px solid #ACACAC;
+  border: 0.5px solid #acacac;
   height: 144px;
   width: 377.5px;
   margin-left: 142px;
@@ -458,7 +457,7 @@ img[disabled] {
 
 .approveDesignDiv::before,
 .approveDesignDiv::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 100%;
   left: 160px;

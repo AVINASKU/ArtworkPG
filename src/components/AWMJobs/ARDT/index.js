@@ -6,7 +6,9 @@ import AddNewDesign from "../DesignJobs/TaskHeader";
 import { ProjectService } from "../../../service/PegaService";
 import ApproveDesignIntentContent from "../DesignJobs/ApproveDesignIntentContent";
 import { CheckReadOnlyAccess } from "../../../utils";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
@@ -18,7 +20,12 @@ const ARDT = () => {
   const [data, setData] = useState(null);
   const [taskData, setTaskData] = useState(null);
   const location = useLocation();
+  let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { TaskDetailsData, loading } = useSelector(
+    (state) => state.TaskDetailsReducer
+  );
   const currentUrl = location.pathname;
   const checkReadWriteAccess = CheckReadOnlyAccess();
 
@@ -27,10 +34,17 @@ const ARDT = () => {
   };
 
   useEffect(() => {
-    const data1 = ProjectService.getApproveDI();
-    setData(data1);
-    setTaskData(data1.DesignIntentList);
-  }, [data]);
+    dispatch(getTaskDetails(TaskID, ProjectID));
+  }, [dispatch, TaskID, ProjectID]);
+
+  useEffect(() => {
+    if (TaskDetailsData) {
+      setTaskData(
+        TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []
+      );
+      setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
+    }
+  }, [TaskDetailsData]);
 
   return (
     <PageLayout>

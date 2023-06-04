@@ -52,10 +52,6 @@ $width: 100%;
     background: #edf4fa;
     color: #003da5;
   }
-
-  .accordion-body {
-    padding: 5px;
-  }
 }
 
 .tabular-add-project {
@@ -131,6 +127,10 @@ $width: 100%;
 
 .ActionsDropdown {
   background-color: #003da5;
+}
+.content-layout .tabular-view.AccordionIndent{
+  overflow: hidden scroll;
+  height: calc( 100vh - 220px);
 }
 
 .AccordionIndent > .accordion > .accordion-item > .accordion-header {
