@@ -14,7 +14,9 @@ const AddNewDesignContent = ({
   item,
   addData,
   roleName,
-  checkBU
+  checkBU,
+  setSubmitActive,
+  checkReadWriteAccess,
 }) => {
   const { Agency_Reference, Additional_Info, event, Select, Cluster } = item;
 
@@ -24,6 +26,14 @@ const AddNewDesignContent = ({
   const [additionalInformation, setAdditionalInfo] = useState(Additional_Info);
   const [tier, setTier] = useState("");
   const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    if (item) {
+      setAgency(Agency_Reference);
+      setCluster(Cluster);
+      setAdditionalInfo(Additional_Info);
+    }
+  }, [item]);
 
   const search = (event) => {
     let _items = [...Array(10).keys()];
@@ -50,12 +60,15 @@ const AddNewDesignContent = ({
         >
           {!di_name ? `Design Intent ${index + 1}` : di_name}
         </div>
-        <img
-          src={deleteIcon}
-          alt="filter logo"
-          onClick={() => handleDelete(index)}
-          className="header-icons"
-        />
+        <div>
+          <img
+            src={deleteIcon}
+            alt="filter logo"
+            onClick={() => checkReadWriteAccess && handleDelete(index)}
+            className="header-icons"
+            disabled={!checkReadWriteAccess}
+          />
+        </div>
       </>
     );
   };
@@ -65,6 +78,11 @@ const AddNewDesignContent = ({
     Brand?.length && Brand.map((item) => item.Brand_Name).join(",");
   let clubCategory =
     Category?.length && Category.map((item) => item.Category_Name).join(",");
+
+  if (clubBrandName === "" || Brand === undefined) clubBrandName = "Brand";
+
+  if (clubCategory === "" || Category === undefined) clubCategory = "Category";
+
   if (agencyRef || clusters || additionalInformation) {
     di_name =
       roleName +
@@ -97,6 +115,7 @@ const AddNewDesignContent = ({
               onChange={(e) => {
                 addData("Select", index, e.checked, di_name);
                 setChecked(e.checked);
+                // setSubmitActive(e.checked ? false : true);
               }}
               checked={event === "submit" ? true : checked}
               className="margin-right"

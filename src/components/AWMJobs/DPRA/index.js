@@ -4,21 +4,20 @@ import DesignHeader from "../DesignJobs/DesignHeader";
 import AddNewDesign from "../DesignJobs/TaskHeader";
 import AddNewDesignContent from "../DesignJobs/AddNewDesignContent";
 import FooterButtons from "../DesignJobs/FooterButtons";
-import { saveDefineProductionReadyArt, submitDefineProductionReadyArt } from "../../../apis/defineProductionReadyArt";
-import "../DesignJobs/index.scss";
+import {
+  saveDefineProductionReadyArt,
+  submitDefineProductionReadyArt,
+} from "../../../apis/defineProductionReadyArt";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { ProjectService } from "../../../service/PegaService";
 import { toLower } from "lodash";
-import {
-  convertCategoryIntoString,
-  convertBrandIntoString,
-  AddNavigation,
-} from "../../../utils";
+import { AddNavigation } from "../../../utils";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
+import { CheckReadOnlyAccess } from "../../../utils";
+import { useLocation } from "react-router-dom";
+import "../DesignJobs/index.scss";
 
 const headerName = "Define Production Ready Art";
-
 const roleName = "PRA_";
 
 function DPRA() {
@@ -26,11 +25,14 @@ function DPRA() {
   const [designIntent, setDesignIntent] = useState([]);
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
-  const[projectData, setProjectData] = useState([]);
+  const [enableSubmit, setEnableSubmit] = useState(true);
+  const [projectData, setProjectData] = useState([]);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { TaskDetailsData, loading } = useSelector((state) => state.TaskDetailsReducer);
+  const { TaskDetailsData, loading } = useSelector(
+    (state) => state.TaskDetailsReducer
+  );
   const { allProjects } = useSelector((state) => state.myProject);
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
 
@@ -42,6 +44,10 @@ function DPRA() {
   let bu = userInformation?.bu;
   // if bu is home care show tire field else not
   let checkBU = toLower(bu) === toLower("Home Care") ? true : false;
+  const checkReadWriteAccess = CheckReadOnlyAccess();
+
+  const location = useLocation();
+  const currentUrl = location.pathname;
 
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
@@ -49,20 +55,22 @@ function DPRA() {
 
   useEffect(() => {
     if (TaskDetailsData) {
-      setDesignIntent(TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
+      setDesignIntent(
+        TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []
+      );
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
     }
-  },[TaskDetailsData]);
+  }, [TaskDetailsData]);
 
-  useEffect(()=> {
+  useEffect(() => {
     let projectData = allProjects.find(
       (project) => project.Project_ID === ProjectID
     );
     setProjectData(projectData);
-  },[projectData]);
+  }, [projectData]);
 
   const handleCancel = () => {
-    return navigate(`/myTasks`);
+    return navigate(currentUrl === "myTasks" ? `/myTasks` : "/allTasks");
   };
 
   const handleDelete = (index) => {
@@ -95,6 +103,26 @@ function DPRA() {
     // add here design job name here check it out from API.
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
+    let values = false;
+    const hasValues = designIntent.every(
+      (item) => {        
+        setEnableSubmit(true);
+       if(item.Select){
+          values = item.Agency_Reference !== "" && item.Cluster !== "";
+      } 
+        // else{
+        //   values = designIntent.some(item => {
+        //     console.log("else select", item)
+        //     if(item.Select){
+        //       values = item.Agency_Reference !== "" && item.Cluster !== ""
+        //     }
+        //   });
+        //   console.log("value else", values)
+        // }
+        return values
+      }
+    );
+    setEnableSubmit(!hasValues);  
     setSubmittedDI(submittedDI);
   };
 
@@ -113,10 +141,10 @@ function DPRA() {
     let updatedData = {};
     let updatedDataList = [];
     const headers = {
-      key: 'If-Match',
+      key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-    
+
     let submitOnlySelectedData = designIntent.filter(
       (task) => task?.Select === true
     );
@@ -130,34 +158,34 @@ function DPRA() {
         task.Action = "update";
       } else if (task?.Action !== "delete" && task?.isNew === true)
         task.Action = "add";
-    
-      updatedData.DesignJobName= task.Design_Job_Name;
-      updatedData.DesignJobID= task.Design_Job_ID;
-      updatedData.AgencyReference= task.Agency_Reference;
-      updatedData.Cluster= task.Cluster;
-      updatedData.AdditionalInfo =task.Additional_Info;
-      updatedData.Select= task.Select ? task.Select : false;
-      updatedData.Tier = task.Tier;      
-      updatedData.Action=task.Action;
-      
-        updatedDataList.push({
-          instruction: "APPEND",
-          target : "PRAList",
-          content: updatedData
-        })
-        return console.log('updatedDataList', updatedDataList);
+
+      updatedData.DesignJobName = task.Design_Job_Name;
+      updatedData.DesignJobID = task.Design_Job_ID;
+      updatedData.AgencyReference = task.Agency_Reference;
+      updatedData.Cluster = task.Cluster;
+      updatedData.AdditionalInfo = task.Additional_Info;
+      updatedData.Select = task.Select ? task.Select : false;
+      updatedData.Tier = task.Tier;
+      updatedData.Action = task.Action;
+
+      updatedDataList.push({
+        instruction: "APPEND",
+        target: "PRAList",
+        content: updatedData,
+      });
+      return console.log("updatedDataList", updatedDataList);
     });
-    
+
     let formData = {
       caseTypeID: "PG-AAS-Work-DefineProductionReadyArt",
       content: {
         AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
         AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
-        Project_Name: TaskDetailsData?.ArtworkAgilityTasks[0]?.Project_Name
+        Project_Name: TaskDetailsData?.ArtworkAgilityTasks[0]?.Project_Name,
       },
       pageInstructions: updatedDataList,
     };
-    console.log('formData', formData)
+    console.log("formData", formData);
     await submitDefineProductionReadyArt(formData, id, headers);
     // navigate(`/${currentUrl?.split("/")[1]}`);
   };
@@ -168,25 +196,25 @@ function DPRA() {
       if (task?.isNew) {
         task.Design_Job_ID = "";
       }
+      task.Action = "update";
+      if (task?.Action !== "delete" && task?.Design_Job_ID) {
         task.Action = "update";
-        if (task?.Action !== "delete" && task?.Design_Job_ID) {
-          task.Action = "update";
-        } else if (task?.Action !== "delete" && task?.isNew === true)
-          task.Action = "add";
+      } else if (task?.Action !== "delete" && task?.isNew === true)
+        task.Action = "add";
 
-          updatedData.push({        
-            Design_Job_Name: task.Design_Job_Name,
-            Design_Job_ID: task.Design_Job_ID,
-            Agency_Reference: task.Agency_Reference,
-            Cluster: task.Cluster,            
-            Additional_Info:task.Additional_Info,
-            Select: task.Select ? task.Select : false,
-            Tier: task.Tier,
-            Action: task.Action
-          });
-      return console.log('updatedData', updatedData);
+      updatedData.push({
+        Design_Job_Name: task.Design_Job_Name,
+        Design_Job_ID: task.Design_Job_ID,
+        Agency_Reference: task.Agency_Reference,
+        Cluster: task.Cluster,
+        Additional_Info: task.Additional_Info,
+        Select: task.Select ? task.Select : false,
+        Tier: task.Tier,
+        Action: task.Action,
+      });
+      return console.log("updatedData", updatedData);
     });
-   
+
     let formData = {
       AWM_Project_ID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
       AWM_Task_ID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
@@ -196,9 +224,9 @@ function DPRA() {
       ProductionReadyArtList: updatedData,
     };
     console.log("full draft data --->", formData);
-   await saveDefineProductionReadyArt(formData);
+    await saveDefineProductionReadyArt(formData);
   };
-    let Brand = [];
+  let Brand = [];
   let Category = [];
 
   if (TaskDetailsData?.ArtworkAgilityPage) {
@@ -214,20 +242,20 @@ function DPRA() {
         breadcrumb={breadcrumb}
         headerName={headerName}
         label="Define Roduction Ready Art"
+        checkReadWriteAccess={checkReadWriteAccess}
       />
-      <div
-        style={{
-          overflowY: "scroll",
-          overflowX: "hidden",
-          width: "100%",
-          height: "400px",
-        }}
-      >
-        {<AddNewDesign {...data} />}
+      <div className="task-details">
+        {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
 
-        {loading || designIntent === null ? 
-          <i className="pi pi-spin pi-spinner" style={{ fontSize: '2rem' }}></i>
-          : designIntent &&
+        {loading || designIntent === null ? (
+          <div className="align-item-center">
+            <i
+              className="pi pi-spin pi-spinner"
+              style={{ fontSize: "2rem" }}
+            ></i>
+          </div>
+        ) : (
+          designIntent &&
           designIntent.length &&
           designIntent.map((item, index) => {
             if (item && item?.Action !== "delete") {
@@ -243,16 +271,21 @@ function DPRA() {
                   checkBU={checkBU}
                   Brand={Brand}
                   Category={Category}
+                  checkReadWriteAccess={checkReadWriteAccess}
                 />
               );
             } else return <>Data Not Found</>;
-          })}
-        <FooterButtons
-          handleCancel={handleCancel}
-          onSaveAsDraft={onSaveAsDraft}
-          onSubmit={onSubmit}
-        />
+          })
+        )}
       </div>
+      <FooterButtons
+        handleCancel={handleCancel}
+        onSaveAsDraft={onSaveAsDraft}
+        onSubmit={onSubmit}
+        checkReadWriteAccess={checkReadWriteAccess}
+        bottomFixed={true}
+        formValid={enableSubmit}
+      />
     </PageLayout>
   );
 }

@@ -11,6 +11,7 @@ import { submitUploadApproveDesignIntent } from "../../../apis/uploadSubmitAPIs"
 import AddNewDesign from "../DesignJobs/TaskHeader";
 import { UploadFileToServer } from "../../../store/actions/ProofScopeActions";
 import { postSaveDesignIntent } from "../../../apis/uploadSaveAsDraft";
+import { CheckReadOnlyAccess } from "../../../utils";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
@@ -38,6 +39,7 @@ const UPRA = () => {
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
   const roleName = "DI_";
   const version = "V1";
+  const checkReadWriteAccess = CheckReadOnlyAccess();
 
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
@@ -100,10 +102,13 @@ const UPRA = () => {
         headerName={headerName}
         disabled={true}
         label="Upload Production Ready Art"
+        checkReadWriteAccess={checkReadWriteAccess}
       />
       {<AddNewDesign {...data} />}
       {loading ? (
-        <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
+        <div className="align-item-center">
+          <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
+        </div>
       ) : (
         designIntent && (
           <UploadDesignIntentProofscope
@@ -116,6 +121,7 @@ const UPRA = () => {
             roleName={roleName}
             ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
             version={version}
+            checkReadWriteAccess={checkReadWriteAccess}
           />
         )
       )}{" "}
@@ -123,6 +129,7 @@ const UPRA = () => {
         onSubmit={onSubmit}
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
+        checkReadWriteAccess={checkReadWriteAccess}
       />
     </PageLayout>
   );

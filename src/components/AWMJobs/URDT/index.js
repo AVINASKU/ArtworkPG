@@ -1,25 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import PageLayout from '../../PageLayout';
-import DesignHeader from '../DesignJobs/DesignHeader';
-import FooterButtons from '../DesignJobs/FooterButtons';
-import AddNewDesign from '../DesignJobs/TaskHeader';
-import ApproveDesignIntentContent from '../DesignJobs/ApproveDesignIntentContent';
-import {
-  getTaskDetails
-} from '../../../store/actions/taskDetailAction';
-import { submitUploadRegionalDesignIntent } from '../../../apis/uploadSubmitAPIs';
-import { postSaveDesignIntent } from '../../../apis/uploadSaveAsDraft'
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import moment from "moment";
+import PageLayout from "../../PageLayout";
+import DesignHeader from "../DesignJobs/DesignHeader";
+import FooterButtons from "../DesignJobs/FooterButtons";
+import AddNewDesign from "../DesignJobs/TaskHeader";
+import ApproveDesignIntentContent from "../DesignJobs/ApproveDesignIntentContent";
+import { getTaskDetails } from "../../../store/actions/taskDetailAction";
+import { submitUploadRegionalDesignIntent } from "../../../apis/uploadSubmitAPIs";
+import { postSaveDesignIntent } from "../../../apis/uploadSaveAsDraft";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { CheckReadOnlyAccess } from "../../../utils";
 
 const breadcrumb = [
-  { label: 'My Tasks', url: '/tasks' },
-  { label: 'Upload Regional Design Template' },
+  { label: "My Tasks", url: "/tasks" },
+  { label: "Upload Regional Design Template" },
 ];
-const headerName = 'Upload Regional Design Template';
+const headerName = "Upload Regional Design Template";
 
 const URDT = () => {
   const [data, setData] = useState(null);
+  const [date, setDate] = useState("");
+  const [version, setVersion] = useState("V0");
   const [designIntent, setDesignIntent] = useState(null);
   const [formattedValue, setformattedValue] = useState(0);
   const [mappedFiles, setMappedFiles] = useState([]);
@@ -33,9 +35,10 @@ const URDT = () => {
   const dispatch = useDispatch();
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
   const roleName = "DI_";
-  const version = "V1";
   const location = useLocation();
   const currentUrl = location.pathname;
+  const checkReadWriteAccess = CheckReadOnlyAccess();
+
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
   }, [dispatch, TaskID, ProjectID]);
@@ -46,6 +49,17 @@ const URDT = () => {
         TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []
       );
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
+      const data =
+        TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails[0]?.FileMetaDataList[0] || [];
+      if (data) {
+        data.Version !== "" && setVersion(data.Version);
+        data.Timestamp !== "" &&
+          setDate(
+            moment(data.Timestamp, "YYYYMMDD[T]HHmmss.SSS [GMT]").format(
+              "DD-MMMM-YYYY"
+            )
+          );
+      }
     }
   }, [TaskDetailsData]);
 
@@ -54,34 +68,36 @@ const URDT = () => {
   };
 
   const onSaveAsDraft = async () => {
+    const fileSize = Math.round(formattedValue / 1000000);
     const formData = {
-        AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
-        AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
-        Size : '1',
-        Version: version,
-        Filename: fileName
+      AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
+      AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
+      Size: fileSize === 0 ? "1" : fileSize,
+      Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
+      Filename: fileName,
     };
     await postSaveDesignIntent(formData);
   };
 
   const onSubmit = async () => {
+    const fileSize = Math.round(formattedValue / 1000000);
     const headers = {
-      key: 'If-Match',
+      key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
     console.log("azureFile", azureFile);
     const formData = {
-      caseTypeID: 'PG-AAS-Work-UploadRegionalDesignTemplate',
+      caseTypeID: "PG-AAS-Work-UploadRegionalDesignTemplate",
       content: {
         AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
         AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
-        Size : '1',
-        Version: version,
-        Filename: fileName
+        Size: fileSize === 0 ? "1" : fileSize,
+        Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
+        Filename: fileName,
       },
     };
-   // console.log('formData', formData, "id", id);
-   await submitUploadRegionalDesignIntent(formData, id, headers);
+    // console.log('formData', formData, "id", id);
+    await submitUploadRegionalDesignIntent(formData, id, headers);
     navigate(`/${currentUrl?.split("/")[1]}`);
   };
   return (
@@ -90,32 +106,43 @@ const URDT = () => {
         breadcrumb={breadcrumb}
         headerName={headerName}
         disabled={true}
-        label={data?.Task_Name}
+        label="Upload Regional Design Template"
+        checkReadWriteAccess={checkReadWriteAccess}
       />
-
-      {<AddNewDesign {...data} />}
-      {loading ? (
-        <i className="pi pi-spin pi-spinner" style={{ fontSize: '2rem' }}></i>
-      ) : (
-        designIntent && (
-          <ApproveDesignIntentContent
-            {...designIntent}
-            upload={true}
-            setformattedValue={setformattedValue}
-            setAzureFile={setAzureFile}
-            setFileName={setFileName}
-            setMappedFiles={setMappedFiles}
-            item={data}
-            roleName={roleName}
-            ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
-            version={version}
-          />
-        )
-      )}
+      <div className="task-details">
+        {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
+          {loading ? (
+            <div className="align-item-center">
+              <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
+            </div>
+          ) : (
+            designIntent && (
+              <ApproveDesignIntentContent
+                {...designIntent}
+                designIntent={designIntent}
+                upload={true}
+                setformattedValue={setformattedValue}
+                setAzureFile={setAzureFile}
+                setFileName={setFileName}
+                setMappedFiles={setMappedFiles}
+                item={data}
+                roleName={roleName}
+                ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
+                version={version}
+                date={date}
+                checkReadWriteAccess={checkReadWriteAccess}
+                fileName={fileName}
+              />
+            )
+          )}
+      </div>
+      
       <FooterButtons
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
-        onSubmit={onSubmit}        
+        onSubmit={onSubmit}
+        checkReadWriteAccess={checkReadWriteAccess}
+        bottomFixed={true}
       />
     </PageLayout>
   );

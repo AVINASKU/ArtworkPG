@@ -3,14 +3,12 @@ import PageLayout from "../../PageLayout";
 import DesignHeader from "../DesignJobs/DesignHeader";
 import FooterButtons from "../DesignJobs/FooterButtons";
 import AddNewDesign from "../DesignJobs/TaskHeader";
-import { ProjectService } from "../../../service/PegaService";
-import ApproveDesignIntentContent from "../DesignJobs/ApproveDesignIntentContent";
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
-import { Button } from "react-bootstrap";
 import UploadDesignIntentProofscope from "../DesignJobs/UploadDesignIntentProofscope";
-import { useNavigate,useParams, useLocation } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
+import { CheckReadOnlyAccess } from "../../../utils";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
@@ -18,7 +16,7 @@ const breadcrumb = [
 ];
 const headerName = "Approve Production Ready Art";
 
-const ADT = () => {
+const APRA = () => {
   const [data, setData] = useState(null);
   const [taskData, setTaskData] = useState(null);
   const viewProofScopeFile = useProofScopeURL();
@@ -38,6 +36,9 @@ const ADT = () => {
   const version = "V1";
   const location = useLocation();
   const currentUrl = location.pathname;
+
+  const checkReadWriteAccess = CheckReadOnlyAccess();
+
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
   }, [dispatch, TaskID, ProjectID]);
@@ -53,9 +54,14 @@ const ADT = () => {
 
   const handleViewProofScopeClick = (event, fileUrl) => {
     event.preventDefault();
-    viewProofScopeFile(`cloudflow://PP_FILE_STORE/aacdata/DI__Pampers__Artwork project 2_V1`);
+    viewProofScopeFile(
+      `cloudflow://PP_FILE_STORE/aacdata/DI__Pampers__Artwork project 2_V1`
+    );
   };
 
+  const handleCancel = () => {
+    return navigate(currentUrl === "myTasks" ? `/myTasks` : "/allTasks");
+  };
 
   return (
     <PageLayout>
@@ -63,11 +69,14 @@ const ADT = () => {
         breadcrumb={breadcrumb}
         headerName={headerName}
         disabled={true}
-        label="Upload Production Ready Art"
+        label="Approve Production Ready Art"
+        checkReadWriteAccess={checkReadWriteAccess}
       />
       {<AddNewDesign {...data} />}
       {loading ? (
-        <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
+        <div className="align-item-center">
+          <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
+        </div>
       ) : (
         designIntent && (
           <UploadDesignIntentProofscope
@@ -81,15 +90,17 @@ const ADT = () => {
             roleName={roleName}
             ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
             version={version}
+            checkReadWriteAccess={checkReadWriteAccess}
           />
         )
       )}{" "}
       <FooterButtons
+        checkReadWriteAccess={checkReadWriteAccess}
         // onSubmit={onSubmit}
-        // handleCancel={handleCancel}
+        handleCancel={handleCancel}
         // onSaveAsDraft={onSaveAsDraft}
       />
     </PageLayout>
   );
 };
-export default ADT;
+export default APRA;

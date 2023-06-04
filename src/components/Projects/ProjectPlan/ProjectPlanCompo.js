@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Accordion from "react-bootstrap/Accordion";
+import { Toast } from "primereact/toast";
 import ProjectPlan from "./ProjectPlanList";
 import { getProjectPlan } from "../../../apis/projectPlanApi";
 import {
@@ -16,8 +17,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import moment from "moment";
-
+import { CheckReadOnlyAccess } from "../../../utils";
 function ProjectPlanCompo(props) {
+  const toast = useRef(null);
   const [projectPlanDesignData, setProjectPlanDesignData] = useState([]);
   const [updatedProjectPlanDesignData, setUpdatedProjectPlanDesignData] =
     useState([]);
@@ -28,6 +30,14 @@ function ProjectPlanCompo(props) {
   const [updatedList, setUpdatedList] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  // Check if access is empty for the user's role and page
+  const isAccessEmpty = CheckReadOnlyAccess();
+  useEffect(() => {
+    if (!isAccessEmpty) {
+      setActiveSave(true);
+      setActiveFlag(true);
+    }
+  }, [isAccessEmpty, activeFlag]);
 
   const { projectPlanDesign, projectPlan, loading } = useSelector(
     (state) => state.ProjectPlanReducer
@@ -282,11 +292,17 @@ function ProjectPlanCompo(props) {
   const activate = async () => {
     await activateProjectPlan(selectedProject.Project_ID);
     getProjectPlanApi();
+    toast.current.show({
+      severity: "success",
+      summary: "Success",
+      detail: "Project activated successfully!",
+      life: 3000,
+    });
   };
 
   return (
     <>
-      <ProjectPlan
+    <ProjectPlan
         {...props}
         projectPlan={projectPlan}
         selectedProject={selectedProject}
@@ -298,38 +314,38 @@ function ProjectPlanCompo(props) {
         getProjectPlanApi={getProjectPlanApi}
       />
       {/* <Accordion className="projectPlanAccordian" defaultActiveKey="2">
-          <Accordion.Item eventKey="2">
-            <Accordion.Header>Design</Accordion.Header>
-            <Accordion.Body>
-              <ProjectPlan
-                {...props}
-                projectPlan={projectPlan}
-                selectedProject={selectedProject}
-                projectPlanDesign={projectPlanDesign}
-                setPegaData={setPegaData}
-                pegadata={pegadata}
-                setUpdatedProjectPlanDesignData={
-                  setUpdatedProjectPlanDesignData
-                }
-                setActiveSave={setActiveSave}
-                getProjectPlanApi={getProjectPlanApi}
-              />
-            </Accordion.Body>
-          </Accordion.Item>
-          <Accordion.Item eventKey="3">
-            <Accordion.Header>Input</Accordion.Header>
-            <Accordion.Body>Input</Accordion.Body>
-          </Accordion.Item>
-          <Accordion.Item eventKey="4">
-            <Accordion.Header>FA Assembly</Accordion.Header>
-            <Accordion.Body>FA Assembly</Accordion.Body>
-          </Accordion.Item>
-        </Accordion> */}
+        <Accordion.Item eventKey="2">
+          <Accordion.Header>Design</Accordion.Header>
+          <Accordion.Body>
+            <ProjectPlan
+              {...props}
+              projectPlan={projectPlan}
+              selectedProject={selectedProject}
+              projectPlanDesign={projectPlanDesign}
+              setPegaData={setPegaData}
+              pegadata={pegadata}
+              setUpdatedProjectPlanDesignData={setUpdatedProjectPlanDesignData}
+              setActiveSave={setActiveSave}
+              isAccessEmpty={isAccessEmpty}
+              getProjectPlanApi={getProjectPlanApi}
+            />
+          </Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="3">
+          <Accordion.Header>Input</Accordion.Header>
+          <Accordion.Body>Input</Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="4">
+          <Accordion.Header>FA Assembly</Accordion.Header>
+          <Accordion.Body>FA Assembly</Accordion.Body>
+        </Accordion.Item>
+      </Accordion> */}
       <div className="form-buttons">
         <Button
-          className="button-layout"
+          className={!isAccessEmpty ? "btn btn-disabled" : "button-layout"}
           variant="secondary"
           onClick={() => navigate("/myProjects")}
+          disabled={!isAccessEmpty}
         >
           Cancel
         </Button>

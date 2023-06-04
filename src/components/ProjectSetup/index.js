@@ -9,15 +9,37 @@ import { useSelector } from "react-redux";
 import ProjectPlanCompo from "../Projects/ProjectPlan/ProjectPlanCompo";
 import ConfirmationDialog from "./confirmationDialog";
 import TabsComponent from "./tabsComponent";
+import { getUnAuthoirzedAccess, CheckReadOnlyAccess } from "../../utils";
+import { Navigate, useHistory } from "react-router-dom";
+
+import { useNavigate } from "react-router-dom";
 
 function ProjectSetup(props) {
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const { mode, rootBreadCrumb } = projectSetup;
+  const User = useSelector((state) => state.UserReducer);
+  const userInformation = User.userInformation;
+  const { accessMatrix } = useSelector((state) => state?.accessMatrixReducer);
+  let path = "";
+  if (window?.location?.pathname.includes("projectPlan")) {
+    path = "/projectPlan";
+  }
+
+  const accessDetails = getUnAuthoirzedAccess(
+    userInformation.role,
+    accessMatrix,
+    path
+  );
+
+  // Check if access is empty for the user's role and page
+  const isAccessEmpty = accessDetails === null || accessDetails.length === 0;
+  const isReadOnly = CheckReadOnlyAccess();
   const [activeKey, setActiveKey] = useState("0");
   const items = [{ label: rootBreadCrumb }];
   activeKey === "0" && items.push({ label: "Project Setup" });
   activeKey === "1" && items.push({ label: "Project Plan" });
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (mode === "create") {
@@ -47,8 +69,9 @@ function ProjectSetup(props) {
     setOption(option);
   };
   const accept = () => {
-    console.log("accept");
+    return navigate("/myProjects");
   };
+
   const reject = () => {
     console.log("reject");
   };
@@ -275,7 +298,7 @@ function ProjectSetup(props) {
           onHide={setVisible}
           message={
             <>
-              Are you sure <span style={{ color: "red" }}>{option}</span> the
+              Are you sure to <span style={{ color: "red" }}>{option}</span> the
               project?
             </>
           }

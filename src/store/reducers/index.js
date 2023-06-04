@@ -8,6 +8,8 @@ import TaskDetailsReducer from "./TaskDetailsReducer";
 import azureFileUpload from "./AzureFileReducer";
 import delegateReducer from "./DelegateReducer";
 import helpNeededReducer from "./HelpNeededReducer";
+import DropDownValuesReducer from "./DropDownValuesReducer";
+import accessMatrixReducer from "./RoleBasedReducer";
 
 export default combineReducers({
   myProject: ProjectReducer,
@@ -19,4 +21,6 @@ export default combineReducers({
   uploadedUrl: azureFileUpload,
   delegateReducer,
   helpNeededReducer,
+  DropDownValuesReducer,
+  accessMatrixReducer,
 });

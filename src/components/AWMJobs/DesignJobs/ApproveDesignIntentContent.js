@@ -19,7 +19,7 @@ const ApproveDesignIntentContent = ({
   roleName,
   ArtworkAgilityPage,
   version,
-  date
+  date,
 }) => {
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
@@ -31,8 +31,11 @@ const ApproveDesignIntentContent = ({
   };
 
   let di_name;
-  di_name = version !== "V0" || designIntent[0]?.FileMetaDataList[0]?.Timestamp !== "" ? `${item?.Task_Name}_${version}_${date}` : `${item?.Task_Name}`;
-  
+  di_name =
+    version !== "V0" && designIntent[0]?.FileMetaDataList[0]?.Timestamp !== ""
+      ? `${item?.Task_Name}_${version}_${date}`
+      : `${item?.Task_Name}`;
+
   const onTemplateUpload = (e) => {
     let _totalSize = 0;
 
@@ -42,32 +45,26 @@ const ApproveDesignIntentContent = ({
 
     setTotalSize(_totalSize);
   };
+
+
   const itemTemplate = (file) => {
-    setformattedValue(file.size);    
+    setformattedValue(file.size);
     return (
       <div className="upload-row">
-        <img
-          role="presentation"
-          src={file.objectURL}
-          width={50}
-        />
-        <div
-          className="flex flex-column text-left ml-3"
-        >
-          {di_name}
-        </div>
+        <img role="presentation" src={file.objectURL} width={50} />
+        <div className="flex flex-column text-left ml-3">{di_name}</div>
       </div>
     );
   };
   const onTemplateSelect = (e) => {
     const renamedFile = {
-      "objectURL" :  e.files[0].objectURL,
-      "lastModified" :  e.files[0].lastModified,
-      "lastModifiedDate" :  e.files[0].lastModifiedDate,
-      "name" : di_name,
-      "size" :  e.files[0].size,
-      "type" :  e.files[0].type,
-      "webkitRelativePath" :  e.files[0].webkitRelativePath,
+      objectURL: e.files[0].objectURL,
+      lastModified: e.files[0].lastModified,
+      lastModifiedDate: e.files[0].lastModifiedDate,
+      name: di_name,
+      size: e.files[0].size,
+      type: e.files[0].type,
+      webkitRelativePath: e.files[0].webkitRelativePath,
     };
     setAzureFile(renamedFile);
     let _totalSize = totalSize;
@@ -111,6 +108,7 @@ const ApproveDesignIntentContent = ({
     );
   };
   return (
+    console.log("fileName version ", fileName === "", version !== "", fileName, version),
     <div>
       <div className="design-intent-header">{DesignHeader(di_name)}</div>
       <div className="approve-design-intent">
@@ -132,7 +130,9 @@ const ApproveDesignIntentContent = ({
               onSelect={onTemplateSelect}
               itemTemplate={itemTemplate}
             />
-           <div> {fileName === "" && version !== "" && di_name}</div>
+            <div>
+              {designIntent[0]?.FileMetaDataList[0]?.File_Name === "" ? (fileName === "" ? `No files uploaded yet please upload file!` : ``) : (fileName === "" ? di_name : '')}
+            </div>
           </div>
         )}
         {approve && (

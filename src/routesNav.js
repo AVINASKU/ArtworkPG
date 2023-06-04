@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
-import Home from "./home.js";
+// import Home from "./home.js";
 import { Outlet } from "react-router-dom";
 import AllProjects from "./components/Projects/AllProjects/index";
 import MyProjects from "./components/Projects/MyProjects/index.js";
@@ -24,16 +24,21 @@ import UPRA from "./components/AWMJobs/UPRA/index.js";
 import URDT from "./components/AWMJobs/URDT/index.js";
 import CPPFA from "./components/AWMJobs/CPPFA/index.js";
 
+import { checkReadOnlyAccess } from "./utils";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAccessMatrix } from "./store/actions/RoleBasedActions";
+import { useLocation } from "react-router-dom";
+
 const RoutesNav = () => {
   return (
     <Routes>
       <Route path="/" element={<Outlet />}>
         <Route index element={<Login />} />
-        <Route index element={<Home />} />
+        {/* <Route index element={<Home />} /> */}
         <Route path="/myProjects" element={<MyProjects />} />
         <Route path="/allProjects" element={<AllProjects />} />
         <Route path="/myTasks" element={<MyTasksPage />} />
-         <Route path="/AllTasks" element={<AllTasksPage />} />
+        <Route path="/AllTasks" element={<AllTasksPage />} />
         {/* <Route path="/createProject" element={<AddProject />} /> */}
         <Route path="/projectPlan" element={<ProjectCreation />} />
         <Route

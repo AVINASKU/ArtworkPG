@@ -6,19 +6,16 @@ import AddNewDesignContent from "../DesignJobs/AddNewDesignContent";
 import FooterButtons from "../DesignJobs/FooterButtons";
 import {
   saveDefineRegionalDesignTemplate,
-  submitDefineRegionalDesignTemplate
+  submitDefineRegionalDesignTemplate,
 } from "../../../apis/defineRegionalDesignTemplate";
-import "../DesignJobs/index.scss";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { ProjectService } from "../../../service/PegaService";
-import {
-  AddNavigation,
-} from "../../../utils";
-import { toLower} from "lodash";
+import { AddNavigation } from "../../../utils";
+import { toLower } from "lodash";
 import _ from "lodash";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
-
+import { CheckReadOnlyAccess } from "../../../utils";
+import "../DesignJobs/index.scss";
 
 const headerName = "Define Regional Design Template";
 const roleName = "DT_";
@@ -28,13 +25,16 @@ function DDT() {
   const [designIntent, setDesignIntent] = useState([]);
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
-  const[projectData, setProjectData] = useState([]);
+  const [projectData, setProjectData] = useState([]);
+  const [enableSubmit, setEnableSubmit] = useState(true);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const User = useSelector((state) => state.UserReducer);
   const userInformation = User.userInformation;
-  const { TaskDetailsData, loading } = useSelector((state) => state.TaskDetailsReducer);
+  const { TaskDetailsData, loading } = useSelector(
+    (state) => state.TaskDetailsReducer
+  );
   const { allProjects } = useSelector((state) => state.myProject);
   const location = useLocation();
   const currentUrl = location.pathname;
@@ -46,26 +46,30 @@ function DDT() {
   // if bu is baby care show tire field else not
   let checkBU = toLower(bu) === toLower("Home Care") ? true : false;
 
+  const checkReadWriteAccess = CheckReadOnlyAccess();
+
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
   }, [dispatch, TaskID, ProjectID]);
 
-  useEffect(()=> {
+  useEffect(() => {
     let projectData = allProjects.find(
       (project) => project.Project_ID === ProjectID
     );
     setProjectData(projectData);
-  },[projectData]);
+  }, [projectData]);
 
   useEffect(() => {
     if (TaskDetailsData) {
-      setDesignIntent(TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
+      setDesignIntent(
+        TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []
+      );
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
     }
-  },[TaskDetailsData]);
+  }, [TaskDetailsData]);
 
   const handleCancel = () => {
-    return navigate(`/myTasks`);
+    return navigate(currentUrl === "myTasks" ? `/myTasks` : "/allTasks");
   };
 
   const handleDelete = (index) => {
@@ -97,6 +101,26 @@ function DDT() {
     data[fieldName] = value;
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
+    let values = false;
+    const hasValues = designIntent.every(
+      (item) => {        
+        setEnableSubmit(true);
+       if(item.Select){
+          values = item.Agency_Reference !== "" && item.Cluster !== "";
+      } 
+        // else{
+        //   values = designIntent.some(item => {
+        //     console.log("else select", item)
+        //     if(item.Select){
+        //       values = item.Agency_Reference !== "" && item.Cluster !== ""
+        //     }
+        //   });
+        //   console.log("value else", values)
+        // }
+        return values
+      }
+    );
+    setEnableSubmit(!hasValues);
     setSubmittedDI(submittedDI);
   };
 
@@ -115,10 +139,10 @@ function DDT() {
     let updatedData = {};
     let updatedDataList = [];
     const headers = {
-      key: 'If-Match',
+      key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-    
+
     let submitOnlySelectedData = designIntent.filter(
       (task) => task?.Select === true
     );
@@ -132,33 +156,33 @@ function DDT() {
         task.Action = "update";
       } else if (task?.Action !== "delete" && task?.isNew === true)
         task.Action = "add";
-    
-      updatedData.DesignJobName= task.Design_Job_Name;
-      updatedData.DesignJobID= task.Design_Job_ID;
-      updatedData.AgencyReference= task.Agency_Reference;
-      updatedData.Cluster= task.Cluster;
-      updatedData.AdditionalInfo =task.Additional_Info;
+
+      updatedData.DesignJobName = task.Design_Job_Name;
+      updatedData.DesignJobID = task.Design_Job_ID;
+      updatedData.AgencyReference = task.Agency_Reference;
+      updatedData.Cluster = task.Cluster;
+      updatedData.AdditionalInfo = task.Additional_Info;
       updatedData.Tier = task.Tier;
-      updatedData.Select= task.Select ? task.Select : false;
-      updatedData.Action=task.Action;
-      
-        updatedDataList.push({
-          instruction: "APPEND",
-          target : "DesignTemplateList",
-          content: updatedData
-        })
-        return console.log('updatedDataList', updatedDataList);
+      updatedData.Select = task.Select ? task.Select : false;
+      updatedData.Action = task.Action;
+
+      updatedDataList.push({
+        instruction: "APPEND",
+        target: "DesignTemplateList",
+        content: updatedData,
+      });
+      return console.log("updatedDataList", updatedDataList);
     });
-    
+
     let formData = {
       caseTypeID: "PG-AAS-Work-DefineRegionalDesignTemplate",
       content: {
         AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
-        AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID
+        AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
       },
       pageInstructions: updatedDataList,
     };
-    console.log('formData', formData)
+    console.log("formData", formData);
     await submitDefineRegionalDesignTemplate(formData, id, headers);
     navigate(`/${currentUrl?.split("/")[1]}`);
   };
@@ -169,25 +193,25 @@ function DDT() {
       if (task?.isNew) {
         task.Design_Job_ID = "";
       }
+      task.Action = "update";
+      if (task?.Action !== "delete" && task?.Design_Job_ID) {
         task.Action = "update";
-        if (task?.Action !== "delete" && task?.Design_Job_ID) {
-          task.Action = "update";
-        } else if (task?.Action !== "delete" && task?.isNew === true)
-          task.Action = "add";
+      } else if (task?.Action !== "delete" && task?.isNew === true)
+        task.Action = "add";
 
-          updatedData.push({        
-            Design_Job_Name: task.Design_Job_Name,
-            Design_Job_ID: task.Design_Job_ID,
-            Agency_Reference: task.Agency_Reference,
-            Cluster: task.Cluster,
-            Tier: task.Tier,
-            Additional_Info:task.Additional_Info,
-            Select: task.Select ? task.Select : false,
-            Action: task.Action
-          });
-      return console.log('updatedData', updatedData);
+      updatedData.push({
+        Design_Job_Name: task.Design_Job_Name,
+        Design_Job_ID: task.Design_Job_ID,
+        Agency_Reference: task.Agency_Reference,
+        Cluster: task.Cluster,
+        Tier: task.Tier,
+        Additional_Info: task.Additional_Info,
+        Select: task.Select ? task.Select : false,
+        Action: task.Action,
+      });
+      return console.log("updatedData", updatedData);
     });
-   
+
     let formData = {
       AWM_Project_ID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
       AWM_Task_ID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
@@ -197,8 +221,16 @@ function DDT() {
       DesignTemplateList: updatedData,
     };
     console.log("full draft data --->", formData);
-   await saveDefineRegionalDesignTemplate(formData);
+    await saveDefineRegionalDesignTemplate(formData);
   };
+
+  let Brand = [];
+  let Category = [];
+
+  if (TaskDetailsData?.ArtworkAgilityPage) {
+    Brand = TaskDetailsData.ArtworkAgilityPage.Artwork_Brand;
+    Category = TaskDetailsData.ArtworkAgilityPage.Artwork_Category;
+  }
 
   return (
     <PageLayout>
@@ -208,20 +240,20 @@ function DDT() {
         breadcrumb={breadcrumb}
         headerName={headerName}
         label="Define Regional Design Template"
+        checkReadWriteAccess={checkReadWriteAccess}
       />
-      <div
-        style={{
-          overflowY: "scroll",
-          overflowX: "hidden",
-          width: "100%",
-          height: "400px",
-        }}
-      >
-        {<AddNewDesign {...data} />}
+      <div className="task-details">
+        {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
 
-        {loading || designIntent === null ? 
-          <i className="pi pi-spin pi-spinner" style={{ fontSize: '2rem' }}></i>
-          : designIntent &&
+        {loading || designIntent === null ? (
+          <div className="align-item-center">
+            <i
+              className="pi pi-spin pi-spinner"
+              style={{ fontSize: "2rem" }}
+            ></i>
+          </div>
+        ) : (
+          designIntent &&
           designIntent.length &&
           designIntent.map((item, index) => {
             if (item && item?.Action !== "delete") {
@@ -235,16 +267,23 @@ function DDT() {
                   handleDelete={handleDelete}
                   roleName={roleName}
                   checkBU={checkBU}
+                  Brand={Brand}
+                  Category={Category}
+                  checkReadWriteAccess={checkReadWriteAccess}
                 />
               );
             } else return <>Data Not Found</>;
-          })}
-        <FooterButtons
-          handleCancel={handleCancel}
-          onSaveAsDraft={onSaveAsDraft}
-          onSubmit={onSubmit}
-        />
+          })
+        )}
       </div>
+      <FooterButtons
+        handleCancel={handleCancel}
+        onSaveAsDraft={onSaveAsDraft}
+        onSubmit={onSubmit}
+        checkReadWriteAccess={checkReadWriteAccess}
+        bottomFixed={true}
+        formValid={enableSubmit}
+      />
     </PageLayout>
   );
 }

@@ -52,9 +52,9 @@
     // border-radius: 24px;
     overflow: hidden;
     height: 100%;
-
-    &>.content-layout {
-      // padding-top: 24px;
+    position: relative;
+    & > .content-layout {
+      padding-top: 24px;
       padding-bottom: 32px;
       position: relative;
       overflow: hidden;
@@ -96,6 +96,9 @@
         .p-checkbox+.icon-label {
           padding-top: 3px;
         }
+      }
+      &.task-layout{
+        height: auto;
       }
     }
   }

@@ -8,36 +8,50 @@ const FooterButtons = ({
   handleCancel,
   approve,
   formValid,
+  checkReadWriteAccess,
+  bottomFixed
 }) => {
-  const location = useLocation();
-  const locationPath = location?.pathname;
-  const url = locationPath?.split("/");
-  const pathName = url[2];
+  console.log("checkReadWriteAccess in footer", checkReadWriteAccess);
   return (
-    <div className="form-buttons">
+    <div
+      className={
+        bottomFixed
+          ? "form-buttons bottom-fixed"
+          : "form-buttons"
+      }
+      style={{ padding: 15, background: "#FAFAFA" }}
+    >
       <Button
-        className="button-layout"
+        className={
+          checkReadWriteAccess
+            ? "button-layout"
+            : "btn btn-disabled"
+        }        
         variant="secondary"
+        disabled={!checkReadWriteAccess}
         onClick={() => handleCancel()}
       >
         Cancel
       </Button>
       {!approve && (
         <>
-          {pathName !== "CNIQ" && (
-            <Button
-              className="button-layout"
-              variant="secondary"
-              onClick={() => onSaveAsDraft()}
-            >
-              Save as Draft
-            </Button>
-          )}
+          <Button
+            className={
+              checkReadWriteAccess
+                ? "button-layout"
+                : "btn btn-disabled"
+            } 
+            variant="secondary"
+            onClick={() => onSaveAsDraft()}
+            disabled={!checkReadWriteAccess}
+          >
+            Save as Draft
+          </Button>
           <Button
             className="button-layout"
             type="submit"
             onClick={() => onSubmit()}
-            disabled={formValid}
+            disabled={formValid || !checkReadWriteAccess}
           >
             Submit
           </Button>

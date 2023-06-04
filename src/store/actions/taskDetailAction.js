@@ -1,5 +1,5 @@
 import Api from "../../apis";
-import { DEVURL, SITURL, PRODURL } from "../../apis/envUrl";
+import { GETURL, DEVURL, SITURL, PRODURL } from "../../apis/envUrl";
 //pass the taskID and projectId from the my tasks
 
 export const getTaskDetails = (taskID, projectId) => {
@@ -14,7 +14,7 @@ export const getTaskDetails = (taskID, projectId) => {
           "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
         },
       });
-      let apiURL = `${DEVURL}/v1/TaskDetails/${taskID}/${projectId}`;
+      let apiURL = `${GETURL}/taskDetails/${taskID}/${projectId}`;
       const TaskDetailsData = await axiosInstance({
         url: apiURL,
         method: "GET",
