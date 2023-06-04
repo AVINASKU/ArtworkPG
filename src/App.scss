@@ -140,7 +140,6 @@ fieldset:disabled .btn {
 .myProjectAnddAllProjectList,
 .my-task-project {
   table {
-
     // border-collapse: separate !important;
     // border-spacing: 0 5px !important;
     // width: 100%;
@@ -175,20 +174,20 @@ fieldset:disabled .btn {
       }
     }
 
-    tr:nth-child(even)>td {
+    tr:nth-child(even) > td {
       // background:lightcyan !important;
       // background: linear-gradient(to right, transparent 49.5%, black 49.5%, black 50.5%, transparent 50.5%) !important;
       background: #fafcff !important;
       // background-color: blue;
     }
 
-    .p-datatable .p-datatable-tbody>tr {
+    .p-datatable .p-datatable-tbody > tr {
       line-height: 50px !important;
       font-size: 12px;
     }
 
     td,
-    .p-datatable .p-datatable-tbody>tr>td {
+    .p-datatable .p-datatable-tbody > tr > td {
       // background-color: #003da5;
       border-bottom: 1px solid #acacac !important;
       border-top: 1px solid #acacac !important;
@@ -344,13 +343,13 @@ fieldset:disabled .btn {
     }
   }
 }
-.task-details{
+.task-details {
   overflow: hidden scroll;
   width: 100%;
-  height: calc( 100vh - 220px);
+  height: calc(100vh - 180px);
   padding-bottom: 120px;
-  &+.form-buttons{
-    &.bottom-fixed{
+  & + .form-buttons {
+    &.bottom-fixed {
       position: absolute;
       bottom: 0;
       width: 100%;
@@ -377,7 +376,7 @@ fieldset:disabled .btn {
       font-size: 12px;
       line-height: 96.02%;
 
-      &+button {
+      & + button {
         margin-left: 24px;
       }
     }
@@ -388,6 +387,6 @@ fieldset:disabled .btn {
   margin-top: 24px;
 }
 
-.p-datatable .p-datatable-thead>tr>th {
+.p-datatable .p-datatable-thead > tr > th {
   white-space: break-spaces !important;
 }
