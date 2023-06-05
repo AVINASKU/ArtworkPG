@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import Api from ".";
+import { DEVURL, SITURL, PRODURL } from "./envUrl";
 
 const baseURL = "https://pegadev.pg.com/prweb/api/ArtworkAgilityFile";
 
@@ -11,7 +12,7 @@ export const saveColorDevelopment = async (formData) => {
   };
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${baseURL}/v1/UpdateNewPrintFeasibilityJob`;
+  let apiURL = `${DEVURL}/v1/UpdateNewPrintFeasibilityJob`;
   console.log("api url", apiURL);
   const colorDevelopment = await axiosInstance({
     url: apiURL,
@@ -27,7 +28,7 @@ export const saveColorDevelopment = async (formData) => {
 export const submitColorDevelopment = async (formData, id, headers = {}) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${baseURL}/v2/assignments/ASSIGN-WORKLIST ${id}!DefineNewPrintFeasibility_Flow/actions/DefineNewPrintFeasibility`;
+  let apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!DefineNewPrintFeasibility_Flow/actions/DefineNewPrintFeasibility`;
   console.log("api url", apiURL);
   const colorDevelopment = await axiosInstance({
     url: apiURL,
@@ -47,7 +48,7 @@ export const submitConfirmColorDevelopment = async (
 ) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${baseURL}/v2/assignments/ASSIGN-WORKLIST ${id}!CONFIRMCOLORDEVELOPMENTDONE_FLOW/actions/ConfirmColorDevelopmentDone`;
+  let apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!CONFIRMCOLORDEVELOPMENTDONE_FLOW/actions/ConfirmColorDevelopmentDone`;
   console.log("api url", apiURL);
   const colorDevelopment = await axiosInstance({
     url: apiURL,

@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import Api from ".";
+import { DEVURL, SITURL, PRODURL } from "./envUrl";
 
 const baseURL = "https://pegadev.pg.com/prweb/api/ArtworkAgilityFile";
 
@@ -11,7 +12,7 @@ export const saveInkQualification = async (formData) => {
   };
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${baseURL}/V1/UpdateIQJob`;
+  let apiURL = `${DEVURL}/V1/UpdateIQJob`;
   console.log("api url", apiURL);
   const inkQualification = await axiosInstance({
     url: apiURL,
@@ -27,7 +28,7 @@ export const saveInkQualification = async (formData) => {
 export const submitInkQualification = async (formData, id, headers = {}) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${baseURL}/v2/assignments/ASSIGN-WORKLIST ${id}!DEFINEINKQUALIFICATION_FLOW/actions/DefineInkQualification`;
+  let apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!DEFINEINKQUALIFICATION_FLOW/actions/DefineInkQualification`;
   console.log("api url", apiURL);
   const inkQualification = await axiosInstance({
     url: apiURL,
@@ -47,7 +48,7 @@ export const submitConfirmInkQualification = async (
 ) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${baseURL}/v2/assignments/ASSIGN-WORKLIST ${id}!CONFIRMINKQUALIFICATION_FLOW/actions/ConfirmInkQualification`;
+  let apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!CONFIRMINKQUALIFICATION_FLOW/actions/ConfirmInkQualification`;
   console.log("api url", apiURL);
   const inkQualification = await axiosInstance({
     url: apiURL,
