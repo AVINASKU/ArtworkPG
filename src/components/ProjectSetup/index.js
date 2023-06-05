@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import Accordion from "react-bootstrap/Accordion";
+import React, { useState } from "react";
 import AddProject from "../Projects/CreateProject";
 import { DropdownButton, Dropdown } from "react-bootstrap";
 import { BreadCrumb } from "primereact/breadcrumb";
@@ -10,7 +9,6 @@ import ProjectPlanCompo from "../Projects/ProjectPlan/ProjectPlanCompo";
 import ConfirmationDialog from "./confirmationDialog";
 import TabsComponent from "./tabsComponent";
 import { getUnAuthoirzedAccess, CheckReadOnlyAccess } from "../../utils";
-import { Navigate, useHistory } from "react-router-dom";
 
 import { useNavigate } from "react-router-dom";
 
@@ -35,30 +33,7 @@ function ProjectSetup(props) {
   // Check if access is empty for the user's role and page
   const isAccessEmpty = accessDetails === null || accessDetails.length === 0;
   const isReadOnly = CheckReadOnlyAccess();
-  const [activeKey, setActiveKey] = useState("0");
-  const items = [{ label: rootBreadCrumb }];
-  activeKey === "0" && items.push({ label: "Project Setup" });
-  activeKey === "1" && items.push({ label: "Project Plan" });
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (mode === "create") {
-      setActiveKey("0");
-    } else {
-      if (mode === "edit") {
-        setActiveKey("0");
-      } else if (mode === "design") {
-        setActiveKey("1");
-      }
-    }
-  }, [mode]);
-
-  const handleActiveKeyChange = (key) => {
-    if (activeKey === key) {
-      key = -1;
-    }
-    setActiveKey(key);
-  };
 
   const [toggleButtons, setToggleButtons] = useState("Tabular");
   const [option, setOption] = useState("");
@@ -77,6 +52,14 @@ function ProjectSetup(props) {
   };
   const [tabName, setTabName] = useState("ProjectPlan");
   const [tabNameForPP, setTabNameForPP] = useState("Design");
+
+  const items = [{ label: rootBreadCrumb }];
+  tabName === "ProjectPlan" && items.push({ label: "Project Plan" });
+  tabName === "ProjectSetup" && items.push({ label: "Project Setup" });
+  tabName === "ArtworkAlignment" && items.push({ label: "Art work Alignment" });
+  tabName === "Mapping" && items.push({ label: "Mapping" });
+  tabName === "ReadinessPerPMP" && items.push({ label: "ReadinessPerPMP" });
+
   const itemsData = [
     {
       name: "ProjectSetup",
@@ -189,7 +172,7 @@ function ProjectSetup(props) {
             </div>
           </div>
           <div>
-            <nav>
+            <nav className="subNav">
               <div className="nav nav-tabs" id="nav-tab" role="tablist">
                 <button
                   className={`nav-link ${
@@ -315,25 +298,6 @@ function ProjectSetup(props) {
           setTabName={setTabName}
           items={itemsData}
         />
-        {/* <Accordion defaultActiveKey="0" activeKey={activeKey}>
-          <Accordion.Item eventKey="0">
-            <Accordion.Header onClick={() => handleActiveKeyChange("0")}>
-              Project Setup
-            </Accordion.Header>
-            <Accordion.Body>
-              <AddProject {...props} projectMode={mode} />
-            </Accordion.Body>
-          </Accordion.Item>
-
-          <Accordion.Item eventKey="1">
-            <Accordion.Header onClick={() => handleActiveKeyChange("1")}>
-              Project Plan
-            </Accordion.Header>
-            <Accordion.Body>
-              <ProjectPlanCompo />
-            </Accordion.Body>
-          </Accordion.Item>
-        </Accordion> */}
       </div>
     </div>
   );
