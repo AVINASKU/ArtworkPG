@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import moment from "moment";
 import LoadingOverlay from "react-loading-overlay";
 import PageLayout from "../../PageLayout";
 import TaskHeader from "../DesignJobs/TaskHeader";
@@ -26,7 +27,7 @@ const jobName = "IQ_";
 
 function CNIQ() {
   const dispatch = useDispatch();
-  const version = "V1";
+  // const version = "V1";
   const { TaskDetailsData } = useSelector((state) => state.TaskDetailsReducer);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
@@ -39,6 +40,8 @@ function CNIQ() {
   const [fileName, setFileName] = useState("");
   const [azureFile, setAzureFile] = useState("");
   const [loader, setLoader] = useState(false);
+  const [version, setVersion] = useState("V0");
+  const [date, setDate] = useState("");
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
 
@@ -56,6 +59,17 @@ function CNIQ() {
       console.log("TaskDetailsData: ", TaskDetailsData);
       setIQ(TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
+      const data =
+        TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails[0]?.FileMetaDataList[0] || [];
+      if (data) {
+        data.Version !== "" && setVersion(data.Version);
+        data.Timestamp !== "" &&
+          setDate(
+            moment(data.Timestamp, "YYYYMMDD[T]HHmmss.SSS [GMT]").format(
+              "DD-MMMM-YYYY"
+            )
+          );
+      }
     }
   }, [TaskDetailsData]);
   const handleCancel = () => {
@@ -248,6 +262,8 @@ function CNIQ() {
             return (
               <CloneJobs
                 key={item.Design_Job_ID}
+                {...IQ}
+                IQ={IQ}
                 {...data}
                 item={item}
                 data={data}
@@ -261,6 +277,9 @@ function CNIQ() {
                 setformattedValue={setformattedValue}
                 setAzureFile={setAzureFile}
                 setFileName={setFileName}
+                fileName={fileName}
+                version={version}
+                date={date}
               />
             );
           }

@@ -33,6 +33,10 @@ const CloneJobs = ({
   setformattedValue,
   setAzureFile,
   setFileName,
+  fileName,
+  IQ,
+  date,
+  version
 }) => {
   const {
     Printing_Process,
@@ -405,30 +409,21 @@ const CloneJobs = ({
         )}
         {(showPage === "DNIQ" || showPage === "CNIQ") && (
           <Col sm={2}>
-            <div>
-              <label htmlFor="agency">Pantone</label>
-              <AutoComplete
-                id="pantone"
-                value={pantone}
-                suggestions={filteredPantoneItems}
-                completeMethod={(e) =>
-                  searchPantoneFilters(
-                    e.query,
-                    PantoneList,
-                    setFilteredPantoneItems
-                  )
-                }
-                dropdown
-                placeholder="Search Pantone"
-                onChange={(e) => {
-                  addData("Pantone", index, e.target.value, di_name);
-                  setPantone(e.target.value);
-                }}
-                aria-describedby="cluster-help"
-                disabled={showPage === "CNIQ" && true}
-              />
-            </div>
-          </Col>
+          <div>
+            <label htmlFor="agency">Pantone</label>
+            <InputText
+              id="pantone"
+              value={pantone}
+              placeholder="Enter Pantone"
+              onChange={(e) => {
+                addData("Pantone", index, e.target.value, di_name);
+                setPantone(e.target.value);
+              }}
+              aria-describedby="pantone-help"
+              disabled={showPage === "CNIQ" && true}
+            />
+          </div>
+        </Col>
         )}
         <Col sm={2}>
           <Row>
@@ -635,6 +630,10 @@ const CloneJobs = ({
             item={item}
             data={data}
             jobName={jobName}
+            fileName={fileName}
+            IQ={IQ}
+            date={date}
+            version={version}
             // ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
             // version={version}
           />

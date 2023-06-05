@@ -17,9 +17,12 @@ const UploadFile = ({
   data,
   jobName,
   ArtworkAgilityPage,
-  version,
+  fileName,
+  IQ,
+  date,
+  version
 }) => {
-  console.log("data", data.Consumed_Buffer);
+  console.log("data", data);
   console.log("item here here", item);
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
@@ -42,7 +45,10 @@ const UploadFile = ({
   };
 
   let di_name;
-  di_name = item?.Task_Name;
+  di_name =
+    version !== "V0" && IQ[0]?.FileMetaDataList[0]?.Timestamp !== ""
+      ? `${data?.Task_Name}_${version}_${date}`
+      : `${data?.Task_Name}`;
 
   const onTemplateUpload = (e) => {
     let _totalSize = 0;
@@ -54,51 +60,36 @@ const UploadFile = ({
     setTotalSize(_totalSize);
   };
 
-  const itemTemplate = (file, props) => {
-    console.log("file here 1", file);
-    setformattedValue(props.formatSize.substring(0, props.formatSize.length - 3));
-    setFileName(file.name);
-    setAzureFile(file);
-    //   seFileData(file);
+  const itemTemplate = (file) => {
+    setformattedValue(file.size);
     return (
       <div className="upload-row">
-        <img
-          alt={file.name}
-          role="presentation"
-          src={file.objectURL}
-          width={50}
-        />
-        <a
-          className="flex flex-column text-left ml-3"
-          onClick={(event) =>
-            handleViewProofScopeClick(event, "pranali-test-proofscope.png")
-          }
-        >
-          {file.name}
-        </a>
+        <img role="presentation" src={file.objectURL} width={50} />
+        <div className="flex flex-column text-left ml-3">{di_name}</div>
       </div>
     );
   };
 
   const onTemplateSelect = (e) => {
-    const uploadedFile = e.files[0];
     const renamedFile = {
-      ...uploadedFile,
+      objectURL: e.files[0].objectURL,
+      lastModified: e.files[0].lastModified,
+      lastModifiedDate: e.files[0].lastModifiedDate,
       name: di_name,
-      size: uploadedFile.size,
-      type: uploadedFile.type,
-      lastModified: uploadedFile.lastModified,
-      lastModifiedDate: uploadedFile.lastModifiedDate,
-      webkitRelativePath: uploadedFile.webkitRelativePath,
+      size: e.files[0].size,
+      type: e.files[0].type,
+      webkitRelativePath: e.files[0].webkitRelativePath,
     };
+    setAzureFile(renamedFile);
     let _totalSize = totalSize;
     let files = e.files;
-
     Object.keys(files).forEach((key) => {
       _totalSize += files[key].size || 0;
     });
 
     setTotalSize(_totalSize);
+    setAzureFile(renamedFile);
+    setFileName(di_name);
   };
 
   return (
@@ -114,6 +105,9 @@ const UploadFile = ({
         onSelect={onTemplateSelect}
         itemTemplate={itemTemplate}
       />
+      <div>
+        {IQ[0]?.FileMetaDataList[0]?.File_Name === "" ? (fileName === "" ? `No files uploaded yet please upload file!` : ``) : (fileName === "" ? di_name : '')}
+      </div>
     </Col>
   );
 };
