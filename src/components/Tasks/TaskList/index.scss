@@ -6,7 +6,8 @@ $fontWeight400: 400;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 24px 15px 15px 15px;
+  // padding: 24px 15px 15px 15px;
+  padding: 0 15px 15px 15px;
 
   .actions {
     display: flex;
@@ -31,10 +32,12 @@ $fontWeight400: 400;
     padding: 0 0 0;
     overflow: hidden;
     height: 100%;
+
     .myProjectAnddAllProjectList {
       height: 100%;
       overflow: hidden;
     }
+
     .card {
       border: 0 !important;
     }
@@ -65,8 +68,9 @@ $fontWeight400: 400;
 
 .my-task-project {
   .p-datatable > .p-datatable-wrapper {
-    overflow: scroll;
+    overflow: auto;
     width: $width100;
+    height: calc(100vh - 180px);
   }
 
   .p-datatable-table {
@@ -257,6 +261,7 @@ img[disabled] {
 .p-dropdown-item:hover {
   background-color: #edf4fa !important;
 }
+
 div.actions-right {
   display: flex;
   flex-direction: row;
@@ -288,6 +293,7 @@ div.p-button.p-component:nth-child(2) {
 div.p-selectbutton.p-buttonset.p-component {
   border: none;
 }
+
 .p-breadcrumb {
   a {
     text-decoration: none;
@@ -327,12 +333,15 @@ div.p-selectbutton.p-buttonset.p-component {
 .helpneeded_done {
   font-size: 12px;
 }
+
 .helpneeded_no {
   color: #595959;
 }
+
 .helpneeded_done {
   color: #03a000;
 }
+
 .helpneeded_inprocess {
   color: #ff0000;
 }
@@ -385,6 +394,7 @@ thead.p-datatable-thead {
   background: #edf4fa;
   // height: 30px;
 }
+
 .p-datatable-resizable-table > .p-datatable-tbody > tr > td {
   white-space: break-spaces;
 }
@@ -408,6 +418,7 @@ div.flex.align-items-center.gap-2 {
   filter: invert(10%) sepia(100%) saturate(1200%) hue-rotate(190deg)
     brightness(70%) contrast(90%);
 }
+
 .p-overlaypanel,
 .dropdown-menu,
 .p-autocomplete-panel,
@@ -416,6 +427,7 @@ div.flex.align-items-center.gap-2 {
 .p-multiselect-panel {
   z-index: 100000 !important;
 }
+
 .p-autocomplete {
   box-shadow: none !important;
   border-radius: 5px;
@@ -438,16 +450,19 @@ div.flex.align-items-center.gap-2 {
   border: 1px solid #acacac;
   border-radius: 0;
 }
+
 .p-autocomplete-panel .p-autocomplete-items {
   padding: 0;
   width: 100%;
 }
+
 .p-autocomplete-items {
   margin: 0;
   padding: 0;
   list-style-type: none;
   box-shadow: none !important;
 }
+
 .p-autocomplete-panel .p-autocomplete-items .p-autocomplete-item {
   margin: 0;
   /* padding: 0.75rem 1.25rem; */
@@ -457,6 +472,7 @@ div.flex.align-items-center.gap-2 {
   transition: box-shadow 0.2s;
   border-radius: 0;
 }
+
 .p-button-icon-only {
   background: transparent;
   color: #acacac;

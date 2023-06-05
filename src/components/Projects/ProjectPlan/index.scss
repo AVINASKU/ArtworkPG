@@ -72,6 +72,17 @@ $fontWeight400: 400;
   .p-inputwrapper-filled {
     border: none;
   }
+
+  .task-link {
+    color: #003da5;
+    cursor: pointer;
+    line-height: 15px;
+  }
+
+  .textAlignTreeTable {
+    height: calc(100vh - 361px);
+    overflow: auto;
+  }
 }
 
 .font-bold {
@@ -238,11 +249,13 @@ img[disabled] {
   color: #003da5;
   cursor: pointer;
 }
+
 .textAlignTreeTable {
   .p-treetable-thead {
     .cursorMove {
       cursor: move;
     }
+
     .fontBoldcolor {
       color: #145392;
     }
@@ -271,6 +284,7 @@ img[disabled] {
   min-width: 100px;
   padding: 2px 6px;
   align-items: center;
+
   .p-dropdown {
     height: 25px;
   }
@@ -316,6 +330,7 @@ img[disabled] {
       background-color: #f7f7f7 !important;
     }
   }
+
   .accordion-item > .accordion-header {
     position: relative !important;
   }
@@ -327,12 +342,6 @@ img[disabled] {
   .accordion-item > .accordion-header > button::after {
     position: absolute !important;
     margin-left: 110px;
-  }
-
-  .task-link {
-    color: #003da5;
-    cursor: pointer;
-    line-height: 15px;
   }
 }
 

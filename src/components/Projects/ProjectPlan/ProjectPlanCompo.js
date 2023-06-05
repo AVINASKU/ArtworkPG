@@ -292,17 +292,28 @@ function ProjectPlanCompo(props) {
   const activate = async () => {
     await activateProjectPlan(selectedProject.Project_ID);
     getProjectPlanApi();
-    toast.current.show({
-      severity: "success",
-      summary: "Success",
-      detail: "Project activated successfully!",
-      life: 3000,
-    });
+    // toast.current.show({
+    //   severity: "success",
+    //   summary: "Success",
+    //   detail: "Project activated successfully!",
+    //   life: 3000,
+    // });
   };
 
   return (
     <>
-      <Accordion className="projectPlanAccordian" defaultActiveKey="2">
+    <ProjectPlan
+        {...props}
+        projectPlan={projectPlan}
+        selectedProject={selectedProject}
+        projectPlanDesign={projectPlanDesign}
+        setPegaData={setPegaData}
+        pegadata={pegadata}
+        setUpdatedProjectPlanDesignData={setUpdatedProjectPlanDesignData}
+        setActiveSave={setActiveSave}
+        getProjectPlanApi={getProjectPlanApi}
+      />
+      {/* <Accordion className="projectPlanAccordian" defaultActiveKey="2">
         <Accordion.Item eventKey="2">
           <Accordion.Header>Design</Accordion.Header>
           <Accordion.Body>
@@ -328,7 +339,7 @@ function ProjectPlanCompo(props) {
           <Accordion.Header>FA Assembly</Accordion.Header>
           <Accordion.Body>FA Assembly</Accordion.Body>
         </Accordion.Item>
-      </Accordion>
+      </Accordion> */}
       <div className="form-buttons">
         <Button
           className={!isAccessEmpty ? "btn btn-disabled" : "button-layout"}
@@ -357,6 +368,7 @@ function ProjectPlanCompo(props) {
           Activate
         </Button>
       </div>
+      <br />
     </>
   );
 }

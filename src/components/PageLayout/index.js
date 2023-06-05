@@ -6,6 +6,8 @@ import SideBar from "../SideBar";
 import Header from "../Headers";
 
 const PageLayout = (props) => {
+  const pathname = window.location.pathname;
+  const isPath = pathname.includes("proejctPlan");
   return (
     <ThemeProvider
       breakpoints={["xxxl", "xxl", "xl", "lg", "md", "sm", "xs", "xxs"]}
@@ -19,7 +21,7 @@ const PageLayout = (props) => {
               <Header />
             </div>
             <div className="main-container">
-              <div className="wrapper">{props.children}</div>
+              <div className={`${!isPath && "wrapper"}`}>{props.children}</div>
             </div>
           </Col>
         </Row>
