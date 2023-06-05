@@ -20,6 +20,7 @@ import "./index.scss";
 import CDHeader from "../DesignJobs/CDHeader";
 import { cloneDeep } from "lodash";
 import IQHeader from "../DesignJobs/IQHeader";
+import { CheckReadOnlyAccess } from "../../../utils";
 const breadcrumb = [{ label: "Confirm Ink Qualification" }];
 
 const headerName = "Confirm Ink Qualification";
@@ -28,7 +29,9 @@ const jobName = "IQ_";
 function CNIQ() {
   const dispatch = useDispatch();
   // const version = "V1";
-  const { TaskDetailsData } = useSelector((state) => state.TaskDetailsReducer);
+  const { TaskDetailsData, loading } = useSelector(
+    (state) => state.TaskDetailsReducer
+  );
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const [data, setData] = useState(null);
@@ -44,7 +47,7 @@ function CNIQ() {
   const [date, setDate] = useState("");
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
-
+  const checkReadWriteAccess = CheckReadOnlyAccess();
   useEffect(() => {
     // const data1 = ProjectService.getDIData();
     let taskId;
@@ -60,7 +63,8 @@ function CNIQ() {
       setIQ(TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
       const data =
-        TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails[0]?.FileMetaDataList[0] || [];
+        TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails[0]
+          ?.FileMetaDataList[0] || [];
       if (data) {
         data.Version !== "" && setVersion(data.Version);
         data.Timestamp !== "" &&
@@ -171,7 +175,10 @@ function CNIQ() {
     };
     console.log("full submit data --->", formData);
     let id = data.Task_Key;
-    const headers = { key: "If-Match", value: TaskDetailsData?.ArtworkAgilityPage?.Etag };
+    const headers = {
+      key: "If-Match",
+      value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
+    };
 
     await submitConfirmInkQualification(formData, id, headers);
     setLoader(false);
@@ -236,63 +243,69 @@ function CNIQ() {
   };
 
   return (
-    <LoadingOverlay active={loader} spinner text="">
-    <PageLayout>
-      <IQHeader
-        setAddNewDesign={addNewEmptyDesign}
-        onSelectAll={onSelectAll}
-        breadcrumb={breadcrumb}
-        headerName={headerName}
-        label="Confirm Ink Qualification"
-        showPage="CNIQ"
-      />
-      <div
-        style={{
-          overflowY: "scroll",
-          overflowX: "hidden",
-          width: "100%",
-          height: "400px",
-          display: "grid",
-        }}
-      >
-        {<TaskHeader {...data} />}
+    <LoadingOverlay active={loader || loading || IQ === null} spinner text="">
+      <PageLayout>
+        <IQHeader
+          setAddNewDesign={addNewEmptyDesign}
+          onSelectAll={onSelectAll}
+          breadcrumb={breadcrumb}
+          headerName={headerName}
+          label="Confirm Ink Qualification"
+          showPage="CNIQ"
+          checkReadWriteAccess={checkReadWriteAccess}
+        />
+        <div
+          className="task-details"
+          style={{
+            overflowY: "scroll",
+            overflowX: "hidden",
+            width: "100%",
+            height: "400px",
+            // display: "grid",
+          }}
+        >
+          {<TaskHeader {...data} />}
 
-        {IQ.map((item, index) => {
-          if (item && item?.Action !== "delete") {
-            return (
-              <CloneJobs
-                key={item.Design_Job_ID}
-                {...IQ}
-                IQ={IQ}
-                {...data}
-                item={item}
-                data={data}
-                index={index}
-                addData={addData}
-                addIddData={addIddData}
-                handleDelete={handleDelete}
-                jobName={jobName}
-                formValid={formValid}
-                setFormValid={setFormValid}
-                setformattedValue={setformattedValue}
-                setAzureFile={setAzureFile}
-                setFileName={setFileName}
-                fileName={fileName}
-                version={version}
-                date={date}
-              />
-            );
-          }
-        })}
+          {IQ &&
+            IQ.length > 0 &&
+            IQ.map((item, index) => {
+              if (item && item?.Action !== "delete") {
+                return (
+                  <CloneJobs
+                    key={item.Design_Job_ID}
+                    {...IQ}
+                    IQ={IQ}
+                    {...data}
+                    item={item}
+                    data={data}
+                    index={index}
+                    addData={addData}
+                    addIddData={addIddData}
+                    handleDelete={handleDelete}
+                    jobName={jobName}
+                    formValid={formValid}
+                    setFormValid={setFormValid}
+                    setformattedValue={setformattedValue}
+                    setAzureFile={setAzureFile}
+                    setFileName={setFileName}
+                    fileName={fileName}
+                    version={version}
+                    date={date}
+                    checkReadWriteAccess={checkReadWriteAccess}
+                  />
+                );
+              }
+            })}
+        </div>
         <FooterButtons
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}
           formValid={formValid}
-          checkReadWriteAccess = {true}
+          checkReadWriteAccess={checkReadWriteAccess}
+          bottomFixed={true}
         />
-      </div>
-    </PageLayout>
+      </PageLayout>
     </LoadingOverlay>
   );
 }

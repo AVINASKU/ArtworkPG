@@ -18,9 +18,10 @@ const UploadFile = ({
   jobName,
   ArtworkAgilityPage,
   fileName,
-  IQ,
+  designData,
   date,
-  version
+  version,
+  disabled
 }) => {
   console.log("data", data);
   console.log("item here here", item);
@@ -46,7 +47,7 @@ const UploadFile = ({
 
   let di_name;
   di_name =
-    version !== "V0" && IQ[0]?.FileMetaDataList[0]?.Timestamp !== ""
+    version !== "V0" && designData && designData[0]?.FileMetaDataList[0]?.Timestamp !== ""
       ? `${data?.Task_Name}_${version}_${date}`
       : `${data?.Task_Name}`;
 
@@ -104,9 +105,10 @@ const UploadFile = ({
         onUpload={onTemplateUpload}
         onSelect={onTemplateSelect}
         itemTemplate={itemTemplate}
+        disabled={disabled}
       />
       <div>
-        {IQ[0]?.FileMetaDataList[0]?.File_Name === "" ? (fileName === "" ? `No files uploaded yet please upload file!` : ``) : (fileName === "" ? di_name : '')}
+        {designData[0]?.FileMetaDataList[0]?.File_Name === "" ? (fileName === "" ? `No files uploaded yet please upload file!` : ``) : (fileName === "" ? di_name : '')}
       </div>
     </Col>
   );

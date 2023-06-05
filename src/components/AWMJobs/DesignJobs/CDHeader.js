@@ -12,6 +12,7 @@ const CDHeader = ({
   label,
   headerName,
   disabled,
+  checkReadWriteAccess
 }) => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
@@ -60,10 +61,10 @@ const CDHeader = ({
               }}
               checked={checked}
               className="margin-right"
-              disabled={disabled}
+              disabled={!checkReadWriteAccess || disabled}
             ></Checkbox>
             <div className="icon-label">
-              <label className={disabled && "disable-buttons"}>
+              <label className={(!checkReadWriteAccess || disabled) && "disable-buttons"}>
                 {" "}
                 Select All{" "}
               </label>
@@ -74,9 +75,10 @@ const CDHeader = ({
               src={filter}
               alt="filter logo"
               className="filter-icon filter-color-change"
+              disabled={!checkReadWriteAccess || disabled}
             />
             <div>
-              <label className="icon-label">filter</label>
+              <label className="icon-label" disabled={(!checkReadWriteAccess || disabled) && true}>filter</label>
             </div>
           </div>
           <div className="icon-items">
@@ -84,13 +86,13 @@ const CDHeader = ({
               src={plusCollapseImg}
               onClick={() => setAddNewDesign && setAddNewDesign()}
               className={`add-new-design-intent-icon ${
-                disabled && "disabled-add"
+                (!checkReadWriteAccess || disabled )&& "disabled-add"
               }`}
               alt=""
               disabled={!setAddNewDesign && true}
             />
             <div className="icon-label">
-              <label className={disabled && "disable-buttons"}>
+              <label className={(!checkReadWriteAccess || disabled) && "disable-buttons"}>
                 Add Color Development
               </label>
             </div>

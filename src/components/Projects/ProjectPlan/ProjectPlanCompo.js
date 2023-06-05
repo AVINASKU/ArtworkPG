@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import moment from "moment";
 import { CheckReadOnlyAccess } from "../../../utils";
+import LoadingOverlay from "react-loading-overlay";
 function ProjectPlanCompo(props) {
   const toast = useRef(null);
   const [projectPlanDesignData, setProjectPlanDesignData] = useState([]);
@@ -147,7 +148,7 @@ function ProjectPlanCompo(props) {
         data: apiData.filter((data) => data.AWM_Task_ID.includes("DNIQ_")),
       },
       {
-        name: "Confirm New Ink Qualification done",
+        name: "Confirm New Ink Qualification",
         code: "CNIQ",
         data: apiData.filter((data) => data.AWM_Task_ID.includes("CNIQ_")),
       },
@@ -158,7 +159,11 @@ function ProjectPlanCompo(props) {
         tempObj["key"] = task.data[0].AWM_Task_ID;
 
         let dataObj = {};
-        dataObj["Task"] = task.data[0].AWM_Task_ID.includes("CCD_") ? "Confirm Color Development" : task.data[0].AWM_Task_ID.includes("CPT_") ? "Confirm Print Trial"  : task.data[0].Task_Name;
+        dataObj["Task"] = task.data[0].AWM_Task_ID.includes("CCD_")
+          ? "Confirm Color Development"
+          : task.data[0].AWM_Task_ID.includes("CPT_")
+          ? "Confirm Print Trial"
+          : task.data[0].Task_Name;
         dataObj["Dependency"] = task.data[0].Dependency;
         dataObj["Role"] = task.data[0].Role;
         dataObj["RoleOptions"] = task.data[0].RoleOptions;
@@ -301,8 +306,8 @@ function ProjectPlanCompo(props) {
   };
 
   return (
-    <>
-    <ProjectPlan
+    <LoadingOverlay active={loader} spinner text="">
+      <ProjectPlan
         {...props}
         projectPlan={projectPlan}
         selectedProject={selectedProject}
@@ -369,7 +374,7 @@ function ProjectPlanCompo(props) {
         </Button>
       </div>
       <br />
-    </>
+    </LoadingOverlay>
   );
 }
 

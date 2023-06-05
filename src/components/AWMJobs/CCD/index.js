@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import moment from "moment";
 import LoadingOverlay from "react-loading-overlay";
 import PageLayout from "../../PageLayout";
 import TaskHeader from "../DesignJobs/TaskHeader";
@@ -15,6 +16,8 @@ import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
 import "./index.scss";
 import CDHeader from "../DesignJobs/CDHeader";
 import { submitConfirmColorDevelopment } from "../../../apis/colorDevelopmentApi";
+import { CheckReadOnlyAccess } from "../../../utils";
+
 const breadcrumb = [{ label: "Confirm Color Development" }];
 
 const headerName = "Confirm Color Development";
@@ -22,8 +25,10 @@ const jobName = "CD_";
 
 function CCD() {
   const dispatch = useDispatch();
-  const version = "V1";
-  const { TaskDetailsData } = useSelector((state) => state.TaskDetailsReducer);
+  // const version = "V1";
+  const { TaskDetailsData, loading } = useSelector(
+    (state) => state.TaskDetailsReducer
+  );
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const [data, setData] = useState(null);
@@ -35,8 +40,11 @@ function CCD() {
   const [fileName, setFileName] = useState("");
   const [azureFile, setAzureFile] = useState("");
   const [loader, setLoader] = useState(false);
+  const [version, setVersion] = useState("V0");
+  const [date, setDate] = useState("");
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
+  const checkReadWriteAccess = CheckReadOnlyAccess();
 
   useEffect(() => {
     // const data1 = ProjectService.getDIData();
@@ -51,6 +59,18 @@ function CCD() {
     if (TaskDetailsData) {
       setCD(TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
+      const data =
+        TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails[0]
+          ?.FileMetaDataList[0] || [];
+      if (data) {
+        data.Version !== "" && setVersion(data.Version);
+        data.Timestamp !== "" &&
+          setDate(
+            moment(data.Timestamp, "YYYYMMDD[T]HHmmss.SSS [GMT]").format(
+              "DD-MMMM-YYYY"
+            )
+          );
+      }
     }
   }, [TaskDetailsData]);
   const handleCancel = () => {
@@ -202,55 +222,65 @@ function CCD() {
   };
 
   return (
-    <LoadingOverlay active={loader} spinner text="">
-    <PageLayout>
-      <CDHeader
-        setAddNewDesign={addNewEmptyDesign}
-        onSelectAll={onSelectAll}
-        breadcrumb={breadcrumb}
-        headerName={headerName}
-        label="Confirm Color Development"
-        disabled={true}
-      />
-      <div
-        style={{
-          overflowY: "scroll",
-          overflowX: "hidden",
-          width: "100%",
-          height: "400px",
-          display: "grid",
-        }}
-      >
-        {<TaskHeader {...data} />}
-        {CD.map((item, index) => {
-          if (item && item?.Action !== "delete") {
-            return (
-              <CloneJobs
-                key={item.Design_Job_ID}
-                {...data}
-                data={data}
-                item={item}
-                index={index}
-                addData={addData}
-                jobName={jobName}
-                formValid={formValid}
-                setFormValid={setFormValid}
-                setformattedValue={setformattedValue}
-                setAzureFile={setAzureFile}
-                setFileName={setFileName}
-              />
-            );
-          }
-        })}
+    <LoadingOverlay active={loader || loading || CD === null} spinner text="">
+      <PageLayout>
+        <CDHeader
+          setAddNewDesign={addNewEmptyDesign}
+          onSelectAll={onSelectAll}
+          breadcrumb={breadcrumb}
+          headerName={headerName}
+          label="Confirm Color Development"
+          disabled={true}
+          checkReadWriteAccess={checkReadWriteAccess}
+        />
+        <div
+          className="task-details"
+          style={{
+            overflowY: "scroll",
+            overflowX: "hidden",
+            width: "100%",
+            height: "400px",
+            // display: "grid",
+          }}
+        >
+          {<TaskHeader {...data} />}
+          {CD &&
+            CD.length > 0 &&
+            CD.map((item, index) => {
+              if (item && item?.Action !== "delete") {
+                return (
+                  <CloneJobs
+                    key={item.Design_Job_ID}
+                    {...data}
+                    CD={CD}
+                    data={data}
+                    item={item}
+                    index={index}
+                    addData={addData}
+                    jobName={jobName}
+                    formValid={formValid}
+                    setFormValid={setFormValid}
+                    setformattedValue={setformattedValue}
+                    setAzureFile={setAzureFile}
+                    setFileName={setFileName}
+                    fileName={fileName}
+                    version={version}
+                    date={date}
+                    checkReadWriteAccess={checkReadWriteAccess}
+                  />
+                );
+              }
+            })}
+        </div>
         <FooterButtons
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}
           formValid={formValid}
-          checkReadWriteAccess = {true}
+          checkReadWriteAccess={checkReadWriteAccess}
+          bottomFixed={true}
         />
-      </div>
-    </PageLayout>
+      </PageLayout>
     </LoadingOverlay>
   );
 }
