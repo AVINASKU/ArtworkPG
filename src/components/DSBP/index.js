@@ -13,17 +13,19 @@ const DSBP = () => {
   const headerName = "Artwork Alignment";
 
   return (
-    <div className="artwork-dsbp myProjectAnddAllProjectList">
+    <div className="myProjectAnddAllProjectList">
       <ArtworkHeader
         breadcrumb={breadcrumb}
         headerName={headerName}
         label="Artwork Alignment"
       />
       <ProjectNameHeader />
-      <SelectDsbpId />
+      {/* <SelectDsbpId /> */}
       <AgilityList />
     </div>
   );
 };
+
+
 
 export default DSBP;

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+// import filter from "../../../assets/images/filter.svg";
+import filter from "../../assets/images/filter.svg";
 
 import "../Projects/MyProjects/index.scss";
 
@@ -149,30 +151,66 @@ const AgilityList = () => {
     "PO FPC DESC",
   ];
 
+  const renderHeader = (field, isFilterActivated = false) => {
+  console.log("name", field);
+    return (
+      <span key={field}>
+      {/* {field === "Add to Project" && <span>
+      <span>Add dropdown</span>
+      </span>} */}
+        <img
+          src={filter}
+          key={field}
+          alt="Column Filter"
+          // onClick={(e) => projectNameOnClick(e, options)}
+          className={
+            isFilterActivated
+              ? "columnFilterIcon filter-color-change"
+              : "columnFilterIcon"
+          }
+        />
+        {field}
+      </span>
+    );
+  };
+
+  const addBody = () =>{
+  
+  }
+
   const renderColumns = () => {
     if (columnName && columnName.length) {
       return columnName.map((field, index) => {
-        return <Column field={field} header={field} key={index} />;
+        return (
+          <Column
+            field={field}
+            header={() => renderHeader(field)}
+            body={addBody}
+            key={field}
+            columnKey={field}
+            showFilterMenu={false}
+            alignFrozen="left"
+            filterField={field}
+          />
+        );
       });
     }
   };
 
   return (
-    <div className="margin-left myProjectAnddAllProjectList">
-      <DataTable
-        scrollable
-        responsiveLayout="scroll"
-        className="mt-3"
-        columnResizeMode="expand"
-        value={products}
-        resizableColumns
-        dataKey="Project_ID"
-        reorderableColumns
-        tableStyle={{ width: "max-content", minWidth: "100%" }}
-      >
-        {renderColumns()}
-      </DataTable>
-    </div>
+    <DataTable
+      dataKey="DSBP ID"
+      scrollable
+      resizableColumns
+      reorderableColumns
+      responsiveLayout="scroll"
+      columnResizeMode="expand"
+      value={products}
+      className="mt-3"
+      tableStyle={{ width: "max-content", minWidth: "100%" }}
+    >
+      {renderColumns()}
+    </DataTable>
   );
 };
 
