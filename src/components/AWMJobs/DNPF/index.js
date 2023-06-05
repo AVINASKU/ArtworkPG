@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import LoadingOverlay from "react-loading-overlay";
 import PageLayout from "../../PageLayout";
 import TaskHeader from "../DesignJobs/TaskHeader";
 import DesignHeader from "../DesignJobs/DesignHeader";
@@ -12,19 +13,26 @@ import { useNavigate } from "react-router-dom";
 import CloneJobs from "../DesignJobs/CloneJobs";
 import "./index.scss";
 import CDHeader from "../DesignJobs/CDHeader";
-const breadcrumb = [{ label: "Define Color Development" }];
+import {
+  saveColorDevelopment,
+  submitColorDevelopment,
+} from "../../../apis/colorDevelopmentApi";
+const breadcrumb = [{ label: "Define Color Development & Print Trial" }];
 
-const headerName = "Define Color Development";
+const headerName = "Define Color Development  & Print Trial";
 const jobName = "CD_";
 
 function DNPF() {
   const dispatch = useDispatch();
   const { TaskDetailsData } = useSelector((state) => state.TaskDetailsReducer);
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
   const [data, setData] = useState(null);
   const [CD, setCD] = useState([]);
-  const [formValid, setFormValid] = useState(true);
+  const [formValid, setFormValid] = useState(false);
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
+  const [loader, setLoader] = useState(false);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
 
@@ -60,6 +68,10 @@ function DNPF() {
     setCD(sub);
   };
 
+  useEffect(() => {
+    checkFormValidity();
+  }, [data]);
+
   const addNewEmptyDesign = () => {
     const newDesignIntent = [
       ...CD,
@@ -87,9 +99,25 @@ function DNPF() {
   const addData = (fieldName, index, value, Design_Intent_Name) => {
     let data = CD[index];
     data[fieldName] = value;
-    data["CD_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
     setSubmittedDI(submittedDI);
+    checkFormValidity();
+  };
+
+  const checkFormValidity = () => {
+    const validTasks = CD?.filter((task) => {
+      return (
+        task?.Printer &&
+        task?.Printing_Process &&
+        task?.Substrate &&
+        task?.Select
+      );
+    });
+    if (validTasks.length > 0) {
+      setFormValid(true);
+    } else {
+      setFormValid(false);
+    }
   };
 
   const onSelectAll = (checked) => {
@@ -103,48 +131,115 @@ function DNPF() {
     setUpdated(!updated);
   };
 
-  const onSubmit = () => {
+  // const onSubmit = () => {
+  //   let submitOnlySelectedData = CD?.filter((task) => task?.Select === true);
+  //   // submitOnlySelectedData.map((task) => {
+  //   //   task.Event = "submit";
+  //   // });
+  //   console.log("full submit data --->", submitOnlySelectedData);
+  // };
+  const onSubmit = async () => {
+    setLoader(true);
+    let pageInstructions = [];
+
     let submitOnlySelectedData = CD?.filter((task) => task?.Select === true);
-    submitOnlySelectedData.map((task) => {
-      task.Event = "submit";
+    submitOnlySelectedData.forEach((task) => {
+      let taskAction = "update";
+      if (task?.Action !== "delete" && task?.Design_Job_ID) {
+        taskAction = "update";
+      }
+      if (task?.Action !== "delete" && task?.isNew === true) {
+        taskAction = "add";
+      }
+      if (task?.Action === "delete") {
+        taskAction = "delete";
+      }
+      let taskDesignJobID = task?.Design_Job_ID;
+      if (task?.isNew) {
+        taskDesignJobID = "";
+      }
+      let temp = {};
+      temp["instruction"] = "APPEND";
+      temp["target"] = "NewPrintFeasibilityList";
+      temp["content"] = {
+        DesignJobName:
+          "Confirm Color Development",
+        DesignJobID: taskDesignJobID,
+        PrintingProcess: task?.Printing_Process,
+        Substrate: task?.Substrate,
+        Select: task?.Select.toString(),
+        PrintTrialNeeded: task?.Print_Trial_Needed,
+        AdditionalInfo: task?.Additional_Info,
+        Action: taskAction,
+        Printer: task?.Printer,
+      };
+      pageInstructions.push(temp);
     });
-    console.log("full submit data --->", submitOnlySelectedData);
+    let formData = {
+      caseTypeID: "PG-AAS-Work-DefineNewPrintFeasibilityScope",
+      content: {
+        AWMTaskID: data.Task_ID,
+        AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
+      },
+      pageInstructions: pageInstructions,
+    };
+    console.log("full submit data --->", formData);
+    let id = data.Task_Key;
+    const headers = {
+      key: "If-Match",
+      value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
+    };
+
+    await submitColorDevelopment(formData, id, headers);
+    setLoader(false);
   };
 
   const onSaveAsDraft = async () => {
-    // let submitOnlySelectedData = designIntent.filter(
-    //   (task) => task?.Event !== "submit"
-    // );
+    setLoader(true);
+    let counter = 0;
     let submitOnlySelectedData = CD?.map((task) => {
-      task.Action = "update";
+      counter++;
+      // task.Action = "update";
       if (task?.Action !== "delete" && task?.Design_Job_ID) {
         task.Action = "update";
-      } else if (task?.Action !== "delete" && task?.isNew === true)
+      }
+      if (task?.Action !== "delete" && task?.isNew === true) {
         task.Action = "add";
-
+      }
+      if (task?.Action === "delete") {
+        task.Action = "delete";
+      }
       if (task?.isNew) {
         task.Design_Job_ID = "";
       }
 
-      task.Event = "draft";
-      task.AWM_Project_ID = "A-1000";
+      task.Design_Job_Name = `New Print Feasibility${counter}`;
+
       return task;
     });
+
     let formData = {
-      DesignIntentList: submitOnlySelectedData,
+      AWM_Project_ID: selectedProjectDetails.Project_ID,
+      AWM_Task_ID: data.Task_ID,
+      Project_Name: selectedProjectDetails.Project_Name,
+      BU: selectedProjectDetails.BU,
+      Region: selectedProjectDetails.Project_region,
+      NewPrintFeasibilityList: submitOnlySelectedData,
     };
-    console.log("full draft data --->", submitOnlySelectedData);
-    await saveDesignIntent(formData);
+    console.log("full draft data --->", formData);
+    await saveColorDevelopment(formData);
+    setLoader(false);
   };
 
   return (
+    <LoadingOverlay active={loader} spinner text="">
     <PageLayout>
       <CDHeader
         setAddNewDesign={addNewEmptyDesign}
         onSelectAll={onSelectAll}
         breadcrumb={breadcrumb}
         headerName={headerName}
-        label="Define Color Development"
+        label="Define Color Development & Print Trial"
       />
       <div
         style={{
@@ -152,6 +247,7 @@ function DNPF() {
           overflowX: "hidden",
           width: "100%",
           height: "400px",
+          display: "grid",
         }}
       >
         {<TaskHeader {...data} />}
@@ -172,14 +268,22 @@ function DNPF() {
             );
           }
         })}
-        <FooterButtons
+        {/* <FooterButtons
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}
           formValid={formValid}
-        />
+        /> */}
       </div>
+      <FooterButtons
+        handleCancel={handleCancel}
+        onSaveAsDraft={onSaveAsDraft}
+        onSubmit={onSubmit}
+        formValid={formValid}
+        checkReadWriteAccess = {true}
+      />
     </PageLayout>
+    </LoadingOverlay>
   );
 }
 

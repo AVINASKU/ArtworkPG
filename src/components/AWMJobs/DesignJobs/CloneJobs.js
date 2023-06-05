@@ -6,15 +6,16 @@ import deleteIcon from "../../../assets/images/deleteIcon.svg";
 import { MultiSelect } from "primereact/multiselect";
 import { FileUpload } from "primereact/fileupload";
 import {
-  SubstrateList,
-  PrinterList,
-  PrinterProcessList,
+  // SubstrateList,
+  // PrinterList,
+  // PrinterProcessList,
   PantoneList,
 } from "../../../categories";
 import { AutoComplete } from "primereact/autocomplete";
 import { useLocation } from "react-router-dom";
 import { isArray, isString } from "lodash";
 import UploadFile from "./UploadFile";
+import { useSelector } from "react-redux";
 const CloneJobs = ({
   index,
   Artwork_Brand,
@@ -32,6 +33,10 @@ const CloneJobs = ({
   setformattedValue,
   setAzureFile,
   setFileName,
+  fileName,
+  IQ,
+  date,
+  version
 }) => {
   const {
     Printing_Process,
@@ -43,13 +48,19 @@ const CloneJobs = ({
     Substrate,
     Design_Job_ID,
     Design_Job_Name,
-    PrintTrail,
-    CDConfirmed,
+    Print_Trial_Needed,
+    CD_Approved,
     PTConfirmed,
   } = item;
+  const { DropDownValuesData, loading } = useSelector((state) => state.DropDownValuesReducer);
+
   const IDDSampleApproved = data?.IDDSampleApproved || false;
   const IDDSampleLabTestApproved = data?.IDDSampleLabTestApproved || false;
   const location = useLocation();
+  const [PrinterList, setPrinterList] = useState([]);
+  const [SubstrateList, setSubstrateList] = useState([]);
+  const [PrinterProcessList, setPrinterProcessList] = useState([]);
+  // const [PantoneList, setPantoneList] = useState([]);
   const [checked, setChecked] = useState(false);
   const [iddsaChecked, setIddsaChecked] = useState(IDDSampleApproved);
   const [iddsltaChecked, setIddsltaChecked] = useState(
@@ -60,21 +71,47 @@ const CloneJobs = ({
   const [CDConfirmation, setCDConfirmation] = useState(false);
   const [printTrailDone, setPrintTrailDone] = useState(false);
   const [printerProcess, setPrinterProcess] = useState(Printing_Process);
-  const [pantone, setPantone] = useState(Pantone);
+  const [pantone, setPantone] = useState(Pantone || "");
   const [substrateData, setSubstarteData] = useState(Substrate);
-  const [printers, setPrinters] = useState(
-    isArray(Printer)
-      ? Printer
-      : isString(Printer) && (Printer === "" ? [] : [Printer])
-  );
+  const [printers, setPrinters] = useState([]);
   // const [printers, setPrinters] = useState(Printer);
   const [additionalInformation, setAdditionalInfo] = useState(Additional_Info);
   const [filteredItems, setFilteredItems] = useState(null);
   const [filteredPantoneItems, setFilteredPantoneItems] = useState(null);
+  const [taskPageDropDownValues, setTaskPageDropDownValues]  = useState([]);
 
   const locationPath = location?.pathname;
   const url = locationPath?.split("/");
   const pathName = url[2];
+
+  useEffect(() => {
+    let temp = [];
+    isArray(Printer) &&
+      Printer?.forEach((ptr) => {
+        temp.push(ptr.Code);
+      });
+    setPrinters(temp);
+  }, []);
+
+  useEffect(() => {
+    if (DropDownValuesData) {
+      setTaskPageDropDownValues(
+        DropDownValuesData?.ArtworkAgilityTasksPage || []
+      );
+    }
+  }, [DropDownValuesData]);
+
+  useEffect(() => {
+    if(taskPageDropDownValues !== undefined && taskPageDropDownValues.length !== 0){
+      setPrinterList(taskPageDropDownValues.Artwork_Printer);
+      const Artwork_Substrate = taskPageDropDownValues.Artwork_Substrate.reduce((acc,curr)=>(acc.push(curr.Substrate_Name),acc),[])
+      setSubstrateList(Artwork_Substrate);
+      const Artwork_PrinterProcess = taskPageDropDownValues.Artwork_PrinterProcess.reduce((acc,curr)=>(acc.push(curr.PrinterProcess_Name),acc),[])
+      setPrinterProcessList(Artwork_PrinterProcess);
+      // setPantoneList(taskPageDropDownValues.Artwork_Pantone);
+    }
+  },[taskPageDropDownValues]);
+
   let showPage;
   switch (pathName) {
     case "DNPF":
@@ -115,34 +152,41 @@ const CloneJobs = ({
   }, [IDDSampleLabTestApproved]);
 
   useEffect(() => {
-    setPrintTrailNeeded(PrintTrail);
-    setCDConfirmation(CDConfirmed);
+    setPrintTrailNeeded(Print_Trial_Needed);
+    setCDConfirmation(CD_Approved);
     setPrintTrailDone(PTConfirmed);
-  }, [PrintTrail, CDConfirmed, PTConfirmed]);
+  }, [Print_Trial_Needed, CD_Approved, PTConfirmed]);
 
-  useEffect(() => {
-    if (showPage === "CCD" || showPage === "CPT") {
-      if (printerProcess && substrateData && printTrailNeeded && checked) {
-        setFormValid(false);
-      } else {
-        setFormValid(true);
-      }
-    } else if (showPage !== "DNIQ" && showPage !== "CNIQ") {
-      if (CDConfirmation) {
-        setFormValid(false);
-      } else {
-        setFormValid(true);
-      }
-    }
-  }, [
-    printerProcess,
-    pantone,
-    substrateData,
-    printTrailNeeded,
-    checked,
-    CDConfirmation,
-    setFormValid,
-  ]);
+  // useEffect(() => {
+  //   // if (showPage === "CCD" || showPage === "CPT") {
+  //   //   if (printerProcess && substrateData && printTrailNeeded && checked) {
+  //   //     setFormValid(false);
+  //   //   } else {
+  //   //     setFormValid(true);
+  //   //   }
+  //   // } else
+  //   if (
+  //     showPage !== "DNIQ" &&
+  //     showPage !== "CNIQ" &&
+  //     showPage !== "DNPF" &&
+  //     showPage !== "CCD" &&
+  //     showPage !== "CPT"
+  //   ) {
+  //     if (CDConfirmation) {
+  //       setFormValid(false);
+  //     } else {
+  //       setFormValid(true);
+  //     }
+  //   }
+  // }, [
+  //   printerProcess,
+  //   pantone,
+  //   substrateData,
+  //   printTrailNeeded,
+  //   checked,
+  //   CDConfirmation,
+  //   setFormValid,
+  // ]);
 
   const DesignHeader = (di_name) => {
     return (
@@ -183,9 +227,17 @@ const CloneJobs = ({
     Artwork_Category ||
     Artwork_Brand
   ) {
+    let selectedPrinter = [];
+    printers.forEach((val) => {
+      PrinterList.forEach((pl) => {
+        if (pl.code === val) {
+          selectedPrinter.push(pl.Printer_Name);
+        }
+      });
+    });
     di_name =
       jobName +
-      (printers ? printers + "_" : "Printer" + "_") +
+      (selectedPrinter.length ? selectedPrinter + "_" : "Printer" + "_") +
       (jobName === "IQ_" ? (pantone ? pantone + "_" : "Pantone" + "_") : "") +
       (jobName !== "IQ_"
         ? printerProcess
@@ -265,12 +317,25 @@ const CloneJobs = ({
               id="printers"
               value={printers}
               onChange={(e) => {
-                addData("Printer", index, e.value, di_name);
+                console.log(e.value);
+                let selectedPrinter = [];
+                e.value.forEach((val) => {
+                  PrinterList.forEach((pl) => {
+                    if (pl.code === val) {
+                      selectedPrinter.push(pl);
+                    }
+                  });
+                });
+                console.log("selectedPrinter: ", selectedPrinter);
+                addData("Printer", index, selectedPrinter, di_name);
                 setPrinters(e.value);
               }}
               options={
                 PrinterList
-                  ? PrinterList.map((obj) => ({ label: obj, value: obj }))
+                  ? PrinterList.map((obj) => ({
+                      label: obj.Printer_Name,
+                      value: obj.code,
+                    }))
                   : []
               }
               optionLabel="label"
@@ -290,7 +355,7 @@ const CloneJobs = ({
           <Col sm={2}>
             <div>
               <label htmlFor="agency">
-                Printer Process <sup> *</sup>
+                Printing Process <sup> *</sup>
               </label>
               <AutoComplete
                 id="printer"
@@ -300,9 +365,9 @@ const CloneJobs = ({
                   searchFilters(e.query, PrinterProcessList, setFilteredItems)
                 }
                 dropdown
-                placeholder="Search Printer Process"
+                placeholder="Search Printing Process"
                 onChange={(e) => {
-                  addData("Printer_Process", index, e.target.value, di_name);
+                  addData("Printing_Process", index, e.target.value, di_name);
                   setPrinterProcess(e.target.value);
                 }}
                 aria-describedby="cluster-help"
@@ -344,30 +409,21 @@ const CloneJobs = ({
         )}
         {(showPage === "DNIQ" || showPage === "CNIQ") && (
           <Col sm={2}>
-            <div>
-              <label htmlFor="agency">Pantone</label>
-              <AutoComplete
-                id="pantone"
-                value={pantone}
-                suggestions={filteredPantoneItems}
-                completeMethod={(e) =>
-                  searchPantoneFilters(
-                    e.query,
-                    PantoneList,
-                    setFilteredPantoneItems
-                  )
-                }
-                dropdown
-                placeholder="Search Pantone"
-                onChange={(e) => {
-                  addData("Pantone", index, e.target.value, di_name);
-                  setPantone(e.target.value);
-                }}
-                aria-describedby="cluster-help"
-                disabled={showPage === "CNIQ" && true}
-              />
-            </div>
-          </Col>
+          <div>
+            <label htmlFor="agency">Pantone</label>
+            <InputText
+              id="pantone"
+              value={pantone}
+              placeholder="Enter Pantone"
+              onChange={(e) => {
+                addData("Pantone", index, e.target.value, di_name);
+                setPantone(e.target.value);
+              }}
+              aria-describedby="pantone-help"
+              disabled={showPage === "CNIQ" && true}
+            />
+          </div>
+        </Col>
         )}
         <Col sm={2}>
           <Row>
@@ -393,77 +449,100 @@ const CloneJobs = ({
             </Col>
           </Row>
         </Col>
-        {showPage !== "DNIQ" && showPage !== "CNIQ" && (
+        {((showPage !== "DNIQ" && showPage !== "CNIQ") ||
+          (showPage === "DNPF" && printTrailNeeded)) && (
           <Col sm={2}>
             <div>
-              <div className="print-trial">
-                <div>
-                  <Checkbox
-                    onChange={(e) => {
-                      addData("printTrailNeeded", index, e.checked, di_name);
-                      setPrintTrailNeeded(e.checked);
-                      e.checked && setFormValid(false);
-                    }}
-                    checked={event === "submit" ? true : printTrailNeeded}
-                    disabled={
-                      (showPage === "CCD" || showPage === "CPT") && true
-                    }
+              {(showPage === "DNPF" || printTrailNeeded) && (
+                <div className="print-trial">
+                  <div>
+                    <Checkbox
+                      onChange={(e) => {
+                        addData(
+                          "Print_Trial_Needed",
+                          index,
+                          e.checked,
+                          di_name
+                        );
+                        setPrintTrailNeeded(e.checked);
+                        // e.checked && setFormValid(false);
+                      }}
+                      checked={event === "submit" ? true : printTrailNeeded}
+                      disabled={
+                        (showPage === "CCD" || showPage === "CPT") && true
+                      }
+                      className={
+                        (showPage === "CCD" || showPage === "CPT") &&
+                        "disabled-text"
+                      }
+                    ></Checkbox>
+                  </div>
+                  <label
+                    htmlFor="printTrailNeeded"
                     className={
                       (showPage === "CCD" || showPage === "CPT") &&
                       "disabled-text"
                     }
-                  ></Checkbox>
+                  >
+                    Print Trail Needed
+                  </label>
                 </div>
-                <label
-                  htmlFor="printTrailNeeded"
-                  className={
-                    (showPage === "CCD" || showPage === "CPT") &&
-                    "disabled-text"
-                  }
-                >
-                  Print Trail Needed
-                </label>
-              </div>
+              )}
               {(showPage === "CCD" || showPage === "CPT") && (
                 <>
                   <div className="print-trial">
                     <div>
                       <Checkbox
                         onChange={(e) => {
+                          addData("CD_Approved", index, e.checked, di_name);
                           setCDConfirmation(e.checked);
                           setPrintTrailDone(false);
                         }}
                         checked={event === "submit" ? true : CDConfirmation}
                         className="margin-right"
-                      ></Checkbox>
-                    </div>
-
-                    <label htmlFor="printTrailNeeded">CD Approved</label>
-                  </div>
-                  <div className="print-trial">
-                    <div>
-                      <Checkbox
-                        onChange={(e) => {
-                          setPrintTrailDone(e.checked);
-                          (showPage === "CCD" || showPage === "CPT") &&
-                            e.checked &&
-                            setFormValid(false);
-                        }}
-                        checked={event === "submit" ? true : printTrailDone}
-                        className="margin-right"
-                        disabled={!CDConfirmation}
+                        disabled={showPage === "CPT" && true}
                       ></Checkbox>
                     </div>
 
                     <label
                       htmlFor="printTrailNeeded"
-                      className={
-                        !CDConfirmation ? "disabled-text" : "enabled-text"
-                      }
+                      className={showPage === "CPT" && "disabled-text"}
                     >
-                      Print Trial Done
+                      CD Approved
                     </label>
                   </div>
+                  {printTrailNeeded && (
+                    <div className="print-trial">
+                      <div>
+                        <Checkbox
+                          onChange={(e) => {
+                            addData(
+                              "Print_Trial_Done",
+                              index,
+                              e.checked,
+                              di_name
+                            );
+                            setPrintTrailDone(e.checked);
+                            // showPage === "CPT" &&
+                            //   e.checked &&
+                            //   setFormValid(false);
+                          }}
+                          checked={event === "submit" ? true : printTrailDone}
+                          className="margin-right"
+                          disabled={((showPage === "CCD") || (showPage==="CPT" && !CDConfirmation))}
+                        ></Checkbox>
+                      </div>
+
+                      <label
+                        htmlFor="printTrailDone"
+                        className={
+                          ((showPage === "CCD") || (showPage==="CPT" && !CDConfirmation)) ? "disabled-text" : "enabled-text"
+                        }
+                      >
+                        Print Trial Done
+                      </label>
+                    </div>
+                  )}
                 </>
               )}
             </div>
@@ -541,7 +620,7 @@ const CloneJobs = ({
           </Col>
         )} */}
 
-        {showPage === "CNIQ" && (
+        {(showPage === "CNIQ" || showPage === "CCD" || showPage === "CPT") && (
           <UploadFile
             {...data}
             upload={true}
@@ -551,6 +630,10 @@ const CloneJobs = ({
             item={item}
             data={data}
             jobName={jobName}
+            fileName={fileName}
+            IQ={IQ}
+            date={date}
+            version={version}
             // ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
             // version={version}
           />

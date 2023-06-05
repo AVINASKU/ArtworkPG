@@ -91,7 +91,7 @@ const CDHeader = ({
             />
             <div className="icon-label">
               <label className={disabled && "disable-buttons"}>
-                Add Design Intent
+                Add Color Development
               </label>
             </div>
           </div>
