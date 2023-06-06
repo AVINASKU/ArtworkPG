@@ -33,7 +33,6 @@ const TaskList = (props) => {
   const [filters, setFilters] = useState([]);
   const [selectedColumnName, setSelectedColumnName] = useState(null);
   let { ProjectID } = useParams();
-
   const getMyTasks = (myTasksList) => {
     const myTasks = myTasksList?.map((element) => {
       return element;
