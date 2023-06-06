@@ -278,9 +278,8 @@ function DDT() {
         onSaveAsDraft={onSaveAsDraft}
         onSubmit={onSubmit}
         checkReadWriteAccess={checkReadWriteAccess}
-        disableSaveAsDraft={checkTaskISComplete}
         bottomFixed={true}
-        formValid={!enableSubmit || checkTaskISComplete}
+        formValid={!enableSubmit}
       />
     </PageLayout>
   );

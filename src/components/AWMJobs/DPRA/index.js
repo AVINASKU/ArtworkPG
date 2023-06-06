@@ -280,11 +280,10 @@ function DPRA() {
       <FooterButtons
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
-        disableSaveAsDraft = {checkTaskISComplete}
         onSubmit={onSubmit}
-        checkReadWriteAccess={checkReadWriteAccess}
         bottomFixed={true}
-        formValid={!enableSubmit || checkTaskISComplete}
+        checkReadWriteAccess={checkReadWriteAccess}
+        formValid={!enableSubmit}
       />
     </PageLayout>
   );
