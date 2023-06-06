@@ -61,7 +61,7 @@ function ProjectSetup(props) {
   useEffect(() => {
     if (!pathname.includes("#")) {
       setTabName("ProjectPlan");
-    }else if (currentUrl) {
+    } else if (currentUrl) {
       setTabName(currentUrl);
     }
   }, [tabName, currentUrl]);
@@ -82,7 +82,7 @@ function ProjectSetup(props) {
           You are not authorized to access this page.
         </div>
       ) : (
-        <div style={{ background: "#ffffff", borderRadius: "24px" }}>
+        <div className="projectSetupParent">
           <div className="actions">
             <div className="breadCrumbParent">
               <BreadCrumb model={items} />
@@ -107,16 +107,25 @@ function ProjectSetup(props) {
       name: "ProjectPlan",
       tabNameForDisplay: "Project Plan",
       component: (
-        <div style={{ background: "#ffffff", borderRadius: "24px" }}>
-          <div className="actions">
+        <div className="projectSetupParent">
+          <div className="">
             <div className="breadCrumbParent">
-              <div className="displayFlex">
-                <div className="width50">
+              <div className="row">
+                <div className="col">
                   <BreadCrumb model={items} />
+                  {mode !== "create" && (
+                    <div className="row projectPlanName">
+                      <div className="col">
+                        <div className="project-name">
+                          {selectedProjectDetails.Project_Name}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <div className="width50">
+                <div className="col projectPlanButtonsParent">
                   <div
-                    className="btn-group btn-group-toggle d-flex justify-content-end"
+                    className="btn-group btn-group-toggle"
                     data-toggle="buttons"
                   >
                     <div className="col projectPlanButtons">
@@ -141,51 +150,9 @@ function ProjectSetup(props) {
                         Tabular
                       </label>
                     </div>
-                    {/* {shouldShowResetButton && ( */}
-                    {
-                      <DropdownButton
-                        id="projectActions"
-                        title="Actions"
-                        // disabled={false}
-                        disabled={!isReadOnly}
-                        // data-popper-placement="bottom-end"
-                        // drop="down-end"
-                        align="end"
-                      >
-                        <Dropdown.Item
-                          onClick={() => getData("On Hold")}
-                          className="dropdownItemPaddingLeft dropdownItemColor"
-                        >
-                          On Hold
-                        </Dropdown.Item>
-                        <Dropdown.Item
-                          onClick={() => getData("Cancel")}
-                          className="dropdownItemPaddingLeft dropdownItemColor1"
-                        >
-                          Cancel
-                        </Dropdown.Item>
-                        <Dropdown.Item
-                          onClick={() => getData("Previous State")}
-                          className="dropdownItemPaddingLeft dropdownItemColor2"
-                        >
-                          Previous State
-                        </Dropdown.Item>
-                      </DropdownButton>
-                    }
                   </div>
                 </div>
               </div>
-
-              {/* {`--------${mode}`} */}
-              {mode !== "create" && (
-                <div className="row">
-                  <div className="col">
-                    <div className="project-name">
-                      {selectedProjectDetails.Project_Name}
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
           <div>
@@ -290,6 +257,37 @@ function ProjectSetup(props) {
       component: <>Readiness Per PMP Data</>,
     },
   ];
+  const actionButton = (
+    <DropdownButton
+      id="projectActions"
+      title="Actions"
+      // disabled={false}
+      disabled={!isReadOnly}
+      // data-popper-placement="bottom-end"
+      // drop="down-end"
+      align="end"
+    >
+      <Dropdown.Item
+        onClick={() => getData("On Hold")}
+        className="dropdownItemPaddingLeft dropdownItemColor"
+      >
+        On Hold
+      </Dropdown.Item>
+      <Dropdown.Item
+        onClick={() => getData("Cancel")}
+        className="dropdownItemPaddingLeft dropdownItemColor1"
+      >
+        Cancel
+      </Dropdown.Item>
+      <Dropdown.Item
+        onClick={() => getData("Previous State")}
+        className="dropdownItemPaddingLeft dropdownItemColor2"
+      >
+        Previous State
+      </Dropdown.Item>
+    </DropdownButton>
+  );
+
   return (
     <div className="content-layout">
       {visible && (
@@ -313,6 +311,7 @@ function ProjectSetup(props) {
         <TabsComponent
           tabName={tabName}
           items={itemsData}
+          actionButton={actionButton}
         />
       </div>
     </div>

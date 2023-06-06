@@ -2,12 +2,13 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import "./index.scss";
 
-const TabsComponent = ({ items, tabName }) => {
+const TabsComponent = ({ items, tabName, actionButton }) => {
   const location = useLocation();
   const currentUrl = location.pathname;
 
   return (
     <>
+    <div className="displayFlex">
       <div className="tabs-wrapper">
         <ul id="scroller" className="nav nav-tabs">
           {items.map((obj, index) => (
@@ -21,6 +22,8 @@ const TabsComponent = ({ items, tabName }) => {
             </li>
           ))}
         </ul>
+      </div>
+      <div className="actionButtonsForTabComponent">{actionButton}</div>
       </div>
       <div className="tab-content">
         {items.map((obj, index) => (
