@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import moment from "moment";
 import { CheckReadOnlyAccess } from "../../../utils";
+import LoadingOverlay from "react-loading-overlay";
 function ProjectPlanCompo(props) {
   const toast = useRef(null);
   const [projectPlanDesignData, setProjectPlanDesignData] = useState([]);
@@ -149,7 +150,7 @@ function ProjectPlanCompo(props) {
         data: apiData.filter((data) => data.AWM_Task_ID.includes("DNIQ_")),
       },
       {
-        name: "Confirm New Ink Qualification done",
+        name: "Confirm New Ink Qualification",
         code: "CNIQ",
         data: apiData.filter((data) => data.AWM_Task_ID.includes("CNIQ_")),
       },

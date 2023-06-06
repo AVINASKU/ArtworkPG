@@ -17,6 +17,7 @@ import CloneJobs from "../DesignJobs/CloneJobs";
 import "./index.scss";
 import CDHeader from "../DesignJobs/CDHeader";
 import IQHeader from "../DesignJobs/IQHeader";
+import { CheckReadOnlyAccess } from "../../../utils";
 const breadcrumb = [{ label: "Define Ink Qualification" }];
 
 const headerName = "Define Ink Qualification";
@@ -24,7 +25,9 @@ const jobName = "IQ_";
 
 function DNIQ() {
   const dispatch = useDispatch();
-  const { TaskDetailsData } = useSelector((state) => state.TaskDetailsReducer);
+  const { TaskDetailsData, loading } = useSelector(
+    (state) => state.TaskDetailsReducer
+  );
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const [data, setData] = useState(null);
@@ -35,6 +38,7 @@ function DNIQ() {
   const [loader, setLoader] = useState(false);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
+  const checkReadWriteAccess = CheckReadOnlyAccess();
 
   useEffect(() => {
     // const data1 = ProjectService.getDIData();
@@ -133,8 +137,7 @@ function DNIQ() {
       temp["instruction"] = "APPEND";
       temp["target"] = "IQList";
       temp["content"] = {
-        DesignJobName:
-          "Confirm New Ink Qualification",
+        DesignJobName: "Confirm New Ink Qualification",
         DesignJobID: taskDesignJobID,
         AdditionalInfo: task?.Additional_Info,
         Pantone: task?.Pantone,
@@ -215,52 +218,58 @@ function DNIQ() {
   };
 
   return (
-    <LoadingOverlay active={loader} spinner text="">
-    <PageLayout>
-      <IQHeader
-        setAddNewDesign={addNewEmptyDesign}
-        onSelectAll={onSelectAll}
-        breadcrumb={breadcrumb}
-        headerName={headerName}
-        label="Define Ink Qualification"
-        showPage="DNIQ"
-      />
-      <div
-        style={{
-          overflowY: "scroll",
-          overflowX: "hidden",
-          width: "100%",
-          height: "400px",
-          display: "grid",
-        }}
-      >
-        {<TaskHeader {...data} />}
+    <LoadingOverlay active={loader || loading || IQ === null} spinner text="">
+      <PageLayout>
+        <IQHeader
+          setAddNewDesign={addNewEmptyDesign}
+          onSelectAll={onSelectAll}
+          breadcrumb={breadcrumb}
+          headerName={headerName}
+          label="Define Ink Qualification"
+          showPage="DNIQ"
+          checkReadWriteAccess={checkReadWriteAccess}
+        />
+        <div
+          className="task-details"
+          style={{
+            overflowY: "scroll",
+            overflowX: "hidden",
+            width: "100%",
+            height: "400px",
+            // display: "grid",
+          }}
+        >
+          {<TaskHeader {...data} />}
 
-        {IQ.map((item, index) => {
-          if (item && item?.Action !== "delete") {
-            return (
-              <CloneJobs
-                key={item.Design_Job_ID}
-                {...data}
-                item={item}
-                index={index}
-                addData={addData}
-                handleDelete={handleDelete}
-                jobName={jobName}
-                setFormValid={setFormValid}
-              />
-            );
-          }
-        })}
+          {IQ &&
+            IQ.length > 0 &&
+            IQ.map((item, index) => {
+              if (item && item?.Action !== "delete") {
+                return (
+                  <CloneJobs
+                    key={item.Design_Job_ID}
+                    {...data}
+                    item={item}
+                    index={index}
+                    addData={addData}
+                    handleDelete={handleDelete}
+                    jobName={jobName}
+                    setFormValid={setFormValid}
+                    checkReadWriteAccess={checkReadWriteAccess}
+                  />
+                );
+              }
+            })}
+        </div>
         <FooterButtons
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}
           formValid={formValid}
-          checkReadWriteAccess = {true}
+          checkReadWriteAccess={checkReadWriteAccess}
+          bottomFixed={true}
         />
-      </div>
-    </PageLayout>
+      </PageLayout>
     </LoadingOverlay>
   );
 }

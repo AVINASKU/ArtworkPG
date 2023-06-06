@@ -36,7 +36,9 @@ const CloneJobs = ({
   fileName,
   IQ,
   date,
-  version
+  version,
+  CD,
+  checkReadWriteAccess,
 }) => {
   const {
     Printing_Process,
@@ -52,7 +54,9 @@ const CloneJobs = ({
     CD_Approved,
     PTConfirmed,
   } = item;
-  const { DropDownValuesData, loading } = useSelector((state) => state.DropDownValuesReducer);
+  const { DropDownValuesData, loading } = useSelector(
+    (state) => state.DropDownValuesReducer
+  );
 
   const IDDSampleApproved = data?.IDDSampleApproved || false;
   const IDDSampleLabTestApproved = data?.IDDSampleLabTestApproved || false;
@@ -78,7 +82,7 @@ const CloneJobs = ({
   const [additionalInformation, setAdditionalInfo] = useState(Additional_Info);
   const [filteredItems, setFilteredItems] = useState(null);
   const [filteredPantoneItems, setFilteredPantoneItems] = useState(null);
-  const [taskPageDropDownValues, setTaskPageDropDownValues]  = useState([]);
+  const [taskPageDropDownValues, setTaskPageDropDownValues] = useState([]);
 
   const locationPath = location?.pathname;
   const url = locationPath?.split("/");
@@ -102,15 +106,25 @@ const CloneJobs = ({
   }, [DropDownValuesData]);
 
   useEffect(() => {
-    if(taskPageDropDownValues !== undefined && taskPageDropDownValues.length !== 0){
+    if (
+      taskPageDropDownValues !== undefined &&
+      taskPageDropDownValues.length !== 0
+    ) {
       setPrinterList(taskPageDropDownValues.Artwork_Printer);
-      const Artwork_Substrate = taskPageDropDownValues.Artwork_Substrate.reduce((acc,curr)=>(acc.push(curr.Substrate_Name),acc),[])
+      const Artwork_Substrate = taskPageDropDownValues.Artwork_Substrate.reduce(
+        (acc, curr) => (acc.push(curr.Substrate_Name), acc),
+        []
+      );
       setSubstrateList(Artwork_Substrate);
-      const Artwork_PrinterProcess = taskPageDropDownValues.Artwork_PrinterProcess.reduce((acc,curr)=>(acc.push(curr.PrinterProcess_Name),acc),[])
+      const Artwork_PrinterProcess =
+        taskPageDropDownValues.Artwork_PrinterProcess.reduce(
+          (acc, curr) => (acc.push(curr.PrinterProcess_Name), acc),
+          []
+        );
       setPrinterProcessList(Artwork_PrinterProcess);
       // setPantoneList(taskPageDropDownValues.Artwork_Pantone);
     }
-  },[taskPageDropDownValues]);
+  }, [taskPageDropDownValues]);
 
   let showPage;
   switch (pathName) {
@@ -199,18 +213,20 @@ const CloneJobs = ({
         >
           {!di_name
             ? jobName === "IQ_"
-              ? `${jobName}Printer_Pantone_Brand_Category_Project name_Additional info`
+              ? `${jobName}Pantone_Printer_Brand_Category_Project name_Additional info`
               : `${jobName}_Printer_Printing Process_Substrate_Brand_Category_Project name_Additional info`
             : di_name}
         </div>
         <img
           src={deleteIcon}
           alt="filter logo"
-          onClick={() => showPage !== "CNIQ" && handleDelete(index)}
+          onClick={() =>
+            checkReadWriteAccess && showPage !== "CNIQ" && handleDelete(index)
+          }
           className={`delete-icons ${
             showPage === "CCD" || (showPage === "CPT" && "disabled-add")
           }`}
-          disabled={showPage === "CNIQ"}
+          disabled={!checkReadWriteAccess || showPage === "CNIQ"}
         />
       </>
     );
@@ -237,8 +253,8 @@ const CloneJobs = ({
     });
     di_name =
       jobName +
-      (selectedPrinter.length ? selectedPrinter + "_" : "Printer" + "_") +
       (jobName === "IQ_" ? (pantone ? pantone + "_" : "Pantone" + "_") : "") +
+      (selectedPrinter.length ? selectedPrinter + "_" : "Printer" + "_") +
       (jobName !== "IQ_"
         ? printerProcess
           ? printerProcess + "_"
@@ -310,6 +326,22 @@ const CloneJobs = ({
         }}
         className="label-header"
       >
+        {(showPage === "DNPF" || showPage === "DNIQ") && (
+          <Col sm={1}>
+            <label htmlFor="select"> Select</label>
+            <div>
+              <Checkbox
+                onChange={(e) => {
+                  addData("Select", index, e.checked, di_name);
+                  setChecked(e.checked);
+                }}
+                checked={event === "submit" ? true : checked}
+                className="margin-right"
+                disabled={!checkReadWriteAccess || disabled}
+              ></Checkbox>
+            </div>
+          </Col>
+        )}
         <Col sm={2}>
           <div>
             <label htmlFor="cluster">Printer </label>
@@ -342,7 +374,8 @@ const CloneJobs = ({
               filter
               aria-describedby="agency-help"
               disabled={
-                (showPage === "CCD" ||
+                (!checkReadWriteAccess ||
+                  showPage === "CCD" ||
                   showPage === "CPT" ||
                   showPage === "CNIQ") &&
                 true
@@ -371,7 +404,12 @@ const CloneJobs = ({
                   setPrinterProcess(e.target.value);
                 }}
                 aria-describedby="cluster-help"
-                disabled={(showPage === "CCD" || showPage === "CPT") && true}
+                disabled={
+                  (!checkReadWriteAccess ||
+                    showPage === "CCD" ||
+                    showPage === "CPT") &&
+                  true
+                }
               />
             </div>
             {/* {(printers === "" || printers === undefined) && (
@@ -399,7 +437,12 @@ const CloneJobs = ({
                   setSubstarteData(e.target.value);
                 }}
                 aria-describedby="cluster-help"
-                disabled={(showPage === "CCD" || showPage === "CPT") && true}
+                disabled={
+                  (!checkReadWriteAccess ||
+                    showPage === "CCD" ||
+                    showPage === "CPT") &&
+                  true
+                }
               />
             </div>
             {/* {(substrateData === "" || substrateData === undefined) && (
@@ -409,21 +452,23 @@ const CloneJobs = ({
         )}
         {(showPage === "DNIQ" || showPage === "CNIQ") && (
           <Col sm={2}>
-          <div>
-            <label htmlFor="agency">Pantone</label>
-            <InputText
-              id="pantone"
-              value={pantone}
-              placeholder="Enter Pantone"
-              onChange={(e) => {
-                addData("Pantone", index, e.target.value, di_name);
-                setPantone(e.target.value);
-              }}
-              aria-describedby="pantone-help"
-              disabled={showPage === "CNIQ" && true}
-            />
-          </div>
-        </Col>
+            <div>
+              <label htmlFor="agency">Pantone</label>
+              <InputText
+                id="pantone"
+                value={pantone}
+                placeholder="Enter Pantone"
+                onChange={(e) => {
+                  addData("Pantone", index, e.target.value, di_name);
+                  setPantone(e.target.value);
+                }}
+                aria-describedby="pantone-help"
+                disabled={
+                  !checkReadWriteAccess || (showPage === "CNIQ" && true)
+                }
+              />
+            </div>
+          </Col>
         )}
         <Col sm={2}>
           <Row>
@@ -439,7 +484,8 @@ const CloneJobs = ({
                   }}
                   aria-describedby="info-help"
                   disabled={
-                    (showPage === "CCD" ||
+                    (!checkReadWriteAccess ||
+                      showPage === "CCD" ||
                       showPage === "CPT" ||
                       showPage === "CNIQ") &&
                     true
@@ -469,10 +515,15 @@ const CloneJobs = ({
                       }}
                       checked={event === "submit" ? true : printTrailNeeded}
                       disabled={
-                        (showPage === "CCD" || showPage === "CPT") && true
+                        (!checkReadWriteAccess ||
+                          showPage === "CCD" ||
+                          showPage === "CPT") &&
+                        true
                       }
                       className={
-                        (showPage === "CCD" || showPage === "CPT") &&
+                        (!checkReadWriteAccess ||
+                          showPage === "CCD" ||
+                          showPage === "CPT") &&
                         "disabled-text"
                       }
                     ></Checkbox>
@@ -480,7 +531,9 @@ const CloneJobs = ({
                   <label
                     htmlFor="printTrailNeeded"
                     className={
-                      (showPage === "CCD" || showPage === "CPT") &&
+                      (!checkReadWriteAccess ||
+                        showPage === "CCD" ||
+                        showPage === "CPT") &&
                       "disabled-text"
                     }
                   >
@@ -500,13 +553,18 @@ const CloneJobs = ({
                         }}
                         checked={event === "submit" ? true : CDConfirmation}
                         className="margin-right"
-                        disabled={showPage === "CPT" && true}
+                        disabled={
+                          (!checkReadWriteAccess || showPage === "CPT") && true
+                        }
                       ></Checkbox>
                     </div>
 
                     <label
                       htmlFor="printTrailNeeded"
-                      className={showPage === "CPT" && "disabled-text"}
+                      className={
+                        (!checkReadWriteAccess || showPage === "CPT") &&
+                        "disabled-text"
+                      }
                     >
                       CD Approved
                     </label>
@@ -529,14 +587,22 @@ const CloneJobs = ({
                           }}
                           checked={event === "submit" ? true : printTrailDone}
                           className="margin-right"
-                          disabled={((showPage === "CCD") || (showPage==="CPT" && !CDConfirmation))}
+                          disabled={
+                            !checkReadWriteAccess ||
+                            showPage === "CCD" ||
+                            (showPage === "CPT" && !CDConfirmation)
+                          }
                         ></Checkbox>
                       </div>
 
                       <label
                         htmlFor="printTrailDone"
                         className={
-                          ((showPage === "CCD") || (showPage==="CPT" && !CDConfirmation)) ? "disabled-text" : "enabled-text"
+                          !checkReadWriteAccess ||
+                          showPage === "CCD" ||
+                          (showPage === "CPT" && !CDConfirmation)
+                            ? "disabled-text"
+                            : "enabled-text"
                         }
                       >
                         Print Trial Done
@@ -548,7 +614,7 @@ const CloneJobs = ({
             </div>
           </Col>
         )}
-        {(showPage === "DNPF" || showPage === "DNIQ") && (
+        {/* {(showPage === "DNPF" || showPage === "DNIQ") && (
           <Col sm={1}>
             <label htmlFor="select"> Select</label>
             <div>
@@ -559,11 +625,11 @@ const CloneJobs = ({
                 }}
                 checked={event === "submit" ? true : checked}
                 className="margin-right"
-                disabled={disabled}
+                disabled={!checkReadWriteAccess || disabled}
               ></Checkbox>
             </div>
           </Col>
-        )}
+        )} */}
 
         {showPage === "CNIQ" && (
           <Col sm={3}>
@@ -584,9 +650,15 @@ const CloneJobs = ({
                 }}
                 checked={event === "submit" ? true : iddsaChecked}
                 className="margin-right"
-                // disabled={disabled}
+                disabled={!checkReadWriteAccess}
               ></Checkbox>
-              <label htmlFor="iddsa"> IDD Sample Approved</label>
+              <label
+                htmlFor="iddsa"
+                className={!checkReadWriteAccess && "disabled-text"}
+              >
+                {" "}
+                IDD Sample Approved
+              </label>
             </div>
             <div>
               <Checkbox
@@ -596,9 +668,15 @@ const CloneJobs = ({
                 }}
                 checked={event === "submit" ? true : iddsltaChecked}
                 className="margin-right"
-                disabled={!formValid}
+                disabled={!checkReadWriteAccess || !formValid}
               ></Checkbox>
-              <label htmlFor="iddslta"> IDD Sample Lab Test Approved</label>
+              <label
+                htmlFor="iddslta"
+                className={!checkReadWriteAccess && "disabled-text"}
+              >
+                {" "}
+                IDD Sample Lab Test Approved
+              </label>
             </div>
           </Col>
         )}
@@ -631,9 +709,10 @@ const CloneJobs = ({
             data={data}
             jobName={jobName}
             fileName={fileName}
-            IQ={IQ}
+            designData={showPage === "CNIQ" ? IQ : CD}
             date={date}
             version={version}
+            disabled={!checkReadWriteAccess}
             // ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
             // version={version}
           />

@@ -13,6 +13,7 @@ const IQHeader = ({
   headerName,
   disabled,
   showPage,
+  checkReadWriteAccess
 }) => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
@@ -61,10 +62,10 @@ const IQHeader = ({
               }}
               checked={checked}
               className="margin-right"
-              disabled={showPage === "CNIQ" && true}
+              disabled={(!checkReadWriteAccess ||showPage === "CNIQ") && true}
             ></Checkbox>
             <div className="icon-label">
-              <label className={disabled && "disable-buttons"}>
+              <label className={(!checkReadWriteAccess ||disabled) && "disable-buttons"}>
                 {" "}
                 Select All{" "}
               </label>
@@ -75,12 +76,12 @@ const IQHeader = ({
               src={filter}
               alt="filter logo"
               className="filter-icon filter-color-change"
-              disabled={showPage === "CNIQ" && true}
+              disabled={(!checkReadWriteAccess ||showPage === "CNIQ") && true}
             />
             <div>
               <label
                 className="icon-label"
-                disabled={showPage === "CNIQ" && true}
+                disabled={(!checkReadWriteAccess ||showPage === "CNIQ") && true}
               >
                 filter
               </label>
@@ -91,15 +92,15 @@ const IQHeader = ({
               src={plusCollapseImg}
               onClick={() => setAddNewDesign && setAddNewDesign()}
               className={`add-new-design-intent-icon ${
-                showPage === "CNIQ" && "disabled-add"
+                (!checkReadWriteAccess || showPage === "CNIQ") && "disabled-add"
               }`}
               alt=""
-              disabled={showPage === "CNIQ" && true}
+              disabled={(!checkReadWriteAccess || showPage === "CNIQ") && true}
             />
             <div className="icon-label">
               <label
-                className={showPage === "CNIQ" && "disable-buttons"}
-                disabled={showPage === "CNIQ" && true}
+                className={(!checkReadWriteAccess || showPage === "CNIQ") && "disable-buttons"}
+                disabled={(!checkReadWriteAccess || showPage === "CNIQ") && true}
               >
                 Add Ink Qualification
               </label>

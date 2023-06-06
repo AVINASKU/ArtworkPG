@@ -17,6 +17,8 @@ import {
   saveColorDevelopment,
   submitColorDevelopment,
 } from "../../../apis/colorDevelopmentApi";
+import { CheckReadOnlyAccess } from "../../../utils";
+
 const breadcrumb = [{ label: "Define Color Development & Print Trial" }];
 
 const headerName = "Define Color Development  & Print Trial";
@@ -24,7 +26,9 @@ const jobName = "CD_";
 
 function DNPF() {
   const dispatch = useDispatch();
-  const { TaskDetailsData } = useSelector((state) => state.TaskDetailsReducer);
+  const { TaskDetailsData, loading } = useSelector(
+    (state) => state.TaskDetailsReducer
+  );
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const [data, setData] = useState(null);
@@ -35,6 +39,7 @@ function DNPF() {
   const [loader, setLoader] = useState(false);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
+  const checkReadWriteAccess = CheckReadOnlyAccess();
 
   useEffect(() => {
     // const data1 = ProjectService.getDIData();
@@ -162,8 +167,7 @@ function DNPF() {
       temp["instruction"] = "APPEND";
       temp["target"] = "NewPrintFeasibilityList";
       temp["content"] = {
-        DesignJobName:
-          "Confirm Color Development",
+        DesignJobName: "Confirm Color Development",
         DesignJobID: taskDesignJobID,
         PrintingProcess: task?.Printing_Process,
         Substrate: task?.Substrate,
@@ -232,57 +236,63 @@ function DNPF() {
   };
 
   return (
-    <LoadingOverlay active={loader} spinner text="">
-    <PageLayout>
-      <CDHeader
-        setAddNewDesign={addNewEmptyDesign}
-        onSelectAll={onSelectAll}
-        breadcrumb={breadcrumb}
-        headerName={headerName}
-        label="Define Color Development & Print Trial"
-      />
-      <div
-        style={{
-          overflowY: "scroll",
-          overflowX: "hidden",
-          width: "100%",
-          height: "400px",
-          display: "grid",
-        }}
-      >
-        {<TaskHeader {...data} />}
+    <LoadingOverlay active={loader || loading || CD === null} spinner text="">
+      <PageLayout>
+        <CDHeader
+          setAddNewDesign={addNewEmptyDesign}
+          onSelectAll={onSelectAll}
+          breadcrumb={breadcrumb}
+          headerName={headerName}
+          label="Define Color Development & Print Trial"
+          checkReadWriteAccess={checkReadWriteAccess}
+        />
+        <div
+          className="task-details"
+          style={{
+            overflowY: "scroll",
+            overflowX: "hidden",
+            width: "100%",
+            height: "400px",
+            // display: "grid",
+          }}
+        >
+          {<TaskHeader {...data} />}
 
-        {CD.map((item, index) => {
-          if (item && item?.Action !== "delete") {
-            return (
-              <CloneJobs
-                key={item.Design_Job_ID}
-                {...data}
-                item={item}
-                index={index}
-                addData={addData}
-                handleDelete={handleDelete}
-                jobName={jobName}
-                setFormValid={setFormValid}
-              />
-            );
-          }
-        })}
-        {/* <FooterButtons
+          {CD &&
+            CD.length > 0 &&
+            CD.map((item, index) => {
+              if (item && item?.Action !== "delete") {
+                return (
+                  <CloneJobs
+                    key={item.Design_Job_ID}
+                    {...data}
+                    item={item}
+                    index={index}
+                    addData={addData}
+                    handleDelete={handleDelete}
+                    jobName={jobName}
+                    setFormValid={setFormValid}
+                    checkReadWriteAccess={checkReadWriteAccess}
+                  />
+                );
+              }
+            })}
+          {/* <FooterButtons
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}
           formValid={formValid}
         /> */}
-      </div>
-      <FooterButtons
-        handleCancel={handleCancel}
-        onSaveAsDraft={onSaveAsDraft}
-        onSubmit={onSubmit}
-        formValid={formValid}
-        checkReadWriteAccess = {true}
-      />
-    </PageLayout>
+        </div>
+        <FooterButtons
+          handleCancel={handleCancel}
+          onSaveAsDraft={onSaveAsDraft}
+          onSubmit={onSubmit}
+          formValid={formValid}
+          checkReadWriteAccess={checkReadWriteAccess}
+          bottomFixed={true}
+        />
+      </PageLayout>
     </LoadingOverlay>
   );
 }
