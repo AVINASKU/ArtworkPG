@@ -9,10 +9,22 @@ $width: 100%;
   // padding: 0 15px 10px 15px;
   padding: 0 15px 0px 13px;
 }
+.projectNameForProjectSetup {
+  padding-top: 18px;
+}
 
 .subNav {
   .nav {
     padding-left: 13px;
+    // border-color: #003DA5;
+  }
+  .nav-link {
+    color: rgba(172, 172, 172, 1);
+    // border-color: #ffffff;
+  }
+  .nav-link.active {
+    color: rgba(0, 61, 165, 1);
+    // border-color: #003DA5;
   }
 }
 

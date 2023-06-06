@@ -1,7 +1,11 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 import "./index.scss";
 
-const TabsComponent = ({ items, tabName, setTabName }) => {
+const TabsComponent = ({ items, tabName }) => {
+  const location = useLocation();
+  const currentUrl = location.pathname;
+
   return (
     <>
       <div className="tabs-wrapper">
@@ -10,9 +14,8 @@ const TabsComponent = ({ items, tabName, setTabName }) => {
             <li
               key={index + 1}
               className={`${obj.name === tabName ? "active" : ""}`}
-              onClick={() => setTabName(obj.name)}
             >
-              <a data-toggle="tab" href={`#${obj.name}`}>
+              <a data-toggle="tab" href={`${currentUrl}#${obj.name}`}>
                 {obj.tabNameForDisplay}
               </a>
             </li>

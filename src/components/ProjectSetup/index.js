@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddProject from "../Projects/CreateProject";
 import { DropdownButton, Dropdown } from "react-bootstrap";
 import { BreadCrumb } from "primereact/breadcrumb";
@@ -53,6 +53,19 @@ function ProjectSetup(props) {
   const [tabName, setTabName] = useState("ProjectPlan");
   const [tabNameForPP, setTabNameForPP] = useState("Design");
 
+  const pathname = window.location.href;
+
+  let currentUrl = pathname.split("#");
+  currentUrl = currentUrl[currentUrl.length - 1];
+
+  useEffect(() => {
+    if (!pathname.includes("#")) {
+      setTabName("ProjectPlan");
+    }else if (currentUrl) {
+      setTabName(currentUrl);
+    }
+  }, [tabName, currentUrl]);
+
   const items = [{ label: rootBreadCrumb }];
   tabName === "ProjectPlan" && items.push({ label: "Project Plan" });
   tabName === "ProjectSetup" && items.push({ label: "Project Setup" });
@@ -74,7 +87,7 @@ function ProjectSetup(props) {
               {mode !== "create" && (
                 <div className="row">
                   <div className="col">
-                    <div className="project-name">
+                    <div className="project-name projectNameForProjectSetup">
                       {selectedProjectDetails.Project_Name}
                     </div>
                   </div>
@@ -82,7 +95,7 @@ function ProjectSetup(props) {
               )}
             </div>
           </div>
-          <AddProject {...props} setTabName={setTabName} />
+          <AddProject {...props} />
         </div>
       ),
     },
@@ -295,7 +308,6 @@ function ProjectSetup(props) {
       <div className="tabular-view">
         <TabsComponent
           tabName={tabName}
-          setTabName={setTabName}
           items={itemsData}
         />
       </div>
