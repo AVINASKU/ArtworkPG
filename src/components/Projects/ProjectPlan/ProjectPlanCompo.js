@@ -25,13 +25,15 @@ function ProjectPlanCompo(props) {
     useState([]);
   const [pegadata, setPegaData] = useState(null);
   const [activeSave, setActiveSave] = useState(true);
-  const [activeFlag, setActiveFlag] = useState(false);
+  // const [activeFlag, setActiveFlag] = useState(false);
+  // Check if access is empty for the user's role and page
+  const isAccessEmpty = CheckReadOnlyAccess();
+  const [activeFlag, setActiveFlag] = useState(!isAccessEmpty);
   const [loader, setLoader] = useState(false);
   const [updatedList, setUpdatedList] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // Check if access is empty for the user's role and page
-  const isAccessEmpty = CheckReadOnlyAccess();
+
   useEffect(() => {
     if (!isAccessEmpty) {
       setActiveSave(true);
@@ -158,7 +160,11 @@ function ProjectPlanCompo(props) {
         tempObj["key"] = task.data[0].AWM_Task_ID;
 
         let dataObj = {};
-        dataObj["Task"] = task.data[0].AWM_Task_ID.includes("CCD_") ? "Confirm Color Development" : task.data[0].AWM_Task_ID.includes("CPT_") ? "Confirm Print Trial"  : task.data[0].Task_Name;
+        dataObj["Task"] = task.data[0].AWM_Task_ID.includes("CCD_")
+          ? "Confirm Color Development"
+          : task.data[0].AWM_Task_ID.includes("CPT_")
+          ? "Confirm Print Trial"
+          : task.data[0].Task_Name;
         dataObj["Dependency"] = task.data[0].Dependency;
         dataObj["Role"] = task.data[0].Role;
         dataObj["RoleOptions"] = task.data[0].RoleOptions;
@@ -302,7 +308,7 @@ function ProjectPlanCompo(props) {
 
   return (
     <>
-    <ProjectPlan
+      <ProjectPlan
         {...props}
         projectPlan={projectPlan}
         selectedProject={selectedProject}
@@ -312,6 +318,7 @@ function ProjectPlanCompo(props) {
         setUpdatedProjectPlanDesignData={setUpdatedProjectPlanDesignData}
         setActiveSave={setActiveSave}
         getProjectPlanApi={getProjectPlanApi}
+        isAccessEmpty={isAccessEmpty}
       />
       {/* <Accordion className="projectPlanAccordian" defaultActiveKey="2">
         <Accordion.Item eventKey="2">
