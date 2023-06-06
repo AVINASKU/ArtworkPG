@@ -220,6 +220,8 @@ function DDT() {
 
   let Brand = [];
   let Category = [];
+  let checkTaskISComplete =
+    TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Status === "Complete";
 
   if (TaskDetailsData?.ArtworkAgilityPage) {
     Brand = TaskDetailsData.ArtworkAgilityPage.Artwork_Brand;
@@ -238,6 +240,7 @@ function DDT() {
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
+        {checkTaskISComplete && <div>This task is already submitted</div>}
 
         {loading || designIntent === null ? (
           <div className="align-item-center">
@@ -276,7 +279,7 @@ function DDT() {
         onSubmit={onSubmit}
         checkReadWriteAccess={checkReadWriteAccess}
         bottomFixed={true}
-        formValid={!enableSubmit}
+        formValid={!enableSubmit || checkTaskISComplete}
       />
     </PageLayout>
   );
