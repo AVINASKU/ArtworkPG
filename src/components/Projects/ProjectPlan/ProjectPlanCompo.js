@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import moment from "moment";
 import { CheckReadOnlyAccess } from "../../../utils";
+import LoadingOverlay from "react-loading-overlay";
 function ProjectPlanCompo(props) {
   const toast = useRef(null);
   const [projectPlanDesignData, setProjectPlanDesignData] = useState([]);
@@ -25,13 +26,15 @@ function ProjectPlanCompo(props) {
     useState([]);
   const [pegadata, setPegaData] = useState(null);
   const [activeSave, setActiveSave] = useState(true);
-  const [activeFlag, setActiveFlag] = useState(false);
+  // const [activeFlag, setActiveFlag] = useState(false);
+  // Check if access is empty for the user's role and page
+  const isAccessEmpty = CheckReadOnlyAccess();
+  const [activeFlag, setActiveFlag] = useState(!isAccessEmpty);
   const [loader, setLoader] = useState(false);
   const [updatedList, setUpdatedList] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // Check if access is empty for the user's role and page
-  const isAccessEmpty = CheckReadOnlyAccess();
+
   useEffect(() => {
     if (!isAccessEmpty) {
       setActiveSave(true);
@@ -122,7 +125,7 @@ function ProjectPlanCompo(props) {
       },
 
       {
-        name: "Confirm Preliminary print feasibility Assessment done (& upload documents - optional)",
+        name: "Confirm Preliminary print feasibility Assessment",
         code: "CPPFA",
         data: apiData.filter((data) => data.AWM_Task_ID.includes("CPPFA_")),
       },
@@ -132,22 +135,22 @@ function ProjectPlanCompo(props) {
         data: apiData.filter((data) => data.AWM_Task_ID.includes("DNPF_")),
       },
       {
-        name: "Color Confirm Development done (& upload documents - optional) (can be multiple)",
+        name: "Confirm Color Development",
         code: "CCD",
         data: apiData.filter((data) => data.AWM_Task_ID.includes("CCD_")),
       },
       {
-        name: "Confirm Print Trial (if applicable) done (& upload documents - optional) (can be multiple)",
+        name: "Confirm Print Trial",
         code: "CPT",
         data: apiData.filter((data) => data.AWM_Task_ID.includes("CPT_")),
       },
       {
-        name: "Define New Link Ink Qualification scope",
+        name: "Define New Ink Qualification scope",
         code: "DNIQ",
         data: apiData.filter((data) => data.AWM_Task_ID.includes("DNIQ_")),
       },
       {
-        name: "Confirm New Ink Qualification done (& upload documents - optional) (can be multiple)",
+        name: "Confirm New Ink Qualification",
         code: "CNIQ",
         data: apiData.filter((data) => data.AWM_Task_ID.includes("CNIQ_")),
       },
@@ -158,7 +161,11 @@ function ProjectPlanCompo(props) {
         tempObj["key"] = task.data[0].AWM_Task_ID;
 
         let dataObj = {};
-        dataObj["Task"] = task.data[0].Task_Name;
+        dataObj["Task"] = task.data[0].AWM_Task_ID.includes("CCD_")
+          ? "Confirm Color Development"
+          : task.data[0].AWM_Task_ID.includes("CPT_")
+          ? "Confirm Print Trial"
+          : task.data[0].Task_Name;
         dataObj["Dependency"] = task.data[0].Dependency;
         dataObj["Role"] = task.data[0].Role;
         dataObj["RoleOptions"] = task.data[0].RoleOptions;
@@ -292,17 +299,17 @@ function ProjectPlanCompo(props) {
   const activate = async () => {
     await activateProjectPlan(selectedProject.Project_ID);
     getProjectPlanApi();
-    toast.current.show({
-      severity: "success",
-      summary: "Success",
-      detail: "Project activated successfully!",
-      life: 3000,
-    });
+    // toast.current.show({
+    //   severity: "success",
+    //   summary: "Success",
+    //   detail: "Project activated successfully!",
+    //   life: 3000,
+    // });
   };
 
   return (
     <>
-    <ProjectPlan
+      <ProjectPlan
         {...props}
         projectPlan={projectPlan}
         selectedProject={selectedProject}
@@ -312,6 +319,7 @@ function ProjectPlanCompo(props) {
         setUpdatedProjectPlanDesignData={setUpdatedProjectPlanDesignData}
         setActiveSave={setActiveSave}
         getProjectPlanApi={getProjectPlanApi}
+        isAccessEmpty={isAccessEmpty}
       />
       {/* <Accordion className="projectPlanAccordian" defaultActiveKey="2">
         <Accordion.Item eventKey="2">

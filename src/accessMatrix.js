@@ -10,7 +10,7 @@ export const accessMatrix = [
       {
         name: "allProjects",
         path: "/allProjects",
-        access: ["Read"],
+        access: ["Read", "Write", "Edit", "Delete"],
       },
       {
         name: "MyTasks",

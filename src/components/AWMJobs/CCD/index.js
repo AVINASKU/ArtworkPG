@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import moment from "moment";
+import LoadingOverlay from "react-loading-overlay";
 import PageLayout from "../../PageLayout";
 import TaskHeader from "../DesignJobs/TaskHeader";
 import DesignHeader from "../DesignJobs/DesignHeader";
@@ -13,21 +15,36 @@ import CloneJobs from "../DesignJobs/CloneJobs";
 import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
 import "./index.scss";
 import CDHeader from "../DesignJobs/CDHeader";
-const breadcrumb = [{ label: "Confirm Color Development & Print Trial" }];
+import { submitConfirmColorDevelopment } from "../../../apis/colorDevelopmentApi";
+import { CheckReadOnlyAccess } from "../../../utils";
 
-const headerName = "Confirm Color Development & Print Trial";
+const breadcrumb = [{ label: "Confirm Color Development" }];
+
+const headerName = "Confirm Color Development";
 const jobName = "CD_";
 
 function CCD() {
   const dispatch = useDispatch();
-  const { TaskDetailsData } = useSelector((state) => state.TaskDetailsReducer);
+  // const version = "V1";
+  const { TaskDetailsData, loading } = useSelector(
+    (state) => state.TaskDetailsReducer
+  );
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
   const [data, setData] = useState(null);
   const [CD, setCD] = useState([]);
   const [formValid, setFormValid] = useState(true);
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
+  const [formattedValue, setformattedValue] = useState(0);
+  const [fileName, setFileName] = useState("");
+  const [azureFile, setAzureFile] = useState("");
+  const [loader, setLoader] = useState(false);
+  const [version, setVersion] = useState("V0");
+  const [date, setDate] = useState("");
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
+  const checkReadWriteAccess = CheckReadOnlyAccess();
 
   useEffect(() => {
     // const data1 = ProjectService.getDIData();
@@ -42,6 +59,18 @@ function CCD() {
     if (TaskDetailsData) {
       setCD(TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
+      const data =
+        TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails[0]
+          ?.FileMetaDataList[0] || [];
+      if (data) {
+        data.Version !== "" && setVersion(data.Version);
+        data.Timestamp !== "" &&
+          setDate(
+            moment(data.Timestamp, "YYYYMMDD[T]HHmmss.SSS [GMT]").format(
+              "DD-MMMM-YYYY"
+            )
+          );
+      }
     }
   }, [TaskDetailsData]);
   const handleCancel = () => {
@@ -52,17 +81,54 @@ function CCD() {
     const newDesignIntent = [
       ...CD,
       {
-        CD_Job_ID: CD.length + 1,
+        Design_Job_ID: CD.length + 1,
         isNew: true,
-        CD_Job_Name: "",
-        Printer_Process: "",
+        Print_Trial_Done: null,
+        Tier: "",
+        Cluster: "",
+        Agency_Reference: "",
+        Printer: "",
+        Printing_Process: "",
+        Design_Job_Name: "",
         Substrate: "",
         Additional_Info: "",
-        Select: false,
+        CD_Approved: null,
+        Select: null,
+        Print_Trial_Needed: null,
       },
     ];
     setCD(newDesignIntent);
     setUpdated(!updated);
+  };
+
+  const addData = (fieldName, index, value, Design_Intent_Name) => {
+    let data = CD[index];
+    data[fieldName] = value;
+    submittedDI.push(data);
+    setSubmittedDI(submittedDI);
+    checkFormValidity();
+  };
+
+  useEffect(() => {
+    checkFormValidity();
+  }, [data]);
+
+  const checkFormValidity = () => {
+    console.log(CD);
+    const validTasks = CD?.filter((task) => {
+      return (
+        task?.Printer &&
+        task?.Printing_Process &&
+        task?.Substrate &&
+        task?.CD_Approved
+      );
+    });
+    console.log(validTasks.length);
+    if (validTasks.length > 0) {
+      setFormValid(true);
+    } else {
+      setFormValid(false);
+    }
   };
 
   const onSelectAll = (checked) => {
@@ -76,13 +142,57 @@ function CCD() {
     setUpdated(!updated);
   };
 
+  // const onSubmit = async () => {
+  //   let submitOnlySelectedData = CD?.filter((task) => task?.Select === true);
+  //   submitOnlySelectedData.map((task) => {
+  //     task.Event = "submit";
+  //   });
+  //   console.log("full submit data --->", submitOnlySelectedData);
+  //   await dispatch(uploadFileAzure());
+  // };
+
   const onSubmit = async () => {
-    let submitOnlySelectedData = CD?.filter((task) => task?.Select === true);
-    submitOnlySelectedData.map((task) => {
-      task.Event = "submit";
-    });
-    console.log("full submit data --->", submitOnlySelectedData);
-    await dispatch(uploadFileAzure());
+    setLoader(true);
+    let IDDSampleApproved = "";
+    let IDDSampleLabTestApproved = "";
+    let Timestamp;
+    // IQ.forEach((task) => {
+    //   // Filename = task?.Filename;
+    //   // Timestamp = task?.Timestamp;
+    //   // Version = task?.Version;
+    //   // Size = task?.Size;
+    // });
+    // console.log(CD);
+
+    // CD?.forEach((task) => {
+    //   let taskDesignJobID = task?.Design_Job_ID;
+    //   if (task?.isNew) {
+    //     taskDesignJobID = "";
+    //   }
+    // })
+    let formData = {
+      caseTypeID: "PG-AAS-Work-ConfirmColorDevelopmentDone",
+      content: {
+        AWMTaskID: data.Task_ID,
+        AWMProjectID: selectedProjectDetails.Project_ID,
+        DesignJobID: CD[0].Design_Job_ID,
+        Size: formattedValue,
+        Version: version,
+        Filename: fileName,
+        Timestamp: Timestamp,
+        CDApproved: CD[0].CD_Approved,
+        PrintTrialDone: CD[0].Print_Trial_Done,
+      },
+    };
+    console.log("full submit data --->", formData);
+    let id = data.Task_Key;
+    const headers = {
+      key: "If-Match",
+      value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
+    };
+
+    await submitConfirmColorDevelopment(formData, id, headers);
+    setLoader(false);
   };
 
   const onSaveAsDraft = async () => {
@@ -112,46 +222,66 @@ function CCD() {
   };
 
   return (
-    <PageLayout>
-      <CDHeader
-        setAddNewDesign={addNewEmptyDesign}
-        onSelectAll={onSelectAll}
-        breadcrumb={breadcrumb}
-        headerName={headerName}
-        label="Confirm Color Development"
-        disabled={true}
-      />
-      <div
-        style={{
-          overflowY: "scroll",
-          overflowX: "hidden",
-          width: "100%",
-          height: "400px",
-        }}
-      >
-        {<TaskHeader {...data} />}
-        {CD.map((item, index) => {
-          if (item && item?.Action !== "delete") {
-            return (
-              <CloneJobs
-                key={item.CD_Job_ID}
-                {...data}
-                item={item}
-                index={index}
-                jobName={jobName}
-                setFormValid={setFormValid}
-              />
-            );
-          }
-        })}
+    <LoadingOverlay active={loader || loading || CD === null} spinner text="">
+      <PageLayout>
+        <CDHeader
+          setAddNewDesign={addNewEmptyDesign}
+          onSelectAll={onSelectAll}
+          breadcrumb={breadcrumb}
+          headerName={headerName}
+          label="Confirm Color Development"
+          disabled={true}
+          checkReadWriteAccess={checkReadWriteAccess}
+        />
+        <div
+          className="task-details"
+          style={{
+            overflowY: "scroll",
+            overflowX: "hidden",
+            width: "100%",
+            height: "400px",
+            // display: "grid",
+          }}
+        >
+          {<TaskHeader {...data} />}
+          {CD &&
+            CD.length > 0 &&
+            CD.map((item, index) => {
+              if (item && item?.Action !== "delete") {
+                return (
+                  <CloneJobs
+                    key={item.Design_Job_ID}
+                    {...data}
+                    CD={CD}
+                    data={data}
+                    item={item}
+                    index={index}
+                    addData={addData}
+                    jobName={jobName}
+                    formValid={formValid}
+                    setFormValid={setFormValid}
+                    setformattedValue={setformattedValue}
+                    setAzureFile={setAzureFile}
+                    setFileName={setFileName}
+                    fileName={fileName}
+                    version={version}
+                    date={date}
+                    checkReadWriteAccess={checkReadWriteAccess}
+                  />
+                );
+              }
+            })}
+        </div>
         <FooterButtons
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}
           formValid={formValid}
+          checkReadWriteAccess={checkReadWriteAccess}
+          bottomFixed={true}
         />
-      </div>
-    </PageLayout>
+      </PageLayout>
+    </LoadingOverlay>
   );
 }
 

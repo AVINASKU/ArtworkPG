@@ -77,7 +77,11 @@ function ProjectSetup(props) {
     {
       name: "ProjectSetup",
       tabNameForDisplay: "Project Setup",
-      component: (
+      component: !isReadOnly ? (
+        <div className="unauthorized-user">
+          You are not authorized to access this page.
+        </div>
+      ) : (
         <div style={{ background: "#ffffff", borderRadius: "24px" }}>
           <div className="actions">
             <div className="breadCrumbParent">
@@ -143,7 +147,7 @@ function ProjectSetup(props) {
                         id="projectActions"
                         title="Actions"
                         // disabled={false}
-                        // disabled={actionFlag}
+                        disabled={!isReadOnly}
                         // data-popper-placement="bottom-end"
                         // drop="down-end"
                         align="end"
