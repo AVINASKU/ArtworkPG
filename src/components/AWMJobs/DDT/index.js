@@ -68,7 +68,6 @@ function DDT() {
     }
   }, [TaskDetailsData]);
 
-  
   useEffect(() => {
     checkFormValidity();
   }, [data]);
@@ -77,21 +76,17 @@ function DDT() {
     return navigate(currentUrl === "myTasks" ? `/myTasks` : "/allTasks");
   };
 
-    const checkFormValidity = () => {
+  const checkFormValidity = () => {
     console.log(designIntent);
     const validTasks = designIntent?.filter((task) => {
-      return (
-        task?.Agency_Reference &&
-        task?.Cluster &&
-        task?.Select
-      );
+      return task?.Agency_Reference && task?.Cluster && task?.Select;
     });
     console.log(validTasks.length);
     if (validTasks.length > 0) {
-    console.log("here true");
+      console.log("here true");
       setEnableSubmit(true);
     } else {
-    console.log("here false");
+      console.log("here false");
       setEnableSubmit(false);
     }
   };
@@ -126,7 +121,7 @@ function DDT() {
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
     setSubmittedDI(submittedDI);
-        checkFormValidity();
+    checkFormValidity();
   };
 
   const onSelectAll = (checked) => {
