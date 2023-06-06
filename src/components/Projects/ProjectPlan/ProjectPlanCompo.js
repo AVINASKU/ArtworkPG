@@ -58,7 +58,7 @@ function ProjectPlanCompo(props) {
 
   useEffect(() => {
     setActiveFlag(false);
-    if (projectPlanDesign[0]?.Project_State === "Available" || projectPlan.length === 0 || !isAccessEmpty) {
+    if (projectPlanDesign[0]?.Project_State === "Available" || !isAccessEmpty || projectPlan.length === 0) {
       setActiveFlag(true);
     }
   }, [projectPlanDesign, projectPlan, isAccessEmpty]);
@@ -300,12 +300,12 @@ function ProjectPlanCompo(props) {
   const activate = async () => {
     await activateProjectPlan(selectedProject.Project_ID);
     getProjectPlanApi();
-    // toast.current.show({
-    //   severity: "success",
-    //   summary: "Success",
-    //   detail: "Project activated successfully!",
-    //   life: 3000,
-    // });
+    toast.current.show({
+      severity: "success",
+      summary: "Success",
+      detail: "Project activated successfully!",
+      life: 3000,
+    });
   };
 
   return (
