@@ -247,7 +247,7 @@ const CloneJobs = ({
     printers.forEach((val) => {
       PrinterList.forEach((pl) => {
         if (pl.code === val) {
-          selectedPrinter.push(pl.Printer_Name);
+          selectedPrinter.push(pl.Printer);
         }
       });
     });
@@ -365,7 +365,7 @@ const CloneJobs = ({
               options={
                 PrinterList
                   ? PrinterList.map((obj) => ({
-                      label: obj.Printer_Name,
+                      label: obj.Printer,
                       value: obj.code,
                     }))
                   : []

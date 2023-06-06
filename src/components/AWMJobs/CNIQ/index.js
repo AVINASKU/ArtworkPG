@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import LoadingOverlay from "react-loading-overlay";
+import LoadingOverlay from "react-loading-overlay-ts";
 import PageLayout from "../../PageLayout";
 import TaskHeader from "../DesignJobs/TaskHeader";
 import DesignHeader from "../DesignJobs/DesignHeader";
@@ -301,7 +301,7 @@ function CNIQ() {
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}
-          formValid={formValid}
+          formValid={!formValid}
           checkReadWriteAccess={checkReadWriteAccess}
           bottomFixed={true}
         />
