@@ -68,8 +68,32 @@ function DDT() {
     }
   }, [TaskDetailsData]);
 
+  
+  useEffect(() => {
+    checkFormValidity();
+  }, [data]);
+
   const handleCancel = () => {
     return navigate(currentUrl === "myTasks" ? `/myTasks` : "/allTasks");
+  };
+
+    const checkFormValidity = () => {
+    console.log(designIntent);
+    const validTasks = designIntent?.filter((task) => {
+      return (
+        task?.Agency_Reference &&
+        task?.Cluster &&
+        task?.Select
+      );
+    });
+    console.log(validTasks.length);
+    if (validTasks.length > 0) {
+    console.log("here true");
+      setEnableSubmit(true);
+    } else {
+    console.log("here false");
+      setEnableSubmit(false);
+    }
   };
 
   const handleDelete = (index) => {
@@ -101,27 +125,8 @@ function DDT() {
     data[fieldName] = value;
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
-    let values = false;
-    const hasValues = designIntent.every(
-      (item) => {        
-        setEnableSubmit(true);
-       if(item.Select){
-          values = item.Agency_Reference !== "" && item.Cluster !== "";
-      } 
-        // else{
-        //   values = designIntent.some(item => {
-        //     console.log("else select", item)
-        //     if(item.Select){
-        //       values = item.Agency_Reference !== "" && item.Cluster !== ""
-        //     }
-        //   });
-        //   console.log("value else", values)
-        // }
-        return values
-      }
-    );
-    setEnableSubmit(!hasValues);
     setSubmittedDI(submittedDI);
+        checkFormValidity();
   };
 
   const onSelectAll = (checked) => {
@@ -272,7 +277,7 @@ function DDT() {
                   checkReadWriteAccess={checkReadWriteAccess}
                 />
               );
-            } else return <>Data Not Found</>;
+            }
           })
         )}
       </div>
@@ -282,7 +287,7 @@ function DDT() {
         onSubmit={onSubmit}
         checkReadWriteAccess={checkReadWriteAccess}
         bottomFixed={true}
-        formValid={enableSubmit}
+        formValid={!enableSubmit}
       />
     </PageLayout>
   );

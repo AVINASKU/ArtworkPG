@@ -274,7 +274,7 @@ function DPRA() {
                   checkReadWriteAccess={checkReadWriteAccess}
                 />
               );
-            } else return <>Data Not Found</>;
+            }
           })
         )}
       </div>
