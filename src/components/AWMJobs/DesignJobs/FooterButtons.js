@@ -11,6 +11,7 @@ const FooterButtons = ({
   checkReadWriteAccess,
   bottomFixed,
   cptFormValid,
+  disableSaveAsDraft
 }) => {
   const location = useLocation();
   const locationPath = location?.pathname;
@@ -39,7 +40,7 @@ const FooterButtons = ({
               }
               variant="secondary"
               onClick={() => onSaveAsDraft()}
-              disabled={!checkReadWriteAccess}
+              disabled={!checkReadWriteAccess || disableSaveAsDraft}
             >
               Save as Draft
             </Button>
