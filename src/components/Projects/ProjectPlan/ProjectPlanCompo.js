@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import moment from "moment";
 import { CheckReadOnlyAccess } from "../../../utils";
-import LoadingOverlay from "react-loading-overlay";
+
 function ProjectPlanCompo(props) {
   const toast = useRef(null);
   const [projectPlanDesignData, setProjectPlanDesignData] = useState([]);
