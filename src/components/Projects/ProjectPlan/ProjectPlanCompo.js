@@ -26,13 +26,15 @@ function ProjectPlanCompo(props) {
     useState([]);
   const [pegadata, setPegaData] = useState(null);
   const [activeSave, setActiveSave] = useState(true);
-  const [activeFlag, setActiveFlag] = useState(false);
+  // const [activeFlag, setActiveFlag] = useState(false);
+  // Check if access is empty for the user's role and page
+  const isAccessEmpty = CheckReadOnlyAccess();
+  const [activeFlag, setActiveFlag] = useState(!isAccessEmpty);
   const [loader, setLoader] = useState(false);
   const [updatedList, setUpdatedList] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // Check if access is empty for the user's role and page
-  const isAccessEmpty = CheckReadOnlyAccess();
+
   useEffect(() => {
     if (!isAccessEmpty) {
       setActiveSave(true);
@@ -306,7 +308,7 @@ function ProjectPlanCompo(props) {
   };
 
   return (
-    <LoadingOverlay active={loader} spinner text="">
+    <>
       <ProjectPlan
         {...props}
         projectPlan={projectPlan}
@@ -317,6 +319,7 @@ function ProjectPlanCompo(props) {
         setUpdatedProjectPlanDesignData={setUpdatedProjectPlanDesignData}
         setActiveSave={setActiveSave}
         getProjectPlanApi={getProjectPlanApi}
+        isAccessEmpty={isAccessEmpty}
       />
       {/* <Accordion className="projectPlanAccordian" defaultActiveKey="2">
         <Accordion.Item eventKey="2">
@@ -374,7 +377,7 @@ function ProjectPlanCompo(props) {
         </Button>
       </div>
       <br />
-    </LoadingOverlay>
+    </>
   );
 }
 
