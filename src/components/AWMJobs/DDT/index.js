@@ -77,22 +77,17 @@ function DDT() {
   };
 
   const checkFormValidity = () => {
-    console.log(designIntent);
     const validTasks = designIntent?.filter((task) => {
       return task?.Agency_Reference && task?.Cluster && task?.Select;
     });
-    console.log(validTasks.length);
     if (validTasks.length > 0) {
-      console.log("here true");
       setEnableSubmit(true);
     } else {
-      console.log("here false");
       setEnableSubmit(false);
     }
   };
 
   const handleDelete = (index) => {
-    console.log("index", index);
     const sub = designIntent.map((item, i) => {
       if (i === index) {
         item.Action = "delete";
@@ -182,7 +177,6 @@ function DDT() {
       },
       pageInstructions: updatedDataList,
     };
-    console.log("formData", formData);
     await submitDefineRegionalDesignTemplate(formData, id, headers);
     navigate(`/${currentUrl?.split("/")[1]}`);
   };
@@ -220,7 +214,7 @@ function DDT() {
       Region: projectData?.Project_region,
       DesignTemplateList: updatedData,
     };
-    console.log("full draft data --->", formData);
+    // console.log("full draft data --->", formData);
     await saveDefineRegionalDesignTemplate(formData);
   };
 
