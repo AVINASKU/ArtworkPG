@@ -11,7 +11,7 @@ import {
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toLower } from "lodash";
-import { AddNavigation } from "../../../utils";
+import { AddNavigation, Loading } from "../../../utils";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { CheckReadOnlyAccess } from "../../../utils";
 import { useLocation } from "react-router-dom";
@@ -27,6 +27,7 @@ function DPRA() {
   const [submittedDI, setSubmittedDI] = useState([]);
   const [enableSubmit, setEnableSubmit] = useState(true);
   const [projectData, setProjectData] = useState([]);
+  const [loader, setLoader] = useState(false);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -138,6 +139,7 @@ function DPRA() {
   };
 
   const onSubmit = async () => {
+    setLoader(true);
     let updatedData = {};
     let updatedDataList = [];
     const headers = {
@@ -187,10 +189,12 @@ function DPRA() {
     };
     console.log("formData", formData);
     await submitDefineProductionReadyArt(formData, id, headers);
+    setLoader(false);
     // navigate(`/${currentUrl?.split("/")[1]}`);
   };
 
   const onSaveAsDraft = async () => {
+    setLoader(true);
     let updatedData = [];
     designIntent.filter((task) => {
       if (task?.isNew) {
@@ -225,6 +229,7 @@ function DPRA() {
     };
     console.log("full draft data --->", formData);
     await saveDefineProductionReadyArt(formData);
+    setLoader(false);
   };
   let Brand = [];
   let Category = [];
@@ -248,12 +253,7 @@ function DPRA() {
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
 
         {loading || designIntent === null ? (
-          <div className="align-item-center">
-            <i
-              className="pi pi-spin pi-spinner"
-              style={{ fontSize: "2rem" }}
-            ></i>
-          </div>
+          <Loading />
         ) : (
           designIntent &&
           designIntent.length &&

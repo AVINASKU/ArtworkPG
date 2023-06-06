@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import moment from "moment";
 import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -127,3 +127,14 @@ export const CheckReadOnlyAccess = () => {
   });
   return checkReadOnlyAccess;
 };
+
+export const Loading = () => {
+  return (
+    <div className="align-item-center">
+          <i
+            className="pi pi-spin pi-spinner"
+            style={{ fontSize: "2rem" }}
+          ></i>
+        </div>
+  )
+}

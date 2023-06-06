@@ -10,7 +10,7 @@ import {
 } from "../../../apis/defineRegionalDesignTemplate";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { AddNavigation } from "../../../utils";
+import { AddNavigation, Loading } from "../../../utils";
 import { toLower } from "lodash";
 import _ from "lodash";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
@@ -27,6 +27,7 @@ function DDT() {
   const [submittedDI, setSubmittedDI] = useState([]);
   const [projectData, setProjectData] = useState([]);
   const [enableSubmit, setEnableSubmit] = useState(true);
+  const [loader, setLoader] = useState(false);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -136,6 +137,7 @@ function DDT() {
   };
 
   const onSubmit = async () => {
+    setLoader(true);
     let updatedData = {};
     let updatedDataList = [];
     const headers = {
@@ -184,10 +186,12 @@ function DDT() {
     };
     console.log("formData", formData);
     await submitDefineRegionalDesignTemplate(formData, id, headers);
+    setLoader(false);
     navigate(`/${currentUrl?.split("/")[1]}`);
   };
 
   const onSaveAsDraft = async () => {
+    setLoader(true);
     let updatedData = [];
     designIntent.filter((task) => {
       if (task?.isNew) {
@@ -222,6 +226,7 @@ function DDT() {
     };
     console.log("full draft data --->", formData);
     await saveDefineRegionalDesignTemplate(formData);
+    setLoader(false);
   };
 
   let Brand = [];
@@ -245,13 +250,8 @@ function DDT() {
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
 
-        {loading || designIntent === null ? (
-          <div className="align-item-center">
-            <i
-              className="pi pi-spin pi-spinner"
-              style={{ fontSize: "2rem" }}
-            ></i>
-          </div>
+        {loading || loader || designIntent === null ? (
+          <Loading />
         ) : (
           designIntent &&
           designIntent.length &&

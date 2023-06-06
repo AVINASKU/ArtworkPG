@@ -8,7 +8,7 @@ import { Column } from "primereact/column";
 import { FilterMatchMode } from "primereact/api";
 import filter from "../../../assets/images/filter.svg";
 import { NavLink, useParams } from "react-router-dom";
-import { onSortData } from "../../../utils";
+import { onSortData, Loading } from "../../../utils";
 import ConfirmationPopUp from "../../Projects/ConfirmationPopUp";
 import TaskDialog from "../../TaskDialog";
 import CPPFA from "../../AWMJobs/CPPFA";
@@ -16,7 +16,7 @@ import { HelpNeededAction } from "../../../store/actions/HelpNeededAction";
 import { useDispatch } from "react-redux";
 import { getTasks, getAllTasks } from "../../../store/actions/TaskActions";
 
-const TaskList = (props) => {
+const TaskList = ({myTasks, loading, flag, userInformation}) => {
   const dispatch = useDispatch();
   const [selectAllChecked, setSelectAllChecked] = useState(false);
   const [selected, setSelected] = useState([]);
@@ -24,7 +24,7 @@ const TaskList = (props) => {
   const [selectedProdSrchList, setSelectedProdSrchList] = useState([]);
   const [showTaskDialog, setShowTaskDialog] = useState(false);
   const [selectedTask, setSelectedTask] = useState([]);
-  const [flag, setFlag] = useState("");
+  const [setflag, setFlag] = useState("");
   const [frozenCoulmns, setFrozenColumn] = useState([]);
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [projectColumnName, setSelectedFields] = useState([]);
@@ -32,6 +32,7 @@ const TaskList = (props) => {
   const [sortData, setSortData] = useState([]);
   const [filters, setFilters] = useState([]);
   const [selectedColumnName, setSelectedColumnName] = useState(null);
+  const [loader, setLoader] = useState(false);
   let { ProjectID } = useParams();
   const getMyTasks = (myTasksList) => {
     const myTasks = myTasksList?.map((element) => {
@@ -45,31 +46,33 @@ const TaskList = (props) => {
   };
 
   useEffect(() => {
-    const myTasksList = getMyTasks(props?.myTasks);
-    setSelectedProdSrchList(myTasksList);
-
-    let filteredPegaDataJson = localStorage.getItem("columnWiseFilterData");
-    const filteredPegaData = JSON.parse(filteredPegaDataJson);
-
-    if (filteredPegaData && filteredPegaData.length) {
-      setFilters(filteredPegaData);
-      setselectedFields(filteredPegaData);
+    setLoader(true);
+      const myTasksList = getMyTasks(myTasks);
       setSelectedProdSrchList(myTasksList);
-    }
 
-    let columnNamesJson = localStorage.getItem("myTasksAllColumnNames");
-    const columnNames = JSON.parse(columnNamesJson);
-    if (columnNames != null && columnNames.length) {
-      setSelectedFields(columnNames);
-    } else {
-      const columnNames = TaskService.getMyTaskColumnNames();
-      localStorage.setItem(
-        "myTasksAllColumnNames",
-        JSON.stringify(columnNames)
-      );
-      setSelectedFields(columnNames);
-    }
-  }, [props.myTasks]);
+      let filteredPegaDataJson = localStorage.getItem("columnWiseFilterData");
+      const filteredPegaData = JSON.parse(filteredPegaDataJson);
+
+      if (filteredPegaData && filteredPegaData.length) {
+        setFilters(filteredPegaData);
+        setselectedFields(filteredPegaData);
+        setSelectedProdSrchList(myTasksList);
+      }
+
+      let columnNamesJson = localStorage.getItem("myTasksAllColumnNames");
+      const columnNames = JSON.parse(columnNamesJson);
+      if (columnNames != null && columnNames.length) {
+        setSelectedFields(columnNames);
+      } else {
+        const columnNames =  TaskService.getMyTaskColumnNames();
+        localStorage.setItem(
+          "myTasksAllColumnNames",
+          JSON.stringify(columnNames)
+        );
+        setSelectedFields(columnNames);
+      }
+    setLoader(false);
+  }, [myTasks]);
 
   // Find the role that matches the logged-in user's role
 
@@ -231,10 +234,10 @@ const TaskList = (props) => {
     };
     await dispatch(HelpNeededAction(helpResolvedData));
     setSelected([]);
-    if (props.flag === "myTasks") {
-      await dispatch(getTasks(props?.userInformation));
+    if (flag === "myTasks") {
+      await dispatch(getTasks(userInformation));
     } else {
-      await dispatch(getAllTasks(props?.userInformation));
+      await dispatch(getAllTasks(userInformation));
     }
   };
 
@@ -356,7 +359,7 @@ const TaskList = (props) => {
   };
 
   const dynamicColumns = () => {
-    if (props.flag === "myTasks" && TaskService.getMyTaskColumnNames().length) {
+    if (flag === "myTasks" && TaskService.getMyTaskColumnNames().length) {
       return TaskService.getMyTaskColumnNames()
         .slice(0, 5)
         .map((ele, i) => {
@@ -382,7 +385,7 @@ const TaskList = (props) => {
           );
         });
     } else if (
-      props.flag === "allTasks" &&
+      flag === "allTasks" &&
       TaskService.getMyTaskColumnNames().length
     ) {
       return TaskService.getMyTaskColumnNames().map((ele, i) => {
@@ -433,79 +436,88 @@ const TaskList = (props) => {
   };
 
   return (
-    <>
-      <div className="my-task-project">
-        {showApproveDialogCPPFA && (
-          <CPPFA
-            onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
-            showTaskDialog={showApproveDialogCPPFA}
-            selectedTaskData={selectedTaskApproveDialogCPPFA}
+    console.log("selectedProdSrchList", selectedProdSrchList),
+      <>
+      {loading || loader || selectedProdSrchList.length === 0  ? (
+      <Loading />
+    ): (
+      <>
+        <div className="my-task-project">
+          {showApproveDialogCPPFA && (
+            <CPPFA
+              onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
+              showTaskDialog={showApproveDialogCPPFA}
+              selectedTaskData={selectedTaskApproveDialogCPPFA}
+            />
+          )}
+          <ProjectListHeader
+            // exportCSVTasks={
+            //   selected ? exportCSVTasks(true) : exportCSVTasks(true)
+            // }
+            onSearchClick={onSearchClick}
+            handleDelegateClick={handleDelegateClick}
+            handleHelpNeededClick={handleHelpNeededClick}
+            handleHelpProvidedClick={handleHelpProvidedClick}
+            actionFlag={!selected || selected.length === 0}
+            header={flag === "myTasks" ? "My Tasks" : "All Tasks"}
+            selected={selected}
+            allData={selectedProdSrchList}
+            isFilterEnabled={isFilterEnabled}
+            clearFilter={clearFilter}
+            headers={headerColumns}
+          />
+          <ConfirmationPopUp
+            onSort={onSort}
+            selectedColumnName={selectedColumnName}
+            sortData={sortData}
+            op={op}
+            addFrozenColumns={addFrozenColumns}
+            ProjectFrozen={ProjectFrozen}
+            setProjectFrozen={setProjectFrozen}
+            setFrozenColumn={setFrozenColumn}
+            frozenCoulmns={frozenCoulmns}
+            clearColumnWiseFilter={clearColumnWiseFilter}
+            saveSettings={saveSettings}
+            selectedFields={selectedFields}
+            onGlobalFilterChange={onGlobalFilterChange}
+            projectData={selectedProdSrchList}
+            setFilters={setFilters}
+          />
+          <DataTable
+            resizableColumns
+            value={filters?.length ? filters : selectedProdSrchList}
+            reorderableColumns
+            scrollable
+            selection={selected}
+            onSelectionChange={(e) => setSelected(e.value)}
+            responsiveLayout="scroll"
+            className="margin-top-24"
+            ref={dt}
+            filterDisplay={isSearch && "row"}
+            loading={loading}
+            // tableStyle={{ minWidth: "50rem" }}
+            // tableStyle={{ width: "max-content" }}
+            autoLayout={true}
+            filters={searchHeader}
+          >
+            {dynamicColumns()}
+          </DataTable>
+        </div>
+        {showTaskDialog && (
+          <TaskDialog
+            onClose={() => setShowTaskDialog(!showTaskDialog)}
+            showTaskDialog={showTaskDialog}
+            selectedTaskData={selectedTask}
+            flag={setflag}
+            path={flag}
+            userInformation={userInformation}
+            setSelected={setSelected}
           />
         )}
-        <ProjectListHeader
-          // exportCSVTasks={
-          //   selected ? exportCSVTasks(true) : exportCSVTasks(true)
-          // }
-          onSearchClick={onSearchClick}
-          handleDelegateClick={handleDelegateClick}
-          handleHelpNeededClick={handleHelpNeededClick}
-          handleHelpProvidedClick={handleHelpProvidedClick}
-          actionFlag={!selected || selected.length === 0}
-          header={props.flag === "myTasks" ? "My Tasks" : "All Tasks"}
-          selected={selected}
-          allData={selectedProdSrchList}
-          isFilterEnabled={isFilterEnabled}
-          clearFilter={clearFilter}
-          headers={headerColumns}
-        />
-        <ConfirmationPopUp
-          onSort={onSort}
-          selectedColumnName={selectedColumnName}
-          sortData={sortData}
-          op={op}
-          addFrozenColumns={addFrozenColumns}
-          ProjectFrozen={ProjectFrozen}
-          setProjectFrozen={setProjectFrozen}
-          setFrozenColumn={setFrozenColumn}
-          frozenCoulmns={frozenCoulmns}
-          clearColumnWiseFilter={clearColumnWiseFilter}
-          saveSettings={saveSettings}
-          selectedFields={selectedFields}
-          onGlobalFilterChange={onGlobalFilterChange}
-          projectData={selectedProdSrchList}
-          setFilters={setFilters}
-        />
-        <DataTable
-          resizableColumns
-          value={filters?.length ? filters : selectedProdSrchList}
-          reorderableColumns
-          scrollable
-          selection={selected}
-          onSelectionChange={(e) => setSelected(e.value)}
-          responsiveLayout="scroll"
-          className="margin-top-24"
-          ref={dt}
-          filterDisplay={isSearch && "row"}
-          // tableStyle={{ minWidth: "50rem" }}
-          // tableStyle={{ width: "max-content" }}
-          autoLayout={true}
-          filters={searchHeader}
-        >
-          {dynamicColumns()}
-        </DataTable>
-      </div>
-      {showTaskDialog && (
-        <TaskDialog
-          onClose={() => setShowTaskDialog(!showTaskDialog)}
-          showTaskDialog={showTaskDialog}
-          selectedTaskData={selectedTask}
-          flag={flag}
-          path={props.flag}
-          userInformation={props.userInformation}
-          setSelected={setSelected}
-        />
-      )}
-    </>
+      </>
+    )}
+      
+    </>    
   );
 };
 
