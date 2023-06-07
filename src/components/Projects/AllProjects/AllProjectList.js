@@ -13,8 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import _ from "lodash";
 import ProjectNameHeader from "../MyProjects/ProjectNameHeader";
-
-const CustomisedView = React.lazy(() => import("../MyProjects/CustomisedView"));
+import CustomisedView from "../MyProjects/CustomisedView";
 
 const AllProjectList = (props) => {
   const User = useSelector((state) => state.UserReducer);
