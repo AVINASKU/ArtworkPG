@@ -1465,7 +1465,6 @@ function AddProject(props) {
           </Button>
           <Button
             className="button-layout draft-button"
-            disabled={mode === "design"}
             type="submit"
           >
             Submit

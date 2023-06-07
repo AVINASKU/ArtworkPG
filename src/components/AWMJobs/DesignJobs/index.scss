@@ -137,5 +137,8 @@ sup {
   background: "#FAFAFA";
 }
 .align-item-center{
-text-align: center;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  height: 100%;
 }

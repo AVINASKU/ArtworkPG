@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Suspense } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { ProjectService } from "../../../service/PegaService";
@@ -6,15 +6,14 @@ import ConfirmationPopUp from "../ConfirmationPopUp";
 import { FilterMatchMode } from "primereact/api";
 import ProjectListHeader from "../MyProjects/ProjectListHeader";
 import { Tag } from "primereact/tag";
-import { changeDateFormat } from "../../../utils";
+import { changeDateFormat, Loading } from "../../../utils";
 import { getAllProject } from "../../../store/actions/ProjectActions";
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import _ from "lodash";
 import ProjectNameHeader from "../MyProjects/ProjectNameHeader";
-
-const CustomisedView = React.lazy(() => import("../MyProjects/CustomisedView"));
+import CustomisedView from "../MyProjects/CustomisedView";
 
 const AllProjectList = (props) => {
   const User = useSelector((state) => state.UserReducer);
@@ -32,6 +31,7 @@ const AllProjectList = (props) => {
   const [updatedAllColumnNames, setUpdatedAllColumnNames] = useState([]);
   const [isSearch, isSearchSet] = useState(false);
   const [isReorderedColumn, setReorderedColumn] = useState(false);
+  const [loader, setLoader] = useState(false);
   const allProjectList = useSelector((state) => state.myProject);
   const { loading } = allProjectList;
   const location = useLocation();
@@ -120,6 +120,7 @@ const AllProjectList = (props) => {
     return reorderedColumns;
   };
   useEffect(() => {
+    setLoader(true);
     (async () => {
       try {
         // const ProjectData = await ProjectService.getProjectData();
@@ -228,6 +229,7 @@ const AllProjectList = (props) => {
         console.log("error", err);
       }
     })();
+    setLoader(false);
   }, [allProjectList.allProjects]);
 
   const addFrozenColumns = (name) => {
@@ -550,7 +552,10 @@ const AllProjectList = (props) => {
 
   return (
     <div className="myProjectAnddAllProjectList">
-      <Suspense fallback={<div>Loading...</div>}>
+      {loading || loader || pegadata === null ? (
+          <Loading />
+        ): (
+          <>
         {pegadata !== undefined && (
           <ProjectListHeader
             header={props.header}
@@ -624,7 +629,8 @@ const AllProjectList = (props) => {
         >
           {dynamicColumns(projectColumnName)}
         </DataTable>
-      </Suspense>
+      </>
+        )}
     </div>
   );
 };

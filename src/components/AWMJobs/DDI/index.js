@@ -12,7 +12,7 @@ import "../DesignJobs/index.scss";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { CheckReadOnlyAccess } from "../../../utils";
+import { CheckReadOnlyAccess, Loading } from "../../../utils";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
@@ -29,6 +29,7 @@ function DDI() {
   const [submittedDI, setSubmittedDI] = useState([]);
   const [projectData, setProjectData] = useState([]);
   const [enableSubmit, setEnableSubmit] = useState(true);
+  const [loader, setLoader] = useState(false);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -133,6 +134,7 @@ function DDI() {
   };
 
   const onSubmit = async () => {
+    setLoader(true);
     let updatedData = {};
     let updatedDataList = [];
     const headers = {
@@ -181,10 +183,12 @@ function DDI() {
     };
     console.log("formData", formData);
     await submitDesignIntent(formData, id, headers);
+    setLoader(false);
     // navigate(`/AllTasks`);
   };
 
   const onSaveAsDraft = async () => {
+    setLoader(true);
     let updatedData = [];
     designIntent.filter((task) => {
       if (task?.isNew) {
@@ -219,6 +223,7 @@ function DDI() {
     };
     console.log("full draft data --->", formData);
     await saveDesignIntent(formData);
+    setLoader(false);
   };
 
   let Brand = [];
@@ -242,13 +247,8 @@ function DDI() {
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
 
-        {loading || designIntent === null ? (
-          <div className="align-item-center">
-            <i
-              className="pi pi-spin pi-spinner"
-              style={{ fontSize: "2rem" }}
-            ></i>
-          </div>
+        {loading || loader || designIntent === null ? (
+          <Loading />
         ) : (
           designIntent &&
           designIntent.length > 0 &&
