@@ -60,6 +60,7 @@ const ARDT = () => {
 
       <ApproveDesignIntentContent
         {...taskData}
+        designIntent={taskData}
         approve={true}
         checkReadWriteAccess={checkReadWriteAccess}
       />
