@@ -7,7 +7,7 @@ import Header from "../Headers";
 
 const PageLayout = (props) => {
   const pathname = window.location.pathname;
-  const isPath = pathname.includes("proejctPlan");
+  const isPath = pathname.includes("projectPlan");
   return (
     <ThemeProvider
       breakpoints={["xxxl", "xxl", "xl", "lg", "md", "sm", "xs", "xxs"]}
