@@ -17,8 +17,9 @@ import _ from "lodash";
 
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 import ProjectNameHeader from "./ProjectNameHeader";
+import CustomisedView from "./CustomisedView";
 
-const CustomisedView = React.lazy(() => import("./CustomisedView"));
+// const CustomisedView = React.lazy(() => import("./CustomisedView"));
 
 const ProjectList = (props) => {
   const User = useSelector((state) => state.UserReducer);
