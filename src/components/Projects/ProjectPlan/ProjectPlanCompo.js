@@ -300,12 +300,12 @@ function ProjectPlanCompo(props) {
   const activate = async () => {
     await activateProjectPlan(selectedProject.Project_ID);
     getProjectPlanApi();
-    toast.current.show({
-      severity: "success",
-      summary: "Success",
-      detail: "Project activated successfully!",
-      life: 3000,
-    });
+    // toast.current.show({
+    //   severity: "success",
+    //   summary: "Success",
+    //   detail: "Project activated successfully!",
+    //   life: 3000,
+    // });
   };
 
   return (
