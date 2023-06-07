@@ -17,7 +17,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import moment from "moment";
-import { CheckReadOnlyAccess } from "../../../utils";
+import { CheckReadOnlyAccess, Loading } from "../../../utils";
 
 function ProjectPlanCompo(props) {
   const toast = useRef(null);
@@ -35,12 +35,7 @@ function ProjectPlanCompo(props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (!isAccessEmpty) {
-      setActiveSave(true);
-      setActiveFlag(true);
-    }
-  }, [isAccessEmpty, activeFlag]);
+
 
   const { projectPlanDesign, projectPlan, loading } = useSelector(
     (state) => state.ProjectPlanReducer
@@ -56,11 +51,17 @@ function ProjectPlanCompo(props) {
   }, [updatedProjectPlanDesignData]);
 
   useEffect(() => {
-    setActiveFlag(false);
-    if (projectPlanDesign) {
-      setActiveFlag(projectPlanDesign[0]?.Project_State === "Available");
+    if (!isAccessEmpty) {
+      setActiveSave(true);
     }
-  }, [projectPlanDesign]);
+  }, [isAccessEmpty]);
+
+  useEffect(() => {
+    setActiveFlag(false);
+    if (projectPlanDesign[0]?.Project_State === "Available" || !isAccessEmpty || projectPlan.length === 0) {
+      setActiveFlag(true);
+    }
+  }, [projectPlanDesign, projectPlan, isAccessEmpty]);
 
   const getProjectPlanApi = async () => {
     let restructuredData = [];
@@ -299,32 +300,21 @@ function ProjectPlanCompo(props) {
   const activate = async () => {
     await activateProjectPlan(selectedProject.Project_ID);
     getProjectPlanApi();
-    // toast.current.show({
-    //   severity: "success",
-    //   summary: "Success",
-    //   detail: "Project activated successfully!",
-    //   life: 3000,
-    // });
+    toast.current.show({
+      severity: "success",
+      summary: "Success",
+      detail: "Project activated successfully!",
+      life: 3000,
+    });
   };
 
   return (
+    console.log("projectPlan", projectPlan),
     <>
-      <ProjectPlan
-        {...props}
-        projectPlan={projectPlan}
-        selectedProject={selectedProject}
-        projectPlanDesign={projectPlanDesign}
-        setPegaData={setPegaData}
-        pegadata={pegadata}
-        setUpdatedProjectPlanDesignData={setUpdatedProjectPlanDesignData}
-        setActiveSave={setActiveSave}
-        getProjectPlanApi={getProjectPlanApi}
-        isAccessEmpty={isAccessEmpty}
-      />
-      {/* <Accordion className="projectPlanAccordian" defaultActiveKey="2">
-        <Accordion.Item eventKey="2">
-          <Accordion.Header>Design</Accordion.Header>
-          <Accordion.Body>
+    {loading || loader || projectPlan === null ? (
+          <Loading />
+        ) : (
+          <>
             <ProjectPlan
               {...props}
               projectPlan={projectPlan}
@@ -334,48 +324,66 @@ function ProjectPlanCompo(props) {
               pegadata={pegadata}
               setUpdatedProjectPlanDesignData={setUpdatedProjectPlanDesignData}
               setActiveSave={setActiveSave}
-              isAccessEmpty={isAccessEmpty}
               getProjectPlanApi={getProjectPlanApi}
+              isAccessEmpty={isAccessEmpty}
             />
-          </Accordion.Body>
-        </Accordion.Item>
-        <Accordion.Item eventKey="3">
-          <Accordion.Header>Input</Accordion.Header>
-          <Accordion.Body>Input</Accordion.Body>
-        </Accordion.Item>
-        <Accordion.Item eventKey="4">
-          <Accordion.Header>FA Assembly</Accordion.Header>
-          <Accordion.Body>FA Assembly</Accordion.Body>
-        </Accordion.Item>
-      </Accordion> */}
-      <div className="form-buttons">
-        <Button
-          className={!isAccessEmpty ? "btn btn-disabled" : "button-layout"}
-          variant="secondary"
-          onClick={() => navigate("/myProjects")}
-          disabled={!isAccessEmpty}
-        >
-          Cancel
-        </Button>
+            {/* <Accordion className="projectPlanAccordian" defaultActiveKey="2">
+              <Accordion.Item eventKey="2">
+                <Accordion.Header>Design</Accordion.Header>
+                <Accordion.Body>
+                  <ProjectPlan
+                    {...props}
+                    projectPlan={projectPlan}
+                    selectedProject={selectedProject}
+                    projectPlanDesign={projectPlanDesign}
+                    setPegaData={setPegaData}
+                    pegadata={pegadata}
+                    setUpdatedProjectPlanDesignData={setUpdatedProjectPlanDesignData}
+                    setActiveSave={setActiveSave}
+                    isAccessEmpty={isAccessEmpty}
+                    getProjectPlanApi={getProjectPlanApi}
+                  />
+                </Accordion.Body>
+              </Accordion.Item>
+              <Accordion.Item eventKey="3">
+                <Accordion.Header>Input</Accordion.Header>
+                <Accordion.Body>Input</Accordion.Body>
+              </Accordion.Item>
+              <Accordion.Item eventKey="4">
+                <Accordion.Header>FA Assembly</Accordion.Header>
+                <Accordion.Body>FA Assembly</Accordion.Body>
+              </Accordion.Item>
+            </Accordion> */}
+            <div className="form-buttons">
+              <Button
+                className={!isAccessEmpty ? "btn btn-disabled" : "button-layout"}
+                variant="secondary"
+                onClick={() => navigate("/myProjects")}
+                disabled={!isAccessEmpty}
+              >
+                Cancel
+              </Button>
 
-        <Button
-          className={activeSave ? "btn btn-disabled" : "button-layout"}
-          variant="secondary"
-          onClick={onSave}
-          disabled={activeSave}
-        >
-          Save
-        </Button>
+              <Button
+                className={activeSave ? "btn btn-disabled" : "button-layout"}
+                variant="secondary"
+                onClick={onSave}
+                disabled={activeSave}
+              >
+                Save
+              </Button>
 
-        <Button
-          className="button-layout"
-          variant="primary"
-          onClick={activate}
-          disabled={activeFlag}
-        >
-          Activate
-        </Button>
-      </div>
+              <Button
+                className="button-layout"
+                variant="primary"
+                onClick={activate}
+                disabled={activeFlag}
+              >
+                Activate
+              </Button>
+            </div>
+          </>
+        )}
       <br />
     </>
   );

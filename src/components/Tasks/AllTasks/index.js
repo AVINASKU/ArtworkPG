@@ -7,7 +7,10 @@ const AllTasks = () => {
   const User = useSelector((state) => state.UserReducer);
   const userInformation = User.userInformation;
   const dispatch = useDispatch();
-  const allTasks = useSelector((state) => state?.TaskReducer?.allTasks);
+
+  const { allTasks, loading } = useSelector(
+    (state) => state.TaskReducer
+  );
 
   useEffect(() => {
     dispatch(getAllTasks(userInformation));
@@ -17,6 +20,7 @@ const AllTasks = () => {
     <>
       <TaskList
         myTasks={allTasks}
+        loading={loading}
         flag="allTasks"
         userInformation={userInformation}
       />
