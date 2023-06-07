@@ -245,7 +245,7 @@ function DPRA() {
         onSelectAll={onSelectAll}
         breadcrumb={breadcrumb}
         headerName={headerName}
-        label="Define Roduction Ready Art"
+        label="Define Production Ready Art"
         checkReadWriteAccess={checkReadWriteAccess}
       />
       <div className="task-details">
