@@ -64,7 +64,7 @@ function DDI() {
   }, [TaskDetailsData]);
 
   const handleCancel = () => {
-    return navigate(currentUrl === "myTasks" ? `/myTasks` : "/allTasks");
+    return navigate(`/MyTasks`);;
   };
 
   const handleDelete = (index) => {
@@ -184,7 +184,7 @@ function DDI() {
     console.log("formData", formData);
     await submitDesignIntent(formData, id, headers);
     setLoader(false);
-    // navigate(`/AllTasks`);
+    navigate(`/MyTasks`);
   };
 
   const onSaveAsDraft = async () => {
