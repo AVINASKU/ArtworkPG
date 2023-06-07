@@ -246,7 +246,7 @@ const CloneJobs = ({
     let selectedPrinter = [];
     printers.forEach((val) => {
       PrinterList.forEach((pl) => {
-        if (pl.code === val) {
+        if (pl.Code === val) {
           selectedPrinter.push(pl.Printer);
         }
       });
