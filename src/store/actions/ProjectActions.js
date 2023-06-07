@@ -5,7 +5,7 @@ import _ from "lodash";
 
 export const getMyProject = (userInformation) => async (dispatch) => {
   let PM = userInformation?.username;
-
+  dispatch({ type: "GET_PROJECT_DETAILS_REQUEST" });
   try {
     //here need to add url and pass PM name
     const res = await axios.get(`${GETURL}/myprojects/${PM}`);
