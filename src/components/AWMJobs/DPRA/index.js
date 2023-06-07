@@ -70,6 +70,21 @@ function DPRA() {
     setProjectData(projectData);
   }, [projectData]);
 
+  useEffect(() => {
+    checkFormValidity();
+  }, [data]);
+
+  const checkFormValidity = () => {
+    const validTasks = designIntent?.filter((task) => {
+      return task?.Agency_Reference && task?.Cluster && task?.Select;
+    });
+    if (validTasks.length > 0) {
+      setEnableSubmit(true);
+    } else {
+      setEnableSubmit(false);
+    }
+  };
+
   const handleCancel = () => {
     return navigate(currentUrl === "myTasks" ? `/myTasks` : "/allTasks");
   };
@@ -104,27 +119,8 @@ function DPRA() {
     // add here design job name here check it out from API.
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
-    let values = false;
-    const hasValues = designIntent.every(
-      (item) => {        
-        setEnableSubmit(true);
-       if(item.Select){
-          values = item.Agency_Reference !== "" && item.Cluster !== "";
-      } 
-        // else{
-        //   values = designIntent.some(item => {
-        //     console.log("else select", item)
-        //     if(item.Select){
-        //       values = item.Agency_Reference !== "" && item.Cluster !== ""
-        //     }
-        //   });
-        //   console.log("value else", values)
-        // }
-        return values
-      }
-    );
-    setEnableSubmit(!hasValues);  
     setSubmittedDI(submittedDI);
+    checkFormValidity();
   };
 
   const onSelectAll = (checked) => {
@@ -234,6 +230,9 @@ function DPRA() {
   let Brand = [];
   let Category = [];
 
+  let checkTaskISComplete =
+    TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Status === "Complete";
+
   if (TaskDetailsData?.ArtworkAgilityPage) {
     Brand = TaskDetailsData.ArtworkAgilityPage.Artwork_Brand;
     Category = TaskDetailsData.ArtworkAgilityPage.Artwork_SMO;
@@ -274,7 +273,7 @@ function DPRA() {
                   checkReadWriteAccess={checkReadWriteAccess}
                 />
               );
-            } else return <>Data Not Found</>;
+            }
           })
         )}
       </div>
@@ -282,9 +281,9 @@ function DPRA() {
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
         onSubmit={onSubmit}
-        checkReadWriteAccess={checkReadWriteAccess}
         bottomFixed={true}
-        formValid={enableSubmit}
+        checkReadWriteAccess={checkReadWriteAccess}
+        formValid={!enableSubmit}
       />
     </PageLayout>
   );

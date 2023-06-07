@@ -69,12 +69,26 @@ function DDT() {
     }
   }, [TaskDetailsData]);
 
+  useEffect(() => {
+    checkFormValidity();
+  }, [data]);
+
   const handleCancel = () => {
     return navigate(currentUrl === "myTasks" ? `/myTasks` : "/allTasks");
   };
 
+  const checkFormValidity = () => {
+    const validTasks = designIntent?.filter((task) => {
+      return task?.Agency_Reference && task?.Cluster && task?.Select;
+    });
+    if (validTasks.length > 0) {
+      setEnableSubmit(true);
+    } else {
+      setEnableSubmit(false);
+    }
+  };
+
   const handleDelete = (index) => {
-    console.log("index", index);
     const sub = designIntent.map((item, i) => {
       if (i === index) {
         item.Action = "delete";
@@ -102,27 +116,8 @@ function DDT() {
     data[fieldName] = value;
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
-    let values = false;
-    const hasValues = designIntent.every(
-      (item) => {        
-        setEnableSubmit(true);
-       if(item.Select){
-          values = item.Agency_Reference !== "" && item.Cluster !== "";
-      } 
-        // else{
-        //   values = designIntent.some(item => {
-        //     console.log("else select", item)
-        //     if(item.Select){
-        //       values = item.Agency_Reference !== "" && item.Cluster !== ""
-        //     }
-        //   });
-        //   console.log("value else", values)
-        // }
-        return values
-      }
-    );
-    setEnableSubmit(!hasValues);
     setSubmittedDI(submittedDI);
+    checkFormValidity();
   };
 
   const onSelectAll = (checked) => {
@@ -184,7 +179,6 @@ function DDT() {
       },
       pageInstructions: updatedDataList,
     };
-    console.log("formData", formData);
     await submitDefineRegionalDesignTemplate(formData, id, headers);
     setLoader(false);
     navigate(`/${currentUrl?.split("/")[1]}`);
@@ -224,13 +218,15 @@ function DDT() {
       Region: projectData?.Project_region,
       DesignTemplateList: updatedData,
     };
-    console.log("full draft data --->", formData);
+    // console.log("full draft data --->", formData);
     await saveDefineRegionalDesignTemplate(formData);
     setLoader(false);
   };
 
   let Brand = [];
   let Category = [];
+  let checkTaskISComplete =
+    TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Status === "Complete";
 
   if (TaskDetailsData?.ArtworkAgilityPage) {
     Brand = TaskDetailsData.ArtworkAgilityPage.Artwork_Brand;
@@ -249,6 +245,7 @@ function DDT() {
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
+        {checkTaskISComplete && <div>This task is already submitted</div>}
 
         {loading || loader || designIntent === null ? (
           <Loading />
@@ -272,7 +269,7 @@ function DDT() {
                   checkReadWriteAccess={checkReadWriteAccess}
                 />
               );
-            } else return <>Data Not Found</>;
+            }
           })
         )}
       </div>
@@ -282,7 +279,7 @@ function DDT() {
         onSubmit={onSubmit}
         checkReadWriteAccess={checkReadWriteAccess}
         bottomFixed={true}
-        formValid={enableSubmit}
+        formValid={!enableSubmit}
       />
     </PageLayout>
   );
