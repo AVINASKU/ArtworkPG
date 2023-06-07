@@ -74,7 +74,7 @@ function DDT() {
   }, [data]);
 
   const handleCancel = () => {
-    return navigate(currentUrl === "myTasks" ? `/myTasks` : "/allTasks");
+    return navigate(`/MyTasks`);
   };
 
   const checkFormValidity = () => {
@@ -181,7 +181,7 @@ function DDT() {
     };
     await submitDefineRegionalDesignTemplate(formData, id, headers);
     setLoader(false);
-    navigate(`/${currentUrl?.split("/")[1]}`);
+    navigate(`/MyTasks`);
   };
 
   const onSaveAsDraft = async () => {
