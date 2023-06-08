@@ -317,12 +317,12 @@ function ProjectPlanCompo(props) {
     await activateProjectPlan(selectedProject.Project_ID);
     await dispatch(getMyProject(userInformation));
     setLoader(false);
-    await toast.current.show({
-      severity: "success",
-      summary: "Success",
-      detail: "Project activated successfully!",
-      life: 3000,
-    });
+    // await toast.current.show({
+    //   severity: "success",
+    //   summary: "Success",
+    //   detail: "Project activated successfully!",
+    //   life: 3000,
+    // });
   };
 
   return (

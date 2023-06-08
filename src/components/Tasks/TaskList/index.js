@@ -46,7 +46,7 @@ const TaskList = ({myTasks, loading, flag, userInformation}) => {
   };
 
   useEffect(() => {
-    setLoader(true);
+    // setLoader(true);
       const myTasksList = getMyTasks(myTasks);
       setSelectedProdSrchList(myTasksList);
 
