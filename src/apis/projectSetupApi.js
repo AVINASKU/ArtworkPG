@@ -5,17 +5,21 @@ import {
   editProjectAction,
 } from "../store/actions/ProjectSetupActions";
 import { store } from "../store/store";
+import { DEVURL, SITURL, PRODURL } from "./envUrl";
 
 const baseURL = "https://pegadev.pg.com/prweb/api/ArtworkAgilityFile";
 
-export const createNewProject = async (formData, headers = {
-  "Access-Control-Allow-Headers" : "Content-Type",
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
-}) => {
+export const createNewProject = async (
+  formData,
+  headers = {
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+  }
+) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${baseURL}/v1/cases`;
+  let apiURL = `${DEVURL}/v1/cases`;
   const newProjectData = await axiosInstance({
     url: apiURL,
     method: "POST",
@@ -33,9 +37,12 @@ export const editProject = async (formData, id, method, headers = {}) => {
   const axiosInstance = await api.init({ headers });
   let apiURL;
   if (method === "PUT") {
-    apiURL = `${baseURL}/v1/cases/${id}`;
+    apiURL = `${DEVURL}/v1/cases/${id}`;
   } else if (method === "PATCH") {
-    apiURL = `${baseURL}/v2/assignments/ASSIGN-WORKLIST ${id}!CREATE_FLOW_3/actions/CreateProjectManually`;
+    apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!CREATE_FLOW_3/actions/CreateProjectManually`;
+  } else if (method === "POST") {
+    // https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1/UpdateDetailsIntoProjectSetUp/{AWMProjectID}
+    apiURL = `${DEVURL}/v1/UpdateDetailsIntoProjectSetUp/${id}`;
   }
 
   const editProjectData = await axiosInstance({
