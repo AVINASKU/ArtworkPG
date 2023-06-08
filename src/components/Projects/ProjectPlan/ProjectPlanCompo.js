@@ -14,10 +14,11 @@ import {
   activateProjectPlan,
   saveProjectPlanAction,
 } from "../../../apis/projectPlanApi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import moment from "moment";
 import { CheckReadOnlyAccess, Loading } from "../../../utils";
+import { getMyProject } from "../../../store/actions/ProjectActions";
 
 function ProjectPlanCompo(props) {
   const toast = useRef(null);
@@ -34,9 +35,13 @@ function ProjectPlanCompo(props) {
   const [updatedList, setUpdatedList] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  let { ProjectID } = useParams();
 
+  const { userInformation } = useSelector((state) => state.UserReducer);
 
-
+  const { myProject, ...myProjectData } = useSelector(
+    (state) => state.myProject
+  );
   const { projectPlanDesign, projectPlan, loading } = useSelector(
     (state) => state.ProjectPlanReducer
   );
@@ -58,22 +63,26 @@ function ProjectPlanCompo(props) {
 
   useEffect(() => {
     setActiveFlag(false);
-    if (projectPlanDesign[0]?.Project_State === "Available" || !isAccessEmpty || projectPlan.length === 0) {
+    let projectData = myProject.find(
+      (project) => project.Project_ID === ProjectID
+    );
+    const firstTime = projectPlanDesign.some((item) => item.Assignee !== "" || item.Role !== "");
+    if ((!firstTime && projectData?.Project_State === "Draft") || projectData?.Project_State === "Active" || !isAccessEmpty || projectPlan.length === 0) {
       setActiveFlag(true);
     }
-  }, [projectPlanDesign, projectPlan, isAccessEmpty]);
-
+  }, [myProject, projectPlan, isAccessEmpty, projectPlanDesign]);
+  
   const getProjectPlanApi = async () => {
-    let restructuredData = [];
     setLoader(true);
+    let restructuredData = [];
     const apiData =
       mode === "design" && selectedProject.Project_ID
         ? await getProjectPlan(selectedProject.Project_ID)
         : [];
-    setLoader(false);
     apiData && dispatch(updateProjectPlanDesignAction(apiData));
     restructuredData = apiData?.length > 0 ? getRestructuredData(apiData) : [];
     dispatch(updateProjectPlanAction(restructuredData));
+    setLoader(false);
   };
 
   useEffect(() => {
@@ -131,7 +140,7 @@ function ProjectPlanCompo(props) {
         data: apiData.filter((data) => data.AWM_Task_ID.includes("CPPFA_")),
       },
       {
-        name: "Define New Print Feasibility Scope",
+        name: "Define Color Development & Print Trial",
         code: "DNPF",
         data: apiData.filter((data) => data.AWM_Task_ID.includes("DNPF_")),
       },
@@ -166,6 +175,8 @@ function ProjectPlanCompo(props) {
           ? "Confirm Color Development"
           : task.data[0].AWM_Task_ID.includes("CPT_")
           ? "Confirm Print Trial"
+          : task.data[0].AWM_Task_ID.includes("DNPF_")
+          ? "Define Color Development & Print Trial"
           : task.data[0].Task_Name;
         dataObj["Dependency"] = task.data[0].Dependency;
         dataObj["Role"] = task.data[0].Role;
@@ -298,20 +309,24 @@ function ProjectPlanCompo(props) {
   };
 
   const activate = async () => {
+    setLoader(true);
     await activateProjectPlan(selectedProject.Project_ID);
-    getProjectPlanApi();
-    // toast.current.show({
-    //   severity: "success",
-    //   summary: "Success",
-    //   detail: "Project activated successfully!",
-    //   life: 3000,
-    // });
+    await dispatch(getMyProject(userInformation));
+    setLoader(false);
+    await toast.current.show({
+      severity: "success",
+      summary: "Success",
+      detail: "Project activated successfully!",
+      life: 5000,
+    });
   };
 
   return (
     console.log("projectPlan", projectPlan),
-    <>
-    {loading || loader || projectPlan === null ? (
+    (
+      <>
+        <Toast ref={toast} />
+        {loading || loader || myProjectData.loading || projectPlan === null ? (
           <Loading />
         ) : (
           <>
@@ -356,7 +371,9 @@ function ProjectPlanCompo(props) {
             </Accordion> */}
             <div className="form-buttons">
               <Button
-                className={!isAccessEmpty ? "btn btn-disabled" : "button-layout"}
+                className={
+                  !isAccessEmpty ? "btn btn-disabled" : "button-layout"
+                }
                 variant="secondary"
                 onClick={() => navigate("/myProjects")}
                 disabled={!isAccessEmpty}
@@ -384,8 +401,9 @@ function ProjectPlanCompo(props) {
             </div>
           </>
         )}
-      <br />
-    </>
+        <br />
+      </>
+    )
   );
 }
 

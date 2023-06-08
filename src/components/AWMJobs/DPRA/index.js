@@ -86,7 +86,7 @@ function DPRA() {
   };
 
   const handleCancel = () => {
-    return navigate(currentUrl === "myTasks" ? `/myTasks` : "/allTasks");
+    return navigate(`/MyTasks`);
   };
 
   const handleDelete = (index) => {
@@ -186,7 +186,7 @@ function DPRA() {
     console.log("formData", formData);
     await submitDefineProductionReadyArt(formData, id, headers);
     setLoader(false);
-    // navigate(`/${currentUrl?.split("/")[1]}`);
+    navigate(`/MyTasks`);
   };
 
   const onSaveAsDraft = async () => {

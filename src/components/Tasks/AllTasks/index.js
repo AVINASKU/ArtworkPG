@@ -7,11 +7,7 @@ const AllTasks = () => {
   const User = useSelector((state) => state.UserReducer);
   const userInformation = User.userInformation;
   const dispatch = useDispatch();
-
-  const { allTasks, loading } = useSelector(
-    (state) => state.TaskReducer
-  );
-
+  const { allTasks, loading } = useSelector((state) => state.TaskReducer);
   useEffect(() => {
     dispatch(getAllTasks(userInformation));
   }, [dispatch]);

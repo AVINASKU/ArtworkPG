@@ -196,6 +196,7 @@ function DNPF() {
 
     await submitColorDevelopment(formData, id, headers);
     setLoader(false);
+    navigate(`/myTasks`);
   };
 
   const onSaveAsDraft = async () => {

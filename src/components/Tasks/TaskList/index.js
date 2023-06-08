@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getTasks, getAllTasks } from "../../../store/actions/TaskActions";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 
-const TaskList = ({myTasks, loading, flag, userInformation}) => {
+const TaskList = ({ myTasks, loading, flag, userInformation }) => {
   const dispatch = useDispatch();
   const [selectAllChecked, setSelectAllChecked] = useState(false);
   const [selected, setSelected] = useState([]);
@@ -48,30 +48,30 @@ const TaskList = ({myTasks, loading, flag, userInformation}) => {
 
   useEffect(() => {
     setLoader(true);
-      const myTasksList = getMyTasks(myTasks);
+    const myTasksList = getMyTasks(myTasks);
+    setSelectedProdSrchList(myTasksList);
+
+    let filteredPegaDataJson = localStorage.getItem("columnWiseFilterData");
+    const filteredPegaData = JSON.parse(filteredPegaDataJson);
+
+    if (filteredPegaData && filteredPegaData.length) {
+      setFilters(filteredPegaData);
+      setselectedFields(filteredPegaData);
       setSelectedProdSrchList(myTasksList);
+    }
 
-      let filteredPegaDataJson = localStorage.getItem("columnWiseFilterData");
-      const filteredPegaData = JSON.parse(filteredPegaDataJson);
-
-      if (filteredPegaData && filteredPegaData.length) {
-        setFilters(filteredPegaData);
-        setselectedFields(filteredPegaData);
-        setSelectedProdSrchList(myTasksList);
-      }
-
-      let columnNamesJson = localStorage.getItem("myTasksAllColumnNames");
-      const columnNames = JSON.parse(columnNamesJson);
-      if (columnNames != null && columnNames.length) {
-        setSelectedFields(columnNames);
-      } else {
-        const columnNames =  TaskService.getMyTaskColumnNames();
-        localStorage.setItem(
-          "myTasksAllColumnNames",
-          JSON.stringify(columnNames)
-        );
-        setSelectedFields(columnNames);
-      }
+    let columnNamesJson = localStorage.getItem("myTasksAllColumnNames");
+    const columnNames = JSON.parse(columnNamesJson);
+    if (columnNames != null && columnNames.length) {
+      setSelectedFields(columnNames);
+    } else {
+      const columnNames = TaskService.getMyTaskColumnNames();
+      localStorage.setItem(
+        "myTasksAllColumnNames",
+        JSON.stringify(columnNames)
+      );
+      setSelectedFields(columnNames);
+    }
     setLoader(false);
   }, [myTasks]);
 
@@ -173,6 +173,7 @@ const TaskList = ({myTasks, loading, flag, userInformation}) => {
   const headerColumns = [
     "Project_Name",
     "Task_Name",
+    "Task_Type",
     "Status",
     "Help_Needed",
     "Remaining_Buffer",
@@ -354,6 +355,26 @@ const TaskList = ({myTasks, loading, flag, userInformation}) => {
       </div>
     );
   };
+  const taskTemplate = (rowData) => {
+    const firstPart = rowData.AWM_Task_ID.split("_")[0];
+
+    if (firstPart === "DDI" || firstPart === "DDT" || firstPart === "DPRA") {
+      // Handle DI case
+      return <div>Define</div>;
+    } else if (firstPart === "UADI") {
+      // Handle UADI case
+      return <div>Upload and Approve</div>;
+    } else if (firstPart === "URDT" || firstPart === "UPRA") {
+      // Handle URDT case
+      return <div>Upload</div>;
+    } else if (firstPart === "ARDT" || firstPart === "APRA") {
+      // Handle ARTD case
+      return <div>Approve</div>;
+    }
+
+    // Default case (no filter match)
+    return null;
+  };
 
   const assigneeTemplate = (rowData) => {
     return <div>{rowData?.Assignee}</div>;
@@ -378,6 +399,7 @@ const TaskList = ({myTasks, loading, flag, userInformation}) => {
               filterPlaceholder="Search"
               body={
                 (ele === "Task_Name" && taskBodyTemplate) ||
+                (ele === "Task_Type" && taskTemplate) ||
                 (ele === "Help_Needed" && helpNeededBodyTemplate) ||
                 (ele === "Status" && statusTemplate)
               }
@@ -404,6 +426,7 @@ const TaskList = ({myTasks, loading, flag, userInformation}) => {
             filterPlaceholder="Search"
             body={
               (ele === "Task_Name" && taskBodyTemplate) ||
+              (ele === "Task_Type" && taskTemplate) ||
               (ele === "Help_Needed" && helpNeededBodyTemplate) ||
               (ele === "Status" && statusTemplate) ||
               (ele === "PM" && assigneeTemplate)
@@ -524,8 +547,7 @@ const TaskList = ({myTasks, loading, flag, userInformation}) => {
         )}
       </>
     )}
-      
-    </>    
+    </>
   );
 };
 
