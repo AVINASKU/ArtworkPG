@@ -11,7 +11,7 @@ import {
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toLower } from "lodash";
-import { AddNavigation } from "../../../utils";
+import { AddNavigation, Loading } from "../../../utils";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { CheckReadOnlyAccess } from "../../../utils";
 import { useLocation } from "react-router-dom";
@@ -27,6 +27,7 @@ function DPRA() {
   const [submittedDI, setSubmittedDI] = useState([]);
   const [enableSubmit, setEnableSubmit] = useState(true);
   const [projectData, setProjectData] = useState([]);
+  const [loader, setLoader] = useState(false);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -69,8 +70,23 @@ function DPRA() {
     setProjectData(projectData);
   }, [projectData]);
 
+  useEffect(() => {
+    checkFormValidity();
+  }, [data]);
+
+  const checkFormValidity = () => {
+    const validTasks = designIntent?.filter((task) => {
+      return task?.Agency_Reference && task?.Cluster && task?.Select;
+    });
+    if (validTasks.length > 0) {
+      setEnableSubmit(true);
+    } else {
+      setEnableSubmit(false);
+    }
+  };
+
   const handleCancel = () => {
-    return navigate(currentUrl === "myTasks" ? `/myTasks` : "/allTasks");
+    return navigate(`/MyTasks`);
   };
 
   const handleDelete = (index) => {
@@ -103,27 +119,8 @@ function DPRA() {
     // add here design job name here check it out from API.
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
-    let values = false;
-    const hasValues = designIntent.every(
-      (item) => {        
-        setEnableSubmit(true);
-       if(item.Select){
-          values = item.Agency_Reference !== "" && item.Cluster !== "";
-      } 
-        // else{
-        //   values = designIntent.some(item => {
-        //     console.log("else select", item)
-        //     if(item.Select){
-        //       values = item.Agency_Reference !== "" && item.Cluster !== ""
-        //     }
-        //   });
-        //   console.log("value else", values)
-        // }
-        return values
-      }
-    );
-    setEnableSubmit(!hasValues);  
     setSubmittedDI(submittedDI);
+    checkFormValidity();
   };
 
   const onSelectAll = (checked) => {
@@ -138,6 +135,7 @@ function DPRA() {
   };
 
   const onSubmit = async () => {
+    setLoader(true);
     let updatedData = {};
     let updatedDataList = [];
     const headers = {
@@ -187,10 +185,12 @@ function DPRA() {
     };
     console.log("formData", formData);
     await submitDefineProductionReadyArt(formData, id, headers);
-    // navigate(`/${currentUrl?.split("/")[1]}`);
+    setLoader(false);
+    navigate(`/MyTasks`);
   };
 
   const onSaveAsDraft = async () => {
+    setLoader(true);
     let updatedData = [];
     designIntent.filter((task) => {
       if (task?.isNew) {
@@ -225,9 +225,13 @@ function DPRA() {
     };
     console.log("full draft data --->", formData);
     await saveDefineProductionReadyArt(formData);
+    setLoader(false);
   };
   let Brand = [];
   let Category = [];
+
+  let checkTaskISComplete =
+    TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Status === "Complete";
 
   if (TaskDetailsData?.ArtworkAgilityPage) {
     Brand = TaskDetailsData.ArtworkAgilityPage.Artwork_Brand;
@@ -241,19 +245,14 @@ function DPRA() {
         onSelectAll={onSelectAll}
         breadcrumb={breadcrumb}
         headerName={headerName}
-        label="Define Roduction Ready Art"
+        label="Define Production Ready Art"
         checkReadWriteAccess={checkReadWriteAccess}
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
 
-        {loading || designIntent === null ? (
-          <div className="align-item-center">
-            <i
-              className="pi pi-spin pi-spinner"
-              style={{ fontSize: "2rem" }}
-            ></i>
-          </div>
+        {loading || loader || designIntent === null ? (
+          <Loading />
         ) : (
           designIntent &&
           designIntent.length &&
@@ -274,7 +273,7 @@ function DPRA() {
                   checkReadWriteAccess={checkReadWriteAccess}
                 />
               );
-            } else return <>Data Not Found</>;
+            }
           })
         )}
       </div>
@@ -282,9 +281,9 @@ function DPRA() {
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
         onSubmit={onSubmit}
-        checkReadWriteAccess={checkReadWriteAccess}
         bottomFixed={true}
-        formValid={enableSubmit}
+        checkReadWriteAccess={checkReadWriteAccess}
+        formValid={!enableSubmit}
       />
     </PageLayout>
   );

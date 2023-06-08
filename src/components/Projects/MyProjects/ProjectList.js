@@ -12,13 +12,14 @@ import {
   getMyProject,
   // updateProject,
 } from "../../../store/actions/ProjectActions";
-import { changeDateFormat, onSortData } from "../../../utils";
+import { changeDateFormat, onSortData, Loading } from "../../../utils";
 import _ from "lodash";
 
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 import ProjectNameHeader from "./ProjectNameHeader";
+import CustomisedView from "./CustomisedView";
 
-const CustomisedView = React.lazy(() => import("./CustomisedView"));
+// const CustomisedView = React.lazy(() => import("./CustomisedView"));
 
 const ProjectList = (props) => {
   const User = useSelector((state) => state.UserReducer);
@@ -38,6 +39,7 @@ const ProjectList = (props) => {
   const [updatedAllColumnNames, setUpdatedAllColumnNames] = useState([]);
   const [isSearch, isSearchSet] = useState(false);
   const [isReorderedColumn, setReorderedColumn] = useState(false);
+  const [loader, setLoader] = useState(false);
   const myProjectList = useSelector((state) => state.myProject);
   const { loading } = myProjectList;
   const dispatch = useDispatch();
@@ -118,7 +120,7 @@ const ProjectList = (props) => {
     return reorderedColumns;
   };
   useEffect(() => {
-    // setLoading(true);
+    setLoader(true);
     (async () => {
       try {
         // below is json call
@@ -221,7 +223,7 @@ const ProjectList = (props) => {
         console.log("error", err);
       }
     })();
-    // setLoading(false);
+    setLoader(false);
   }, [myProjectList.myProject]);
 
   const addFrozenColumns = (name) => {
@@ -533,75 +535,78 @@ const ProjectList = (props) => {
 
   return (
     <div className="myProjectAnddAllProjectList">
-      <Suspense fallback={<div>Loading...</div>}>
-        {pegadata !== undefined && (
-          <ProjectListHeader
-            header={props.header}
-            clearFilters={clearFilters}
-            clearFilter={clearFilter}
-            setVisible={setVisible}
-            saveSettings={saveSettings}
-            onSearchClick={onSearchClick}
-            // exportCSV={exportCSV}
-            isFilterEnabled={isFilterEnabled}
-            isResetEnabled={isResetEnabled}
-            allData={pegadata}
-            headers={updatedAllColumnNames}
-          />
-        )}
-        <CustomisedView
-          visible={visible}
-          setProjectColumnNames={setProjectColumnNames}
-          setVisible={setVisible}
-          projectColumnName={projectColumnName}
-          allColumnNames={allColumnNames}
-          saveAsPersonaliDefault={saveAsPersonaliDefault}
-          resetToPgDefault={resetToPgDefault}
-        />
+      {loading || loader || pegadata === null ? (
+          <Loading />
+        ): (
+          <>
+            {pegadata !== undefined && (
+              <ProjectListHeader
+                header={props.header}
+                clearFilters={clearFilters}
+                clearFilter={clearFilter}
+                setVisible={setVisible}
+                saveSettings={saveSettings}
+                onSearchClick={onSearchClick}
+                // exportCSV={exportCSV}
+                isFilterEnabled={isFilterEnabled}
+                isResetEnabled={isResetEnabled}
+                allData={pegadata}
+                headers={updatedAllColumnNames}
+              />
+            )}
+            <CustomisedView
+              visible={visible}
+              setProjectColumnNames={setProjectColumnNames}
+              setVisible={setVisible}
+              projectColumnName={projectColumnName}
+              allColumnNames={allColumnNames}
+              saveAsPersonaliDefault={saveAsPersonaliDefault}
+              resetToPgDefault={resetToPgDefault}
+            />
 
-        <ConfirmationPopUp
-          onSort={onSort}
-          setProjectFrozen={setProjectFrozen}
-          saveSettings={saveSettings}
-          projectData={pegadata}
-          addFrozenColumns={addFrozenColumns}
-          onGlobalFilterChange={onGlobalFilterChange}
-          selectedColumnName={selectedColumnName}
-          ProjectFrozen={ProjectFrozen}
-          selectedFields={selectedFields}
-          setFrozenColumn={setFrozenColumn}
-          frozenCoulmns={frozenCoulmns}
-          sortData={sortData}
-          setSortData={setSortData}
-          setFilters={setFilters}
-          filters={filters}
-          op={op}
-          clearColumnWiseFilter={clearColumnWiseFilter}
-        />
+            <ConfirmationPopUp
+              onSort={onSort}
+              setProjectFrozen={setProjectFrozen}
+              saveSettings={saveSettings}
+              projectData={pegadata}
+              addFrozenColumns={addFrozenColumns}
+              onGlobalFilterChange={onGlobalFilterChange}
+              selectedColumnName={selectedColumnName}
+              ProjectFrozen={ProjectFrozen}
+              selectedFields={selectedFields}
+              setFrozenColumn={setFrozenColumn}
+              frozenCoulmns={frozenCoulmns}
+              sortData={sortData}
+              setSortData={setSortData}
+              setFilters={setFilters}
+              filters={filters}
+              op={op}
+              clearColumnWiseFilter={clearColumnWiseFilter}
+            />
 
-        <DataTable
-          resizableColumns
-          dataKey="Project_ID"
-          reorderableColumns
-          onColReorder={storeReorderedColumns}
-          onResize={(e) => console.log("resize", e)}
-          onResizeCapture={(e) => console.log("e", e)}
-          value={filters.length ? filters : pegadata}
-          scrollable
-          responsiveLayout="scroll"
-          loading={loading}
-          className="mt-3"
-          columnResizeMode="expand"
-          onColumnResizeEnd={onColumnResizeEnd}
-          filters={searchHeader}
-          filterDisplay={isSearch && "row"}
-          ref={dt}
-          // tableStyle={{ minWidth: "50rem" }}
-          tableStyle={{ width: "max-content", minWidth: "100%" }}
-        >
-          {dynamicColumns()}
-        </DataTable>
-      </Suspense>
+            <DataTable
+              resizableColumns
+              dataKey="Project_ID"
+              reorderableColumns
+              onColReorder={storeReorderedColumns}
+              onResize={(e) => console.log("resize", e)}
+              onResizeCapture={(e) => console.log("e", e)}
+              value={filters.length ? filters : pegadata}
+              scrollable
+              responsiveLayout="scroll"
+              loading={loading}
+              className="mt-3"
+              columnResizeMode="expand"
+              onColumnResizeEnd={onColumnResizeEnd}
+              filters={searchHeader}
+              filterDisplay={isSearch && "row"}
+              ref={dt}
+              tableStyle={{ width: "max-content", minWidth: "100%" }}
+            >
+              {dynamicColumns()}
+            </DataTable>
+          </>
+        )}      
     </div>
   );
 };

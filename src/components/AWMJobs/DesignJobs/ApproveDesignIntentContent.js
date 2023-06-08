@@ -30,11 +30,13 @@ const ApproveDesignIntentContent = ({
     viewProofScopeFile(`cloudflow://PP_FILE_STORE/aacdata/${fileUrl}`);
   };
 
-  let di_name;
-  di_name =
-    version !== "V0" && designIntent[0]?.FileMetaDataList[0]?.Timestamp !== ""
-      ? `${item?.Task_Name}_${version}_${date}`
-      : `${item?.Task_Name}`;
+  let di_name = "";
+  if (!approve) {
+    di_name =
+      version !== "V0" && designIntent[0]?.FileMetaDataList[0]?.Timestamp !== ""
+        ? `${item?.Task_Name}_${version}_${date}`
+        : `${item?.Task_Name}`;
+  }
 
   const onTemplateUpload = (e) => {
     let _totalSize = 0;
@@ -45,7 +47,6 @@ const ApproveDesignIntentContent = ({
 
     setTotalSize(_totalSize);
   };
-
 
   const itemTemplate = (file) => {
     setformattedValue(file.size);
@@ -108,7 +109,6 @@ const ApproveDesignIntentContent = ({
     );
   };
   return (
-    console.log("fileName version ", fileName === "", version !== "", fileName, version),
     <div>
       <div className="design-intent-header">{DesignHeader(di_name)}</div>
       <div className="approve-design-intent">
@@ -131,7 +131,13 @@ const ApproveDesignIntentContent = ({
               itemTemplate={itemTemplate}
             />
             <div>
-              {designIntent[0]?.FileMetaDataList[0]?.File_Name === "" ? (fileName === "" ? `No files uploaded yet please upload file!` : ``) : (fileName === "" ? di_name : '')}
+              {designIntent[0]?.FileMetaDataList[0]?.File_Name === ""
+                ? fileName === ""
+                  ? `No files uploaded yet please upload file!`
+                  : ``
+                : fileName === ""
+                ? di_name
+                : ""}
             </div>
           </div>
         )}
@@ -156,7 +162,7 @@ const ApproveDesignIntentContent = ({
                 cursor: "pointer",
               }}
             >
-              {file_name}
+              {/* {file_name} */}
             </div>
           </div>
         )}

@@ -1,23 +1,29 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 import "./index.scss";
 
-const TabsComponent = ({ items, tabName, setTabName }) => {
+const TabsComponent = ({ items, tabName, actionButton }) => {
+  const location = useLocation();
+  const currentUrl = location.pathname;
+
   return (
     <>
+    <div className="displayFlex">
       <div className="tabs-wrapper">
         <ul id="scroller" className="nav nav-tabs">
           {items.map((obj, index) => (
             <li
               key={index + 1}
               className={`${obj.name === tabName ? "active" : ""}`}
-              onClick={() => setTabName(obj.name)}
             >
-              <a data-toggle="tab" href={`#${obj.name}`}>
+              <a data-toggle="tab" href={`${currentUrl}#${obj.name}`}>
                 {obj.tabNameForDisplay}
               </a>
             </li>
           ))}
         </ul>
+      </div>
+      <div className="actionButtonsForTabComponent">{actionButton}</div>
       </div>
       <div className="tab-content">
         {items.map((obj, index) => (

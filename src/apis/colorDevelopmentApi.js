@@ -4,7 +4,7 @@ import { DEVURL, SITURL, PRODURL } from "./envUrl";
 
 const baseURL = "https://pegadev.pg.com/prweb/api/ArtworkAgilityFile";
 
-export const saveInkQualification = async (formData) => {
+export const saveColorDevelopment = async (formData) => {
   let headers = {
     "Access-Control-Allow-Headers": "Content-Type",
     "Access-Control-Allow-Origin": "*",
@@ -12,51 +12,51 @@ export const saveInkQualification = async (formData) => {
   };
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${DEVURL}/V1/UpdateIQJob`;
+  let apiURL = `${DEVURL}/v1/UpdateNewPrintFeasibilityJob`;
   console.log("api url", apiURL);
-  const inkQualification = await axiosInstance({
+  const colorDevelopment = await axiosInstance({
     url: apiURL,
     method: "POST",
     data: formData,
   });
 
-  console.log("IQSaveAsDraftresponse", inkQualification, formData);
+  console.log("CDSaveAsDraftresponse", colorDevelopment, formData);
 
   return true;
 };
 
-export const submitInkQualification = async (formData, id, headers = {}) => {
+export const submitColorDevelopment = async (formData, id, headers = {}) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!DEFINEINKQUALIFICATION_FLOW/actions/DefineInkQualification`;
+  let apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!DefineNewPrintFeasibility_Flow/actions/DefineNewPrintFeasibility`;
   console.log("api url", apiURL);
-  const inkQualification = await axiosInstance({
+  const colorDevelopment = await axiosInstance({
     url: apiURL,
     method: "PATCH",
     data: formData,
   });
 
-  console.log("IQSubmitresponse", inkQualification, formData);
+  console.log("CDSubmitresponse", colorDevelopment, formData);
 
   return true;
 };
 
-export const submitConfirmInkQualification = async (
+export const submitConfirmColorDevelopment = async (
   formData,
   id,
   headers = {}
 ) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!CONFIRMINKQUALIFICATION_FLOW/actions/ConfirmInkQualification`;
+  let apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!CONFIRMCOLORDEVELOPMENTDONE_FLOW/actions/ConfirmColorDevelopmentDone`;
   console.log("api url", apiURL);
-  const inkQualification = await axiosInstance({
+  const colorDevelopment = await axiosInstance({
     url: apiURL,
     method: "PATCH",
     data: formData,
   });
 
-  console.log("IQSubmitresponse", inkQualification, formData);
+  console.log("CDConfirmSubmitresponse", colorDevelopment, formData);
 
   return true;
 };

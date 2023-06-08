@@ -10,7 +10,7 @@ import {
 } from "../../../apis/defineRegionalDesignTemplate";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { AddNavigation } from "../../../utils";
+import { AddNavigation, Loading } from "../../../utils";
 import { toLower } from "lodash";
 import _ from "lodash";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
@@ -27,6 +27,7 @@ function DDT() {
   const [submittedDI, setSubmittedDI] = useState([]);
   const [projectData, setProjectData] = useState([]);
   const [enableSubmit, setEnableSubmit] = useState(true);
+  const [loader, setLoader] = useState(false);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -68,12 +69,26 @@ function DDT() {
     }
   }, [TaskDetailsData]);
 
+  useEffect(() => {
+    checkFormValidity();
+  }, [data]);
+
   const handleCancel = () => {
-    return navigate(currentUrl === "myTasks" ? `/myTasks` : "/allTasks");
+    return navigate(`/MyTasks`);
+  };
+
+  const checkFormValidity = () => {
+    const validTasks = designIntent?.filter((task) => {
+      return task?.Agency_Reference && task?.Cluster && task?.Select;
+    });
+    if (validTasks.length > 0) {
+      setEnableSubmit(true);
+    } else {
+      setEnableSubmit(false);
+    }
   };
 
   const handleDelete = (index) => {
-    console.log("index", index);
     const sub = designIntent.map((item, i) => {
       if (i === index) {
         item.Action = "delete";
@@ -101,27 +116,8 @@ function DDT() {
     data[fieldName] = value;
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
-    let values = false;
-    const hasValues = designIntent.every(
-      (item) => {        
-        setEnableSubmit(true);
-       if(item.Select){
-          values = item.Agency_Reference !== "" && item.Cluster !== "";
-      } 
-        // else{
-        //   values = designIntent.some(item => {
-        //     console.log("else select", item)
-        //     if(item.Select){
-        //       values = item.Agency_Reference !== "" && item.Cluster !== ""
-        //     }
-        //   });
-        //   console.log("value else", values)
-        // }
-        return values
-      }
-    );
-    setEnableSubmit(!hasValues);
     setSubmittedDI(submittedDI);
+    checkFormValidity();
   };
 
   const onSelectAll = (checked) => {
@@ -136,6 +132,7 @@ function DDT() {
   };
 
   const onSubmit = async () => {
+    setLoader(true);
     let updatedData = {};
     let updatedDataList = [];
     const headers = {
@@ -182,12 +179,13 @@ function DDT() {
       },
       pageInstructions: updatedDataList,
     };
-    console.log("formData", formData);
     await submitDefineRegionalDesignTemplate(formData, id, headers);
-    navigate(`/${currentUrl?.split("/")[1]}`);
+    setLoader(false);
+    navigate(`/MyTasks`);
   };
 
   const onSaveAsDraft = async () => {
+    setLoader(true);
     let updatedData = [];
     designIntent.filter((task) => {
       if (task?.isNew) {
@@ -220,12 +218,15 @@ function DDT() {
       Region: projectData?.Project_region,
       DesignTemplateList: updatedData,
     };
-    console.log("full draft data --->", formData);
+    // console.log("full draft data --->", formData);
     await saveDefineRegionalDesignTemplate(formData);
+    setLoader(false);
   };
 
   let Brand = [];
   let Category = [];
+  let checkTaskISComplete =
+    TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Status === "Complete";
 
   if (TaskDetailsData?.ArtworkAgilityPage) {
     Brand = TaskDetailsData.ArtworkAgilityPage.Artwork_Brand;
@@ -244,14 +245,10 @@ function DDT() {
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
+        {checkTaskISComplete && <div>This task is already submitted</div>}
 
-        {loading || designIntent === null ? (
-          <div className="align-item-center">
-            <i
-              className="pi pi-spin pi-spinner"
-              style={{ fontSize: "2rem" }}
-            ></i>
-          </div>
+        {loading || loader || designIntent === null ? (
+          <Loading />
         ) : (
           designIntent &&
           designIntent.length &&
@@ -272,7 +269,7 @@ function DDT() {
                   checkReadWriteAccess={checkReadWriteAccess}
                 />
               );
-            } else return <>Data Not Found</>;
+            }
           })
         )}
       </div>
@@ -282,7 +279,7 @@ function DDT() {
         onSubmit={onSubmit}
         checkReadWriteAccess={checkReadWriteAccess}
         bottomFixed={true}
-        formValid={enableSubmit}
+        formValid={!enableSubmit}
       />
     </PageLayout>
   );

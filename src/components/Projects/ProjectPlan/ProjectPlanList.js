@@ -310,7 +310,13 @@ const ProjectPlanList = ({
               <div className="d-flex">
                 <Dropdown
                   editable
-                  value={options?.data[field]}
+                  value={
+                    field === "Role"
+                      ? options?.data[field]
+                      : options?.data[field]
+                      ? options?.data[field]
+                      : options?.data["Assignee"]
+                  }
                   onChange={(e) => onDropdownChange(options, e, field)}
                   options={
                     field === "Role"

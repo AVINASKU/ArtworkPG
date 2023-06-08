@@ -14,10 +14,12 @@ import {
   activateProjectPlan,
   saveProjectPlanAction,
 } from "../../../apis/projectPlanApi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import moment from "moment";
-import { CheckReadOnlyAccess } from "../../../utils";
+import { CheckReadOnlyAccess, Loading } from "../../../utils";
+import { getMyProject } from "../../../store/actions/ProjectActions";
+
 function ProjectPlanCompo(props) {
   const toast = useRef(null);
   const [projectPlanDesignData, setProjectPlanDesignData] = useState([]);
@@ -25,20 +27,21 @@ function ProjectPlanCompo(props) {
     useState([]);
   const [pegadata, setPegaData] = useState(null);
   const [activeSave, setActiveSave] = useState(true);
-  const [activeFlag, setActiveFlag] = useState(false);
+  // const [activeFlag, setActiveFlag] = useState(false);
+  // Check if access is empty for the user's role and page
+  const isAccessEmpty = CheckReadOnlyAccess();
+  const [activeFlag, setActiveFlag] = useState(!isAccessEmpty);
   const [loader, setLoader] = useState(false);
   const [updatedList, setUpdatedList] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // Check if access is empty for the user's role and page
-  const isAccessEmpty = CheckReadOnlyAccess();
-  useEffect(() => {
-    if (!isAccessEmpty) {
-      setActiveSave(true);
-      setActiveFlag(true);
-    }
-  }, [isAccessEmpty, activeFlag]);
+  let { ProjectID } = useParams();
 
+  const { userInformation } = useSelector((state) => state.UserReducer);
+
+  const { myProject, ...myProjectData } = useSelector(
+    (state) => state.myProject
+  );
   const { projectPlanDesign, projectPlan, loading } = useSelector(
     (state) => state.ProjectPlanReducer
   );
@@ -53,23 +56,37 @@ function ProjectPlanCompo(props) {
   }, [updatedProjectPlanDesignData]);
 
   useEffect(() => {
-    setActiveFlag(false);
-    if (projectPlanDesign) {
-      setActiveFlag(projectPlanDesign[0]?.Project_State === "Available");
+    if (!isAccessEmpty) {
+      setActiveSave(true);
     }
-  }, [projectPlanDesign]);
+  }, [isAccessEmpty]);
+
+  useEffect(() => {
+    setActiveFlag(false);
+    let projectData = myProject.find(
+      (project) => project.Project_ID === ProjectID
+    );
+    console.log("projectData", projectData);
+    if (
+      projectData?.Project_State === "Active" ||
+      !isAccessEmpty ||
+      projectPlan.length === 0
+    ) {
+      setActiveFlag(true);
+    }
+  }, [myProject, projectPlan, isAccessEmpty]);
 
   const getProjectPlanApi = async () => {
-    let restructuredData = [];
     setLoader(true);
+    let restructuredData = [];
     const apiData =
       mode === "design" && selectedProject.Project_ID
         ? await getProjectPlan(selectedProject.Project_ID)
         : [];
-    setLoader(false);
     apiData && dispatch(updateProjectPlanDesignAction(apiData));
     restructuredData = apiData?.length > 0 ? getRestructuredData(apiData) : [];
     dispatch(updateProjectPlanAction(restructuredData));
+    setLoader(false);
   };
 
   useEffect(() => {
@@ -122,32 +139,32 @@ function ProjectPlanCompo(props) {
       },
 
       {
-        name: "Confirm Preliminary print feasibility Assessment done (& upload documents - optional)",
+        name: "Confirm Preliminary print feasibility Assessment",
         code: "CPPFA",
         data: apiData.filter((data) => data.AWM_Task_ID.includes("CPPFA_")),
       },
       {
-        name: "Define New Print Feasibility Scope",
+        name: "Define Color Development & Print Trial",
         code: "DNPF",
         data: apiData.filter((data) => data.AWM_Task_ID.includes("DNPF_")),
       },
       {
-        name: "Color Confirm Development done (& upload documents - optional) (can be multiple)",
+        name: "Confirm Color Development",
         code: "CCD",
         data: apiData.filter((data) => data.AWM_Task_ID.includes("CCD_")),
       },
       {
-        name: "Confirm Print Trial (if applicable) done (& upload documents - optional) (can be multiple)",
+        name: "Confirm Print Trial",
         code: "CPT",
         data: apiData.filter((data) => data.AWM_Task_ID.includes("CPT_")),
       },
       {
-        name: "Define New Link Ink Qualification scope",
+        name: "Define New Ink Qualification scope",
         code: "DNIQ",
         data: apiData.filter((data) => data.AWM_Task_ID.includes("DNIQ_")),
       },
       {
-        name: "Confirm New Ink Qualification done (& upload documents - optional) (can be multiple)",
+        name: "Confirm New Ink Qualification",
         code: "CNIQ",
         data: apiData.filter((data) => data.AWM_Task_ID.includes("CNIQ_")),
       },
@@ -158,7 +175,13 @@ function ProjectPlanCompo(props) {
         tempObj["key"] = task.data[0].AWM_Task_ID;
 
         let dataObj = {};
-        dataObj["Task"] = task.data[0].Task_Name;
+        dataObj["Task"] = task.data[0].AWM_Task_ID.includes("CCD_")
+          ? "Confirm Color Development"
+          : task.data[0].AWM_Task_ID.includes("CPT_")
+          ? "Confirm Print Trial"
+          : task.data[0].AWM_Task_ID.includes("DNPF_")
+          ? "Define Color Development & Print Trial"
+          : task.data[0].Task_Name;
         dataObj["Dependency"] = task.data[0].Dependency;
         dataObj["Role"] = task.data[0].Role;
         dataObj["RoleOptions"] = task.data[0].RoleOptions;
@@ -290,9 +313,11 @@ function ProjectPlanCompo(props) {
   };
 
   const activate = async () => {
+    setLoader(true);
     await activateProjectPlan(selectedProject.Project_ID);
-    getProjectPlanApi();
-    toast.current.show({
+    await dispatch(getMyProject(userInformation));
+    setLoader(false);
+    await toast.current.show({
       severity: "success",
       summary: "Success",
       detail: "Project activated successfully!",
@@ -301,22 +326,14 @@ function ProjectPlanCompo(props) {
   };
 
   return (
-    <>
-    <ProjectPlan
-        {...props}
-        projectPlan={projectPlan}
-        selectedProject={selectedProject}
-        projectPlanDesign={projectPlanDesign}
-        setPegaData={setPegaData}
-        pegadata={pegadata}
-        setUpdatedProjectPlanDesignData={setUpdatedProjectPlanDesignData}
-        setActiveSave={setActiveSave}
-        getProjectPlanApi={getProjectPlanApi}
-      />
-      {/* <Accordion className="projectPlanAccordian" defaultActiveKey="2">
-        <Accordion.Item eventKey="2">
-          <Accordion.Header>Design</Accordion.Header>
-          <Accordion.Body>
+    console.log("projectPlan", projectPlan),
+    (
+      <>
+        <Toast ref={toast} />
+        {loading || loader || myProjectData.loading || projectPlan === null ? (
+          <Loading />
+        ) : (
+          <>
             <ProjectPlan
               {...props}
               projectPlan={projectPlan}
@@ -326,50 +343,71 @@ function ProjectPlanCompo(props) {
               pegadata={pegadata}
               setUpdatedProjectPlanDesignData={setUpdatedProjectPlanDesignData}
               setActiveSave={setActiveSave}
-              isAccessEmpty={isAccessEmpty}
               getProjectPlanApi={getProjectPlanApi}
+              isAccessEmpty={isAccessEmpty}
             />
-          </Accordion.Body>
-        </Accordion.Item>
-        <Accordion.Item eventKey="3">
-          <Accordion.Header>Input</Accordion.Header>
-          <Accordion.Body>Input</Accordion.Body>
-        </Accordion.Item>
-        <Accordion.Item eventKey="4">
-          <Accordion.Header>FA Assembly</Accordion.Header>
-          <Accordion.Body>FA Assembly</Accordion.Body>
-        </Accordion.Item>
-      </Accordion> */}
-      <div className="form-buttons">
-        <Button
-          className={!isAccessEmpty ? "btn btn-disabled" : "button-layout"}
-          variant="secondary"
-          onClick={() => navigate("/myProjects")}
-          disabled={!isAccessEmpty}
-        >
-          Cancel
-        </Button>
+            {/* <Accordion className="projectPlanAccordian" defaultActiveKey="2">
+              <Accordion.Item eventKey="2">
+                <Accordion.Header>Design</Accordion.Header>
+                <Accordion.Body>
+                  <ProjectPlan
+                    {...props}
+                    projectPlan={projectPlan}
+                    selectedProject={selectedProject}
+                    projectPlanDesign={projectPlanDesign}
+                    setPegaData={setPegaData}
+                    pegadata={pegadata}
+                    setUpdatedProjectPlanDesignData={setUpdatedProjectPlanDesignData}
+                    setActiveSave={setActiveSave}
+                    isAccessEmpty={isAccessEmpty}
+                    getProjectPlanApi={getProjectPlanApi}
+                  />
+                </Accordion.Body>
+              </Accordion.Item>
+              <Accordion.Item eventKey="3">
+                <Accordion.Header>Input</Accordion.Header>
+                <Accordion.Body>Input</Accordion.Body>
+              </Accordion.Item>
+              <Accordion.Item eventKey="4">
+                <Accordion.Header>FA Assembly</Accordion.Header>
+                <Accordion.Body>FA Assembly</Accordion.Body>
+              </Accordion.Item>
+            </Accordion> */}
+            <div className="form-buttons">
+              <Button
+                className={
+                  !isAccessEmpty ? "btn btn-disabled" : "button-layout"
+                }
+                variant="secondary"
+                onClick={() => navigate("/myProjects")}
+                disabled={!isAccessEmpty}
+              >
+                Cancel
+              </Button>
 
-        <Button
-          className={activeSave ? "btn btn-disabled" : "button-layout"}
-          variant="secondary"
-          onClick={onSave}
-          disabled={activeSave}
-        >
-          Save
-        </Button>
+              <Button
+                className={activeSave ? "btn btn-disabled" : "button-layout"}
+                variant="secondary"
+                onClick={onSave}
+                disabled={activeSave}
+              >
+                Save
+              </Button>
 
-        <Button
-          className="button-layout"
-          variant="primary"
-          onClick={activate}
-          disabled={activeFlag}
-        >
-          Activate
-        </Button>
-      </div>
-      <br />
-    </>
+              <Button
+                className="button-layout"
+                variant="primary"
+                onClick={activate}
+                disabled={activeFlag}
+              >
+                Activate
+              </Button>
+            </div>
+          </>
+        )}
+        <br />
+      </>
+    )
   );
 }
 

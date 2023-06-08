@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import moment from "moment";
+import LoadingOverlay from "react-loading-overlay-ts";
 import PageLayout from "../../PageLayout";
 import TaskHeader from "../DesignJobs/TaskHeader";
 import DesignHeader from "../DesignJobs/DesignHeader";
@@ -18,6 +20,7 @@ import "./index.scss";
 import CDHeader from "../DesignJobs/CDHeader";
 import { cloneDeep } from "lodash";
 import IQHeader from "../DesignJobs/IQHeader";
+import { CheckReadOnlyAccess } from "../../../utils";
 const breadcrumb = [{ label: "Confirm Ink Qualification" }];
 
 const headerName = "Confirm Ink Qualification";
@@ -25,8 +28,10 @@ const jobName = "IQ_";
 
 function CNIQ() {
   const dispatch = useDispatch();
-  const version = "V1";
-  const { TaskDetailsData } = useSelector((state) => state.TaskDetailsReducer);
+  // const version = "V1";
+  const { TaskDetailsData, loading } = useSelector(
+    (state) => state.TaskDetailsReducer
+  );
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const [data, setData] = useState(null);
@@ -37,9 +42,12 @@ function CNIQ() {
   const [formattedValue, setformattedValue] = useState(0);
   const [fileName, setFileName] = useState("");
   const [azureFile, setAzureFile] = useState("");
+  const [loader, setLoader] = useState(false);
+  const [version, setVersion] = useState("V0");
+  const [date, setDate] = useState("");
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
-
+  const checkReadWriteAccess = CheckReadOnlyAccess();
   useEffect(() => {
     // const data1 = ProjectService.getDIData();
     let taskId;
@@ -50,82 +58,23 @@ function CNIQ() {
   }, [dispatch, TaskID, ProjectID]);
 
   useEffect(() => {
-    // if (TaskDetailsData) {
-    //   console.log("TaskDetailsData: ", TaskDetailsData);
-    //   setIQ(TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
-    //   setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
-    // }
-    let TaskDetailData = {
-      ArtworkAgilityTasks: [
-        {
-          Consumed_Buffer: "",
-          DesignJobDetails: [
-            {
-              Print_Trial_Done: null,
-              Tier: "",
-              Cluster: "",
-              Agency_Reference: "",
-              Printer: ["ALL4LABELS ITALY NMS S R L~15144637"],
-              Printing_Process: "",
-              Design_Job_Name: "IQ1",
-              Substrate: "",
-              Additional_Info: "test1",
-              Pantone: "Dropdown",
-              Design_Job_ID: "IQ_DJob-213",
-              CD_Approved: null,
-              Select: true,
-              Print_Trial_Needed: null,
-            },
-          ],
-          IDDSampleApproved: null,
-          Task_Key: "",
-          Duration: "",
-          Project_Name: "For Color",
-          Start_Date: "",
-          End_Date: "",
-          Task_Name: "Confirm New Ink Qualification done",
-          Task_ID: "CNIQ_Task-228",
-          RiskLevel: "",
-          IDDSampleLabTestApproved: null,
-        },
-      ],
-      ArtworkAgilityPage: {
-        Artwork_Category: [
-          {
-            code: "BFCND",
-            Category_Name: "Baby & Feminine Care No Detail",
-          },
-          {
-            code: "BCA",
-            Category_Name: "Baby Care Adjacencies",
-          },
-        ],
-        AWM_Project_ID: "A-1167",
-        Artwork_Brand: [
-          {
-            code: "J29",
-            Brand_Name: "Pampers",
-          },
-          {
-            code: "BV0102",
-            Brand_Name: "Charlie Banana",
-          },
-        ],
-        Artwork_SMO: [
-          {
-            code: "DEU",
-            SMO_Name: "Germany",
-          },
-          {
-            code: "FRA",
-            SMO_Name: "France",
-          },
-        ],
-      },
-    };
-    console.log("TaskDetailData: ", TaskDetailData);
-    setIQ(TaskDetailData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
-    setData(TaskDetailData?.ArtworkAgilityTasks[0] || []);
+    if (TaskDetailsData) {
+      console.log("TaskDetailsData: ", TaskDetailsData);
+      setIQ(TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
+      setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
+      const data =
+        TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails[0]
+          ?.FileMetaDataList[0] || [];
+      if (data) {
+        data.Version !== "" && setVersion(data.Version);
+        data.Timestamp !== "" &&
+          setDate(
+            moment(data.Timestamp, "YYYYMMDD[T]HHmmss.SSS [GMT]").format(
+              "DD-MMMM-YYYY"
+            )
+          );
+      }
+    }
   }, [TaskDetailsData]);
   const handleCancel = () => {
     return navigate(`/myTasks`);
@@ -201,6 +150,7 @@ function CNIQ() {
   }, [data]);
 
   const onSubmit = async () => {
+    setLoader(true);
     let IDDSampleApproved = "";
     let IDDSampleLabTestApproved = "";
     let Timestamp;
@@ -214,7 +164,7 @@ function CNIQ() {
       caseTypeID: "PG-AAS-Work-ConfirmInkQualification",
       content: {
         AWMTaskID: data.Task_ID,
-        AWMProjectID: selectedProjectDetails.Project_ID,
+        AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
         IDDSampleApproved: data.IDDSampleApproved,
         IDDSampleLabTestApproved: data.IDDSampleLabTestApproved,
         Size: formattedValue,
@@ -224,10 +174,14 @@ function CNIQ() {
       },
     };
     console.log("full submit data --->", formData);
-    let id = `PG-AAS-WORK ${selectedProjectDetails.Project_ID}`;
-    const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
+    let id = data.Task_Key;
+    const headers = {
+      key: "If-Match",
+      value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
+    };
 
     await submitConfirmInkQualification(formData, id, headers);
+    setLoader(false);
   };
 
   const onSaveAsDraft = async () => {
@@ -289,55 +243,70 @@ function CNIQ() {
   };
 
   return (
-    <PageLayout>
-      <IQHeader
-        setAddNewDesign={addNewEmptyDesign}
-        onSelectAll={onSelectAll}
-        breadcrumb={breadcrumb}
-        headerName={headerName}
-        label="Confirm Ink Qualification"
-        showPage="CNIQ"
-      />
-      <div
-        style={{
-          overflowY: "scroll",
-          overflowX: "hidden",
-          width: "100%",
-          height: "400px",
-        }}
-      >
-        {<TaskHeader {...data} />}
+    <LoadingOverlay active={loader || loading || IQ === null} spinner text="">
+      <PageLayout>
+        <IQHeader
+          setAddNewDesign={addNewEmptyDesign}
+          onSelectAll={onSelectAll}
+          breadcrumb={breadcrumb}
+          headerName={headerName}
+          label="Confirm Ink Qualification"
+          showPage="CNIQ"
+          checkReadWriteAccess={checkReadWriteAccess}
+        />
+        <div
+          className="task-details"
+          style={{
+            overflowY: "scroll",
+            overflowX: "hidden",
+            width: "100%",
+            height: "400px",
+            // display: "grid",
+          }}
+        >
+          {<TaskHeader {...data} />}
 
-        {IQ.map((item, index) => {
-          if (item && item?.Action !== "delete") {
-            return (
-              <CloneJobs
-                key={item.Design_Job_ID}
-                {...data}
-                item={item}
-                data={data}
-                index={index}
-                addData={addData}
-                addIddData={addIddData}
-                handleDelete={handleDelete}
-                jobName={jobName}
-                formValid={formValid}
-                setFormValid={setFormValid}
-                setformattedValue={setformattedValue}
-                setAzureFile={setAzureFile}
-                setFileName={setFileName}
-              />
-            );
-          }
-        })}
+          {IQ &&
+            IQ.length > 0 &&
+            IQ.map((item, index) => {
+              if (item && item?.Action !== "delete") {
+                return (
+                  <CloneJobs
+                    key={item.Design_Job_ID}
+                    {...IQ}
+                    IQ={IQ}
+                    {...data}
+                    item={item}
+                    data={data}
+                    index={index}
+                    addData={addData}
+                    addIddData={addIddData}
+                    handleDelete={handleDelete}
+                    jobName={jobName}
+                    formValid={formValid}
+                    setFormValid={setFormValid}
+                    setformattedValue={setformattedValue}
+                    setAzureFile={setAzureFile}
+                    setFileName={setFileName}
+                    fileName={fileName}
+                    version={version}
+                    date={date}
+                    checkReadWriteAccess={checkReadWriteAccess}
+                  />
+                );
+              }
+            })}
+        </div>
         <FooterButtons
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}
-          formValid={formValid}
+          formValid={!formValid}
+          checkReadWriteAccess={checkReadWriteAccess}
+          bottomFixed={true}
         />
-      </div>
-    </PageLayout>
+      </PageLayout>
+    </LoadingOverlay>
   );
 }
 

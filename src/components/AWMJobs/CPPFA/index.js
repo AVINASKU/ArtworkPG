@@ -57,7 +57,7 @@ const CPPFA = ({
 
   useEffect(() => {
     pegadata.find((el) => {
-      if (el.Task === "Define New Print Feasibility scope") {
+      if (el.Task === "Define Color Development & Print Trial") {
         setCppfaDialogFlag(true);
       }
     });
@@ -143,6 +143,8 @@ const CPPFA = ({
     iconOnly: false,
     className: "",
   };
+  const myProjects = url[1];
+
   return (
     <Dialog
       visible={visible}
@@ -155,31 +157,19 @@ const CPPFA = ({
               <ul>
                 <li className="p-breadcrumb-chevron pi pi-chevron-right"></li>
                 <li className="">
-                  <NavLink
-                    to={`/${url[1]}`}
-                    className="p-menuitem-link"
-                    onClick={() => hideDialog()}
-                  >
+                  <NavLink to={`/${myProjects}`} className="p-menuitem-link">
                     <span className="p-menuitem-text">
-                      {url[1] === "myProjects"
-                        ? "My Projects"
-                        : url[1] === "projectPlan"
-                        ? "Project Plan"
-                        : "All Projects"}
+                      {url[1] === "myProjects" ? "My Projects" : "All Projects"}
                     </span>
                   </NavLink>
                 </li>
                 <li className="p-breadcrumb-chevron pi pi-chevron-right"></li>
                 <li className="">
-                  <NavLink
-                    to={`/${url[2]}`}
-                    className="p-menuitem-link"
-                    onClick={() => hideDialog()}
-                  >
+                  <a href="#" className="p-menuitem-link">
                     <span className="p-menuitem-text">
-                      {url[2] === "projectPlan" ? "Project Plan" : ""}
+                      Preliminary Print Feasibility Assessment
                     </span>
-                  </NavLink>
+                  </a>
                 </li>
               </ul>
             </nav>
@@ -221,7 +211,7 @@ const CPPFA = ({
                   defaultChecked={riskLevel === "Low"}
                   value="Low"
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
-                  disabled={!isAccessEmpty}
+                  disabled={isAccessEmpty}
                 />
                 <label className="radioLabel">Low Risk</label>
               </div>
@@ -232,7 +222,7 @@ const CPPFA = ({
                   name="fav_language"
                   value="Medium"
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
-                  disabled={!isAccessEmpty}
+                  disabled={isAccessEmpty}
                 />
                 <label className="radioLabel">Medium Risk</label>
               </div>
@@ -243,7 +233,7 @@ const CPPFA = ({
                   name="fav_language"
                   value="High"
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
-                  disabled={!isAccessEmpty}
+                  disabled={isAccessEmpty}
                 />
                 <label className="radioLabel">High Risk</label>
               </div>
@@ -265,7 +255,7 @@ const CPPFA = ({
                     </span>
                   </p>
                 }
-                disabled={!isAccessEmpty}
+                disabled={isAccessEmpty}
               />
             </Col>
             <Col></Col>
@@ -297,7 +287,7 @@ const CPPFA = ({
                     yesOrNo === "yes" ? "yesOrNoButtonsColor" : "btn-secondary"
                   }`}
                   onClick={() => setYesOrNo("yes")}
-                  disabled={!isAccessEmpty}
+                  disabled={isAccessEmpty}
                 >
                   Yes
                 </button>
@@ -307,7 +297,7 @@ const CPPFA = ({
                     yesOrNo === "no" ? "yesOrNoButtonsColor" : "btn-secondary"
                   }`}
                   onClick={() => setYesOrNo("no")}
-                  disabled={!isAccessEmpty}
+                  disabled={isAccessEmpty}
                 >
                   No
                 </button>
@@ -332,7 +322,7 @@ const CPPFA = ({
         <Button
           label="Confirm PPFA"
           onClick={handleSubmit}
-          disabled={!isAccessEmpty}
+          disabled={isAccessEmpty}
         />
       </div>
     </Dialog>

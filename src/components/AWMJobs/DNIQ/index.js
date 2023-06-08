@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import LoadingOverlay from "react-loading-overlay-ts";
 import PageLayout from "../../PageLayout";
 import TaskHeader from "../DesignJobs/TaskHeader";
 import DesignHeader from "../DesignJobs/DesignHeader";
@@ -16,6 +17,7 @@ import CloneJobs from "../DesignJobs/CloneJobs";
 import "./index.scss";
 import CDHeader from "../DesignJobs/CDHeader";
 import IQHeader from "../DesignJobs/IQHeader";
+import { CheckReadOnlyAccess } from "../../../utils";
 const breadcrumb = [{ label: "Define Ink Qualification" }];
 
 const headerName = "Define Ink Qualification";
@@ -23,7 +25,9 @@ const jobName = "IQ_";
 
 function DNIQ() {
   const dispatch = useDispatch();
-  const { TaskDetailsData } = useSelector((state) => state.TaskDetailsReducer);
+  const { TaskDetailsData, loading } = useSelector(
+    (state) => state.TaskDetailsReducer
+  );
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const [data, setData] = useState(null);
@@ -31,8 +35,10 @@ function DNIQ() {
   const [formValid, setFormValid] = useState(false);
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
+  const [loader, setLoader] = useState(false);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
+  const checkReadWriteAccess = CheckReadOnlyAccess();
 
   useEffect(() => {
     // const data1 = ProjectService.getDIData();
@@ -50,6 +56,7 @@ function DNIQ() {
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
     }
   }, [TaskDetailsData]);
+
   const handleCancel = () => {
     return navigate(`/myTasks`);
   };
@@ -61,6 +68,7 @@ function DNIQ() {
       }
       return item;
     });
+    console.log("DNIQ Handle delete: ", IQ);
     // console.log("index here", sub1);
     // const sub = subProject.splice(index,1);
 
@@ -87,6 +95,7 @@ function DNIQ() {
 
   const addData = (fieldName, index, value, Design_Intent_Name) => {
     let data = IQ[index];
+    console.log(data);
     data[fieldName] = value;
     submittedDI.push(data);
     setSubmittedDI(submittedDI);
@@ -105,6 +114,7 @@ function DNIQ() {
   };
 
   const onSubmit = async () => {
+    setLoader(true);
     let pageInstructions = [];
 
     let submitOnlySelectedData = IQ?.filter((task) => task?.Select === true);
@@ -116,20 +126,23 @@ function DNIQ() {
       if (task?.Action !== "delete" && task?.isNew === true) {
         taskAction = "add";
       }
+      if (task?.Action === "delete") {
+        taskAction = "delete";
+      }
       let taskDesignJobID = task?.Design_Job_ID;
       if (task?.isNew) {
         taskDesignJobID = "";
       }
       let temp = {};
-      temp["instruction"] = "Append";
+      temp["instruction"] = "APPEND";
       temp["target"] = "IQList";
       temp["content"] = {
-        DesignJobName: "DCINF",
+        DesignJobName: "Confirm New Ink Qualification",
         DesignJobID: taskDesignJobID,
         AdditionalInfo: task?.Additional_Info,
         Pantone: task?.Pantone,
         Printer: task?.Printer,
-        Select: task?.Select,
+        Select: task?.Select.toString(),
         Action: taskAction,
       };
       pageInstructions.push(temp);
@@ -138,37 +151,44 @@ function DNIQ() {
       caseTypeID: "PG-AAS-Work-DefineInkQualification",
       content: {
         AWMTaskID: data.Task_ID,
-        AWMProjectID: selectedProjectDetails.Project_ID,
+        AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
       },
       pageInstructions: pageInstructions,
     };
     console.log("full submit data --->", formData);
-    let id = `PG-AAS-WORK ${selectedProjectDetails.Project_ID}`;
-    const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
+    let id = data.Task_Key;
+    const headers = {
+      key: "If-Match",
+      value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
+    };
 
     await submitInkQualification(formData, id, headers);
+    setLoader(false);
   };
 
   const onSaveAsDraft = async () => {
+    setLoader(true);
     // let submitOnlySelectedData = designIntent.filter(
     //   (task) => task?.Event !== "submit"
     // );
     let counter = 0;
     let submitOnlySelectedData = IQ?.map((task) => {
       counter++;
-      task.Action = "update";
+      // task.Action = "update";
       if (task?.Action !== "delete" && task?.Design_Job_ID) {
         task.Action = "update";
       }
       if (task?.Action !== "delete" && task?.isNew === true) {
         task.Action = "add";
       }
-
+      if (task?.Action === "delete") {
+        task.Action = "delete";
+      }
       if (task?.isNew) {
         task.Design_Job_ID = "";
       }
 
-      task.Design_Job_Name = `IQ${counter}`;
+      task.Design_Job_Name = `Confirm New Ink Qualification ${counter}`;
 
       return task;
     });
@@ -182,7 +202,8 @@ function DNIQ() {
       IQList: submitOnlySelectedData,
     };
     console.log("full draft data --->", formData);
-    // await saveInkQualification(formData);
+    await saveInkQualification(formData);
+    setLoader(false);
   };
 
   const checkFormValidity = () => {
@@ -197,49 +218,59 @@ function DNIQ() {
   };
 
   return (
-    <PageLayout>
-      <IQHeader
-        setAddNewDesign={addNewEmptyDesign}
-        onSelectAll={onSelectAll}
-        breadcrumb={breadcrumb}
-        headerName={headerName}
-        label="Define Ink Qualification"
-        showPage="DNIQ"
-      />
-      <div
-        style={{
-          overflowY: "scroll",
-          overflowX: "hidden",
-          width: "100%",
-          height: "400px",
-        }}
-      >
-        {<TaskHeader {...data} />}
+    <LoadingOverlay active={loader || loading || IQ === null} spinner text="">
+      <PageLayout>
+        <IQHeader
+          setAddNewDesign={addNewEmptyDesign}
+          onSelectAll={onSelectAll}
+          breadcrumb={breadcrumb}
+          headerName={headerName}
+          label="Define Ink Qualification"
+          showPage="DNIQ"
+          checkReadWriteAccess={checkReadWriteAccess}
+        />
+        <div
+          className="task-details"
+          style={{
+            overflowY: "scroll",
+            overflowX: "hidden",
+            width: "100%",
+            height: "400px",
+            // display: "grid",
+          }}
+        >
+          {<TaskHeader {...data} />}
 
-        {IQ.map((item, index) => {
-          if (item && item?.Action !== "delete") {
-            return (
-              <CloneJobs
-                key={item.Design_Job_ID}
-                {...data}
-                item={item}
-                index={index}
-                addData={addData}
-                handleDelete={handleDelete}
-                jobName={jobName}
-                setFormValid={setFormValid}
-              />
-            );
-          }
-        })}
+          {IQ &&
+            IQ.length > 0 &&
+            IQ.map((item, index) => {
+              if (item && item?.Action !== "delete") {
+                return (
+                  <CloneJobs
+                    key={item.Design_Job_ID}
+                    {...data}
+                    item={item}
+                    index={index}
+                    addData={addData}
+                    handleDelete={handleDelete}
+                    jobName={jobName}
+                    setFormValid={setFormValid}
+                    checkReadWriteAccess={checkReadWriteAccess}
+                  />
+                );
+              }
+            })}
+        </div>
         <FooterButtons
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}
-          formValid={formValid}
+          formValid={!formValid}
+          checkReadWriteAccess={checkReadWriteAccess}
+          bottomFixed={true}
         />
-      </div>
-    </PageLayout>
+      </PageLayout>
+    </LoadingOverlay>
   );
 }
 
