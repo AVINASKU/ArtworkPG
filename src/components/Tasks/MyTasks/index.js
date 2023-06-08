@@ -17,7 +17,7 @@ const MyTask = () => {
           excludedPrefixes.includes(firstPart) && task.Status === "Complete";
 
         return (
-          (task.Status === "Available" || task.Status === "Complete") &&
+          // (task.Status === "Available" || task.Status === "Complete") &&
           !isExcludedTask
         );
       })
