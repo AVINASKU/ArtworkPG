@@ -17,7 +17,7 @@ $width: 100%;
 .subNav {
   .nav {
     padding-left: 13px;
-    border-color: #003DA5;
+    border-color: #003da5;
   }
 
   .nav-link {
@@ -28,7 +28,7 @@ $width: 100%;
   .nav-link.active {
     color: rgba(0, 61, 165, 1);
     border-width: 1px 1px 0 1px;
-    border-color: #003DA5 #003DA5 #ffffff #003DA5;
+    border-color: #003da5 #003da5 #ffffff #003da5;
   }
 }
 
@@ -165,9 +165,10 @@ $width: 100%;
 }
 
 .projectSetupParent {
+  height: 451px;
   background: rgb(255, 255, 255);
   border-radius: 24px;
-  margin-top: 23.5px;
+  margin-top: 5.5px;
 }
 
 .breadCrumbParent {
@@ -227,8 +228,7 @@ $width: 100%;
   line-height: 15px;
 }
 
-
-// TabsComponent Styles Start 
+// TabsComponent Styles Start
 .tab-content {
   .nav-link {
     font-style: normal;
@@ -237,7 +237,7 @@ $width: 100%;
   }
 }
 
-.tab-content>.active {
+.tab-content > .active {
   padding: 10px 20px;
   display: contents !important;
 }
@@ -284,14 +284,14 @@ ul.nav.nav-tabs {
     border-bottom: 2.5px solid rgba(0, 61, 165, 1);
   }
 
-  .nav-tabs li>a {
+  .nav-tabs li > a {
     color: rgba(172, 172, 172, 1);
     font-weight: 500;
     font-size: 14px;
-    line-height: 17.07px
+    line-height: 17.07px;
   }
 
-  .nav-tabs li.active>a {
+  .nav-tabs li.active > a {
     color: rgba(0, 61, 165, 1);
   }
 }
@@ -304,7 +304,7 @@ span.right {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #5453D2;
+  background-color: #5453d2;
   border-radius: 50%;
   left: -50px;
   top: 8px;
@@ -315,7 +315,6 @@ span.right {
 span.right {
   right: -50px;
   left: unset;
-
 }
 
 .scroller-btn.inactive {
