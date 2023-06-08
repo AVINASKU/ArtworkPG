@@ -17,9 +17,9 @@ import _ from "lodash";
 
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 import ProjectNameHeader from "./ProjectNameHeader";
-import CustomisedView from "./CustomisedView";
+//import CustomisedView from "./CustomisedView";
 
-// const CustomisedView = React.lazy(() => import("./CustomisedView"));
+const CustomisedView = React.lazy(() => import("./CustomisedView"));
 
 const ProjectList = (props) => {
   const User = useSelector((state) => state.UserReducer);
@@ -535,9 +535,10 @@ const ProjectList = (props) => {
 
   return (
     <div className="myProjectAnddAllProjectList">
-      {loading || loader || pegadata === null ? (
+      {/* {loader || pegadata === null ? (
           <Loading />
-        ): (
+        ): ( */}
+        <Suspense fallback={ <Loading />}>
           <>
             {pegadata !== undefined && (
               <ProjectListHeader
@@ -594,7 +595,6 @@ const ProjectList = (props) => {
               value={filters.length ? filters : pegadata}
               scrollable
               responsiveLayout="scroll"
-              loading={loading}
               className="mt-3"
               columnResizeMode="expand"
               onColumnResizeEnd={onColumnResizeEnd}
@@ -606,7 +606,9 @@ const ProjectList = (props) => {
               {dynamicColumns()}
             </DataTable>
           </>
-        )}      
+        </Suspense>
+          
+        {/* )}       */}
     </div>
   );
 };
