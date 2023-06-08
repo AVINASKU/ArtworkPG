@@ -49,13 +49,14 @@ function AddProject(props) {
   const selectedProjectDetails = projectSetup.selectedProject;
   const mode = projectSetup.mode;
   const id = `PG-AAS-WORK ${selectedProjectDetails.Project_ID}`;
+  const awmProjectId = selectedProjectDetails.Project_ID;
   const prePopuSmo = [];
   selectedProjectDetails?.Artwork_SMO?.forEach((obj) => {
     if (obj.code !== "") {
       prePopuSmo.push(obj.code);
     }
   });
-
+  const [submitButtonState, setSubmitButtonState] = useState(false);
   const [projectName, setProjectName] = useState("");
   const [projectDesc, setProjectDesc] = useState("");
   const [groupName, setGroupName] = useState("");
@@ -91,13 +92,14 @@ function AddProject(props) {
   const [PMAlert, setPMAlert] = useState(false);
   const [SMOAlert, setSMOAlert] = useState(false);
   const [brandAlert, setBrandAlert] = useState(false);
-  const [projectSetupPageDropDownValues, setProjectSetupPageDropDownValues]  = useState([]);
-  const [bUs, setbUs]  = useState([]);
-  const [brands, setBrands]  = useState([]);
-  const [regions, setRegions]  = useState([]);
-  const [smos, setSmos]  = useState([]);
-  const [scales, setScales]  = useState([]);
-  const [projectTypeList, setProjectTypeList]  = useState([]);
+  const [projectSetupPageDropDownValues, setProjectSetupPageDropDownValues] =
+    useState([]);
+  const [bUs, setbUs] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [regions, setRegions] = useState([]);
+  const [smos, setSmos] = useState([]);
+  const [scales, setScales] = useState([]);
+  const [projectTypeList, setProjectTypeList] = useState([]);
   const [designScopeList, setDesignScopeList] = useState({
     DI: "",
     DT: "",
@@ -107,8 +109,25 @@ function AddProject(props) {
     CICs: "",
   });
 
-  const { DropDownValuesData, loading } = useSelector((state) => state.DropDownValuesReducer);
+  const { DropDownValuesData, loading } = useSelector(
+    (state) => state.DropDownValuesReducer
+  );
 
+  useEffect(() => {
+    if (
+      projectName &&
+      bu &&
+      brand?.length &&
+      region &&
+      smo?.length &&
+      printerDate &&
+      readinessDate
+    ) {
+      setSubmitButtonState(true);
+    } else {
+      setSubmitButtonState(false);
+    }
+  }, [mode, projectName, bu, brand, region, smo, printerDate, readinessDate]);
   const showStatus = (severity, summary, detail, redirect) => {
     toast.current.show({
       severity: severity,
@@ -153,11 +172,11 @@ function AddProject(props) {
       let data = [];
       if (selectedProjectDetails?.Artwork_Category?.length > 0) {
         selectedProjectDetails?.Artwork_Category?.forEach((category) => {
-          let temp = {}
+          let temp = {};
           if (category.code !== "") {
-              temp.code = category['code']
-              temp.Label_Name = category['Category_Name'];
-              data.push(temp)
+            temp.code = category["code"];
+            temp.Label_Name = category["Category_Name"];
+            data.push(temp);
             setSubCategories(data);
           } else {
             setSubCategories([]);
@@ -189,9 +208,7 @@ function AddProject(props) {
       setCluster(selectedProjectDetails?.Cluster || "");
       setScale(
         (selectedProjectDetails &&
-          scales.find(
-            (r) => r.code === selectedProjectDetails.Project_Scale
-          ) &&
+          scales.find((r) => r.code === selectedProjectDetails.Project_Scale) &&
           scales.find((r) => r.code === selectedProjectDetails.Project_Scale)
             .code) ||
           []
@@ -434,7 +451,7 @@ function AddProject(props) {
   const getProjectCategory = () => {
     const selectedCategoriesOptions = [];
     subCategories.forEach((obj) => {
-      obj.Category_Name = obj['Label_Name'];
+      obj.Category_Name = obj["Label_Name"];
       delete obj.Label_Name;
       let temp = {};
       temp.instruction = "APPEND";
@@ -458,7 +475,9 @@ function AddProject(props) {
 
   const handleRegionChange = (e) => {
     e.target.value.length === 0 ? setRegionAlert(true) : setRegionAlert(false);
-    const selectedRegion = regions.find((r) => r.Region_Name === e.target.value);
+    const selectedRegion = regions.find(
+      (r) => r.Region_Name === e.target.value
+    );
     setRegion(selectedRegion);
   };
   const handleScaleChange = (e) => {
@@ -480,7 +499,10 @@ function AddProject(props) {
 
   // const bUs = Object.keys(categories).map((bu) => ({ code: bu, name: bu }));
   useEffect(() => {
-    if(projectSetupPageDropDownValues !== undefined && projectSetupPageDropDownValues.length !== 0){
+    if (
+      projectSetupPageDropDownValues !== undefined &&
+      projectSetupPageDropDownValues.length !== 0
+    ) {
       setbUs(projectSetupPageDropDownValues.Artwork_BU);
       setBrands(projectSetupPageDropDownValues.Artwork_Brand);
       setRegions(projectSetupPageDropDownValues.Artwork_Region);
@@ -488,7 +510,7 @@ function AddProject(props) {
       setScales(projectSetupPageDropDownValues.Artwork_Scale);
       setProjectTypeList(projectSetupPageDropDownValues.Artwork_ProjectType);
     }
-  },[projectSetupPageDropDownValues]);
+  }, [projectSetupPageDropDownValues]);
 
   // const bUs = businessUnits.map((bu) => {
   //   return {
@@ -497,19 +519,17 @@ function AddProject(props) {
   //   };
   // });
   const handleSubCategoryChange = (e) => {
-    setSubCategories(e.value); 
-       
+    setSubCategories(e.value);
   };
-
 
   useEffect(() => {
     bu &&
-    bUs.forEach((obj) => {
-      obj.Artwork_Picklist.forEach((pickList)=> {
-        if(bu === obj.code){  
-          setSubCategoriesOptions(pickList.Labels);
-        }
-      })
+      bUs.forEach((obj) => {
+        obj.Artwork_Picklist.forEach((pickList) => {
+          if (bu === obj.code) {
+            setSubCategoriesOptions(pickList.Labels);
+          }
+        });
       });
   }, [bu, bUs]);
 
@@ -521,7 +541,7 @@ function AddProject(props) {
         )) ||
         {}
     );
-  },[regions])
+  }, [regions]);
 
   const form = useForm({ date: null });
   let today = new Date();
@@ -765,10 +785,93 @@ function AddProject(props) {
     return formData;
   };
 
+  const getArtworkSMO = () => {
+    const selectedSmoOptions = [];
+
+    smo?.forEach((sm) => {
+      let temp = {};
+      smoOptions?.forEach((option) => {
+        if (option.value === sm) {
+          temp.SMO_Name = option.label;
+          temp.code = option.value;
+        }
+      });
+      selectedSmoOptions.push(temp);
+    });
+    console.log("smo: ", selectedSmoOptions);
+    return selectedSmoOptions;
+  };
+
+  const getArtworkBrand = () => {
+    return brand;
+  };
+
+  const getArtworkCategory = () => {
+    const selectedCategoriesOptions = [];
+    subCategories.forEach((obj) => {
+      let temp = {};
+      temp.Category_Name = obj.Label_Name;
+      temp.code = obj.code;
+      selectedCategoriesOptions.push(temp);
+    });
+    console.log("Categories: ", selectedCategoriesOptions);
+    return selectedCategoriesOptions;
+  };
+  const collectSubmit2Data = (status, mode) => {
+    const ArtworkSMO = getArtworkSMO();
+    const ArtworkCategory = getArtworkCategory();
+    const ArtworkBrand = getArtworkBrand();
+    const ProjectCode = getProjectCode();
+
+    const formData = {
+      AWM_Project_ID: selectedProjectDetails.Project_ID,
+      Status: status,
+      Region: region?.Region_Name,
+      Project_Name: projectName,
+      Initiative_Group_Name: groupName,
+      Project_Description: projectDesc,
+      BU: bu,
+      Project_region: region?.Region_Name,
+      Cluster: cluster,
+      Project_Scale: scale,
+      Tier: tier,
+      Project_State: selectedProjectDetails.Project_State,
+      Project_Type: projectType,
+      IL: iL,
+      PM: pm,
+      Estimated_SOS: sosDate,
+      Estimated_SOP: sopDate,
+      Comments: comments,
+      Buffer_To_Work: "",
+      Project_Code: ProjectCode,
+      Design_Intent: (designScopeList.DI !== "").toString(),
+      Design_Template: (designScopeList.DT !== "").toString(),
+      Ink_Qualification: (designScopeList.IQ !== "").toString(),
+      New_Print_Feasibility: (designScopeList.PF !== "").toString(),
+      Production_Ready_Art: (designScopeList.PRA !== "").toString(),
+      CICs: (designScopeList.CICs !== "").toString(),
+      POAs: "true",
+      Estimated_No_Of_DI: designScopeList.DI.toString(),
+      Estimated_No_Of_DT: designScopeList.DT.toString(),
+      Estimated_No_Of_PRA: designScopeList.PRA.toString(),
+      Estimated_No_Of_IQ: designScopeList.IQ.toString(),
+      Estimated_No_Of_NPF: designScopeList.PF.toString(),
+      Estimated_No_Of_CICs: designScopeList.CICs.toString(),
+      Estimated_No_Of_POAs: POA.toString(),
+      Estimated_AW_Readiness: readinessDate,
+      Estimated_AW_Printer: printerDate,
+      Artwork_Brand: ArtworkBrand,
+      Artwork_Category: ArtworkCategory,
+      Artwork_SMO: ArtworkSMO,
+    };
+
+    return formData;
+  };
+
   const onSubmit = async () => {
-    const formData = collectFormData("Active", mode);
-    setFormData(formData);
     if (mode === "create") {
+      const formData = collectFormData("Active", mode);
+      setFormData(formData);
       await createNewProject(formData);
       // if (response?.data?.ID) {
       //   showStatus("success", "Success", "Submit Successful", "navigate");
@@ -777,8 +880,11 @@ function AddProject(props) {
       //   showStatus("error", "Error", "Submit Failed");
       //   // alert("Submit failed");
       // }
-    } else if (mode === "edit" || mode === "design") {
-      const method = "PATCH";
+    } else if (mode === "edit") {
+      const formData = collectFormData("Active", mode);
+      setFormData(formData);
+
+      let method = "PATCH";
       const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
       await editProject(formData, id, method, headers);
       // if (response?.data?.ID) {
@@ -788,6 +894,12 @@ function AddProject(props) {
       //   showStatus("error", "Error", "Submit Failed");
       //   // alert("Submit failed");
       // }
+    } else if (mode === "design") {
+      const formData = collectSubmit2Data("Active", mode);
+      setFormData(formData);
+      let method = "POST";
+      const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
+      await editProject(formData, awmProjectId, method, headers);
     }
     navigate("/myProjects");
   };
@@ -868,6 +980,7 @@ function AddProject(props) {
         <Row>
           <Col>
             <Row>
+              {/* <>{mode}</> */}
               <Form.Group
                 className={`mb-3 ${projectNameAlert ? "error-text" : ""}`}
                 controlId="projectName.ControlInput1"
@@ -1465,6 +1578,8 @@ function AddProject(props) {
           </Button>
           <Button
             className="button-layout draft-button"
+            // disabled={mode !== "design"}
+            disabled={!submitButtonState}
             type="submit"
           >
             Submit

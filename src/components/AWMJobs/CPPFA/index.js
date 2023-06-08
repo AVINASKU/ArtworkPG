@@ -57,7 +57,7 @@ const CPPFA = ({
 
   useEffect(() => {
     pegadata.find((el) => {
-      if (el.Task === "Define New Print Feasibility scope") {
+      if (el.Task === "Define Color Development & Print Trial") {
         setCppfaDialogFlag(true);
       }
     });
