@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddProject from "../Projects/CreateProject";
 import { DropdownButton, Dropdown } from "react-bootstrap";
 import { BreadCrumb } from "primereact/breadcrumb";
@@ -53,6 +53,19 @@ function ProjectSetup(props) {
   const [tabName, setTabName] = useState("ProjectPlan");
   const [tabNameForPP, setTabNameForPP] = useState("Design");
 
+  const pathname = window.location.href;
+
+  let currentUrl = pathname.split("#");
+  currentUrl = currentUrl[currentUrl.length - 1];
+
+  useEffect(() => {
+    if (!pathname.includes("#")) {
+      setTabName("ProjectPlan");
+    } else if (currentUrl) {
+      setTabName(currentUrl);
+    }
+  }, [tabName, currentUrl]);
+
   const items = [{ label: rootBreadCrumb }];
   tabName === "ProjectPlan" && items.push({ label: "Project Plan" });
   tabName === "ProjectSetup" && items.push({ label: "Project Setup" });
@@ -69,7 +82,7 @@ function ProjectSetup(props) {
           You are not authorized to access this page.
         </div>
       ) : (
-        <div style={{ background: "#ffffff", borderRadius: "24px" }}>
+        <div className="projectSetupParent">
           <div className="actions">
             <div className="breadCrumbParent">
               <BreadCrumb model={items} />
@@ -78,7 +91,7 @@ function ProjectSetup(props) {
               {mode !== "create" && (
                 <div className="row">
                   <div className="col">
-                    <div className="project-name">
+                    <div className="project-name projectNameForProjectSetup">
                       {selectedProjectDetails.Project_Name}
                     </div>
                   </div>
@@ -86,8 +99,7 @@ function ProjectSetup(props) {
               )}
             </div>
           </div>
-
-          <AddProject {...props} setTabName={setTabName} />
+          <AddProject {...props} />
         </div>
       ),
     },
@@ -95,16 +107,25 @@ function ProjectSetup(props) {
       name: "ProjectPlan",
       tabNameForDisplay: "Project Plan",
       component: (
-        <div style={{ background: "#ffffff", borderRadius: "24px" }}>
-          <div className="actions">
+        <div className="projectSetupParent">
+          <div className="">
             <div className="breadCrumbParent">
-              <div className="displayFlex">
-                <div className="width50">
+              <div className="row">
+                <div className="col">
                   <BreadCrumb model={items} />
+                  {mode !== "create" && (
+                    <div className="row projectPlanName">
+                      <div className="col">
+                        <div className="project-name">
+                          {selectedProjectDetails.Project_Name}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <div className="width50">
+                <div className="col projectPlanButtonsParent">
                   <div
-                    className="btn-group btn-group-toggle d-flex justify-content-end"
+                    className="btn-group btn-group-toggle"
                     data-toggle="buttons"
                   >
                     <div className="col projectPlanButtons">
@@ -129,51 +150,9 @@ function ProjectSetup(props) {
                         Tabular
                       </label>
                     </div>
-                    {/* {shouldShowResetButton && ( */}
-                    {
-                      <DropdownButton
-                        id="projectActions"
-                        title="Actions"
-                        // disabled={false}
-                        disabled={!isReadOnly}
-                        // data-popper-placement="bottom-end"
-                        // drop="down-end"
-                        align="end"
-                      >
-                        <Dropdown.Item
-                          onClick={() => getData("On Hold")}
-                          className="dropdownItemPaddingLeft dropdownItemColor"
-                        >
-                          On Hold
-                        </Dropdown.Item>
-                        <Dropdown.Item
-                          onClick={() => getData("Cancel")}
-                          className="dropdownItemPaddingLeft dropdownItemColor1"
-                        >
-                          Cancel
-                        </Dropdown.Item>
-                        <Dropdown.Item
-                          onClick={() => getData("Previous State")}
-                          className="dropdownItemPaddingLeft dropdownItemColor2"
-                        >
-                          Previous State
-                        </Dropdown.Item>
-                      </DropdownButton>
-                    }
                   </div>
                 </div>
               </div>
-
-              {/* {`--------${mode}`} */}
-              {mode !== "create" && (
-                <div className="row">
-                  <div className="col">
-                    <div className="project-name">
-                      {selectedProjectDetails.Project_Name}
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
           <div>
@@ -278,6 +257,37 @@ function ProjectSetup(props) {
       component: <>Readiness Per PMP Data</>,
     },
   ];
+  const actionButton = (
+    <DropdownButton
+      id="projectActions"
+      title="Actions"
+      // disabled={false}
+      disabled={!isReadOnly}
+      // data-popper-placement="bottom-end"
+      // drop="down-end"
+      align="end"
+    >
+      <Dropdown.Item
+        onClick={() => getData("On Hold")}
+        className="dropdownItemPaddingLeft dropdownItemColor"
+      >
+        On Hold
+      </Dropdown.Item>
+      <Dropdown.Item
+        onClick={() => getData("Cancel")}
+        className="dropdownItemPaddingLeft dropdownItemColor1"
+      >
+        Cancel
+      </Dropdown.Item>
+      <Dropdown.Item
+        onClick={() => getData("Previous State")}
+        className="dropdownItemPaddingLeft dropdownItemColor2"
+      >
+        Previous State
+      </Dropdown.Item>
+    </DropdownButton>
+  );
+
   return (
     <div className="content-layout">
       {visible && (
@@ -300,8 +310,8 @@ function ProjectSetup(props) {
       <div className="tabular-view">
         <TabsComponent
           tabName={tabName}
-          setTabName={setTabName}
           items={itemsData}
+          actionButton={actionButton}
         />
       </div>
     </div>

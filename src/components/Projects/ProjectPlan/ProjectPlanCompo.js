@@ -18,9 +18,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import moment from "moment";
 import { CheckReadOnlyAccess, Loading } from "../../../utils";
-import {
-  getMyProject
-} from "../../../store/actions/ProjectActions";
+import { getMyProject } from "../../../store/actions/ProjectActions";
 
 function ProjectPlanCompo(props) {
   const toast = useRef(null);
@@ -38,10 +36,12 @@ function ProjectPlanCompo(props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   let { ProjectID } = useParams();
-  
+
   const { userInformation } = useSelector((state) => state.UserReducer);
 
-  const { myProject, ...myProjectData } = useSelector((state) => state.myProject);
+  const { myProject, ...myProjectData } = useSelector(
+    (state) => state.myProject
+  );
   const { projectPlanDesign, projectPlan, loading } = useSelector(
     (state) => state.ProjectPlanReducer
   );
@@ -74,11 +74,11 @@ function ProjectPlanCompo(props) {
   
   const getProjectPlanApi = async () => {
     setLoader(true);
-    let restructuredData = [];    
+    let restructuredData = [];
     const apiData =
       mode === "design" && selectedProject.Project_ID
         ? await getProjectPlan(selectedProject.Project_ID)
-        : [];   
+        : [];
     apiData && dispatch(updateProjectPlanDesignAction(apiData));
     restructuredData = apiData?.length > 0 ? getRestructuredData(apiData) : [];
     dispatch(updateProjectPlanAction(restructuredData));
@@ -140,7 +140,7 @@ function ProjectPlanCompo(props) {
         data: apiData.filter((data) => data.AWM_Task_ID.includes("CPPFA_")),
       },
       {
-        name: "Define New Print Feasibility Scope",
+        name: "Define Color Development & Print Trial",
         code: "DNPF",
         data: apiData.filter((data) => data.AWM_Task_ID.includes("DNPF_")),
       },
@@ -175,6 +175,8 @@ function ProjectPlanCompo(props) {
           ? "Confirm Color Development"
           : task.data[0].AWM_Task_ID.includes("CPT_")
           ? "Confirm Print Trial"
+          : task.data[0].AWM_Task_ID.includes("DNPF_")
+          ? "Define Color Development & Print Trial"
           : task.data[0].Task_Name;
         dataObj["Dependency"] = task.data[0].Dependency;
         dataObj["Role"] = task.data[0].Role;
@@ -309,21 +311,22 @@ function ProjectPlanCompo(props) {
   const activate = async () => {
     setLoader(true);
     await activateProjectPlan(selectedProject.Project_ID);
-    await dispatch(getMyProject(userInformation))
+    await dispatch(getMyProject(userInformation));
     setLoader(false);
     await toast.current.show({
       severity: "success",
       summary: "Success",
       detail: "Project activated successfully!",
-      life: 3000,
+      life: 5000,
     });
   };
 
   return (
     console.log("projectPlan", projectPlan),
-    <>
-    <Toast ref={toast} />
-    {loading || loader || myProjectData.loading || projectPlan === null ? (
+    (
+      <>
+        <Toast ref={toast} />
+        {loading || loader || myProjectData.loading || projectPlan === null ? (
           <Loading />
         ) : (
           <>
@@ -368,7 +371,9 @@ function ProjectPlanCompo(props) {
             </Accordion> */}
             <div className="form-buttons">
               <Button
-                className={!isAccessEmpty ? "btn btn-disabled" : "button-layout"}
+                className={
+                  !isAccessEmpty ? "btn btn-disabled" : "button-layout"
+                }
                 variant="secondary"
                 onClick={() => navigate("/myProjects")}
                 disabled={!isAccessEmpty}
@@ -396,8 +401,9 @@ function ProjectPlanCompo(props) {
             </div>
           </>
         )}
-      <br />
-    </>
+        <br />
+      </>
+    )
   );
 }
 
