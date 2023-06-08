@@ -13,8 +13,9 @@ import ConfirmationPopUp from "../../Projects/ConfirmationPopUp";
 import TaskDialog from "../../TaskDialog";
 import CPPFA from "../../AWMJobs/CPPFA";
 import { HelpNeededAction } from "../../../store/actions/HelpNeededAction";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getTasks, getAllTasks } from "../../../store/actions/TaskActions";
+import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 
 const TaskList = ({myTasks, loading, flag, userInformation}) => {
   const dispatch = useDispatch();
@@ -429,14 +430,17 @@ const TaskList = ({myTasks, loading, flag, userInformation}) => {
   const [showApproveDialogCPPFA, setShowApproveDialogCPPFA] = useState(false);
   const [selectedTaskApproveDialogCPPFA, setSelectedTaskApproveDialogCPPFA] =
     useState([]);
+
   const handleApproveDialogCPPFA = (options) => {
+    console.log("options:", options);
     setShowApproveDialogCPPFA(true);
-    let task = [{ TaskID: options.key, ProjectID: ProjectID }];
+    let task = { TaskID: options.AWM_Task_ID, ProjectID: options.AWM_Project_ID };
     setSelectedTaskApproveDialogCPPFA(task);
   };
-
+  
+  const { TaskDetailsData } = useSelector((state) => state.TaskDetailsReducer);
+  
   return (
-    console.log("selectedProdSrchList", selectedProdSrchList),
       <>
       {loading || loader || selectedProdSrchList.length === 0  ? (
       <Loading />
@@ -448,6 +452,10 @@ const TaskList = ({myTasks, loading, flag, userInformation}) => {
               onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
               showTaskDialog={showApproveDialogCPPFA}
               selectedTaskData={selectedTaskApproveDialogCPPFA}
+              pegadata={selectedProdSrchList}
+              getProjectPlanApi={getTaskDetails}
+              status={true}
+              TaskDetailsData={TaskDetailsData}
             />
           )}
           <ProjectListHeader
