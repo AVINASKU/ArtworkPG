@@ -455,9 +455,9 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
     useState([]);
 
   const handleApproveDialogCPPFA = (options) => {
-    console.log("options:", options);
     setShowApproveDialogCPPFA(true);
     let task = { TaskID: options.AWM_Task_ID, ProjectID: options.AWM_Project_ID };
+    dispatch(getTaskDetails(options.AWM_Task_ID, ProjectID));
     setSelectedTaskApproveDialogCPPFA(task);
   };
   
@@ -476,9 +476,9 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
               showTaskDialog={showApproveDialogCPPFA}
               selectedTaskData={selectedTaskApproveDialogCPPFA}
               pegadata={selectedProdSrchList}
-              getProjectPlanApi={getTaskDetails}
               status={true}
               TaskDetailsData={TaskDetailsData}
+              userInformation={userInformation}
             />
           )}
           <ProjectListHeader

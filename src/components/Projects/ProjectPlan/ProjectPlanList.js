@@ -21,7 +21,7 @@ import ApproveDesignDialog from "./ApproveDesignDialog";
 import { useLocation, useParams } from "react-router-dom";
 import CPPFA from "./../../AWMJobs/CPPFA";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const ProjectPlanList = ({
   projectPlan,
@@ -47,6 +47,7 @@ const ProjectPlanList = ({
   const [selectedTaskApproveDialog, setSelectedTaskApproveDialog] = useState(
     []
   );
+  const dispatch = useDispatch();
   const [flag, setFlag] = useState("");
   const [loader, setLoader] = useState(false);
   //projectPlanDesign
@@ -558,6 +559,7 @@ const ProjectPlanList = ({
     setShowApproveDialogCPPFA(true);
     let task = { TaskID: options.key, ProjectID: ProjectID };
     setSelectedTaskApproveDialogCPPFA(task);
+    dispatch(getTaskDetails(options.key, ProjectID));
   };
 
   const storeReorderedColumns = (e) => {

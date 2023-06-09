@@ -1,29 +1,27 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable array-callback-return */
 import React, { useState, useEffect } from "react";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Col, Row } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
-import {
-  getTaskDetails,
-  submitCPPFA,
-} from "../../../store/actions/taskDetailAction";
+import { submitCPPFA } from "../../../store/actions/taskDetailAction";
 import { changeDateFormat, CheckReadOnlyAccess } from "../../../utils";
 import { FileUpload } from "primereact/fileupload";
 import { NavLink, useLocation } from "react-router-dom";
 import upload1 from "../../../assets/images/upload1.svg";
 import "./index.scss";
 import { getProjectPlan } from "../../../apis/projectPlanApi";
+import { getTasks } from "../../../store/actions/TaskActions";
 
 const CPPFA = ({
   showTaskDialog,
   selectedTaskData,
   onClose,
   pegadata,
-  getProjectPlanApi,
-  status,
   TaskDetailsData,
+  userInformation,
 }) => {
   const location = useLocation();
   const locationPath = location?.pathname;
@@ -125,7 +123,7 @@ const CPPFA = ({
         NPFNeeded: cppfaDialogFlag ? String(false) : String(yesOrNo === "yes"),
         AWMTaskID: selectedTaskData.TaskID,
         AWMProjectID: selectedTaskData.ProjectID,
-        Size: Math.round(formattedValue),
+        Size: String(Math.round(formattedValue)),
         Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
         Filename: fileName,
       },
@@ -141,11 +139,10 @@ const CPPFA = ({
         headers
       );
       hideDialog();
-      // dispatch(getProjectPlanApi(TaskID, ProjectID));
       if (url[2] === "projectPlan") {
         await getProjectPlan(ProjectID);
       } else if (url[1] === "MyTasks") {
-        await getTaskDetails(TaskID, ProjectID);
+        await dispatch(getTasks(userInformation));
       }
     }
   };
