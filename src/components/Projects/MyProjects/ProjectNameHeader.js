@@ -11,8 +11,8 @@ const ProjectNameHeader = (
   const isFilterActivated =
     (frozenCoulmns &&
       frozenCoulmns.length &&
-      frozenCoulmns.includes(options)) ||
-    (sortData && sortData.length && sortData[0] === options);
+      frozenCoulmns.includes(options)) || 
+    (sortData && sortData.length && sortData[0] === options)
 
   return (
     <div>

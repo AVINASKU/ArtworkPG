@@ -131,10 +131,24 @@ export const CheckReadOnlyAccess = () => {
 export const Loading = () => {
   return (
     <div className="align-item-center">
-          <i
-            className="pi pi-spin pi-spinner"
-            style={{ fontSize: "2rem" }}
-          ></i>
-        </div>
-  )
-}
+      <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
+    </div>
+  );
+};
+
+export const optionList = (data, fieldName) => {
+  const uniqueSMOs = new Set();
+
+  // Iterate over the array and add "Artwork_SMO" values to the Set
+  data.forEach((item) => {
+    if (item[fieldName] || item[fieldName]===0) {
+      uniqueSMOs.add(item[fieldName]);
+    }
+  });
+
+
+  // Convert the Set to an array
+  const optionList = Array.from(uniqueSMOs);
+
+  return optionList;
+};

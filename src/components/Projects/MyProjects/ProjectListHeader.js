@@ -28,6 +28,7 @@ const ProjectListHeader = ({
   selected,
   allData,
   headers,
+  setReorderColumnFlag,
 }) => {
   const location = useLocation();
   // const [downloadCSV, setDownloadCSV] = useState(false);
@@ -96,13 +97,17 @@ const ProjectListHeader = ({
 
             <button
               type="button"
-              disabled={!isResetEnabled}
+              // disabled={!isResetEnabled}
+              
               className={
                 isResetEnabled
                   ? "btn btn-primary reset-to-default-view"
                   : "btn btn-disabled"
               }
-              onClick={() => clearFilters()}
+              onClick={() =>{
+              setReorderColumnFlag(false);
+              clearFilters();
+              } }
             >
               Reset to Default
             </button>

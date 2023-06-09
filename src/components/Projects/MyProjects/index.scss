@@ -26,7 +26,7 @@ $fontWeight400: 400;
   }
 
   .p-datatable-table {
-    line-height: 15px;
+    line-height: 12px;
   }
 
   .p-column-title {
@@ -39,10 +39,10 @@ $fontWeight400: 400;
     }
 
     span {
-      font-size: 14px;
+      font-size: 12px;
       /* width: 10px; */
       display: flex;
-      margin-left: 10px;
+      margin-left: 2px;
       position: relative;
       vertical-align: middle;
       align-items: center;
@@ -100,9 +100,10 @@ $fontWeight400: 400;
 // ProjectList Styles Start
 .columnFilterIcon {
   cursor: pointer;
-  margin-right: 12px;
-  width: 11px;
-  height: 16px;
+  margin-right: 2px;
+  margin-left: 5px;
+  // width: 11px;
+  // height: 16px;
 }
 
 // Filter and Save buttons disabled
