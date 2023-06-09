@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as types from "./../types/types";
-import { GETURL, DEVURL } from "../../apis/envUrl";
+import { DEVURL } from "../../apis/envUrl";
 import _ from "lodash";
 
 export const getMyProject = (userInformation) => async (dispatch) => {
@@ -8,7 +8,7 @@ export const getMyProject = (userInformation) => async (dispatch) => {
   dispatch({ type: "GET_PROJECT_DETAILS_REQUEST" });
   try {
     //here need to add url and pass PM name
-    const res = await axios.get(`${GETURL}/myprojects/${PM}`);
+    const res = await axios.get(`${DEVURL}/myprojects/${PM}`);
 
     if (res?.data === null) {
       dispatch({
@@ -40,7 +40,7 @@ export const getAllProject = (userInformation) => async (dispatch) => {
   let bu = userInformation?.bu;
   try {
     //here need to add url and pass PM name
-    const res = await axios.get(`${GETURL}/allprojects/${bu}/${region}`);
+    const res = await axios.get(`${DEVURL}/allprojects/${bu}/${region}`);
 
     if (res?.data === null) {
       dispatch({
