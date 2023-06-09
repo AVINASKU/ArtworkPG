@@ -476,7 +476,6 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
               showTaskDialog={showApproveDialogCPPFA}
               selectedTaskData={selectedTaskApproveDialogCPPFA}
               pegadata={selectedProdSrchList}
-              status={true}
               TaskDetailsData={TaskDetailsData}
               userInformation={userInformation}
             />

@@ -33,6 +33,7 @@ const ProjectPlanList = ({
   setActiveSave,
   isAccessEmpty,
   activeSave,
+  getProjectPlanApi
 }) => {
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
@@ -594,8 +595,7 @@ const ProjectPlanList = ({
           showTaskDialog={showApproveDialogCPPFA}
           selectedTaskData={selectedTaskApproveDialogCPPFA}
           pegadata={pegadata1}
-          getProjectPlanApi={getTaskDetails}
-          status={false}
+          getProjectPlanApi={getProjectPlanApi}
           TaskDetailsData={TaskDetailsData}
         />
       )}

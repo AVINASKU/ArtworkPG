@@ -22,6 +22,7 @@ const CPPFA = ({
   pegadata,
   TaskDetailsData,
   userInformation,
+  getProjectPlanApi
 }) => {
   const location = useLocation();
   const locationPath = location?.pathname;
@@ -94,9 +95,7 @@ const CPPFA = ({
 
   const itemTemplate = (file, props) => {
     setFileName(file.name);
-    setFormattedValue(
-      props.formatSize.substring(0, props.formatSize.length - 3)
-    );
+    setFormattedValue(file.size);
     setAzureFile(file);
     return (
       <div className="upload-row">
@@ -116,6 +115,7 @@ const CPPFA = ({
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
+    const fileSize = Math.round(formattedValue / 1000000);
     const formData = {
       caseTypeID: "PG-AAS-Work-ConfirmPreliminaryPrintFeasibilityAssessment",
       content: {
@@ -123,9 +123,9 @@ const CPPFA = ({
         NPFNeeded: cppfaDialogFlag ? String(false) : String(yesOrNo === "yes"),
         AWMTaskID: selectedTaskData.TaskID,
         AWMProjectID: selectedTaskData.ProjectID,
-        Size: String(Math.round(formattedValue)),
+        Size: fileSize === 0 ? "1" : fileSize,
         Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
-        Filename: fileName,
+        Filename: fileName.split('.').slice(0, -1).join('.')
       },
     };
 
@@ -140,7 +140,7 @@ const CPPFA = ({
       );
       hideDialog();
       if (url[2] === "projectPlan") {
-        await getProjectPlan(ProjectID);
+        getProjectPlanApi();
       } else if (url[1] === "MyTasks") {
         await dispatch(getTasks(userInformation));
       }
