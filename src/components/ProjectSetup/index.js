@@ -1,7 +1,7 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
 import AddProject from "../Projects/CreateProject";
 import { DropdownButton, Dropdown } from "react-bootstrap";
-import { BreadCrumb } from "primereact/breadcrumb";
 import "primeicons/primeicons.css";
 import "./index.scss";
 import { useSelector } from "react-redux";
@@ -10,12 +10,12 @@ import ConfirmationDialog from "./confirmationDialog";
 import TabsComponent from "./tabsComponent";
 import { getUnAuthoirzedAccess, CheckReadOnlyAccess } from "../../utils";
 
-import { useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 function ProjectSetup(props) {
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
-  const { mode, rootBreadCrumb } = projectSetup;
+  const { mode } = projectSetup;
   const User = useSelector((state) => state.UserReducer);
   const userInformation = User.userInformation;
   const { accessMatrix } = useSelector((state) => state?.accessMatrixReducer);
@@ -66,12 +66,45 @@ function ProjectSetup(props) {
     }
   }, [tabName, currentUrl]);
 
-  const items = [{ label: rootBreadCrumb }];
-  tabName === "ProjectPlan" && items.push({ label: "Project Plan" });
-  tabName === "ProjectSetup" && items.push({ label: "Project Setup" });
-  tabName === "ArtworkAlignment" && items.push({ label: "Art work Alignment" });
-  tabName === "Mapping" && items.push({ label: "Mapping" });
-  tabName === "ReadinessPerPMP" && items.push({ label: "ReadinessPerPMP" });
+  let items = "";
+  if (tabName === "ProjectSetup") {
+    items = "Project Setup";
+  } else if (tabName === "ProjectPlan") {
+    items = "Project Plan";
+  } else if (tabName === "ArtworkAlignment") {
+    items = "Art work Alignment";
+  } else if (tabName === "Mapping") {
+    items = "Mapping";
+  } else if (tabName === "ReadinessPerPMP") {
+    items = "ReadinessPerPMP";
+  }
+
+  const location = useLocation();
+  const locationPath = location?.pathname;
+  const url = locationPath?.split("/");
+
+  const breadcrumb = (
+    <div>
+      <nav className="p-breadcrumb p-component" aria-label="Breadcrumb">
+        <ul>
+          <li className="p-breadcrumb-chevron pi pi-chevron-right"></li>
+          <li className="">
+            <NavLink to={`/${url[1]}`} className="p-menuitem-link">
+              <span className="p-menuitem-text">
+                {url[1] === "allProjects" ? "All Projects" : "My Projects"}
+              </span>
+            </NavLink>
+          </li>
+          <li className="p-breadcrumb-chevron pi pi-chevron-right"></li>
+          <li className="">
+            <a href="#" className="p-menuitem-link">
+              <span className="p-menuitem-text">{items}</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  );
 
   const itemsData = [
     {
@@ -85,9 +118,7 @@ function ProjectSetup(props) {
         <div className="projectSetupParent">
           <div className="actions">
             <div className="breadCrumbParent">
-              <BreadCrumb model={items} />
-
-              {/* {`--------${mode}`} */}
+              {breadcrumb}
               {mode !== "create" && (
                 <div className="row">
                   <div className="col">
@@ -112,7 +143,7 @@ function ProjectSetup(props) {
             <div className="breadCrumbParent">
               <div className="row">
                 <div className="col">
-                  <BreadCrumb model={items} />
+                  {breadcrumb}
                   {mode !== "create" && (
                     <div className="row projectPlanName">
                       <div className="col">

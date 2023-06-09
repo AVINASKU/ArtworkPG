@@ -1,26 +1,28 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable array-callback-return */
 import React, { useState, useEffect } from "react";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Col, Row } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
-import { getTaskDetails, submitCPPFA } from "../../../store/actions/taskDetailAction";
+import { submitCPPFA } from "../../../store/actions/taskDetailAction";
 import { changeDateFormat, CheckReadOnlyAccess } from "../../../utils";
 import { FileUpload } from "primereact/fileupload";
 import { NavLink, useLocation } from "react-router-dom";
 import upload1 from "../../../assets/images/upload1.svg";
 import "./index.scss";
 import { getProjectPlan } from "../../../apis/projectPlanApi";
+import { getTasks } from "../../../store/actions/TaskActions";
 
 const CPPFA = ({
   showTaskDialog,
   selectedTaskData,
   onClose,
   pegadata,
-  getProjectPlanApi,
-  status,
   TaskDetailsData,
+  userInformation,
+  getProjectPlanApi
 }) => {
   const location = useLocation();
   const locationPath = location?.pathname;
@@ -93,9 +95,7 @@ const CPPFA = ({
 
   const itemTemplate = (file, props) => {
     setFileName(file.name);
-    setFormattedValue(
-      props.formatSize.substring(0, props.formatSize.length - 3)
-    );
+    setFormattedValue(file.size);
     setAzureFile(file);
     return (
       <div className="upload-row">
@@ -115,6 +115,7 @@ const CPPFA = ({
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
+    const fileSize = Math.round(formattedValue / 1000000);
     const formData = {
       caseTypeID: "PG-AAS-Work-ConfirmPreliminaryPrintFeasibilityAssessment",
       content: {
@@ -122,9 +123,9 @@ const CPPFA = ({
         NPFNeeded: cppfaDialogFlag ? String(false) : String(yesOrNo === "yes"),
         AWMTaskID: selectedTaskData.TaskID,
         AWMProjectID: selectedTaskData.ProjectID,
-        Size: Math.round(formattedValue),
+        Size: fileSize === 0 ? "1" : fileSize,
         Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
-        Filename: fileName,
+        Filename: fileName.split('.').slice(0, -1).join('.')
       },
     };
 
@@ -138,12 +139,10 @@ const CPPFA = ({
         headers
       );
       hideDialog();
-      // dispatch(getProjectPlanApi(TaskID, ProjectID));
       if (url[2] === "projectPlan") {
-        await getProjectPlan(ProjectID);
+        getProjectPlanApi();
       } else if (url[1] === "MyTasks") {
-        console.log("url[1]:", url[1]);
-        await getTaskDetails(TaskID, ProjectID);
+        await dispatch(getTasks(userInformation));
       }
     }
   };
@@ -169,7 +168,13 @@ const CPPFA = ({
                 <li className="">
                   <NavLink to={`/${myProjects}`} className="p-menuitem-link">
                     <span className="p-menuitem-text">
-                      {url[1] === "myProjects" ? "My Projects" : "All Projects"}
+                      {url[1] === "myProjects"
+                        ? "My Projects"
+                        : url[1] === "MyTasks"
+                        ? "My Tasks"
+                        : url[1] === "AllTasks"
+                        ? "All Tasks"
+                        : "All Projects"}
                     </span>
                   </NavLink>
                 </li>
@@ -333,9 +338,9 @@ const CPPFA = ({
           label="Confirm PPFA"
           onClick={handleSubmit}
           disabled={
-            isAccessEmpty ||
-            riskLevel !== "Low" ? yesOrNo === "": false ||
-            designIntent.Task_Status === "Complete"
+            isAccessEmpty || riskLevel !== "Low"
+              ? yesOrNo === ""
+              : false || designIntent.Task_Status === "Complete"
           }
         />
       </div>
