@@ -9,7 +9,7 @@ import { FilterMatchMode } from "primereact/api";
 import ProjectListHeader from "./ProjectListHeader";
 import { Tag } from "primereact/tag";
 import { getMyProject } from "../../../store/actions/ProjectActions";
-import { changeDateFormat, onSortData, Loading } from "../../../utils";
+import { changeDateFormat, onSortData, Loading, generateUniqueKey } from "../../../utils";
 import _, { filter } from "lodash";
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 import ProjectNameHeader from "./ProjectNameHeader";
@@ -35,7 +35,7 @@ const ProjectList = (props) => {
   const [isSearch, isSearchSet] = useState(false);
   const [isReorderedColumn, setReorderedColumn] = useState(false);
   const [loader, setLoader] = useState(false);
-  const [previousColumnName, setPreviousColumnName] = useState(null);
+  const [isColWidthSet, setColWidth] = useState(null);
   const myProjectList = useSelector((state) => state.myProject);
   const { loading } = myProjectList;
   const dispatch = useDispatch();
@@ -101,6 +101,16 @@ const ProjectList = (props) => {
         JSON.stringify(columnWidthMyProject)
       );
     }
+
+    let jsonColWidth = localStorage.getItem(
+      "isColWidthSetMyProject"
+    );
+    let isColWidthSetFlag = JSON.parse(jsonColWidth);
+    if(isColWidthSetFlag){
+    setColWidth(true);
+    }
+
+
   }, []);
 
   const reorderColumns = (columns) => {
@@ -428,6 +438,8 @@ const ProjectList = (props) => {
       "columnWidthMyProject",
       JSON.stringify(columnWidthMyProject)
     );
+     localStorage.removeItem("isColWidthSetMyProject");
+     setColWidth(false);
     setSelectedFields([]);
     setSortData([]);
     setFrozenColumn([]);
@@ -507,6 +519,11 @@ const ProjectList = (props) => {
       "columnWidthMyProject",
       JSON.stringify(columnWidthMyProject)
     );
+    localStorage.setItem(
+      "isColWidthSetMyProject",
+      JSON.stringify(true)
+    );
+     setColWidth(true);
     setProjectColumnNames(projectColumnName);
     setVisible(false);
   };
@@ -622,9 +639,8 @@ const ProjectList = (props) => {
 
   const isFilterEnabled =
     frozenCoulmns?.length || filters?.length || sortData?.length;
-  let columnWidth = localStorage.getItem("columnWidthMyProject");
-  const jsonColumnWidth = JSON.parse(columnWidth);
-  const isResetEnabled = isReorderedColumn || isFilterEnabled;
+
+  const isResetEnabled = isReorderedColumn || isFilterEnabled || isColWidthSet;
 
   return (
     <div className="myProjectAnddAllProjectList">
@@ -682,6 +698,7 @@ const ProjectList = (props) => {
           <DataTable
             resizableColumns
             dataKey="Project_ID"
+            key={generateUniqueKey("ppp")}
             reorderableColumns
             onColReorder={storeReorderedColumns}
             onResize={(e) => console.log("resize", e)}
