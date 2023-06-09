@@ -12,7 +12,7 @@ export const saveColorDevelopment = async (formData) => {
   };
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${DEVURL}/v1/UpdateNewPrintFeasibilityJob`;
+  let apiURL = `${DEVURL}/updateNewPrintFeasibilityJob`;
   console.log("api url", apiURL);
   const colorDevelopment = await axiosInstance({
     url: apiURL,
@@ -28,7 +28,7 @@ export const saveColorDevelopment = async (formData) => {
 export const submitColorDevelopment = async (formData, id, headers = {}) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!DefineNewPrintFeasibility_Flow/actions/DefineNewPrintFeasibility`;
+  let apiURL = `${DEVURL}/defineNewPrintFeasibility/${id}`;
   console.log("api url", apiURL);
   const colorDevelopment = await axiosInstance({
     url: apiURL,

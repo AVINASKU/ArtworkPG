@@ -13,7 +13,7 @@ export const DelegateAction = (formData) => {
           "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
         },
       });
-      let apiURL = `${DEVURL}/v1/DelegateTask`;
+      let apiURL = `${DEVURL}/delegatetask`;
 
       const response = await axiosInstance.post(apiURL, formData);
       dispatch({

@@ -33,7 +33,7 @@ export const saveDesignIntent = async (
 ) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${DEVURL}/v1/UpdateDesignIntentJob`;
+  let apiURL = `${DEVURL}/updatedesignintent`;
   console.log("api url", apiURL);
   const designIntent = await axiosInstance({
     url: apiURL,
@@ -52,7 +52,7 @@ export const submitDesignIntent = async (formData, id, headers = {}) => {
   let apiURL;
   //https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v2/assignments/ASSIGN-WORKLIST PG-AAS-WORK D-111!DESIGNINTENT_FLOW/actions/DefineDesignIntent
   
-  apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!DESIGNINTENT_FLOW/actions/DefineDesignIntent`;
+  apiURL = `${DEVURL}/defineDesignIntent/${id}`;
 
   const submitDesignIntentData = await axiosInstance({
     url: apiURL,

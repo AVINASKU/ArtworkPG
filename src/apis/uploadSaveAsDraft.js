@@ -11,7 +11,7 @@ export const postSaveDesignIntent = async (
 ) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${DEVURL}/v1/SaveUploadTask`;
+  let apiURL = `${DEVURL}/saveuploadtask`;
   console.log("api url", apiURL);
   const designIntent = await axiosInstance({
     url: apiURL,
