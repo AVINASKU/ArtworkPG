@@ -21,7 +21,7 @@ const PageLayout = (props) => {
               <Header />
             </div>
             <div className="main-container">
-              <div className={`${!isPath && "wrapper"}`}>{props.children}</div>
+              <div className={`wrapper`}>{props.children}</div>
             </div>
           </Col>
         </Row>

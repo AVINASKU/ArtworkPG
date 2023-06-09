@@ -82,7 +82,7 @@ function ProjectSetup(props) {
           You are not authorized to access this page.
         </div>
       ) : (
-        <div className="projectSetupParent">
+        <div className="projectSetupParent project-setup-wrapper">
           <div className="actions">
             <div className="breadCrumbParent">
               <BreadCrumb model={items} />
@@ -107,7 +107,7 @@ function ProjectSetup(props) {
       name: "ProjectPlan",
       tabNameForDisplay: "Project Plan",
       component: (
-        <div className="projectSetupParent">
+        <div className="projectSetupParent project-plan-wrapper">
           <div className="">
             <div className="breadCrumbParent">
               <div className="row">

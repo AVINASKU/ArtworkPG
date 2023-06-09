@@ -207,7 +207,6 @@ sup {
 .tabular-add-project {
   padding: 15px;
   overflow-y: auto;
-  height: 57vh !important;
   // width: 90vw;
   .col {
     max-width: 230px;
@@ -218,8 +217,9 @@ sup {
     border: 1px solid #acacac;
     padding-top: 10px;
     padding-left: 20px;
-    position: absolute;
+    // position: absolute;
     border-radius: 4px;
+    min-width: 240px;
   }
   .p-multiselect {
     width: 100%;
