@@ -5,7 +5,10 @@ import { Dialog } from "primereact/dialog";
 import { Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
-import { getTaskDetails, submitCPPFA } from "../../../store/actions/taskDetailAction";
+import {
+  getTaskDetails,
+  submitCPPFA,
+} from "../../../store/actions/taskDetailAction";
 import { changeDateFormat, CheckReadOnlyAccess } from "../../../utils";
 import { FileUpload } from "primereact/fileupload";
 import { NavLink, useLocation } from "react-router-dom";
@@ -142,7 +145,6 @@ const CPPFA = ({
       if (url[2] === "projectPlan") {
         await getProjectPlan(ProjectID);
       } else if (url[1] === "MyTasks") {
-        console.log("url[1]:", url[1]);
         await getTaskDetails(TaskID, ProjectID);
       }
     }
@@ -169,7 +171,13 @@ const CPPFA = ({
                 <li className="">
                   <NavLink to={`/${myProjects}`} className="p-menuitem-link">
                     <span className="p-menuitem-text">
-                      {url[1] === "myProjects" ? "My Projects" : "All Projects"}
+                      {url[1] === "myProjects"
+                        ? "My Projects"
+                        : url[1] === "MyTasks"
+                        ? "My Tasks"
+                        : url[1] === "AllTasks"
+                        ? "All Tasks"
+                        : "All Projects"}
                     </span>
                   </NavLink>
                 </li>
@@ -333,9 +341,9 @@ const CPPFA = ({
           label="Confirm PPFA"
           onClick={handleSubmit}
           disabled={
-            isAccessEmpty ||
-            riskLevel !== "Low" ? yesOrNo === "": false ||
-            designIntent.Task_Status === "Complete"
+            isAccessEmpty || riskLevel !== "Low"
+              ? yesOrNo === ""
+              : false || designIntent.Task_Status === "Complete"
           }
         />
       </div>
