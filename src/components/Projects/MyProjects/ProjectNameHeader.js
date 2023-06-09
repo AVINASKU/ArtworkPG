@@ -32,10 +32,14 @@ const ProjectNameHeader = (
           {splittedCol === "Artwork Category" && "Category"}
           {splittedCol === "Artwork Brand" && "Brand"}
           {splittedCol === "Project region" && "Region"}
+          {splittedCol === "Estimated AW Printer" && "Estimated AW@Printer"}
+          {splittedCol === "Project Scale" && "Scale"}
           {splittedCol !== "Artwork SMO" &&
             splittedCol !== "Artwork Category" &&
             splittedCol !== "Artwork Brand" &&
             splittedCol !== "Project region" &&
+            splittedCol !== "Estimated AW Printer" &&
+            splittedCol !== "Project Scale" &&
             splittedCol}
         </span>
       </>

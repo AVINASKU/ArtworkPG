@@ -16,8 +16,6 @@ import ProjectNameHeader from "./ProjectNameHeader";
 import CustomisedView from "./CustomisedView";
 
 const ProjectList = (props) => {
-  //pranali added reorder
-  const [reorderColumnFlag, setReorderColumnFlag] = useState(false);
   const User = useSelector((state) => state.UserReducer);
   const userInformation = User.userInformation;
   const [pegadata, setPegaData] = useState(null);
@@ -467,6 +465,8 @@ const ProjectList = (props) => {
   const onGlobalFilterChange = (e, colName) => {
       const value = e.value;
 
+      console.log("value and e.value", value,e.value);
+
         setSelectedFields(value);
 
     const artworkCategories = value;
@@ -590,7 +590,6 @@ const ProjectList = (props) => {
     }
     localStorage.setItem("allColumnNames", JSON.stringify(projectColumnName));
     setProjectColumnNames(projectColumnName);
-    setReorderColumnFlag(true);
   };
 
   const clearFilter = () => {
@@ -661,7 +660,6 @@ const ProjectList = (props) => {
               isResetEnabled={isResetEnabled}
               allData={pegadata}
               headers={updatedAllColumnNames}
-              setReorderColumnFlag={setReorderColumnFlag}
             />
           )}
           <CustomisedView

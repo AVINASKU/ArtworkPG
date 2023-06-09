@@ -4,29 +4,19 @@ import export2excel from "../../assets/images/export2excel.svg";
 import { changeDateFormat, onSortData } from "../../utils";
 
 export const ExportSelectedRows = ({ allData, selectedRows, headers }) => {
-  var headers = headers.map(function (str) {
-    {
-      str === "Estimated_SOP" && changeDateFormat(allData[str]);
-    }
-    {
-      str === "Estimated_SOS" && changeDateFormat(allData[str]);
-    }
-    {
-      str === "Estimated_AW_Printer" && changeDateFormat(allData[str]);
-    }
-    {
-      str === "Estimated_AW_Readiness" && changeDateFormat(allData[str]);
-    }
-    if (
-      str.startsWith("Artwork_") ||
-      str.startsWith("Project_region") ||
-      str.startsWith("Project_Scale")
-    ) {
-      return str.substring(8); // Remove the first 8 characters ("Artwork_")
-    } else {
-      return str; // Keep the original string
-    }
-  });
+if(selectedRows && selectedRows.length){
+// selectedRows.map((ele)=>{
+// let splittedCol = ele.split("_").join(" ");
+
+// })
+
+
+}
+headers.map((ele) =>  ele.split("_").join(" "));
+
+console.log("all data", allData, headers, selectedRows);
+
+
   if (!selectedRows || selectedRows.length === 0) {
     const csvReport = {
       data: allData,
@@ -42,7 +32,8 @@ export const ExportSelectedRows = ({ allData, selectedRows, headers }) => {
       headers: headers,
       filename: "Selected_Rows.csv",
     };
-    return <>{csvTag(csvReport)}</>;
+    return <div></div>
+    // return <>{csvTag(csvReport)}</>;
   }
 };
 
