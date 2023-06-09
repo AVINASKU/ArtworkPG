@@ -151,7 +151,8 @@ function AddProject(props) {
   };
 
   useEffect(() => {
-    dispatch(getDropDownValues());
+  //  if(DropDownValuesData === null)
+      dispatch(getDropDownValues());
   }, [dispatch]);
 
   useEffect(() => {
@@ -161,6 +162,47 @@ function AddProject(props) {
       );
     }
   }, [DropDownValuesData]);
+
+  useEffect(() => {
+    if(projectSetupPageDropDownValues !== undefined && projectSetupPageDropDownValues.length !== 0){
+      setbUs(projectSetupPageDropDownValues.Artwork_BU);
+      setBrands(projectSetupPageDropDownValues.Artwork_Brand);
+      setRegions(projectSetupPageDropDownValues.Artwork_Region);
+      setSmos(projectSetupPageDropDownValues.Artwork_SMO);
+      setScales(projectSetupPageDropDownValues.Artwork_Scale);
+      setProjectTypeList(projectSetupPageDropDownValues.Artwork_ProjectType);
+    }
+  },[projectSetupPageDropDownValues]);
+
+  useEffect(() => {
+    bu &&
+    bUs.forEach((obj) => {
+      obj.Artwork_Picklist.forEach((pickList)=> {
+        if(bu === obj.code && pickList.Picklist_Name === "SAPCategory"){
+          setSubCategoriesOptions(pickList.Labels);
+        }
+      })
+      });
+  }, [bu, bUs]);
+
+  useEffect(() => {
+    setRegion(
+      (selectedProjectDetails &&
+        regions.find(
+          (r) => r.Region_Name === selectedProjectDetails.Project_region
+        )) ||
+        {}
+    );
+  },[regions]);
+
+
+  useEffect(() => {
+    setScale(
+      (selectedProjectDetails &&
+        scales?.find((r) => r.Scale_Name === selectedProjectDetails.Project_Scale)) ||
+        {}
+    );
+  },[scales]);
 
   useEffect(() => {
     if (mode === "edit" || mode === "design") {
@@ -186,6 +228,15 @@ function AddProject(props) {
         setSubCategories([]);
       }
 
+      bu &&
+      bUs.forEach((obj) => {
+        obj.Artwork_Picklist.forEach((pickList)=> {
+          if(bu === obj.code && pickList.Picklist_Name === "SAPCategory"){
+            setSubCategoriesOptions(pickList.Labels);
+          }
+        })
+        });
+
       if (selectedProjectDetails?.Artwork_Brand?.length > 0) {
         selectedProjectDetails?.Artwork_Brand.forEach((brand) => {
           if (brand.code !== "") {
@@ -205,13 +256,11 @@ function AddProject(props) {
           {}
       );
       setSmo(prePopuSmo || []);
-      setCluster(selectedProjectDetails?.Cluster || "");
+      setCluster(selectedProjectDetails?.Cluster || "");    
       setScale(
         (selectedProjectDetails &&
-          scales.find((r) => r.code === selectedProjectDetails.Project_Scale) &&
-          scales.find((r) => r.code === selectedProjectDetails.Project_Scale)
-            .code) ||
-          []
+          scales.find((r) => r.Scale_Name === selectedProjectDetails.Project_Scale)) ||
+          {}
       );
       setSOSDate(
         (selectedProjectDetails?.Estimated_SOS &&
@@ -407,7 +456,7 @@ function AddProject(props) {
       setPs("");
       setTier("");
     }
-  }, [mode]);
+  }, [mode, projectSetup?.selectedProject]);
 
   const getSmoOptions = () => {
     return smos.map((smo) => ({
@@ -481,9 +530,8 @@ function AddProject(props) {
     setRegion(selectedRegion);
   };
   const handleScaleChange = (e) => {
-    const selectedScale = scaleList.find((r) => r.code === e.target.value);
-    setRegion(selectedScale);
-    setSmo([]);
+    const selectedScale = scales.find((r) => r.Scale_Name === e.target.value);
+    setScale(selectedScale);
   };
 
   const smoOptions = getSmoOptions();
@@ -498,19 +546,6 @@ function AddProject(props) {
   };
 
   // const bUs = Object.keys(categories).map((bu) => ({ code: bu, name: bu }));
-  useEffect(() => {
-    if (
-      projectSetupPageDropDownValues !== undefined &&
-      projectSetupPageDropDownValues.length !== 0
-    ) {
-      setbUs(projectSetupPageDropDownValues.Artwork_BU);
-      setBrands(projectSetupPageDropDownValues.Artwork_Brand);
-      setRegions(projectSetupPageDropDownValues.Artwork_Region);
-      setSmos(projectSetupPageDropDownValues.Artwork_SMO);
-      setScales(projectSetupPageDropDownValues.Artwork_Scale);
-      setProjectTypeList(projectSetupPageDropDownValues.Artwork_ProjectType);
-    }
-  }, [projectSetupPageDropDownValues]);
 
   // const bUs = businessUnits.map((bu) => {
   //   return {
@@ -521,27 +556,6 @@ function AddProject(props) {
   const handleSubCategoryChange = (e) => {
     setSubCategories(e.value);
   };
-
-  useEffect(() => {
-    bu &&
-      bUs.forEach((obj) => {
-        obj.Artwork_Picklist.forEach((pickList) => {
-          if (bu === obj.code) {
-            setSubCategoriesOptions(pickList.Labels);
-          }
-        });
-      });
-  }, [bu, bUs]);
-
-  useEffect(() => {
-    setRegion(
-      (selectedProjectDetails &&
-        regions.find(
-          (r) => r.Region_Name === selectedProjectDetails.Project_region
-        )) ||
-        {}
-    );
-  }, [regions]);
 
   const form = useForm({ date: null });
   let today = new Date();
@@ -766,7 +780,7 @@ function AddProject(props) {
         ProductionStrategy: ps,
         // Project_Brands: "V14", //
         // Project_Categories: "AIR", //
-        Project_Scale: scale,
+        Project_Scale: scale?.Scale_Name,
         Cluster: cluster,
         ProjectDescription: projectDesc,
         ProjectName: projectName,
@@ -1203,13 +1217,13 @@ function AddProject(props) {
                 <Form.Label>Scale </Form.Label>
                 <div>
                   <Form.Select
-                    value={scale}
-                    onChange={(e) => setScale(e.target.value)}
+                    value={scale.Scale_Name || ""}
+                    onChange={handleScaleChange}
                     placeholder="Select Scale"
                   >
                     <option value="">Select Scale</option>
                     {scales.map((bu) => (
-                      <option key={bu.code} value={bu.code}>
+                      <option key={bu.code} value={bu.Scale_Name}>
                         {bu.Scale_Name}
                       </option>
                     ))}
@@ -1581,6 +1595,7 @@ function AddProject(props) {
             // disabled={mode !== "design"}
             disabled={!submitButtonState}
             type="submit"
+            disabled={!formValid}
           >
             Submit
           </Button>

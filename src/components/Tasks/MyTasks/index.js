@@ -9,6 +9,20 @@ const MyTask = () => {
   const userInformation = User.userInformation;
   const dispatch = useDispatch();
   const myTasks = useSelector((state) => state.TaskReducer.myTasks);
+  const filteredTasks = myTasks
+    ? myTasks.filter((task) => {
+        const firstPart = task.AWM_Task_ID.split("_")[0];
+        const excludedPrefixes = ["URDT", "UDAI", "UPRA"];
+        const isExcludedTask =
+          excludedPrefixes.includes(firstPart) && task.Status === "Complete";
+
+        return (
+          // (task.Status === "Available" || task.Status === "Complete") &&
+          !isExcludedTask
+        );
+      })
+    : [];
+
   const { accessMatrix } = useSelector((state) => state?.accessMatrixReducer);
   const accessDetails = getUnAuthoirzedAccess(
     userInformation.role,
@@ -31,7 +45,7 @@ const MyTask = () => {
       )}
       {!isAccessEmpty && (
         <TaskList
-          myTasks={myTasks}
+          myTasks={filteredTasks}
           flag="myTasks"
           userInformation={userInformation}
         />
