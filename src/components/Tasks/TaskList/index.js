@@ -13,8 +13,9 @@ import ConfirmationPopUp from "../../Projects/ConfirmationPopUp";
 import TaskDialog from "../../TaskDialog";
 import CPPFA from "../../AWMJobs/CPPFA";
 import { HelpNeededAction } from "../../../store/actions/HelpNeededAction";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getTasks, getAllTasks } from "../../../store/actions/TaskActions";
+import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 
 const TaskList = ({ myTasks, loading, flag, userInformation }) => {
   const dispatch = useDispatch();
@@ -452,98 +453,101 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
   const [showApproveDialogCPPFA, setShowApproveDialogCPPFA] = useState(false);
   const [selectedTaskApproveDialogCPPFA, setSelectedTaskApproveDialogCPPFA] =
     useState([]);
+
   const handleApproveDialogCPPFA = (options) => {
+    console.log("options:", options);
     setShowApproveDialogCPPFA(true);
-    let task = [{ TaskID: options.key, ProjectID: ProjectID }];
+    let task = { TaskID: options.AWM_Task_ID, ProjectID: options.AWM_Project_ID };
     setSelectedTaskApproveDialogCPPFA(task);
   };
-
+  
+  const { TaskDetailsData } = useSelector((state) => state.TaskDetailsReducer);
+  
   return (
-    console.log("selectedProdSrchList", selectedProdSrchList),
-    (
       <>
-        {loading || loader || selectedProdSrchList.length === 0 ? (
-          <Loading />
-        ) : (
-          <>
-            <div className="my-task-project">
-              {showApproveDialogCPPFA && (
-                <CPPFA
-                  onClose={() =>
-                    setShowApproveDialogCPPFA(!showApproveDialogCPPFA)
-                  }
-                  showTaskDialog={showApproveDialogCPPFA}
-                  selectedTaskData={selectedTaskApproveDialogCPPFA}
-                />
-              )}
-              <ProjectListHeader
-                // exportCSVTasks={
-                //   selected ? exportCSVTasks(true) : exportCSVTasks(true)
-                // }
-                onSearchClick={onSearchClick}
-                handleDelegateClick={handleDelegateClick}
-                handleHelpNeededClick={handleHelpNeededClick}
-                handleHelpProvidedClick={handleHelpProvidedClick}
-                actionFlag={!selected || selected.length === 0}
-                header={flag === "myTasks" ? "My Tasks" : "All Tasks"}
-                selected={selected}
-                allData={selectedProdSrchList}
-                isFilterEnabled={isFilterEnabled}
-                clearFilter={clearFilter}
-                headers={headerColumns}
-              />
-              <ConfirmationPopUp
-                onSort={onSort}
-                selectedColumnName={selectedColumnName}
-                sortData={sortData}
-                op={op}
-                addFrozenColumns={addFrozenColumns}
-                ProjectFrozen={ProjectFrozen}
-                setProjectFrozen={setProjectFrozen}
-                setFrozenColumn={setFrozenColumn}
-                frozenCoulmns={frozenCoulmns}
-                clearColumnWiseFilter={clearColumnWiseFilter}
-                saveSettings={saveSettings}
-                selectedFields={selectedFields}
-                onGlobalFilterChange={onGlobalFilterChange}
-                projectData={selectedProdSrchList}
-                setFilters={setFilters}
-              />
-              <DataTable
-                resizableColumns
-                value={filters?.length ? filters : selectedProdSrchList}
-                reorderableColumns
-                scrollable
-                selection={selected}
-                onSelectionChange={(e) => setSelected(e.value)}
-                responsiveLayout="scroll"
-                className="margin-top-24"
-                ref={dt}
-                filterDisplay={isSearch && "row"}
-                loading={loading}
-                // tableStyle={{ minWidth: "50rem" }}
-                // tableStyle={{ width: "max-content" }}
-                autoLayout={true}
-                filters={searchHeader}
-              >
-                {dynamicColumns()}
-              </DataTable>
-            </div>
-            {showTaskDialog && (
-              <TaskDialog
-                onClose={() => setShowTaskDialog(!showTaskDialog)}
-                showTaskDialog={showTaskDialog}
-                selectedTaskData={selectedTask}
-                flag={setflag}
-                path={flag}
-                userInformation={userInformation}
-                setSelected={setSelected}
-              />
-            )}
-          </>
+      {loading || loader || selectedProdSrchList.length === 0  ? (
+      <Loading />
+    ): (
+      <>
+        <div className="my-task-project">
+          {showApproveDialogCPPFA && (
+            <CPPFA
+              onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
+              showTaskDialog={showApproveDialogCPPFA}
+              selectedTaskData={selectedTaskApproveDialogCPPFA}
+              pegadata={selectedProdSrchList}
+              getProjectPlanApi={getTaskDetails}
+              status={true}
+              TaskDetailsData={TaskDetailsData}
+            />
+          )}
+          <ProjectListHeader
+            // exportCSVTasks={
+            //   selected ? exportCSVTasks(true) : exportCSVTasks(true)
+            // }
+            onSearchClick={onSearchClick}
+            handleDelegateClick={handleDelegateClick}
+            handleHelpNeededClick={handleHelpNeededClick}
+            handleHelpProvidedClick={handleHelpProvidedClick}
+            actionFlag={!selected || selected.length === 0}
+            header={flag === "myTasks" ? "My Tasks" : "All Tasks"}
+            selected={selected}
+            allData={selectedProdSrchList}
+            isFilterEnabled={isFilterEnabled}
+            clearFilter={clearFilter}
+            headers={headerColumns}
+          />
+          <ConfirmationPopUp
+            onSort={onSort}
+            selectedColumnName={selectedColumnName}
+            sortData={sortData}
+            op={op}
+            addFrozenColumns={addFrozenColumns}
+            ProjectFrozen={ProjectFrozen}
+            setProjectFrozen={setProjectFrozen}
+            setFrozenColumn={setFrozenColumn}
+            frozenCoulmns={frozenCoulmns}
+            clearColumnWiseFilter={clearColumnWiseFilter}
+            saveSettings={saveSettings}
+            selectedFields={selectedFields}
+            onGlobalFilterChange={onGlobalFilterChange}
+            projectData={selectedProdSrchList}
+            setFilters={setFilters}
+          />
+          <DataTable
+            resizableColumns
+            value={filters?.length ? filters : selectedProdSrchList}
+            reorderableColumns
+            scrollable
+            selection={selected}
+            onSelectionChange={(e) => setSelected(e.value)}
+            responsiveLayout="scroll"
+            className="margin-top-24"
+            ref={dt}
+            filterDisplay={isSearch && "row"}
+            loading={loading}
+            // tableStyle={{ minWidth: "50rem" }}
+            // tableStyle={{ width: "max-content" }}
+            autoLayout={true}
+            filters={searchHeader}
+          >
+            {dynamicColumns()}
+          </DataTable>
+        </div>
+        {showTaskDialog && (
+          <TaskDialog
+            onClose={() => setShowTaskDialog(!showTaskDialog)}
+            showTaskDialog={showTaskDialog}
+            selectedTaskData={selectedTask}
+            flag={setflag}
+            path={flag}
+            userInformation={userInformation}
+            setSelected={setSelected}
+          />
         )}
       </>
-    )
+    )}
+    </>
   );
 };
 
