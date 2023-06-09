@@ -11,7 +11,7 @@ export const saveDefineProductionReadyArt = async (
 ) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${DEVURL}/v1/UpdateProductionReadyArtJob`;
+  let apiURL = `${DEVURL}/updateProductionReadyArtJob`;
   console.log("api url", apiURL);
   const DefineProductionReadyArt = await axiosInstance({
     url: apiURL,
@@ -30,7 +30,7 @@ export const submitDefineProductionReadyArt = async (formData, id, headers = {})
   let apiURL;
   //https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v2/assignments/ASSIGN-WORKLIST PG-AAS-WORK D-806!PRODUCTIONREADYART_FLOW/actions/DefineProductionReadyArt
   
-  apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!PRODUCTIONREADYART_FLOW/actions/DefineProductionReadyArt`;
+  apiURL = `${DEVURL}/definePRA/${id}`;
 
   const submitDefineProductionReadyArtData = await axiosInstance({
     url: apiURL,
