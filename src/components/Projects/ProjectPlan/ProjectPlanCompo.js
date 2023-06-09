@@ -66,16 +66,12 @@ function ProjectPlanCompo(props) {
     let projectData = myProject.find(
       (project) => project.Project_ID === ProjectID
     );
-    console.log("projectData", projectData);
-    if (
-      projectData?.Project_State === "Active" ||
-      !isAccessEmpty ||
-      projectPlan.length === 0
-    ) {
+    const firstTime = projectPlanDesign.some((item) => item.Assignee !== "" || item.Role !== "");
+    if ((!firstTime && projectData?.Project_State === "Draft") || projectData?.Project_State === "Active" || !isAccessEmpty || projectPlan.length === 0) {
       setActiveFlag(true);
     }
-  }, [myProject, projectPlan, isAccessEmpty]);
-
+  }, [myProject, projectPlan, isAccessEmpty, projectPlanDesign]);
+  
   const getProjectPlanApi = async () => {
     setLoader(true);
     let restructuredData = [];
@@ -317,12 +313,12 @@ function ProjectPlanCompo(props) {
     await activateProjectPlan(selectedProject.Project_ID);
     await dispatch(getMyProject(userInformation));
     setLoader(false);
-    // await toast.current.show({
-    //   severity: "success",
-    //   summary: "Success",
-    //   detail: "Project activated successfully!",
-    //   life: 3000,
-    // });
+    await toast.current.show({
+      severity: "success",
+      summary: "Success",
+      detail: "Project activated successfully!",
+      life: 5000,
+    });
   };
 
   return (

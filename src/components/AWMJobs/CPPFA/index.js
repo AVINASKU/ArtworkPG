@@ -5,15 +5,13 @@ import { Dialog } from "primereact/dialog";
 import { Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
-import {
-  getTaskDetails,
-  submitCPPFA,
-} from "../../../store/actions/taskDetailAction";
+import { getTaskDetails, submitCPPFA } from "../../../store/actions/taskDetailAction";
 import { changeDateFormat, CheckReadOnlyAccess } from "../../../utils";
 import { FileUpload } from "primereact/fileupload";
 import { NavLink, useLocation } from "react-router-dom";
 import upload1 from "../../../assets/images/upload1.svg";
 import "./index.scss";
+import { getProjectPlan } from "../../../apis/projectPlanApi";
 
 const CPPFA = ({
   showTaskDialog,
@@ -21,16 +19,25 @@ const CPPFA = ({
   onClose,
   pegadata,
   getProjectPlanApi,
+  status,
+  TaskDetailsData,
 }) => {
+  const location = useLocation();
+  const locationPath = location?.pathname;
+  const url = locationPath?.split("/");
+
   const [visible, setVisible] = useState(showTaskDialog);
   const [designIntent, setDesignIntent] = useState({});
   const [version, setVersion] = useState("V0");
-  // const isAccessEmpty = CheckReadOnlyAccess();
-  const isAccessEmpty = false;
+  // const isAccessEmpty = url[1] === "AllTasks" ? true : CheckReadOnlyAccess();
+  let isAccessEmpty = false;
+  if (url[1] === "AllTasks") {
+    isAccessEmpty = true;
+  } else if (url[1] === "MyTasks" || url[2] === "projectPlan") {
+    isAccessEmpty = false;
+  }
+  // const isAccessEmpty = false;
   const dispatch = useDispatch();
-  const { TaskDetailsData, loading } = useSelector(
-    (state) => state.TaskDetailsReducer
-  );
 
   const { TaskID, ProjectID } = selectedTaskData;
   const [cppfaDialogFlag, setCppfaDialogFlag] = useState(false);
@@ -39,9 +46,9 @@ const CPPFA = ({
     setVisible(showTaskDialog);
   }, [showTaskDialog]);
 
-  useEffect(() => {
-    dispatch(getTaskDetails(TaskID, ProjectID));
-  }, [dispatch, TaskID, ProjectID]);
+  // useEffect(() => {
+  //   dispatch(getProjectPlanApi(TaskID, ProjectID));
+  // }, [dispatch, TaskID, ProjectID]);
 
   useEffect(() => {
     if (TaskDetailsData) {
@@ -68,10 +75,6 @@ const CPPFA = ({
     setVisible(false);
     onClose();
   };
-  const location = useLocation();
-  const locationPath = location?.pathname;
-  const url = locationPath?.split("/");
-
   const [riskLevel, setRiskLevel] = useState("Low");
   const [highRiskYesOrNo, setHighRiskYesOrNo] = useState("");
   const [yesOrNo, setYesOrNo] = useState("");
@@ -116,10 +119,10 @@ const CPPFA = ({
       caseTypeID: "PG-AAS-Work-ConfirmPreliminaryPrintFeasibilityAssessment",
       content: {
         RiskLevel: riskLevel,
-        NPFNeeded: cppfaDialogFlag ? false : yesOrNo === "yes",
+        NPFNeeded: cppfaDialogFlag ? String(false) : String(yesOrNo === "yes"),
         AWMTaskID: selectedTaskData.TaskID,
         AWMProjectID: selectedTaskData.ProjectID,
-        Size: formattedValue,
+        Size: Math.round(formattedValue),
         Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
         Filename: fileName,
       },
@@ -135,7 +138,13 @@ const CPPFA = ({
         headers
       );
       hideDialog();
-      getProjectPlanApi();
+      // dispatch(getProjectPlanApi(TaskID, ProjectID));
+      if (url[2] === "projectPlan") {
+        await getProjectPlan(ProjectID);
+      } else if (url[1] === "MyTasks") {
+        console.log("url[1]:", url[1]);
+        await getTaskDetails(TaskID, ProjectID);
+      }
     }
   };
 
@@ -323,7 +332,11 @@ const CPPFA = ({
         <Button
           label="Confirm PPFA"
           onClick={handleSubmit}
-          disabled={isAccessEmpty}
+          disabled={
+            isAccessEmpty ||
+            riskLevel !== "Low" ? yesOrNo === "": false ||
+            designIntent.Task_Status === "Complete"
+          }
         />
       </div>
     </Dialog>

@@ -20,6 +20,8 @@ import TaskDialog from "../../TaskDialog";
 import ApproveDesignDialog from "./ApproveDesignDialog";
 import { useLocation, useParams } from "react-router-dom";
 import CPPFA from "./../../AWMJobs/CPPFA";
+import { getTaskDetails } from "../../../store/actions/taskDetailAction";
+import { useSelector } from "react-redux";
 
 const ProjectPlanList = ({
   projectPlan,
@@ -30,7 +32,6 @@ const ProjectPlanList = ({
   setUpdatedProjectPlanDesignData,
   setActiveSave,
   isAccessEmpty,
-  getProjectPlanApi,
   activeSave,
 }) => {
   const [ProjectFrozen, setProjectFrozen] = useState(false);
@@ -574,6 +575,8 @@ const ProjectPlanList = ({
     setProjectColumnNames(projectColumnName);
   };
 
+  const { TaskDetailsData } = useSelector((state) => state.TaskDetailsReducer);
+
   return (
     <div className="myProjectAnddAllProjectList">
       {showApproveDialog && (
@@ -589,7 +592,9 @@ const ProjectPlanList = ({
           showTaskDialog={showApproveDialogCPPFA}
           selectedTaskData={selectedTaskApproveDialogCPPFA}
           pegadata={pegadata1}
-          getProjectPlanApi={getProjectPlanApi}
+          getProjectPlanApi={getTaskDetails}
+          status={false}
+          TaskDetailsData={TaskDetailsData}
         />
       )}
       <Suspense fallback={<div>Loading...</div>}>

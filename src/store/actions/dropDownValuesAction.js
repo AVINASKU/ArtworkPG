@@ -1,5 +1,5 @@
 import Api from "../../apis";
-import { GETURL, DEVURL, SITURL, PRODURL } from "../../apis/envUrl";
+import { DEVURL, SITURL, PRODURL } from "../../apis/envUrl";
 //pass the taskID and projectId from the my tasks
 
 export const getDropDownValues = () => {
@@ -14,7 +14,7 @@ export const getDropDownValues = () => {
           "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
         },
       });
-      let apiURL = `${GETURL}/fetchdropdownvalues`;
+      let apiURL = `${DEVURL}/fetchdropdownvalues`;
       const DropDownValuesData = await axiosInstance({
         url: apiURL,
         method: "GET",
