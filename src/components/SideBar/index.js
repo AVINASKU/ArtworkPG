@@ -21,6 +21,7 @@ import { getAccessDetails } from "../../utils";
 import { updateMode } from "../../store/actions/ProjectSetupActions";
 import { updateUser } from "../../apis/userApi";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
+import { useCookies } from "react-cookie";
 
 const SideBar = () => {
   const location = useLocation();
@@ -34,6 +35,8 @@ const SideBar = () => {
   );
   const [expandedItems, setExpandedItems] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState(null);
+  const [cookies, setCookie, removeCookie] = useCookies();
+
   useEffect(() => {
     dispatch(fetchAccessMatrix());
   }, [dispatch]);
@@ -74,7 +77,15 @@ const SideBar = () => {
     sessionStorage.removeItem("session");
     sessionStorage.removeItem("sideBarOpen");
     updateUser("", "");
-    navigate("/");
+    removeCookie("tokenNumber");
+    removeCookie("initials");
+    removeCookie("userName");
+    removeCookie("userInfo");
+    removeCookie("LastName");
+    removeCookie("region");
+    removeCookie("initials");
+    removeCookie("FirstName");
+    window.location.href = "https://awflowdev.pg.com";
   };
   // Replace with the actual location path
   const accessDetails = getAccessDetails(userInformation.role, accessMatrix);
