@@ -205,8 +205,10 @@ sup {
 }
 
 .tabular-add-project {
-  padding: 15px;
+  padding: 0 15px 15px 15px;
   overflow-y: auto;
+  height: 66vh !important;
+  // height: 57vh !important;
   // width: 90vw;
   .col {
     max-width: 230px;
