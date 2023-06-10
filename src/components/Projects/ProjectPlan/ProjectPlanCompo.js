@@ -401,7 +401,6 @@ function ProjectPlanCompo(props) {
             </div>
           </>
         )}
-        <br />
       </>
     )
   );
