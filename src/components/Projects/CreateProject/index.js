@@ -77,6 +77,7 @@ function AddProject(props) {
   const [bu, setBu] = useState("");
   const [subCategories, setSubCategories] = useState([]);
   const [brand, setBrand] = useState([]);
+  const [tierList, setTierList] = useState([]);
   const [tier, setTier] = useState("");
   const [ps, setPs] = useState("");
   const [pm, setPm] = useState(userInformation.username);
@@ -180,6 +181,9 @@ function AddProject(props) {
       obj.Artwork_Picklist.forEach((pickList)=> {
         if(bu === obj.code && pickList.Picklist_Name === "SAPCategory"){
           setSubCategoriesOptions(pickList.Labels);
+        }
+        if(obj.code === "BBY" && pickList.Picklist_Name === "TIER"){
+          setTierList(pickList.Labels)
         }
       })
       });
@@ -774,7 +778,7 @@ function AddProject(props) {
         Estimated_AW_Printer: printerDate,
         Estimated_AW_Readiness: readinessDate,
         IL: iL,
-        tier: tier,
+        tier: tier?.Label_Name,
         InitiativeGroupName: groupName,
         PM: pm,
         ProductionStrategy: ps,
@@ -964,7 +968,12 @@ function AddProject(props) {
     return outputDate;
   };
   const handleTierChange = (e) => {
-    setTier(e.target.value);
+    const selectedTier = tierList.find(
+      (r) => r.Label_Name === e.target.value
+    );
+    console.log("selectedTier", e.target.value)
+    console.log("tierList", tierList);
+    setTier(selectedTier);
   };
   const handlePsChange = (e) => {
     setPs(e.target.value);
@@ -1530,7 +1539,8 @@ function AddProject(props) {
             <Row>
               <Form.Group className="mb-3" controlId="bve.SelectMultiple">
                 <Form.Label>
-                  {(region?.code === "EUF" || region?.code === "EUE") &&
+                  {/* new  */}
+                  {(region?.Region_Name === "EUROPE" || region?.code === "EUE") &&
                     bu === "BBY" &&
                     "Tier"}
                   {(region?.code === "EUF" || region?.code === "EUE") &&
@@ -1538,17 +1548,18 @@ function AddProject(props) {
                     "Production Strategy"}
                 </Form.Label>
                 <div>
-                  {(region?.code === "EUF" || region?.code === "EUE") &&
+                  {(region?.Region_Name === "EUROPE" || region?.code === "EUE") &&
                     bu === "BBY" && (
                       <Form.Select
                         {...register("Teir", { required: false })}
+                        value={tier?.Label_Name || ""}
                         placeholder="Select Teir"
                         onChange={handleTierChange}
                       >
                         <option value="">Select Tier</option>
-                        {Tier.map((tier) => (
-                          <option key={tier.code} value={tier.code}>
-                            {tier.name}
+                        {tierList.map((tier) => (
+                          <option key={tier.code} value={tier.Label_Name}>
+                            {tier.Label_Name}
                           </option>
                         ))}
                       </Form.Select>
@@ -1595,7 +1606,7 @@ function AddProject(props) {
             // disabled={mode !== "design"}
             disabled={!submitButtonState}
             type="submit"
-            disabled={!formValid}
+            // disabled={!formValid}
           >
             Submit
           </Button>

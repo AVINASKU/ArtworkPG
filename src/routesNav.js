@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
-// import Home from "./home.js";
+import Home from "./home.js";
 import { Outlet } from "react-router-dom";
 import AllProjects from "./components/Projects/AllProjects/index";
 import MyProjects from "./components/Projects/MyProjects/index.js";
 import ProjectCreation from "./projectCreation.js";
-import Login from "./login.js";
 import DDI from "./components/AWMJobs/DDI/index.js";
 import UADI from "./components/AWMJobs/UADI";
 import AllTasksPage from "./AllTaksPage.js";
@@ -29,12 +28,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchAccessMatrix } from "./store/actions/RoleBasedActions";
 import { useLocation } from "react-router-dom";
 
-const RoutesNav = () => {
+const RoutesNav = (props) => {
   return (
     <Routes>
       <Route path="/" element={<Outlet />}>
-        <Route index element={<Login />} />
-        {/* <Route index element={<Home />} /> */}
+        {<Route index element={<Home {...props} />} />}
         <Route path="/myProjects" element={<MyProjects />} />
         <Route path="/allProjects" element={<AllProjects />} />
         <Route path="/myTasks" element={<MyTasksPage />} />

@@ -95,7 +95,7 @@ export const accessMatrix = [
       {
         name: "myProjects",
         path: "/myProjects",
-        access: [],
+        access: ["Read", "Write", "Edit", "Delete"],
       },
       {
         name: "allProjects",
@@ -105,17 +105,17 @@ export const accessMatrix = [
       {
         name: "MyTasks",
         path: "/MyTasks",
-        access: [],
+        access: ["Read", "Write", "Edit", "Delete"],
       },
       {
         name: "AllTasks",
         path: "/AllTasks",
-        access: [],
+        access: ["Read", "Write", "Edit", "Delete"],
       },
       {
         name: "projectPlan",
         path: "/projectPlan",
-        access: ["Read"],
+        access: ["Read", "Write", "Edit", "Delete"],
       },
     ],
   },

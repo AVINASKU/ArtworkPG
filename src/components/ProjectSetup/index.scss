@@ -170,6 +170,36 @@ $width: 100%;
   border-radius: 24px;
   margin-top: 5.5px;
   margin-left: 2px;
+  &.project-setup-wrapper {
+    height: 100%;
+    position: relative;
+    .tabular-add-project{
+      overflow: hidden;
+      form{
+        height: 100%;
+        overflow: hidden auto;
+        padding-bottom: 90px;
+        .form-buttons{
+          position: absolute;
+          bottom: 5px;
+          background: white;
+          text-align: right;
+          width: 100%;
+          left: 0;
+          .btn{
+            margin-bottom: 10px
+          }
+        }
+      }
+    }
+  }
+  &.project-plan-wrapper{
+    .tab-content{
+      height: auto;
+      overflow: initial;
+    }
+   
+  }
 }
 
 .breadCrumbParent {
@@ -235,6 +265,8 @@ $width: 100%;
 
 // TabsComponent Styles Start
 .tab-content {
+  height: calc(100% - 41px);
+  overflow: hidden;
   .nav-link {
     font-style: normal;
     font-weight: 500;
