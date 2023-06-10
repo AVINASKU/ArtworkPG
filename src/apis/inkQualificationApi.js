@@ -12,7 +12,7 @@ export const saveInkQualification = async (formData) => {
   };
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${DEVURL}/V1/UpdateIQJob`;
+  let apiURL = `${DEVURL}/updateIQJob`;
   console.log("api url", apiURL);
   const inkQualification = await axiosInstance({
     url: apiURL,
@@ -28,7 +28,7 @@ export const saveInkQualification = async (formData) => {
 export const submitInkQualification = async (formData, id, headers = {}) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!DEFINEINKQUALIFICATION_FLOW/actions/DefineInkQualification`;
+  let apiURL = `${DEVURL}/defineInkQualification/${id}`;
   console.log("api url", apiURL);
   const inkQualification = await axiosInstance({
     url: apiURL,
@@ -48,7 +48,7 @@ export const submitConfirmInkQualification = async (
 ) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!CONFIRMINKQUALIFICATION_FLOW/actions/ConfirmInkQualification`;
+  let apiURL = `${DEVURL}/confirmInkQualification/${id}`;
   console.log("api url", apiURL);
   const inkQualification = await axiosInstance({
     url: apiURL,
