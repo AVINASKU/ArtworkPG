@@ -78,7 +78,8 @@ function AddProject(props) {
   const [subCategories, setSubCategories] = useState([]);
   const [brand, setBrand] = useState([]);
   const [tierList, setTierList] = useState([]);
-  const [tier, setTier] = useState("");
+  const [productionStrategyList, setProductionStrategyList] = useState([]);
+  const [Tier, setTier] = useState("");
   const [ps, setPs] = useState("");
   const [pm, setPm] = useState(userInformation.username);
   const [iL, setIl] = useState("");
@@ -185,6 +186,9 @@ function AddProject(props) {
         if(obj.code === "BBY" && pickList.Picklist_Name === "TIER"){
           setTierList(pickList.Labels)
         }
+        if(obj.code === "HOM" && pickList.Picklist_Name === "PRODSTRAT"){
+          setProductionStrategyList(pickList.Labels)
+        }
       })
       });
   }, [bu, bUs]);
@@ -203,10 +207,31 @@ function AddProject(props) {
   useEffect(() => {
     setScale(
       (selectedProjectDetails &&
-        scales?.find((r) => r.Scale_Name === selectedProjectDetails.Project_Scale)) ||
+        scales?.find((r) => r.Scale_Name === selectedProjectDetails?.Project_Scale)) ||
         {}
     );
   },[scales]);
+
+  useEffect(() => {
+    setPs(
+      (selectedProjectDetails &&
+        productionStrategyList.find(
+          (ps) => ps.Label_Name === selectedProjectDetails?.Production_Strategy
+        )) ||
+        {}
+    );
+  },[productionStrategyList]);
+
+  useEffect(() => {
+    setTier(
+      (selectedProjectDetails &&
+        tierList.find(
+          (r) => r.Label_Name === selectedProjectDetails?.Tier
+        )) ||
+        {}
+    );
+  },[tierList]);
+  
 
   useEffect(() => {
     if (mode === "edit" || mode === "design") {
@@ -363,8 +388,6 @@ function AddProject(props) {
         },
       });
       setPOA(selectedProjectDetails?.Estimated_No_Of_POAs);
-      setPs(selectedProjectDetails?.Production_Strategy);
-      setTier(selectedProjectDetails?.Tier);
     } else {
       setProjectName("");
       setGroupName("");
@@ -778,10 +801,10 @@ function AddProject(props) {
         Estimated_AW_Printer: printerDate,
         Estimated_AW_Readiness: readinessDate,
         IL: iL,
-        tier: tier?.Label_Name,
+        Tier: Tier?.Label_Name,
         InitiativeGroupName: groupName,
         PM: pm,
-        ProductionStrategy: ps,
+        ProductionStrategy: ps?.Label_Name,
         // Project_Brands: "V14", //
         // Project_Categories: "AIR", //
         Project_Scale: scale?.Scale_Name,
@@ -852,7 +875,7 @@ function AddProject(props) {
       Project_region: region?.Region_Name,
       Cluster: cluster,
       Project_Scale: scale,
-      Tier: tier,
+      Tier: Tier?.Label_Name,
       Project_State: selectedProjectDetails.Project_State,
       Project_Type: projectType,
       IL: iL,
@@ -976,7 +999,12 @@ function AddProject(props) {
     setTier(selectedTier);
   };
   const handlePsChange = (e) => {
-    setPs(e.target.value);
+    const selectedPs = productionStrategyList.find(
+      (r) => r.Label_Name === e.target.value
+    );
+    console.log("selectedPs", e.target.value)
+    console.log("setProductionStrategyList", setProductionStrategyList);
+    setPs(selectedPs);
   };
   const handlePM = (e) => {
     e.target.value.length === 0 ? setPMAlert(true) : setPMAlert(false);
@@ -1543,8 +1571,8 @@ function AddProject(props) {
                   {(region?.Region_Name === "EUROPE" || region?.code === "EUE") &&
                     bu === "BBY" &&
                     "Tier"}
-                  {(region?.code === "EUF" || region?.code === "EUE") &&
-                    bu === "HC" &&
+                  {(region?.Region_Name === "EUROPE" || region?.code === "EUE") &&
+                    bu === "HOM" &&
                     "Production Strategy"}
                 </Form.Label>
                 <div>
@@ -1552,7 +1580,7 @@ function AddProject(props) {
                     bu === "BBY" && (
                       <Form.Select
                         {...register("Teir", { required: false })}
-                        value={tier?.Label_Name || ""}
+                        value={Tier?.Label_Name || ""}
                         placeholder="Select Teir"
                         onChange={handleTierChange}
                       >
@@ -1564,17 +1592,18 @@ function AddProject(props) {
                         ))}
                       </Form.Select>
                     )}
-                  {(region?.code === "EUF" || region?.code === "EUE") &&
-                    bu === "HC" && (
+                  {(region?.Region_Name === "EUROPE" || region?.code === "EUE") &&
+                    bu === "HOM" && (
                       <Form.Select
                         {...register("Production Strtegy", { required: false })}
+                        value={ps?.Label_Name || ""}
                         placeholder="Select PS"
                         onChange={handlePsChange}
                       >
                         <option value="">Select Production Strategy</option>
-                        {ProductionStrategy.map((ps) => (
-                          <option key={ps.code} value={ps.code}>
-                            {ps.name}
+                        {productionStrategyList.map((ps) => (
+                          <option key={ps.code} value={ps.Label_Name}>
+                            {ps.Label_Name}
                           </option>
                         ))}
                       </Form.Select>

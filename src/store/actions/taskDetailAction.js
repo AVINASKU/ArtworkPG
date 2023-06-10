@@ -55,7 +55,7 @@ export const submitUploadApproveDesignIntent = async (
 export const submitCPPFA = async (formData, id, headers = {}) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!PRELIMINARYPRINTFEASIBILITYASSESSMENT_FLOW/actions/PreliminaryPrintFeasibilityAssessment`;
+  let apiURL = `${DEVURL}/preliminaryPrintFeasibilityAssessment/${id}`;
 
   const submitCPPFAData = await axiosInstance({
     url: apiURL,
