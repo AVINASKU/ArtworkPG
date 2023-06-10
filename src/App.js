@@ -17,12 +17,12 @@ function App() {
   return (
     <div>
       <Provider store={store}>
-        <React.StrictMode>
+        {/* <React.StrictMode> */}
           <BrowserRouter>
-            <RoutesNav />
+            <RoutesNav/>
             {/* <Home /> */}
           </BrowserRouter>
-        </React.StrictMode>
+        {/* </React.StrictMode> */}
       </Provider>
     </div>
   );
