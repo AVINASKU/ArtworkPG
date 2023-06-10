@@ -11,7 +11,7 @@ export const saveDefineRegionalDesignTemplate = async (
 ) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${DEVURL}/v1/UpdateDesignTemplateJob`;
+  let apiURL = `${DEVURL}/updateDesignTemplateJob`;
   const defineRegionalDesignTemplate = await axiosInstance({
     url: apiURL,
     method: "POST",
@@ -27,9 +27,8 @@ export const submitDefineRegionalDesignTemplate = async (formData, id, headers =
   const api = new Api();
   const axiosInstance = await api.init({ headers });
   let apiURL;
-  //https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v2/assignments/ASSIGN-WORKLIST PG-AAS-WORK D-852!DEFINEREGIONALDESIGNTEMPLATE_FLOW/actions/DesignTemplate
   
-  apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!DEFINEREGIONALDESIGNTEMPLATE_FLOW/actions/DesignTemplate`;
+  apiURL = `${DEVURL}/designTemplate/${id}`;
 
   const submitDefineRegionalDesignTemplateData = await axiosInstance({
     url: apiURL,

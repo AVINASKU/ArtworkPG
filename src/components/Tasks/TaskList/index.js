@@ -465,7 +465,7 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
   
   return (
       <>
-      {loading || loader || selectedProdSrchList.length === 0  ? (
+      {loading || loader  ? (
       <Loading />
     ): (
       <>
