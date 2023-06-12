@@ -17,6 +17,7 @@ const AddNewDesignContent = ({
   checkBU,
   setSubmitActive,
   checkReadWriteAccess,
+  taskName
 }) => {
   const { Agency_Reference, Additional_Info, event, Select, Cluster } = item;
 
@@ -58,7 +59,7 @@ const AddNewDesignContent = ({
           }}
           className="font-color"
         >
-          {!di_name ? `Design Intent ${index + 1}` : di_name}
+          {!di_name ? `${taskName} ${index + 1}` : di_name}
         </div>
         <div>
           <img

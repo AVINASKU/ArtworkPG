@@ -132,7 +132,7 @@ const UploadDesignIntentProofscope = ({
   };
 
   return (
-    <div style={{ height: "300px" }}>
+    <div>
       <div className="design-intent-header">{DesignHeader(di_name)}</div>
       <div className="approve-design-intent">
         {upload && (

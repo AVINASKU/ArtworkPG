@@ -243,6 +243,7 @@ function DDI() {
         headerName={headerName}
         label="Define Design Intent"
         checkReadWriteAccess={checkReadWriteAccess}
+        taskName="Design Intent"
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
@@ -266,6 +267,7 @@ function DDI() {
                   handleDelete={handleDelete}
                   roleName={roleName}
                   checkReadWriteAccess={checkReadWriteAccess}
+                  taskName="Design Intent"
                 />
               );
             }

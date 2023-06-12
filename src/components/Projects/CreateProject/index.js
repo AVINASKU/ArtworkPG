@@ -84,7 +84,7 @@ function AddProject(props) {
   const [productionStrategyList, setProductionStrategyList] = useState([]);
   const [Tier, setTier] = useState("");
   const [ps, setPs] = useState("");
-  const [pm, setPm] = useState(userInformation.username);
+  const [pm, setPm] = useState("");
   const [iL, setIl] = useState("");
   const [comments, setComments] = useState("");
   const [projectType, setProjectType] = useState("");
@@ -118,6 +118,13 @@ function AddProject(props) {
     (state) => state.DropDownValuesReducer
   );
 
+  useEffect(() => {
+    RoleUser.users.map((role) => {
+      if (role.username === userInformation.username) {
+        setPm(role.username);
+      }
+    });
+  });
   // useEffect(() => {
   //   if (
   //     projectName &&
@@ -415,7 +422,7 @@ function AddProject(props) {
       setPrinterDate("");
       setReadinessDate("");
       setIl("");
-      setPm(userInformation.username);
+      setPm(pm);
       setComments("");
       setProjectType("");
 
@@ -869,7 +876,7 @@ function AddProject(props) {
     console.log("Categories: ", selectedCategoriesOptions);
     return selectedCategoriesOptions;
   };
-  const collectSubmit2Data = (status, mode) => {
+  const collectForm2Data = (action, mode) => {
     const ArtworkSMO = getArtworkSMO();
     const ArtworkCategory = getArtworkCategory();
     const ArtworkBrand = getArtworkBrand();
@@ -877,7 +884,8 @@ function AddProject(props) {
 
     const formData = {
       AWM_Project_ID: selectedProjectDetails.Project_ID,
-      Status: status,
+      // Status: status,
+      Action: action,
       Region: region?.Region_Name,
       Project_Name: projectName,
       Initiative_Group_Name: groupName,
@@ -955,7 +963,7 @@ function AddProject(props) {
       (mode === "edit" || mode === "design") &&
       JSON.parse(sessionStorage.getItem("ProjectSubmitted"))
     ) {
-      const formData = collectSubmit2Data("Active", mode);
+      const formData = collectForm2Data("", mode);
       setFormData(formData);
       let method = "POST";
       const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
@@ -968,9 +976,10 @@ function AddProject(props) {
   const onSaveAsDraft = async () => {
     setSpinnerText("Saving");
     setLoader(true);
-    const draftFormData = collectFormData("Draft", mode);
-    localStorage.setItem("formDraft", JSON.stringify(draftFormData));
+
     if (mode === "create") {
+      let draftFormData = collectFormData("Draft", mode);
+      localStorage.setItem("formDraft", JSON.stringify(draftFormData));
       await createNewProject(draftFormData);
       // if (response?.data?.ID) {
       //   showStatus(
@@ -985,9 +994,11 @@ function AddProject(props) {
       //   // alert("Save As Draft failed");
       // }
     } else if (mode === "edit" || mode === "design") {
-      const method = "PUT";
+      let draftFormData = collectForm2Data("saveasdraft", mode);
+      localStorage.setItem("formDraft", JSON.stringify(draftFormData));
+      const method = "POST";
       const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
-      await editProject(draftFormData, id, method, headers);
+      await editProject(draftFormData, awmProjectId, method, headers);
       // if (response?.data?.ID) {
       //   showStatus(
       //     "success",
@@ -1546,8 +1557,8 @@ function AddProject(props) {
                     >
                       <option value="">Select PM</option>
                       {RoleUser.users.map((r) => (
-                        <option key={r.userid} value={r.userid}>
-                          {r.userid}
+                        <option key={r.username} value={r.username}>
+                          {r.username}
                         </option>
                       ))}
                     </Form.Select>
@@ -1660,6 +1671,10 @@ function AddProject(props) {
               className="button-layout"
               variant="secondary"
               onClick={onSaveAsDraft}
+              disabled={
+                mode !== "create" &&
+                JSON.parse(sessionStorage.getItem("ProjectSubmitted"))
+              }
             >
               Save as draft
             </Button>
