@@ -630,7 +630,7 @@ const AllProjectList = (props) => {
               isFilterEnabled={isFilterEnabled}
               isResetEnabled={isResetEnabled}
               allData={pegadata}
-              headers={updatedAllColumnNames}
+              headers={allColumnNames}
             />
           )}
 
