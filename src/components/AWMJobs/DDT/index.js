@@ -69,25 +69,9 @@ function DDT() {
     }
   }, [TaskDetailsData]);
 
-  useEffect(() => {
-    checkFormValidity();
-  }, [data]);
-
   const handleCancel = () => {
     return navigate(`/MyTasks`);
   };
-
-  const checkFormValidity = () => {
-    const validTasks = designIntent?.filter((task) => {
-      return task?.Agency_Reference && task?.Cluster && task?.Select;
-    });
-    if (validTasks.length > 0) {
-      setEnableSubmit(true);
-    } else {
-      setEnableSubmit(false);
-    }
-  };
-
   const handleDelete = (index) => {
     const sub = designIntent.map((item, i) => {
       if (i === index) {
@@ -116,8 +100,28 @@ function DDT() {
     data[fieldName] = value;
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
+    let values = false;
+    const hasValues = designIntent.every(
+      (item) => {        
+        setEnableSubmit(true);
+       if(item.Select){
+          values = item.Agency_Reference !== "" && item.Cluster !== "";
+      } 
+      else{
+        console.log("designIntent else", designIntent);
+        let data = designIntent.filter(item => item.Select && item.Agency_Reference !== "" && item.Cluster !== "");
+        console.log("value else", data);
+        if (data.length !== 0) {
+          values = true;
+        } else {
+          values = false;
+        }
+      }
+        return values
+      }
+    );
+    setEnableSubmit(!hasValues);  
     setSubmittedDI(submittedDI);
-    checkFormValidity();
   };
 
   const onSelectAll = (checked) => {
@@ -281,7 +285,7 @@ function DDT() {
         onSubmit={onSubmit}
         checkReadWriteAccess={checkReadWriteAccess}
         bottomFixed={true}
-        formValid={!enableSubmit}
+        formValid={enableSubmit}
       />
     </PageLayout>
   );
