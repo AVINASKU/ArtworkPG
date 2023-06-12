@@ -66,17 +66,24 @@ function ProjectPlanCompo(props) {
     let projectData = myProject.find(
       (project) => project.Project_ID === ProjectID
     );
-    const firstTime = projectPlanDesign.some((item) => item.Assignee !== "" || item.Role !== "");
-    if ((!firstTime && projectData?.Project_State === "Draft") || projectData?.Project_State === "Active" || !isAccessEmpty || projectPlan.length === 0) {
+    const firstTime = projectPlanDesign.some(
+      (item) => item.Assignee !== "" || item.Role !== ""
+    );
+    if (
+      (!firstTime && projectData?.Project_State === "Draft") ||
+      projectData?.Project_State === "Active" ||
+      !isAccessEmpty ||
+      projectPlan.length === 0
+    ) {
       setActiveFlag(true);
     }
   }, [myProject, projectPlan, isAccessEmpty, projectPlanDesign]);
-  
+
   const getProjectPlanApi = async () => {
     setLoader(true);
     let restructuredData = [];
     const apiData =
-      mode === "design" && selectedProject.Project_ID
+      (mode === "edit" || mode === "design") && selectedProject.Project_ID
         ? await getProjectPlan(selectedProject.Project_ID)
         : [];
     apiData && dispatch(updateProjectPlanDesignAction(apiData));
