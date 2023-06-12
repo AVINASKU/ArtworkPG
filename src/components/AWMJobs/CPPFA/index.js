@@ -125,7 +125,7 @@ const CPPFA = ({
         AWMProjectID: selectedTaskData.ProjectID,
         Size: fileSize === 0 ? "1" : fileSize,
         Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
-        Filename: fileName.split('.').slice(0, -1).join('.')
+        Filename: fileName ? fileName.split('.').slice(0, -1).join('.'): null
       },
     };
 
@@ -340,7 +340,7 @@ const CPPFA = ({
           disabled={
             isAccessEmpty || riskLevel !== "Low"
               ? yesOrNo === ""
-              : false || designIntent.Task_Status === "Complete"
+              : designIntent.Task_Status === "Completed"
           }
         />
       </div>
