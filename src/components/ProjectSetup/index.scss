@@ -10,8 +10,10 @@ $width: 100%;
   padding: 0 15px 0px 13px;
 }
 
-.projectNameForProjectSetup {
-  padding-top: 5px;
+.ProjectPlanBreadCrum {
+  ul {
+    padding: 0;
+  }
 }
 
 .subNav {
@@ -255,7 +257,7 @@ $width: 100%;
 }
 
 .projectPlanButtonsParent {
-  text-align: center;
+  text-align: right;
 }
 
 .displayFlex {
@@ -366,4 +368,8 @@ span.right {
   width: 9.6%;
 }
 
+.piChevronRightMargin {
+  margin-left: 9.5px;
+  margin-right: 9.81px;
+}
 // TabsComponent Styles End

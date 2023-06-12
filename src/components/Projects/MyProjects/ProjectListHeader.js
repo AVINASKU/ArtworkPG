@@ -28,7 +28,14 @@ const ProjectListHeader = ({
   selected,
   allData,
   headers,
+  CustomizeViewFlag,
+  ResetToDefaultFlag,
+  isTreeTableFlag
 }) => {
+  let modifiedAllData = allData;
+  if(isTreeTableFlag){
+    modifiedAllData = allData?.map((obj) => obj.data);
+  }
   const location = useLocation();
   // const [downloadCSV, setDownloadCSV] = useState(false);
   // const [showCSV, setShowCSV] = useState(true);
@@ -143,7 +150,7 @@ const ProjectListHeader = ({
           <>
             {isReadOnly && (
               <ExportSelectedRows
-                allData={allData}
+                allData={modifiedAllData}
                 selectedRows={selected}
                 headers={headers}
               />
@@ -152,6 +159,7 @@ const ProjectListHeader = ({
               className="button-layout"
               variant="secondary"
               onClick={() => setVisible(true)}
+              hidden={CustomizeViewFlag}
             >
               Customize View
             </Button>
@@ -167,6 +175,7 @@ const ProjectListHeader = ({
               onClick={() => {
                 clearFilters();
               }}
+              hidden={ResetToDefaultFlag}
             >
               Reset to Default
             </button>
@@ -178,7 +187,7 @@ const ProjectListHeader = ({
               <>
                 <ExportSelectedRows
                   selectedRows={selected}
-                  allData={allData}
+                  allData={modifiedAllData}
                   headers={headers}
                 />
 

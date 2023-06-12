@@ -501,6 +501,9 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
             isFilterEnabled={isFilterEnabled}
             clearFilter={clearFilter}
             headers={headerColumns}
+            CustomizeViewFlag={false}
+            ResetToDefaultFlag={false}
+            isTreeTableFlag={false}
           />
           <ConfirmationPopUp
             onSort={onSort}

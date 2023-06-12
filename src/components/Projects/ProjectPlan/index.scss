@@ -79,9 +79,12 @@ $fontWeight400: 400;
     line-height: 15px;
   }
 
-  .textAlignTreeTable {
-    height: calc(100vh - 320px);
-    overflow: auto;
+  // .p-treetable-wrapper {
+  //   height: calc(100vh - 320px);
+  //   overflow: auto;
+  // }
+  table .p-inputtext {
+    width: 100% !important;
   }
 }
 
@@ -288,6 +291,9 @@ img[disabled] {
   .p-dropdown {
     height: 25px;
   }
+}
+.p-treetable-resizable .p-treetable-tbody > tr > td {
+  width: 170px;
 }
 
 .projectPlanCompoButtons {
