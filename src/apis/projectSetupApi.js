@@ -42,7 +42,7 @@ export const editProject = async (formData, id, method, headers = {}) => {
     apiURL = `${DEVURL}/createProjectManually/${id}`;
   } else if (method === "POST") {
     // https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1/UpdateDetailsIntoProjectSetUp/{AWMProjectID}
-    apiURL = `${DEVURL}/updateProjectSetup/${id}`;
+    apiURL = `${DEVURL}/updateDetailsIntoProjectSetUp/${id}`;
   }
 
   const editProjectData = await axiosInstance({
