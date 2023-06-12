@@ -20,6 +20,7 @@ import {
   Tier,
   PMValues,
 } from "../../../categories";
+import { RoleUser } from "../../../userRole";
 import { useDispatch, useSelector } from "react-redux";
 
 const defaultCheckedItems = {
@@ -1129,7 +1130,7 @@ function AddProject(props) {
                     >
                       <option value="">Select BU</option>
                       {bUs.map((bu) => (
-                        <option key={bu.code} value={bu.code}>
+                        <option key={bu.code} value={bu.BU_Name}>
                           {bu.BU_Name}
                         </option>
                       ))}
@@ -1544,9 +1545,9 @@ function AddProject(props) {
                       disabled={mode === "create" && true}
                     >
                       <option value="">Select PM</option>
-                      {PMValues.map((r) => (
-                        <option key={r.label} value={r.value}>
-                          {r.value}
+                      {RoleUser.users.map((r) => (
+                        <option key={r.userid} value={r.userid}>
+                          {r.userid}
                         </option>
                       ))}
                     </Form.Select>
