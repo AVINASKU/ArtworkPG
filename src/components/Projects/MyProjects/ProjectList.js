@@ -575,7 +575,7 @@ const ProjectList = (props) => {
       "columnWidthMyProject",
       JSON.stringify(columnWidthMyProject)
     );
-    setProjectColumnNames(projectColumnName);
+    setProjectColumnNames(allColumnNames);
     setVisible(false);
   };
 
