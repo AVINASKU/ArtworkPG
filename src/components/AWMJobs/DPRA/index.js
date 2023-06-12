@@ -70,21 +70,6 @@ function DPRA() {
     setProjectData(projectData);
   }, [projectData]);
 
-  useEffect(() => {
-    checkFormValidity();
-  }, [data]);
-
-  const checkFormValidity = () => {
-    const validTasks = designIntent?.filter((task) => {
-      return task?.Agency_Reference && task?.Cluster && task?.Select;
-    });
-    if (validTasks.length > 0) {
-      setEnableSubmit(true);
-    } else {
-      setEnableSubmit(false);
-    }
-  };
-
   const handleCancel = () => {
     return navigate(`/MyTasks`);
   };
@@ -119,8 +104,28 @@ function DPRA() {
     // add here design job name here check it out from API.
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
+    let values = false;
+    const hasValues = designIntent.every(
+      (item) => {        
+        setEnableSubmit(true);
+       if(item.Select){
+          values = item.Agency_Reference !== "" && item.Cluster !== "";
+      } 
+        else{
+          console.log("designIntent else", designIntent);
+          let data = designIntent.filter(item => item.Select && item.Agency_Reference !== "" && item.Cluster !== "");
+          console.log("value else", data);
+          if (data.length !== 0) {
+            values = true;
+          } else {
+            values = false;
+          }
+        }
+        return values
+      }
+    );
+    setEnableSubmit(!hasValues);  
     setSubmittedDI(submittedDI);
-    checkFormValidity();
   };
 
   const onSelectAll = (checked) => {
@@ -285,7 +290,7 @@ function DPRA() {
         onSubmit={onSubmit}
         bottomFixed={true}
         checkReadWriteAccess={checkReadWriteAccess}
-        formValid={!enableSubmit}
+        formValid={enableSubmit}
       />
     </PageLayout>
   );

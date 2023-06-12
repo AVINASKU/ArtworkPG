@@ -403,6 +403,9 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
                 (ele === "Help_Needed" && helpNeededBodyTemplate) ||
                 (ele === "Status" && statusTemplate)
               }
+              style={{
+              width: "200px"
+            }}
               // body={ele === "Help Needed" && countryBodyTemplate}
             />
           );
@@ -431,6 +434,9 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
               (ele === "Status" && statusTemplate) ||
               (ele === "PM" && assigneeTemplate)
             }
+            style={{
+              width: "200px"
+            }}
             // body={ele === "Help Needed" && countryBodyTemplate}
           />
         );
