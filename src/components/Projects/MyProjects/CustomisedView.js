@@ -68,7 +68,7 @@ export default function CustomisedView({
       .join(" ");
     return colNames;
   };
-
+  console.log("col", allColumnNames);
   return (
     <>
       <Dialog

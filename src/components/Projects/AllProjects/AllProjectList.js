@@ -384,10 +384,7 @@ const AllProjectList = (props) => {
     ];
     setProjectColumnNames(defaultColName);
     // const columnNames = ProjectService.getAllColumnNamesAllProjects();
-    localStorage.setItem(
-      "columnWidthAllProject",
-      JSON.stringify({})
-    );
+    localStorage.setItem("columnWidthAllProject", JSON.stringify({}));
     localStorage.setItem(
       "allColumnNamesAllProjects",
       JSON.stringify(defaultColName)
@@ -416,9 +413,7 @@ const AllProjectList = (props) => {
     localStorage.setItem("allProjectColumnWiseFilterData", JSON.stringify({}));
     localStorage.setItem("allProjectSortingData", JSON.stringify({}));
     localStorage.setItem("allProjectFrozenData", JSON.stringify({}));
-    localStorage.setItem(
-      "columnWidthAllProject", JSON.stringify({})
-    );
+    localStorage.setItem("columnWidthAllProject", JSON.stringify({}));
     setProjectColumnNames(defaultCol);
     setSelectedFields([]);
     setSortData([]);
@@ -544,93 +539,94 @@ const AllProjectList = (props) => {
   const isFilterEnabled =
     frozenCoulmns?.length || filters?.length || sortData?.length;
 
-  let columnWidth = localStorage.getItem(
-    "columnWidthAllProject"
-  );
+  let columnWidth = localStorage.getItem("columnWidthAllProject");
   const jsonColumnWidth = JSON.parse(columnWidth);
-  const isResetEnabled = isReorderedColumn || isFilterEnabled || (jsonColumnWidth && !(Object.keys(jsonColumnWidth).length === 0));
+  const isResetEnabled =
+    isReorderedColumn ||
+    isFilterEnabled ||
+    (jsonColumnWidth && !(Object.keys(jsonColumnWidth).length === 0));
 
   return (
     <div className="myProjectAnddAllProjectList">
       {loading || loader || pegadata === null ? (
-          <Loading />
-        ): (
-          <>
-        {pegadata !== undefined && (
-          <ProjectListHeader
-            header={props.header}
-            clearFilters={clearFilters}
-            clearFilter={clearFilter}
+        <Loading />
+      ) : (
+        <>
+          {pegadata !== undefined && (
+            <ProjectListHeader
+              header={props.header}
+              clearFilters={clearFilters}
+              clearFilter={clearFilter}
+              setVisible={setVisible}
+              saveSettings={saveSettings}
+              onSearchClick={onSearchClick}
+              exportCSV={exportCSV}
+              isFilterEnabled={isFilterEnabled}
+              isResetEnabled={isResetEnabled}
+              allData={pegadata}
+              headers={updatedAllColumnNames}
+            />
+          )}
+
+          <CustomisedView
+            visible={visible}
+            setProjectColumnNames={setProjectColumnNames}
             setVisible={setVisible}
-            saveSettings={saveSettings}
-            onSearchClick={onSearchClick}
-            exportCSV={exportCSV}
-            isFilterEnabled={isFilterEnabled}
-            isResetEnabled={isResetEnabled}
-            allData={pegadata}
-            headers={updatedAllColumnNames}
+            projectColumnName={projectColumnName}
+            allColumnNames={allColumnNames}
+            saveAsPersonaliDefault={saveAsPersonaliDefault}
+            resetToPgDefault={resetToPgDefault}
           />
-        )}
 
-        <CustomisedView
-          visible={visible}
-          setProjectColumnNames={setProjectColumnNames}
-          setVisible={setVisible}
-          projectColumnName={projectColumnName}
-          allColumnNames={allColumnNames}
-          saveAsPersonaliDefault={saveAsPersonaliDefault}
-          resetToPgDefault={resetToPgDefault}
-        />
+          <ConfirmationPopUp
+            onSort={onSort}
+            saveSettings={saveSettings}
+            setProjectFrozen={setProjectFrozen}
+            projectData={pegadata}
+            addFrozenColumns={addFrozenColumns}
+            onGlobalFilterChange={onGlobalFilterChange}
+            selectedColumnName={selectedColumnName}
+            ProjectFrozen={ProjectFrozen}
+            selectedFields={selectedFields}
+            setFrozenColumn={setFrozenColumn}
+            frozenCoulmns={frozenCoulmns}
+            sortData={sortData}
+            setSortData={setSortData}
+            setFilters={setFilters}
+            filters={filters}
+            op={op}
+            clearColumnWiseFilter={clearColumnWiseFilter}
+          />
 
-        <ConfirmationPopUp
-          onSort={onSort}
-          saveSettings={saveSettings}
-          setProjectFrozen={setProjectFrozen}
-          projectData={pegadata}
-          addFrozenColumns={addFrozenColumns}
-          onGlobalFilterChange={onGlobalFilterChange}
-          selectedColumnName={selectedColumnName}
-          ProjectFrozen={ProjectFrozen}
-          selectedFields={selectedFields}
-          setFrozenColumn={setFrozenColumn}
-          frozenCoulmns={frozenCoulmns}
-          sortData={sortData}
-          setSortData={setSortData}
-          setFilters={setFilters}
-          filters={filters}
-          op={op}
-          clearColumnWiseFilter={clearColumnWiseFilter}
-        />
-
-        <DataTable
-          resizableColumns
-          dataKey="Project_ID"
-          reorderableColumns
-          onColReorder={storeReorderedColumns}
-          onResize={(e) => console.log("resize", e)}
-          onResizeCapture={(e) => console.log("e", e)}
-          value={filters.length ? filters : pegadata}
-          scrollable
-          responsiveLayout="scroll"
-          loading={loading}
-          className="mt-3"
-          columnResizeMode="expand"
-          onColumnResizeEnd={onColumnResizeEnd}
-          filters={searchHeader}
-          filterDisplay={isSearch && "row"}
-          // tableStyle={{ minWidth: "50rem" }}
-          tableStyle={{ width: "max-content", minWidth: "100%" }}
-          autoLayout={true}
-          ref={dt}
-        // selectionMode="single"
-        // onSelectionChange={(e) => {
-        //   navigate(`/projectPlan/${e.value.ProjectID}`);
-        // }}
-        >
-          {dynamicColumns(projectColumnName)}
-        </DataTable>
-      </>
-        )}
+          <DataTable
+            resizableColumns
+            dataKey="Project_ID"
+            reorderableColumns
+            onColReorder={storeReorderedColumns}
+            onResize={(e) => console.log("resize", e)}
+            onResizeCapture={(e) => console.log("e", e)}
+            value={filters.length ? filters : pegadata}
+            scrollable
+            responsiveLayout="scroll"
+            loading={loading}
+            className="mt-3"
+            columnResizeMode="expand"
+            onColumnResizeEnd={onColumnResizeEnd}
+            filters={searchHeader}
+            filterDisplay={isSearch && "row"}
+            // tableStyle={{ minWidth: "50rem" }}
+            tableStyle={{ width: "max-content", minWidth: "100%" }}
+            autoLayout={true}
+            ref={dt}
+            // selectionMode="single"
+            // onSelectionChange={(e) => {
+            //   navigate(`/projectPlan/${e.value.ProjectID}`);
+            // }}
+          >
+            {dynamicColumns(projectColumnName)}
+          </DataTable>
+        </>
+      )}
     </div>
   );
 };
