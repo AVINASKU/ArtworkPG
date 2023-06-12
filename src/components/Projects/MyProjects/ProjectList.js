@@ -637,7 +637,8 @@ const ProjectList = (props) => {
     "columnWidthMyProject"
   );
   const jsonColumnWidth = JSON.parse(columnWidth);
-  const isResetEnabled = isReorderedColumn || isFilterEnabled || (jsonColumnWidth && !(Object.keys(jsonColumnWidth).length === 0));
+
+   const isResetEnabled = isReorderedColumn || isFilterEnabled || isColWidthSet;
 
   return (
     <div className="myProjectAnddAllProjectList">
