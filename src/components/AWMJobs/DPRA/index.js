@@ -247,6 +247,7 @@ function DPRA() {
         headerName={headerName}
         label="Define Production Ready Art"
         checkReadWriteAccess={checkReadWriteAccess}
+        taskName="Production Ready Art"
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
@@ -271,6 +272,7 @@ function DPRA() {
                   Brand={Brand}
                   Category={Category}
                   checkReadWriteAccess={checkReadWriteAccess}
+                  taskName="Production Ready Art"
                 />
               );
             }
