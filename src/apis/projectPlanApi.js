@@ -19,6 +19,11 @@ export const getProjectPlan = async (
     url: apiURL,
     method: "GET",
   });
+  if (projectPlanData?.ArtworkAgilityProjects) {
+    sessionStorage.setItem("ProjectSubmitted", true);
+  } else {
+    sessionStorage.setItem("ProjectSubmitted", false);
+  }
 
   return projectPlanData?.ArtworkAgilityProjects;
 };
@@ -29,7 +34,7 @@ export const activateProjectPlan = async (projectId, headers = {}) => {
   let apiURL = `${DEVURL}/activateProject/${projectId}`;
   const activateResponse = await axiosInstance({
     url: apiURL,
-    method: "POST"
+    method: "POST",
   });
   return activateResponse;
 };
