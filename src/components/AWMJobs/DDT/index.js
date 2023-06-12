@@ -242,6 +242,7 @@ function DDT() {
         headerName={headerName}
         label="Define Regional Design Template"
         checkReadWriteAccess={checkReadWriteAccess}
+        taskName="Regional Design Intent"
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
@@ -267,6 +268,7 @@ function DDT() {
                   Brand={Brand}
                   Category={Category}
                   checkReadWriteAccess={checkReadWriteAccess}
+                  taskName="Regional Design Intent"
                 />
               );
             }

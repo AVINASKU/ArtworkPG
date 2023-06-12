@@ -464,7 +464,10 @@ sup {
   color: #595959;
   font-size: 12px;
   font-weight: 500;
-  height: 32px;
+  line-height: 12px;
+}
+.css-e7nvmg-LoadingOverlayWrapperBase{
+  height: calc(100% - 40px);
 }
 
 .mb-4 {
