@@ -13,6 +13,7 @@ const DesignHeader = ({
   headerName,
   disabled,
   checkReadWriteAccess,
+  taskName
 }) => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
@@ -96,7 +97,7 @@ const DesignHeader = ({
             />
             <div className="icon-label">
               <label className={disabled && "disable-buttons"}>
-                Add Design Intent
+                Add {taskName}
               </label>
             </div>
           </div>
