@@ -106,15 +106,16 @@ function DDI() {
        if(item.Select){
           values = item.Agency_Reference !== "" && item.Cluster !== "";
       } 
-        // else{
-        //   values = designIntent.some(item => {
-        //     console.log("else select", item)
-        //     if(item.Select){
-        //       values = item.Agency_Reference !== "" && item.Cluster !== ""
-        //     }
-        //   });
-        //   console.log("value else", values)
-        // }
+      else{
+        console.log("designIntent else", designIntent);
+        let data = designIntent.filter(item => item.Select && item.Agency_Reference !== "" && item.Cluster !== "");
+        console.log("value else", data);
+        if (data.length !== 0) {
+          values = true;
+        } else {
+          values = false;
+        }
+      }
         return values
       }
     );
