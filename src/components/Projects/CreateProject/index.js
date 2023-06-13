@@ -79,6 +79,7 @@ function AddProject(props) {
   const [smo, setSmo] = useState([]);
   const [bu, setBu] = useState("");
   const [subCategories, setSubCategories] = useState([]);
+  const [categoriesAlert, setCategoriesAlert] = useState(false);
   const [brand, setBrand] = useState([]);
   const [tierList, setTierList] = useState([]);
   const [productionStrategyList, setProductionStrategyList] = useState([]);
@@ -198,13 +199,15 @@ function AddProject(props) {
     bu &&
       bUs.forEach((obj) => {
         obj.Artwork_Picklist.forEach((pickList) => {
-          if (bu === obj.code && pickList.Picklist_Name === "SAPCategory") {
+          if (bu === obj.BU_Name && pickList.Picklist_Name === "SAPCategory") {
             setSubCategoriesOptions(pickList.Labels);
           }
-          if (obj.code === "BBY" && pickList.Picklist_Name === "TIER") {
+         
+          if (obj.code === "BBY" && pickList.Picklist_Name === "TIER") {           
             setTierList(pickList.Labels);
           }
           if (obj.code === "HOM" && pickList.Picklist_Name === "PRODSTRAT") {
+            console.log("obj", obj, "pickList", pickList.Labels)
             setProductionStrategyList(pickList.Labels);
           }
         });
@@ -599,6 +602,10 @@ function AddProject(props) {
   //   };
   // });
   const handleSubCategoryChange = (e) => {
+    console.log("categoriesAlert", e.value)
+    e.value.length === 0
+    ? setCategoriesAlert(true)
+    : setCategoriesAlert(false);
     setSubCategories(e.value);
   };
 
@@ -764,6 +771,12 @@ function AddProject(props) {
   const checkFormValidity = () => {
     // check if all fields are filled
     // // const valid = selectedCities && selectedCities.length > 0 && isValid;
+    const checkedvalue = !checkedItems.CICs && !checkedItems.DI && !checkedItems.DT && !checkedItems.IQ &&!checkedItems.PF && !checkedItems.PRA;
+    const checkedValue1 = designScopeList.CICs === "" && designScopeList.DI === "" && designScopeList.DT === "" && designScopeList.IQ === "" && designScopeList.PF === "" && designScopeList.PRA === "";
+    console.log("item item", checkedvalue);
+    console.log("item checkedValue1", checkedValue1);
+    console.log("condition", checkedvalue === checkedValue1)
+
     const valid =
       projectName !== "" &&
       brand?.length > 0 &&
@@ -775,12 +788,15 @@ function AddProject(props) {
       bu.length > 0 &&
       readinessDate &&
       printerDate &&
+      subCategories?.length > 0 &&
+      checkedvalue === checkedValue1 &&
       true;
     return valid;
   };
 
   useEffect(() => {
     const valid = checkFormValidity();
+    
     // check if all fields are filled
     // const valid = selectedCities && selectedCities.length > 0 && isValid;
     setFormValid(valid);
@@ -929,49 +945,51 @@ function AddProject(props) {
   };
 
   const onSubmit = async () => {
-    setSpinnerText("Submitting");
-    setLoader(true);
-    if (mode === "create") {
-      const formData = collectFormData("Active", mode);
-      setFormData(formData);
-      await createNewProject(formData);
-      // if (response?.data?.ID) {
-      //   showStatus("success", "Success", "Submit Successful", "navigate");
-      //   // alert("Submit Successful");
-      // } else {
-      //   showStatus("error", "Error", "Submit Failed");
-      //   // alert("Submit failed");
-      // }
-    } else if (
-      (mode === "edit" || mode === "design") &&
-      !JSON.parse(sessionStorage.getItem("ProjectSubmitted"))
-    ) {
-      const formData = collectFormData("Active", mode);
-      setFormData(formData);
+    console.log("designScopeList", designScopeList);
+    console.log("checkedItems", checkedItems);
+    // setSpinnerText("Submitting");
+    // setLoader(true);
+    // if (mode === "create") {
+    //   const formData = collectFormData("Active", mode);
+    //   setFormData(formData);
+    //   await createNewProject(formData);
+    //   // if (response?.data?.ID) {
+    //   //   showStatus("success", "Success", "Submit Successful", "navigate");
+    //   //   // alert("Submit Successful");
+    //   // } else {
+    //   //   showStatus("error", "Error", "Submit Failed");
+    //   //   // alert("Submit failed");
+    //   // }
+    // } else if (
+    //   (mode === "edit" || mode === "design") &&
+    //   !JSON.parse(sessionStorage.getItem("ProjectSubmitted"))
+    // ) {
+    //   const formData = collectFormData("Active", mode);
+    //   setFormData(formData);
 
-      let method = "PATCH";
-      const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
-      await editProject(formData, id, method, headers);
-      // if (response?.data?.ID) {
-      //   showStatus("success", "Success", "Submit Successful", "navigate");
-      //   // alert("Submit Successful");
-      // } else {
-      //   showStatus("error", "Error", "Submit Failed");
-      //   // alert("Submit failed");
-      // }
-    } else if (
-      (mode === "edit" || mode === "design") &&
-      JSON.parse(sessionStorage.getItem("ProjectSubmitted"))
-    ) {
-      const formData = collectForm2Data("", mode);
-      setFormData(formData);
-      let method = "POST";
-      const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
-      await editProject(formData, awmProjectId, method, headers);
-    }
-    setSpinnerText("");
-    setLoader(false);
-    navigate("/myProjects");
+    //   let method = "PATCH";
+    //   const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
+    //   await editProject(formData, id, method, headers);
+    //   // if (response?.data?.ID) {
+    //   //   showStatus("success", "Success", "Submit Successful", "navigate");
+    //   //   // alert("Submit Successful");
+    //   // } else {
+    //   //   showStatus("error", "Error", "Submit Failed");
+    //   //   // alert("Submit failed");
+    //   // }
+    // } else if (
+    //   (mode === "edit" || mode === "design") &&
+    //   JSON.parse(sessionStorage.getItem("ProjectSubmitted"))
+    // ) {
+    //   const formData = collectForm2Data("", mode);
+    //   setFormData(formData);
+    //   let method = "POST";
+    //   const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
+    //   await editProject(formData, awmProjectId, method, headers);
+    // }
+    // setSpinnerText("");
+    // setLoader(false);
+    // navigate("/myProjects");
   };
   const onSaveAsDraft = async () => {
     setSpinnerText("Saving");
@@ -1066,7 +1084,7 @@ function AddProject(props) {
               <Row>
                 {/* <>{mode}</> */}
                 <Form.Group
-                  className={`mb-3 ${projectNameAlert ? "error-text" : ""}`}
+                  className={`mb-2 ${projectNameAlert ? "error-text" : ""}`}
                   controlId="projectName.ControlInput1"
                 >
                   <Form.Label>
@@ -1095,7 +1113,7 @@ function AddProject(props) {
               </Row>
               <Row>
                 <Form.Group
-                  className={`mb-4`}
+                  className={`mb-2`}
                   controlId="groupName.ControlInput1"
                 >
                   <Form.Label>Initiative Group Name</Form.Label>
@@ -1110,13 +1128,12 @@ function AddProject(props) {
               </Row>
               <Row>
                 <Form.Group
-                  className="mb-4"
+                  className="mb-2"
                   controlId="projectDescription.ControlInput1"
                 >
                   <Form.Label>Project Description</Form.Label>
                   <textarea
                     type="text"
-                    style={{ height: "105px" }}
                     className="form-control"
                     placeholder="Enter Project Description"
                     onChange={(e) => setProjectDesc(e.target.value)}
@@ -1126,8 +1143,8 @@ function AddProject(props) {
               </Row>
               <Row>
                 <Form.Group
-                  // className={`mb-3 ${bu === "" && "error-valid"}`}
-                  className={`mb-3 ${businessUnitAlert ? "error-text" : ""}`}
+                  // className={`mb-2 ${bu === "" && "error-valid"}`}
+                  className={`mb-2 ${businessUnitAlert ? "error-text" : ""}`}
                   controlId="bu.SelectMultiple"
                 >
                   <Form.Label>
@@ -1155,12 +1172,12 @@ function AddProject(props) {
               <Row>
                 <Form.Group
                   controlId="scale.category"
-                  className="mb-4"
-                  // className={`mb-3 ${
+                  className={`mb-2 ${categoriesAlert ? "error-text" : ""}`}
+                  // className={`mb-2 ${
                   //   selectedCities && !selectedCities.length && "error-valid"
                   // }`}
                 >
-                  <Form.Label>Category</Form.Label>
+                  <Form.Label>Category <sup>*</sup></Form.Label>
                   <MultiSelect
                     value={subCategories}
                     onChange={handleSubCategoryChange}
@@ -1174,7 +1191,7 @@ function AddProject(props) {
               </Row>
               <Row>
                 <Form.Group
-                  // className={`mb-3 ${brand?.length < 1 && "error-valid"}`}
+                  // className={`mb-2 ${brand?.length < 1 && "error-valid"}`}
                   className={brandAlert ? "error-text" : ""}
                   controlId="brand.SelectMultiple"
                 >
@@ -1208,10 +1225,10 @@ function AddProject(props) {
             <Col>
               <Row>
                 <Form.Group
-                  // className={`mb-3 ${
+                  // className={`mb-2 ${
                   //   (!region || Object.keys(region).length < 1) && "error-valid"
                   // }`}
-                  className={`mb-3 ${regionAlert ? "error-text" : ""}`}
+                  className={`mb-2 ${regionAlert ? "error-text" : ""}`}
                   controlId="reg.SelectMultiple"
                 >
                   <Form.Label>
@@ -1240,8 +1257,8 @@ function AddProject(props) {
               </Row>
               <Row>
                 <Form.Group
-                  // className={`mb-3 ${(!smo || smo?.length < 1) && "error-valid"}`}
-                  className={`mb-3 ${SMOAlert ? "error-text" : ""}`}
+                  // className={`mb-2 ${(!smo || smo?.length < 1) && "error-valid"}`}
+                  className={`mb-2 ${SMOAlert ? "error-text" : ""}`}
                   controlId="smo.SelectMultiple"
                 >
                   <Form.Label>
@@ -1271,7 +1288,7 @@ function AddProject(props) {
                 </Form.Group>
               </Row>
               <Row>
-                <Form.Group className="mb-4" controlId="cluster.SelectMultiple">
+                <Form.Group className="mb-2" controlId="cluster.SelectMultiple">
                   <Form.Label>Cluster</Form.Label>
                   <div>
                     <Form.Control
@@ -1283,7 +1300,7 @@ function AddProject(props) {
                 </Form.Group>
               </Row>
               <Row>
-                <Form.Group className="mb-4" controlId="bve.SelectMultiple">
+                <Form.Group className="mb-2" controlId="bve.SelectMultiple">
                   <Form.Label>Scale </Form.Label>
                   <div>
                     <Form.Select
@@ -1391,7 +1408,7 @@ function AddProject(props) {
             </Col>
             <Col>
               <Row>
-                <Form.Group className="mb-4" controlId="sop.readiness">
+                <Form.Group className="mb-2" controlId="sop.readiness">
                   <Form.Label>Estimated SOS</Form.Label>
                   {/*
                 {errors.sopDate && (
@@ -1419,7 +1436,6 @@ function AddProject(props) {
                           className={classNames({
                             "p-invalid": fieldState.error,
                           })}
-                          disabled={!sopDate}
                         />
                       </>
                     )}
@@ -1427,7 +1443,7 @@ function AddProject(props) {
                 </Form.Group>
               </Row>
               <Row>
-                <Form.Group className={`mb-4`} controlId="sop.readiness">
+                <Form.Group className={`mb-2`} controlId="sop.readiness">
                   <Form.Label>Estimated SOP</Form.Label>
                   <Controller
                     name="date"
@@ -1451,7 +1467,6 @@ function AddProject(props) {
                             fontSize: "12px",
                             fontWeight: 1500,
                           }}
-                          disabled={!printerDate}
                         />
                       </>
                     )}
@@ -1460,7 +1475,7 @@ function AddProject(props) {
               </Row>
               <Row>
                 <Form.Group
-                  className={`mb-3 ${!printerDate && "error-valid"}`}
+                  className={`mb-2 ${!printerDate && "error-valid"}`}
                   controlId="sop.readiness"
                 >
                   <Form.Label>
@@ -1487,7 +1502,6 @@ function AddProject(props) {
                           className={classNames({
                             "p-invalid": fieldState.error,
                           })}
-                          disabled={!readinessDate}
                         />
                       </>
                     )}
@@ -1499,7 +1513,7 @@ function AddProject(props) {
               </Row>
               <Row>
                 <Form.Group
-                  className={`mb-3 ${!readinessDate && "error-valid"}`}
+                  className={`mb-2 ${!readinessDate && "error-valid"}`}
                   controlId="sop.readiness"
                 >
                   <Form.Label>
@@ -1533,7 +1547,7 @@ function AddProject(props) {
                 </Form.Group>
               </Row>
               <Row>
-                <Form.Group className="mb-4" controlId="il.SelectMultiple">
+                <Form.Group className="mb-2" controlId="il.SelectMultiple">
                   <Form.Label>IL</Form.Label>
                   <div>
                     <Form.Control
@@ -1568,11 +1582,10 @@ function AddProject(props) {
             </Col>
             <Col>
               <Row>
-                <Form.Group className="mb-4" controlId="comments.ControlInput1">
+                <Form.Group className="mb-2" controlId="comments.ControlInput1">
                   <Form.Label>Comments</Form.Label>
                   <textarea
                     type="text"
-                    style={{ height: "108px" }}
                     className="form-control"
                     placeholder="Add Comments"
                     onChange={(e) => setComments(e.target.value)}
@@ -1582,7 +1595,7 @@ function AddProject(props) {
               </Row>
               <Row>
                 <Form.Group
-                  className="mb-4"
+                  className="mb-2"
                   controlId="projectType.SelectMultiple"
                 >
                   <Form.Label>Project Type</Form.Label>
@@ -1603,22 +1616,22 @@ function AddProject(props) {
                 </Form.Group>
               </Row>
               <Row>
-                <Form.Group className="mb-3" controlId="bve.SelectMultiple">
+                <Form.Group className="mb-2" controlId="bve.SelectMultiple">
                   <Form.Label>
                     {/* new  */}
                     {(region?.Region_Name === "EUROPE" ||
                       region?.code === "EUE") &&
-                      bu === "BBY" &&
+                      bu === "Baby Care" &&
                       "Tier"}
                     {(region?.Region_Name === "EUROPE" ||
                       region?.code === "EUE") &&
-                      bu === "HOM" &&
+                      bu === "Home Care" &&
                       "Production Strategy"}
                   </Form.Label>
                   <div>
                     {(region?.Region_Name === "EUROPE" ||
                       region?.code === "EUE") &&
-                      bu === "BBY" && (
+                      bu === "Baby Care" && (
                         <Form.Select
                           {...register("Teir", { required: false })}
                           value={Tier?.Label_Name || ""}
@@ -1635,7 +1648,7 @@ function AddProject(props) {
                       )}
                     {(region?.Region_Name === "EUROPE" ||
                       region?.code === "EUE") &&
-                      bu === "HOM" && (
+                      bu === "Home Care" && (
                         <Form.Select
                           {...register("Production Strtegy", {
                             required: false,
@@ -1668,7 +1681,12 @@ function AddProject(props) {
               Cancel
             </Button>
             <Button
-              className="button-layout"
+              className={
+                mode !== "create" &&
+                JSON.parse(sessionStorage.getItem("ProjectSubmitted"))
+                  ? "button-layout btn btn-disabled"
+                  : "button-layout"
+              }
               variant="secondary"
               onClick={onSaveAsDraft}
               disabled={
@@ -1679,9 +1697,11 @@ function AddProject(props) {
               Save as draft
             </Button>
             <Button
-              className="button-layout draft-button"
-              // disabled={mode !== "design"}
-              // disabled={!submitButtonState}
+              className={
+                !formValid
+                  ? "button-layout btn btn-disabled"
+                  : "button-layout"
+              }
               type="submit"
               disabled={!formValid}
             >
