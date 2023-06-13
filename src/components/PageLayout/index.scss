@@ -98,6 +98,10 @@
         .p-checkbox + .icon-label {
           padding-top: 3px;
         }
+        &.disabled{
+          pointer-events: none;
+          opacity: 0.4;
+        }
       }
 
       &.task-layout {

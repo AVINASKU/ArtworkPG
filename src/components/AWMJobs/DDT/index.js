@@ -70,7 +70,7 @@ function DDT() {
   }, [TaskDetailsData]);
 
   const handleCancel = () => {
-    return navigate(`/MyTasks`);
+    return navigate(`/${currentUrl?.split("/")[1]}`);
   };
   const handleDelete = (index) => {
     const sub = designIntent.map((item, i) => {
@@ -96,6 +96,8 @@ function DDT() {
   };
 
   const addData = (fieldName, index, value, Design_Intent_Name) => {
+    if(checkTaskISComplete) 
+      return setEnableSubmit(true);
     let data = designIntent[index];
     data[fieldName] = value;
     data["Design_Job_Name"] = Design_Intent_Name;
@@ -152,8 +154,9 @@ function DDT() {
       if (task?.isNew) {
         task.Design_Job_ID = "";
       }
-      task.Action = "update";
-      if (task?.Action !== "delete" && task?.Design_Job_ID) {
+      if (task?.Action === "delete") {
+        task.Action = "delete";
+      } else if (task?.Action !== "delete" && task?.Design_Job_ID) {
         task.Action = "update";
       } else if (task?.Action !== "delete" && task?.isNew === true)
         task.Action = "add";
@@ -185,7 +188,7 @@ function DDT() {
     };
     await submitDefineRegionalDesignTemplate(formData, id, headers);
     setLoader(false);
-    navigate(`/MyTasks`);
+    navigate(`/${currentUrl?.split("/")[1]}`);
   };
 
   const onSaveAsDraft = async () => {
@@ -195,8 +198,9 @@ function DDT() {
       if (task?.isNew) {
         task.Design_Job_ID = "";
       }
-      task.Action = "update";
-      if (task?.Action !== "delete" && task?.Design_Job_ID) {
+      if (task?.Action === "delete") {
+        task.Action = "delete";
+      } else if (task?.Action !== "delete" && task?.Design_Job_ID) {
         task.Action = "update";
       } else if (task?.Action !== "delete" && task?.isNew === true)
         task.Action = "add";
@@ -247,10 +251,11 @@ function DDT() {
         label="Define Regional Design Template"
         checkReadWriteAccess={checkReadWriteAccess}
         taskName="Regional Design Intent"
+        checkTaskISComplete={checkTaskISComplete}
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
-        {checkTaskISComplete && <div>This task is already submitted</div>}
+        {checkTaskISComplete && <div className="task-completion">This task is already submitted</div>}
 
         {loading || loader || designIntent === null ? (
           <Loading />
@@ -286,6 +291,7 @@ function DDT() {
         checkReadWriteAccess={checkReadWriteAccess}
         bottomFixed={true}
         formValid={enableSubmit}
+        checkTaskISComplete={checkTaskISComplete}
       />
     </PageLayout>
   );

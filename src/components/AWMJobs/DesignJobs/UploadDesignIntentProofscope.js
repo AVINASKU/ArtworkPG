@@ -11,6 +11,7 @@ const UploadDesignIntentProofscope = ({
   file_name,
   setformattedValue,
   setFileName,
+  fileName,
   setMappedFiles,
   setAzureFile,
   item,
@@ -155,15 +156,22 @@ const UploadDesignIntentProofscope = ({
             />
           </div>
         )}
+        {item?.DesignJobDetails[0]?.FileMetaDataList[0]?.File_Name === ""
+          ? fileName === ""
+            ? `No files uploaded yet please upload file!`
+            : ``
+          : fileName === ""
+          ? di_name && (
+            <a
+              className="flex flex-column text-left ml-3"
+              onClick={(event) => handleViewProofScopeClick(event, updatedImg)}
+            >
+              {di_name}
+            </a>
+          )
+          : ""}
 
-        {updatedImg && (
-          <a
-            className="flex flex-column text-left ml-3"
-            onClick={(event) => handleViewProofScopeClick(event, updatedImg)}
-          >
-            {updatedImg}
-          </a>
-        )}
+        
 
         {approve && (
           <div
