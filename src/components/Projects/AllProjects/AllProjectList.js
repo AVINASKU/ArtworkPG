@@ -14,6 +14,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import _ from "lodash";
 import ProjectNameHeader from "../MyProjects/ProjectNameHeader";
 import CustomisedView from "../MyProjects/CustomisedView";
+import { generateUniqueKey } from "../../../utils";
 
 const AllProjectList = (props) => {
   const User = useSelector((state) => state.UserReducer);
@@ -703,6 +704,7 @@ const AllProjectList = (props) => {
             reorderableColumns
             onColReorder={storeReorderedColumns}
             onResize={(e) => console.log("resize", e)}
+            key={generateUniqueKey("ppp")}
             onResizeCapture={(e) => console.log("e", e)}
             value={filters.length ? filters : pegadata}
             scrollable

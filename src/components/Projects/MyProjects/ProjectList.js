@@ -18,6 +18,8 @@ import _ from "lodash";
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 import ProjectNameHeader from "./ProjectNameHeader";
 import CustomisedView from "./CustomisedView";
+import { generateUniqueKey } from "../../../utils";
+
 
 //const CustomisedView = React.lazy(() => import("./CustomisedView"));
 
@@ -716,6 +718,7 @@ const ProjectList = (props) => {
             resizableColumns
             dataKey="Project_ID"
             reorderableColumns
+            key={generateUniqueKey("sss")}
             onColReorder={storeReorderedColumns}
             onResize={(e) => console.log("resize", e)}
             onResizeCapture={(e) => console.log("e", e)}
