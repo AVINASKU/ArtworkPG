@@ -347,7 +347,10 @@ function ProjectPlanCompo(props) {
               getProjectPlanApi={getProjectPlanApi}
               isAccessEmpty={isAccessEmpty}
             />
-            <div className="form-buttons">
+            <div
+              className="form-buttons"
+              style={{ padding: 15, background: "#FAFAFA" }}
+            >
               <Button
                 className={
                   !isAccessEmpty ? "btn btn-disabled" : "button-layout"

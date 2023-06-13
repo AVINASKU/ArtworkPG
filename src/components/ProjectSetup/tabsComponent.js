@@ -8,7 +8,7 @@ const TabsComponent = ({ items, tabName, actionButton }) => {
 
   return (
     <>
-    <div className="displayFlex">
+    <div className="tabComponent">
       <div className="tabs-wrapper">
         <ul id="scroller" className="nav nav-tabs">
           {items.map((obj, index) => (
