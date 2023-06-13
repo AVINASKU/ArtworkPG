@@ -771,11 +771,8 @@ function AddProject(props) {
   const checkFormValidity = () => {
     // check if all fields are filled
     // // const valid = selectedCities && selectedCities.length > 0 && isValid;
-    const checkedvalue = !checkedItems.CICs && !checkedItems.DI && !checkedItems.DT && !checkedItems.IQ &&!checkedItems.PF && !checkedItems.PRA;
-    const checkedValue1 = designScopeList.CICs === "" && designScopeList.DI === "" && designScopeList.DT === "" && designScopeList.IQ === "" && designScopeList.PF === "" && designScopeList.PRA === "";
-    console.log("item item", checkedvalue);
-    console.log("item checkedValue1", checkedValue1);
-    console.log("condition", checkedvalue === checkedValue1)
+    // const checkedvalue = !checkedItems.CICs && !checkedItems.DI && !checkedItems.DT && !checkedItems.IQ &&!checkedItems.PF && !checkedItems.PRA;
+    // const checkedValue1 = designScopeList.CICs === "" && designScopeList.DI === "" && designScopeList.DT === "" && designScopeList.IQ === "" && designScopeList.PF === "" && designScopeList.PRA === "";
 
     const valid =
       projectName !== "" &&
@@ -789,7 +786,7 @@ function AddProject(props) {
       readinessDate &&
       printerDate &&
       subCategories?.length > 0 &&
-      checkedvalue === checkedValue1 &&
+      //checkedvalue === checkedValue1 &&
       true;
     return valid;
   };
@@ -945,51 +942,49 @@ function AddProject(props) {
   };
 
   const onSubmit = async () => {
-    console.log("designScopeList", designScopeList);
-    console.log("checkedItems", checkedItems);
-    // setSpinnerText("Submitting");
-    // setLoader(true);
-    // if (mode === "create") {
-    //   const formData = collectFormData("Active", mode);
-    //   setFormData(formData);
-    //   await createNewProject(formData);
-    //   // if (response?.data?.ID) {
-    //   //   showStatus("success", "Success", "Submit Successful", "navigate");
-    //   //   // alert("Submit Successful");
-    //   // } else {
-    //   //   showStatus("error", "Error", "Submit Failed");
-    //   //   // alert("Submit failed");
-    //   // }
-    // } else if (
-    //   (mode === "edit" || mode === "design") &&
-    //   !JSON.parse(sessionStorage.getItem("ProjectSubmitted"))
-    // ) {
-    //   const formData = collectFormData("Active", mode);
-    //   setFormData(formData);
+    setSpinnerText("Submitting");
+    setLoader(true);
+    if (mode === "create") {
+      const formData = collectFormData("Active", mode);
+      setFormData(formData);
+      await createNewProject(formData);
+      // if (response?.data?.ID) {
+      //   showStatus("success", "Success", "Submit Successful", "navigate");
+      //   // alert("Submit Successful");
+      // } else {
+      //   showStatus("error", "Error", "Submit Failed");
+      //   // alert("Submit failed");
+      // }
+    } else if (
+      (mode === "edit" || mode === "design") &&
+      !JSON.parse(sessionStorage.getItem("ProjectSubmitted"))
+    ) {
+      const formData = collectFormData("Active", mode);
+      setFormData(formData);
 
-    //   let method = "PATCH";
-    //   const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
-    //   await editProject(formData, id, method, headers);
-    //   // if (response?.data?.ID) {
-    //   //   showStatus("success", "Success", "Submit Successful", "navigate");
-    //   //   // alert("Submit Successful");
-    //   // } else {
-    //   //   showStatus("error", "Error", "Submit Failed");
-    //   //   // alert("Submit failed");
-    //   // }
-    // } else if (
-    //   (mode === "edit" || mode === "design") &&
-    //   JSON.parse(sessionStorage.getItem("ProjectSubmitted"))
-    // ) {
-    //   const formData = collectForm2Data("", mode);
-    //   setFormData(formData);
-    //   let method = "POST";
-    //   const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
-    //   await editProject(formData, awmProjectId, method, headers);
-    // }
-    // setSpinnerText("");
-    // setLoader(false);
-    // navigate("/myProjects");
+      let method = "PATCH";
+      const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
+      await editProject(formData, id, method, headers);
+      // if (response?.data?.ID) {
+      //   showStatus("success", "Success", "Submit Successful", "navigate");
+      //   // alert("Submit Successful");
+      // } else {
+      //   showStatus("error", "Error", "Submit Failed");
+      //   // alert("Submit failed");
+      // }
+    } else if (
+      (mode === "edit" || mode === "design") &&
+      JSON.parse(sessionStorage.getItem("ProjectSubmitted"))
+    ) {
+      const formData = collectForm2Data("", mode);
+      setFormData(formData);
+      let method = "POST";
+      const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
+      await editProject(formData, awmProjectId, method, headers);
+    }
+    setSpinnerText("");
+    setLoader(false);
+    navigate("/myProjects");
   };
   const onSaveAsDraft = async () => {
     setSpinnerText("Saving");
