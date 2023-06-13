@@ -21,6 +21,7 @@ import CDHeader from "../DesignJobs/CDHeader";
 import { cloneDeep } from "lodash";
 import IQHeader from "../DesignJobs/IQHeader";
 import { CheckReadOnlyAccess } from "../../../utils";
+import IQCDFooterButtons from "../DesignJobs/IQCDFooterButtons";
 const breadcrumb = [{ label: "Confirm Ink Qualification" }];
 
 const headerName = "Confirm Ink Qualification";
@@ -182,12 +183,14 @@ function CNIQ() {
 
     await submitConfirmInkQualification(formData, id, headers);
     setLoader(false);
+    navigate("/myTasks");
   };
 
   const onSaveAsDraft = async () => {
     // let submitOnlySelectedData = designIntent.filter(
     //   (task) => task?.Event !== "submit"
     // );
+    setLoader(true);
     let counter = 0;
     let submitOnlySelectedData = IQ?.map((task) => {
       counter++;
@@ -218,6 +221,8 @@ function CNIQ() {
     };
     console.log("full draft data --->", formData);
     await saveInkQualification(formData);
+    setLoader(false);
+    navigate("/myTasks");
   };
 
   const checkFormValidity = () => {
@@ -297,7 +302,7 @@ function CNIQ() {
               }
             })}
         </div>
-        <FooterButtons
+        <IQCDFooterButtons
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}

@@ -234,6 +234,7 @@ function DNPF() {
     console.log("full draft data --->", formData);
     await saveColorDevelopment(formData);
     setLoader(false);
+    navigate(`/myTasks`);
   };
 
   return (

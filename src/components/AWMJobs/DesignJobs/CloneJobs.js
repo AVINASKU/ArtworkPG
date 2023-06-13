@@ -153,9 +153,9 @@ const CloneJobs = ({
       break;
   }
 
-  useEffect(() => {
-    setChecked(Select);
-  }, [Select]);
+  // useEffect(() => {
+  //   setChecked(Select);
+  // }, [Select]);
 
   useEffect(() => {
     setIddsaChecked(IDDSampleApproved);
