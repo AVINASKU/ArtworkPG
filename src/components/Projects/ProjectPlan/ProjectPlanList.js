@@ -685,7 +685,7 @@ const ProjectPlanList = ({
             resizableColumns
             dataKey="Task"
             reorderableColumns
-            scrollable
+            // scrollable
             onColReorder={storeReorderedColumns}
             value={filters.length ? filters : pegadata}
             loading={loader}
