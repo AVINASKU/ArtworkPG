@@ -211,9 +211,9 @@ const ProjectPlanList = ({
   };
 
   const clearColumnWiseFilter = () => {
-    console.log("test");
     let jsonFrozenItem = localStorage.getItem("frozenDataProjectPlan");
     const frozenItem = JSON.parse(jsonFrozenItem);
+    console.log("test", frozenItem, selectedColumnName);
     if (
       frozenItem &&
       frozenItem.length &&
@@ -686,7 +686,6 @@ const ProjectPlanList = ({
             dataKey="Task"
             reorderableColumns
             scrollable
-            scrollHeight="calc(100vh - 320px)"
             onColReorder={storeReorderedColumns}
             value={filters.length ? filters : pegadata}
             loading={loader}

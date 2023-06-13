@@ -79,6 +79,21 @@ $fontWeight400: 400;
     line-height: 15px;
   }
 
+  .textAlignTreeTable {
+    height: calc(100vh - 320px);
+    overflow: auto;
+
+    .p-treetable-wrapper {
+      height: calc(100% - 10px);
+      overflow-x: auto;
+  
+      thead.p-treetable-thead {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+      }
+    }
+  }
   // .p-treetable-wrapper {
   //   height: calc(100vh - 320px);
   //   overflow: auto;
