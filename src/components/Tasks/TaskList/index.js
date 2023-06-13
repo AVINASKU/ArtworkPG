@@ -9,13 +9,14 @@ import { FilterMatchMode } from "primereact/api";
 import filter from "../../../assets/images/filter.svg";
 import { NavLink, useParams } from "react-router-dom";
 import { onSortData, Loading } from "../../../utils";
-import ConfirmationPopUp from "../../Projects/ConfirmationPopUp";
+// import ConfirmationPopUp from "../../Projects/ConfirmationPopUp";
 import TaskDialog from "../../TaskDialog";
 import CPPFA from "../../AWMJobs/CPPFA";
 import { HelpNeededAction } from "../../../store/actions/HelpNeededAction";
 import { useDispatch, useSelector } from "react-redux";
 import { getTasks, getAllTasks } from "../../../store/actions/TaskActions";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
+import ProjectListFilter from "../../Projects/ProjectListFilter";
 
 const TaskList = ({ myTasks, loading, flag, userInformation }) => {
   const dispatch = useDispatch();
@@ -149,10 +150,41 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
     }
   };
 
-  const onGlobalFilterChange = (e) => {
-    const value = e.value;
-    setselectedFields(value);
-    setFilters(value);
+  const onGlobalFilterChange = (e, colName) => {
+      const value = e.value;
+
+      console.log("value and e.value", value,e.value, selectedColumnName);
+
+        setselectedFields(value);
+
+    const artworkCategories = value;
+    // [
+    //   ...new Set(e?.value.map((item) => item[selectedColumnName])),
+    // ];
+
+    console.log("artwork", artworkCategories);
+
+    if (artworkCategories.length) {
+      let filterProjectState = selectedProdSrchList.filter((item) => {
+        if (
+          item &&
+          item[selectedColumnName]
+        ) {
+          const hasWords = artworkCategories.some((word) =>
+           Number.isInteger(word) ? item[selectedColumnName] === word : item[selectedColumnName]?.includes(word) 
+          );
+          if (hasWords) {
+            return item;
+          }
+        }
+      });
+      setFilters(filterProjectState);
+      // localStorage.setItem("columnWiseFilterData", JSON.stringify(filterProjectState));
+    } else {
+    // localStorage.removeItem("columnWiseFilterData");
+    setSelectedFields([]);
+    setFilters([]);
+    }
   };
 
   const clearFilter = () => {
@@ -505,7 +537,7 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
             ResetToDefaultFlag={false}
             isTreeTableFlag={false}
           />
-          <ConfirmationPopUp
+          <ProjectListFilter
             onSort={onSort}
             selectedColumnName={selectedColumnName}
             sortData={sortData}
