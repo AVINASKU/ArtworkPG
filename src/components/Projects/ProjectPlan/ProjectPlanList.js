@@ -691,7 +691,7 @@ const ProjectPlanList = ({
             loading={loader}
             className="mt-3 textAlignTreeTable"
             // tableStyle={{ minWidth: "119rem", tableLayout: "auto" }}
-            tableStyle={{ width: "119rem", minWidth: "50rem" }}
+            tableStyle={{ width: "max-content", minWidth: "100%" }}
             // filterDisplay={isSearch && "row"}
             // filters={true}
           >

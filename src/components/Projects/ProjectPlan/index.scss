@@ -80,7 +80,7 @@ $fontWeight400: 400;
   }
 
   .textAlignTreeTable {
-    height: calc(100vh - 320px);
+    height: calc(100vh - 275px);
     overflow: auto;
 
     .p-treetable-wrapper {
@@ -295,7 +295,7 @@ img[disabled] {
   text-align: left !important;
   display: flex;
   height: auto;
-  border-bottom: none !important;
+  // border-bottom: none !important;
 }
 
 .textAlignTreeTable > div > .p-treetable-table > .p-treetable-tbody > tr > td {
