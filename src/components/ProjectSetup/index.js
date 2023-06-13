@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import AddProject from "../Projects/CreateProject";
 import { DropdownButton, Dropdown } from "react-bootstrap";
 import "primeicons/primeicons.css";
@@ -11,6 +11,8 @@ import TabsComponent from "./tabsComponent";
 import { getUnAuthoirzedAccess, CheckReadOnlyAccess } from "../../utils";
 
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import ProjectListHeader from "../Projects/MyProjects/ProjectListHeader";
+import { ProjectService } from "../../service/PegaService";
 
 function ProjectSetup(props) {
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
@@ -83,11 +85,18 @@ function ProjectSetup(props) {
   const locationPath = location?.pathname;
   const url = locationPath?.split("/");
 
+  const [isSearch, isSearchSet] = useState(false);
+  const onSearchClick = () => {
+    isSearchSet(!isSearch);
+  };
+
   const breadcrumb = (
     <div>
-      <nav className="p-breadcrumb p-component" aria-label="Breadcrumb">
+      <nav
+        className="p-breadcrumb p-component ProjectPlanBreadCrum"
+        aria-label="Breadcrumb"
+      >
         <ul>
-          <li className="p-breadcrumb-chevron pi pi-chevron-right"></li>
           <li className="">
             <NavLink to={`/${url[1]}`} className="p-menuitem-link">
               <span className="p-menuitem-text">
@@ -95,16 +104,41 @@ function ProjectSetup(props) {
               </span>
             </NavLink>
           </li>
-          <li className="p-breadcrumb-chevron pi pi-chevron-right"></li>
+          <li className="p-breadcrumb-chevron pi pi-chevron-right piChevronRightMargin"></li>
           <li className="">
             <a href="#" className="p-menuitem-link">
               <span className="p-menuitem-text">{items}</span>
             </a>
           </li>
+          <li>
+            {mode !== "create" && (
+              <div className="project-name">
+                {selectedProjectDetails.Project_Name}
+              </div>
+            )}
+          </li>
         </ul>
       </nav>
     </div>
   );
+
+  const [isColWidthSet, setColWidth] = useState(null);
+
+  const [isFilterEnabled, setIsFilterEnabled] = useState(true);
+    // frozenCoulmns?.length || filters?.length || sortData?.length;
+
+  const isResetEnabled =
+    // isReorderedColumn || isFilterEnabled ||
+    isColWidthSet;
+
+  const { projectPlan } = useSelector((state) => state.ProjectPlanReducer);
+  const columnNames = ProjectService.getProjectPlanAllColumnNames();
+
+  const childFunc = useRef(null);
+
+  const test = (e) => {
+    setIsFilterEnabled(e);
+  }
 
   const itemsData = [
     {
@@ -117,18 +151,7 @@ function ProjectSetup(props) {
       ) : (
         <div className="projectSetupParent project-setup-wrapper">
           <div className="actions">
-            <div className="breadCrumbParent">
-              {breadcrumb}
-              {mode !== "create" && (
-                <div className="row">
-                  <div className="col">
-                    <div className="project-name projectNameForProjectSetup">
-                      {selectedProjectDetails.Project_Name}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+            <div className="breadCrumbParent">{breadcrumb}</div>
           </div>
           <AddProject {...props} />
         </div>
@@ -139,48 +162,54 @@ function ProjectSetup(props) {
       tabNameForDisplay: "Project Plan",
       component: (
         <div className="projectSetupParent project-plan-wrapper">
-          <div className="">
-            <div className="breadCrumbParent">
-              <div className="row">
-                <div className="col">
-                  {breadcrumb}
-                  {mode !== "create" && (
-                    <div className="row projectPlanName">
-                      <div className="col">
-                        <div className="project-name">
-                          {selectedProjectDetails.Project_Name}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div className="col projectPlanButtonsParent">
-                  <div
-                    className="btn-group btn-group-toggle"
-                    data-toggle="buttons"
-                  >
-                    <div className="col projectPlanButtons">
-                      <label
-                        className={` btn border border-secondary ${
-                          toggleButtons === "GanttChart"
-                            ? "ganttChartTabular active"
-                            : ""
-                        }`}
-                        onClick={() => setToggleButtons("GanttChart")}
-                      >
-                        Gantt Chart
-                      </label>
-                      <label
-                        className={` btn border border-secondary ${
-                          toggleButtons === "Tabular"
-                            ? "ganttChartTabular active"
-                            : ""
-                        }`}
-                        onClick={() => setToggleButtons("Tabular")}
-                      >
-                        Tabular
-                      </label>
-                    </div>
+          <div className="breadCrumbParent">
+            <div className="row">
+              <div className="col">{breadcrumb}</div>
+              <div className="col" style={{ display: "flex" }}>
+                {selectedProjectDetails !== undefined && (
+                  <ProjectListHeader
+                    header=""
+                    clearFilters={() => {}}
+                    clearFilter={childFunc.current}
+                    setVisible={() => {}}
+                    saveSettings={() => {}}
+                    onSearchClick={onSearchClick}
+                    // exportCSV={exportCSV}
+                    isFilterEnabled={isFilterEnabled}
+                    isResetEnabled={isResetEnabled}
+                    allData={projectPlan}
+                    headers={columnNames}
+                    CustomizeViewFlag={true}
+                    ResetToDefaultFlag={true}
+                    isTreeTableFlag={true}
+                  />
+                )}
+                <div
+                  className="btn-group btn-group-toggle"
+                  data-toggle="buttons"
+                  style={{ paddingLeft: "28px" }}
+                >
+                  <div className="col projectPlanButtons">
+                    <label
+                      className={` btn border border-secondary ${
+                        toggleButtons === "GanttChart"
+                          ? "ganttChartTabular active"
+                          : ""
+                      }`}
+                      onClick={() => setToggleButtons("GanttChart")}
+                    >
+                      Gantt Chart
+                    </label>
+                    <label
+                      className={` btn border border-secondary ${
+                        toggleButtons === "Tabular"
+                          ? "ganttChartTabular active"
+                          : ""
+                      }`}
+                      onClick={() => setToggleButtons("Tabular")}
+                    >
+                      Tabular
+                    </label>
                   </div>
                 </div>
               </div>
@@ -246,7 +275,12 @@ function ProjectSetup(props) {
               role="tabpanel"
               aria-labelledby="nav-design-tab"
             >
-              <ProjectPlanCompo />
+              <ProjectPlanCompo
+                isSearch={isSearch}
+                setColWidth={setColWidth}
+                childFunc={childFunc}
+                test={test}
+              />
             </div>
             <div
               className={`tab-pane fade ${

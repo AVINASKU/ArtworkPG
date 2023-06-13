@@ -10,8 +10,10 @@ $width: 100%;
   padding: 0 15px 0px 13px;
 }
 
-.projectNameForProjectSetup {
-  padding-top: 5px;
+.ProjectPlanBreadCrum {
+  ul {
+    padding: 0;
+  }
 }
 
 .subNav {
@@ -172,7 +174,7 @@ $width: 100%;
   padding-bottom: 20px;
   position: relative;
   &.project-setup-wrapper {
-    height: 100%;
+    // height: 100%;
     position: relative;
     .tabular-add-project{
       overflow: hidden;
@@ -253,7 +255,7 @@ $width: 100%;
 }
 
 .projectPlanButtonsParent {
-  text-align: center;
+  text-align: right;
 }
 
 .displayFlex {
@@ -359,9 +361,13 @@ span.right {
 
 .actionButtonsForTabComponent {
   padding-top: 5px;
-  right: 28px;
-  // position: absolute;
+  position: absolute;
+  right: 25px;
   width: 9.6%;
 }
 
+.piChevronRightMargin {
+  margin-left: 9.5px;
+  margin-right: 9.81px;
+}
 // TabsComponent Styles End

@@ -80,8 +80,26 @@ $fontWeight400: 400;
   }
 
   .textAlignTreeTable {
-    height: calc(100vh - 320px);
+    height: calc(100vh - 275px);
     overflow: auto;
+
+    .p-treetable-wrapper {
+      height: calc(100% - 10px);
+      overflow-x: auto;
+  
+      thead.p-treetable-thead {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+      }
+    }
+  }
+  // .p-treetable-wrapper {
+  //   height: calc(100vh - 320px);
+  //   overflow: auto;
+  // }
+  table .p-inputtext {
+    width: 100% !important;
   }
 }
 
@@ -277,7 +295,7 @@ img[disabled] {
   text-align: left !important;
   display: flex;
   height: auto;
-  border-bottom: none !important;
+  // border-bottom: none !important;
 }
 
 .textAlignTreeTable > div > .p-treetable-table > .p-treetable-tbody > tr > td {
@@ -288,6 +306,9 @@ img[disabled] {
   .p-dropdown {
     height: 25px;
   }
+}
+.p-treetable-resizable .p-treetable-tbody > tr > td {
+  width: 170px;
 }
 
 .projectPlanCompoButtons {

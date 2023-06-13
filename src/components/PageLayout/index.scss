@@ -54,7 +54,8 @@
     height: 100%;
     position: relative;
     padding-bottom: 0;
-    & > .content-layout {
+
+    &>.content-layout {
       // padding-top: 24px;
       padding-top: 8px;
       // padding-bottom: 32px;
@@ -95,7 +96,7 @@
           padding-top: 8px;
         }
 
-        .p-checkbox + .icon-label {
+        .p-checkbox+.icon-label {
           padding-top: 3px;
         }
         &.disabled{
@@ -108,5 +109,10 @@
         height: auto;
       }
     }
+  }
+
+  .comon-wrapper {
+    background: #edf4fa !important;
+    border: none !important;
   }
 }
