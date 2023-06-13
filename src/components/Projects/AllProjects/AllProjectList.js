@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { ProjectService } from "../../../service/PegaService";
-import ConfirmationPopUp from "../ConfirmationPopUp";
+import ProjectListFilter from "../ProjectListFilter";
 import { FilterMatchMode } from "primereact/api";
 import ProjectListHeader from "../MyProjects/ProjectListHeader";
 import { Tag } from "primereact/tag";
@@ -402,6 +402,8 @@ const AllProjectList = (props) => {
     setProjectColumnNames(reorderColumns(selectedCategories));
     const columnNames = JSON.stringify(reorderColumns(selectedCategories));
     localStorage.setItem("allColumnNamesAllProjects", columnNames);
+     localStorage.setItem("isColWidthSetAllProject", JSON.stringify(true));
+    setColWidth(true);
     setVisible(false);
   };
 
@@ -490,10 +492,41 @@ const AllProjectList = (props) => {
     setVisible(false);
   };
 
-  const onGlobalFilterChange = (e) => {
-    const value = e.value;
-    setSelectedFields(value);
-    setFilters(value);
+  const onGlobalFilterChange = (e, colName) => {
+      const value = e.value;
+
+      console.log("value and e.value", value,e.value);
+
+        setSelectedFields(value);
+
+    const artworkCategories = value;
+    // [
+    //   ...new Set(e?.value.map((item) => item[selectedColumnName])),
+    // ];
+
+    console.log("artwork", artworkCategories);
+
+    if (artworkCategories.length) {
+      let filterProjectState = pegadata.filter((item) => {
+        if (
+          item &&
+          item[selectedColumnName]
+        ) {
+          const hasWords = artworkCategories.some((word) =>
+           Number.isInteger(word) ? item[selectedColumnName] === word : item[selectedColumnName]?.includes(word) 
+          );
+          if (hasWords) {
+            return item;
+          }
+        }
+      });
+      setFilters(filterProjectState);
+      // localStorage.setItem("columnWiseFilterData", JSON.stringify(filterProjectState));
+    } else {
+    // localStorage.removeItem("columnWiseFilterData");
+    setSelectedFields([]);
+    setFilters([]);
+    }
   };
 
   const onColumnResizeEnd = (event) => {
@@ -631,6 +664,9 @@ const AllProjectList = (props) => {
               isResetEnabled={isResetEnabled}
               allData={pegadata}
               headers={allColumnNames}
+              CustomizeViewFlag={false}
+              ResetToDefaultFlag={false}
+              isTreeTableFlag={false}
             />
           )}
 
@@ -644,7 +680,7 @@ const AllProjectList = (props) => {
             resetToPgDefault={resetToPgDefault}
           />
 
-          <ConfirmationPopUp
+          <ProjectListFilter
             onSort={onSort}
             saveSettings={saveSettings}
             setProjectFrozen={setProjectFrozen}

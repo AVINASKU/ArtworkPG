@@ -24,9 +24,8 @@ export const submitUploadApproveDesignIntent = async (formData, id, headers = {}
     const api = new Api();
     const axiosInstance = await api.init({ headers });
     let apiURL;
-    //https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v2/assignments/ASSIGN-WORKLIST PG-AAS-WORK U-5708!UPLOADAPPROVEDESIGNINTENT_FLOW/actions/UploadApproveDesignIntent
     
-    apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!UPLOADREGIONALDESIGNTEMPLATE_FLOW/actions/UploadRegionalDesignTemplate`;
+    apiURL = `${DEVURL}/uploadRegionalDesignTemplate/${id}`;
   
     const submitUploadRegionalDesignIntentData = await axiosInstance({
       url: apiURL,
@@ -44,7 +43,7 @@ export const submitUploadApproveDesignIntent = async (formData, id, headers = {}
     const axiosInstance = await api.init({ headers });
     let apiURL;
     
-    apiURL = `${DEVURL}/uploadPRA/${id}`;
+    apiURL = `${DEVURL}/uploadPRA/${id}`; 
   
     const submitUploadProductionReadyArtData = await axiosInstance({
       url: apiURL,
