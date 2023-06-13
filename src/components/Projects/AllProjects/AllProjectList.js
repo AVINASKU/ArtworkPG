@@ -665,6 +665,9 @@ const AllProjectList = (props) => {
               isResetEnabled={isResetEnabled}
               allData={pegadata}
               headers={allColumnNames}
+              CustomizeViewFlag={false}
+              ResetToDefaultFlag={false}
+              isTreeTableFlag={false}
             />
           )}
 

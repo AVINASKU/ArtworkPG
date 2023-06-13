@@ -10,8 +10,10 @@ $width: 100%;
   padding: 0 15px 0px 13px;
 }
 
-.projectNameForProjectSetup {
-  padding-top: 5px;
+.ProjectPlanBreadCrum {
+  ul {
+    padding: 0;
+  }
 }
 
 .subNav {
@@ -78,7 +80,7 @@ $width: 100%;
 }
 
 .tabular-add-project {
-  padding: 0 15px 15px 15px;
+  padding: 0;
   overflow-y: scroll;
   height: 72vh;
 }
@@ -165,31 +167,21 @@ $width: 100%;
 }
 
 .projectSetupParent {
-  height: 471px;
+  height: 100%;
   background: rgb(255, 255, 255);
   border-radius: 24px;
-  margin-top: 5.5px;
   margin-left: 2px;
+  padding-bottom: 20px;
+  position: relative;
   &.project-setup-wrapper {
-    height: 100%;
+    // height: 100%;
     position: relative;
     .tabular-add-project{
       overflow: hidden;
       form{
         height: 100%;
         overflow: hidden auto;
-        padding-bottom: 90px;
-        .form-buttons{
-          position: absolute;
-          bottom: 5px;
-          background: white;
-          text-align: right;
-          width: 100%;
-          left: 0;
-          .btn{
-            margin-bottom: 10px
-          }
-        }
+        padding-bottom: 90px;        
       }
     }
   }
@@ -199,6 +191,14 @@ $width: 100%;
       overflow: initial;
     }
    
+  }
+  .form-buttons{
+    position: absolute;
+    background: white;
+    text-align: right;
+    width: 100%;
+    left: 0;
+    bottom: 0;
   }
 }
 
@@ -255,7 +255,7 @@ $width: 100%;
 }
 
 .projectPlanButtonsParent {
-  text-align: center;
+  text-align: right;
 }
 
 .displayFlex {
@@ -361,9 +361,13 @@ span.right {
 
 .actionButtonsForTabComponent {
   padding-top: 5px;
-  right: 28px;
-  // position: absolute;
+  position: absolute;
+  right: 25px;
   width: 9.6%;
 }
 
+.piChevronRightMargin {
+  margin-left: 9.5px;
+  margin-right: 9.81px;
+}
 // TabsComponent Styles End

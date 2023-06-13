@@ -666,14 +666,30 @@ const ProjectList = (props) => {
     <div className="myProjectAnddAllProjectList">
       {/* <Suspense fallback={ <Loading />}> */}
       {loader || loading || pegadata === null ? (
-        <Loading />
-      ) : (
-        <>
-          {pegadata !== undefined && (
-            <ProjectListHeader
-              header={props.header}
-              clearFilters={clearFilters}
-              clearFilter={clearFilter}
+          <Loading />
+        ): (   
+          <>
+            {pegadata !== undefined && (
+              <ProjectListHeader
+                header={props.header}
+                clearFilters={clearFilters}
+                clearFilter={clearFilter}
+                setVisible={setVisible}
+                saveSettings={saveSettings}
+                onSearchClick={onSearchClick}
+                // exportCSV={exportCSV}
+                isFilterEnabled={isFilterEnabled}
+                isResetEnabled={isResetEnabled}
+                allData={pegadata}
+                headers={allColumnNames}
+                CustomizeViewFlag={false}
+                ResetToDefaultFlag={false}
+                isTreeTableFlag={false}
+              />
+            )}
+            <CustomisedView
+              visible={visible}
+              setProjectColumnNames={setProjectColumnNames}
               setVisible={setVisible}
               saveSettings={saveSettings}
               onSearchClick={onSearchClick}
@@ -683,7 +699,7 @@ const ProjectList = (props) => {
               allData={pegadata}
               headers={allColumnNames}
             />
-          )}
+          
           <CustomisedView
             visible={visible}
             setProjectColumnNames={setProjectColumnNames}

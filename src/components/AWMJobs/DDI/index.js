@@ -39,6 +39,8 @@ function DDI() {
   const myProjectList = useSelector((state) => state.myProject);
   const location = useLocation();
   const currentUrl = location.pathname;
+  let checkTaskISComplete =
+    TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Status === "Complete";
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
 
   const checkReadWriteAccess = CheckReadOnlyAccess();
@@ -64,7 +66,7 @@ function DDI() {
   }, [TaskDetailsData]);
 
   const handleCancel = () => {
-    return navigate(`/MyTasks`);;
+    return navigate(`/${currentUrl?.split("/")[1]}`);
   };
 
   const handleDelete = (index) => {
@@ -94,7 +96,9 @@ function DDI() {
     setUpdated(!updated);
   };
 
-  const addData = (fieldName, index, value, Design_Intent_Name) => {    
+  const addData = (fieldName, index, value, Design_Intent_Name) => { 
+    if(checkTaskISComplete) 
+      return setEnableSubmit(true);
     let data = designIntent[index];
     data[fieldName] = value;
     data["Design_Job_Name"] = Design_Intent_Name;
@@ -152,8 +156,9 @@ function DDI() {
       if (task?.isNew) {
         task.Design_Job_ID = "";
       }
-      task.Action = "update";
-      if (task?.Action !== "delete" && task?.Design_Job_ID) {
+      if (task?.Action === "delete") {
+        task.Action = "delete";
+      } else if (task?.Action !== "delete" && task?.Design_Job_ID) {
         task.Action = "update";
       } else if (task?.Action !== "delete" && task?.isNew === true)
         task.Action = "add";
@@ -185,7 +190,7 @@ function DDI() {
     console.log("formData", formData);
     await submitDesignIntent(formData, id, headers);
     setLoader(false);
-    navigate(`/MyTasks`);
+    navigate(`/${currentUrl?.split("/")[1]}`);
   };
 
   const onSaveAsDraft = async () => {
@@ -195,8 +200,9 @@ function DDI() {
       if (task?.isNew) {
         task.Design_Job_ID = "";
       }
-      task.Action = "update";
-      if (task?.Action !== "delete" && task?.Design_Job_ID) {
+      if (task?.Action === "delete") {
+        task.Action = "delete";
+      } else if (task?.Action !== "delete" && task?.Design_Job_ID) {
         task.Action = "update";
       } else if (task?.Action !== "delete" && task?.isNew === true)
         task.Action = "add";
@@ -245,10 +251,11 @@ function DDI() {
         label="Define Design Intent"
         checkReadWriteAccess={checkReadWriteAccess}
         taskName="Design Intent"
+        checkTaskISComplete={checkTaskISComplete}
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
-
+        {checkTaskISComplete && <div className="task-completion">This task is already submitted</div>}
         {loading || loader || designIntent === null ? (
           <Loading />
         ) : (
@@ -283,6 +290,7 @@ function DDI() {
         // formValid={submitActive}
         checkReadWriteAccess={checkReadWriteAccess}
         bottomFixed={true}
+        checkTaskISComplete={checkTaskISComplete}
       />
     </PageLayout>
   );
