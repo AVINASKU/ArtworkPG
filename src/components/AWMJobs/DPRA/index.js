@@ -71,7 +71,7 @@ function DPRA() {
   }, [projectData]);
 
   const handleCancel = () => {
-    return navigate(`/MyTasks`);
+    return navigate(`/${currentUrl?.split("/")[1]}`);
   };
 
   const handleDelete = (index) => {
@@ -99,6 +99,8 @@ function DPRA() {
   };
 
   const addData = (fieldName, index, value, Design_Intent_Name) => {
+    if(checkTaskISComplete) 
+      return setEnableSubmit(true);
     let data = designIntent[index];
     data[fieldName] = value;
     // add here design job name here check it out from API.
@@ -156,8 +158,9 @@ function DPRA() {
       if (task?.isNew) {
         task.Design_Job_ID = "";
       }
-      task.Action = "update";
-      if (task?.Action !== "delete" && task?.Design_Job_ID) {
+      if (task?.Action === "delete") {
+        task.Action = "delete";
+      } else if (task?.Action !== "delete" && task?.Design_Job_ID) {
         task.Action = "update";
       } else if (task?.Action !== "delete" && task?.isNew === true)
         task.Action = "add";
@@ -191,7 +194,7 @@ function DPRA() {
     console.log("formData", formData);
     await submitDefineProductionReadyArt(formData, id, headers);
     setLoader(false);
-    navigate(`/MyTasks`);
+    navigate(`/${currentUrl?.split("/")[1]}`);
   };
 
   const onSaveAsDraft = async () => {
@@ -201,8 +204,9 @@ function DPRA() {
       if (task?.isNew) {
         task.Design_Job_ID = "";
       }
-      task.Action = "update";
-      if (task?.Action !== "delete" && task?.Design_Job_ID) {
+      if (task?.Action === "delete") {
+        task.Action = "delete";
+      } else if (task?.Action !== "delete" && task?.Design_Job_ID) {
         task.Action = "update";
       } else if (task?.Action !== "delete" && task?.isNew === true)
         task.Action = "add";
@@ -253,10 +257,11 @@ function DPRA() {
         label="Define Production Ready Art"
         checkReadWriteAccess={checkReadWriteAccess}
         taskName="Production Ready Art"
+        checkTaskISComplete={checkTaskISComplete}
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
-
+        {checkTaskISComplete && <div className="task-completion">This task is already submitted</div>}
         {loading || loader || designIntent === null ? (
           <Loading />
         ) : (
@@ -291,6 +296,7 @@ function DPRA() {
         bottomFixed={true}
         checkReadWriteAccess={checkReadWriteAccess}
         formValid={enableSubmit}
+        checkTaskISComplete={checkTaskISComplete}
       />
     </PageLayout>
   );

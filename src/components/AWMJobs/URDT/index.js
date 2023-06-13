@@ -10,7 +10,7 @@ import { submitUploadRegionalDesignIntent } from "../../../apis/uploadSubmitAPIs
 import { postSaveDesignIntent } from "../../../apis/uploadSaveAsDraft";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { CheckReadOnlyAccess } from "../../../utils";
+import { CheckReadOnlyAccess, Loading } from "../../../utils";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/tasks" },
@@ -27,6 +27,7 @@ const URDT = () => {
   const [mappedFiles, setMappedFiles] = useState([]);
   const [fileName, setFileName] = useState("");
   const [azureFile, setAzureFile] = useState("");
+  const [loader, setLoader] = useState(false);
   let { TaskID, ProjectID } = useParams();
   const { TaskDetailsData, loading } = useSelector(
     (state) => state.TaskDetailsReducer
@@ -68,6 +69,7 @@ const URDT = () => {
   };
 
   const onSaveAsDraft = async () => {
+    setLoader(true);
     const fileSize = Math.round(formattedValue / 1000000);
     const formData = {
       AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
@@ -77,9 +79,11 @@ const URDT = () => {
       Filename: fileName,
     };
     await postSaveDesignIntent(formData);
+    setLoader(false);
   };
 
   const onSubmit = async () => {
+    setLoader(true);
     const fileSize = Math.round(formattedValue / 1000000);
     const headers = {
       key: "If-Match",
@@ -98,6 +102,7 @@ const URDT = () => {
     };
     // console.log('formData', formData, "id", id);
     await submitUploadRegionalDesignIntent(formData, id, headers);
+    setLoader(false);
     navigate(`/${currentUrl?.split("/")[1]}`);
   };
   return (
@@ -108,13 +113,12 @@ const URDT = () => {
         disabled={true}
         label="Upload Regional Design Template"
         checkReadWriteAccess={checkReadWriteAccess}
+        taskName="Regional Design Intent"
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
-          {loading ? (
-            <div className="align-item-center">
-              <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
-            </div>
+          {loading || loader || designIntent === null ? (
+             <Loading />
           ) : (
             designIntent && (
               <ApproveDesignIntentContent
