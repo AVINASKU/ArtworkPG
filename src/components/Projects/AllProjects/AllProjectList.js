@@ -14,6 +14,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import _ from "lodash";
 import ProjectNameHeader from "../MyProjects/ProjectNameHeader";
 import CustomisedView from "../MyProjects/CustomisedView";
+import { generateUniqueKey } from "../../../utils";
 
 const AllProjectList = (props) => {
   const User = useSelector((state) => state.UserReducer);
@@ -421,23 +422,23 @@ const AllProjectList = (props) => {
       "Full Kit Readiness Tracking",
     ];
 
-        const ProjectData = _.cloneDeep(allProjectList.myProject);
-    let allCol = [];
-    if (ProjectData.length) {
-      allCol = Object.keys(ProjectData[0]);
-      allCol.push("Full Kit Readiness Tracking");
-    }
-    let columnWidthMyProject = {};
-    if (allCol.length) {
-      allCol.forEach((column) => {
-        columnWidthMyProject[column] = 100;
-      });
-    }
+    //     const ProjectData = _.cloneDeep(allProjectList.myProject);
+    // let allCol = [];
+    // if (ProjectData.length) {
+    //   allCol = Object.keys(ProjectData[0]);
+    //   allCol.push("Full Kit Readiness Tracking");
+    // }
+    // let columnWidthMyProject = {};
+    // if (allCol.length) {
+    //   allCol.forEach((column) => {
+    //     columnWidthMyProject[column] = 100;
+    //   });
+    // }
 
     setProjectColumnNames(allColumnNames);
     // const columnNames = ProjectService.getAllColumnNamesAllProjects();
 
-    localStorage.setItem("columnWidthAllProject", JSON.stringify(columnWidthMyProject));
+    // localStorage.setItem("columnWidthAllProject", JSON.stringify(columnWidthMyProject));
     localStorage.setItem(
       "allColumnNamesAllProjects",
       JSON.stringify(allColumnNames)
@@ -664,9 +665,6 @@ const AllProjectList = (props) => {
               isResetEnabled={isResetEnabled}
               allData={pegadata}
               headers={allColumnNames}
-              CustomizeViewFlag={false}
-              ResetToDefaultFlag={false}
-              isTreeTableFlag={false}
             />
           )}
 
@@ -706,6 +704,7 @@ const AllProjectList = (props) => {
             reorderableColumns
             onColReorder={storeReorderedColumns}
             onResize={(e) => console.log("resize", e)}
+            key={generateUniqueKey("ppp")}
             onResizeCapture={(e) => console.log("e", e)}
             value={filters.length ? filters : pegadata}
             scrollable
