@@ -189,6 +189,7 @@ $width: 100%;
     .tab-content{
       height: auto;
       overflow: initial;
+      padding: 0;
     }
    
   }
@@ -266,8 +267,10 @@ $width: 100%;
 
 // TabsComponent Styles Start
 .tab-content {
-  height: calc(100% - 41px);
+  height: calc(100% - 30px);
   overflow: hidden;
+  position: relative;
+  padding-bottom: 20px;
   .nav-link {
     font-style: normal;
     font-weight: 500;
@@ -308,15 +311,14 @@ ul.nav.nav-tabs {
 
 .nav-tabs li {
   // flex-basis: 90px;
-  min-width: 90px;
+  min-width: 150px;
   display: flex;
   align-items: flex-start;
   margin: 0 !important;
 }
 
 .tabs-wrapper {
-  position: relative;
-  width: 89%;
+  flex: 1;
 
   .nav-tabs li.active {
     border-bottom: 2.5px solid rgba(0, 61, 165, 1);
@@ -360,19 +362,12 @@ span.right {
   pointer-events: none;
 }
 
-.actionButtonsForTabComponent {
-  padding-top: 5px;
-  position: absolute;
-  right: 25px;
-  width: 9.6%;
-}
-
 .piChevronRightMargin {
   margin-left: 9.5px;
   margin-right: 9.81px;
 }
 .tabComponent {
   display:flex;
-  margin-bottom: 23.5px;
+  align-items: center;
 }
 // TabsComponent Styles End
