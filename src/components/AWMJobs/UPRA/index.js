@@ -125,33 +125,37 @@ const UPRA = () => {
         label="Upload Production Ready Art"
         checkReadWriteAccess={checkReadWriteAccess}
       />
-      {<AddNewDesign {...data} />}
-      {loading ? (
-        <div className="align-item-center">
-          <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
-        </div>
-      ) : (
-        designIntent && (
-          <UploadDesignIntentProofscope
-            {...designIntent}
-            upload={true}
-            setformattedValue={setformattedValue}
-            setAzureFile={setAzureFile}
-            setFileName={setFileName}
-            item={data}
-            roleName={roleName}
-            ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
-            version={version}
-            checkReadWriteAccess={checkReadWriteAccess}
-            date={date}
-          />
-        )
-      )}{" "}
+      <div className="task-details">
+        {<AddNewDesign {...data} />}
+        {loading ? (
+          <div className="align-item-center">
+            <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
+          </div>
+        ) : (
+          designIntent && (
+            <UploadDesignIntentProofscope
+              {...designIntent}
+              upload={true}
+              setformattedValue={setformattedValue}
+              setAzureFile={setAzureFile}
+              setFileName={setFileName}
+              item={data}
+              roleName={roleName}
+              ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
+              version={version}
+              checkReadWriteAccess={checkReadWriteAccess}
+              date={date}
+            />
+          )
+        )}{" "}
+      </div>
+      
       <FooterButtons
         onSubmit={onSubmit}
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
         checkReadWriteAccess={checkReadWriteAccess}
+        bottomFixed={true}
       />
     </PageLayout>
   );

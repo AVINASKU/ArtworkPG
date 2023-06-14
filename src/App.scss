@@ -480,3 +480,32 @@ fieldset:disabled .btn {
 .p-datatable .p-datatable-thead > tr > th {
   white-space: break-spaces !important;
 }
+.p-multiselect{
+  & .p-multiselect-label{
+    padding: 10px 16px;
+    line-height: 10px;
+    font-size: 10px;
+  }
+}
+input, textarea{
+  &::-moz-placeholder {
+    color: #c2c2c2 !important;
+    font-size: 10px;
+    opacity: 0.8;
+  }
+  &:-moz-placeholder {
+    color: #c2c2c2 !important;
+    font-size: 10px;
+    opacity: 0.8;
+  }
+  &:-ms-input-placeholder {
+    color: #c2c2c2 !important;
+    font-size: 10px;
+    opacity: 0.8;
+  }
+  &::-webkit-input-placeholder {
+    color: #c2c2c2 !important;
+    font-size: 10px;
+    opacity: 0.8;
+  }
+}
