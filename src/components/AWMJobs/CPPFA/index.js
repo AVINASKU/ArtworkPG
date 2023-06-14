@@ -229,8 +229,9 @@ const CPPFA = ({
                   type="radio"
                   id="html"
                   name="fav_language"
-                  defaultChecked={riskLevel === "Low"}
                   value="Low"
+                  defaultChecked={riskLevel === "Low"}
+                  checked={designIntent.RiskLevel === "Low" || designIntent.RiskLevel === ""}
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
                   disabled={isAccessEmpty || cppfaDialogFlag}
                 />
@@ -242,6 +243,7 @@ const CPPFA = ({
                   id="html"
                   name="fav_language"
                   value="Medium"
+                  checked={designIntent.RiskLevel === "Medium"}
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
                   disabled={isAccessEmpty || cppfaDialogFlag}
                 />
@@ -253,6 +255,7 @@ const CPPFA = ({
                   id="html"
                   name="fav_language"
                   value="High"
+                  checked={designIntent.RiskLevel === "High"}
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
                   disabled={isAccessEmpty || cppfaDialogFlag}
                 />
