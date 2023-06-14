@@ -18,6 +18,7 @@ import "./index.scss";
 import CDHeader from "../DesignJobs/CDHeader";
 import IQHeader from "../DesignJobs/IQHeader";
 import { CheckReadOnlyAccess } from "../../../utils";
+import IQCDFooterButtons from "../DesignJobs/IQCDFooterButtons";
 const breadcrumb = [{ label: "Define Ink Qualification" }];
 
 const headerName = "Define Ink Qualification";
@@ -161,9 +162,10 @@ function DNIQ() {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-
+    console.log("Submit Data", formData, id, headers);
     await submitInkQualification(formData, id, headers);
     setLoader(false);
+    navigate("/myTasks");
   };
 
   const onSaveAsDraft = async () => {
@@ -204,6 +206,7 @@ function DNIQ() {
     console.log("full draft data --->", formData);
     await saveInkQualification(formData);
     setLoader(false);
+    navigate("/myTasks");
   };
 
   const checkFormValidity = () => {
@@ -228,6 +231,7 @@ function DNIQ() {
           label="Define Ink Qualification"
           showPage="DNIQ"
           checkReadWriteAccess={checkReadWriteAccess}
+          data={data}
         />
         <div
           className="task-details"
@@ -261,13 +265,14 @@ function DNIQ() {
               }
             })}
         </div>
-        <FooterButtons
+        <IQCDFooterButtons
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}
           formValid={!formValid}
           checkReadWriteAccess={checkReadWriteAccess}
           bottomFixed={true}
+          data={data}
         />
       </PageLayout>
     </LoadingOverlay>

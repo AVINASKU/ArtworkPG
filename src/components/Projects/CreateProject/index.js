@@ -65,7 +65,7 @@ function AddProject(props) {
   const [projectDesc, setProjectDesc] = useState("");
   const [groupName, setGroupName] = useState("");
   const [cluster, setCluster] = useState("");
-  const [scale, setScale] = useState([]);
+  const [scale, setScale] = useState("");
   const [selectedCities, setSelectedCities] = useState([]);
   const [formValid, setFormValid] = useState(false);
   const [formData, setFormData] = useState(null);
@@ -230,7 +230,7 @@ function AddProject(props) {
         scales?.find(
           (r) => r.Scale_Name === selectedProjectDetails?.Project_Scale
         )) ||
-        {}
+        ""
     );
   }, [scales]);
 
@@ -310,7 +310,7 @@ function AddProject(props) {
           scales.find(
             (r) => r.Scale_Name === selectedProjectDetails.Project_Scale
           )) ||
-          {}
+          ""
       );
       setSOSDate(
         (selectedProjectDetails?.Estimated_SOS &&
@@ -335,7 +335,7 @@ function AddProject(props) {
       setIl(selectedProjectDetails?.IL);
       setPm(selectedProjectDetails?.PM || userInformation.username);
       setComments(selectedProjectDetails?.Comments || "");
-      setProjectType(selectedProjectDetails?.Project_Type || []);
+      setProjectType(selectedProjectDetails?.Project_Type || "");
 
       setDesignScopeList((prevDesignScopeList) => ({
         ...prevDesignScopeList,
@@ -419,7 +419,7 @@ function AddProject(props) {
       setRegion({});
       setSmo([]);
       setCluster("");
-      setScale([]);
+      setScale("");
       setSOSDate("");
       setSOPDate("");
       setPrinterDate("");

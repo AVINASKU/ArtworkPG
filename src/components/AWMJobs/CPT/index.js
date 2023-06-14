@@ -208,6 +208,7 @@ function CPT() {
 
     await submitConfirmColorDevelopment(formData, id, headers);
     setLoader(false);
+    navigate(`/myTasks`);
   };
 
   const onSaveAsDraft = async () => {
