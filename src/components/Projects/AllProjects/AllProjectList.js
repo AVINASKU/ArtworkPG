@@ -314,10 +314,10 @@ const AllProjectList = (props) => {
             style={{ color: "#003DA5", cursor: "pointer" }}
             onClick={() => {
               if (field && field.length) {
-                let option = myProjectList.myProject.find(
+                let option = allProjectList.myProject.find(
                   (project) => project.Project_ID === projectId
                 );
-                dispatch(selectedProject(option, "My Projects"));
+                dispatch(selectedProject(option, "All Projects"));
                 navigate(`${currentUrl}/projectPlan/${projectId}`);
               }
             }}
@@ -331,10 +331,10 @@ const AllProjectList = (props) => {
             style={{ color: "#003DA5", cursor: "pointer" }}
             onClick={() => {
               if (field && field.length) {
-                let option = myProjectList.myProject.find(
+                let option = allProjectList.myProject.find(
                   (project) => project.Project_ID === projectId
                 );
-                dispatch(selectedProject(option, "My Projects"));
+                dispatch(selectedProject(option, "All Projects"));
                 navigate(`${currentUrl}/projectPlan/${projectId}`);
               }
             }}
