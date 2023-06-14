@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import LoadingOverlay from "react-loading-overlay-ts";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { MultiSelect } from "primereact/multiselect";
 import { Calendar } from "primereact/calendar";
@@ -10,6 +9,7 @@ import { createNewProject, editProject } from "../../../apis/projectSetupApi";
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 import { updateProjectPlanAction } from "../../../store/actions/ProjectPlanActions";
 import { getDropDownValues } from "../../../store/actions/dropDownValuesAction";
+import { Loading } from "../../../utils";
 import moment from "moment-timezone";
 import { Toast } from "primereact/toast";
 import "./index.scss";
@@ -1070,7 +1070,10 @@ function AddProject(props) {
   };
 
   return (
-    <LoadingOverlay active={loader} spinner text={spinnerText}>
+    <>
+    { loading || loader ? (
+      <Loading />
+    ) : (
       <div className="tabular-add-project">
         <Toast ref={toast} />
         <Form onSubmit={handleSubmit(onSubmit)}>
@@ -1705,7 +1708,8 @@ function AddProject(props) {
           </div>
         </Form>
       </div>
-    </LoadingOverlay>
+    )}
+    </>
   );
 }
 export default AddProject;
