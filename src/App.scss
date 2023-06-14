@@ -125,7 +125,6 @@ div {
 .btn.disabled,
 fieldset:disabled .btn {
   /* Light Grey */
-  font-size: 16px;
   text-align: center;
   display: flex;
   align-items: center;
@@ -133,8 +132,6 @@ fieldset:disabled .btn {
   border-radius: 20px;
   background: #acacac !important;
   border-radius: 20px;
-  width: 178px;
-  height: 40px;
   border-color: #acacac !important;
 }
 
