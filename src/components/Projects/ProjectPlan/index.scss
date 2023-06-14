@@ -80,11 +80,11 @@ $fontWeight400: 400;
   }
 
   .textAlignTreeTable {
-    height: calc(100vh - 275px);
+    height: calc(100vh - 238px);
     overflow: auto;
 
     .p-treetable-wrapper {
-      height: calc(100% - 10px);
+      height: calc(100% - 43px);
       overflow-x: auto;
   
       thead.p-treetable-thead {
@@ -297,6 +297,10 @@ img[disabled] {
   height: auto;
   // border-bottom: none !important;
 }
+// .p-treetable-emptymessage {
+//   text-align: center !important;
+//   display: none;
+// }
 
 .textAlignTreeTable > div > .p-treetable-table > .p-treetable-tbody > tr > td {
   min-width: 100px;
