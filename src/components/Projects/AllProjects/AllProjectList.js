@@ -77,7 +77,7 @@ const AllProjectList = (props) => {
   }, [dispatch, userInformation]);
 
   useEffect(() => {
-    const ProjectData = _.cloneDeep(allProjectList.myProject);
+    const ProjectData = _.cloneDeep(allProjectList.allProjects);
     let allCol = [];
     if (ProjectData.length) {
       allCol = Object.keys(ProjectData[0]);
@@ -314,7 +314,7 @@ const AllProjectList = (props) => {
             style={{ color: "#003DA5", cursor: "pointer" }}
             onClick={() => {
               if (field && field.length) {
-                let option = allProjectList.myProject.find(
+                let option = allProjectList.allProjects.find(
                   (project) => project.Project_ID === projectId
                 );
                 dispatch(selectedProject(option, "All Projects"));
@@ -331,7 +331,7 @@ const AllProjectList = (props) => {
             style={{ color: "#003DA5", cursor: "pointer" }}
             onClick={() => {
               if (field && field.length) {
-                let option = allProjectList.myProject.find(
+                let option = allProjectList.allProjects.find(
                   (project) => project.Project_ID === projectId
                 );
                 dispatch(selectedProject(option, "All Projects"));
@@ -468,7 +468,7 @@ const AllProjectList = (props) => {
       "Estimated_AW_Printer",
       "Full Kit Readiness Tracking",
     ];
-    const ProjectData = _.cloneDeep(allProjectList.myProject);
+    const ProjectData = _.cloneDeep(allProjectList.allProjects);
     let allCol = [];
     if (ProjectData.length) {
       allCol = Object.keys(ProjectData[0]);
