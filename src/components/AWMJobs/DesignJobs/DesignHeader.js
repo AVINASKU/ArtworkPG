@@ -13,6 +13,8 @@ const DesignHeader = ({
   headerName,
   disabled,
   checkReadWriteAccess,
+  taskName,
+  checkTaskISComplete
 }) => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
@@ -84,7 +86,7 @@ const DesignHeader = ({
               <label className="icon-label">filter</label>
             </div>
           </div>
-          <div className="icon-items">
+          <div className={ checkTaskISComplete ? "icon-items disabled": "icon-items"}>
             <img
               src={plusCollapseImg}
               onClick={() =>
@@ -96,7 +98,7 @@ const DesignHeader = ({
             />
             <div className="icon-label">
               <label className={disabled && "disable-buttons"}>
-                Add Design Intent
+                Add {taskName}
               </label>
             </div>
           </div>

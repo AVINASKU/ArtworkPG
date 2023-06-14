@@ -11,12 +11,14 @@ const UploadDesignIntentProofscope = ({
   file_name,
   setformattedValue,
   setFileName,
+  fileName,
   setMappedFiles,
   setAzureFile,
   item,
   roleName,
   ArtworkAgilityPage,
   version,
+  date
 }) => {
   console.log("item here here", item);
   const [totalSize, setTotalSize] = useState(0);
@@ -38,9 +40,10 @@ const UploadDesignIntentProofscope = ({
     event.preventDefault();
     viewProofScopeFile(`cloudflow://PP_FILE_STORE/aacdata/${fileUrl}`);
   };
-
   let di_name;
-  di_name = item?.Task_Name;
+  if (!approve) {
+    di_name = version !== "V0" && item?.DesignJobDetails[0]?.FileMetaDataList[0]?.Timestamp !== "" ? `${item?.Task_Name}_${version}_${date}` : `${item?.Task_Name}`;
+  }
 
   const onTemplateUpload = (e) => {
     let _totalSize = 0;
@@ -54,14 +57,13 @@ const UploadDesignIntentProofscope = ({
 
   const itemTemplate = (file, props) => {
     console.log("file here 1", file);
-    setformattedValue(props.formatSize);
-    setFileName(file.name);
+    setformattedValue(file.size);
+    setFileName(di_name);
     setAzureFile(file);
     //   seFileData(file);
     return (
       <div className="upload-row">
         <img
-          alt={file.name}
           role="presentation"
           src={file.objectURL}
           width={50}
@@ -131,7 +133,7 @@ const UploadDesignIntentProofscope = ({
   };
 
   return (
-    <div style={{ height: "300px" }}>
+    <div>
       <div className="design-intent-header">{DesignHeader(di_name)}</div>
       <div className="approve-design-intent">
         {upload && (
@@ -154,15 +156,22 @@ const UploadDesignIntentProofscope = ({
             />
           </div>
         )}
+        {item?.DesignJobDetails[0]?.FileMetaDataList[0]?.File_Name === ""
+          ? fileName === ""
+            ? `No files uploaded yet please upload file!`
+            : ``
+          : fileName === ""
+          ? di_name && (
+            <a
+              className="flex flex-column text-left ml-3"
+              onClick={(event) => handleViewProofScopeClick(event, updatedImg)}
+            >
+              {di_name}
+            </a>
+          )
+          : ""}
 
-        {updatedImg && (
-          <a
-            className="flex flex-column text-left ml-3"
-            onClick={(event) => handleViewProofScopeClick(event, updatedImg)}
-          >
-            {updatedImg}
-          </a>
-        )}
+        
 
         {approve && (
           <div

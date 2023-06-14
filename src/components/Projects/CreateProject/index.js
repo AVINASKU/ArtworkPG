@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import LoadingOverlay from "react-loading-overlay-ts";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { MultiSelect } from "primereact/multiselect";
 import { Calendar } from "primereact/calendar";
@@ -19,6 +20,7 @@ import {
   Tier,
   PMValues,
 } from "../../../categories";
+import { RoleUser } from "../../../userRole";
 import { useDispatch, useSelector } from "react-redux";
 
 const defaultCheckedItems = {
@@ -56,13 +58,14 @@ function AddProject(props) {
       prePopuSmo.push(obj.code);
     }
   });
+  const [loader, setLoader] = useState(false);
+  const [spinnerText, setSpinnerText] = useState(false);
   const [submitButtonState, setSubmitButtonState] = useState(false);
   const [projectName, setProjectName] = useState("");
   const [projectDesc, setProjectDesc] = useState("");
   const [groupName, setGroupName] = useState("");
   const [cluster, setCluster] = useState("");
   const [scale, setScale] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [selectedCities, setSelectedCities] = useState([]);
   const [formValid, setFormValid] = useState(false);
   const [formData, setFormData] = useState(null);
@@ -76,10 +79,13 @@ function AddProject(props) {
   const [smo, setSmo] = useState([]);
   const [bu, setBu] = useState("");
   const [subCategories, setSubCategories] = useState([]);
+  const [categoriesAlert, setCategoriesAlert] = useState(false);
   const [brand, setBrand] = useState([]);
-  const [tier, setTier] = useState("");
+  const [tierList, setTierList] = useState([]);
+  const [productionStrategyList, setProductionStrategyList] = useState([]);
+  const [Tier, setTier] = useState("");
   const [ps, setPs] = useState("");
-  const [pm, setPm] = useState(userInformation.username);
+  const [pm, setPm] = useState("");
   const [iL, setIl] = useState("");
   const [comments, setComments] = useState("");
   const [projectType, setProjectType] = useState("");
@@ -114,20 +120,27 @@ function AddProject(props) {
   );
 
   useEffect(() => {
-    if (
-      projectName &&
-      bu &&
-      brand?.length &&
-      region &&
-      smo?.length &&
-      printerDate &&
-      readinessDate
-    ) {
-      setSubmitButtonState(true);
-    } else {
-      setSubmitButtonState(false);
-    }
-  }, [mode, projectName, bu, brand, region, smo, printerDate, readinessDate]);
+    RoleUser.users.map((role) => {
+      if (role.username === userInformation.username) {
+        setPm(role.username);
+      }
+    });
+  });
+  // useEffect(() => {
+  //   if (
+  //     projectName &&
+  //     bu &&
+  //     brand?.length &&
+  //     region &&
+  //     smo?.length &&
+  //     printerDate &&
+  //     readinessDate
+  //   ) {
+  //     setSubmitButtonState(true);
+  //   } else {
+  //     setSubmitButtonState(false);
+  //   }
+  // }, [mode, projectName, bu, brand, region, smo, printerDate, readinessDate]);
   const showStatus = (severity, summary, detail, redirect) => {
     toast.current.show({
       severity: severity,
@@ -143,16 +156,21 @@ function AddProject(props) {
   };
 
   const formatDate = (date) => {
-    return new Date(
+    const formattedDate = new Date(
       moment(date, "YYYYMMDD[T]HHmmss.SSS [GMT]")
         .tz(Intl.DateTimeFormat().resolvedOptions().timeZone)
         .format("ddd MMM DD YYYY HH:mm:ss [GMT]ZZ (z)")
     );
+    if (formattedDate.getFullYear() > "1999") {
+      return formattedDate;
+    } else {
+      return "";
+    }
   };
 
   useEffect(() => {
-  //  if(DropDownValuesData === null)
-      dispatch(getDropDownValues());
+    //  if(DropDownValuesData === null)
+    dispatch(getDropDownValues());
   }, [dispatch]);
 
   useEffect(() => {
@@ -164,7 +182,10 @@ function AddProject(props) {
   }, [DropDownValuesData]);
 
   useEffect(() => {
-    if(projectSetupPageDropDownValues !== undefined && projectSetupPageDropDownValues.length !== 0){
+    if (
+      projectSetupPageDropDownValues !== undefined &&
+      projectSetupPageDropDownValues.length !== 0
+    ) {
       setbUs(projectSetupPageDropDownValues.Artwork_BU);
       setBrands(projectSetupPageDropDownValues.Artwork_Brand);
       setRegions(projectSetupPageDropDownValues.Artwork_Region);
@@ -172,16 +193,24 @@ function AddProject(props) {
       setScales(projectSetupPageDropDownValues.Artwork_Scale);
       setProjectTypeList(projectSetupPageDropDownValues.Artwork_ProjectType);
     }
-  },[projectSetupPageDropDownValues]);
+  }, [projectSetupPageDropDownValues]);
 
   useEffect(() => {
     bu &&
-    bUs.forEach((obj) => {
-      obj.Artwork_Picklist.forEach((pickList)=> {
-        if(bu === obj.code && pickList.Picklist_Name === "SAPCategory"){
-          setSubCategoriesOptions(pickList.Labels);
-        }
-      })
+      bUs.forEach((obj) => {
+        obj.Artwork_Picklist.forEach((pickList) => {
+          if (bu === obj.BU_Name && pickList.Picklist_Name === "SAPCategory") {
+            setSubCategoriesOptions(pickList.Labels);
+          }
+         
+          if (obj.code === "BBY" && pickList.Picklist_Name === "TIER") {           
+            setTierList(pickList.Labels);
+          }
+          if (obj.code === "HOM" && pickList.Picklist_Name === "PRODSTRAT") {
+            console.log("obj", obj, "pickList", pickList.Labels)
+            setProductionStrategyList(pickList.Labels);
+          }
+        });
       });
   }, [bu, bUs]);
 
@@ -193,16 +222,35 @@ function AddProject(props) {
         )) ||
         {}
     );
-  },[regions]);
-
+  }, [regions]);
 
   useEffect(() => {
     setScale(
       (selectedProjectDetails &&
-        scales?.find((r) => r.Scale_Name === selectedProjectDetails.Project_Scale)) ||
+        scales?.find(
+          (r) => r.Scale_Name === selectedProjectDetails?.Project_Scale
+        )) ||
         {}
     );
-  },[scales]);
+  }, [scales]);
+
+  useEffect(() => {
+    setPs(
+      (selectedProjectDetails &&
+        productionStrategyList.find(
+          (ps) => ps.Label_Name === selectedProjectDetails?.Production_Strategy
+        )) ||
+        {}
+    );
+  }, [productionStrategyList]);
+
+  useEffect(() => {
+    setTier(
+      (selectedProjectDetails &&
+        tierList.find((r) => r.Label_Name === selectedProjectDetails?.Tier)) ||
+        {}
+    );
+  }, [tierList]);
 
   useEffect(() => {
     if (mode === "edit" || mode === "design") {
@@ -229,12 +277,12 @@ function AddProject(props) {
       }
 
       bu &&
-      bUs.forEach((obj) => {
-        obj.Artwork_Picklist.forEach((pickList)=> {
-          if(bu === obj.code && pickList.Picklist_Name === "SAPCategory"){
-            setSubCategoriesOptions(pickList.Labels);
-          }
-        })
+        bUs.forEach((obj) => {
+          obj.Artwork_Picklist.forEach((pickList) => {
+            if (bu === obj.code && pickList.Picklist_Name === "SAPCategory") {
+              setSubCategoriesOptions(pickList.Labels);
+            }
+          });
         });
 
       if (selectedProjectDetails?.Artwork_Brand?.length > 0) {
@@ -256,10 +304,12 @@ function AddProject(props) {
           {}
       );
       setSmo(prePopuSmo || []);
-      setCluster(selectedProjectDetails?.Cluster || "");    
+      setCluster(selectedProjectDetails?.Cluster || "");
       setScale(
         (selectedProjectDetails &&
-          scales.find((r) => r.Scale_Name === selectedProjectDetails.Project_Scale)) ||
+          scales.find(
+            (r) => r.Scale_Name === selectedProjectDetails.Project_Scale
+          )) ||
           {}
       );
       setSOSDate(
@@ -359,8 +409,6 @@ function AddProject(props) {
         },
       });
       setPOA(selectedProjectDetails?.Estimated_No_Of_POAs);
-      setPs(selectedProjectDetails?.Production_Strategy);
-      setTier(selectedProjectDetails?.Tier);
     } else {
       setProjectName("");
       setGroupName("");
@@ -377,7 +425,7 @@ function AddProject(props) {
       setPrinterDate("");
       setReadinessDate("");
       setIl("");
-      setPm(userInformation.username);
+      setPm(pm);
       setComments("");
       setProjectType("");
 
@@ -554,6 +602,10 @@ function AddProject(props) {
   //   };
   // });
   const handleSubCategoryChange = (e) => {
+    console.log("categoriesAlert", e.value)
+    e.value.length === 0
+    ? setCategoriesAlert(true)
+    : setCategoriesAlert(false);
     setSubCategories(e.value);
   };
 
@@ -719,6 +771,9 @@ function AddProject(props) {
   const checkFormValidity = () => {
     // check if all fields are filled
     // // const valid = selectedCities && selectedCities.length > 0 && isValid;
+    // const checkedvalue = !checkedItems.CICs && !checkedItems.DI && !checkedItems.DT && !checkedItems.IQ &&!checkedItems.PF && !checkedItems.PRA;
+    // const checkedValue1 = designScopeList.CICs === "" && designScopeList.DI === "" && designScopeList.DT === "" && designScopeList.IQ === "" && designScopeList.PF === "" && designScopeList.PRA === "";
+
     const valid =
       projectName !== "" &&
       brand?.length > 0 &&
@@ -730,12 +785,15 @@ function AddProject(props) {
       bu.length > 0 &&
       readinessDate &&
       printerDate &&
+      subCategories?.length > 0 &&
+      //checkedvalue === checkedValue1 &&
       true;
     return valid;
   };
 
   useEffect(() => {
     const valid = checkFormValidity();
+    
     // check if all fields are filled
     // const valid = selectedCities && selectedCities.length > 0 && isValid;
     setFormValid(valid);
@@ -774,10 +832,10 @@ function AddProject(props) {
         Estimated_AW_Printer: printerDate,
         Estimated_AW_Readiness: readinessDate,
         IL: iL,
-        tier: tier,
+        Tier: Tier?.Label_Name,
         InitiativeGroupName: groupName,
         PM: pm,
-        ProductionStrategy: ps,
+        ProductionStrategy: ps?.Label_Name,
         // Project_Brands: "V14", //
         // Project_Categories: "AIR", //
         Project_Scale: scale?.Scale_Name,
@@ -831,7 +889,7 @@ function AddProject(props) {
     console.log("Categories: ", selectedCategoriesOptions);
     return selectedCategoriesOptions;
   };
-  const collectSubmit2Data = (status, mode) => {
+  const collectForm2Data = (action, mode) => {
     const ArtworkSMO = getArtworkSMO();
     const ArtworkCategory = getArtworkCategory();
     const ArtworkBrand = getArtworkBrand();
@@ -839,7 +897,8 @@ function AddProject(props) {
 
     const formData = {
       AWM_Project_ID: selectedProjectDetails.Project_ID,
-      Status: status,
+      // Status: status,
+      Action: action,
       Region: region?.Region_Name,
       Project_Name: projectName,
       Initiative_Group_Name: groupName,
@@ -848,7 +907,7 @@ function AddProject(props) {
       Project_region: region?.Region_Name,
       Cluster: cluster,
       Project_Scale: scale,
-      Tier: tier,
+      Tier: Tier?.Label_Name,
       Project_State: selectedProjectDetails.Project_State,
       Project_Type: projectType,
       IL: iL,
@@ -883,6 +942,8 @@ function AddProject(props) {
   };
 
   const onSubmit = async () => {
+    setSpinnerText("Submitting");
+    setLoader(true);
     if (mode === "create") {
       const formData = collectFormData("Active", mode);
       setFormData(formData);
@@ -894,7 +955,10 @@ function AddProject(props) {
       //   showStatus("error", "Error", "Submit Failed");
       //   // alert("Submit failed");
       // }
-    } else if (mode === "edit") {
+    } else if (
+      (mode === "edit" || mode === "design") &&
+      !JSON.parse(sessionStorage.getItem("ProjectSubmitted"))
+    ) {
       const formData = collectFormData("Active", mode);
       setFormData(formData);
 
@@ -908,20 +972,27 @@ function AddProject(props) {
       //   showStatus("error", "Error", "Submit Failed");
       //   // alert("Submit failed");
       // }
-    } else if (mode === "design") {
-      const formData = collectSubmit2Data("Active", mode);
+    } else if (
+      (mode === "edit" || mode === "design") &&
+      JSON.parse(sessionStorage.getItem("ProjectSubmitted"))
+    ) {
+      const formData = collectForm2Data("", mode);
       setFormData(formData);
       let method = "POST";
       const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
       await editProject(formData, awmProjectId, method, headers);
     }
+    setSpinnerText("");
+    setLoader(false);
     navigate("/myProjects");
   };
   const onSaveAsDraft = async () => {
-    const draftFormData = collectFormData("Draft", mode);
-    localStorage.setItem("formDraft", JSON.stringify(draftFormData));
-    setIsLoading(true);
+    setSpinnerText("Saving");
+    setLoader(true);
+
     if (mode === "create") {
+      let draftFormData = collectFormData("Draft", mode);
+      localStorage.setItem("formDraft", JSON.stringify(draftFormData));
       await createNewProject(draftFormData);
       // if (response?.data?.ID) {
       //   showStatus(
@@ -936,9 +1007,11 @@ function AddProject(props) {
       //   // alert("Save As Draft failed");
       // }
     } else if (mode === "edit" || mode === "design") {
-      const method = "PUT";
+      let draftFormData = collectForm2Data("saveasdraft", mode);
+      localStorage.setItem("formDraft", JSON.stringify(draftFormData));
+      const method = "POST";
       const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
-      await editProject(draftFormData, id, method, headers);
+      await editProject(draftFormData, awmProjectId, method, headers);
       // if (response?.data?.ID) {
       //   showStatus(
       //     "success",
@@ -952,7 +1025,8 @@ function AddProject(props) {
       //   // alert("Save As Draft failed");
       // }
     }
-    setIsLoading(false);
+    setSpinnerText("");
+    setLoader(false);
     navigate("/myProjects");
   };
 
@@ -964,10 +1038,18 @@ function AddProject(props) {
     return outputDate;
   };
   const handleTierChange = (e) => {
-    setTier(e.target.value);
+    const selectedTier = tierList.find((r) => r.Label_Name === e.target.value);
+    console.log("selectedTier", e.target.value);
+    console.log("tierList", tierList);
+    setTier(selectedTier);
   };
   const handlePsChange = (e) => {
-    setPs(e.target.value);
+    const selectedPs = productionStrategyList.find(
+      (r) => r.Label_Name === e.target.value
+    );
+    console.log("selectedPs", e.target.value);
+    console.log("setProductionStrategyList", setProductionStrategyList);
+    setPs(selectedPs);
   };
   const handlePM = (e) => {
     e.target.value.length === 0 ? setPMAlert(true) : setPMAlert(false);
@@ -988,620 +1070,642 @@ function AddProject(props) {
   };
 
   return (
-    <div className="tabular-add-project">
-      <Toast ref={toast} />
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <Row>
-          <Col>
-            <Row>
-              {/* <>{mode}</> */}
-              <Form.Group
-                className={`mb-3 ${projectNameAlert ? "error-text" : ""}`}
-                controlId="projectName.ControlInput1"
-              >
-                <Form.Label>
-                  Project Name <sup>*</sup>
-                </Form.Label>
-                <input
-                  type="text"
-                  style={{ fontSize: "10px" }}
-                  className="form-control"
-                  placeholder="Enter Project Name"
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setProjectName(value);
-                    if (value.trim() === "") {
-                      setProjectNameAlert(true);
-                    } else if (value.trim() !== "") {
-                      setProjectNameAlert(false);
-                    }
-                  }}
-                  value={projectName}
-                />
-                {/* {projectName === "" && (
-                  <span className="error-text">Field Remaining</span>
-                )} */}
-              </Form.Group>
-            </Row>
-            <Row>
-              <Form.Group
-                className={`mb-4`}
-                controlId="groupName.ControlInput1"
-              >
-                <Form.Label>Initiative Group Name</Form.Label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Enter Group Name"
-                  onChange={(e) => setGroupName(e.target.value)}
-                  value={groupName}
-                />
-              </Form.Group>
-            </Row>
-            <Row>
-              <Form.Group
-                className="mb-4"
-                controlId="projectDescription.ControlInput1"
-              >
-                <Form.Label>Project Description</Form.Label>
-                <textarea
-                  type="text"
-                  style={{ height: "105px" }}
-                  className="form-control"
-                  placeholder="Enter Project Description"
-                  onChange={(e) => setProjectDesc(e.target.value)}
-                  value={projectDesc}
-                />
-              </Form.Group>
-            </Row>
-            <Row>
-              <Form.Group
-                // className={`mb-3 ${bu === "" && "error-valid"}`}
-                className={`mb-3 ${businessUnitAlert ? "error-text" : ""}`}
-                controlId="bu.SelectMultiple"
-              >
-                <Form.Label>
-                  Business Unit<sup>*</sup>
-                </Form.Label>
-                <div>
-                  <Form.Select
-                    value={bu}
-                    onChange={handleBuChange}
-                    placeholder="Select BU"
-                  >
-                    <option value="">Select BU</option>
-                    {bUs.map((bu) => (
-                      <option key={bu.code} value={bu.code}>
-                        {bu.BU_Name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </div>
-                {/* {bu === "" && (
-                  <span className="error-text">Field Remaining</span>
-                )} */}
-              </Form.Group>
-            </Row>
-            <Row>
-              <Form.Group
-                controlId="scale.category"
-                className="mb-4"
-                // className={`mb-3 ${
-                //   selectedCities && !selectedCities.length && "error-valid"
-                // }`}
-              >
-                <Form.Label>Category</Form.Label>
-                <MultiSelect
-                  value={subCategories}
-                  onChange={handleSubCategoryChange}
-                  options={subCategoriesOptions}
-                  optionLabel="Label_Name"
-                  filter
-                  placeholder="Select Categories"
-                  className="w-full md:w-20rem"
-                />
-              </Form.Group>
-            </Row>
-            <Row>
-              <Form.Group
-                // className={`mb-3 ${brand?.length < 1 && "error-valid"}`}
-                className={brandAlert ? "error-text" : ""}
-                controlId="brand.SelectMultiple"
-              >
-                <Form.Label>
-                  Brand <sup>*</sup>
-                </Form.Label>
-                <div>
-                  <MultiSelect
-                    value={brand}
+    <LoadingOverlay active={loader} spinner text={spinnerText}>
+      <div className="tabular-add-project">
+        <Toast ref={toast} />
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <Row>
+            <Col>
+              <Row>
+                {/* <>{mode}</> */}
+                <Form.Group
+                  className={`mb-2 ${projectNameAlert ? "error-text" : ""}`}
+                  controlId="projectName.ControlInput1"
+                >
+                  <Form.Label>
+                    Project Name <sup>*</sup>
+                  </Form.Label>
+                  <input
+                    type="text"
+                    style={{ fontSize: "10px" }}
+                    className="form-control"
+                    placeholder="Enter Project Name"
                     onChange={(e) => {
-                      e.target.value.length === 0
-                        ? setBrandAlert(true)
-                        : setBrandAlert(false);
-                      setBrand(e.value);
+                      const value = e.target.value;
+                      setProjectName(value);
+                      if (value.trim() === "") {
+                        setProjectNameAlert(true);
+                      } else if (value.trim() !== "") {
+                        setProjectNameAlert(false);
+                      }
                     }}
-                    options={brands}
-                    optionLabel="Brand_Name"
-                    filter
-                    placeholder="Select Brand"
-                    className="w-full md:w-20rem"
-                    // style={{ marginBottom: "12px" }}
-                    required
+                    value={projectName}
                   />
-                </div>
-                {/* {brand?.length < 1 && (
+                  {/* {projectName === "" && (
                   <span className="error-text">Field Remaining</span>
                 )} */}
-              </Form.Group>
-            </Row>
-          </Col>
-          <Col>
-            <Row>
-              <Form.Group
-                // className={`mb-3 ${
-                //   (!region || Object.keys(region).length < 1) && "error-valid"
-                // }`}
-                className={`mb-3 ${regionAlert ? "error-text" : ""}`}
-                controlId="reg.SelectMultiple"
-              >
-                <Form.Label>
-                  Region <sup>*</sup>
-                </Form.Label>
-                <div>
-                  <Form.Select
-                    value={region?.Region_Name || ""}
-                    onChange={handleRegionChange}
-                    placeholder="Select Region"
-                    // className="form-control"
-                    // style={{ color: "pink" }}
-                  >
-                    <option value="">Select Region</option>
-                    {regions.map((r) => (
-                      <option key={r.code} value={r.Region_Name}>
-                        {r.Region_Name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </div>
-                {/* {(!region || Object.keys(region).length < 1) && (
+                </Form.Group>
+              </Row>
+              <Row>
+                <Form.Group
+                  className={`mb-2`}
+                  controlId="groupName.ControlInput1"
+                >
+                  <Form.Label>Initiative Group Name</Form.Label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter Group Name"
+                    onChange={(e) => setGroupName(e.target.value)}
+                    value={groupName}
+                  />
+                </Form.Group>
+              </Row>
+              <Row>
+                <Form.Group
+                  className="mb-2"
+                  controlId="projectDescription.ControlInput1"
+                >
+                  <Form.Label>Project Description</Form.Label>
+                  <textarea
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter Project Description"
+                    onChange={(e) => setProjectDesc(e.target.value)}
+                    value={projectDesc}
+                  />
+                </Form.Group>
+              </Row>
+              <Row>
+                <Form.Group
+                  // className={`mb-2 ${bu === "" && "error-valid"}`}
+                  className={`mb-2 ${businessUnitAlert ? "error-text" : ""}`}
+                  controlId="bu.SelectMultiple"
+                >
+                  <Form.Label>
+                    Business Unit<sup>*</sup>
+                  </Form.Label>
+                  <div>
+                    <Form.Select
+                      value={bu}
+                      onChange={handleBuChange}
+                      placeholder="Select BU"
+                    >
+                      <option value="">Select BU</option>
+                      {bUs.map((bu) => (
+                        <option key={bu.code} value={bu.BU_Name}>
+                          {bu.BU_Name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </div>
+                  {/* {bu === "" && (
                   <span className="error-text">Field Remaining</span>
                 )} */}
-              </Form.Group>
-            </Row>
-            <Row>
-              <Form.Group
-                // className={`mb-3 ${(!smo || smo?.length < 1) && "error-valid"}`}
-                className={`mb-3 ${SMOAlert ? "error-text" : ""}`}
-                controlId="smo.SelectMultiple"
-              >
-                <Form.Label>
-                  SMO <sup>*</sup>
-                </Form.Label>
-                <div>
+                </Form.Group>
+              </Row>
+              <Row>
+                <Form.Group
+                  controlId="scale.category"
+                  className={`mb-2 ${categoriesAlert ? "error-text" : ""}`}
+                  // className={`mb-2 ${
+                  //   selectedCities && !selectedCities.length && "error-valid"
+                  // }`}
+                >
+                  <Form.Label>Category <sup>*</sup></Form.Label>
                   <MultiSelect
-                    value={smo}
-                    onChange={(e) => {
-                      e.target.value.length === 0
-                        ? setSMOAlert(true)
-                        : setSMOAlert(false);
-                      setSmo(e.value);
-                    }}
-                    options={smoOptions}
-                    optionLabel="label"
+                    value={subCategories}
+                    onChange={handleSubCategoryChange}
+                    options={subCategoriesOptions}
+                    optionLabel="Label_Name"
                     filter
-                    placeholder="Select SMO"
+                    placeholder="Select Categories"
                     className="w-full md:w-20rem"
-                    // required={!!region}
-                    // disabled={!region}
                   />
-                </div>
-                {/* {(!smo || smo?.length < 1) && (
+                </Form.Group>
+              </Row>
+              <Row>
+                <Form.Group
+                  // className={`mb-2 ${brand?.length < 1 && "error-valid"}`}
+                  className={brandAlert ? "error-text" : ""}
+                  controlId="brand.SelectMultiple"
+                >
+                  <Form.Label>
+                    Brand <sup>*</sup>
+                  </Form.Label>
+                  <div>
+                    <MultiSelect
+                      value={brand}
+                      onChange={(e) => {
+                        e.target.value.length === 0
+                          ? setBrandAlert(true)
+                          : setBrandAlert(false);
+                        setBrand(e.value);
+                      }}
+                      options={brands}
+                      optionLabel="Brand_Name"
+                      filter
+                      placeholder="Select Brand"
+                      className="w-full md:w-20rem"
+                      // style={{ marginBottom: "12px" }}
+                      required
+                    />
+                  </div>
+                  {/* {brand?.length < 1 && (
                   <span className="error-text">Field Remaining</span>
                 )} */}
-              </Form.Group>
-            </Row>
-            <Row>
-              <Form.Group className="mb-4" controlId="cluster.SelectMultiple">
-                <Form.Label>Cluster</Form.Label>
-                <div>
-                  <Form.Control
-                    placeholder="Enter Cluster"
-                    value={cluster}
-                    onChange={(e) => setCluster(e.target.value)}
-                  ></Form.Control>
-                </div>
-              </Form.Group>
-            </Row>
-            <Row>
-              <Form.Group className="mb-4" controlId="bve.SelectMultiple">
-                <Form.Label>Scale </Form.Label>
-                <div>
-                  <Form.Select
-                    value={scale.Scale_Name || ""}
-                    onChange={handleScaleChange}
-                    placeholder="Select Scale"
-                  >
-                    <option value="">Select Scale</option>
-                    {scales.map((bu) => (
-                      <option key={bu.code} value={bu.Scale_Name}>
-                        {bu.Scale_Name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </div>
-              </Form.Group>
-            </Row>
-            <Row>
-              <Form.Group controlId="il.SelectMultiple">
-                <Form.Label>Scope & Estimated #s</Form.Label>
-                <div className="design-scope">
-                  {designScope.map((option, index) => (
-                    <span key={index} style={{ display: "flex" }}>
-                      <Form.Check
-                        label={option.label}
-                        name={option.value}
-                        type="checkbox"
-                        value={option.value}
-                        onChange={handleCheckboxChange}
-                        checked={checkedItems[option.value]}
-                        style={{
-                          width: 160,
-                        }}
-                      />
-                      {option.value !== "PF" && (
-                        <Form.Control
-                          type="number"
-                          value={designScopeList[option.value]}
-                          onChange={(e) => {
-                            const inputValue = parseInt(e.target.value, 10);
-                            if (inputValue > 0) {
-                              setDesignScopeList((prevDesignScopeList) => ({
-                                ...prevDesignScopeList,
-                                [option.value]: parseInt(e.target.value),
-                              }));
-                            } else {
-                              setDesignScopeList((prevDesignScopeList) => ({
-                                ...prevDesignScopeList,
-                                [option.value]: parseInt(""),
-                              }));
-                            }
-                          }}
-                          disabled={!textBoxEnabled[option.value]}
-                          // style={textBoxEnabled[option.value] ? {} : { opacity: 0.5 }}
+                </Form.Group>
+              </Row>
+            </Col>
+            <Col>
+              <Row>
+                <Form.Group
+                  // className={`mb-2 ${
+                  //   (!region || Object.keys(region).length < 1) && "error-valid"
+                  // }`}
+                  className={`mb-2 ${regionAlert ? "error-text" : ""}`}
+                  controlId="reg.SelectMultiple"
+                >
+                  <Form.Label>
+                    Region <sup>*</sup>
+                  </Form.Label>
+                  <div>
+                    <Form.Select
+                      value={region?.Region_Name || ""}
+                      onChange={handleRegionChange}
+                      placeholder="Select Region"
+                      // className="form-control"
+                      // style={{ color: "pink" }}
+                    >
+                      <option value="">Select Region</option>
+                      {regions.map((r) => (
+                        <option key={r.code} value={r.Region_Name}>
+                          {r.Region_Name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </div>
+                  {/* {(!region || Object.keys(region).length < 1) && (
+                  <span className="error-text">Field Remaining</span>
+                )} */}
+                </Form.Group>
+              </Row>
+              <Row>
+                <Form.Group
+                  // className={`mb-2 ${(!smo || smo?.length < 1) && "error-valid"}`}
+                  className={`mb-2 ${SMOAlert ? "error-text" : ""}`}
+                  controlId="smo.SelectMultiple"
+                >
+                  <Form.Label>
+                    SMO <sup>*</sup>
+                  </Form.Label>
+                  <div>
+                    <MultiSelect
+                      value={smo}
+                      onChange={(e) => {
+                        e.target.value.length === 0
+                          ? setSMOAlert(true)
+                          : setSMOAlert(false);
+                        setSmo(e.value);
+                      }}
+                      options={smoOptions}
+                      optionLabel="label"
+                      filter
+                      placeholder="Select SMO"
+                      className="w-full md:w-20rem"
+                      // required={!!region}
+                      // disabled={!region}
+                    />
+                  </div>
+                  {/* {(!smo || smo?.length < 1) && (
+                  <span className="error-text">Field Remaining</span>
+                )} */}
+                </Form.Group>
+              </Row>
+              <Row>
+                <Form.Group className="mb-2" controlId="cluster.SelectMultiple">
+                  <Form.Label>Cluster</Form.Label>
+                  <div>
+                    <Form.Control
+                      placeholder="Enter Cluster"
+                      value={cluster}
+                      onChange={(e) => setCluster(e.target.value)}
+                    ></Form.Control>
+                  </div>
+                </Form.Group>
+              </Row>
+              <Row>
+                <Form.Group className="mb-2" controlId="bve.SelectMultiple">
+                  <Form.Label>Scale </Form.Label>
+                  <div>
+                    <Form.Select
+                      value={scale.Scale_Name || ""}
+                      onChange={handleScaleChange}
+                      placeholder="Select Scale"
+                    >
+                      <option value="">Select Scale</option>
+                      {scales.map((bu) => (
+                        <option key={bu.code} value={bu.Scale_Name}>
+                          {bu.Scale_Name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </div>
+                </Form.Group>
+              </Row>
+              <Row>
+                <Form.Group controlId="il.SelectMultiple">
+                  <Form.Label>Scope & Estimated #s</Form.Label>
+                  <div className="design-scope">
+                    {designScope.map((option, index) => (
+                      <span key={index} style={{ display: "flex" }}>
+                        <Form.Check
+                          label={option.label}
+                          name={option.value}
+                          type="checkbox"
+                          value={option.value}
+                          onChange={handleCheckboxChange}
+                          checked={checkedItems[option.value]}
                           style={{
-                            width: 40,
-                            height: 27,
-                            paddingLeft: "5px",
-                            paddingRight: 0,
-                            fontSize: "10px",
-                            marginRight: "10px",
-                            ...(!textBoxEnabled[option.value]
-                              ? { backgroundColor: "#e9ecef" }
-                              : {}),
+                            width: 160,
                           }}
                         />
-                      )}
+                        {option.value !== "PF" && (
+                          <Form.Control
+                            type="number"
+                            value={designScopeList[option.value]}
+                            onChange={(e) => {
+                              const inputValue = parseInt(e.target.value, 10);
+                              if (inputValue > 0) {
+                                setDesignScopeList((prevDesignScopeList) => ({
+                                  ...prevDesignScopeList,
+                                  [option.value]: parseInt(e.target.value),
+                                }));
+                              } else {
+                                setDesignScopeList((prevDesignScopeList) => ({
+                                  ...prevDesignScopeList,
+                                  [option.value]: parseInt(""),
+                                }));
+                              }
+                            }}
+                            disabled={!textBoxEnabled[option.value]}
+                            // style={textBoxEnabled[option.value] ? {} : { opacity: 0.5 }}
+                            style={{
+                              width: 40,
+                              height: 27,
+                              paddingLeft: "5px",
+                              paddingRight: 0,
+                              fontSize: "10px",
+                              marginRight: "10px",
+                              ...(!textBoxEnabled[option.value]
+                                ? { backgroundColor: "#e9ecef" }
+                                : {}),
+                            }}
+                          />
+                        )}
+                      </span>
+                    ))}
+                    <span style={{ display: "flex" }}>
+                      <Form.Check
+                        label="Final Art *"
+                        name="POA"
+                        type="checkbox"
+                        value="POA"
+                        onChange={handleCheckboxChange}
+                        checked
+                        style={{ width: 160 }}
+                      />
+                      <Form.Control
+                        type="number"
+                        value={POA}
+                        required
+                        onChange={(e) => {
+                          const inputValue = parseInt(e.target.value, 10);
+                          if (inputValue > 0) {
+                            setPOA(inputValue);
+                          } else {
+                            setPOA("");
+                          }
+                        }}
+                        style={{
+                          width: 40,
+                          height: 27,
+                          paddingLeft: "5px",
+                          paddingRight: 0,
+                          fontSize: "10px",
+                          marginRight: "10px",
+                        }}
+                      />
                     </span>
-                  ))}
-                  <span style={{ display: "flex" }}>
-                    <Form.Check
-                      label="Final Art *"
-                      name="POA"
-                      type="checkbox"
-                      value="POA"
-                      onChange={handleCheckboxChange}
-                      checked
-                      style={{ width: 160 }}
-                    />
-                    <Form.Control
-                      type="number"
-                      value={POA}
-                      required
-                      onChange={(e) => {
-                        const inputValue = parseInt(e.target.value, 10);
-                        if (inputValue > 0) {
-                          setPOA(inputValue);
-                        } else {
-                          setPOA("");
-                        }
-                      }}
-                      style={{
-                        width: 40,
-                        height: 27,
-                        paddingLeft: "5px",
-                        paddingRight: 0,
-                        fontSize: "10px",
-                        marginRight: "10px",
-                      }}
-                    />
-                  </span>
-                </div>
-              </Form.Group>
-            </Row>
-          </Col>
-          <Col>
-            <Row>
-              <Form.Group className="mb-4" controlId="sop.readiness">
-                <Form.Label>Estimated SOS</Form.Label>
-                {/*
+                  </div>
+                </Form.Group>
+              </Row>
+            </Col>
+            <Col>
+              <Row>
+                <Form.Group className="mb-2" controlId="sop.readiness">
+                  <Form.Label>Estimated SOS</Form.Label>
+                  {/*
                 {errors.sopDate && (
                   <span className="error-text">Please select a SOP Date</span>
                 )} */}
-                <Controller
-                  name="date"
-                  control={form.control}
-                  rules={{ required: "Date is required." }}
-                  render={({ field, fieldState }) => (
-                    <>
-                      <Calendar
-                        placeholder="Select Estimated SOS"
-                        inputId={field.name}
-                        value={sosDate}
-                        onChange={(e) => setSOSDate(e.target.value)}
-                        dateFormat="d-M-y"
-                        showIcon={true}
-                        minDate={sopDate !== "" ? sopDate : minDate}
-                        style={{
-                          width: 208,
-                          fontSize: "12px",
-                          fontWeight: 1500,
-                        }}
-                        className={classNames({
-                          "p-invalid": fieldState.error,
-                        })}
-                      />
-                    </>
-                  )}
-                />
-              </Form.Group>
-            </Row>
-            <Row>
-              <Form.Group className={`mb-4`} controlId="sop.readiness">
-                <Form.Label>Estimated SOP</Form.Label>
-                <Controller
-                  name="date"
-                  control={form.control}
-                  rules={{ required: "Date is required." }}
-                  render={({ field, fieldState }) => (
-                    <>
-                      <Calendar
-                        placeholder="Select Estimated SOP"
-                        inputId={field.name}
-                        value={sopDate}
-                        onChange={(e) => setSOPDate(e.target.value)}
-                        dateFormat="d-M-y"
-                        showIcon={true}
-                        minDate={printerDate !== "" ? printerDate : minDate}
-                        maxDate={sosDate}
-                        className={classNames({
-                          "p-invalid": fieldState.error,
-                        })}
-                        style={{
-                          fontSize: "12px",
-                          fontWeight: 1500,
-                        }}
-                      />
-                    </>
-                  )}
-                />
-              </Form.Group>
-            </Row>
-            <Row>
-              <Form.Group
-                className={`mb-3 ${!printerDate && "error-valid"}`}
-                controlId="sop.readiness"
-              >
-                <Form.Label>
-                  Estimated AW@Printer<sup>*</sup>{" "}
-                </Form.Label>
+                  <Controller
+                    name="date"
+                    control={form.control}
+                    rules={{ required: "Date is required." }}
+                    render={({ field, fieldState }) => (
+                      <>
+                        <Calendar
+                          placeholder="Select Estimated SOS"
+                          inputId={field.name}
+                          value={sosDate}
+                          onChange={(e) => setSOSDate(e.target.value)}
+                          dateFormat="d-M-y"
+                          showIcon={true}
+                          minDate={sopDate !== "" ? sopDate : minDate}
+                          style={{
+                            width: 208,
+                            fontSize: "12px",
+                            fontWeight: 1500,
+                          }}
+                          className={classNames({
+                            "p-invalid": fieldState.error,
+                          })}
+                        />
+                      </>
+                    )}
+                  />
+                </Form.Group>
+              </Row>
+              <Row>
+                <Form.Group className={`mb-2`} controlId="sop.readiness">
+                  <Form.Label>Estimated SOP</Form.Label>
+                  <Controller
+                    name="date"
+                    control={form.control}
+                    rules={{ required: "Date is required." }}
+                    render={({ field, fieldState }) => (
+                      <>
+                        <Calendar
+                          placeholder="Select Estimated SOP"
+                          inputId={field.name}
+                          value={sopDate}
+                          onChange={(e) => setSOPDate(e.target.value)}
+                          dateFormat="d-M-y"
+                          showIcon={true}
+                          minDate={printerDate !== "" ? printerDate : minDate}
+                          maxDate={sosDate}
+                          className={classNames({
+                            "p-invalid": fieldState.error,
+                          })}
+                          style={{
+                            fontSize: "12px",
+                            fontWeight: 1500,
+                          }}
+                        />
+                      </>
+                    )}
+                  />
+                </Form.Group>
+              </Row>
+              <Row>
+                <Form.Group
+                  className={`mb-2 ${!printerDate && "error-valid"}`}
+                  controlId="sop.readiness"
+                >
+                  <Form.Label>
+                    Estimated AW@Printer<sup>*</sup>{" "}
+                  </Form.Label>
 
-                <Controller
-                  name="date"
-                  control={form.control}
-                  rules={{ required: "Date is required." }}
-                  render={({ field, fieldState }) => (
-                    <>
-                      <Calendar
-                        placeholder="Select Estimated AW@Printer"
-                        inputId={field.name}
-                        value={printerDate}
-                        onChange={(e) => setPrinterDate(e.target.value)}
-                        dateFormat="d-M-y"
-                        showIcon={true}
-                        minDate={readinessDate !== "" ? readinessDate : minDate}
-                        maxDate={sopDate}
-                        className={classNames({
-                          "p-invalid": fieldState.error,
-                        })}
-                      />
-                    </>
-                  )}
-                />
-                {/* {!printerDate && (
+                  <Controller
+                    name="date"
+                    control={form.control}
+                    rules={{ required: "Date is required." }}
+                    render={({ field, fieldState }) => (
+                      <>
+                        <Calendar
+                          placeholder="Select Estimated AW@Printer"
+                          inputId={field.name}
+                          value={printerDate}
+                          onChange={(e) => setPrinterDate(e.target.value)}
+                          dateFormat="d-M-y"
+                          showIcon={true}
+                          minDate={
+                            readinessDate !== "" ? readinessDate : minDate
+                          }
+                          maxDate={sopDate}
+                          className={classNames({
+                            "p-invalid": fieldState.error,
+                          })}
+                        />
+                      </>
+                    )}
+                  />
+                  {/* {!printerDate && (
                   <span className="error-text">Field Remaining</span>
                 )} */}
-              </Form.Group>
-            </Row>
-            <Row>
-              <Form.Group
-                className={`mb-3 ${!readinessDate && "error-valid"}`}
-                controlId="sop.readiness"
-              >
-                <Form.Label>
-                  Estimated AW Readiness <sup>*</sup>
-                </Form.Label>
-                <Controller
-                  name="date"
-                  control={form.control}
-                  rules={{ required: "Date is required." }}
-                  render={({ field, fieldState }) => (
-                    <>
-                      <Calendar
-                        placeholder="Select Estimated AW Readiness"
-                        inputId={field.name}
-                        value={readinessDate}
-                        onChange={(e) => setReadinessDate(e.target.value)}
-                        dateFormat="d-M-y"
-                        showIcon={true}
-                        minDate={minDate}
-                        maxDate={printerDate}
-                        className={classNames({
-                          "p-invalid": fieldState.error,
-                        })}
-                      />
-                    </>
-                  )}
-                />
-                {/* {!readinessDate && (
+                </Form.Group>
+              </Row>
+              <Row>
+                <Form.Group
+                  className={`mb-2 ${!readinessDate && "error-valid"}`}
+                  controlId="sop.readiness"
+                >
+                  <Form.Label>
+                    Estimated AW Readiness <sup>*</sup>
+                  </Form.Label>
+                  <Controller
+                    name="date"
+                    control={form.control}
+                    rules={{ required: "Date is required." }}
+                    render={({ field, fieldState }) => (
+                      <>
+                        <Calendar
+                          placeholder="Select Estimated AW Readiness"
+                          inputId={field.name}
+                          value={readinessDate}
+                          onChange={(e) => setReadinessDate(e.target.value)}
+                          dateFormat="d-M-y"
+                          showIcon={true}
+                          minDate={minDate}
+                          maxDate={printerDate}
+                          className={classNames({
+                            "p-invalid": fieldState.error,
+                          })}
+                        />
+                      </>
+                    )}
+                  />
+                  {/* {!readinessDate && (
                   <span className="error-text">Field Remaining</span>
                 )} */}
-              </Form.Group>
-            </Row>
-            <Row>
-              <Form.Group className="mb-4" controlId="il.SelectMultiple">
-                <Form.Label>IL</Form.Label>
-                <div>
-                  <Form.Control
-                    placeholder="Enter IL"
-                    value={iL}
-                    onChange={handleIL}
-                  ></Form.Control>
-                </div>
-              </Form.Group>
-            </Row>
-            <Row>
-              <Form.Group className={PMAlert ? "error-text" : ""}>
-                <Form.Label className={PMAlert ? "error-text" : ""}>
-                  PM <sup>*</sup>
-                </Form.Label>
-                <div>
-                  <Form.Select
-                    value={pm}
-                    onChange={handlePM}
-                    disabled={mode === "create" && true}
-                  >
-                    <option value="">Select PM</option>
-                    {PMValues.map((r) => (
-                      <option key={r.label} value={r.value}>
-                        {r.value}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </div>
-              </Form.Group>
-            </Row>
-          </Col>
-          <Col>
-            <Row>
-              <Form.Group className="mb-4" controlId="comments.ControlInput1">
-                <Form.Label>Comments</Form.Label>
-                <textarea
-                  type="text"
-                  style={{ height: "108px" }}
-                  className="form-control"
-                  placeholder="Add Comments"
-                  onChange={(e) => setComments(e.target.value)}
-                  value={comments}
-                />
-              </Form.Group>
-            </Row>
-            <Row>
-              <Form.Group
-                className="mb-4"
-                controlId="projectType.SelectMultiple"
-              >
-                <Form.Label>Project Type</Form.Label>
-                <div>
-                  <Form.Select
-                    value={projectType}
-                    onChange={(e) => setProjectType(e.target.value)}
-                    placeholder="Select Project Type"
-                  >
-                    <option value="">Select Project Type</option>
-                    {projectTypeList.map((pt) => (
-                      <option key={pt.code} value={pt.code}>
-                        {pt.ProjectType_Name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </div>
-              </Form.Group>
-            </Row>
-            <Row>
-              <Form.Group className="mb-3" controlId="bve.SelectMultiple">
-                <Form.Label>
-                  {(region?.code === "EUF" || region?.code === "EUE") &&
-                    bu === "BBY" &&
-                    "Tier"}
-                  {(region?.code === "EUF" || region?.code === "EUE") &&
-                    bu === "HC" &&
-                    "Production Strategy"}
-                </Form.Label>
-                <div>
-                  {(region?.code === "EUF" || region?.code === "EUE") &&
-                    bu === "BBY" && (
-                      <Form.Select
-                        {...register("Teir", { required: false })}
-                        placeholder="Select Teir"
-                        onChange={handleTierChange}
-                      >
-                        <option value="">Select Tier</option>
-                        {Tier.map((tier) => (
-                          <option key={tier.code} value={tier.code}>
-                            {tier.name}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    )}
-                  {(region?.code === "EUF" || region?.code === "EUE") &&
-                    bu === "HC" && (
-                      <Form.Select
-                        {...register("Production Strtegy", { required: false })}
-                        placeholder="Select PS"
-                        onChange={handlePsChange}
-                      >
-                        <option value="">Select Production Strategy</option>
-                        {ProductionStrategy.map((ps) => (
-                          <option key={ps.code} value={ps.code}>
-                            {ps.name}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    )}
-                </div>
-              </Form.Group>
-            </Row>
-          </Col>
-        </Row>
-        <div className="form-buttons">
-          <Button
-            className="button-layout"
-            variant="secondary"
-            onClick={() => {
-              navigate("/myProjects");
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            className="button-layout"
-            variant="secondary"
-            onClick={onSaveAsDraft}
-          >
-            Save as draft
-          </Button>
-          <Button
-            className="button-layout draft-button"
-            // disabled={mode !== "design"}
-            disabled={!submitButtonState}
-            type="submit"
-            disabled={!formValid}
-          >
-            Submit
-          </Button>
-        </div>
-      </Form>
-    </div>
+                </Form.Group>
+              </Row>
+              <Row>
+                <Form.Group className="mb-2" controlId="il.SelectMultiple">
+                  <Form.Label>IL</Form.Label>
+                  <div>
+                    <Form.Control
+                      placeholder="Enter IL"
+                      value={iL}
+                      onChange={handleIL}
+                    ></Form.Control>
+                  </div>
+                </Form.Group>
+              </Row>
+              <Row>
+                <Form.Group className={PMAlert ? "error-text" : ""}>
+                  <Form.Label className={PMAlert ? "error-text" : ""}>
+                    PM <sup>*</sup>
+                  </Form.Label>
+                  <div>
+                    <Form.Select
+                      value={pm}
+                      onChange={handlePM}
+                      disabled={mode === "create" && true}
+                    >
+                      <option value="">Select PM</option>
+                      {RoleUser.users.map((r) => (
+                        <option key={r.username} value={r.username}>
+                          {r.username}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </div>
+                </Form.Group>
+              </Row>
+            </Col>
+            <Col>
+              <Row>
+                <Form.Group className="mb-2" controlId="comments.ControlInput1">
+                  <Form.Label>Comments</Form.Label>
+                  <textarea
+                    type="text"
+                    className="form-control"
+                    placeholder="Add Comments"
+                    onChange={(e) => setComments(e.target.value)}
+                    value={comments}
+                  />
+                </Form.Group>
+              </Row>
+              <Row>
+                <Form.Group
+                  className="mb-2"
+                  controlId="projectType.SelectMultiple"
+                >
+                  <Form.Label>Project Type</Form.Label>
+                  <div>
+                    <Form.Select
+                      value={projectType}
+                      onChange={(e) => setProjectType(e.target.value)}
+                      placeholder="Select Project Type"
+                    >
+                      <option value="">Select Project Type</option>
+                      {projectTypeList.map((pt) => (
+                        <option key={pt.code} value={pt.code}>
+                          {pt.ProjectType_Name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </div>
+                </Form.Group>
+              </Row>
+              <Row>
+                <Form.Group className="mb-2" controlId="bve.SelectMultiple">
+                  <Form.Label>
+                    {/* new  */}
+                    {(region?.Region_Name === "EUROPE" ||
+                      region?.code === "EUE") &&
+                      bu === "Baby Care" &&
+                      "Tier"}
+                    {(region?.Region_Name === "EUROPE" ||
+                      region?.code === "EUE") &&
+                      bu === "Home Care" &&
+                      "Production Strategy"}
+                  </Form.Label>
+                  <div>
+                    {(region?.Region_Name === "EUROPE" ||
+                      region?.code === "EUE") &&
+                      bu === "Baby Care" && (
+                        <Form.Select
+                          {...register("Teir", { required: false })}
+                          value={Tier?.Label_Name || ""}
+                          placeholder="Select Teir"
+                          onChange={handleTierChange}
+                        >
+                          <option value="">Select Tier</option>
+                          {tierList.map((tier) => (
+                            <option key={tier.code} value={tier.Label_Name}>
+                              {tier.Label_Name}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      )}
+                    {(region?.Region_Name === "EUROPE" ||
+                      region?.code === "EUE") &&
+                      bu === "Home Care" && (
+                        <Form.Select
+                          {...register("Production Strtegy", {
+                            required: false,
+                          })}
+                          value={ps?.Label_Name || ""}
+                          placeholder="Select PS"
+                          onChange={handlePsChange}
+                        >
+                          <option value="">Select Production Strategy</option>
+                          {productionStrategyList.map((ps) => (
+                            <option key={ps.code} value={ps.Label_Name}>
+                              {ps.Label_Name}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      )}
+                  </div>
+                </Form.Group>
+              </Row>
+            </Col>
+          </Row>
+          <div className="form-buttons">
+            <Button
+              className="button-layout"
+              variant="secondary"
+              onClick={() => {
+                navigate("/myProjects");
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              className={
+                mode !== "create" &&
+                JSON.parse(sessionStorage.getItem("ProjectSubmitted"))
+                  ? "button-layout btn btn-disabled"
+                  : "button-layout"
+              }
+              variant="secondary"
+              onClick={onSaveAsDraft}
+              disabled={
+                mode !== "create" &&
+                JSON.parse(sessionStorage.getItem("ProjectSubmitted"))
+              }
+            >
+              Save as draft
+            </Button>
+            <Button
+              className={
+                !formValid
+                  ? "button-layout btn btn-disabled"
+                  : "button-layout"
+              }
+              type="submit"
+              disabled={!formValid}
+            >
+              Submit
+            </Button>
+          </div>
+        </Form>
+      </div>
+    </LoadingOverlay>
   );
 }
 export default AddProject;

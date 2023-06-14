@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { ProjectService } from "../../../service/PegaService";
-import ConfirmationPopUp from "../ConfirmationPopUp";
+import ProjectListFilter from "../ProjectListFilter";
 import { FilterMatchMode } from "primereact/api";
 import ProjectListHeader from "../MyProjects/ProjectListHeader";
 import { Tag } from "primereact/tag";
@@ -32,6 +32,7 @@ const AllProjectList = (props) => {
   const [isSearch, isSearchSet] = useState(false);
   const [isReorderedColumn, setReorderedColumn] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [isColWidthSet, setColWidth] = useState(null);
   const allProjectList = useSelector((state) => state.myProject);
   const { loading } = allProjectList;
   const location = useLocation();
@@ -73,6 +74,40 @@ const AllProjectList = (props) => {
   useEffect(() => {
     dispatch(getAllProject(userInformation));
   }, [dispatch, userInformation]);
+
+  useEffect(() => {
+    const ProjectData = _.cloneDeep(allProjectList.myProject);
+    let allCol = [];
+    if (ProjectData.length) {
+      allCol = Object.keys(ProjectData[0]);
+      allCol.push("Full Kit Readiness Tracking");
+    }
+    let columnWidthMyProject = {};
+    if (allCol.length) {
+      allCol.forEach((column) => {
+        columnWidthMyProject[column] = 100;
+      });
+    }
+
+    let getJsonStoredWidthColumns = localStorage.getItem(
+      "columnWidthAllProject"
+    );
+    let getStoredWidthColumns = JSON.parse(getJsonStoredWidthColumns);
+    const checkEmptyObject = _.isEmpty(getStoredWidthColumns);
+
+    if (checkEmptyObject) {
+      localStorage.setItem(
+        "columnWidthAllProject",
+        JSON.stringify(columnWidthMyProject)
+      );
+    }
+
+    let jsonColWidth = localStorage.getItem("isColWidthSetAllProject");
+    let isColWidthSetFlag = JSON.parse(jsonColWidth);
+    if (isColWidthSetFlag) {
+      setColWidth(true);
+    }
+  }, []);
 
   const reorderColumns = (columns) => {
     const requiredColumnOrderArray = [
@@ -367,27 +402,45 @@ const AllProjectList = (props) => {
     setProjectColumnNames(reorderColumns(selectedCategories));
     const columnNames = JSON.stringify(reorderColumns(selectedCategories));
     localStorage.setItem("allColumnNamesAllProjects", columnNames);
+     localStorage.setItem("isColWidthSetAllProject", JSON.stringify(true));
+    setColWidth(true);
     setVisible(false);
   };
 
   const resetToPgDefault = () => {
-    const defaultColName = [
-      "ProjectID",
-      "ProjectName",
-      "Project_Category",
-      "Project_SMO",
+    const allColumnNames = [
+      "Project_ID",
+      "Project_Name",
+      "Artwork_Category",
+      "Artwork_SMO",
       "PM",
-      "Project_Brand",
-      "EstimatedAWPrinters",
+      "Project_State",
+      "Artwork_Brand",
+      "Buffer_To_Work",
+      "Estimated_AW_Printer",
       "Full Kit Readiness Tracking",
-      "Buffer to work",
     ];
-    setProjectColumnNames(defaultColName);
+
+        const ProjectData = _.cloneDeep(allProjectList.myProject);
+    let allCol = [];
+    if (ProjectData.length) {
+      allCol = Object.keys(ProjectData[0]);
+      allCol.push("Full Kit Readiness Tracking");
+    }
+    let columnWidthMyProject = {};
+    if (allCol.length) {
+      allCol.forEach((column) => {
+        columnWidthMyProject[column] = 100;
+      });
+    }
+
+    setProjectColumnNames(allColumnNames);
     // const columnNames = ProjectService.getAllColumnNamesAllProjects();
-    localStorage.setItem("columnWidthAllProject", JSON.stringify({}));
+
+    localStorage.setItem("columnWidthAllProject", JSON.stringify(columnWidthMyProject));
     localStorage.setItem(
       "allColumnNamesAllProjects",
-      JSON.stringify(defaultColName)
+      JSON.stringify(allColumnNames)
     );
     setVisible(false);
   };
@@ -405,6 +458,18 @@ const AllProjectList = (props) => {
       "Estimated_AW_Printer",
       "Full Kit Readiness Tracking",
     ];
+    const ProjectData = _.cloneDeep(allProjectList.myProject);
+    let allCol = [];
+    if (ProjectData.length) {
+      allCol = Object.keys(ProjectData[0]);
+      allCol.push("Full Kit Readiness Tracking");
+    }
+    let columnWidthMyProject = {};
+    if (allCol.length) {
+      allCol.forEach((column) => {
+        columnWidthMyProject[column] = 100;
+      });
+    }
     localStorage.setItem(
       "allColumnNamesAllProjects",
       JSON.stringify(defaultCol)
@@ -413,7 +478,12 @@ const AllProjectList = (props) => {
     localStorage.setItem("allProjectColumnWiseFilterData", JSON.stringify({}));
     localStorage.setItem("allProjectSortingData", JSON.stringify({}));
     localStorage.setItem("allProjectFrozenData", JSON.stringify({}));
-    localStorage.setItem("columnWidthAllProject", JSON.stringify({}));
+    localStorage.setItem(
+      "columnWidthAllProject",
+      JSON.stringify(columnWidthMyProject)
+    );
+     localStorage.removeItem("isColWidthSetAllProject");
+     setColWidth(false);
     setProjectColumnNames(defaultCol);
     setSelectedFields([]);
     setSortData([]);
@@ -422,10 +492,41 @@ const AllProjectList = (props) => {
     setVisible(false);
   };
 
-  const onGlobalFilterChange = (e) => {
-    const value = e.value;
-    setSelectedFields(value);
-    setFilters(value);
+  const onGlobalFilterChange = (e, colName) => {
+      const value = e.value;
+
+      console.log("value and e.value", value,e.value);
+
+        setSelectedFields(value);
+
+    const artworkCategories = value;
+    // [
+    //   ...new Set(e?.value.map((item) => item[selectedColumnName])),
+    // ];
+
+    console.log("artwork", artworkCategories);
+
+    if (artworkCategories.length) {
+      let filterProjectState = pegadata.filter((item) => {
+        if (
+          item &&
+          item[selectedColumnName]
+        ) {
+          const hasWords = artworkCategories.some((word) =>
+           Number.isInteger(word) ? item[selectedColumnName] === word : item[selectedColumnName]?.includes(word) 
+          );
+          if (hasWords) {
+            return item;
+          }
+        }
+      });
+      setFilters(filterProjectState);
+      // localStorage.setItem("columnWiseFilterData", JSON.stringify(filterProjectState));
+    } else {
+    // localStorage.removeItem("columnWiseFilterData");
+    setSelectedFields([]);
+    setFilters([]);
+    }
   };
 
   const onColumnResizeEnd = (event) => {
@@ -449,6 +550,9 @@ const AllProjectList = (props) => {
       "columnWidthAllProject",
       JSON.stringify(columnWidthMyProject)
     );
+    localStorage.setItem("isColWidthSetAllProject", JSON.stringify(true));
+    setColWidth(true);
+
     setProjectColumnNames(projectColumnName);
     setVisible(false);
   };
@@ -539,12 +643,7 @@ const AllProjectList = (props) => {
   const isFilterEnabled =
     frozenCoulmns?.length || filters?.length || sortData?.length;
 
-  let columnWidth = localStorage.getItem("columnWidthAllProject");
-  const jsonColumnWidth = JSON.parse(columnWidth);
-  const isResetEnabled =
-    isReorderedColumn ||
-    isFilterEnabled ||
-    (jsonColumnWidth && !(Object.keys(jsonColumnWidth).length === 0));
+   const isResetEnabled = isReorderedColumn || isFilterEnabled || isColWidthSet;
 
   return (
     <div className="myProjectAnddAllProjectList">
@@ -564,7 +663,10 @@ const AllProjectList = (props) => {
               isFilterEnabled={isFilterEnabled}
               isResetEnabled={isResetEnabled}
               allData={pegadata}
-              headers={updatedAllColumnNames}
+              headers={allColumnNames}
+              CustomizeViewFlag={false}
+              ResetToDefaultFlag={false}
+              isTreeTableFlag={false}
             />
           )}
 
@@ -578,7 +680,7 @@ const AllProjectList = (props) => {
             resetToPgDefault={resetToPgDefault}
           />
 
-          <ConfirmationPopUp
+          <ProjectListFilter
             onSort={onSort}
             saveSettings={saveSettings}
             setProjectFrozen={setProjectFrozen}

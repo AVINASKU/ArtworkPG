@@ -204,7 +204,7 @@
   z-index: 10000000 !important;
 }
 .tooltip-inner {
-  background-color: #e1edf8;
+  background-color: #e1edf8 !important;
 }
 .toolname {
   color: #003da5;
@@ -216,7 +216,7 @@
 }
 .bs-tooltip-end .tooltip-arrow::before,
 .bs-tooltip-auto[data-popper-placement^="right"] .tooltip-arrow::before {
-  border-right-color: #e1edf8;
+  border-right-color: #e1edf8 !important;
 }
 .create {
   color: #595959;

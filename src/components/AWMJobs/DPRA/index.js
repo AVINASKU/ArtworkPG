@@ -70,23 +70,8 @@ function DPRA() {
     setProjectData(projectData);
   }, [projectData]);
 
-  useEffect(() => {
-    checkFormValidity();
-  }, [data]);
-
-  const checkFormValidity = () => {
-    const validTasks = designIntent?.filter((task) => {
-      return task?.Agency_Reference && task?.Cluster && task?.Select;
-    });
-    if (validTasks.length > 0) {
-      setEnableSubmit(true);
-    } else {
-      setEnableSubmit(false);
-    }
-  };
-
   const handleCancel = () => {
-    return navigate(`/MyTasks`);
+    return navigate(`/${currentUrl?.split("/")[1]}`);
   };
 
   const handleDelete = (index) => {
@@ -114,13 +99,35 @@ function DPRA() {
   };
 
   const addData = (fieldName, index, value, Design_Intent_Name) => {
+    if(checkTaskISComplete) 
+      return setEnableSubmit(true);
     let data = designIntent[index];
     data[fieldName] = value;
     // add here design job name here check it out from API.
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
+    let values = false;
+    const hasValues = designIntent.every(
+      (item) => {        
+        setEnableSubmit(true);
+       if(item.Select){
+          values = item.Agency_Reference !== "" && item.Cluster !== "";
+      } 
+        else{
+          console.log("designIntent else", designIntent);
+          let data = designIntent.filter(item => item.Select && item.Agency_Reference !== "" && item.Cluster !== "");
+          console.log("value else", data);
+          if (data.length !== 0) {
+            values = true;
+          } else {
+            values = false;
+          }
+        }
+        return values
+      }
+    );
+    setEnableSubmit(!hasValues);  
     setSubmittedDI(submittedDI);
-    checkFormValidity();
   };
 
   const onSelectAll = (checked) => {
@@ -151,8 +158,9 @@ function DPRA() {
       if (task?.isNew) {
         task.Design_Job_ID = "";
       }
-      task.Action = "update";
-      if (task?.Action !== "delete" && task?.Design_Job_ID) {
+      if (task?.Action === "delete") {
+        task.Action = "delete";
+      } else if (task?.Action !== "delete" && task?.Design_Job_ID) {
         task.Action = "update";
       } else if (task?.Action !== "delete" && task?.isNew === true)
         task.Action = "add";
@@ -186,7 +194,7 @@ function DPRA() {
     console.log("formData", formData);
     await submitDefineProductionReadyArt(formData, id, headers);
     setLoader(false);
-    navigate(`/MyTasks`);
+    navigate(`/${currentUrl?.split("/")[1]}`);
   };
 
   const onSaveAsDraft = async () => {
@@ -196,8 +204,9 @@ function DPRA() {
       if (task?.isNew) {
         task.Design_Job_ID = "";
       }
-      task.Action = "update";
-      if (task?.Action !== "delete" && task?.Design_Job_ID) {
+      if (task?.Action === "delete") {
+        task.Action = "delete";
+      } else if (task?.Action !== "delete" && task?.Design_Job_ID) {
         task.Action = "update";
       } else if (task?.Action !== "delete" && task?.isNew === true)
         task.Action = "add";
@@ -247,10 +256,12 @@ function DPRA() {
         headerName={headerName}
         label="Define Production Ready Art"
         checkReadWriteAccess={checkReadWriteAccess}
+        taskName="Production Ready Art"
+        checkTaskISComplete={checkTaskISComplete}
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
-
+        {checkTaskISComplete && <div className="task-completion">This task is already submitted</div>}
         {loading || loader || designIntent === null ? (
           <Loading />
         ) : (
@@ -271,6 +282,7 @@ function DPRA() {
                   Brand={Brand}
                   Category={Category}
                   checkReadWriteAccess={checkReadWriteAccess}
+                  taskName="Production Ready Art"
                 />
               );
             }
@@ -283,7 +295,8 @@ function DPRA() {
         onSubmit={onSubmit}
         bottomFixed={true}
         checkReadWriteAccess={checkReadWriteAccess}
-        formValid={!enableSubmit}
+        formValid={enableSubmit}
+        checkTaskISComplete={checkTaskISComplete}
       />
     </PageLayout>
   );

@@ -7,7 +7,7 @@ $fontWeight400: 400;
   flex-direction: column;
   align-items: flex-start;
   // padding: 24px 15px 15px 15px;
-  padding: 0 15px 15px 15px;
+  // padding: 0 15px 15px 15px;
 
   .actions {
     display: flex;
@@ -67,10 +67,10 @@ $fontWeight400: 400;
 }
 
 .my-task-project {
-  .p-datatable > .p-datatable-wrapper {
+  .p-datatable>.p-datatable-wrapper {
     overflow: auto;
     width: $width100;
-    height: calc(100vh - 180px);
+    height: calc(100vh - 150px);
   }
 
   .p-datatable-table {
@@ -81,12 +81,14 @@ $fontWeight400: 400;
     font-weight: $fontWeight500;
     display: flex;
     align-items: center;
+
     img {
       position: absolute;
       left: 0;
       top: 0;
       width: 10px;
     }
+
     span {
       font-size: 14px;
       /* width: 10px; */
@@ -97,13 +99,16 @@ $fontWeight400: 400;
       align-items: center;
     }
   }
+
   .p-column-title:nth-child(1) {
     font-weight: $fontWeight500;
     display: flex;
     align-items: center;
+
     img {
       position: relative;
     }
+
     span {
       font-size: 12px;
       /* width: 10px; */
@@ -142,7 +147,7 @@ $fontWeight400: 400;
     }
   }
 
-  .p-datatable-thead > tr > th {
+  .p-datatable-thead>tr>th {
     padding: 0 1rem;
   }
 }
@@ -155,7 +160,7 @@ $fontWeight400: 400;
   margin: 8px;
 }
 
-.p-checkbox-checked + label {
+.p-checkbox-checked+label {
   color: #003da5;
 }
 
@@ -168,9 +173,9 @@ $fontWeight400: 400;
 // ProjectList Styles Start
 .columnFilterIcon {
   cursor: pointer;
-  margin-right: 12px;
-  width: 11px;
-  height: 16px;
+  margin-right: 2px;
+  // width: 11px;
+  // height: 16px;
 }
 
 // Filter and Save buttons disabled
@@ -315,7 +320,7 @@ div.p-selectbutton.p-buttonset.p-component {
 }
 
 .p-datatable-scrollable {
-  &-table > .p-datatable-thead {
+  &-table>.p-datatable-thead {
     z-index: 10000;
   }
 }
@@ -390,12 +395,12 @@ thead.p-datatable-thead {
   max-height: 30px;
 }
 
-.p-datatable .p-datatable-thead > tr > th {
+.p-datatable .p-datatable-thead>tr>th {
   background: #edf4fa;
   // height: 30px;
 }
 
-.p-datatable-resizable-table > .p-datatable-tbody > tr > td {
+.p-datatable-resizable-table>.p-datatable-tbody>tr>td {
   white-space: break-spaces;
 }
 
@@ -415,8 +420,7 @@ div.flex.align-items-center.gap-2 {
 }
 
 .filter-color-change {
-  filter: invert(10%) sepia(100%) saturate(1200%) hue-rotate(190deg)
-    brightness(70%) contrast(90%);
+  filter: invert(10%) sepia(100%) saturate(1200%) hue-rotate(190deg) brightness(70%) contrast(90%);
 }
 
 .p-overlaypanel,
@@ -479,6 +483,7 @@ div.flex.align-items-center.gap-2 {
   border: 0;
   height: 33px;
 }
+
 // .p-button:enabled:hover,
 .p-button:not(button):not(a):not(.p-disabled):hover {
   background: transparent;

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import Accordion from "react-bootstrap/Accordion";
 import { Toast } from "primereact/toast";
 import ProjectPlan from "./ProjectPlanList";
 import { getProjectPlan } from "../../../apis/projectPlanApi";
@@ -32,7 +31,6 @@ function ProjectPlanCompo(props) {
   const isAccessEmpty = CheckReadOnlyAccess();
   const [activeFlag, setActiveFlag] = useState(!isAccessEmpty);
   const [loader, setLoader] = useState(false);
-  const [updatedList, setUpdatedList] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   let { ProjectID } = useParams();
@@ -66,17 +64,24 @@ function ProjectPlanCompo(props) {
     let projectData = myProject.find(
       (project) => project.Project_ID === ProjectID
     );
-    const firstTime = projectPlanDesign.some((item) => item.Assignee !== "" || item.Role !== "");
-    if ((!firstTime && projectData?.Project_State === "Draft") || projectData?.Project_State === "Active" || !isAccessEmpty || projectPlan.length === 0) {
+    const firstTime = projectPlanDesign.some(
+      (item) => item.Assignee !== "" || item.Role !== ""
+    );
+    if (
+      (!firstTime && projectData?.Project_State === "Draft") ||
+      projectData?.Project_State === "Active" ||
+      !isAccessEmpty ||
+      projectPlan.length === 0
+    ) {
       setActiveFlag(true);
     }
   }, [myProject, projectPlan, isAccessEmpty, projectPlanDesign]);
-  
+
   const getProjectPlanApi = async () => {
     setLoader(true);
     let restructuredData = [];
     const apiData =
-      mode === "design" && selectedProject.Project_ID
+      (mode === "edit" || mode === "design") && selectedProject.Project_ID
         ? await getProjectPlan(selectedProject.Project_ID)
         : [];
     apiData && dispatch(updateProjectPlanDesignAction(apiData));
@@ -342,34 +347,10 @@ function ProjectPlanCompo(props) {
               getProjectPlanApi={getProjectPlanApi}
               isAccessEmpty={isAccessEmpty}
             />
-            {/* <Accordion className="projectPlanAccordian" defaultActiveKey="2">
-              <Accordion.Item eventKey="2">
-                <Accordion.Header>Design</Accordion.Header>
-                <Accordion.Body>
-                  <ProjectPlan
-                    {...props}
-                    projectPlan={projectPlan}
-                    selectedProject={selectedProject}
-                    projectPlanDesign={projectPlanDesign}
-                    setPegaData={setPegaData}
-                    pegadata={pegadata}
-                    setUpdatedProjectPlanDesignData={setUpdatedProjectPlanDesignData}
-                    setActiveSave={setActiveSave}
-                    isAccessEmpty={isAccessEmpty}
-                    getProjectPlanApi={getProjectPlanApi}
-                  />
-                </Accordion.Body>
-              </Accordion.Item>
-              <Accordion.Item eventKey="3">
-                <Accordion.Header>Input</Accordion.Header>
-                <Accordion.Body>Input</Accordion.Body>
-              </Accordion.Item>
-              <Accordion.Item eventKey="4">
-                <Accordion.Header>FA Assembly</Accordion.Header>
-                <Accordion.Body>FA Assembly</Accordion.Body>
-              </Accordion.Item>
-            </Accordion> */}
-            <div className="form-buttons">
+            <div
+              className="form-buttons"
+              style={{ padding: 15, background: "#FAFAFA" }}
+            >
               <Button
                 className={
                   !isAccessEmpty ? "btn btn-disabled" : "button-layout"
@@ -401,7 +382,6 @@ function ProjectPlanCompo(props) {
             </div>
           </>
         )}
-        <br />
       </>
     )
   );

@@ -21,7 +21,8 @@ import ApproveDesignDialog from "./ApproveDesignDialog";
 import { useLocation, useParams } from "react-router-dom";
 import CPPFA from "./../../AWMJobs/CPPFA";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import _ from "lodash";
 
 const ProjectPlanList = ({
   projectPlan,
@@ -33,6 +34,11 @@ const ProjectPlanList = ({
   setActiveSave,
   isAccessEmpty,
   activeSave,
+  getProjectPlanApi,
+  isSearch,
+  setColWidth,
+  childFunc,
+  test
 }) => {
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
@@ -47,6 +53,7 @@ const ProjectPlanList = ({
   const [selectedTaskApproveDialog, setSelectedTaskApproveDialog] = useState(
     []
   );
+  const dispatch = useDispatch();
   const [flag, setFlag] = useState("");
   const [loader, setLoader] = useState(false);
   //projectPlanDesign
@@ -206,6 +213,7 @@ const ProjectPlanList = ({
   const clearColumnWiseFilter = () => {
     let jsonFrozenItem = localStorage.getItem("frozenDataProjectPlan");
     const frozenItem = JSON.parse(jsonFrozenItem);
+    console.log("test", frozenItem, selectedColumnName);
     if (
       frozenItem &&
       frozenItem.length &&
@@ -235,6 +243,7 @@ const ProjectPlanList = ({
       setSelectedCities([]);
       setFilters([]);
     }
+    test(false);
   };
 
   const location = useLocation();
@@ -510,14 +519,58 @@ const ProjectPlanList = ({
     }
   };
 
-  const rowExpansionColumns = () => {
+  useEffect(() => {
+    const ProjectData = _.cloneDeep(projectPlan);
+    let allCol = [];
+    if (ProjectData.length) {
+      allCol = Object.keys(ProjectData[0]);
+    }
+    let columnWidthProjectPlan = {};
+    if (allCol.length) {
+      allCol.forEach((column) => {
+        columnWidthProjectPlan[column] = 100;
+      });
+    }
+
+    let getJsonStoredWidthColumns = localStorage.getItem(
+      "columnWidthProjectPlan"
+    );
+    let getStoredWidthColumns = JSON.parse(getJsonStoredWidthColumns);
+    const checkEmptyObject = _.isEmpty(getStoredWidthColumns);
+
+    if (checkEmptyObject) {
+      localStorage.setItem(
+        "columnWidthProjectPlan",
+        JSON.stringify(columnWidthProjectPlan)
+      );
+    }
+
+    let jsonColWidth = localStorage.getItem("isColWidthSetMyProject");
+    let isColWidthSetFlag = JSON.parse(jsonColWidth);
+    if (isColWidthSetFlag) {
+      setColWidth(true);
+    }
+  }, []);
+
+  const dynamicColumns = () => {
     if (projectColumnName.length) {
       return projectColumnName.map((ele, i) => {
+        let jsonColumnWidthMyProject = localStorage.getItem(
+          "columnWidthProjectPlan"
+        );
+        const columnWidthProjectPlan = JSON.parse(jsonColumnWidthMyProject);
+        let checkWidth = [];
+        if (columnWidthProjectPlan) {
+          checkWidth = Object.keys(columnWidthProjectPlan);
+        }
+
         return (
           <Column
             key={ele}
             field={ele?.split("_").join("")}
             filterField={ele}
+            filter={isSearch}
+            filterPlaceholder={ele}
             header={projectNameHeader(ele)}
             expander={ele === "Task"}
             columnKey={ele || i}
@@ -528,6 +581,12 @@ const ProjectPlanList = ({
             }
             showFilterMenu={false}
             body={elementTemplate}
+            // style={{
+            //   width:
+            //     checkWidth.length && checkWidth.includes(ele)
+            //       ? columnWidthProjectPlan[ele]
+            //       : "",
+            // }}
           />
         );
       });
@@ -558,6 +617,7 @@ const ProjectPlanList = ({
     setShowApproveDialogCPPFA(true);
     let task = { TaskID: options.key, ProjectID: ProjectID };
     setSelectedTaskApproveDialogCPPFA(task);
+    dispatch(getTaskDetails(options.key, ProjectID));
   };
 
   const storeReorderedColumns = (e) => {
@@ -577,6 +637,10 @@ const ProjectPlanList = ({
 
   const { TaskDetailsData } = useSelector((state) => state.TaskDetailsReducer);
 
+  useEffect(() => {
+    childFunc.current = clearColumnWiseFilter;
+  }, []);
+
   return (
     <div className="myProjectAnddAllProjectList">
       {showApproveDialog && (
@@ -592,8 +656,7 @@ const ProjectPlanList = ({
           showTaskDialog={showApproveDialogCPPFA}
           selectedTaskData={selectedTaskApproveDialogCPPFA}
           pegadata={pegadata1}
-          getProjectPlanApi={getTaskDetails}
-          status={false}
+          getProjectPlanApi={getProjectPlanApi}
           TaskDetailsData={TaskDetailsData}
         />
       )}
@@ -622,14 +685,18 @@ const ProjectPlanList = ({
             resizableColumns
             dataKey="Task"
             reorderableColumns
+            // scrollable
             onColReorder={storeReorderedColumns}
             value={filters.length ? filters : pegadata}
             loading={loader}
             className="mt-3 textAlignTreeTable"
-            tableStyle={{ minWidth: "119rem", tableLayout: "auto" }}
+            // tableStyle={{ minWidth: "119rem", tableLayout: "auto" }}
+            tableStyle={{ width: "max-content", minWidth: "100%" }}
+            // filterDisplay={isSearch && "row"}
+            // filters={true}
           >
             {/* <Column header="" expander={true}></Column> */}
-            {rowExpansionColumns()}
+            {dynamicColumns()}
           </TreeTable>
           {showTaskDialog && (
             <TaskDialog

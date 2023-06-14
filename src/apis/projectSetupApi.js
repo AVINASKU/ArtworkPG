@@ -19,7 +19,7 @@ export const createNewProject = async (
 ) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${DEVURL}/v1/cases`;
+  let apiURL = `${DEVURL}/createproject`;
   const newProjectData = await axiosInstance({
     url: apiURL,
     method: "POST",
@@ -37,12 +37,12 @@ export const editProject = async (formData, id, method, headers = {}) => {
   const axiosInstance = await api.init({ headers });
   let apiURL;
   if (method === "PUT") {
-    apiURL = `${DEVURL}/v1/cases/${id}`;
+    apiURL = `${DEVURL}/createprojectasdraft/${id}`;
   } else if (method === "PATCH") {
-    apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!CREATE_FLOW_3/actions/CreateProjectManually`;
+    apiURL = `${DEVURL}/createProjectManually/${id}`;
   } else if (method === "POST") {
     // https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1/UpdateDetailsIntoProjectSetUp/{AWMProjectID}
-    apiURL = `${DEVURL}/v1/UpdateDetailsIntoProjectSetUp/${id}`;
+    apiURL = `${DEVURL}/updateProjectSetup/${id}`;
   }
 
   const editProjectData = await axiosInstance({

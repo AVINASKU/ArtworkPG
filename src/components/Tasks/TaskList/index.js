@@ -9,13 +9,14 @@ import { FilterMatchMode } from "primereact/api";
 import filter from "../../../assets/images/filter.svg";
 import { NavLink, useParams } from "react-router-dom";
 import { onSortData, Loading } from "../../../utils";
-import ConfirmationPopUp from "../../Projects/ConfirmationPopUp";
+// import ConfirmationPopUp from "../../Projects/ConfirmationPopUp";
 import TaskDialog from "../../TaskDialog";
 import CPPFA from "../../AWMJobs/CPPFA";
 import { HelpNeededAction } from "../../../store/actions/HelpNeededAction";
 import { useDispatch, useSelector } from "react-redux";
 import { getTasks, getAllTasks } from "../../../store/actions/TaskActions";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
+import ProjectListFilter from "../../Projects/ProjectListFilter";
 
 const TaskList = ({ myTasks, loading, flag, userInformation }) => {
   const dispatch = useDispatch();
@@ -34,7 +35,7 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
   const [filters, setFilters] = useState([]);
   const [selectedColumnName, setSelectedColumnName] = useState(null);
   const [loader, setLoader] = useState(false);
-  let { ProjectID } = useParams();
+
   const getMyTasks = (myTasksList) => {
     const myTasks = myTasksList?.map((element) => {
       return element;
@@ -149,10 +150,41 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
     }
   };
 
-  const onGlobalFilterChange = (e) => {
-    const value = e.value;
-    setselectedFields(value);
-    setFilters(value);
+  const onGlobalFilterChange = (e, colName) => {
+      const value = e.value;
+
+      console.log("value and e.value", value,e.value, selectedColumnName);
+
+        setselectedFields(value);
+
+    const artworkCategories = value;
+    // [
+    //   ...new Set(e?.value.map((item) => item[selectedColumnName])),
+    // ];
+
+    console.log("artwork", artworkCategories);
+
+    if (artworkCategories.length) {
+      let filterProjectState = selectedProdSrchList.filter((item) => {
+        if (
+          item &&
+          item[selectedColumnName]
+        ) {
+          const hasWords = artworkCategories.some((word) =>
+           Number.isInteger(word) ? item[selectedColumnName] === word : item[selectedColumnName]?.includes(word) 
+          );
+          if (hasWords) {
+            return item;
+          }
+        }
+      });
+      setFilters(filterProjectState);
+      // localStorage.setItem("columnWiseFilterData", JSON.stringify(filterProjectState));
+    } else {
+    // localStorage.removeItem("columnWiseFilterData");
+    setSelectedFields([]);
+    setFilters([]);
+    }
   };
 
   const clearFilter = () => {
@@ -403,6 +435,9 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
                 (ele === "Help_Needed" && helpNeededBodyTemplate) ||
                 (ele === "Status" && statusTemplate)
               }
+              style={{
+              width: "200px"
+            }}
               // body={ele === "Help Needed" && countryBodyTemplate}
             />
           );
@@ -431,6 +466,9 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
               (ele === "Status" && statusTemplate) ||
               (ele === "PM" && assigneeTemplate)
             }
+            style={{
+              width: "200px"
+            }}
             // body={ele === "Help Needed" && countryBodyTemplate}
           />
         );
@@ -455,9 +493,9 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
     useState([]);
 
   const handleApproveDialogCPPFA = (options) => {
-    console.log("options:", options);
     setShowApproveDialogCPPFA(true);
     let task = { TaskID: options.AWM_Task_ID, ProjectID: options.AWM_Project_ID };
+    dispatch(getTaskDetails(options.AWM_Task_ID, options.AWM_Project_ID));
     setSelectedTaskApproveDialogCPPFA(task);
   };
   
@@ -465,7 +503,7 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
   
   return (
       <>
-      {loading || loader || selectedProdSrchList.length === 0  ? (
+      {loading || loader  ? (
       <Loading />
     ): (
       <>
@@ -476,9 +514,8 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
               showTaskDialog={showApproveDialogCPPFA}
               selectedTaskData={selectedTaskApproveDialogCPPFA}
               pegadata={selectedProdSrchList}
-              getProjectPlanApi={getTaskDetails}
-              status={true}
               TaskDetailsData={TaskDetailsData}
+              userInformation={userInformation}
             />
           )}
           <ProjectListHeader
@@ -496,8 +533,11 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
             isFilterEnabled={isFilterEnabled}
             clearFilter={clearFilter}
             headers={headerColumns}
+            CustomizeViewFlag={false}
+            ResetToDefaultFlag={false}
+            isTreeTableFlag={false}
           />
-          <ConfirmationPopUp
+          <ProjectListFilter
             onSort={onSort}
             selectedColumnName={selectedColumnName}
             sortData={sortData}

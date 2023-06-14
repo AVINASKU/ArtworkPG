@@ -10,6 +10,7 @@ import delegateReducer from "./DelegateReducer";
 import helpNeededReducer from "./HelpNeededReducer";
 import DropDownValuesReducer from "./DropDownValuesReducer";
 import accessMatrixReducer from "./RoleBasedReducer";
+import ssoReducer from "./SSOReducer";
 
 export default combineReducers({
   myProject: ProjectReducer,
@@ -23,4 +24,5 @@ export default combineReducers({
   helpNeededReducer,
   DropDownValuesReducer,
   accessMatrixReducer,
+   ssoReducer,
 });

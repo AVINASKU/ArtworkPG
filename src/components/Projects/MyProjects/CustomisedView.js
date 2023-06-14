@@ -111,11 +111,15 @@ export default function CustomisedView({
                             {category === "Artwork_Category" && "Category"}
                             {category === "Artwork_Brand" && "Brand"}
                             {category === "Project_region" && "Region"}
+                            {category === "Estimated_AW_Printer" && "Estimated AW@Printer"}
+                            {category === "Project_Scale" && "Scale"}
                             {category &&
                               category !== "Artwork_SMO" &&
                               category !== "Artwork_Category" &&
                               category !== "Artwork_Brand" &&
                               category !== "Project_region" &&
+                              category !== "Estimated_AW_Printer" &&
+                              category !== "Project_Scale" &&
                               capitalizeFirstLetter(category)}
                           </label>
                         </div>

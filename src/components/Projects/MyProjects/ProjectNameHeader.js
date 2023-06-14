@@ -11,8 +11,8 @@ const ProjectNameHeader = (
   const isFilterActivated =
     (frozenCoulmns &&
       frozenCoulmns.length &&
-      frozenCoulmns.includes(options)) ||
-    (sortData && sortData.length && sortData[0] === options);
+      frozenCoulmns.includes(options)) || 
+    (sortData && sortData.length && sortData[0] === options)
 
   return (
     <div>
@@ -32,10 +32,14 @@ const ProjectNameHeader = (
           {splittedCol === "Artwork Category" && "Category"}
           {splittedCol === "Artwork Brand" && "Brand"}
           {splittedCol === "Project region" && "Region"}
+          {splittedCol === "Estimated AW Printer" && "Estimated AW@Printer"}
+          {splittedCol === "Project Scale" && "Scale"}
           {splittedCol !== "Artwork SMO" &&
             splittedCol !== "Artwork Category" &&
             splittedCol !== "Artwork Brand" &&
             splittedCol !== "Project region" &&
+            splittedCol !== "Estimated AW Printer" &&
+            splittedCol !== "Project Scale" &&
             splittedCol}
         </span>
       </>

@@ -10,8 +10,10 @@ $width: 100%;
   padding: 0 15px 0px 13px;
 }
 
-.projectNameForProjectSetup {
-  padding-top: 12px;
+.ProjectPlanBreadCrum {
+  ul {
+    padding: 0;
+  }
 }
 
 .subNav {
@@ -78,7 +80,7 @@ $width: 100%;
 }
 
 .tabular-add-project {
-  padding: 15px;
+  padding: 8px 0 0 0;
   overflow-y: scroll;
   height: 72vh;
 }
@@ -165,15 +167,49 @@ $width: 100%;
 }
 
 .projectSetupParent {
-  height: 451px;
+  height: 100%;
   background: rgb(255, 255, 255);
   border-radius: 24px;
-  margin-top: 5.5px;
+  margin-left: 2px;
+  padding-bottom: 20px;
+  position: relative;
+  &.project-setup-wrapper {
+    // height: 100%;
+    position: relative;
+    .tabular-add-project{
+      overflow: hidden;
+      form{
+        height: 100%;
+        overflow: hidden auto;
+        padding-bottom: 90px;        
+      }
+    }
+  }
+  &.project-plan-wrapper{
+    .tab-content{
+      height: auto;
+      overflow: initial;
+    }
+   
+  }
+  .form-buttons{
+    position: absolute;
+    background: white;
+    text-align: right;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+  }
 }
 
 .breadCrumbParent {
-  padding-top: 12px;
+  padding-top: 8px;
+  padding-left: 8px;
+  // border-radius: 24px
   // width: $width;
+  nav {
+    margin-left: 5px;
+  }
 }
 
 .breadCrumbParent {
@@ -192,7 +228,7 @@ $width: 100%;
 }
 
 .projectPlanName {
-  padding-bottom: 24px;
+  padding-bottom: 5px;
 }
 
 .dropdownItemPaddingLeft {
@@ -220,7 +256,7 @@ $width: 100%;
 }
 
 .projectPlanButtonsParent {
-  text-align: center;
+  text-align: right;
 }
 
 .displayFlex {
@@ -230,6 +266,8 @@ $width: 100%;
 
 // TabsComponent Styles Start
 .tab-content {
+  height: calc(100% - 41px);
+  overflow: hidden;
   .nav-link {
     font-style: normal;
     font-weight: 500;
@@ -237,7 +275,7 @@ $width: 100%;
   }
 }
 
-.tab-content > .active {
+.tab-content>.active {
   padding: 10px 20px;
   display: contents !important;
 }
@@ -284,14 +322,14 @@ ul.nav.nav-tabs {
     border-bottom: 2.5px solid rgba(0, 61, 165, 1);
   }
 
-  .nav-tabs li > a {
+  .nav-tabs li>a {
     color: rgba(172, 172, 172, 1);
     font-weight: 500;
     font-size: 14px;
     line-height: 17.07px;
   }
 
-  .nav-tabs li.active > a {
+  .nav-tabs li.active>a {
     color: rgba(0, 61, 165, 1);
   }
 }
@@ -324,9 +362,17 @@ span.right {
 
 .actionButtonsForTabComponent {
   padding-top: 5px;
-  right: 28px;
-  // position: absolute;
+  position: absolute;
+  right: 25px;
   width: 9.6%;
 }
 
+.piChevronRightMargin {
+  margin-left: 9.5px;
+  margin-right: 9.81px;
+}
+.tabComponent {
+  display:flex;
+  margin-bottom: 23.5px;
+}
 // TabsComponent Styles End

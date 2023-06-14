@@ -80,8 +80,26 @@ $fontWeight400: 400;
   }
 
   .textAlignTreeTable {
-    height: calc(100vh - 361px);
+    height: calc(100vh - 238px);
     overflow: auto;
+
+    .p-treetable-wrapper {
+      height: calc(100% - 43px);
+      overflow-x: auto;
+  
+      thead.p-treetable-thead {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+      }
+    }
+  }
+  // .p-treetable-wrapper {
+  //   height: calc(100vh - 320px);
+  //   overflow: auto;
+  // }
+  table .p-inputtext {
+    width: 100% !important;
   }
 }
 
@@ -106,9 +124,9 @@ $fontWeight400: 400;
 // ProjectList Styles Start
 .columnFilterIcon {
   cursor: pointer;
-  margin-right: 12px;
-  width: 11px;
-  height: 16px;
+  margin-right: 2px;
+  // width: 11px;
+  // height: 16px;
 }
 
 // Filter and Save buttons disabled
@@ -277,8 +295,12 @@ img[disabled] {
   text-align: left !important;
   display: flex;
   height: auto;
-  border-bottom: none !important;
+  // border-bottom: none !important;
 }
+// .p-treetable-emptymessage {
+//   text-align: center !important;
+//   display: none;
+// }
 
 .textAlignTreeTable > div > .p-treetable-table > .p-treetable-tbody > tr > td {
   min-width: 100px;
@@ -288,6 +310,9 @@ img[disabled] {
   .p-dropdown {
     height: 25px;
   }
+}
+.p-treetable-resizable .p-treetable-tbody > tr > td {
+  width: 170px;
 }
 
 .projectPlanCompoButtons {

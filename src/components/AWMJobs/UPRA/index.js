@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import moment from "moment";
 import PageLayout from "../../PageLayout";
 import DesignHeader from "../DesignJobs/DesignHeader";
 import FooterButtons from "../DesignJobs/FooterButtons";
@@ -6,7 +7,7 @@ import UploadDesignIntentProofscope from "../DesignJobs/UploadDesignIntentProofs
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
-import { submitUploadApproveDesignIntent } from "../../../apis/uploadSubmitAPIs";
+import { submitUploadProductionReadyArt } from "../../../apis/uploadSubmitAPIs";
 
 import AddNewDesign from "../DesignJobs/TaskHeader";
 import { UploadFileToServer } from "../../../store/actions/ProofScopeActions";
@@ -25,6 +26,8 @@ const UPRA = () => {
   const [fileName, setFileName] = useState("");
   const [azureFile, setAzureFile] = useState("");
   const [formattedValue, setformattedValue] = useState(0);
+  const [date, setDate] = useState("");
+  const [version, setVersion] = useState("V0");
   const location = useLocation();
   const locationPath = location?.pathname;
   const url = locationPath?.split("/");
@@ -38,7 +41,6 @@ const UPRA = () => {
   const dispatch = useDispatch();
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
   const roleName = "DI_";
-  const version = "V1";
   const checkReadWriteAccess = CheckReadOnlyAccess();
 
   useEffect(() => {
@@ -51,17 +53,29 @@ const UPRA = () => {
         TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []
       );
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
+      const data =
+        TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails[0]?.FileMetaDataList[0] || [];
+      if (data) {
+        data.Version !== "" && setVersion(data.Version);
+        data.Timestamp !== "" &&
+          setDate(
+            moment(data.Timestamp, "YYYYMMDD[T]HHmmss.SSS [GMT]").format(
+              "DD-MMMM-YYYY"
+            )
+          );
+      }
     }
   }, [TaskDetailsData]);
 
   const filePath = "cloudflow://PP_FILE_STORE/aacdata/" + fileName;
 
   const onSaveAsDraft = async () => {
+    const fileSize = Math.round(formattedValue / 1000000);
     const formData = {
       AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
       AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
-      Size: "1",
-      Version: version,
+      Size: fileSize === 0 ? "1" : fileSize,
+      Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
       Filename: fileName,
     };
     console.log("azure file details", azureFile, fileName, filePath);
@@ -74,7 +88,7 @@ const UPRA = () => {
   };
 
   const onSubmit = async () => {
-    console.log("TaskDetailsData", TaskDetailsData);
+    const fileSize = Math.round(formattedValue / 1000000);
     const headers = {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
@@ -84,15 +98,22 @@ const UPRA = () => {
       caseTypeID: "PG-AAS-Work-UploadProductionReadyArt",
       content: {
         AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
-        AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
-        Size: formattedValue,
-        Version: version,
-        Filename: fileName,
+        AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID
       },
+      pageInstructions: [{
+        instruction: "APPEND",
+        target: "PRAUploadList",
+        content: {
+          Action: "add",
+          Filename: fileName,
+          Size: fileSize === 0 ? "1" : fileSize,
+          Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
+        }
+      }],
     };
     await dispatch(UploadFileToServer(azureFile, filePath));
     console.log("formData", formData, "id", id);
-    await submitUploadApproveDesignIntent(formData, id, headers);
+    await submitUploadProductionReadyArt(formData, id, headers);
   };
 
   return (
@@ -103,33 +124,40 @@ const UPRA = () => {
         disabled={true}
         label="Upload Production Ready Art"
         checkReadWriteAccess={checkReadWriteAccess}
+        taskName="Production Ready Art"
       />
-      {<AddNewDesign {...data} />}
-      {loading ? (
-        <div className="align-item-center">
-          <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
-        </div>
-      ) : (
-        designIntent && (
-          <UploadDesignIntentProofscope
-            {...designIntent}
-            upload={true}
-            setformattedValue={setformattedValue}
-            setAzureFile={setAzureFile}
-            setFileName={setFileName}
-            item={data}
-            roleName={roleName}
-            ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
-            version={version}
-            checkReadWriteAccess={checkReadWriteAccess}
-          />
-        )
-      )}{" "}
+      <div className="task-details">
+        {<AddNewDesign {...data} />}
+        {loading ? (
+          <div className="align-item-center">
+            <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
+          </div>
+        ) : (
+          designIntent && (
+            <UploadDesignIntentProofscope
+              {...designIntent}
+              upload={true}
+              setformattedValue={setformattedValue}
+              setAzureFile={setAzureFile}
+              setFileName={setFileName}
+              item={data}
+              roleName={roleName}
+              ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
+              version={version}
+              checkReadWriteAccess={checkReadWriteAccess}
+              date={date}
+              fileName={fileName}
+            />
+          )
+        )}{" "}
+      </div>
+      
       <FooterButtons
         onSubmit={onSubmit}
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
         checkReadWriteAccess={checkReadWriteAccess}
+        bottomFixed={true}
       />
     </PageLayout>
   );

@@ -118,11 +118,6 @@
   box-shadow: none !important;
   outline: none !important;
 }
-.form-control:focus,
-.p-inputwrapper-filled {
-  // border: 1px solid #003da5 !important;
-  color: #003da5 !important;
-}
 .form-label {
   font-size: 12px;
   line-height: 14.63px;
@@ -186,7 +181,7 @@ sup {
   label {
     color: red !important;
   }
-  div {
+   & > div {
     border-radius: 0.375rem;
     border: 1px solid red !important;
   }
@@ -205,9 +200,10 @@ sup {
 }
 
 .tabular-add-project {
-  padding: 15px;
+  padding: 0 15px 15px 15px;
   overflow-y: auto;
-  height: 57vh !important;
+  height: 66vh !important;
+  // height: 57vh !important;
   // width: 90vw;
   .col {
     max-width: 230px;
@@ -218,8 +214,9 @@ sup {
     border: 1px solid #acacac;
     padding-top: 10px;
     padding-left: 20px;
-    position: absolute;
+    // position: absolute;
     border-radius: 4px;
+    min-width: 240px;
   }
   .p-multiselect {
     width: 100%;
@@ -325,10 +322,10 @@ sup {
     display: block;
     width: 100%;
     max-width: 208px;
-    padding: 0.375rem 0.75rem;
-    font-size: 12px;
+    padding: 0.375rem 16px;
+    font-size: 10px;
     font-weight: 400;
-    line-height: 1.5;
+    line-height: 2;
     color: #595959;
     background-color: #fff;
     background-clip: padding-box;
@@ -337,13 +334,6 @@ sup {
     border-radius: 4px;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     height: 32px;
-    box-shadow: none !important;
-    outline: none !important;
-  }
-  .form-control:focus,
-  .p-inputwrapper-filled {
-    border: 1px solid #003da5;
-    color: #003da5 !important;
     box-shadow: none !important;
     outline: none !important;
   }
@@ -409,7 +399,8 @@ sup {
   }
   .form-check-label {
     margin: 1px;
-    font-size: 12px;
+    font-size: 10px;
+    font-weight: 400;
   }
   .p-calendar-w-btn-right .p-inputtext {
     border-top-right-radius: 0;
@@ -434,9 +425,10 @@ sup {
 
   .form-select {
     max-width: 208px;
-    min-height: 32px;
     color: #595959;
-    font-size: 12px;
+    font-size: 10px;
+    line-height: 10px;
+    padding: 10px 16px;
     &:focus {
       box-shadow: none;
     }
@@ -450,19 +442,21 @@ sup {
     outline: none !important;
   }
 
-  label.form-check-label {
-    &:nth-child(2) {
-      white-space: pre;
-      font-size: 10px;
-    }
-  }
+  // label.form-check-label {
+  //   &:nth-child(2) {
+  //     white-space: pre;
+  //   }
+  // }
 }
 
 .p-multiselect .p-multiselect-label.p-placeholder {
   color: #595959;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 500;
-  height: 32px;
+  line-height: 10px;
+}
+.css-e7nvmg-LoadingOverlayWrapperBase{
+  position: initial;
 }
 
 .mb-4 {
