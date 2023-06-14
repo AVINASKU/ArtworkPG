@@ -422,23 +422,23 @@ const AllProjectList = (props) => {
       "Full Kit Readiness Tracking",
     ];
 
-        const ProjectData = _.cloneDeep(allProjectList.myProject);
-    let allCol = [];
-    if (ProjectData.length) {
-      allCol = Object.keys(ProjectData[0]);
-      allCol.push("Full Kit Readiness Tracking");
-    }
-    let columnWidthMyProject = {};
-    if (allCol.length) {
-      allCol.forEach((column) => {
-        columnWidthMyProject[column] = 100;
-      });
-    }
+    //     const ProjectData = _.cloneDeep(allProjectList.myProject);
+    // let allCol = [];
+    // if (ProjectData.length) {
+    //   allCol = Object.keys(ProjectData[0]);
+    //   allCol.push("Full Kit Readiness Tracking");
+    // }
+    // let columnWidthMyProject = {};
+    // if (allCol.length) {
+    //   allCol.forEach((column) => {
+    //     columnWidthMyProject[column] = 100;
+    //   });
+    // }
 
     setProjectColumnNames(allColumnNames);
     // const columnNames = ProjectService.getAllColumnNamesAllProjects();
 
-    localStorage.setItem("columnWidthAllProject", JSON.stringify(columnWidthMyProject));
+    // localStorage.setItem("columnWidthAllProject", JSON.stringify(columnWidthMyProject));
     localStorage.setItem(
       "allColumnNamesAllProjects",
       JSON.stringify(allColumnNames)
@@ -665,9 +665,6 @@ const AllProjectList = (props) => {
               isResetEnabled={isResetEnabled}
               allData={pegadata}
               headers={allColumnNames}
-              CustomizeViewFlag={false}
-              ResetToDefaultFlag={false}
-              isTreeTableFlag={false}
             />
           )}
 

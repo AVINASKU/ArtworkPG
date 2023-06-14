@@ -568,25 +568,25 @@ const ProjectList = (props) => {
       "Full Kit Readiness Tracking",
     ];
 
-    const ProjectData = _.cloneDeep(myProjectList.myProject);
-    let allCol = [];
-    if (ProjectData.length) {
-      allCol = Object.keys(ProjectData[0]);
-      allCol.push("Full Kit Readiness Tracking");
-    }
-    let columnWidthMyProject = {};
-    if (allCol.length) {
-      allCol.forEach((column) => {
-        columnWidthMyProject[column] = 100;
-      });
-    }
+    // const ProjectData = _.cloneDeep(myProjectList.myProject);
+    // let allCol = [];
+    // if (ProjectData.length) {
+    //   allCol = Object.keys(ProjectData[0]);
+    //   allCol.push("Full Kit Readiness Tracking");
+    // }
+    // let columnWidthMyProject = {};
+    // if (allCol.length) {
+    //   allCol.forEach((column) => {
+    //     columnWidthMyProject[column] = 100;
+    //   });
+    // }
 
     localStorage.setItem("allColumnNames", JSON.stringify({}));
     localStorage.setItem("allColumnNames", JSON.stringify(allColumnNames));
-    localStorage.setItem(
-      "columnWidthMyProject",
-      JSON.stringify(columnWidthMyProject)
-    );
+    // localStorage.setItem(
+    //   "columnWidthMyProject",
+    //   JSON.stringify(columnWidthMyProject)
+    // );
 
     localStorage.removeItem("isCustomViewIsAddedMyProject");
     isCustomViewIsAddedMyProject(true);
@@ -666,30 +666,14 @@ const ProjectList = (props) => {
     <div className="myProjectAnddAllProjectList">
       {/* <Suspense fallback={ <Loading />}> */}
       {loader || loading || pegadata === null ? (
-          <Loading />
-        ): (   
-          <>
-            {pegadata !== undefined && (
-              <ProjectListHeader
-                header={props.header}
-                clearFilters={clearFilters}
-                clearFilter={clearFilter}
-                setVisible={setVisible}
-                saveSettings={saveSettings}
-                onSearchClick={onSearchClick}
-                // exportCSV={exportCSV}
-                isFilterEnabled={isFilterEnabled}
-                isResetEnabled={isResetEnabled}
-                allData={pegadata}
-                headers={allColumnNames}
-                CustomizeViewFlag={false}
-                ResetToDefaultFlag={false}
-                isTreeTableFlag={false}
-              />
-            )}
-            <CustomisedView
-              visible={visible}
-              setProjectColumnNames={setProjectColumnNames}
+        <Loading />
+      ) : (
+        <>
+          {pegadata !== undefined && (
+            <ProjectListHeader
+              header={props.header}
+              clearFilters={clearFilters}
+              clearFilter={clearFilter}
               setVisible={setVisible}
               saveSettings={saveSettings}
               onSearchClick={onSearchClick}
@@ -699,7 +683,7 @@ const ProjectList = (props) => {
               allData={pegadata}
               headers={allColumnNames}
             />
-          
+          )}
           <CustomisedView
             visible={visible}
             setProjectColumnNames={setProjectColumnNames}
