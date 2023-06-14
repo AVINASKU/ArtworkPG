@@ -195,7 +195,7 @@ const CPPFA = ({
               </ul>
             </nav>
           </div>
-          <div className="p-dialog-header1">{designIntent.Task_Name}</div>
+          <div className="p-dialog-header1">{designIntent.Project_Name}</div>
         </div>
       }
     >
@@ -345,9 +345,10 @@ const CPPFA = ({
           label="Confirm PPFA"
           onClick={handleSubmit}
           disabled={
-            isAccessEmpty || riskLevel !== "Low"
+            cppfaDialogFlag ? false :
+            (isAccessEmpty || riskLevel !== "Low"
               ? yesOrNo === ""
-              : designIntent.Task_Status === "Completed"
+              : designIntent.Task_Status === "Completed")
           }
         />
       </div>
