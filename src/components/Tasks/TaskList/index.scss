@@ -7,7 +7,7 @@ $fontWeight400: 400;
   flex-direction: column;
   align-items: flex-start;
   // padding: 24px 15px 15px 15px;
-  padding: 0 15px 15px 15px;
+  // padding: 0 15px 15px 15px;
 
   .actions {
     display: flex;
@@ -67,7 +67,7 @@ $fontWeight400: 400;
 }
 
 .my-task-project {
-  .p-datatable > .p-datatable-wrapper {
+  .p-datatable>.p-datatable-wrapper {
     overflow: auto;
     width: $width100;
     height: calc(100vh - 150px);
@@ -147,7 +147,7 @@ $fontWeight400: 400;
     }
   }
 
-  .p-datatable-thead > tr > th {
+  .p-datatable-thead>tr>th {
     padding: 0 1rem;
   }
 }
@@ -160,7 +160,7 @@ $fontWeight400: 400;
   margin: 8px;
 }
 
-.p-checkbox-checked + label {
+.p-checkbox-checked+label {
   color: #003da5;
 }
 
@@ -320,7 +320,7 @@ div.p-selectbutton.p-buttonset.p-component {
 }
 
 .p-datatable-scrollable {
-  &-table > .p-datatable-thead {
+  &-table>.p-datatable-thead {
     z-index: 10000;
   }
 }
@@ -395,12 +395,12 @@ thead.p-datatable-thead {
   max-height: 30px;
 }
 
-.p-datatable .p-datatable-thead > tr > th {
+.p-datatable .p-datatable-thead>tr>th {
   background: #edf4fa;
   // height: 30px;
 }
 
-.p-datatable-resizable-table > .p-datatable-tbody > tr > td {
+.p-datatable-resizable-table>.p-datatable-tbody>tr>td {
   white-space: break-spaces;
 }
 
@@ -420,8 +420,7 @@ div.flex.align-items-center.gap-2 {
 }
 
 .filter-color-change {
-  filter: invert(10%) sepia(100%) saturate(1200%) hue-rotate(190deg)
-    brightness(70%) contrast(90%);
+  filter: invert(10%) sepia(100%) saturate(1200%) hue-rotate(190deg) brightness(70%) contrast(90%);
 }
 
 .p-overlaypanel,
@@ -494,8 +493,4 @@ div.flex.align-items-center.gap-2 {
   text-align: center;
   font-size: 20px;
   color: red;
-}
-
-.filter-icon {
-  cursor: pointer;
 }

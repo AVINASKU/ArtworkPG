@@ -5,7 +5,6 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { ProjectService } from "../../../service/PegaService";
 import ProjectListFilter from "../ProjectListFilter";
-import ProjectListFilter from "../ProjectListFilter";
 import { FilterMatchMode } from "primereact/api";
 import ProjectListHeader from "./ProjectListHeader";
 import { Tag } from "primereact/tag";
@@ -42,6 +41,9 @@ const ProjectList = (props) => {
   const [isReorderedColumn, setReorderedColumn] = useState(false);
   const [loader, setLoader] = useState(false);
   const [isColWidthSet, setColWidth] = useState(null);
+  const [customViewIsAddedMyProject, isCustomViewIsAddedMyProject] =
+    useState(null);
+  const [filterCleared, setFilterCleared] = useState(false);
   const myProjectList = useSelector((state) => state.myProject);
   const { loading } = myProjectList;
   const dispatch = useDispatch();
@@ -66,10 +68,6 @@ const ProjectList = (props) => {
 
   const onSort = (column, direction) => (event) => {
     const sortedData = onSortData(column, direction, pegadata);
-    let jsonSortingData1 = localStorage.getItem("sortingData");
-    const sortingData = JSON.parse(jsonSortingData1);
-    let sortedColName = JSON.stringify([column]);
-    localStorage.setItem("sortingData", sortedColName);
     let jsonSortingData1 = localStorage.getItem("sortingData");
     const sortingData = JSON.parse(jsonSortingData1);
     let sortedColName = JSON.stringify([column]);
@@ -116,6 +114,14 @@ const ProjectList = (props) => {
     let isColWidthSetFlag = JSON.parse(jsonColWidth);
     if (isColWidthSetFlag) {
       setColWidth(true);
+    }
+    let checkCustomViewApplied = localStorage.getItem(
+      "isCustomViewIsAddedMyProject"
+    );
+    let ischeckCustomViewApplied = JSON.parse(checkCustomViewApplied);
+
+    if (ischeckCustomViewApplied) {
+      isCustomViewIsAddedMyProject(true);
     }
   }, []);
 
@@ -444,6 +450,10 @@ const ProjectList = (props) => {
       JSON.stringify(columnWidthMyProject)
     );
     localStorage.removeItem("isColWidthSetMyProject");
+
+    localStorage.removeItem("isCustomViewIsAddedMyProject");
+    isCustomViewIsAddedMyProject(false);
+
     setColWidth(false);
     setSelectedFields([]);
     setSortData([]);
@@ -513,6 +523,7 @@ const ProjectList = (props) => {
     setColWidth(true);
     setProjectColumnNames(projectColumnName);
     setVisible(false);
+    setFilterCleared(false);
   };
 
   // const exportCSV = (selectionOnly) => {
@@ -574,6 +585,9 @@ const ProjectList = (props) => {
       "columnWidthMyProject",
       JSON.stringify(columnWidthMyProject)
     );
+
+    localStorage.removeItem("isCustomViewIsAddedMyProject");
+    isCustomViewIsAddedMyProject(true);
     setProjectColumnNames(allColumnNames);
     setVisible(false);
   };
@@ -640,20 +654,40 @@ const ProjectList = (props) => {
   let columnWidth = localStorage.getItem("columnWidthMyProject");
   const jsonColumnWidth = JSON.parse(columnWidth);
 
-  const isResetEnabled = isReorderedColumn || isFilterEnabled || isColWidthSet;
+  const isResetEnabled =
+    isReorderedColumn ||
+    isFilterEnabled ||
+    isColWidthSet ||
+    customViewIsAddedMyProject;
 
   return (
     <div className="myProjectAnddAllProjectList">
       {/* <Suspense fallback={ <Loading />}> */}
       {loader || loading || pegadata === null ? (
-        <Loading />
-      ) : (
-        <>
-          {pegadata !== undefined && (
-            <ProjectListHeader
-              header={props.header}
-              clearFilters={clearFilters}
-              clearFilter={clearFilter}
+          <Loading />
+        ): (   
+          <>
+            {pegadata !== undefined && (
+              <ProjectListHeader
+                header={props.header}
+                clearFilters={clearFilters}
+                clearFilter={clearFilter}
+                setVisible={setVisible}
+                saveSettings={saveSettings}
+                onSearchClick={onSearchClick}
+                // exportCSV={exportCSV}
+                isFilterEnabled={isFilterEnabled}
+                isResetEnabled={isResetEnabled}
+                allData={pegadata}
+                headers={allColumnNames}
+                CustomizeViewFlag={false}
+                ResetToDefaultFlag={false}
+                isTreeTableFlag={false}
+              />
+            )}
+            <CustomisedView
+              visible={visible}
+              setProjectColumnNames={setProjectColumnNames}
               setVisible={setVisible}
               saveSettings={saveSettings}
               onSearchClick={onSearchClick}
@@ -663,7 +697,7 @@ const ProjectList = (props) => {
               allData={pegadata}
               headers={allColumnNames}
             />
-          )}
+          
           <CustomisedView
             visible={visible}
             setProjectColumnNames={setProjectColumnNames}
@@ -710,7 +744,10 @@ const ProjectList = (props) => {
             filters={searchHeader}
             filterDisplay={isSearch && "row"}
             ref={dt}
-            tableStyle={{ width: "max-content", minWidth: "100%" }}
+            tableStyle={{
+              width: filterCleared && "max-content",
+              minWidth: filterCleared && "100%",
+            }}
           >
             {dynamicColumns()}
           </DataTable>

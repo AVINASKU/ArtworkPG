@@ -28,6 +28,7 @@ const UADI = () => {
   const [azureFile, setAzureFile] = useState("");
   const [version, setVersion] = useState("V0");
   const [date, setDate] = useState("");
+  const [loader, setLoader] = useState(false);
   let { TaskID, ProjectID } = useParams();
   const { TaskDetailsData, loading } = useSelector(
     (state) => state.TaskDetailsReducer
@@ -69,6 +70,7 @@ const UADI = () => {
   };
 
   const onSaveAsDraft = async () => {
+    setLoader(true);
     const fileSize = Math.round(formattedValue / 1000000);
     const formData = {
       AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
@@ -79,9 +81,11 @@ const UADI = () => {
     };
     await dispatch(uploadFileAzure(azureFile));
     await postSaveDesignIntent(formData);
+    setLoader(false);
   };
 
   const onSubmit = async () => {
+    setLoader(true);
     const fileSize = Math.round(formattedValue / 1000000);
     const headers = {
       key: "If-Match",
@@ -101,7 +105,7 @@ const UADI = () => {
     await dispatch(uploadFileAzure(azureFile));
     // console.log('formData', formData, "id", id);
     await submitUploadApproveDesignIntent(formData, id, headers);
-
+    setLoader(false);
     navigate(`/${currentUrl?.split("/")[1]}`);
   };
   return (
@@ -112,10 +116,11 @@ const UADI = () => {
         disabled={true}
         label="Upload Approved Design Intent"
         checkReadWriteAccess={checkReadWriteAccess}
+        taskName="Design Intent"
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
-          {loading ? (
+          {loading || loader || designIntent === null ? (
             <div className="align-item-center">
               <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
             </div>

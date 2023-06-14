@@ -154,6 +154,12 @@ const CPPFA = ({
   };
   const myProjects = url[1];
 
+  const onValidationFail = (uploadData) => {
+    if(uploadData.size > 1000000) {
+      setFileName(null);
+    }
+  }
+
   return (
     <Dialog
       visible={visible}
@@ -271,6 +277,7 @@ const CPPFA = ({
                   </p>
                 }
                 disabled={isAccessEmpty}
+                onValidationFail={(e)=> onValidationFail(e)}
               />
             </Col>
             <Col></Col>

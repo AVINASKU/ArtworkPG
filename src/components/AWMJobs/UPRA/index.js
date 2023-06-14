@@ -124,6 +124,7 @@ const UPRA = () => {
         disabled={true}
         label="Upload Production Ready Art"
         checkReadWriteAccess={checkReadWriteAccess}
+        taskName="Production Ready Art"
       />
       <div className="task-details">
         {<AddNewDesign {...data} />}
@@ -145,6 +146,7 @@ const UPRA = () => {
               version={version}
               checkReadWriteAccess={checkReadWriteAccess}
               date={date}
+              fileName={fileName}
             />
           )
         )}{" "}
