@@ -179,6 +179,7 @@ function ProjectSetup(props) {
                     isResetEnabled={isResetEnabled}
                     allData={projectPlan}
                     headers={columnNames}
+                    filterFLag={true}
                     CustomizeViewFlag={true}
                     ResetToDefaultFlag={true}
                     isTreeTableFlag={true}

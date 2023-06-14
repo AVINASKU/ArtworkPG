@@ -195,7 +195,7 @@ const CPPFA = ({
               </ul>
             </nav>
           </div>
-          <div className="p-dialog-header1">{designIntent.Task_Name}</div>
+          <div className="p-dialog-header1">{designIntent.Project_Name}</div>
         </div>
       }
     >
@@ -229,10 +229,11 @@ const CPPFA = ({
                   type="radio"
                   id="html"
                   name="fav_language"
-                  defaultChecked={riskLevel === "Low"}
                   value="Low"
+                  defaultChecked={riskLevel === "Low"}
+                  checked={designIntent.RiskLevel === "Low" || designIntent.RiskLevel === ""}
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
-                  disabled={isAccessEmpty}
+                  disabled={isAccessEmpty || cppfaDialogFlag}
                 />
                 <label className="radioLabel">Low Risk</label>
               </div>
@@ -242,8 +243,9 @@ const CPPFA = ({
                   id="html"
                   name="fav_language"
                   value="Medium"
+                  checked={designIntent.RiskLevel === "Medium"}
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
-                  disabled={isAccessEmpty}
+                  disabled={isAccessEmpty || cppfaDialogFlag}
                 />
                 <label className="radioLabel">Medium Risk</label>
               </div>
@@ -253,8 +255,9 @@ const CPPFA = ({
                   id="html"
                   name="fav_language"
                   value="High"
+                  checked={designIntent.RiskLevel === "High"}
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
-                  disabled={isAccessEmpty}
+                  disabled={isAccessEmpty || cppfaDialogFlag}
                 />
                 <label className="radioLabel">High Risk</label>
               </div>
@@ -276,7 +279,7 @@ const CPPFA = ({
                     </span>
                   </p>
                 }
-                disabled={isAccessEmpty}
+                disabled={isAccessEmpty || cppfaDialogFlag}
                 onValidationFail={(e)=> onValidationFail(e)}
               />
             </Col>
@@ -345,9 +348,11 @@ const CPPFA = ({
           label="Confirm PPFA"
           onClick={handleSubmit}
           disabled={
-            isAccessEmpty || riskLevel !== "Low"
+            cppfaDialogFlag ? true :
+            (isAccessEmpty || riskLevel !== "Low"
               ? yesOrNo === ""
-              : designIntent.Task_Status === "Completed"
+              : false) ||
+              designIntent.Task_Status === "Completed"
           }
         />
       </div>

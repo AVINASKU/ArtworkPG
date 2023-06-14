@@ -28,6 +28,7 @@ const ProjectListHeader = ({
   selected,
   allData,
   headers,
+  filterFLag,
   CustomizeViewFlag,
   ResetToDefaultFlag,
   isTreeTableFlag
@@ -130,6 +131,7 @@ const ProjectListHeader = ({
             alt="filter logo"
             onClick={clearFilter}
             className="header-icons"
+            hidden={filterFLag}
           />
         ) : (
           <img
@@ -137,6 +139,7 @@ const ProjectListHeader = ({
             alt="filter logo"
             onClick={clearFilter}
             className="header-icons"
+            hidden={filterFLag}
           />
         )}
         <img
