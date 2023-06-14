@@ -80,7 +80,7 @@ $width: 100%;
 }
 
 .tabular-add-project {
-  padding: 0;
+  padding: 8px 0 0 0;
   overflow-y: scroll;
   height: 72vh;
 }
@@ -203,7 +203,8 @@ $width: 100%;
 }
 
 .breadCrumbParent {
-  padding-top: 5px;
+  padding-top: 8px;
+  padding-left: 8px;
   // border-radius: 24px
   // width: $width;
   nav {
@@ -369,5 +370,9 @@ span.right {
 .piChevronRightMargin {
   margin-left: 9.5px;
   margin-right: 9.81px;
+}
+.tabComponent {
+  display:flex;
+  margin-bottom: 23.5px;
 }
 // TabsComponent Styles End
