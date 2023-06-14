@@ -184,7 +184,7 @@ const CPPFA = ({
                     </span>
                   </NavLink>
                 </li>
-                <li className="p-breadcrumb-chevron pi pi-chevron-right"></li>
+                <li className="p-breadcrumb-chevron pi pi-chevron-right piChevronRightMargin"></li>
                 <li className="">
                   <a href="#" className="p-menuitem-link">
                     <span className="p-menuitem-text">
