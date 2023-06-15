@@ -10,3 +10,40 @@
     margin-right: 20px;
   }
 }
+
+.p-checkbox {
+    display: none;
+  }
+
+  .p-multiselect-close{
+  display: none;
+  }
+
+  .p-multiselect-panel .p-multiselect-items .p-multiselect-item {
+      flex-direction: row !important;
+    margin:2px !important;
+}
+
+.p-multiselect-panel .p-multiselect-header .p-multiselect-filter-container .p-inputtext{
+
+width: 100%;
+}
+
+.p-multiselect-items-wrapper{
+padding:0px;
+}
+
+.city-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.city-name {
+  flex: 1;
+}
+
+.add-new-design-intent-icon,
+.header-icons {
+  margin-left: 10px; /* Add appropriate margin */
+}

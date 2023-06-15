@@ -4,7 +4,7 @@ import { Column } from "primereact/column";
 // import filter from "../../../assets/images/filter.svg";
 import filter from "../../assets/images/filter.svg";
 
-import "../Projects/MyProjects/index.scss";
+// import "../Projects/MyProjects/index.scss";
 
 const AgilityList = () => {
   const products = [

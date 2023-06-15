@@ -5,6 +5,14 @@ import ProjectNameHeader from "./ProjectNameHeader";
 import AgilityList from "./AgilityList";
 import "./index.scss";
 
+
+  const customStyles = {
+    '.p-checkbox': {
+      display: 'none',
+      // Add any other custom styles you want to override
+    }
+  };
+
 const DSBP = () => {
   const breadcrumb = [
     { label: "My Tasks", url: "/myTasks" },
@@ -13,7 +21,7 @@ const DSBP = () => {
   const headerName = "Artwork Alignment";
 
   return (
-    <div className="myProjectAnddAllProjectList">
+    <div className="artwork-dsbp">
       <ArtworkHeader
         breadcrumb={breadcrumb}
         headerName={headerName}
