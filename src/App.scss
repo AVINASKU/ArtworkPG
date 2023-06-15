@@ -55,6 +55,10 @@ div {
       border-color: #003DA5;
       &:hover, &:active{
         background-color: #002C7A;
+        &:focus{
+          outline: none;
+          outline-offset: inherit;
+        }
       }  
     }
     &-secondary{
@@ -401,7 +405,7 @@ fieldset:disabled .btn {
         width: auto;
         height: auto;
         font-size: 12px;
-        line-height: 12px;
+        line-height: 11px;
         border-radius: 20px;
       }
     }
