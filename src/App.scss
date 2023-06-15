@@ -508,3 +508,7 @@ input, textarea{
   padding: 25px;
   font-weight: bold;
 }
+.dependant-task {
+  pointer-events: none;
+  opacity: 0.5;
+}

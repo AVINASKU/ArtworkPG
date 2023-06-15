@@ -282,9 +282,9 @@ const ProjectPlanList = ({
         {field === "Task" && (
           <span
             className={`${
-              options.redirect === true || optionsData.Task
+              (options.redirect === true || optionsData.Task) && optionsData.State !== "Awaiting"
                 ? "task-link"
-                : "task"
+                : "task dependant-task"
             }`}
             onClick={() => {
               if (field && field.length && keyCode[0] !== "CPPFA") {
