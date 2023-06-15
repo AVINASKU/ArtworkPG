@@ -83,6 +83,9 @@ const CPPFA = ({
 
   const setRiskLevelFunc = (level) => {
     setRiskLevel(level);
+    const data = {...designIntent};
+    data.RiskLevel = level;
+    setDesignIntent(data);
     if (level === "Low") {
       setHighRiskYesOrNo("");
       setYesOrNo("");
@@ -230,7 +233,6 @@ const CPPFA = ({
                   id="html"
                   name="fav_language"
                   value="Low"
-                  defaultChecked={riskLevel === "Low"}
                   checked={designIntent.RiskLevel === "Low" || designIntent.RiskLevel === ""}
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
                   disabled={isAccessEmpty || cppfaDialogFlag}
