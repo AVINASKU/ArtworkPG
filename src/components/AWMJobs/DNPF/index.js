@@ -18,6 +18,7 @@ import {
   submitColorDevelopment,
 } from "../../../apis/colorDevelopmentApi";
 import { CheckReadOnlyAccess } from "../../../utils";
+import IQCDFooterButtons from "../DesignJobs/IQCDFooterButtons";
 
 const breadcrumb = [{ label: "Define Color Development & Print Trial" }];
 
@@ -57,7 +58,7 @@ function DNPF() {
     }
   }, [TaskDetailsData]);
   const handleCancel = () => {
-    return navigate(`/myTasks`);
+    return navigate(`/MyTasks`);
   };
 
   const handleDelete = (index) => {
@@ -193,10 +194,10 @@ function DNPF() {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-
+    console.log("Submit Data for CD", formData, id, headers);
     await submitColorDevelopment(formData, id, headers);
     setLoader(false);
-    navigate(`/myTasks`);
+    navigate(`/MyTasks`);
   };
 
   const onSaveAsDraft = async () => {
@@ -234,7 +235,7 @@ function DNPF() {
     console.log("full draft data --->", formData);
     await saveColorDevelopment(formData);
     setLoader(false);
-    navigate(`/myTasks`);
+    navigate(`/MyTasks`);
   };
 
   return (
@@ -247,6 +248,7 @@ function DNPF() {
           headerName={headerName}
           label="Define Color Development & Print Trial"
           checkReadWriteAccess={checkReadWriteAccess}
+          data={data}
         />
         <div
           className="task-details"
@@ -259,7 +261,11 @@ function DNPF() {
           }}
         >
           {<TaskHeader {...data} />}
-
+          {data?.Task_Status === "Complete" && (
+            <div className="task-completion">
+              This task is already submitted
+            </div>
+          )}
           {CD &&
             CD.length > 0 &&
             CD.map((item, index) => {
@@ -286,13 +292,14 @@ function DNPF() {
           formValid={formValid}
         /> */}
         </div>
-        <FooterButtons
+        <IQCDFooterButtons
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}
           formValid={!formValid}
           checkReadWriteAccess={checkReadWriteAccess}
           bottomFixed={true}
+          data={data}
         />
       </PageLayout>
     </LoadingOverlay>
