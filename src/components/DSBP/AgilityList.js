@@ -152,10 +152,10 @@ const AgilityList = () => {
   ];
 
   const renderHeader = (field, isFilterActivated = false) => {
-  console.log("name", field);
+    console.log("name", field);
     return (
       <span key={field}>
-      {/* {field === "Add to Project" && <span>
+        {/* {field === "Add to Project" && <span>
       <span>Add dropdown</span>
       </span>} */}
         <img
@@ -174,9 +174,11 @@ const AgilityList = () => {
     );
   };
 
-  const addBody = () =>{
-  
-  }
+  const addBody = (options, rowData) => {
+    let field = rowData.field;
+    console.log("option", options);
+    return <>{options[field]}</>;
+  };
 
   const renderColumns = () => {
     if (columnName && columnName.length) {
