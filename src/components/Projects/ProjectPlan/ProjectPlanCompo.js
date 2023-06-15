@@ -349,7 +349,7 @@ function ProjectPlanCompo(props) {
             />
             <div
               className="form-buttons"
-              style={{ padding: 15, background: "#FAFAFA" }}
+              style={{ background: "#FAFAFA" }}
             >
               <Button
                 className={

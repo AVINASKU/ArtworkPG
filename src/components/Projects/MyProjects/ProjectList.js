@@ -682,6 +682,10 @@ const ProjectList = (props) => {
               isResetEnabled={isResetEnabled}
               allData={pegadata}
               headers={allColumnNames}
+              filterFLag={false}
+              CustomizeViewFlag={false}
+              ResetToDefaultFlag={false}
+              isTreeTableFlag={false}
             />
           )}
           <CustomisedView

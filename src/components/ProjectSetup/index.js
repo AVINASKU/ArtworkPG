@@ -179,6 +179,7 @@ function ProjectSetup(props) {
                     isResetEnabled={isResetEnabled}
                     allData={projectPlan}
                     headers={columnNames}
+                    filterFLag={true}
                     CustomizeViewFlag={true}
                     ResetToDefaultFlag={true}
                     isTreeTableFlag={true}
@@ -187,7 +188,6 @@ function ProjectSetup(props) {
                 <div
                   className="btn-group btn-group-toggle"
                   data-toggle="buttons"
-                  style={{ paddingLeft: "28px" }}
                 >
                   <div className="col projectPlanButtons">
                     <label

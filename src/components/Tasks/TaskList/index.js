@@ -533,6 +533,7 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
             isFilterEnabled={isFilterEnabled}
             clearFilter={clearFilter}
             headers={headerColumns}
+            filterFLag={false}
             CustomizeViewFlag={false}
             ResetToDefaultFlag={false}
             isTreeTableFlag={false}
