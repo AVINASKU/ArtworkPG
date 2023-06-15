@@ -15,8 +15,9 @@ import CloneJobs from "../DesignJobs/CloneJobs";
 import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
 import "./index.scss";
 import CDHeader from "../DesignJobs/CDHeader";
-import { submitConfirmColorDevelopment } from "../../../apis/colorDevelopmentApi";
+import { submitConfirmPrintTrial } from "../../../apis/colorDevelopmentApi";
 import { CheckReadOnlyAccess } from "../../../utils";
+import IQCDFooterButtons from "../DesignJobs/IQCDFooterButtons";
 
 const breadcrumb = [{ label: "Confirm Print Trial" }];
 
@@ -75,7 +76,7 @@ function CPT() {
     }
   }, [TaskDetailsData]);
   const handleCancel = () => {
-    return navigate(`/myTasks`);
+    return navigate(`/MyTasks`);
   };
 
   const addNewEmptyDesign = () => {
@@ -206,9 +207,9 @@ function CPT() {
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
 
-    await submitConfirmColorDevelopment(formData, id, headers);
+    await submitConfirmPrintTrial(formData, id, headers);
     setLoader(false);
-    navigate(`/myTasks`);
+    navigate(`/MyTasks`);
   };
 
   const onSaveAsDraft = async () => {
@@ -248,6 +249,7 @@ function CPT() {
           label="Confirm Print Trial"
           disabled={true}
           checkReadWriteAccess={checkReadWriteAccess}
+          data={data}
         />
         <div
           className="task-details"
@@ -260,6 +262,11 @@ function CPT() {
           }}
         >
           {<TaskHeader {...data} />}
+          {data?.Task_Status === "Complete" && (
+            <div className="task-completion">
+              This task is already submitted
+            </div>
+          )}
           {CD &&
             CD.length > 0 &&
             CD.map((item, index) => {
@@ -288,7 +295,7 @@ function CPT() {
               }
             })}
         </div>
-        <FooterButtons
+        <IQCDFooterButtons
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}
@@ -296,6 +303,7 @@ function CPT() {
           cptFormValid={cptFormValid}
           checkReadWriteAccess={checkReadWriteAccess}
           bottomFixed={true}
+          data={data}
         />
       </PageLayout>
     </LoadingOverlay>

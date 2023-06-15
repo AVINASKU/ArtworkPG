@@ -27,7 +27,7 @@ const IQHeader = ({
       <i
         className="pi pi-times"
         onClick={() => {
-          navigate("/myTasks");
+          navigate("/MyTasks");
         }}
       ></i>
       <div className="actions">
@@ -66,7 +66,7 @@ const IQHeader = ({
               disabled={
                 (!checkReadWriteAccess ||
                   showPage === "CNIQ" ||
-                  (showPage === "DNIQ" && data?.Task_Status === "Complete")) &&
+                  data?.Task_Status === "Complete") &&
                 true
               }
             ></Checkbox>
@@ -89,7 +89,7 @@ const IQHeader = ({
               disabled={
                 (!checkReadWriteAccess ||
                   showPage === "CNIQ" ||
-                  (showPage === "DNIQ" && data?.Task_Status === "Complete")) &&
+                  data?.Task_Status === "Complete") &&
                 true
               }
             />
@@ -99,8 +99,7 @@ const IQHeader = ({
                 disabled={
                   (!checkReadWriteAccess ||
                     showPage === "CNIQ" ||
-                    (showPage === "DNIQ" &&
-                      data?.Task_Status === "Complete")) &&
+                    data?.Task_Status === "Complete") &&
                   true
                 }
               >
@@ -115,14 +114,14 @@ const IQHeader = ({
               className={`add-new-design-intent-icon ${
                 (!checkReadWriteAccess ||
                   showPage === "CNIQ" ||
-                  (showPage === "DNIQ" && data?.Task_Status === "Complete")) &&
+                  data?.Task_Status === "Complete") &&
                 "disabled-add"
               }`}
               alt=""
               disabled={
                 (!checkReadWriteAccess ||
                   showPage === "CNIQ" ||
-                  (showPage === "DNIQ" && data?.Task_Status === "Complete")) &&
+                  data?.Task_Status === "Complete") &&
                 true
               }
             />
@@ -131,15 +130,13 @@ const IQHeader = ({
                 className={
                   (!checkReadWriteAccess ||
                     showPage === "CNIQ" ||
-                    (showPage === "DNIQ" &&
-                      data?.Task_Status === "Complete")) &&
+                    data?.Task_Status === "Complete") &&
                   "disable-buttons"
                 }
                 disabled={
                   (!checkReadWriteAccess ||
                     showPage === "CNIQ" ||
-                    (showPage === "DNIQ" &&
-                      data?.Task_Status === "Complete")) &&
+                    data?.Task_Status === "Complete") &&
                   true
                 }
               >
