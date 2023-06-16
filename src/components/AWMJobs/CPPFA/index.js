@@ -22,7 +22,7 @@ const CPPFA = ({
   pegadata,
   TaskDetailsData,
   userInformation,
-  getProjectPlanApi
+  getProjectPlanApi,
 }) => {
   const location = useLocation();
   const locationPath = location?.pathname;
@@ -83,7 +83,7 @@ const CPPFA = ({
 
   const setRiskLevelFunc = (level) => {
     setRiskLevel(level);
-    const data = {...designIntent};
+    const data = { ...designIntent };
     data.RiskLevel = level;
     setDesignIntent(data);
     if (level === "Low") {
@@ -128,7 +128,7 @@ const CPPFA = ({
         AWMProjectID: selectedTaskData.ProjectID,
         Size: fileSize === 0 ? "1" : fileSize,
         Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
-        Filename: fileName ? fileName.split('.').slice(0, -1).join('.'): null
+        Filename: fileName ? fileName.split(".").slice(0, -1).join(".") : null,
       },
     };
 
@@ -158,10 +158,10 @@ const CPPFA = ({
   const myProjects = url[1];
 
   const onValidationFail = (uploadData) => {
-    if(uploadData.size > 1000000) {
+    if (uploadData.size > 1000000) {
       setFileName(null);
     }
-  }
+  };
 
   return (
     <Dialog
@@ -233,7 +233,10 @@ const CPPFA = ({
                   id="html"
                   name="fav_language"
                   value="Low"
-                  checked={designIntent.RiskLevel === "Low" || designIntent.RiskLevel === ""}
+                  checked={
+                    designIntent.RiskLevel === "Low" ||
+                    designIntent.RiskLevel === ""
+                  }
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
                   disabled={isAccessEmpty || cppfaDialogFlag}
                 />
@@ -275,14 +278,30 @@ const CPPFA = ({
                 itemTemplate={itemTemplate}
                 emptyTemplate={
                   <p className="m-0">
-                    Drop or Browse file here <br />
-                    <span className="fileSupportedData">
-                      File supported: PDF, DOCX, JPEG
-                    </span>
+                    {designIntent.FileMetaDataList &&
+                    designIntent.FileMetaDataList.length > 0 ? (
+                      designIntent.FileMetaDataList[0].File_Name === "" ? (
+                        <>
+                        <span>Drop or Browse file here</span> <br />
+                        <span className="fileSupportedData">
+                          File supported: PDF, DOCX, JPEG
+                        </span>
+                      </>
+                      ) : (
+                        designIntent.FileMetaDataList[0].File_Name
+                      )
+                    ) : (
+                      <>
+                        <span>Drop or Browse file here</span> <br />
+                        <span className="fileSupportedData">
+                          File supported: PDF, DOCX, JPEG
+                        </span>
+                      </>
+                    )}
                   </p>
                 }
                 disabled={isAccessEmpty || cppfaDialogFlag}
-                onValidationFail={(e)=> onValidationFail(e)}
+                onValidationFail={(e) => onValidationFail(e)}
               />
             </Col>
             <Col></Col>
@@ -350,11 +369,11 @@ const CPPFA = ({
           label="Confirm PPFA"
           onClick={handleSubmit}
           disabled={
-            cppfaDialogFlag ? true :
-            (isAccessEmpty || riskLevel !== "Low"
-              ? yesOrNo === ""
-              : false) ||
-              designIntent.Task_Status === "Completed"
+            cppfaDialogFlag
+              ? true
+              : (isAccessEmpty || riskLevel !== "Low"
+                  ? yesOrNo === ""
+                  : false) || designIntent.Task_Status === "Completed"
           }
         />
       </div>
