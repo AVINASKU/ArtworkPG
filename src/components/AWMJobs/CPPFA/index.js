@@ -373,7 +373,7 @@ const CPPFA = ({
               ? true
               : (isAccessEmpty || riskLevel !== "Low"
                   ? yesOrNo === ""
-                  : false) || designIntent.Task_Status === "Completed"
+                  : false) || designIntent.Task_Status === "Complete"
           }
         />
       </div>
