@@ -59,7 +59,7 @@ function DNIQ() {
   }, [TaskDetailsData]);
 
   const handleCancel = () => {
-    return navigate(`/myTasks`);
+    return navigate(`/MyTasks`);
   };
 
   const handleDelete = (index) => {
@@ -165,7 +165,7 @@ function DNIQ() {
     console.log("Submit Data", formData, id, headers);
     await submitInkQualification(formData, id, headers);
     setLoader(false);
-    navigate("/myTasks");
+    navigate("/MyTasks");
   };
 
   const onSaveAsDraft = async () => {
@@ -206,7 +206,7 @@ function DNIQ() {
     console.log("full draft data --->", formData);
     await saveInkQualification(formData);
     setLoader(false);
-    navigate("/myTasks");
+    navigate("/MyTasks");
   };
 
   const checkFormValidity = () => {
@@ -244,7 +244,11 @@ function DNIQ() {
           }}
         >
           {<TaskHeader {...data} />}
-
+          {data?.Task_Status === "Complete" && (
+            <div className="task-completion">
+              This task is already submitted
+            </div>
+          )}
           {IQ &&
             IQ.length > 0 &&
             IQ.map((item, index) => {

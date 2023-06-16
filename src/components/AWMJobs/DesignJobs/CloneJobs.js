@@ -52,7 +52,7 @@ const CloneJobs = ({
     Design_Job_Name,
     Print_Trial_Needed,
     CD_Approved,
-    PTConfirmed,
+    Print_Trial_Done,
   } = item;
   const { DropDownValuesData, loading } = useSelector(
     (state) => state.DropDownValuesReducer
@@ -168,8 +168,8 @@ const CloneJobs = ({
   useEffect(() => {
     setPrintTrailNeeded(Print_Trial_Needed);
     setCDConfirmation(CD_Approved);
-    setPrintTrailDone(PTConfirmed);
-  }, [Print_Trial_Needed, CD_Approved, PTConfirmed]);
+    setPrintTrailDone(Print_Trial_Done);
+  }, [Print_Trial_Needed, CD_Approved, Print_Trial_Done]);
 
   // useEffect(() => {
   //   // if (showPage === "CCD" || showPage === "CPT") {

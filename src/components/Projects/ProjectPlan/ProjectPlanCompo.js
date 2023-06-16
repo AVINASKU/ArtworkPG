@@ -317,6 +317,7 @@ function ProjectPlanCompo(props) {
     setLoader(true);
     await activateProjectPlan(selectedProject.Project_ID);
     await dispatch(getMyProject(userInformation));
+    getProjectPlanApi();
     setLoader(false);
     await toast.current.show({
       severity: "success",
