@@ -1,15 +1,15 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import ArtworkHeader from "./ArtworkHeader";
 import SelectDsbpId from "./SelectDsbpId";
 import ProjectNameHeader from "./ProjectNameHeader";
 import AgilityList from "./AgilityList";
 import { getDSBPDropdownData } from "../../store/actions/DSBPActions";
+import { addDsbpToProject, deleteDsbpFromProject } from "../../apis/dsbpApi";
 import { useDispatch, useSelector } from "react-redux";
 import FooterButtons from "../AWMJobs/DesignJobs/FooterButtons";
 import "./index.scss";
-import { useEffect } from "react";
-import { useState } from "react";
 
 const DSBP = () => {
   const navigate = useNavigate();
@@ -157,9 +157,20 @@ const DSBP = () => {
     setDropdownList(DropDownData.DSBPDropdownData);
   }, [DropDownData]);
 
-  const addDSBPIntoProject = (InitiativeID, operation) => {
+  const addDSBPIntoProject = async (InitiativeID, operation) => {
     console.log("dsbp id", InitiativeID, operation);
-    // project id and initiative id i need to pass here
+    const projectId = "A-2316";
+    if (operation === "add") {
+      console.log("add operation");
+      let checkRes = await addDsbpToProject(projectId, InitiativeID);
+      console.log("checkRes", checkRes);
+    }
+    if (operation === "delete") {
+      console.log("delete operation");
+      let checkRes = await deleteDsbpFromProject(projectId, InitiativeID);
+      console.log("check delete Res", checkRes);
+    }
+    // fetch dsbp project data after delete / add
   };
 
   const handleSelect = (item) => {
