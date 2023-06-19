@@ -203,11 +203,10 @@ function AddProject(props) {
             setSubCategoriesOptions(pickList.Labels);
           }
          
-          if (obj.code === "BBY" && pickList.Picklist_Name === "TIER") {           
+          if (obj.code === "BBY" && pickList.Picklist_Name === "Tier") {    
             setTierList(pickList.Labels);
           }
           if (obj.code === "HOM" && pickList.Picklist_Name === "PRODSTRAT") {
-            console.log("obj", obj, "pickList", pickList.Labels)
             setProductionStrategyList(pickList.Labels);
           }
         });
