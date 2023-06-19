@@ -15,6 +15,7 @@ const IQHeader = ({
   showPage,
   checkReadWriteAccess,
   data,
+  selectAllCheckbox,
 }) => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
@@ -61,7 +62,7 @@ const IQHeader = ({
                 setChecked(e.checked);
                 onSelectAll(e.checked);
               }}
-              checked={checked}
+              checked={selectAllCheckbox || checked}
               className="margin-right"
               disabled={
                 (!checkReadWriteAccess ||
