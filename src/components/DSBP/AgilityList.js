@@ -152,7 +152,7 @@ const AgilityList = () => {
   ];
 
   const renderHeader = (field, isFilterActivated = false) => {
-    console.log("name", field);
+    // console.log("name", field);
     return (
       <span key={field}>
         {/* {field === "Add to Project" && <span>
@@ -176,7 +176,7 @@ const AgilityList = () => {
 
   const addBody = (options, rowData) => {
     let field = rowData.field;
-    console.log("option", options);
+    // console.log("option", options);
     return <>{options[field]}</>;
   };
 

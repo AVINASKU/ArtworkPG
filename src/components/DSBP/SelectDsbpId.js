@@ -2,34 +2,29 @@ import React, { useState } from "react";
 import { MultiSelect } from "primereact/multiselect";
 import plusCollapseImg from "../../assets/images/plusCollapse.svg";
 import deleteIcon from "../../assets/images/deleteIcon.svg";
+import {addEllipsis} from "../../utils";
 
-const SelectDsbpId = () => {
-  const [selectedCities, setSelectedCities] = useState(null);
-  const cities = [
-    { name: "New York", code: "NY" },
-    { name: "Rome", code: "RM" },
-    { name: "London", code: "LDN" },
-    { name: "Istanbul", code: "IST" },
-    { name: "Paris", code: "PRS" },
-  ];
-
-  const selectedCityTemplate = (option) => {
-    return option.name;
-  };
+const SelectDsbpId = ({ dropdownlist, addDSBPIntoProject }) => {
+  const [selectedCities, setSelectedCities] = useState([]);
 
   const cityOptionTemplate = (option) => {
     return (
       <div className="city-option">
-        <div className="city-name">{option.name}</div>
+        <div className="city-name" onClick={(e) => e.stopPropagation()}>
+          {addEllipsis(option.InitiativeName, 50)}
+        </div>
         <div>
           <img
             src={plusCollapseImg}
             className={`add-new-design-intent-icon ${
               selectedCities &&
               selectedCities.length &&
-              selectedCities.includes(option.name) &&
+              selectedCities.includes(option.InitiativeID) &&
               "disable-icons"
             }`}
+            onClick={(e) => {
+              handleOptionSelection(option, "add");
+            }}
             alt=""
             style={{ height: 12 }}
           />
@@ -39,18 +34,18 @@ const SelectDsbpId = () => {
             src={deleteIcon}
             onClick={(e) => {
               e.stopPropagation();
-              console.log("pranali", option, selectedCities);
-              if (selectedCities.includes(option.name)) {
-                const updatedCities = selectedCities.filter(
-                  (item) => item !== option.name
-                );
-                setSelectedCities(updatedCities);
-              }
-              // alert("clicked",option, selectedCities);
+              handleOptionSelection(option, "delete");
+              // if (selectedCities.includes(option.InitiativeName)) {
+              //   const updatedCities = selectedCities.filter(
+              //     (item) => item !== option.InitiativeName
+              //   );
+              //   setSelectedCities(updatedCities);
+              // }
             }}
             alt="filter logo"
             className={`header-icons ${
-              ((selectedCities && !selectedCities.includes(option.name)) ||
+              ((selectedCities &&
+                !selectedCities.includes(option.InitiativeID)) ||
                 !selectedCities) &&
               "disable-icons"
             }`}
@@ -61,24 +56,31 @@ const SelectDsbpId = () => {
     );
   };
 
-  const multiSelectOnChange = (e) => {
-    setSelectedCities(e.value);
+  const handleOptionSelection = (option, operation) => {
+    const updatedSelectedCities = [...selectedCities];
+    const index = updatedSelectedCities.indexOf(option.InitiativeID);
+    if (index > -1) {
+      updatedSelectedCities.splice(index, 1); // Deselect the option
+    } else {
+      updatedSelectedCities.push(option.InitiativeID); // Select the option
+    }
+    setSelectedCities(updatedSelectedCities); // Update selectedCities state
+    addDSBPIntoProject(option.InitiativeID, operation);
   };
 
   return (
     <>
       <div className="margin-left">Select DSBP ID</div>
-
       <div className="actions multiselect-padding margin-left dsbp-select">
         <MultiSelect
           value={selectedCities}
-          onChange={(e) => multiSelectOnChange(e)}
-          options={cities}
-          optionLabel="name"
-          optionValue="name" // Set optionValue to "name" to remove checkboxes
-          placeholder="Select Cities"
+          // onChange={(e) => multiSelectOnChange(e)}
+          options={dropdownlist}
+          optionLabel="InitiativeName"
+          optionValue="InitiativeID" // Set optionValue to "name" to remove checkboxes
+          placeholder="Select"
           filter
-          valueTemplate={selectedCityTemplate}
+          // valueTemplate={selectedCityTemplate}
           itemTemplate={cityOptionTemplate}
           maxSelectedLabels={3}
           panelClassName="dsbp-multiselect-dropdown"
