@@ -33,3 +33,8 @@ export const UPDATE_MODE = "UPDATE_MODE";
 // User
 export const UPDATE_USER = "UPDATE_USER";
 export const USER_PROFILE_DATA = "USER_PROFILE_DATA";
+
+//DSBP dropdown 
+export const GET_ALL_DSBP_DATA= "GET_ALL_DSBP_DATA";
+export const GET_ALL_DSBP_DATA_ERROR = "GET_ALL_DSBP_DATA_ERROR";
+
