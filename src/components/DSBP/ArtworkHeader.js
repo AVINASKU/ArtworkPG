@@ -1,18 +1,23 @@
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import CustomizeView from "./CustomizeView";
 import "primeicons/primeicons.css";
 
 const ArtworkHeader = ({ label, headerName }) => {
-  const navigate = useNavigate();
-  const [checked, setChecked] = useState(false);
   const location = useLocation();
   const locationPath = location?.pathname;
 
   const url = locationPath?.split("/");
   const mytasks = url[1];
+  const [showApproveDialogCPPFA, setShowApproveDialogCPPFA] = useState(false);
   return (
     <div className="actions multiselect-padding">
+      {showApproveDialogCPPFA && (
+        <CustomizeView
+          onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
+          showTaskDialog={showApproveDialogCPPFA}
+        />
+      )}
       <div className="actions multiselect-padding">
         <div>
           {/* <BreadCrumb model={breadcrumb} /> */}
@@ -43,7 +48,11 @@ const ArtworkHeader = ({ label, headerName }) => {
           <button type="button" className="btn btn-secondary">
             Confirm Full Scope in
           </button>
-          <button type="button" className="btn btn-secondary">
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => setShowApproveDialogCPPFA(true)}
+          >
             Customize View
           </button>
           <button type="button" className="btn btn-secondary">
