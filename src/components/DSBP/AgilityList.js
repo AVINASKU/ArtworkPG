@@ -4,12 +4,12 @@ import { Column } from "primereact/column";
 // import filter from "../../../assets/images/filter.svg";
 import filter from "../../assets/images/filter.svg";
 
-// import "../Projects/MyProjects/index.scss";
+import "../Projects/MyProjects/index.scss";
 
 const AgilityList = () => {
   const products = [
     {
-      "DSBP Id": "1000",
+      "InitiativeID": "1000",
       PMP: "894567",
       code: "f230fh0g3",
       name: "Bamboo Watch",
@@ -22,7 +22,7 @@ const AgilityList = () => {
       rating: 5,
     },
     {
-      "DSBP Id": "1001",
+      "InitiativeID": "1001",
       PMP: "456389",
       code: "nvklal433",
       name: "Black Watch",
@@ -35,7 +35,7 @@ const AgilityList = () => {
       rating: 4,
     },
     {
-      "DSBP Id": "1002",
+      "InitiativeID": "1002",
       PMP: "674567",
       code: "zz21cz3c1",
       name: "Blue Band",
@@ -48,7 +48,7 @@ const AgilityList = () => {
       rating: 3,
     },
     {
-      "DSBP Id": "1003",
+      "InitiativeID": "1003",
       PMP: "223156",
       code: "244wgerg2",
       name: "Blue T-Shirt",
@@ -61,7 +61,7 @@ const AgilityList = () => {
       rating: 5,
     },
     {
-      "DSBP Id": "1004",
+      "InitiativeID": "1004",
       PMP: "902345",
       code: "h456wer53",
       name: "Bracelet",
@@ -74,7 +74,7 @@ const AgilityList = () => {
       rating: 4,
     },
     {
-      "DSBP Id": "1005",
+      "InitiativeID": "1005",
       PMP: "234512",
       code: "av2231fwg",
       name: "Brown Purse",
@@ -87,7 +87,7 @@ const AgilityList = () => {
       rating: 4,
     },
     {
-      "DSBP Id": "1006",
+      "InitiativeID": "1006",
       PMP: "765645",
       code: "bib36pfvm",
       name: "Chakra Bracelet",
@@ -100,7 +100,7 @@ const AgilityList = () => {
       rating: 3,
     },
     {
-      "DSBP Id": "1007",
+      "InitiativeID": "1007",
       PMP: "778890",
       code: "mbvjkgip5",
       name: "Galaxy Earrings",
@@ -113,7 +113,7 @@ const AgilityList = () => {
       rating: 5,
     },
     {
-      "DSBP Id": "1008",
+      "InitiativeID": "1008",
       PMP: "901234",
       code: "vbb124btr",
       name: "Game Controller",
@@ -128,7 +128,7 @@ const AgilityList = () => {
   ];
 
   const columnName = [
-    "DSBP Id",
+    "InitiativeID",
     "PMP",
     "Locked in DSBP",
     "Add to Project",
@@ -151,13 +151,58 @@ const AgilityList = () => {
     "PO FPC DESC",
   ];
 
+  const [selectAllChecked, setSelectAllChecked] = useState(false);
+  const [selected, setSelected] = useState([]);
+
+  const addBody = (options, rowData) => {
+    let field = rowData.field;
+    return <>
+      <div className="flex align-items-center gap-2">
+        <input
+          type="checkbox"
+          className="p-checkbox-box p-highlight"
+          checked={selected?.some((item)=>item.InitiativeID === options.InitiativeID)}
+          onChange={() => handleSelect(options)}
+        />
+        {options[field]}        
+      </div>
+    </>;
+  };
+
+  const handleSelect = (item) => {
+    if (selected?.some((d)=>d.InitiativeID === item.InitiativeID)) {
+      setSelected(selected.filter((i) => i.InitiativeID !== item.InitiativeID));
+    } else {
+      if (selected.length === 0) {
+        const selectedList = [];
+        selectedList.push(item);
+        setSelected(selectedList);
+      } else {
+        setSelected([...selected, item]);
+      }
+    }
+  };
+
+const handleSelectAll = (e) => {
+  if (e.target.checked) {
+    setSelectAllChecked(true);
+    setSelected(products);
+  } else {
+    setSelectAllChecked(false);
+    setSelected([]);
+  }
+};
+
   const renderHeader = (field, isFilterActivated = false) => {
-    // console.log("name", field);
     return (
       <span key={field}>
-        {/* {field === "Add to Project" && <span>
-      <span>Add dropdown</span>
-      </span>} */}
+      {field === "InitiativeID" && (
+        <input
+          type="checkbox"
+          checked={selectAllChecked}
+          onChange={handleSelectAll}
+        />
+      )}
         <img
           src={filter}
           key={field}
@@ -174,11 +219,6 @@ const AgilityList = () => {
     );
   };
 
-  const addBody = (options, rowData) => {
-    let field = rowData.field;
-    // console.log("option", options);
-    return <>{options[field]}</>;
-  };
 
   const renderColumns = () => {
     if (columnName && columnName.length) {
@@ -187,7 +227,7 @@ const AgilityList = () => {
           <Column
             field={field}
             header={() => renderHeader(field)}
-            body={addBody}
+            body={field === "InitiativeID" && addBody}
             key={field}
             columnKey={field}
             showFilterMenu={false}
@@ -198,10 +238,9 @@ const AgilityList = () => {
       });
     }
   };
-
   return (
     <DataTable
-      dataKey="DSBP ID"
+      dataKey="InitiativeID"
       scrollable
       resizableColumns
       reorderableColumns
@@ -210,6 +249,8 @@ const AgilityList = () => {
       value={products}
       className="mt-3"
       tableStyle={{ width: "max-content", minWidth: "100%" }}
+      selection={selected}
+      onSelectionChange={(e) => setSelected(e.value)}
     >
       {renderColumns()}
     </DataTable>

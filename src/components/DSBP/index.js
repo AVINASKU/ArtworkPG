@@ -1,15 +1,18 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import ArtworkHeader from "./ArtworkHeader";
 import SelectDsbpId from "./SelectDsbpId";
 import ProjectNameHeader from "./ProjectNameHeader";
 import AgilityList from "./AgilityList";
 import { getDSBPDropdownData } from "../../store/actions/DSBPActions";
 import { useDispatch, useSelector } from "react-redux";
+import FooterButtons from "../AWMJobs/DesignJobs/FooterButtons";
 import "./index.scss";
 import { useEffect } from "react";
 import { useState } from "react";
 
 const DSBP = () => {
+    const navigate = useNavigate();
   const [dropdownlist, setDropdownList] = useState(null);
   const DropDownData = useSelector((state) => state.DSBPDropdownReducer);
 
@@ -37,6 +40,14 @@ const DSBP = () => {
     // project id and initiative id i need to pass here
   };
 
+  const handleCancel = () => {
+    return navigate(`/myProjects`);
+  };
+
+  const onSubmit = () => {
+    return navigate(`/myProjects`);
+  };
+
   console.log("dropdownlist", dropdownlist);
 
   return (
@@ -52,6 +63,11 @@ const DSBP = () => {
         addDSBPIntoProject={addDSBPIntoProject}
       />
       <AgilityList />
+      <FooterButtons
+        handleCancel={handleCancel}
+        hideSaveButton={true}
+        onSubmit={onSubmit}
+      />
     </div>
   );
 };
