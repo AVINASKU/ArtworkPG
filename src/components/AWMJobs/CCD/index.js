@@ -19,9 +19,9 @@ import { submitConfirmColorDevelopment } from "../../../apis/colorDevelopmentApi
 import { CheckReadOnlyAccess } from "../../../utils";
 import IQCDFooterButtons from "../DesignJobs/IQCDFooterButtons";
 
-const breadcrumb = [{ label: "Confirm Color Development" }];
+const breadcrumb = [{ label: "Confirm Color Development & Print Trial" }];
 
-const headerName = "Confirm Color Development";
+const headerName = "Confirm Color Development & Print Trial";
 const jobName = "CD_";
 
 function CCD() {
@@ -231,7 +231,7 @@ function CCD() {
           onSelectAll={onSelectAll}
           breadcrumb={breadcrumb}
           headerName={headerName}
-          label="Confirm Color Development"
+          label="Confirm Color Development & Print Trial"
           disabled={true}
           checkReadWriteAccess={checkReadWriteAccess}
           data={data}

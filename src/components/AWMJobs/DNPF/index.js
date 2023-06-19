@@ -19,6 +19,7 @@ import {
 } from "../../../apis/colorDevelopmentApi";
 import { CheckReadOnlyAccess } from "../../../utils";
 import IQCDFooterButtons from "../DesignJobs/IQCDFooterButtons";
+import { cloneDeep } from "lodash";
 
 const breadcrumb = [{ label: "Define Color Development & Print Trial" }];
 
@@ -38,6 +39,8 @@ function DNPF() {
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
   const [loader, setLoader] = useState(false);
+  const [selectAllCheckbox, setSelectAllCheckbox] = useState(false);
+
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const checkReadWriteAccess = CheckReadOnlyAccess();
@@ -103,12 +106,28 @@ function DNPF() {
   };
 
   const addData = (fieldName, index, value, Design_Intent_Name) => {
-    let data = CD[index];
+    let CDdata = cloneDeep(CD);
+    let data = CDdata[index];
     data[fieldName] = value;
-    submittedDI.push(data);
-    setSubmittedDI(submittedDI);
+    setCD(CDdata);
+    // submittedDI.push(data);
+    setSubmittedDI(Math.random());
     checkFormValidity();
   };
+
+  useEffect(() => {
+    let count = 0;
+    CD?.forEach((obj) => {
+      if (obj.Select) {
+        count++;
+      }
+    });
+    if (CD.length === count) {
+      setSelectAllCheckbox(true);
+    } else {
+      setSelectAllCheckbox(false);
+    }
+  }, [submittedDI]);
 
   const checkFormValidity = () => {
     const validTasks = CD?.filter((task) => {
@@ -127,11 +146,11 @@ function DNPF() {
   };
 
   const onSelectAll = (checked) => {
-    CD?.map((task) => {
-      if (task?.Event !== "submit") {
-        task.Select = checked;
-      }
-      return task;
+    CD?.forEach((task) => {
+      // if (task?.Event !== "submit") {
+      task.Select = checked;
+      // }
+      // return task;
     });
     setCD(CD);
     setUpdated(!updated);
@@ -244,6 +263,7 @@ function DNPF() {
         <CDHeader
           setAddNewDesign={addNewEmptyDesign}
           onSelectAll={onSelectAll}
+          selectAllCheckbox={selectAllCheckbox}
           breadcrumb={breadcrumb}
           headerName={headerName}
           label="Define Color Development & Print Trial"

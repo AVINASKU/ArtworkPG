@@ -153,9 +153,10 @@ const CloneJobs = ({
       break;
   }
 
-  // useEffect(() => {
-  //   setChecked(Select);
-  // }, [Select]);
+  useEffect(() => {
+    setChecked(Select);
+    addData("Select", index, Select, di_name);
+  }, [Select]);
 
   useEffect(() => {
     setIddsaChecked(IDDSampleApproved);
@@ -335,7 +336,7 @@ const CloneJobs = ({
                   addData("Select", index, e.checked, di_name);
                   setChecked(e.checked);
                 }}
-                checked={event === "submit" ? true : checked}
+                checked={checked}
                 className="margin-right"
                 disabled={!checkReadWriteAccess || disabled}
               ></Checkbox>

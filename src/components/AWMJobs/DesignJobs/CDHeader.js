@@ -14,6 +14,7 @@ const CDHeader = ({
   disabled,
   checkReadWriteAccess,
   data,
+  selectAllCheckbox,
 }) => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
@@ -60,7 +61,7 @@ const CDHeader = ({
                 setChecked(e.checked);
                 onSelectAll(e.checked);
               }}
-              checked={checked}
+              checked={selectAllCheckbox || checked}
               className="margin-right"
               disabled={
                 !checkReadWriteAccess ||

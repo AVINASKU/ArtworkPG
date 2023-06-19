@@ -19,6 +19,7 @@ import CDHeader from "../DesignJobs/CDHeader";
 import IQHeader from "../DesignJobs/IQHeader";
 import { CheckReadOnlyAccess } from "../../../utils";
 import IQCDFooterButtons from "../DesignJobs/IQCDFooterButtons";
+import { cloneDeep } from "lodash";
 const breadcrumb = [{ label: "Define Ink Qualification" }];
 
 const headerName = "Define Ink Qualification";
@@ -37,6 +38,8 @@ function DNIQ() {
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
   const [loader, setLoader] = useState(false);
+  const [selectAllCheckbox, setSelectAllCheckbox] = useState(false);
+
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const checkReadWriteAccess = CheckReadOnlyAccess();
@@ -95,20 +98,36 @@ function DNIQ() {
   };
 
   const addData = (fieldName, index, value, Design_Intent_Name) => {
-    let data = IQ[index];
+    let IQdata = cloneDeep(IQ);
+    let data = IQdata[index];
     console.log(data);
     data[fieldName] = value;
-    submittedDI.push(data);
-    setSubmittedDI(submittedDI);
+    setIQ(IQdata);
+    // submittedDI.push(data);
+    setSubmittedDI(Math.random());
     checkFormValidity();
   };
 
-  const onSelectAll = (checked) => {
-    IQ?.map((task) => {
-      if (task?.Event !== "submit") {
-        task.Select = checked;
+  useEffect(() => {
+    let count = 0;
+    IQ?.forEach((obj) => {
+      if (obj.Select) {
+        count++;
       }
-      return task;
+    });
+    if (IQ.length === count) {
+      setSelectAllCheckbox(true);
+    } else {
+      setSelectAllCheckbox(false);
+    }
+  }, [submittedDI]);
+
+  const onSelectAll = (checked) => {
+    IQ?.forEach((task) => {
+      // if (task?.Event !== "submit") {
+      task.Select = checked;
+      // }
+      // return task;
     });
     setIQ(IQ);
     setUpdated(!updated);
@@ -226,6 +245,7 @@ function DNIQ() {
         <IQHeader
           setAddNewDesign={addNewEmptyDesign}
           onSelectAll={onSelectAll}
+          selectAllCheckbox={selectAllCheckbox}
           breadcrumb={breadcrumb}
           headerName={headerName}
           label="Define Ink Qualification"
