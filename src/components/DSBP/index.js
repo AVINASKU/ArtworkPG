@@ -5,10 +5,11 @@ import SelectDsbpId from "./SelectDsbpId";
 import ProjectNameHeader from "./ProjectNameHeader";
 import AgilityList from "./AgilityList";
 import { getDSBPDropdownData } from "../../store/actions/DSBPActions";
-import { addDsbpToProject, deleteDsbpFromProject } from "../../apis/dsbpApi";
+import { addDsbpToProject, deleteDsbpFromProject, getDsbpPMPDetails } from "../../apis/dsbpApi";
 import { useDispatch, useSelector } from "react-redux";
 import FooterButtons from "../AWMJobs/DesignJobs/FooterButtons";
 import "./index.scss";
+const projectId = "A-2316";
 
 const DSBP = () => {
   const navigate = useNavigate();
@@ -147,6 +148,16 @@ const DSBP = () => {
   const BU = "BABY CARE";
   const Region = "EUROPE";
   console.log("dropdown data", DropDownData);
+
+  useEffect(()=>{
+  async function fetchData(){
+    const resp =  await getDsbpPMPDetails(projectId);
+  console.log("resp", resp);
+  }
+
+  fetchData();
+
+  },[])
 
   useEffect(() => {
     dispatch(getDSBPDropdownData(BU, Region));
