@@ -1,4 +1,4 @@
-.ppfaDialog {
+.ppfaDialogForDSBP {
   width: 1080px;
   height: 569px;
   border-radius: 20px;
@@ -35,6 +35,7 @@
     height: 372px;
     padding: 4px 12px;
     overflow-y: auto;
+    cursor:url('./../../../assets/images/cursor.svg'), auto;
   }
 
   .p-dialog-content {
