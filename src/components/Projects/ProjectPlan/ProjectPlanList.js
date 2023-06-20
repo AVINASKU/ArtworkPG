@@ -277,15 +277,14 @@ const ProjectPlanList = ({
     const key = options?.key;
     const keyCode = key?.split("_");
     const url = `MyTasks/${keyCode[0]}/${key}/${currentUrlLastSeg}`;
+    console.log("url", url);
+    console.log("url key", options.children.length === 0);
     return (
       <>
         {field === "Task" && (
           <span
-            className={`${
-              (options.redirect === true || optionsData.Task) && optionsData.State !== "Awaiting"
-                ? "task-link"
-                : "task dependant-task"
-            }`}
+            className={`${optionsData.State === "Awaiting" ? "dependant-task" : (options.children.length === 0) ? "task-link" : "task"}
+            `}
             onClick={() => {
               if (field && field.length && keyCode[0] !== "CPPFA") {
                 (options.redirect === true || optionsData.Task) &&
