@@ -11,29 +11,34 @@ const ArtworkHeader = ({ label, headerName, selected }) => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
   const [actionDialog, setActionDialog] = useState(false);
+  const [actionHeader, setActionHeader] = useState("");
   const location = useLocation();
   const locationPath = location?.pathname;
-  const actionValue = [
+  const actionNameObject = [
     {
       value: "Mass Update",
-      key:"option-1"
+      key:"option-1",
+      header:"Mass Update"
     },
     {
       value: "Create POAA",
-      key:"option-2"
+      key:"option-2",
+      header:"Are you sure you want to create POAs for below PMPs in RTA ?"
     },
     {
       value: "Group PMPs",
-      key:"option-3"
+      key:"option-3",
+      header:"Are you sure you want to group these PMPs ?"
     },
     {
       value: "Add to Project",
-      key:"option-4"
+      key:"option-4",
+      header:"Add to Project"
     }
   ];
 
   const handleAction=(e)=>{
-    console.log("datawwwwwwwwww",e);
+    setActionHeader(e);
     if(e !== "Add to Project")
       setActionDialog(true)
   }
@@ -81,19 +86,25 @@ const ArtworkHeader = ({ label, headerName, selected }) => {
             variant="secondary"
             onSelect={handleAction}
           >
-            {actionValue?.map((item) => {
-              return <Dropdown.Item
-                value={item.value} eventKey={item.value}
-              >
-              {item.value}
-            </Dropdown.Item>
+            {actionNameObject?.map((item) => {
+              return (
+                <Dropdown.Item value={item.value} eventKey={item.header}>
+                  {item.value}
+                </Dropdown.Item>
+              );
             })}
           </DropdownButton>
         </div>
       </div>
-      { actionDialog &&
-        <DsbpActionDialog actionDialog={actionDialog} setActionDialog={setActionDialog} selected={selected} />
-      }
+      {actionDialog && (
+        <DsbpActionDialog
+          actionHeader={actionHeader}
+          actionDialog={actionDialog}
+          setActionDialog={setActionDialog}
+          selected={selected}
+          actionNameObject={actionNameObject}
+        />
+      )}
     </div>
   );
 };
