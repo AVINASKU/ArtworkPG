@@ -431,7 +431,11 @@ div.flex.align-items-center.gap-2 {
 .p-multiselect-panel {
   z-index: 100000 !important;
 }
-
+.dropdown-menu{
+  width: 175px;
+  border-color: #003DA5;
+  box-shadow: 0px 6px 16px 0px #5959593D;
+}
 .p-autocomplete {
   box-shadow: none !important;
   border-radius: 5px;

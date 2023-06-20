@@ -224,6 +224,8 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
   };
   const handleSelect = (item) => {
     if (selected?.includes(item)) {
+      console.log("item", item);
+      console.log("selected.filter((i) => i !== item)", selected.filter((i) => i !== item));
       setSelected(selected.filter((i) => i !== item));
       setSelectedTask(selectedTask.filter((i) => i !== item));
     } else {
@@ -500,7 +502,7 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
   };
   
   const { TaskDetailsData } = useSelector((state) => state.TaskDetailsReducer);
-  
+  console.log("selected", selected);
   return (
       <>
       {loading || loader  ? (
