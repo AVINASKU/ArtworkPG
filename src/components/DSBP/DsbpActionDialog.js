@@ -6,9 +6,8 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { ProductService } from './ProductService';
 
-const DsbpActionDialog = ({actionDialog, setActionDialog}) => {
+const DsbpActionDialog = ({actionDialog, setActionDialog, selected}) => {
     const [products, setProducts] = useState([]);
-    const [selectedProducts, setSelectedProducts] = useState(null);
     const [packageName, setPackageName] = useState("");
 
     useEffect(() => {
@@ -31,7 +30,8 @@ const DsbpActionDialog = ({actionDialog, setActionDialog}) => {
            
         </div>
     );
-
+    console.log("selectedv action", selected);
+    console.log("products", products)
     return (
       <div className="card flex justify-content-center">
         <Dialog
@@ -43,21 +43,14 @@ const DsbpActionDialog = ({actionDialog, setActionDialog}) => {
         >
           <Row>
             <Col sm={6}>
-              {products && (
+              {selected && (
                 <div className="card">
                   <DataTable
-                    value={products}
-                    tableStyle={{ minWidth: "50rem" }}
-                    selection={selectedProducts}
-                    onSelectionChange={(e) => setSelectedProducts(e.value)}
+                    value={selected}
                     dataKey="id"
                   >
-                    <Column
-                        selectionMode="multiple"
-                        headerStyle={{ width: "3rem" }}
-                        ></Column>
-                        <Column field="code" header="Code"></Column>
-                        <Column field="name" header="Name"></Column>
+                        <Column field="InitiativeID" header="InitiativeID"></Column>
+                        <Column field="PMP" header="PMP"></Column>
                   </DataTable>
                 </div>
               )}

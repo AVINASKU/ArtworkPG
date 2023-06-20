@@ -7,7 +7,7 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import DsbpActionDialog from "./DsbpActionDialog";
 import "primeicons/primeicons.css";
 
-const ArtworkHeader = ({ label, headerName }) => {
+const ArtworkHeader = ({ label, headerName, selected }) => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
   const [actionDialog, setActionDialog] = useState(false);
@@ -37,7 +37,7 @@ const ArtworkHeader = ({ label, headerName }) => {
     if(e !== "Add to Project")
       setActionDialog(true)
   }
-
+  
   const url = locationPath?.split("/");
   const mytasks = url[1];
   return (
@@ -92,7 +92,7 @@ const ArtworkHeader = ({ label, headerName }) => {
         </div>
       </div>
       { actionDialog &&
-        <DsbpActionDialog actionDialog={actionDialog} setActionDialog={setActionDialog} />
+        <DsbpActionDialog actionDialog={actionDialog} setActionDialog={setActionDialog} selected={selected} />
       }
     </div>
   );
