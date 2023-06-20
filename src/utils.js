@@ -157,3 +157,13 @@ export const optionList = (data, fieldName) => {
     const timestamp = new Date().getTime();
     return `${fieldName}_${timestamp}`;
   };
+
+  export const addEllipsis = (text, maxLength)=>{
+  
+   if (text.length <= maxLength) {
+    return text;
+  }
+
+  const trimmedText = text.substring(0, maxLength);
+  return trimmedText + "...";
+  }
