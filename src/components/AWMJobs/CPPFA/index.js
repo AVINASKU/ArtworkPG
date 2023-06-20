@@ -198,7 +198,9 @@ const CPPFA = ({
               </ul>
             </nav>
           </div>
-          <div className="p-dialog-header1">{designIntent.Project_Name}</div>
+          <div className="p-dialog-header1">
+            <NavLink to={`/${myProjects}`}>{designIntent.Project_Name}</NavLink>
+          </div>
         </div>
       }
     >
@@ -282,11 +284,11 @@ const CPPFA = ({
                     designIntent.FileMetaDataList.length > 0 ? (
                       designIntent.FileMetaDataList[0].File_Name === "" ? (
                         <>
-                        <span>Drop or Browse file here</span> <br />
-                        <span className="fileSupportedData">
-                          File supported: PDF, DOCX, JPEG
-                        </span>
-                      </>
+                          <span>Drop or Browse file here</span> <br />
+                          <span className="fileSupportedData">
+                            File supported: PDF, DOCX, JPEG
+                          </span>
+                        </>
                       ) : (
                         designIntent.FileMetaDataList[0].File_Name
                       )
@@ -373,7 +375,7 @@ const CPPFA = ({
               ? true
               : (isAccessEmpty || riskLevel !== "Low"
                   ? yesOrNo === ""
-                  : false) || designIntent.Task_Status === "Completed"
+                  : false) || designIntent.Task_Status === "Complete"
           }
         />
       </div>
