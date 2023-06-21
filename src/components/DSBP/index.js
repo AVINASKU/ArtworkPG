@@ -25,6 +25,10 @@ const DSBP = () => {
   const DropDownData = useSelector((state) => state.DSBPDropdownReducer);
   const [dsbpPmpData, setDsbpPmpData] = useState(null);
   const [selectedFields, setSelectedFields] = useState(null);
+  const [filteredDsbpData, setFilteredDsbpData] = useState(null);
+  const [totalNoOfDsbpId, setTotalNoOfDsbpId] = useState(0);
+  const [totalNoOfPMP, setTotalNoOfPMP] = useState(0);
+  const [totalNoOfPOA, setTotalNoOfPOA] = useState(0);
 
   const breadcrumb = [
     { label: "My Tasks", url: "/myTasks" },
@@ -40,17 +44,30 @@ const DSBP = () => {
   useEffect(() => {
     async function fetchData() {
       const resp = await getDsbpPMPDetails("A-2474");
-      console.log("resp", resp);
-      const transformedArray = resp.flatMap((item) =>
-        item.DSBP_PMP_PIMaterialIDPage.map((person) => ({
-          DSBP_InitiativeID: item.DSBP_InitiativeID,
-          ...person,
-        }))
-      );
-      setDsbpPmpData(transformedArray);
+      if (resp && resp.length) {
+        const transformedArray = resp.flatMap((item) =>
+          item.DSBP_PMP_PIMaterialIDPage.map((person) => ({
+            DSBP_InitiativeID: item.DSBP_InitiativeID,
+            ...person,
+          }))
+        );
+
+        setDsbpPmpData(transformedArray);
+        setTotalNoOfPMP(transformedArray.length);
+
+        const count = transformedArray.reduce((acc, obj) => {
+          if (obj.DSBP_PO_PMP_poPoa !== "") {
+            return acc + 1;
+          }
+          return acc;
+        }, 0);
+
+        setTotalNoOfPOA(count);
+      }
+      setTotalNoOfDsbpId(resp.length);
     }
     fetchData();
-  }, [projectId]);
+  }, []);
 
   useEffect(() => {
     dispatch(getDSBPDropdownData(BU, Region));
@@ -119,10 +136,26 @@ const DSBP = () => {
 
   const onGlobalFilterChange = (e, colName) => {
     const value = e.value;
-
     console.log("value and e.value", value, e.value);
-
     setSelectedFields(value);
+    const artworkValues = value;
+
+    if (artworkValues.length) {
+      let filteredDsbpData = dsbpPmpData.filter((item) => {
+        if (item && item[colName]) {
+          const hasWords = artworkValues.some((word) =>
+            Number.isInteger(word)
+              ? item[colName] === word
+              : item[colName]?.includes(word)
+          );
+          if (hasWords) {
+            return item;
+          }
+        }
+      });
+      console.log("filtered dsbp data", filteredDsbpData);
+      setFilteredDsbpData(filteredDsbpData);
+    } else setFilteredDsbpData([]);
   };
 
   return (
@@ -137,6 +170,9 @@ const DSBP = () => {
       <SelectDsbpId
         dropdownlist={dropdownlist}
         addDSBPIntoProject={addDSBPIntoProject}
+        totalNoOfDsbpId={totalNoOfDsbpId}
+        totalNoOfPMP={totalNoOfPMP}
+        totalNoOfPOA={totalNoOfPOA}
       />
       <AgilityList
         selected={selected}
@@ -145,6 +181,7 @@ const DSBP = () => {
         handleSelect={handleSelect}
         handleSelectAll={handleSelectAll}
         dsbpPmpData={dsbpPmpData}
+        filteredDsbpData={filteredDsbpData}
         onSort={onSort}
         onGlobalFilterChange={onGlobalFilterChange}
         selectedFields={selectedFields}
