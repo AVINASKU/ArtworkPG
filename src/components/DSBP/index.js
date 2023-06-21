@@ -5,7 +5,11 @@ import SelectDsbpId from "./SelectDsbpId";
 import ProjectNameHeader from "./ProjectNameHeader";
 import AgilityList from "./AgilityList";
 import { getDSBPDropdownData } from "../../store/actions/DSBPActions";
-import { addDsbpToProject, deleteDsbpFromProject, getDsbpPMPDetails } from "../../apis/dsbpApi";
+import {
+  addDsbpToProject,
+  deleteDsbpFromProject,
+  getDsbpPMPDetails,
+} from "../../apis/dsbpApi";
 import { useDispatch, useSelector } from "react-redux";
 import FooterButtons from "../AWMJobs/DesignJobs/FooterButtons";
 import "./index.scss";
@@ -17,10 +21,11 @@ const DSBP = () => {
   const [selectAllChecked, setSelectAllChecked] = useState(false);
   const [selected, setSelected] = useState([]);
   const DropDownData = useSelector((state) => state.DSBPDropdownReducer);
-  
+  const [dsbpPmpData, setDsbpPmpData] = useState(null);
+
   const products = [
     {
-      "InitiativeID": "1000",
+      InitiativeID: "1000",
       PMP: "894567",
       code: "f230fh0g3",
       name: "Bamboo Watch",
@@ -33,7 +38,7 @@ const DSBP = () => {
       rating: 5,
     },
     {
-      "InitiativeID": "1001",
+      InitiativeID: "1001",
       PMP: "456389",
       code: "nvklal433",
       name: "Black Watch",
@@ -46,7 +51,7 @@ const DSBP = () => {
       rating: 4,
     },
     {
-      "InitiativeID": "1002",
+      InitiativeID: "1002",
       PMP: "674567",
       code: "zz21cz3c1",
       name: "Blue Band",
@@ -59,7 +64,7 @@ const DSBP = () => {
       rating: 3,
     },
     {
-      "InitiativeID": "1003",
+      InitiativeID: "1003",
       PMP: "223156",
       code: "244wgerg2",
       name: "Blue T-Shirt",
@@ -72,7 +77,7 @@ const DSBP = () => {
       rating: 5,
     },
     {
-      "InitiativeID": "1004",
+      InitiativeID: "1004",
       PMP: "902345",
       code: "h456wer53",
       name: "Bracelet",
@@ -85,7 +90,7 @@ const DSBP = () => {
       rating: 4,
     },
     {
-      "InitiativeID": "1005",
+      InitiativeID: "1005",
       PMP: "234512",
       code: "av2231fwg",
       name: "Brown Purse",
@@ -98,7 +103,7 @@ const DSBP = () => {
       rating: 4,
     },
     {
-      "InitiativeID": "1006",
+      InitiativeID: "1006",
       PMP: "765645",
       code: "bib36pfvm",
       name: "Chakra Bracelet",
@@ -111,7 +116,7 @@ const DSBP = () => {
       rating: 3,
     },
     {
-      "InitiativeID": "1007",
+      InitiativeID: "1007",
       PMP: "778890",
       code: "mbvjkgip5",
       name: "Galaxy Earrings",
@@ -124,7 +129,7 @@ const DSBP = () => {
       rating: 5,
     },
     {
-      "InitiativeID": "1008",
+      InitiativeID: "1008",
       PMP: "901234",
       code: "vbb124btr",
       name: "Game Controller",
@@ -149,15 +154,37 @@ const DSBP = () => {
   const Region = "EUROPE";
   console.log("dropdown data", DropDownData);
 
-  useEffect(()=>{
-  async function fetchData(){
-    const resp =  await getDsbpPMPDetails(projectId);
-  console.log("resp", resp);
-  }
+  useEffect(() => {
+    async function fetchData() {
+      const resp = await getDsbpPMPDetails(projectId);
+      console.log("resp", resp);
+      let mappedData = null;
+      if (resp && resp.length) {
+        console.log("resp");
+        mappedData = resp.map((ele) => {
+          let flattenedData = null;
+          if (ele && ele.DSBP_PMP_PIMaterialIDPage) {
+            console.log("data --->", ele);
+            flattenedData = ele.DSBP_PMP_PIMaterialIDPage.map((data) => {
+              return {
+                ...data,
+                DSBP_InitiativeID: ele.DSBP_InitiativeID,
+              };
+            });
+          }
+          console.log("flattendData", flattenedData);
+          return flattenedData;
+        });
+        // let mappedData = resp.DSBP_PMP_PIMaterialIDPage.forEach((data) => {
+        //   data["DSBP_InitiativeID"] = resp.DSBP_InitiativeID;
+        // });
 
-  fetchData();
-
-  },[])
+        console.log("mapped data", mappedData);
+      }
+      setDsbpPmpData(mappedData[0]);
+    }
+    fetchData();
+  }, [projectId]);
 
   useEffect(() => {
     dispatch(getDSBPDropdownData(BU, Region));
@@ -184,8 +211,8 @@ const DSBP = () => {
   };
 
   const handleSelect = (item) => {
-    console.log("item", item)
-    if (selected?.some((d)=>d.InitiativeID === item.InitiativeID)) {
+    console.log("item", item);
+    if (selected?.some((d) => d.InitiativeID === item.InitiativeID)) {
       setSelected(selected.filter((i) => i.InitiativeID !== item.InitiativeID));
     } else {
       if (selected.length === 0) {
@@ -198,15 +225,15 @@ const DSBP = () => {
     }
   };
 
-const handleSelectAll = (e) => {
-  if (e.target.checked) {
-    setSelectAllChecked(true);
-   setSelected(products);
-  } else {
-    setSelectAllChecked(false);
-    setSelected([]);
-  }
-};
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectAllChecked(true);
+      setSelected(products);
+    } else {
+      setSelectAllChecked(false);
+      setSelected([]);
+    }
+  };
 
   const handleCancel = () => {
     return navigate(`/myProjects`);
@@ -238,6 +265,7 @@ const handleSelectAll = (e) => {
         handleSelect={handleSelect}
         handleSelectAll={handleSelectAll}
         products={products}
+        dsbpPmpData={dsbpPmpData}
       />
       <FooterButtons
         handleCancel={handleCancel}

@@ -6,10 +6,11 @@ import filter from "../../assets/images/filter.svg";
 
 import "../Projects/MyProjects/index.scss";
 
-const AgilityList = ({selected, setSelected, selectAllChecked, handleSelect, handleSelectAll, products}) => {
+const AgilityList = ({selected,dsbpPmpData, setSelected, selectAllChecked, handleSelect, handleSelectAll, products}) => {
   
   const columnName = [
     "InitiativeID",
+    "DSBP_InitiativeID",
     "PMP",
     "Locked in DSBP",
     "Add to Project",
@@ -100,7 +101,7 @@ const AgilityList = ({selected, setSelected, selectAllChecked, handleSelect, han
       reorderableColumns
       responsiveLayout="scroll"
       columnResizeMode="expand"
-      value={products}
+      value={dsbpPmpData}
       className="mt-3"
       tableStyle={{ width: "max-content", minWidth: "100%" }}
       selection={selected}
