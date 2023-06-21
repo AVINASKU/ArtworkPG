@@ -64,6 +64,10 @@ function DNPF() {
     return navigate(`/MyTasks`);
   };
 
+  // useEffect(() => {
+  //   setSubmittedDI(Math.random());
+  // });
+
   const handleDelete = (index) => {
     const sub = CD?.map((item, i) => {
       if (i === index) {
@@ -78,7 +82,7 @@ function DNPF() {
   };
 
   useEffect(() => {
-    checkFormValidity();
+    checkFormValidity(CD);
   }, [data]);
 
   const addNewEmptyDesign = () => {
@@ -109,10 +113,11 @@ function DNPF() {
     let CDdata = cloneDeep(CD);
     let data = CDdata[index];
     data[fieldName] = value;
+    data["Design_Job_Name"] = Design_Intent_Name;
     setCD(CDdata);
     // submittedDI.push(data);
     setSubmittedDI(Math.random());
-    checkFormValidity();
+    checkFormValidity(CDdata);
   };
 
   useEffect(() => {
@@ -129,14 +134,9 @@ function DNPF() {
     }
   }, [submittedDI]);
 
-  const checkFormValidity = () => {
-    const validTasks = CD?.filter((task) => {
-      return (
-        task?.Printer &&
-        task?.Printing_Process &&
-        task?.Substrate &&
-        task?.Select
-      );
+  const checkFormValidity = (CDdata) => {
+    const validTasks = CDdata?.filter((task) => {
+      return task?.Printing_Process && task?.Substrate && task?.Select;
     });
     if (validTasks.length > 0) {
       setFormValid(true);
@@ -187,7 +187,7 @@ function DNPF() {
       temp["instruction"] = "APPEND";
       temp["target"] = "NewPrintFeasibilityList";
       temp["content"] = {
-        DesignJobName: "Confirm Color Development",
+        DesignJobName: task?.Design_Job_Name,
         DesignJobID: taskDesignJobID,
         PrintingProcess: task?.Printing_Process,
         Substrate: task?.Substrate,
@@ -238,7 +238,7 @@ function DNPF() {
         task.Design_Job_ID = "";
       }
 
-      task.Design_Job_Name = `New Print Feasibility${counter}`;
+      task.Design_Job_Name = task?.Design_Job_Name;
 
       return task;
     });
@@ -254,7 +254,7 @@ function DNPF() {
     console.log("full draft data --->", formData);
     await saveColorDevelopment(formData);
     setLoader(false);
-    navigate(`/MyTasks`);
+    // navigate(`/MyTasks`);
   };
 
   return (
@@ -280,7 +280,7 @@ function DNPF() {
             // display: "grid",
           }}
         >
-          {<TaskHeader {...data} />}
+          {<TaskHeader {...data} TaskDetailsData={TaskDetailsData} />}
           {data?.Task_Status === "Complete" && (
             <div className="task-completion">
               This task is already submitted
@@ -294,6 +294,7 @@ function DNPF() {
                   <CloneJobs
                     key={item.Design_Job_ID}
                     {...data}
+                    data={data}
                     item={item}
                     index={index}
                     addData={addData}
@@ -301,6 +302,12 @@ function DNPF() {
                     jobName={jobName}
                     setFormValid={setFormValid}
                     checkReadWriteAccess={checkReadWriteAccess}
+                    Artwork_Brand={
+                      TaskDetailsData?.ArtworkAgilityPage?.Artwork_Brand
+                    }
+                    Artwork_Category={
+                      TaskDetailsData?.ArtworkAgilityPage?.Artwork_Category
+                    }
                   />
                 );
               }
