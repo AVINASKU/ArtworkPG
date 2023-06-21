@@ -5,6 +5,7 @@ import { Button } from "react-bootstrap";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import DsbpActionDialog from "./DsbpActionDialog";
+import CustomizeView from "./CustomizeView";
 import "primeicons/primeicons.css";
 
 const ArtworkHeader = ({ label, headerName, selected }) => {
@@ -45,8 +46,15 @@ const ArtworkHeader = ({ label, headerName, selected }) => {
   
   const url = locationPath?.split("/");
   const mytasks = url[1];
+  const [showApproveDialogCPPFA, setShowApproveDialogCPPFA] = useState(false);
   return (
     <div className="actions multiselect-padding">
+      {showApproveDialogCPPFA && (
+        <CustomizeView
+          onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
+          showTaskDialog={showApproveDialogCPPFA}
+        />
+      )}
       <div className="actions multiselect-padding">
         <div>
           {/* <BreadCrumb model={breadcrumb} /> */}
@@ -77,7 +85,11 @@ const ArtworkHeader = ({ label, headerName, selected }) => {
           <button type="button" className="btn btn-secondary">
             Confirm Full Scope in
           </button>
-          <button type="button" className="btn btn-secondary">
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => setShowApproveDialogCPPFA(true)}
+          >
             Customize View
           </button>
           <DropdownButton
