@@ -5,6 +5,8 @@ import { Column } from "primereact/column";
 import filter from "../../assets/images/filter.svg";
 import DSBPFilter from "./DSBPFilter";
 import "../Projects/MyProjects/index.scss";
+import { generateUniqueKey } from "../../utils";
+import { onSortData } from "../../utils";
 
 const AgilityList = ({
   selected,
@@ -13,8 +15,11 @@ const AgilityList = ({
   selectAllChecked,
   handleSelect,
   handleSelectAll,
-  products,
+  onSort,
+  selectedFields,
+  onGlobalFilterChange,
 }) => {
+  const [selectedColumnName, setSelectedColumnName] = useState(null);
   const columnName = [
     "DSBP_InitiativeID",
     "DSBP_IL",
@@ -66,6 +71,11 @@ const AgilityList = ({
     );
   };
 
+  const projectNameOnClick = (e, options) => {
+    op.current.toggle(e);
+    setSelectedColumnName(options);
+  };
+
   const renderHeader = (field, isFilterActivated = false) => {
     return (
       <span key={field}>
@@ -80,7 +90,7 @@ const AgilityList = ({
           src={filter}
           key={field}
           alt="Column Filter"
-          // onClick={(e) => projectNameOnClick(e, options)}
+          onClick={(e) => projectNameOnClick(e, field)}
           className={
             isFilterActivated
               ? "columnFilterIcon filter-color-change"
@@ -105,30 +115,41 @@ const AgilityList = ({
             showFilterMenu={false}
             alignFrozen="left"
             filterField={field}
+            style={{
+              width: "250px",
+            }}
           />
         );
       });
     }
   };
   return (
-  <>
-  <DSBPFilter op={op}/>
+    <>
+      <DSBPFilter
+        op={op}
+        onSort={onSort}
+        selectedColumnName={selectedColumnName}
+        dsbpPmpData={dsbpPmpData}
+        selectedFields={selectedFields}
+        onGlobalFilterChange={onGlobalFilterChange}
+      />
 
-    <DataTable
-      dataKey="DSBP_InitiativeID"
-      scrollable
-      resizableColumns
-      reorderableColumns
-      responsiveLayout="scroll"
-      columnResizeMode="expand"
-      value={dsbpPmpData}
-      className="mt-3"
-      tableStyle={{ width: "max-content", minWidth: "100%" }}
-      selection={selected}
-      onSelectionChange={(e) => setSelected(e.value)}
-    >
-      {renderColumns()}
-    </DataTable>
+      <DataTable
+        dataKey="DSBP_PMP_PIMaterialID"
+        scrollable
+        resizableColumns
+        // key={generateUniqueKey("artwork")}
+        reorderableColumns
+        responsiveLayout="scroll"
+        columnResizeMode="expand"
+        value={dsbpPmpData}
+        className="mt-3"
+        tableStyle={{ width: "max-content", minWidth: "100%" }}
+        selection={selected}
+        onSelectionChange={(e) => setSelected(e.value)}
+      >
+        {renderColumns()}
+      </DataTable>
     </>
   );
 };
