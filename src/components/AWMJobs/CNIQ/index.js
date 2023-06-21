@@ -22,6 +22,8 @@ import { cloneDeep } from "lodash";
 import IQHeader from "../DesignJobs/IQHeader";
 import { CheckReadOnlyAccess } from "../../../utils";
 import IQCDFooterButtons from "../DesignJobs/IQCDFooterButtons";
+import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
+
 const breadcrumb = [{ label: "Confirm Ink Qualification" }];
 
 const headerName = "Confirm Ink Qualification";
@@ -180,7 +182,7 @@ function CNIQ() {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-
+    await dispatch(uploadFileAzure(azureFile));
     await submitConfirmInkQualification(formData, id, headers);
     setLoader(false);
     navigate("/MyTasks");
@@ -220,6 +222,7 @@ function CNIQ() {
       IQList: submitOnlySelectedData,
     };
     console.log("full draft data --->", formData);
+    await dispatch(uploadFileAzure(azureFile));
     await saveInkQualification(formData);
     setLoader(false);
     navigate("/MyTasks");
@@ -237,7 +240,7 @@ function CNIQ() {
     //   }
     // } else {
     const validTasks = IQ?.filter((task) => {
-      return task?.Printer && task?.Pantone && data?.IDDSampleApproved;
+      return task?.Printer && data?.IDDSampleApproved;
     });
     if (validTasks.length > 0) {
       setFormValid(true);
@@ -269,7 +272,7 @@ function CNIQ() {
             // display: "grid",
           }}
         >
-          {<TaskHeader {...data} />}
+          {<TaskHeader {...data} TaskDetailsData={TaskDetailsData} />}
           {data?.Task_Status === "Complete" && (
             <div className="task-completion">
               This task is already submitted
@@ -313,6 +316,7 @@ function CNIQ() {
           formValid={!formValid}
           checkReadWriteAccess={checkReadWriteAccess}
           bottomFixed={true}
+          data={data}
         />
       </PageLayout>
     </LoadingOverlay>

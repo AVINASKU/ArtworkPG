@@ -117,12 +117,7 @@ function CCD() {
   const checkFormValidity = () => {
     console.log(CD);
     const validTasks = CD?.filter((task) => {
-      return (
-        task?.Printer &&
-        task?.Printing_Process &&
-        task?.Substrate &&
-        task?.CD_Approved
-      );
+      return task?.Printing_Process && task?.Substrate && task?.CD_Approved;
     });
     console.log(validTasks.length);
     if (validTasks.length > 0) {
@@ -191,7 +186,7 @@ function CCD() {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-
+    await dispatch(uploadFileAzure(azureFile));
     await submitConfirmColorDevelopment(formData, id, headers);
     setLoader(false);
     navigate(`/MyTasks`);
@@ -220,6 +215,7 @@ function CCD() {
       DesignIntentList: submitOnlySelectedData,
     };
     console.log("full draft data --->", submitOnlySelectedData);
+    await dispatch(uploadFileAzure(azureFile));
     await saveDesignIntent(formData);
   };
 
@@ -246,7 +242,7 @@ function CCD() {
             // display: "grid",
           }}
         >
-          {<TaskHeader {...data} />}
+          {<TaskHeader {...data} TaskDetailsData={TaskDetailsData} />}
           {data?.Task_Status === "Complete" && (
             <div className="task-completion">
               This task is already submitted
