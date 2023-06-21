@@ -69,9 +69,9 @@ const SelectDsbpId = ({ dropdownlist, addDSBPIntoProject }) => {
   };
 
   return (
-    <>
+    <div style={{textAlign:"initial"}}>
       <div className="margin-left">Select DSBP ID</div>
-      <div className="actions multiselect-padding margin-left dsbp-select">
+      <div className="actions margin-left dsbp-select">
         <MultiSelect
           value={selectedCities}
           // onChange={(e) => multiSelectOnChange(e)}
@@ -95,7 +95,7 @@ const SelectDsbpId = ({ dropdownlist, addDSBPIntoProject }) => {
           <div> POA Created : 12</div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

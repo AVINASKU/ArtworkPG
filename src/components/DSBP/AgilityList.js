@@ -18,6 +18,7 @@ const AgilityList = ({
   onSort,
   selectedFields,
   onGlobalFilterChange,
+  filteredDsbpData,
 }) => {
   const [selectedColumnName, setSelectedColumnName] = useState(null);
   const columnName = [
@@ -142,7 +143,11 @@ const AgilityList = ({
         reorderableColumns
         responsiveLayout="scroll"
         columnResizeMode="expand"
-        value={dsbpPmpData}
+        value={
+          filteredDsbpData && filteredDsbpData.length
+            ? filteredDsbpData
+            : dsbpPmpData
+        }
         className="mt-3"
         tableStyle={{ width: "max-content", minWidth: "100%" }}
         selection={selected}
