@@ -99,8 +99,6 @@ function DPRA() {
   };
 
   const addData = (fieldName, index, value, Design_Intent_Name) => {
-    if(checkTaskISComplete) 
-      return setEnableSubmit(true);
     let data = designIntent[index];
     data[fieldName] = value;
     // add here design job name here check it out from API.
@@ -239,9 +237,6 @@ function DPRA() {
   let Brand = [];
   let Category = [];
 
-  let checkTaskISComplete =
-    TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Status === "Complete";
-
   if (TaskDetailsData?.ArtworkAgilityPage) {
     Brand = TaskDetailsData.ArtworkAgilityPage.Artwork_Brand;
     Category = TaskDetailsData.ArtworkAgilityPage.Artwork_SMO;
@@ -257,11 +252,9 @@ function DPRA() {
         label="Define Production Ready Art"
         checkReadWriteAccess={checkReadWriteAccess}
         taskName="Production Ready Art"
-        checkTaskISComplete={checkTaskISComplete}
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
-        {checkTaskISComplete && <div className="task-completion">This task is already submitted</div>}
         {loading || loader || designIntent === null ? (
           <Loading />
         ) : (
@@ -296,7 +289,6 @@ function DPRA() {
         bottomFixed={true}
         checkReadWriteAccess={checkReadWriteAccess}
         formValid={enableSubmit}
-        checkTaskISComplete={checkTaskISComplete}
       />
     </PageLayout>
   );
