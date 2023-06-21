@@ -182,6 +182,8 @@ function ProjectPlanCompo(props) {
           ? "Confirm Print Trial"
           : task.data[0].AWM_Task_ID.includes("DNPF_")
           ? "Define Color Development & Print Trial"
+          : task.data[0].AWM_Task_ID.includes("CNIQ")
+          ? "Confirm Ink Qualification"
           : task.data[0].Task_Name;
         dataObj["Dependency"] = task.data[0].Dependency;
         dataObj["Role"] = task.data[0].Role;
@@ -348,10 +350,7 @@ function ProjectPlanCompo(props) {
               getProjectPlanApi={getProjectPlanApi}
               isAccessEmpty={isAccessEmpty}
             />
-            <div
-              className="form-buttons"
-              style={{ background: "#FAFAFA" }}
-            >
+            <div className="form-buttons" style={{ background: "#FAFAFA" }}>
               <Button
                 className={
                   !isAccessEmpty ? "btn btn-disabled" : "button-layout"

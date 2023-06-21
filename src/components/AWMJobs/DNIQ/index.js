@@ -65,6 +65,10 @@ function DNIQ() {
     return navigate(`/MyTasks`);
   };
 
+  // useEffect(() => {
+  //   setSubmittedDI(Math.random());
+  // }, [data]);
+
   const handleDelete = (index) => {
     const sub = IQ?.map((item, i) => {
       if (i === index) {
@@ -78,6 +82,10 @@ function DNIQ() {
 
     setIQ(sub);
   };
+
+  useEffect(() => {
+    checkFormValidity(IQ);
+  }, [data]);
 
   const addNewEmptyDesign = () => {
     const newDesignIntent = [
@@ -100,12 +108,13 @@ function DNIQ() {
   const addData = (fieldName, index, value, Design_Intent_Name) => {
     let IQdata = cloneDeep(IQ);
     let data = IQdata[index];
-    console.log(data);
+    console.log("addData:", data);
     data[fieldName] = value;
+    data["Design_Job_Name"] = Design_Intent_Name;
     setIQ(IQdata);
     // submittedDI.push(data);
     setSubmittedDI(Math.random());
-    checkFormValidity();
+    checkFormValidity(IQdata);
   };
 
   useEffect(() => {
@@ -157,7 +166,7 @@ function DNIQ() {
       temp["instruction"] = "APPEND";
       temp["target"] = "IQList";
       temp["content"] = {
-        DesignJobName: "Confirm New Ink Qualification",
+        DesignJobName: task?.Design_Job_Name,
         DesignJobID: taskDesignJobID,
         AdditionalInfo: task?.Additional_Info,
         Pantone: task?.Pantone,
@@ -209,7 +218,7 @@ function DNIQ() {
         task.Design_Job_ID = "";
       }
 
-      task.Design_Job_Name = `Confirm New Ink Qualification ${counter}`;
+      task.Design_Job_Name = task?.Design_Job_Name;
 
       return task;
     });
@@ -225,12 +234,12 @@ function DNIQ() {
     console.log("full draft data --->", formData);
     await saveInkQualification(formData);
     setLoader(false);
-    navigate("/MyTasks");
+    // navigate("/MyTasks");
   };
 
-  const checkFormValidity = () => {
-    const validTasks = IQ?.filter((task) => {
-      return task?.Printer && task?.Pantone && task?.Select;
+  const checkFormValidity = (IQdata) => {
+    const validTasks = IQdata?.filter((task) => {
+      return task?.Printer && task?.Select;
     });
     if (validTasks.length > 0) {
       setFormValid(true);
@@ -263,7 +272,7 @@ function DNIQ() {
             // display: "grid",
           }}
         >
-          {<TaskHeader {...data} />}
+          {<TaskHeader {...data} TaskDetailsData={TaskDetailsData} />}
           {data?.Task_Status === "Complete" && (
             <div className="task-completion">
               This task is already submitted
@@ -277,6 +286,7 @@ function DNIQ() {
                   <CloneJobs
                     key={item.Design_Job_ID}
                     {...data}
+                    data={data}
                     item={item}
                     index={index}
                     addData={addData}
@@ -284,6 +294,12 @@ function DNIQ() {
                     jobName={jobName}
                     setFormValid={setFormValid}
                     checkReadWriteAccess={checkReadWriteAccess}
+                    Artwork_Brand={
+                      TaskDetailsData?.ArtworkAgilityPage?.Artwork_Brand
+                    }
+                    Artwork_Category={
+                      TaskDetailsData?.ArtworkAgilityPage?.Artwork_Category
+                    }
                   />
                 );
               }

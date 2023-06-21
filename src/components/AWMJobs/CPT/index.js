@@ -206,7 +206,7 @@ function CPT() {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-
+    await dispatch(uploadFileAzure(azureFile));
     await submitConfirmPrintTrial(formData, id, headers);
     setLoader(false);
     navigate(`/MyTasks`);
@@ -235,6 +235,7 @@ function CPT() {
       DesignIntentList: submitOnlySelectedData,
     };
     console.log("full draft data --->", submitOnlySelectedData);
+    await dispatch(uploadFileAzure(azureFile));
     await saveDesignIntent(formData);
   };
 
@@ -261,7 +262,7 @@ function CPT() {
             // display: "grid",
           }}
         >
-          {<TaskHeader {...data} />}
+          {<TaskHeader {...data} TaskDetailsData={TaskDetailsData} />}
           {data?.Task_Status === "Complete" && (
             <div className="task-completion">
               This task is already submitted
