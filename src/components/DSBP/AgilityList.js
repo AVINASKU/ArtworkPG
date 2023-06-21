@@ -61,9 +61,7 @@ const AgilityList = ({
           <input
             type="checkbox"
             className="p-checkbox-box p-highlight"
-            checked={selected?.some(
-              (item) => item.InitiativeID === options.InitiativeID
-            )}
+            checked={selected?.includes(options)}
             onChange={() => handleSelect(options)}
           />
           {options[field]}

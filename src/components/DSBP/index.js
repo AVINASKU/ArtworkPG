@@ -5,10 +5,12 @@ import SelectDsbpId from "./SelectDsbpId";
 import ProjectNameHeader from "./ProjectNameHeader";
 import AgilityList from "./AgilityList";
 import { getDSBPDropdownData } from "../../store/actions/DSBPActions";
+import { getDropDownValues } from "../../store/actions/dropDownValuesAction";
 import {
   addDsbpToProject,
   deleteDsbpFromProject,
   getDsbpPMPDetails,
+  onSubmitDsbpAction
 } from "../../apis/dsbpApi";
 import { useDispatch, useSelector } from "react-redux";
 import FooterButtons from "../AWMJobs/DesignJobs/FooterButtons";
@@ -40,6 +42,12 @@ const DSBP = () => {
   const BU = "BABY CARE";
   const Region = "EUROPE";
   console.log("dropdown data", DropDownData);
+
+  useEffect(() => {
+    //if(DropDownValuesData === null)
+    dispatch(getDropDownValues());
+  }, [dispatch]);
+
 
   useEffect(() => {
     async function fetchData() {
@@ -101,8 +109,8 @@ const DSBP = () => {
 
   const handleSelect = (item) => {
     console.log("item", item);
-    if (selected?.some((d) => d.InitiativeID === item.InitiativeID)) {
-      setSelected(selected.filter((i) => i.InitiativeID !== item.InitiativeID));
+    if (selected?.includes(item)) {
+      setSelected(selected.filter((i) => i !== item));
     } else {
       if (selected.length === 0) {
         const selectedList = [];
@@ -117,12 +125,44 @@ const DSBP = () => {
   const handleSelectAll = (e) => {
     if (e.target.checked) {
       setSelectAllChecked(true);
-      // setSelected(products);
+      setSelected(dsbpPmpData);
     } else {
       setSelectAllChecked(false);
       setSelected([]);
     }
   };
+
+  const onActionSubmit = async (formData) => {
+    console.log("submitted...!", formData);
+    let updatedData = {};
+    let updatedDataList = selected.map((pmpDetails)=>{
+      updatedData = {
+        DSBP_InitiativeID: pmpDetails.DSBP_InitiativeID,
+        DSBP_PMP_PIMaterialID: pmpDetails.DSBP_PMP_PIMaterialID
+      };
+      if(formData === "AddToProject"){       
+        updatedData.FK_AWMProjectID = pmpDetails.FK_AWMProjectID;
+        updatedData.AWM_AddedToProject = "Yes";        
+      }
+      if (formData.AWM_AISE !== undefined) {
+        updatedData.AWM_AISE = formData?.AWM_AISE;
+      }
+      if (formData?.AWM_AssemblyMechanism !== undefined) {
+        updatedData.AWM_AssemblyMechanism = formData?.AWM_AssemblyMechanism;
+      }
+      if (formData?.AWM_Biocide !== undefined) {
+        updatedData.AWM_Biocide = formData?.AWM_Biocide;
+      }
+      if (formData?.AWM_GroupPMP !== undefined) {
+        updatedData.AWM_GroupPMP = formData?.AWM_GroupPMP;
+      }
+      return updatedData;
+    })
+    const updatedPmpDetails = { ArtworkAgilityPMPs: updatedDataList };
+    console.log("updatedDataObject", updatedPmpDetails);
+    await onSubmitDsbpAction(updatedPmpDetails);
+  };
+
 
   const handleCancel = () => {
     return navigate(`/myProjects`);
@@ -164,6 +204,7 @@ const DSBP = () => {
         breadcrumb={breadcrumb}
         headerName={headerName}
         selected={selected}
+        onActionSubmit={onActionSubmit}
         label="Artwork Alignment"
       />
       <ProjectNameHeader />
