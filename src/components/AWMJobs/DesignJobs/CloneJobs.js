@@ -98,6 +98,22 @@ const CloneJobs = ({
   }, [Printer]);
 
   useEffect(() => {
+    setPantone(Pantone);
+  }, [Pantone]);
+
+  useEffect(() => {
+    setPrinterProcess(Printing_Process);
+  }, [Printing_Process]);
+
+  useEffect(() => {
+    setSubstarteData(Substrate);
+  }, [Substrate]);
+
+  useEffect(() => {
+    setAdditionalInfo(Additional_Info);
+  }, [Additional_Info]);
+
+  useEffect(() => {
     if (DropDownValuesData) {
       setTaskPageDropDownValues(
         DropDownValuesData?.ArtworkAgilityTasksPage || []
