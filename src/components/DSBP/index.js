@@ -156,32 +156,15 @@ const DSBP = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const resp = await getDsbpPMPDetails(projectId);
+      const resp = await getDsbpPMPDetails("A-2474");
       console.log("resp", resp);
-      let mappedData = null;
-      if (resp && resp.length) {
-        console.log("resp");
-        mappedData = resp.map((ele) => {
-          let flattenedData = null;
-          if (ele && ele.DSBP_PMP_PIMaterialIDPage) {
-            console.log("data --->", ele);
-            flattenedData = ele.DSBP_PMP_PIMaterialIDPage.map((data) => {
-              return {
-                ...data,
-                DSBP_InitiativeID: ele.DSBP_InitiativeID,
-              };
-            });
-          }
-          console.log("flattendData", flattenedData);
-          return flattenedData;
-        });
-        // let mappedData = resp.DSBP_PMP_PIMaterialIDPage.forEach((data) => {
-        //   data["DSBP_InitiativeID"] = resp.DSBP_InitiativeID;
-        // });
-
-        console.log("mapped data", mappedData);
-      }
-      setDsbpPmpData(mappedData[0]);
+      const transformedArray = resp.flatMap((item) =>
+        item.DSBP_PMP_PIMaterialIDPage.map((person) => ({
+          DSBP_InitiativeID: item.DSBP_InitiativeID,
+          ...person,
+        }))
+      );
+      setDsbpPmpData(transformedArray);
     }
     fetchData();
   }, [projectId]);

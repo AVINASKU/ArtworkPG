@@ -1,19 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 // import filter from "../../../assets/images/filter.svg";
 import filter from "../../assets/images/filter.svg";
-
+import DSBPFilter from "./DSBPFilter";
 import "../Projects/MyProjects/index.scss";
 
-const AgilityList = ({selected,dsbpPmpData, setSelected, selectAllChecked, handleSelect, handleSelectAll, products}) => {
-  
+const AgilityList = ({
+  selected,
+  dsbpPmpData,
+  setSelected,
+  selectAllChecked,
+  handleSelect,
+  handleSelectAll,
+  products,
+}) => {
   const columnName = [
-    "InitiativeID",
     "DSBP_InitiativeID",
-    "PMP",
-    "Locked in DSBP",
+    "DSBP_IL",
+    "DSBP_PMP_PIMaterialID",
+    "DSBP_PO_PMP_poPoa",
+    "DSBP_PO_PMP_poMaterialNumber",
     "Add to Project",
+    "DSBP_PO_PMP_poLanguages",
+    "DSBP_PMP_regulatoryStickeringCos",
+    "DSBP_PMP_PIMaterialDescription",
+    "DSBP_InitiativeState",
+    "DSBP_PO_PMP_poPoaApprovedCountries",
     "POA #",
     "POAA Creation Status",
     "Rejection reason",
@@ -32,32 +45,37 @@ const AgilityList = ({selected,dsbpPmpData, setSelected, selectAllChecked, handl
     "PO FPC",
     "PO FPC DESC",
   ];
+  const op = useRef(null);
 
   const addBody = (options, rowData) => {
     let field = rowData.field;
-    return <>
-      <div className="flex align-items-center gap-2">
-        <input
-          type="checkbox"
-          className="p-checkbox-box p-highlight"
-          checked={selected?.some((item)=>item.InitiativeID === options.InitiativeID)}
-          onChange={() => handleSelect(options)}
-        />
-        {options[field]}        
-      </div>
-    </>;
+    return (
+      <>
+        <div className="flex align-items-center gap-2">
+          <input
+            type="checkbox"
+            className="p-checkbox-box p-highlight"
+            checked={selected?.some(
+              (item) => item.InitiativeID === options.InitiativeID
+            )}
+            onChange={() => handleSelect(options)}
+          />
+          {options[field]}
+        </div>
+      </>
+    );
   };
 
   const renderHeader = (field, isFilterActivated = false) => {
     return (
       <span key={field}>
-      {field === "InitiativeID" && (
-        <input
-          type="checkbox"
-          checked={selectAllChecked}
-          onChange={handleSelectAll}
-        />
-      )}
+        {field === "DSBP_InitiativeID" && (
+          <input
+            type="checkbox"
+            checked={selectAllChecked}
+            onChange={handleSelectAll}
+          />
+        )}
         <img
           src={filter}
           key={field}
@@ -74,7 +92,6 @@ const AgilityList = ({selected,dsbpPmpData, setSelected, selectAllChecked, handl
     );
   };
 
-
   const renderColumns = () => {
     if (columnName && columnName.length) {
       return columnName.map((field, index) => {
@@ -82,7 +99,7 @@ const AgilityList = ({selected,dsbpPmpData, setSelected, selectAllChecked, handl
           <Column
             field={field}
             header={() => renderHeader(field)}
-            body={field === "InitiativeID" && addBody}
+            body={field === "DSBP_InitiativeID" && addBody}
             key={field}
             columnKey={field}
             showFilterMenu={false}
@@ -94,8 +111,11 @@ const AgilityList = ({selected,dsbpPmpData, setSelected, selectAllChecked, handl
     }
   };
   return (
+  <>
+  <DSBPFilter op={op}/>
+
     <DataTable
-      dataKey="InitiativeID"
+      dataKey="DSBP_InitiativeID"
       scrollable
       resizableColumns
       reorderableColumns
@@ -109,6 +129,7 @@ const AgilityList = ({selected,dsbpPmpData, setSelected, selectAllChecked, handl
     >
       {renderColumns()}
     </DataTable>
+    </>
   );
 };
 
