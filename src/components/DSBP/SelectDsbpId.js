@@ -2,9 +2,15 @@ import React, { useState } from "react";
 import { MultiSelect } from "primereact/multiselect";
 import plusCollapseImg from "../../assets/images/plusCollapse.svg";
 import deleteIcon from "../../assets/images/deleteIcon.svg";
-import {addEllipsis} from "../../utils";
+import { addEllipsis } from "../../utils";
 
-const SelectDsbpId = ({ dropdownlist, addDSBPIntoProject }) => {
+const SelectDsbpId = ({
+  dropdownlist,
+  addDSBPIntoProject,
+  totalNoOfDsbpId,
+  totalNoOfPMP,
+  totalNoOfPOA,
+}) => {
   const [selectedCities, setSelectedCities] = useState([]);
 
   const cityOptionTemplate = (option) => {
@@ -69,7 +75,7 @@ const SelectDsbpId = ({ dropdownlist, addDSBPIntoProject }) => {
   };
 
   return (
-    <div style={{textAlign:"initial"}}>
+    <div style={{ textAlign: "initial" }}>
       <div className="margin-left">Select DSBP ID</div>
       <div className="actions margin-left dsbp-select">
         <MultiSelect
@@ -88,11 +94,11 @@ const SelectDsbpId = ({ dropdownlist, addDSBPIntoProject }) => {
         />
 
         <div className="action-buttons margin-right">
-          <div>DSBP ID's : 00</div>
+          <div>DSBP ID's : {totalNoOfDsbpId}</div>
           <div>PMP's Locked : 00</div>
           <div> Added Project : 01</div>
-          <div> Total PMP's: 09</div>
-          <div> POA Created : 12</div>
+          <div> Total PMP's: {totalNoOfPMP}</div>
+          <div> POA Created : {totalNoOfPOA}</div>
         </div>
       </div>
     </div>

@@ -25,7 +25,10 @@ const DSBP = () => {
   const DropDownData = useSelector((state) => state.DSBPDropdownReducer);
   const [dsbpPmpData, setDsbpPmpData] = useState(null);
   const [selectedFields, setSelectedFields] = useState(null);
-  const [filteredDsbpData , setFilteredDsbpData]= useState(null);
+  const [filteredDsbpData, setFilteredDsbpData] = useState(null);
+  const [totalNoOfDsbpId, setTotalNoOfDsbpId] = useState(0);
+  const [totalNoOfPMP, setTotalNoOfPMP] = useState(0);
+  const [totalNoOfPOA, setTotalNoOfPOA] = useState(0);
 
   const breadcrumb = [
     { label: "My Tasks", url: "/myTasks" },
@@ -41,19 +44,30 @@ const DSBP = () => {
   useEffect(() => {
     async function fetchData() {
       const resp = await getDsbpPMPDetails("A-2474");
-      console.log("resp", resp);
-      if(resp && resp.length){
-      const transformedArray = resp.flatMap((item) =>
-        item.DSBP_PMP_PIMaterialIDPage.map((person) => ({
-          DSBP_InitiativeID: item.DSBP_InitiativeID,
-          ...person,
-        }))
-      );
-      setDsbpPmpData(transformedArray);
+      if (resp && resp.length) {
+        const transformedArray = resp.flatMap((item) =>
+          item.DSBP_PMP_PIMaterialIDPage.map((person) => ({
+            DSBP_InitiativeID: item.DSBP_InitiativeID,
+            ...person,
+          }))
+        );
+
+        setDsbpPmpData(transformedArray);
+        setTotalNoOfPMP(transformedArray.length);
+
+        const count = transformedArray.reduce((acc, obj) => {
+          if (obj.DSBP_PO_PMP_poPoa !== "") {
+            return acc + 1;
+          }
+          return acc;
+        }, 0);
+
+        setTotalNoOfPOA(count);
       }
+      setTotalNoOfDsbpId(resp.length);
     }
     fetchData();
-  }, [projectId]);
+  }, []);
 
   useEffect(() => {
     dispatch(getDSBPDropdownData(BU, Region));
@@ -156,6 +170,9 @@ const DSBP = () => {
       <SelectDsbpId
         dropdownlist={dropdownlist}
         addDSBPIntoProject={addDSBPIntoProject}
+        totalNoOfDsbpId={totalNoOfDsbpId}
+        totalNoOfPMP={totalNoOfPMP}
+        totalNoOfPOA={totalNoOfPOA}
       />
       <AgilityList
         selected={selected}
