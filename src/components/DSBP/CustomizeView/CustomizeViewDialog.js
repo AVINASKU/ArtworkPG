@@ -70,7 +70,7 @@ const CustomizeViewDialog = ({
     if (index >= -1) {
       const newList1 = [...list1Data];
       console.log("dropType:", dropType);
-      if (dropType === "drop1") {
+      if (dropType === "drop1" || dropType === "drop2") {
         if (!_.includes(list2Data, list1Data[index])) {
           setList2Func([...list2Data, list1Data[index]]);
         }
@@ -84,18 +84,18 @@ const CustomizeViewDialog = ({
 
   const onItemDrop = (data, data1) => {
     const index = list2.findIndex((obj) => obj.ID === parseInt(data.drop1, 10));
+    const index3 = list3.findIndex((obj) => obj.ID === parseInt(data.drop1, 10));
     if (index >= -1) {
-      setList1([...list1, { ...list2[index] }]);
+        // setList1([...list1, { ...list2[index] }]);
       const newList2 = [...list2];
       newList2.splice(index, 1);
       setList2(newList2);
-    console.log("dropType data:", data1.target.value);
     }
-
-  //   let modifiedList1 = list1;
-  //   modifiedList1 = modifiedList1.filter(function(entry1) {
-  //     return list2.some(function(entry2) { return entry1.ID === entry2.Student.ID; });
-  // });
+    if (index3 >= -1) {
+      const newList3 = [...list3];
+      newList3.splice(index3, 1);
+      setList3(newList3);
+    }
   };
 
   return (
@@ -143,7 +143,7 @@ const CustomizeViewDialog = ({
           </Col>
           <Col>
             <div className="dragAndDropColumnData">Freezed Columns</div>
-            <div className="dragAndDropColumn">
+            <div className="dragAndDropColumn cursorDefault">
               <Droppable
                 types={["drop1"]}
                 className="dragAndDrop100"

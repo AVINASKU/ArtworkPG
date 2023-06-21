@@ -28,6 +28,10 @@
     padding-bottom: 8px;
   }
 
+  .row {
+    cursor: url('./../../../assets/images/cursor.svg'), auto;
+  }
+
   .dragAndDropColumn {
     border: 1px solid rgba(172, 172, 172, 1);
     border-radius: 8px;
@@ -35,7 +39,10 @@
     height: 372px;
     padding: 4px 12px;
     overflow-y: auto;
-    cursor:url('./../../../assets/images/cursor.svg'), auto;
+  }
+
+  .cursorDefault {
+    cursor: default;
   }
 
   .p-dialog-content {
