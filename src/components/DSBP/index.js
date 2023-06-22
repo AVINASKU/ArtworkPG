@@ -5,14 +5,18 @@ import SelectDsbpId from "./SelectDsbpId";
 import ProjectNameHeader from "./ProjectNameHeader";
 import AgilityList from "./AgilityList";
 import { getDSBPDropdownData } from "../../store/actions/DSBPActions";
+import { getDropDownValues } from "../../store/actions/dropDownValuesAction";
 import {
   addDsbpToProject,
   deleteDsbpFromProject,
   getDsbpPMPDetails,
+  onSubmitDsbpAction
 } from "../../apis/dsbpApi";
 import { useDispatch, useSelector } from "react-redux";
 import FooterButtons from "../AWMJobs/DesignJobs/FooterButtons";
 import "./index.scss";
+import { onSortData } from "../../utils";
+
 const projectId = "A-2316";
 
 const DSBP = () => {
@@ -22,126 +26,11 @@ const DSBP = () => {
   const [selected, setSelected] = useState([]);
   const DropDownData = useSelector((state) => state.DSBPDropdownReducer);
   const [dsbpPmpData, setDsbpPmpData] = useState(null);
-
-  const products = [
-    {
-      InitiativeID: "1000",
-      PMP: "894567",
-      code: "f230fh0g3",
-      name: "Bamboo Watch",
-      description: "Product Description",
-      image: "bamboo-watch.jpg",
-      price: 65,
-      category: "Accessories",
-      quantity: 24,
-      inventoryStatus: "INSTOCK",
-      rating: 5,
-    },
-    {
-      InitiativeID: "1001",
-      PMP: "456389",
-      code: "nvklal433",
-      name: "Black Watch",
-      description: "Product Description",
-      image: "black-watch.jpg",
-      price: 72,
-      category: "Accessories",
-      quantity: 61,
-      inventoryStatus: "INSTOCK",
-      rating: 4,
-    },
-    {
-      InitiativeID: "1002",
-      PMP: "674567",
-      code: "zz21cz3c1",
-      name: "Blue Band",
-      description: "Product Description",
-      image: "blue-band.jpg",
-      price: 79,
-      category: "Fitness",
-      quantity: 2,
-      inventoryStatus: "LOWSTOCK",
-      rating: 3,
-    },
-    {
-      InitiativeID: "1003",
-      PMP: "223156",
-      code: "244wgerg2",
-      name: "Blue T-Shirt",
-      description: "Product Description",
-      image: "blue-t-shirt.jpg",
-      price: 29,
-      category: "Clothing",
-      quantity: 25,
-      inventoryStatus: "INSTOCK",
-      rating: 5,
-    },
-    {
-      InitiativeID: "1004",
-      PMP: "902345",
-      code: "h456wer53",
-      name: "Bracelet",
-      description: "Product Description",
-      image: "bracelet.jpg",
-      price: 15,
-      category: "Accessories",
-      quantity: 73,
-      inventoryStatus: "INSTOCK",
-      rating: 4,
-    },
-    {
-      InitiativeID: "1005",
-      PMP: "234512",
-      code: "av2231fwg",
-      name: "Brown Purse",
-      description: "Product Description",
-      image: "brown-purse.jpg",
-      price: 120,
-      category: "Accessories",
-      quantity: 0,
-      inventoryStatus: "OUTOFSTOCK",
-      rating: 4,
-    },
-    {
-      InitiativeID: "1006",
-      PMP: "765645",
-      code: "bib36pfvm",
-      name: "Chakra Bracelet",
-      description: "Product Description",
-      image: "chakra-bracelet.jpg",
-      price: 32,
-      category: "Accessories",
-      quantity: 5,
-      inventoryStatus: "LOWSTOCK",
-      rating: 3,
-    },
-    {
-      InitiativeID: "1007",
-      PMP: "778890",
-      code: "mbvjkgip5",
-      name: "Galaxy Earrings",
-      description: "Product Description",
-      image: "galaxy-earrings.jpg",
-      price: 34,
-      category: "Accessories",
-      quantity: 23,
-      inventoryStatus: "INSTOCK",
-      rating: 5,
-    },
-    {
-      InitiativeID: "1008",
-      PMP: "901234",
-      code: "vbb124btr",
-      name: "Game Controller",
-      description: "Product Description",
-      image: "game-controller.jpg",
-      price: 99,
-      category: "Electronics",
-      quantity: 2,
-      inventoryStatus: "LOWSTOCK",
-      rating: 4,
-    },
-  ];
+  const [selectedFields, setSelectedFields] = useState(null);
+  const [filteredDsbpData, setFilteredDsbpData] = useState(null);
+  const [totalNoOfDsbpId, setTotalNoOfDsbpId] = useState(0);
+  const [totalNoOfPMP, setTotalNoOfPMP] = useState(0);
+  const [totalNoOfPOA, setTotalNoOfPOA] = useState(0);
 
   const breadcrumb = [
     { label: "My Tasks", url: "/myTasks" },
@@ -155,19 +44,38 @@ const DSBP = () => {
   console.log("dropdown data", DropDownData);
 
   useEffect(() => {
+    //if(DropDownValuesData === null)
+    dispatch(getDropDownValues());
+  }, [dispatch]);
+
+
+  useEffect(() => {
     async function fetchData() {
       const resp = await getDsbpPMPDetails("A-2474");
-      console.log("resp", resp);
-      const transformedArray = resp.flatMap((item) =>
-        item.DSBP_PMP_PIMaterialIDPage.map((person) => ({
-          DSBP_InitiativeID: item.DSBP_InitiativeID,
-          ...person,
-        }))
-      );
-      setDsbpPmpData(transformedArray);
+      if (resp && resp.length) {
+        const transformedArray = resp.flatMap((item) =>
+          item.DSBP_PMP_PIMaterialIDPage.map((person) => ({
+            DSBP_InitiativeID: item.DSBP_InitiativeID,
+            ...person,
+          }))
+        );
+
+        setDsbpPmpData(transformedArray);
+        setTotalNoOfPMP(transformedArray.length);
+
+        const count = transformedArray.reduce((acc, obj) => {
+          if (obj.DSBP_PO_PMP_poPoa !== "") {
+            return acc + 1;
+          }
+          return acc;
+        }, 0);
+
+        setTotalNoOfPOA(count);
+      }
+      setTotalNoOfDsbpId(resp.length);
     }
     fetchData();
-  }, [projectId]);
+  }, []);
 
   useEffect(() => {
     dispatch(getDSBPDropdownData(BU, Region));
@@ -193,10 +101,16 @@ const DSBP = () => {
     // fetch dsbp project data after delete / add
   };
 
+  const onSort = (column, direction) => (event) => {
+    const sortedData = onSortData(column, direction, dsbpPmpData);
+    setDsbpPmpData(sortedData);
+    console.log("sorted data", sortedData);
+  };
+
   const handleSelect = (item) => {
     console.log("item", item);
-    if (selected?.some((d) => d.InitiativeID === item.InitiativeID)) {
-      setSelected(selected.filter((i) => i.InitiativeID !== item.InitiativeID));
+    if (selected?.includes(item)) {
+      setSelected(selected.filter((i) => i !== item));
     } else {
       if (selected.length === 0) {
         const selectedList = [];
@@ -211,12 +125,44 @@ const DSBP = () => {
   const handleSelectAll = (e) => {
     if (e.target.checked) {
       setSelectAllChecked(true);
-      setSelected(products);
+      setSelected(dsbpPmpData);
     } else {
       setSelectAllChecked(false);
       setSelected([]);
     }
   };
+
+  const onActionSubmit = async (formData) => {
+    console.log("submitted...!", formData);
+    let updatedData = {};
+    let updatedDataList = selected.map((pmpDetails)=>{
+      updatedData = {
+        DSBP_InitiativeID: pmpDetails.DSBP_InitiativeID,
+        DSBP_PMP_PIMaterialID: pmpDetails.DSBP_PMP_PIMaterialID
+      };
+      if(formData === "AddToProject"){       
+        updatedData.FK_AWMProjectID = pmpDetails.FK_AWMProjectID;
+        updatedData.AWM_AddedToProject = "Yes";        
+      }
+      if (formData.AWM_AISE !== undefined) {
+        updatedData.AWM_AISE = formData?.AWM_AISE;
+      }
+      if (formData?.AWM_AssemblyMechanism !== undefined) {
+        updatedData.AWM_AssemblyMechanism = formData?.AWM_AssemblyMechanism;
+      }
+      if (formData?.AWM_Biocide !== undefined) {
+        updatedData.AWM_Biocide = formData?.AWM_Biocide;
+      }
+      if (formData?.AWM_GroupPMP !== undefined) {
+        updatedData.AWM_GroupPMP = formData?.AWM_GroupPMP;
+      }
+      return updatedData;
+    })
+    const updatedPmpDetails = { ArtworkAgilityPMPs: updatedDataList };
+    console.log("updatedDataObject", updatedPmpDetails);
+    await onSubmitDsbpAction(updatedPmpDetails);
+  };
+
 
   const handleCancel = () => {
     return navigate(`/myProjects`);
@@ -228,18 +174,46 @@ const DSBP = () => {
 
   console.log("dropdownlist", dropdownlist);
 
+  const onGlobalFilterChange = (e, colName) => {
+    const value = e.value;
+    console.log("value and e.value", value, e.value);
+    setSelectedFields(value);
+    const artworkValues = value;
+
+    if (artworkValues.length) {
+      let filteredDsbpData = dsbpPmpData.filter((item) => {
+        if (item && item[colName]) {
+          const hasWords = artworkValues.some((word) =>
+            Number.isInteger(word)
+              ? item[colName] === word
+              : item[colName]?.includes(word)
+          );
+          if (hasWords) {
+            return item;
+          }
+        }
+      });
+      console.log("filtered dsbp data", filteredDsbpData);
+      setFilteredDsbpData(filteredDsbpData);
+    } else setFilteredDsbpData([]);
+  };
+
   return (
     <div className="artwork-dsbp myProjectAnddAllProjectList">
       <ArtworkHeader
         breadcrumb={breadcrumb}
         headerName={headerName}
         selected={selected}
+        onActionSubmit={onActionSubmit}
         label="Artwork Alignment"
       />
       <ProjectNameHeader />
       <SelectDsbpId
         dropdownlist={dropdownlist}
         addDSBPIntoProject={addDSBPIntoProject}
+        totalNoOfDsbpId={totalNoOfDsbpId}
+        totalNoOfPMP={totalNoOfPMP}
+        totalNoOfPOA={totalNoOfPOA}
       />
       <AgilityList
         selected={selected}
@@ -247,8 +221,11 @@ const DSBP = () => {
         selectAllChecked={selectAllChecked}
         handleSelect={handleSelect}
         handleSelectAll={handleSelectAll}
-        products={products}
         dsbpPmpData={dsbpPmpData}
+        filteredDsbpData={filteredDsbpData}
+        onSort={onSort}
+        onGlobalFilterChange={onGlobalFilterChange}
+        selectedFields={selectedFields}
       />
       <FooterButtons
         handleCancel={handleCancel}
