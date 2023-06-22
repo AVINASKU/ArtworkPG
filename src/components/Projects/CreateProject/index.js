@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import LoadingOverlay from "react-loading-overlay-ts";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { MultiSelect } from "primereact/multiselect";
 import { Calendar } from "primereact/calendar";
@@ -10,6 +9,7 @@ import { createNewProject, editProject } from "../../../apis/projectSetupApi";
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 import { updateProjectPlanAction } from "../../../store/actions/ProjectPlanActions";
 import { getDropDownValues } from "../../../store/actions/dropDownValuesAction";
+import { Loading } from "../../../utils";
 import moment from "moment-timezone";
 import { Toast } from "primereact/toast";
 import "./index.scss";
@@ -65,7 +65,7 @@ function AddProject(props) {
   const [projectDesc, setProjectDesc] = useState("");
   const [groupName, setGroupName] = useState("");
   const [cluster, setCluster] = useState("");
-  const [scale, setScale] = useState([]);
+  const [scale, setScale] = useState("");
   const [selectedCities, setSelectedCities] = useState([]);
   const [formValid, setFormValid] = useState(false);
   const [formData, setFormData] = useState(null);
@@ -203,11 +203,10 @@ function AddProject(props) {
             setSubCategoriesOptions(pickList.Labels);
           }
          
-          if (obj.code === "BBY" && pickList.Picklist_Name === "TIER") {           
+          if (obj.code === "BBY" && pickList.Picklist_Name === "Tier") {    
             setTierList(pickList.Labels);
           }
           if (obj.code === "HOM" && pickList.Picklist_Name === "PRODSTRAT") {
-            console.log("obj", obj, "pickList", pickList.Labels)
             setProductionStrategyList(pickList.Labels);
           }
         });
@@ -230,7 +229,7 @@ function AddProject(props) {
         scales?.find(
           (r) => r.Scale_Name === selectedProjectDetails?.Project_Scale
         )) ||
-        {}
+        ""
     );
   }, [scales]);
 
@@ -310,7 +309,7 @@ function AddProject(props) {
           scales.find(
             (r) => r.Scale_Name === selectedProjectDetails.Project_Scale
           )) ||
-          {}
+          ""
       );
       setSOSDate(
         (selectedProjectDetails?.Estimated_SOS &&
@@ -335,7 +334,7 @@ function AddProject(props) {
       setIl(selectedProjectDetails?.IL);
       setPm(selectedProjectDetails?.PM || userInformation.username);
       setComments(selectedProjectDetails?.Comments || "");
-      setProjectType(selectedProjectDetails?.Project_Type || []);
+      setProjectType(selectedProjectDetails?.Project_Type || "");
 
       setDesignScopeList((prevDesignScopeList) => ({
         ...prevDesignScopeList,
@@ -419,7 +418,7 @@ function AddProject(props) {
       setRegion({});
       setSmo([]);
       setCluster("");
-      setScale([]);
+      setScale("");
       setSOSDate("");
       setSOPDate("");
       setPrinterDate("");
@@ -1070,7 +1069,10 @@ function AddProject(props) {
   };
 
   return (
-    <LoadingOverlay active={loader} spinner text={spinnerText}>
+    <>
+    { loading || loader ? (
+      <Loading />
+    ) : (
       <div className="tabular-add-project">
         <Toast ref={toast} />
         <Form onSubmit={handleSubmit(onSubmit)}>
@@ -1705,7 +1707,8 @@ function AddProject(props) {
           </div>
         </Form>
       </div>
-    </LoadingOverlay>
+    )}
+    </>
   );
 }
 export default AddProject;

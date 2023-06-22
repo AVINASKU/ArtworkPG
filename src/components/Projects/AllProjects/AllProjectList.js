@@ -14,6 +14,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import _ from "lodash";
 import ProjectNameHeader from "../MyProjects/ProjectNameHeader";
 import CustomisedView from "../MyProjects/CustomisedView";
+import { generateUniqueKey } from "../../../utils";
 
 const AllProjectList = (props) => {
   const User = useSelector((state) => state.UserReducer);
@@ -76,7 +77,7 @@ const AllProjectList = (props) => {
   }, [dispatch, userInformation]);
 
   useEffect(() => {
-    const ProjectData = _.cloneDeep(allProjectList.myProject);
+    const ProjectData = _.cloneDeep(allProjectList.allProjects);
     let allCol = [];
     if (ProjectData.length) {
       allCol = Object.keys(ProjectData[0]);
@@ -281,7 +282,6 @@ const AllProjectList = (props) => {
   const fullKitReadinessBody = (options, rowData) => {
     let field = rowData.field;
     let projectId = options["Project_ID"];
-
     return (
       <>
         {field === "Project State" && (
@@ -303,23 +303,10 @@ const AllProjectList = (props) => {
               backgroundColor: "white",
               color: "gray",
               border: "1px solid",
+              padding: "0.15rem 0.4rem",
+              margin: "2px 0",
             }}
           ></Tag>
-        )}
-
-        {field === "Project_ID" && (
-          <span
-            style={{ color: "#003DA5", cursor: "pointer" }}
-            onClick={() => {
-              if (field && field.length) {
-                let option = allProjectList.allProjects[rowData.rowIndex];
-                dispatch(selectedProject(option, "All Projects"));
-                navigate(`${currentUrl}/projectPlan/${projectId}`);
-              }
-            }}
-          >
-            {options[field]}{" "}
-          </span>
         )}
 
         {field === "Project_Name" && (
@@ -327,21 +314,44 @@ const AllProjectList = (props) => {
             style={{ color: "#003DA5", cursor: "pointer" }}
             onClick={() => {
               if (field && field.length) {
-                let option = allProjectList.allProjects[rowData.rowIndex];
+                let option = allProjectList.allProjects.find(
+                  (project) => project.Project_ID === projectId
+                );
                 dispatch(selectedProject(option, "All Projects"));
                 navigate(`${currentUrl}/projectPlan/${projectId}`);
               }
             }}
           >
+            {options[field]}
+          </span>
+        )}
+
+        {field === "Project_ID" && (
+          <span
+            style={{ color: "#003DA5", cursor: "pointer" }}
+            onClick={() => {
+              if (field && field.length) {
+                let option = allProjectList.allProjects.find(
+                  (project) => project.Project_ID === projectId
+                );
+                dispatch(selectedProject(option, "All Projects"));
+                navigate(`${currentUrl}/projectPlan/${projectId}`);
+              }
+            }}
+          >
+            {" "}
             {options[field]}{" "}
           </span>
         )}
 
         {field === "Estimated_SOP" && changeDateFormat(options[field])}
         {field === "Estimated_AW_Printer" && changeDateFormat(options[field])}
-
+        {field === "Estimated_AW_Readiness" && changeDateFormat(options[field])}
+        {field === "Estimated_SOS" && changeDateFormat(options[field])}
         {field !== "Full Kit Readiness Tracking" &&
           field !== "Estimated_SOP" &&
+          field !== "Estimated_SOS" &&
+          field !== "Estimated_AW_Readiness" &&
           field !== "Estimated_AW_Printer" &&
           field !== "Project_Name" &&
           field !== "Project_ID" && <> {options[field]}</>}
@@ -421,23 +431,23 @@ const AllProjectList = (props) => {
       "Full Kit Readiness Tracking",
     ];
 
-        const ProjectData = _.cloneDeep(allProjectList.myProject);
-    let allCol = [];
-    if (ProjectData.length) {
-      allCol = Object.keys(ProjectData[0]);
-      allCol.push("Full Kit Readiness Tracking");
-    }
-    let columnWidthMyProject = {};
-    if (allCol.length) {
-      allCol.forEach((column) => {
-        columnWidthMyProject[column] = 100;
-      });
-    }
+    //     const ProjectData = _.cloneDeep(allProjectList.myProject);
+    // let allCol = [];
+    // if (ProjectData.length) {
+    //   allCol = Object.keys(ProjectData[0]);
+    //   allCol.push("Full Kit Readiness Tracking");
+    // }
+    // let columnWidthMyProject = {};
+    // if (allCol.length) {
+    //   allCol.forEach((column) => {
+    //     columnWidthMyProject[column] = 100;
+    //   });
+    // }
 
     setProjectColumnNames(allColumnNames);
     // const columnNames = ProjectService.getAllColumnNamesAllProjects();
 
-    localStorage.setItem("columnWidthAllProject", JSON.stringify(columnWidthMyProject));
+    // localStorage.setItem("columnWidthAllProject", JSON.stringify(columnWidthMyProject));
     localStorage.setItem(
       "allColumnNamesAllProjects",
       JSON.stringify(allColumnNames)
@@ -458,7 +468,7 @@ const AllProjectList = (props) => {
       "Estimated_AW_Printer",
       "Full Kit Readiness Tracking",
     ];
-    const ProjectData = _.cloneDeep(allProjectList.myProject);
+    const ProjectData = _.cloneDeep(allProjectList.allProjects);
     let allCol = [];
     if (ProjectData.length) {
       allCol = Object.keys(ProjectData[0]);
@@ -664,6 +674,7 @@ const AllProjectList = (props) => {
               isResetEnabled={isResetEnabled}
               allData={pegadata}
               headers={allColumnNames}
+              filterFLag={false}
               CustomizeViewFlag={false}
               ResetToDefaultFlag={false}
               isTreeTableFlag={false}
@@ -706,6 +717,7 @@ const AllProjectList = (props) => {
             reorderableColumns
             onColReorder={storeReorderedColumns}
             onResize={(e) => console.log("resize", e)}
+            key={generateUniqueKey("ppp")}
             onResizeCapture={(e) => console.log("e", e)}
             value={filters.length ? filters : pegadata}
             scrollable

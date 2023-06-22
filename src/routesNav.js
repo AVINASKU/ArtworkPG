@@ -110,11 +110,13 @@ import APRA from "./components/AWMJobs/APRA/index.js";
 import UPRA from "./components/AWMJobs/UPRA/index.js";
 import URDT from "./components/AWMJobs/URDT/index.js";
 import CPPFA from "./components/AWMJobs/CPPFA/index.js";
+import DsbpPage from "./DsbpPage";
 
 import { checkReadOnlyAccess } from "./utils";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAccessMatrix } from "./store/actions/RoleBasedActions";
 import { useLocation } from "react-router-dom";
+import Role from "./role";
 
 const RoutesNav = () => {
   return (
@@ -123,6 +125,7 @@ const RoutesNav = () => {
         <Route index element={<Login />} />
         {/* <Route index element={<Home />} /> */}
         <Route path="/myProjects" element={<MyProjects />} />
+        <Route path="/roles" element={<Role />} />
         <Route path="/allProjects" element={<AllProjects />} />
         <Route path="/myTasks" element={<MyTasksPage />} />
         <Route path="/AllTasks" element={<AllTasksPage />} />
@@ -167,6 +170,7 @@ const RoutesNav = () => {
         <Route path="/allTasks/DNPF/:TaskID/:ProjectID" element={<DNPF />} />
         <Route path="/myTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
         <Route path="/allTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
+        <Route path="/DSBP" element={<DsbpPage />} />
         {/* <Route path="/reports" element={<Reports />} /> */}
       </Route>
     </Routes>

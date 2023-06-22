@@ -140,11 +140,13 @@ export const optionList = (data, fieldName) => {
   const uniqueSMOs = new Set();
 
   // Iterate over the array and add "Artwork_SMO" values to the Set
+  if(data && data.length){
   data.forEach((item) => {
     if (item[fieldName] || item[fieldName]===0) {
       uniqueSMOs.add(item[fieldName]);
     }
   });
+  }
 
 
   // Convert the Set to an array
@@ -157,3 +159,13 @@ export const optionList = (data, fieldName) => {
     const timestamp = new Date().getTime();
     return `${fieldName}_${timestamp}`;
   };
+
+  export const addEllipsis = (text, maxLength)=>{
+  
+   if (text.length <= maxLength) {
+    return text;
+  }
+
+  const trimmedText = text.substring(0, maxLength);
+  return trimmedText + "...";
+  }

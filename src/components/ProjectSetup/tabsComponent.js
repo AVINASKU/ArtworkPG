@@ -8,22 +8,27 @@ const TabsComponent = ({ items, tabName, actionButton }) => {
 
   return (
     <>
-    <div className="displayFlex">
-      <div className="tabs-wrapper">
-        <ul id="scroller" className="nav nav-tabs">
-          {items.map((obj, index) => (
-            <li
-              key={index + 1}
-              className={`${obj.name === tabName ? "active" : ""}`}
-            >
-              <a data-toggle="tab" href={`${currentUrl}#${obj.name}`}>
-                {obj.tabNameForDisplay}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="actionButtonsForTabComponent">{actionButton}</div>
+      <div className="tabComponent">
+        <div className="tabs-wrapper">
+          <ul id="scroller" className="nav nav-tabs">
+            {items.map((obj, index) => (
+              <li
+                key={index + 1}
+                className={`${obj.name === tabName ? "active" : ""}`}
+              >
+                <a data-toggle="tab" href={`${currentUrl}#${obj.name}`}>
+                  {obj.tabNameForDisplay}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div
+          className="actionButtonsForTabComponent"
+          hidden={tabName === "ProjectSetup"}
+        >
+          {actionButton}
+        </div>
       </div>
       <div className="tab-content">
         {items.map((obj, index) => (

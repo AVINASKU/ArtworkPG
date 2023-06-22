@@ -35,7 +35,7 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
   const [filters, setFilters] = useState([]);
   const [selectedColumnName, setSelectedColumnName] = useState(null);
   const [loader, setLoader] = useState(false);
-  let { ProjectID } = useParams();
+
   const getMyTasks = (myTasksList) => {
     const myTasks = myTasksList?.map((element) => {
       return element;
@@ -224,6 +224,8 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
   };
   const handleSelect = (item) => {
     if (selected?.includes(item)) {
+      console.log("item", item);
+      console.log("selected.filter((i) => i !== item)", selected.filter((i) => i !== item));
       setSelected(selected.filter((i) => i !== item));
       setSelectedTask(selectedTask.filter((i) => i !== item));
     } else {
@@ -301,7 +303,6 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
           {options === "Task_Name" && (
             <input
               type="checkbox"
-              style={{ margin: "12px" }}
               checked={selectAllChecked}
               onChange={handleSelectAll}
               // disabled={error && true}
@@ -439,9 +440,6 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
               style={{
               width: "200px"
             }}
-              style={{
-                width: "200px",
-              }}
               // body={ele === "Help Needed" && countryBodyTemplate}
             />
           );
@@ -473,9 +471,6 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
             style={{
               width: "200px"
             }}
-            style={{
-              width: "200px",
-            }}
             // body={ele === "Help Needed" && countryBodyTemplate}
           />
         );
@@ -501,101 +496,100 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
 
   const handleApproveDialogCPPFA = (options) => {
     setShowApproveDialogCPPFA(true);
-    let task = {
-      TaskID: options.AWM_Task_ID,
-      ProjectID: options.AWM_Project_ID,
-    };
-    dispatch(getTaskDetails(options.AWM_Task_ID, ProjectID));
+    let task = { TaskID: options.AWM_Task_ID, ProjectID: options.AWM_Project_ID };
+    dispatch(getTaskDetails(options.AWM_Task_ID, options.AWM_Project_ID));
     setSelectedTaskApproveDialogCPPFA(task);
   };
-
+  
   const { TaskDetailsData } = useSelector((state) => state.TaskDetailsReducer);
-
+  console.log("selected", selected);
   return (
-    <>
-      {loading || loader ? (
-        <Loading />
-      ) : (
-        <>
-          <div className="my-task-project">
-            {showApproveDialogCPPFA && (
-              <CPPFA
-                onClose={() =>
-                  setShowApproveDialogCPPFA(!showApproveDialogCPPFA)
-                }
-                showTaskDialog={showApproveDialogCPPFA}
-                selectedTaskData={selectedTaskApproveDialogCPPFA}
-                pegadata={selectedProdSrchList}
-                TaskDetailsData={TaskDetailsData}
-                userInformation={userInformation}
-              />
-            )}
-            <ProjectListHeader
-              // exportCSVTasks={
-              //   selected ? exportCSVTasks(true) : exportCSVTasks(true)
-              // }
-              onSearchClick={onSearchClick}
-              handleDelegateClick={handleDelegateClick}
-              handleHelpNeededClick={handleHelpNeededClick}
-              handleHelpProvidedClick={handleHelpProvidedClick}
-              actionFlag={!selected || selected.length === 0}
-              header={flag === "myTasks" ? "My Tasks" : "All Tasks"}
-              selected={selected}
-              allData={selectedProdSrchList}
-              isFilterEnabled={isFilterEnabled}
-              clearFilter={clearFilter}
-              headers={headerColumns}
-            />
-            <ConfirmationPopUp
-              onSort={onSort}
-              selectedColumnName={selectedColumnName}
-              sortData={sortData}
-              op={op}
-              addFrozenColumns={addFrozenColumns}
-              ProjectFrozen={ProjectFrozen}
-              setProjectFrozen={setProjectFrozen}
-              setFrozenColumn={setFrozenColumn}
-              frozenCoulmns={frozenCoulmns}
-              clearColumnWiseFilter={clearColumnWiseFilter}
-              saveSettings={saveSettings}
-              selectedFields={selectedFields}
-              onGlobalFilterChange={onGlobalFilterChange}
-              projectData={selectedProdSrchList}
-              setFilters={setFilters}
-            />
-            <DataTable
-              resizableColumns
-              value={filters?.length ? filters : selectedProdSrchList}
-              reorderableColumns
-              scrollable
-              selection={selected}
-              onSelectionChange={(e) => setSelected(e.value)}
-              responsiveLayout="scroll"
-              className="margin-top-24"
-              ref={dt}
-              filterDisplay={isSearch && "row"}
-              loading={loading}
-              // tableStyle={{ minWidth: "50rem" }}
-              // tableStyle={{ width: "max-content" }}
-              autoLayout={true}
-              filters={searchHeader}
-            >
-              {dynamicColumns()}
-            </DataTable>
-          </div>
-          {showTaskDialog && (
-            <TaskDialog
-              onClose={() => setShowTaskDialog(!showTaskDialog)}
-              showTaskDialog={showTaskDialog}
-              selectedTaskData={selectedTask}
-              flag={setflag}
-              path={flag}
+      <>
+      {loading || loader  ? (
+      <Loading />
+    ): (
+      <>
+        <div className="my-task-project">
+          {showApproveDialogCPPFA && (
+            <CPPFA
+              onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
+              showTaskDialog={showApproveDialogCPPFA}
+              selectedTaskData={selectedTaskApproveDialogCPPFA}
+              pegadata={selectedProdSrchList}
+              TaskDetailsData={TaskDetailsData}
               userInformation={userInformation}
-              setSelected={setSelected}
             />
           )}
-        </>
-      )}
+          <ProjectListHeader
+            // exportCSVTasks={
+            //   selected ? exportCSVTasks(true) : exportCSVTasks(true)
+            // }
+            onSearchClick={onSearchClick}
+            handleDelegateClick={handleDelegateClick}
+            handleHelpNeededClick={handleHelpNeededClick}
+            handleHelpProvidedClick={handleHelpProvidedClick}
+            actionFlag={!selected || selected.length === 0}
+            header={flag === "myTasks" ? "My Tasks" : "All Tasks"}
+            selected={selected}
+            allData={selectedProdSrchList}
+            isFilterEnabled={isFilterEnabled}
+            clearFilter={clearFilter}
+            headers={headerColumns}
+            filterFLag={false}
+            CustomizeViewFlag={false}
+            ResetToDefaultFlag={false}
+            isTreeTableFlag={false}
+          />
+          <ProjectListFilter
+            onSort={onSort}
+            selectedColumnName={selectedColumnName}
+            sortData={sortData}
+            op={op}
+            addFrozenColumns={addFrozenColumns}
+            ProjectFrozen={ProjectFrozen}
+            setProjectFrozen={setProjectFrozen}
+            setFrozenColumn={setFrozenColumn}
+            frozenCoulmns={frozenCoulmns}
+            clearColumnWiseFilter={clearColumnWiseFilter}
+            saveSettings={saveSettings}
+            selectedFields={selectedFields}
+            onGlobalFilterChange={onGlobalFilterChange}
+            projectData={selectedProdSrchList}
+            setFilters={setFilters}
+          />
+          <DataTable
+            resizableColumns
+            value={filters?.length ? filters : selectedProdSrchList}
+            reorderableColumns
+            scrollable
+            selection={selected}
+            onSelectionChange={(e) => setSelected(e.value)}
+            responsiveLayout="scroll"
+            className="margin-top-24"
+            ref={dt}
+            filterDisplay={isSearch && "row"}
+            loading={loading}
+            // tableStyle={{ minWidth: "50rem" }}
+            // tableStyle={{ width: "max-content" }}
+            autoLayout={true}
+            filters={searchHeader}
+          >
+            {dynamicColumns()}
+          </DataTable>
+        </div>
+        {showTaskDialog && (
+          <TaskDialog
+            onClose={() => setShowTaskDialog(!showTaskDialog)}
+            showTaskDialog={showTaskDialog}
+            selectedTaskData={selectedTask}
+            flag={setflag}
+            path={flag}
+            userInformation={userInformation}
+            setSelected={setSelected}
+          />
+        )}
+      </>
+    )}
     </>
   );
 };

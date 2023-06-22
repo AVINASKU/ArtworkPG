@@ -17,10 +17,11 @@ import "./index.scss";
 import CDHeader from "../DesignJobs/CDHeader";
 import { submitConfirmColorDevelopment } from "../../../apis/colorDevelopmentApi";
 import { CheckReadOnlyAccess } from "../../../utils";
+import IQCDFooterButtons from "../DesignJobs/IQCDFooterButtons";
 
-const breadcrumb = [{ label: "Confirm Color Development" }];
+const breadcrumb = [{ label: "Confirm Color Development & Print Trial" }];
 
-const headerName = "Confirm Color Development";
+const headerName = "Confirm Color Development & Print Trial";
 const jobName = "CD_";
 
 function CCD() {
@@ -74,7 +75,7 @@ function CCD() {
     }
   }, [TaskDetailsData]);
   const handleCancel = () => {
-    return navigate(`/myTasks`);
+    return navigate(`/MyTasks`);
   };
 
   const addNewEmptyDesign = () => {
@@ -116,12 +117,7 @@ function CCD() {
   const checkFormValidity = () => {
     console.log(CD);
     const validTasks = CD?.filter((task) => {
-      return (
-        task?.Printer &&
-        task?.Printing_Process &&
-        task?.Substrate &&
-        task?.CD_Approved
-      );
+      return task?.Printing_Process && task?.Substrate && task?.CD_Approved;
     });
     console.log(validTasks.length);
     if (validTasks.length > 0) {
@@ -190,9 +186,10 @@ function CCD() {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-
+    await dispatch(uploadFileAzure(azureFile));
     await submitConfirmColorDevelopment(formData, id, headers);
     setLoader(false);
+    navigate(`/MyTasks`);
   };
 
   const onSaveAsDraft = async () => {
@@ -218,6 +215,7 @@ function CCD() {
       DesignIntentList: submitOnlySelectedData,
     };
     console.log("full draft data --->", submitOnlySelectedData);
+    await dispatch(uploadFileAzure(azureFile));
     await saveDesignIntent(formData);
   };
 
@@ -229,9 +227,10 @@ function CCD() {
           onSelectAll={onSelectAll}
           breadcrumb={breadcrumb}
           headerName={headerName}
-          label="Confirm Color Development"
+          label="Confirm Color Development & Print Trial"
           disabled={true}
           checkReadWriteAccess={checkReadWriteAccess}
+          data={data}
         />
         <div
           className="task-details"
@@ -243,7 +242,12 @@ function CCD() {
             // display: "grid",
           }}
         >
-          {<TaskHeader {...data} />}
+          {<TaskHeader {...data} TaskDetailsData={TaskDetailsData} />}
+          {data?.Task_Status === "Complete" && (
+            <div className="task-completion">
+              This task is already submitted
+            </div>
+          )}
           {CD &&
             CD.length > 0 &&
             CD.map((item, index) => {
@@ -272,13 +276,14 @@ function CCD() {
               }
             })}
         </div>
-        <FooterButtons
+        <IQCDFooterButtons
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}
           formValid={!formValid}
           checkReadWriteAccess={checkReadWriteAccess}
           bottomFixed={true}
+          data={data}
         />
       </PageLayout>
     </LoadingOverlay>

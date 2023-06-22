@@ -22,7 +22,7 @@ const CPPFA = ({
   pegadata,
   TaskDetailsData,
   userInformation,
-  getProjectPlanApi
+  getProjectPlanApi,
 }) => {
   const location = useLocation();
   const locationPath = location?.pathname;
@@ -83,6 +83,9 @@ const CPPFA = ({
 
   const setRiskLevelFunc = (level) => {
     setRiskLevel(level);
+    const data = { ...designIntent };
+    data.RiskLevel = level;
+    setDesignIntent(data);
     if (level === "Low") {
       setHighRiskYesOrNo("");
       setYesOrNo("");
@@ -125,7 +128,7 @@ const CPPFA = ({
         AWMProjectID: selectedTaskData.ProjectID,
         Size: fileSize === 0 ? "1" : fileSize,
         Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
-        Filename: fileName ? fileName.split('.').slice(0, -1).join('.'): null
+        Filename: fileName ? fileName.split(".").slice(0, -1).join(".") : null,
       },
     };
 
@@ -155,10 +158,10 @@ const CPPFA = ({
   const myProjects = url[1];
 
   const onValidationFail = (uploadData) => {
-    if(uploadData.size > 1000000) {
+    if (uploadData.size > 1000000) {
       setFileName(null);
     }
-  }
+  };
 
   return (
     <Dialog
@@ -184,7 +187,7 @@ const CPPFA = ({
                     </span>
                   </NavLink>
                 </li>
-                <li className="p-breadcrumb-chevron pi pi-chevron-right"></li>
+                <li className="p-breadcrumb-chevron pi pi-chevron-right piChevronRightMargin"></li>
                 <li className="">
                   <a href="#" className="p-menuitem-link">
                     <span className="p-menuitem-text">
@@ -195,7 +198,9 @@ const CPPFA = ({
               </ul>
             </nav>
           </div>
-          <div className="p-dialog-header1">{designIntent.Task_Name}</div>
+          <div className="p-dialog-header1">
+            <NavLink to={`/${myProjects}`}>{designIntent.Project_Name}</NavLink>
+          </div>
         </div>
       }
     >
@@ -229,10 +234,13 @@ const CPPFA = ({
                   type="radio"
                   id="html"
                   name="fav_language"
-                  defaultChecked={riskLevel === "Low"}
                   value="Low"
+                  checked={
+                    designIntent.RiskLevel === "Low" ||
+                    designIntent.RiskLevel === ""
+                  }
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
-                  disabled={isAccessEmpty}
+                  disabled={isAccessEmpty || cppfaDialogFlag}
                 />
                 <label className="radioLabel">Low Risk</label>
               </div>
@@ -242,8 +250,9 @@ const CPPFA = ({
                   id="html"
                   name="fav_language"
                   value="Medium"
+                  checked={designIntent.RiskLevel === "Medium"}
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
-                  disabled={isAccessEmpty}
+                  disabled={isAccessEmpty || cppfaDialogFlag}
                 />
                 <label className="radioLabel">Medium Risk</label>
               </div>
@@ -253,8 +262,9 @@ const CPPFA = ({
                   id="html"
                   name="fav_language"
                   value="High"
+                  checked={designIntent.RiskLevel === "High"}
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
-                  disabled={isAccessEmpty}
+                  disabled={isAccessEmpty || cppfaDialogFlag}
                 />
                 <label className="radioLabel">High Risk</label>
               </div>
@@ -270,14 +280,30 @@ const CPPFA = ({
                 itemTemplate={itemTemplate}
                 emptyTemplate={
                   <p className="m-0">
-                    Drop or Browse file here <br />
-                    <span className="fileSupportedData">
-                      File supported: PDF, DOCX, JPEG
-                    </span>
+                    {designIntent.FileMetaDataList &&
+                    designIntent.FileMetaDataList.length > 0 ? (
+                      designIntent.FileMetaDataList[0].File_Name === "" ? (
+                        <>
+                          <span>Drop or Browse file here</span> <br />
+                          <span className="fileSupportedData">
+                            File supported: PDF, DOCX, JPEG
+                          </span>
+                        </>
+                      ) : (
+                        designIntent.FileMetaDataList[0].File_Name
+                      )
+                    ) : (
+                      <>
+                        <span>Drop or Browse file here</span> <br />
+                        <span className="fileSupportedData">
+                          File supported: PDF, DOCX, JPEG
+                        </span>
+                      </>
+                    )}
                   </p>
                 }
-                disabled={isAccessEmpty}
-                onValidationFail={(e)=> onValidationFail(e)}
+                disabled={isAccessEmpty || cppfaDialogFlag}
+                onValidationFail={(e) => onValidationFail(e)}
               />
             </Col>
             <Col></Col>
@@ -345,9 +371,11 @@ const CPPFA = ({
           label="Confirm PPFA"
           onClick={handleSubmit}
           disabled={
-            isAccessEmpty || riskLevel !== "Low"
-              ? yesOrNo === ""
-              : designIntent.Task_Status === "Completed"
+            cppfaDialogFlag
+              ? true
+              : (isAccessEmpty || riskLevel !== "Low"
+                  ? yesOrNo === ""
+                  : false) || designIntent.Task_Status === "Complete"
           }
         />
       </div>

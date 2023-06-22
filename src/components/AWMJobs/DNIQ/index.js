@@ -18,6 +18,8 @@ import "./index.scss";
 import CDHeader from "../DesignJobs/CDHeader";
 import IQHeader from "../DesignJobs/IQHeader";
 import { CheckReadOnlyAccess } from "../../../utils";
+import IQCDFooterButtons from "../DesignJobs/IQCDFooterButtons";
+import { cloneDeep } from "lodash";
 const breadcrumb = [{ label: "Define Ink Qualification" }];
 
 const headerName = "Define Ink Qualification";
@@ -36,6 +38,8 @@ function DNIQ() {
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
   const [loader, setLoader] = useState(false);
+  const [selectAllCheckbox, setSelectAllCheckbox] = useState(false);
+
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const checkReadWriteAccess = CheckReadOnlyAccess();
@@ -58,8 +62,12 @@ function DNIQ() {
   }, [TaskDetailsData]);
 
   const handleCancel = () => {
-    return navigate(`/myTasks`);
+    return navigate(`/MyTasks`);
   };
+
+  // useEffect(() => {
+  //   setSubmittedDI(Math.random());
+  // }, [data]);
 
   const handleDelete = (index) => {
     const sub = IQ?.map((item, i) => {
@@ -74,6 +82,10 @@ function DNIQ() {
 
     setIQ(sub);
   };
+
+  useEffect(() => {
+    checkFormValidity(IQ);
+  }, [data]);
 
   const addNewEmptyDesign = () => {
     const newDesignIntent = [
@@ -94,20 +106,37 @@ function DNIQ() {
   };
 
   const addData = (fieldName, index, value, Design_Intent_Name) => {
-    let data = IQ[index];
-    console.log(data);
+    let IQdata = cloneDeep(IQ);
+    let data = IQdata[index];
+    console.log("addData:", data);
     data[fieldName] = value;
-    submittedDI.push(data);
-    setSubmittedDI(submittedDI);
-    checkFormValidity();
+    data["Design_Job_Name"] = Design_Intent_Name;
+    setIQ(IQdata);
+    // submittedDI.push(data);
+    setSubmittedDI(Math.random());
+    checkFormValidity(IQdata);
   };
 
-  const onSelectAll = (checked) => {
-    IQ?.map((task) => {
-      if (task?.Event !== "submit") {
-        task.Select = checked;
+  useEffect(() => {
+    let count = 0;
+    IQ?.forEach((obj) => {
+      if (obj.Select) {
+        count++;
       }
-      return task;
+    });
+    if (IQ.length === count) {
+      setSelectAllCheckbox(true);
+    } else {
+      setSelectAllCheckbox(false);
+    }
+  }, [submittedDI]);
+
+  const onSelectAll = (checked) => {
+    IQ?.forEach((task) => {
+      // if (task?.Event !== "submit") {
+      task.Select = checked;
+      // }
+      // return task;
     });
     setIQ(IQ);
     setUpdated(!updated);
@@ -137,7 +166,7 @@ function DNIQ() {
       temp["instruction"] = "APPEND";
       temp["target"] = "IQList";
       temp["content"] = {
-        DesignJobName: "Confirm New Ink Qualification",
+        DesignJobName: task?.Design_Job_Name,
         DesignJobID: taskDesignJobID,
         AdditionalInfo: task?.Additional_Info,
         Pantone: task?.Pantone,
@@ -161,9 +190,10 @@ function DNIQ() {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-
+    console.log("Submit Data", formData, id, headers);
     await submitInkQualification(formData, id, headers);
     setLoader(false);
+    navigate("/MyTasks");
   };
 
   const onSaveAsDraft = async () => {
@@ -188,7 +218,7 @@ function DNIQ() {
         task.Design_Job_ID = "";
       }
 
-      task.Design_Job_Name = `Confirm New Ink Qualification ${counter}`;
+      task.Design_Job_Name = task?.Design_Job_Name;
 
       return task;
     });
@@ -204,11 +234,12 @@ function DNIQ() {
     console.log("full draft data --->", formData);
     await saveInkQualification(formData);
     setLoader(false);
+    // navigate("/MyTasks");
   };
 
-  const checkFormValidity = () => {
-    const validTasks = IQ?.filter((task) => {
-      return task?.Printer && task?.Pantone && task?.Select;
+  const checkFormValidity = (IQdata) => {
+    const validTasks = IQdata?.filter((task) => {
+      return task?.Printer && task?.Select;
     });
     if (validTasks.length > 0) {
       setFormValid(true);
@@ -223,11 +254,13 @@ function DNIQ() {
         <IQHeader
           setAddNewDesign={addNewEmptyDesign}
           onSelectAll={onSelectAll}
+          selectAllCheckbox={selectAllCheckbox}
           breadcrumb={breadcrumb}
           headerName={headerName}
           label="Define Ink Qualification"
           showPage="DNIQ"
           checkReadWriteAccess={checkReadWriteAccess}
+          data={data}
         />
         <div
           className="task-details"
@@ -239,8 +272,12 @@ function DNIQ() {
             // display: "grid",
           }}
         >
-          {<TaskHeader {...data} />}
-
+          {<TaskHeader {...data} TaskDetailsData={TaskDetailsData} />}
+          {data?.Task_Status === "Complete" && (
+            <div className="task-completion">
+              This task is already submitted
+            </div>
+          )}
           {IQ &&
             IQ.length > 0 &&
             IQ.map((item, index) => {
@@ -249,6 +286,7 @@ function DNIQ() {
                   <CloneJobs
                     key={item.Design_Job_ID}
                     {...data}
+                    data={data}
                     item={item}
                     index={index}
                     addData={addData}
@@ -256,18 +294,25 @@ function DNIQ() {
                     jobName={jobName}
                     setFormValid={setFormValid}
                     checkReadWriteAccess={checkReadWriteAccess}
+                    Artwork_Brand={
+                      TaskDetailsData?.ArtworkAgilityPage?.Artwork_Brand
+                    }
+                    Artwork_Category={
+                      TaskDetailsData?.ArtworkAgilityPage?.Artwork_Category
+                    }
                   />
                 );
               }
             })}
         </div>
-        <FooterButtons
+        <IQCDFooterButtons
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}
           formValid={!formValid}
           checkReadWriteAccess={checkReadWriteAccess}
           bottomFixed={true}
+          data={data}
         />
       </PageLayout>
     </LoadingOverlay>

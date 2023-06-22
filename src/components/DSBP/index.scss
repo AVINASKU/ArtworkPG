@@ -1,0 +1,67 @@
+.artwork-dsbp {
+  .multiselect-padding {
+    margin-bottom: 10px;
+  }
+  .margin-left {
+    margin-left: 10px;
+  }
+  .margin-right {
+    margin-right: 20px;
+  }
+}
+.dsbp-select {
+  .p-inputwrapper-filled {
+    border: 1px solid blue;
+  }
+}
+
+.dsbp-multiselect-dropdown {
+  .p-checkbox {
+    display: none;
+  }
+
+  .p-multiselect-close {
+    display: none;
+  }
+
+  .p-multiselect-items .p-multiselect-item {
+    flex-direction: row !important;
+  }
+
+  .p-multiselect-header .p-multiselect-filter-container .p-inputtext {
+    width: 100%;
+  }
+
+  .p-multiselect-items-wrapper {
+    padding: 0px !important;
+  }
+
+  .city-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    // width: 270px;
+  }
+
+  .city-name {
+    flex: 1;
+    width: 380px;
+  }
+
+  .add-new-design-intent-icon,
+  .header-icons {
+    margin-left: 10px; /* Add appropriate margin */
+  }
+
+  .disable-icons {
+    opacity: 0.2;
+    pointer-events: none;
+  }
+  .ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+}

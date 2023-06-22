@@ -48,7 +48,7 @@ export const submitConfirmColorDevelopment = async (
 ) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!CONFIRMCOLORDEVELOPMENTDONE_FLOW/actions/ConfirmColorDevelopmentDone`;
+  let apiURL = `${DEVURL}/confirmColorDevelopment/${id}`;
   console.log("api url", apiURL);
   const colorDevelopment = await axiosInstance({
     url: apiURL,
@@ -57,6 +57,22 @@ export const submitConfirmColorDevelopment = async (
   });
 
   console.log("CDConfirmSubmitresponse", colorDevelopment, formData);
+
+  return true;
+};
+
+export const submitConfirmPrintTrial = async (formData, id, headers = {}) => {
+  const api = new Api();
+  const axiosInstance = await api.init({ headers });
+  let apiURL = `${DEVURL}/confirmPrintTrialDone/${id}`;
+  console.log("api url", apiURL);
+  const colorDevelopment = await axiosInstance({
+    url: apiURL,
+    method: "PATCH",
+    data: formData,
+  });
+
+  console.log("CPTConfirmSubmitresponse", colorDevelopment, formData);
 
   return true;
 };

@@ -18,6 +18,8 @@ import _ from "lodash";
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 import ProjectNameHeader from "./ProjectNameHeader";
 import CustomisedView from "./CustomisedView";
+import { generateUniqueKey } from "../../../utils";
+
 
 //const CustomisedView = React.lazy(() => import("./CustomisedView"));
 
@@ -566,25 +568,25 @@ const ProjectList = (props) => {
       "Full Kit Readiness Tracking",
     ];
 
-    const ProjectData = _.cloneDeep(myProjectList.myProject);
-    let allCol = [];
-    if (ProjectData.length) {
-      allCol = Object.keys(ProjectData[0]);
-      allCol.push("Full Kit Readiness Tracking");
-    }
-    let columnWidthMyProject = {};
-    if (allCol.length) {
-      allCol.forEach((column) => {
-        columnWidthMyProject[column] = 100;
-      });
-    }
+    // const ProjectData = _.cloneDeep(myProjectList.myProject);
+    // let allCol = [];
+    // if (ProjectData.length) {
+    //   allCol = Object.keys(ProjectData[0]);
+    //   allCol.push("Full Kit Readiness Tracking");
+    // }
+    // let columnWidthMyProject = {};
+    // if (allCol.length) {
+    //   allCol.forEach((column) => {
+    //     columnWidthMyProject[column] = 100;
+    //   });
+    // }
 
     localStorage.setItem("allColumnNames", JSON.stringify({}));
     localStorage.setItem("allColumnNames", JSON.stringify(allColumnNames));
-    localStorage.setItem(
-      "columnWidthMyProject",
-      JSON.stringify(columnWidthMyProject)
-    );
+    // localStorage.setItem(
+    //   "columnWidthMyProject",
+    //   JSON.stringify(columnWidthMyProject)
+    // );
 
     localStorage.removeItem("isCustomViewIsAddedMyProject");
     isCustomViewIsAddedMyProject(true);
@@ -664,30 +666,14 @@ const ProjectList = (props) => {
     <div className="myProjectAnddAllProjectList">
       {/* <Suspense fallback={ <Loading />}> */}
       {loader || loading || pegadata === null ? (
-          <Loading />
-        ): (   
-          <>
-            {pegadata !== undefined && (
-              <ProjectListHeader
-                header={props.header}
-                clearFilters={clearFilters}
-                clearFilter={clearFilter}
-                setVisible={setVisible}
-                saveSettings={saveSettings}
-                onSearchClick={onSearchClick}
-                // exportCSV={exportCSV}
-                isFilterEnabled={isFilterEnabled}
-                isResetEnabled={isResetEnabled}
-                allData={pegadata}
-                headers={allColumnNames}
-                CustomizeViewFlag={false}
-                ResetToDefaultFlag={false}
-                isTreeTableFlag={false}
-              />
-            )}
-            <CustomisedView
-              visible={visible}
-              setProjectColumnNames={setProjectColumnNames}
+        <Loading />
+      ) : (
+        <>
+          {pegadata !== undefined && (
+            <ProjectListHeader
+              header={props.header}
+              clearFilters={clearFilters}
+              clearFilter={clearFilter}
               setVisible={setVisible}
               saveSettings={saveSettings}
               onSearchClick={onSearchClick}
@@ -696,8 +682,12 @@ const ProjectList = (props) => {
               isResetEnabled={isResetEnabled}
               allData={pegadata}
               headers={allColumnNames}
+              filterFLag={false}
+              CustomizeViewFlag={false}
+              ResetToDefaultFlag={false}
+              isTreeTableFlag={false}
             />
-          
+          )}
           <CustomisedView
             visible={visible}
             setProjectColumnNames={setProjectColumnNames}
@@ -732,6 +722,7 @@ const ProjectList = (props) => {
             resizableColumns
             dataKey="Project_ID"
             reorderableColumns
+            key={generateUniqueKey("sss")}
             onColReorder={storeReorderedColumns}
             onResize={(e) => console.log("resize", e)}
             onResizeCapture={(e) => console.log("e", e)}

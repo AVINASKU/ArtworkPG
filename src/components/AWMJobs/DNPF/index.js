@@ -18,6 +18,8 @@ import {
   submitColorDevelopment,
 } from "../../../apis/colorDevelopmentApi";
 import { CheckReadOnlyAccess } from "../../../utils";
+import IQCDFooterButtons from "../DesignJobs/IQCDFooterButtons";
+import { cloneDeep } from "lodash";
 
 const breadcrumb = [{ label: "Define Color Development & Print Trial" }];
 
@@ -37,6 +39,8 @@ function DNPF() {
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
   const [loader, setLoader] = useState(false);
+  const [selectAllCheckbox, setSelectAllCheckbox] = useState(false);
+
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const checkReadWriteAccess = CheckReadOnlyAccess();
@@ -57,8 +61,12 @@ function DNPF() {
     }
   }, [TaskDetailsData]);
   const handleCancel = () => {
-    return navigate(`/myTasks`);
+    return navigate(`/MyTasks`);
   };
+
+  // useEffect(() => {
+  //   setSubmittedDI(Math.random());
+  // });
 
   const handleDelete = (index) => {
     const sub = CD?.map((item, i) => {
@@ -74,7 +82,7 @@ function DNPF() {
   };
 
   useEffect(() => {
-    checkFormValidity();
+    checkFormValidity(CD);
   }, [data]);
 
   const addNewEmptyDesign = () => {
@@ -102,21 +110,33 @@ function DNPF() {
   };
 
   const addData = (fieldName, index, value, Design_Intent_Name) => {
-    let data = CD[index];
+    let CDdata = cloneDeep(CD);
+    let data = CDdata[index];
     data[fieldName] = value;
-    submittedDI.push(data);
-    setSubmittedDI(submittedDI);
-    checkFormValidity();
+    data["Design_Job_Name"] = Design_Intent_Name;
+    setCD(CDdata);
+    // submittedDI.push(data);
+    setSubmittedDI(Math.random());
+    checkFormValidity(CDdata);
   };
 
-  const checkFormValidity = () => {
-    const validTasks = CD?.filter((task) => {
-      return (
-        task?.Printer &&
-        task?.Printing_Process &&
-        task?.Substrate &&
-        task?.Select
-      );
+  useEffect(() => {
+    let count = 0;
+    CD?.forEach((obj) => {
+      if (obj.Select) {
+        count++;
+      }
+    });
+    if (CD.length === count) {
+      setSelectAllCheckbox(true);
+    } else {
+      setSelectAllCheckbox(false);
+    }
+  }, [submittedDI]);
+
+  const checkFormValidity = (CDdata) => {
+    const validTasks = CDdata?.filter((task) => {
+      return task?.Printing_Process && task?.Substrate && task?.Select;
     });
     if (validTasks.length > 0) {
       setFormValid(true);
@@ -126,11 +146,11 @@ function DNPF() {
   };
 
   const onSelectAll = (checked) => {
-    CD?.map((task) => {
-      if (task?.Event !== "submit") {
-        task.Select = checked;
-      }
-      return task;
+    CD?.forEach((task) => {
+      // if (task?.Event !== "submit") {
+      task.Select = checked;
+      // }
+      // return task;
     });
     setCD(CD);
     setUpdated(!updated);
@@ -167,7 +187,7 @@ function DNPF() {
       temp["instruction"] = "APPEND";
       temp["target"] = "NewPrintFeasibilityList";
       temp["content"] = {
-        DesignJobName: "Confirm Color Development",
+        DesignJobName: task?.Design_Job_Name,
         DesignJobID: taskDesignJobID,
         PrintingProcess: task?.Printing_Process,
         Substrate: task?.Substrate,
@@ -193,10 +213,10 @@ function DNPF() {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-
+    console.log("Submit Data for CD", formData, id, headers);
     await submitColorDevelopment(formData, id, headers);
     setLoader(false);
-    navigate(`/myTasks`);
+    navigate(`/MyTasks`);
   };
 
   const onSaveAsDraft = async () => {
@@ -218,7 +238,7 @@ function DNPF() {
         task.Design_Job_ID = "";
       }
 
-      task.Design_Job_Name = `New Print Feasibility${counter}`;
+      task.Design_Job_Name = task?.Design_Job_Name;
 
       return task;
     });
@@ -234,6 +254,7 @@ function DNPF() {
     console.log("full draft data --->", formData);
     await saveColorDevelopment(formData);
     setLoader(false);
+    // navigate(`/MyTasks`);
   };
 
   return (
@@ -242,10 +263,12 @@ function DNPF() {
         <CDHeader
           setAddNewDesign={addNewEmptyDesign}
           onSelectAll={onSelectAll}
+          selectAllCheckbox={selectAllCheckbox}
           breadcrumb={breadcrumb}
           headerName={headerName}
           label="Define Color Development & Print Trial"
           checkReadWriteAccess={checkReadWriteAccess}
+          data={data}
         />
         <div
           className="task-details"
@@ -257,8 +280,12 @@ function DNPF() {
             // display: "grid",
           }}
         >
-          {<TaskHeader {...data} />}
-
+          {<TaskHeader {...data} TaskDetailsData={TaskDetailsData} />}
+          {data?.Task_Status === "Complete" && (
+            <div className="task-completion">
+              This task is already submitted
+            </div>
+          )}
           {CD &&
             CD.length > 0 &&
             CD.map((item, index) => {
@@ -267,6 +294,7 @@ function DNPF() {
                   <CloneJobs
                     key={item.Design_Job_ID}
                     {...data}
+                    data={data}
                     item={item}
                     index={index}
                     addData={addData}
@@ -274,6 +302,12 @@ function DNPF() {
                     jobName={jobName}
                     setFormValid={setFormValid}
                     checkReadWriteAccess={checkReadWriteAccess}
+                    Artwork_Brand={
+                      TaskDetailsData?.ArtworkAgilityPage?.Artwork_Brand
+                    }
+                    Artwork_Category={
+                      TaskDetailsData?.ArtworkAgilityPage?.Artwork_Category
+                    }
                   />
                 );
               }
@@ -285,13 +319,14 @@ function DNPF() {
           formValid={formValid}
         /> */}
         </div>
-        <FooterButtons
+        <IQCDFooterButtons
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}
           formValid={!formValid}
           checkReadWriteAccess={checkReadWriteAccess}
           bottomFixed={true}
+          data={data}
         />
       </PageLayout>
     </LoadingOverlay>

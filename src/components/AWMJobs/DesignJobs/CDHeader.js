@@ -12,7 +12,9 @@ const CDHeader = ({
   label,
   headerName,
   disabled,
-  checkReadWriteAccess
+  checkReadWriteAccess,
+  data,
+  selectAllCheckbox,
 }) => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
@@ -25,7 +27,7 @@ const CDHeader = ({
       <i
         className="pi pi-times"
         onClick={() => {
-          navigate("/myTasks");
+          navigate("/MyTasks");
         }}
       ></i>
       <div className="actions">
@@ -59,12 +61,23 @@ const CDHeader = ({
                 setChecked(e.checked);
                 onSelectAll(e.checked);
               }}
-              checked={checked}
+              checked={selectAllCheckbox || checked}
               className="margin-right"
-              disabled={!checkReadWriteAccess || disabled}
+              disabled={
+                !checkReadWriteAccess ||
+                disabled ||
+                data?.Task_Status === "Complete"
+              }
             ></Checkbox>
             <div className="icon-label">
-              <label className={(!checkReadWriteAccess || disabled) && "disable-buttons"}>
+              <label
+                className={
+                  (!checkReadWriteAccess ||
+                    disabled ||
+                    data?.Task_Status === "Complete") &&
+                  "disable-buttons"
+                }
+              >
                 {" "}
                 Select All{" "}
               </label>
@@ -75,10 +88,23 @@ const CDHeader = ({
               src={filter}
               alt="filter logo"
               className="filter-icon filter-color-change"
-              disabled={!checkReadWriteAccess || disabled}
+              disabled={
+                !checkReadWriteAccess ||
+                disabled ||
+                data?.Task_Status === "Complete"
+              }
             />
             <div>
-              <label className="icon-label" disabled={(!checkReadWriteAccess || disabled) && true}>filter</label>
+              <label
+                className="icon-label"
+                disabled={
+                  !checkReadWriteAccess ||
+                  disabled ||
+                  (data?.Task_Status === "Complete" && true)
+                }
+              >
+                filter
+              </label>
             </div>
           </div>
           <div className="icon-items">
@@ -86,13 +112,23 @@ const CDHeader = ({
               src={plusCollapseImg}
               onClick={() => setAddNewDesign && setAddNewDesign()}
               className={`add-new-design-intent-icon ${
-                (!checkReadWriteAccess || disabled )&& "disabled-add"
+                (!checkReadWriteAccess ||
+                  disabled ||
+                  data?.Task_Status === "Complete") &&
+                "disabled-add"
               }`}
               alt=""
               disabled={!setAddNewDesign && true}
             />
             <div className="icon-label">
-              <label className={(!checkReadWriteAccess || disabled) && "disable-buttons"}>
+              <label
+                className={
+                  (!checkReadWriteAccess ||
+                    disabled ||
+                    data?.Task_Status === "Complete") &&
+                  "disable-buttons"
+                }
+              >
                 Add Color Development
               </label>
             </div>

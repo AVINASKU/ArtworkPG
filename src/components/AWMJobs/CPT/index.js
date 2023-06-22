@@ -15,12 +15,13 @@ import CloneJobs from "../DesignJobs/CloneJobs";
 import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
 import "./index.scss";
 import CDHeader from "../DesignJobs/CDHeader";
-import { submitConfirmColorDevelopment } from "../../../apis/colorDevelopmentApi";
+import { submitConfirmPrintTrial } from "../../../apis/colorDevelopmentApi";
 import { CheckReadOnlyAccess } from "../../../utils";
+import IQCDFooterButtons from "../DesignJobs/IQCDFooterButtons";
 
-const breadcrumb = [{ label: "Confirm Print Trial" }];
+const breadcrumb = [{ label: "Confirm Color Development & Print Trial" }];
 
-const headerName = "Confirm Print Trial";
+const headerName = "Confirm Color Development & Print Trial";
 const jobName = "CD_";
 
 function CPT() {
@@ -75,7 +76,7 @@ function CPT() {
     }
   }, [TaskDetailsData]);
   const handleCancel = () => {
-    return navigate(`/myTasks`);
+    return navigate(`/MyTasks`);
   };
 
   const addNewEmptyDesign = () => {
@@ -205,9 +206,10 @@ function CPT() {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-
-    await submitConfirmColorDevelopment(formData, id, headers);
+    await dispatch(uploadFileAzure(azureFile));
+    await submitConfirmPrintTrial(formData, id, headers);
     setLoader(false);
+    navigate(`/MyTasks`);
   };
 
   const onSaveAsDraft = async () => {
@@ -233,6 +235,7 @@ function CPT() {
       DesignIntentList: submitOnlySelectedData,
     };
     console.log("full draft data --->", submitOnlySelectedData);
+    await dispatch(uploadFileAzure(azureFile));
     await saveDesignIntent(formData);
   };
 
@@ -244,9 +247,10 @@ function CPT() {
           onSelectAll={onSelectAll}
           breadcrumb={breadcrumb}
           headerName={headerName}
-          label="Confirm Print Trial"
+          label="Confirm Color Development & Print Trial"
           disabled={true}
           checkReadWriteAccess={checkReadWriteAccess}
+          data={data}
         />
         <div
           className="task-details"
@@ -258,7 +262,12 @@ function CPT() {
             // display: "grid",
           }}
         >
-          {<TaskHeader {...data} />}
+          {<TaskHeader {...data} TaskDetailsData={TaskDetailsData} />}
+          {data?.Task_Status === "Complete" && (
+            <div className="task-completion">
+              This task is already submitted
+            </div>
+          )}
           {CD &&
             CD.length > 0 &&
             CD.map((item, index) => {
@@ -287,7 +296,7 @@ function CPT() {
               }
             })}
         </div>
-        <FooterButtons
+        <IQCDFooterButtons
           handleCancel={handleCancel}
           onSaveAsDraft={onSaveAsDraft}
           onSubmit={onSubmit}
@@ -295,6 +304,7 @@ function CPT() {
           cptFormValid={cptFormValid}
           checkReadWriteAccess={checkReadWriteAccess}
           bottomFixed={true}
+          data={data}
         />
       </PageLayout>
     </LoadingOverlay>

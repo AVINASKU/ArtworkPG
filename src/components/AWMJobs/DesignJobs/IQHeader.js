@@ -13,7 +13,9 @@ const IQHeader = ({
   headerName,
   disabled,
   showPage,
-  checkReadWriteAccess
+  checkReadWriteAccess,
+  data,
+  selectAllCheckbox,
 }) => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
@@ -26,7 +28,7 @@ const IQHeader = ({
       <i
         className="pi pi-times"
         onClick={() => {
-          navigate("/myTasks");
+          navigate("/MyTasks");
         }}
       ></i>
       <div className="actions">
@@ -60,12 +62,21 @@ const IQHeader = ({
                 setChecked(e.checked);
                 onSelectAll(e.checked);
               }}
-              checked={checked}
+              checked={selectAllCheckbox || checked}
               className="margin-right"
-              disabled={(!checkReadWriteAccess ||showPage === "CNIQ") && true}
+              disabled={
+                (!checkReadWriteAccess ||
+                  showPage === "CNIQ" ||
+                  data?.Task_Status === "Complete") &&
+                true
+              }
             ></Checkbox>
             <div className="icon-label">
-              <label className={(!checkReadWriteAccess ||disabled) && "disable-buttons"}>
+              <label
+                className={
+                  (!checkReadWriteAccess || disabled) && "disable-buttons"
+                }
+              >
                 {" "}
                 Select All{" "}
               </label>
@@ -76,12 +87,22 @@ const IQHeader = ({
               src={filter}
               alt="filter logo"
               className="filter-icon filter-color-change"
-              disabled={(!checkReadWriteAccess ||showPage === "CNIQ") && true}
+              disabled={
+                (!checkReadWriteAccess ||
+                  showPage === "CNIQ" ||
+                  data?.Task_Status === "Complete") &&
+                true
+              }
             />
             <div>
               <label
                 className="icon-label"
-                disabled={(!checkReadWriteAccess ||showPage === "CNIQ") && true}
+                disabled={
+                  (!checkReadWriteAccess ||
+                    showPage === "CNIQ" ||
+                    data?.Task_Status === "Complete") &&
+                  true
+                }
               >
                 filter
               </label>
@@ -92,15 +113,33 @@ const IQHeader = ({
               src={plusCollapseImg}
               onClick={() => setAddNewDesign && setAddNewDesign()}
               className={`add-new-design-intent-icon ${
-                (!checkReadWriteAccess || showPage === "CNIQ") && "disabled-add"
+                (!checkReadWriteAccess ||
+                  showPage === "CNIQ" ||
+                  data?.Task_Status === "Complete") &&
+                "disabled-add"
               }`}
               alt=""
-              disabled={(!checkReadWriteAccess || showPage === "CNIQ") && true}
+              disabled={
+                (!checkReadWriteAccess ||
+                  showPage === "CNIQ" ||
+                  data?.Task_Status === "Complete") &&
+                true
+              }
             />
             <div className="icon-label">
               <label
-                className={(!checkReadWriteAccess || showPage === "CNIQ") && "disable-buttons"}
-                disabled={(!checkReadWriteAccess || showPage === "CNIQ") && true}
+                className={
+                  (!checkReadWriteAccess ||
+                    showPage === "CNIQ" ||
+                    data?.Task_Status === "Complete") &&
+                  "disable-buttons"
+                }
+                disabled={
+                  (!checkReadWriteAccess ||
+                    showPage === "CNIQ" ||
+                    data?.Task_Status === "Complete") &&
+                  true
+                }
               >
                 Add Ink Qualification
               </label>
