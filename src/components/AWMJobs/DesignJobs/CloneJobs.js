@@ -95,7 +95,23 @@ const CloneJobs = ({
         temp.push(ptr.Code);
       });
     setPrinters(temp);
-  }, []);
+  }, [Printer]);
+
+  useEffect(() => {
+    setPantone(Pantone);
+  }, [Pantone]);
+
+  useEffect(() => {
+    setPrinterProcess(Printing_Process);
+  }, [Printing_Process]);
+
+  useEffect(() => {
+    setSubstarteData(Substrate);
+  }, [Substrate]);
+
+  useEffect(() => {
+    setAdditionalInfo(Additional_Info);
+  }, [Additional_Info]);
 
   useEffect(() => {
     if (DropDownValuesData) {
@@ -222,12 +238,25 @@ const CloneJobs = ({
           src={deleteIcon}
           alt="filter logo"
           onClick={() =>
-            checkReadWriteAccess && showPage !== "CNIQ" && handleDelete(index)
+            checkReadWriteAccess &&
+            showPage !== "CNIQ" &&
+            showPage !== "CCD" &&
+            showPage !== "CPT" &&
+            data?.Task_Status !== "Complete" &&
+            handleDelete(index)
           }
           className={`delete-icons ${
-            showPage === "CCD" || (showPage === "CPT" && "disabled-add")
+            ((data?.Task_Status === "Complete" && showPage === "CCD") ||
+              showPage === "CPT") &&
+            "disabled-add"
           }`}
-          disabled={!checkReadWriteAccess || showPage === "CNIQ"}
+          disabled={
+            !checkReadWriteAccess ||
+            showPage === "CNIQ" ||
+            showPage === "CCD" ||
+            showPage === "CPT" ||
+            data?.Task_Status === "Complete"
+          }
         />
       </>
     );
@@ -266,10 +295,13 @@ const CloneJobs = ({
           ? substrateData + "_"
           : "Substrate" + "_"
         : "") +
-      (Artwork_Brand ? Artwork_Brand?.map((obj) => obj) : "Brand" + "_") +
+      (Artwork_Brand
+        ? Artwork_Brand?.map((obj) => obj.Brand_Name)
+        : "Brand" + "_") +
       (Artwork_Category
-        ? Artwork_Category?.map((obj) => obj)
+        ? Artwork_Category?.map((obj) => obj.Category_Name)
         : "Category" + "_") +
+      "_" +
       Project_Name +
       "_" +
       (additionalInformation ? additionalInformation : "Additional info");
@@ -338,14 +370,21 @@ const CloneJobs = ({
                 }}
                 checked={checked}
                 className="margin-right"
-                disabled={!checkReadWriteAccess || disabled}
+                disabled={
+                  !checkReadWriteAccess ||
+                  disabled ||
+                  data.Task_Status === "Complete"
+                }
               ></Checkbox>
             </div>
           </Col>
         )}
         <Col sm={2}>
           <div>
-            <label htmlFor="cluster">Printer </label>
+            <label htmlFor="cluster">
+              Printer{" "}
+              {showPage === "DNIQ" || showPage === "CNIQ" ? <sup> *</sup> : ""}
+            </label>
             <MultiSelect
               id="printers"
               value={printers}
@@ -378,7 +417,8 @@ const CloneJobs = ({
                 (!checkReadWriteAccess ||
                   showPage === "CCD" ||
                   showPage === "CPT" ||
-                  showPage === "CNIQ") &&
+                  showPage === "CNIQ" ||
+                  data.Task_Status === "Complete") &&
                 true
               }
               placeholder="Select Printer"
@@ -408,7 +448,8 @@ const CloneJobs = ({
                 disabled={
                   (!checkReadWriteAccess ||
                     showPage === "CCD" ||
-                    showPage === "CPT") &&
+                    showPage === "CPT" ||
+                    data.Task_Status === "Complete") &&
                   true
                 }
               />
@@ -441,7 +482,8 @@ const CloneJobs = ({
                 disabled={
                   (!checkReadWriteAccess ||
                     showPage === "CCD" ||
-                    showPage === "CPT") &&
+                    showPage === "CPT" ||
+                    data.Task_Status === "Complete") &&
                   true
                 }
               />
@@ -465,7 +507,9 @@ const CloneJobs = ({
                 }}
                 aria-describedby="pantone-help"
                 disabled={
-                  !checkReadWriteAccess || (showPage === "CNIQ" && true)
+                  !checkReadWriteAccess ||
+                  (showPage === "CNIQ" && true) ||
+                  data.Task_Status === "Complete"
                 }
               />
             </div>
@@ -488,7 +532,8 @@ const CloneJobs = ({
                     (!checkReadWriteAccess ||
                       showPage === "CCD" ||
                       showPage === "CPT" ||
-                      showPage === "CNIQ") &&
+                      showPage === "CNIQ" ||
+                      data.Task_Status === "Complete") &&
                     true
                   }
                 />
@@ -518,13 +563,15 @@ const CloneJobs = ({
                       disabled={
                         (!checkReadWriteAccess ||
                           showPage === "CCD" ||
-                          showPage === "CPT") &&
+                          showPage === "CPT" ||
+                          data.Task_Status === "Complete") &&
                         true
                       }
                       className={
                         (!checkReadWriteAccess ||
                           showPage === "CCD" ||
-                          showPage === "CPT") &&
+                          showPage === "CPT" ||
+                          data.Task_Status === "Complete") &&
                         "disabled-text"
                       }
                     ></Checkbox>
@@ -534,7 +581,8 @@ const CloneJobs = ({
                     className={
                       (!checkReadWriteAccess ||
                         showPage === "CCD" ||
-                        showPage === "CPT") &&
+                        showPage === "CPT" ||
+                        data.Task_Status === "Complete") &&
                       "disabled-text"
                     }
                   >
@@ -555,7 +603,10 @@ const CloneJobs = ({
                         checked={event === "submit" ? true : CDConfirmation}
                         className="margin-right"
                         disabled={
-                          (!checkReadWriteAccess || showPage === "CPT") && true
+                          (!checkReadWriteAccess ||
+                            showPage === "CPT" ||
+                            data.Task_Status === "Complete") &&
+                          true
                         }
                       ></Checkbox>
                     </div>
@@ -563,7 +614,9 @@ const CloneJobs = ({
                     <label
                       htmlFor="printTrailNeeded"
                       className={
-                        (!checkReadWriteAccess || showPage === "CPT") &&
+                        (!checkReadWriteAccess ||
+                          showPage === "CPT" ||
+                          data.Task_Status === "Complete") &&
                         "disabled-text"
                       }
                     >
@@ -591,7 +644,8 @@ const CloneJobs = ({
                           disabled={
                             !checkReadWriteAccess ||
                             showPage === "CCD" ||
-                            (showPage === "CPT" && !CDConfirmation)
+                            (showPage === "CPT" && !CDConfirmation) ||
+                            data.Task_Status === "Complete"
                           }
                         ></Checkbox>
                       </div>
@@ -601,7 +655,8 @@ const CloneJobs = ({
                         className={
                           !checkReadWriteAccess ||
                           showPage === "CCD" ||
-                          (showPage === "CPT" && !CDConfirmation)
+                          (showPage === "CPT" && !CDConfirmation) ||
+                          data.Task_Status === "Complete"
                             ? "disabled-text"
                             : "enabled-text"
                         }
@@ -651,11 +706,16 @@ const CloneJobs = ({
                 }}
                 checked={event === "submit" ? true : iddsaChecked}
                 className="margin-right"
-                disabled={!checkReadWriteAccess}
+                disabled={
+                  !checkReadWriteAccess || data.Task_Status === "Complete"
+                }
               ></Checkbox>
               <label
                 htmlFor="iddsa"
-                className={!checkReadWriteAccess && "disabled-text"}
+                className={
+                  (!checkReadWriteAccess || data.Task_Status === "Complete") &&
+                  "disabled-text"
+                }
               >
                 {" "}
                 IDD Sample Approved
@@ -669,11 +729,18 @@ const CloneJobs = ({
                 }}
                 checked={event === "submit" ? true : iddsltaChecked}
                 className="margin-right"
-                disabled={!checkReadWriteAccess || !formValid}
+                disabled={
+                  !checkReadWriteAccess ||
+                  !iddsaChecked ||
+                  data.Task_Status === "Complete"
+                }
               ></Checkbox>
               <label
                 htmlFor="iddslta"
-                className={!checkReadWriteAccess && "disabled-text"}
+                className={
+                  (!checkReadWriteAccess || data.Task_Status === "Complete") &&
+                  "disabled-text"
+                }
               >
                 {" "}
                 IDD Sample Lab Test Approved
@@ -713,7 +780,7 @@ const CloneJobs = ({
             designData={showPage === "CNIQ" ? IQ : CD}
             date={date}
             version={version}
-            disabled={!checkReadWriteAccess}
+            disabled={!checkReadWriteAccess || data.Task_Status === "Complete"}
             // ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
             // version={version}
           />

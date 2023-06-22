@@ -276,20 +276,21 @@ const ProjectPlanList = ({
     let currentUrlLastSeg = currentUrl.split("/")[3];
     const key = options?.key;
     const keyCode = key?.split("_");
-    const locaiton = window.location.pathname;
-    const url = `${locaiton.split("/")[1]}/${locaiton.split("/")[2]}/${
-      keyCode[0]
-    }/${key}/${currentUrlLastSeg}`;
+    const url = `MyTasks/${keyCode[0]}/${key}/${currentUrlLastSeg}`;
+    console.log("url", url);
+    console.log("url key", options.children.length === 0);
     return (
       <>
         {field === "Task" && (
           <span
             className={`${
-              (options.redirect === true || optionsData.Task) &&
-              optionsData.State !== "Awaiting"
+              optionsData.State === "Awaiting"
+                ? "dependant-task"
+                : options.children.length === 0
                 ? "task-link"
-                : "task dependant-task"
-            }`}
+                : "task"
+            }
+            `}
             onClick={() => {
               if (field && field.length && keyCode[0] !== "CPPFA") {
                 (options.redirect === true || optionsData.Task) &&

@@ -21,7 +21,7 @@ const UploadFile = ({
   designData,
   date,
   version,
-  disabled
+  disabled,
 }) => {
   console.log("data", data);
   console.log("item here here", item);
@@ -34,12 +34,11 @@ const UploadFile = ({
     console.log("item ----", item);
     if (item?.FileMetaDataList[0]) {
       console.log("here here", item?.FileMetaDataList[0]);
-      let uploadedFileName =
-        item?.FileMetaDataList[0]?.File_Name;
+      let uploadedFileName = item?.FileMetaDataList[0]?.File_Name;
       setUpdatedImg(uploadedFileName);
     }
   });
-  
+
   const handleViewProofScopeClick = async (event, fileUrl) => {
     event.preventDefault();
     viewProofScopeFile(`cloudflow://PP_FILE_STORE/aacdata/${fileUrl}`);
@@ -47,9 +46,18 @@ const UploadFile = ({
 
   let di_name;
   di_name =
-    version !== "V0" && designData && designData[0]?.FileMetaDataList[0]?.Timestamp !== ""
+    version !== "V0" &&
+    designData &&
+    designData[0]?.FileMetaDataList[0]?.Timestamp !== ""
       ? `${data?.Task_Name}_${version}_${date}`
       : `${data?.Task_Name}`;
+
+  // let di_name;
+  // di_name =
+  //   version !== "V0" &&
+  //   item?.DesignJobDetails[0]?.FileMetaDataList[0]?.Timestamp !== ""
+  //     ? `${item?.Task_Name}_${version}_${date}`
+  //     : `${item?.Task_Name}`;
 
   const onTemplateUpload = (e) => {
     let _totalSize = 0;
@@ -108,7 +116,13 @@ const UploadFile = ({
         disabled={disabled}
       />
       <div>
-        {designData[0]?.FileMetaDataList[0]?.File_Name === "" ? (fileName === "" ? `No files uploaded yet please upload file!` : ``) : (fileName === "" ? di_name : '')}
+        {designData[0]?.FileMetaDataList[0]?.File_Name === ""
+          ? fileName === ""
+            ? `No files uploaded yet please upload file!`
+            : ``
+          : fileName === ""
+          ? di_name
+          : ""}
       </div>
     </Col>
   );
