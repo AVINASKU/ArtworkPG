@@ -409,7 +409,7 @@ const CPPFA = ({
             cppfaDialogFlag && designIntent.Task_Status === "Complete"
               ? true
               : isAccessEmpty || riskLevel !== "Low"
-              ? yesOrNo === ""
+              ? designIntent.Task_Status !== "Complete" ? false : yesOrNo === ""
               : false
           }
         />
