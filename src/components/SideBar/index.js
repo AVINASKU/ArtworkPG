@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Nav, NavItem, Button, FormLabel } from "react-bootstrap";
+import { Nav, NavItem } from "react-bootstrap";
 import { NavLink, useLocation } from "react-router-dom";
 import PgLogo from "../../assets/images/logo.svg";
-import ReportsImg from "../../assets/images/projects.svg";
 import LogoutImg from "../../assets/images/logout.svg";
-import PlusImg from "../../assets/images/plus.svg";
 import plusCollapseImg from "../../assets/images/plusCollapse.svg";
 import ExpandImg from "../../assets/images/expand.svg";
 import ArrowDownImg from "../../assets/images/sort.svg";
@@ -16,8 +14,11 @@ import "./index.scss";
 import { Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAccessMatrix } from "../../store/actions/RoleBasedActions";
-import { getAccessDetails } from "../../utils";
+import {
+  fetchAccessMatrix,
+  fetchAccessRoles,
+} from "../../store/actions/RoleBasedActions";
+import { getAccessDetails, roles } from "../../utils";
 import { updateMode } from "../../store/actions/ProjectSetupActions";
 import { updateUser } from "../../apis/userApi";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
@@ -28,6 +29,7 @@ const SideBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { accessMatrix } = useSelector((state) => state?.accessMatrixReducer);
+  const { accessRoles } = useSelector((state) => state?.accessMatrixReducer);
   const User = useSelector((state) => state.UserReducer);
   const userInformation = User.userInformation;
   const [isToggle, setIsToggle] = useState(
@@ -39,6 +41,7 @@ const SideBar = () => {
 
   useEffect(() => {
     dispatch(fetchAccessMatrix());
+    dispatch(fetchAccessRoles());
   }, [dispatch]);
   const toggleSidebar = () => {
     sessionStorage.setItem("sideBarOpen", JSON.stringify(!isToggle));
@@ -90,6 +93,11 @@ const SideBar = () => {
   // Replace with the actual location path
   const accessDetails = getAccessDetails(userInformation.role, accessMatrix);
 
+  const rolesWithAccess = accessRoles.filter((accessRole) => {
+    const roleNames = accessRole.roles.map((role) => role.name);
+    return roleNames.some((roleName) => roles.includes(roleName));
+  });
+  // console.log(hasEmptyAccessForMyProjects);
   const navItems = {
     data: [
       {
@@ -163,10 +171,65 @@ const SideBar = () => {
             {pathName !== "/roles" &&
               navItems?.data?.map((item, index) => {
                 if (item.items) {
-                  const pageAccess = accessDetails.pages.find(
-                    (page) => page.path === item.url
-                  );
-                  if (pageAccess && pageAccess.access.length > 0) {
+                  //single user access
+                  // const pageAccess = accessDetails.pages.find(
+                  //   (page) => page.path === item.url
+                  // );
+                  // if (pageAccess && pageAccess.access.length > 0) {
+                  //   return (
+                  //     <NavItem
+                  //       key={index}
+                  //       className={
+                  //         item.items?.some(
+                  //           (subItem) => location.pathname === subItem.url
+                  //         ) || expandedItems.includes(index)
+                  //           ? "active"
+                  //           : ""
+                  //       }
+                  //     >
+                  //       <NavLink
+                  //         className={`nav-link ${isToggle && "parent-link"}`}
+                  //         to={item.url}
+                  //       >
+                  //         {isToggle ? (
+                  //           <>
+                  //             <div>
+                  //               <img src={item.img} alt="logos" />
+                  //             </div>
+                  //             <div>{isToggle ? item.name : ""}</div>
+                  //           </>
+                  //         ) : (
+                  //           <OverlayTrigger
+                  //             placement="right"
+                  //             overlay={
+                  //               <Tooltip className="tooltip">
+                  //                 <div className="toolname">{item.name}</div>
+                  //               </Tooltip>
+                  //             }
+                  //           >
+                  //             <div>
+                  //               <img src={item.img} alt="logos" />
+                  //             </div>
+                  //           </OverlayTrigger>
+                  //         )}
+                  //       </NavLink>
+                  //     </NavItem>
+                  //   );
+                  // } else {
+                  //   return null; // Hide the link if access is empty
+                  // }
+
+                  const hasAccess = rolesWithAccess.some((roleWithAccess) => {
+                    return (
+                      roleWithAccess.path === item.url &&
+                      roleWithAccess.roles.some((role) => {
+                        return (
+                          roles.includes(role.name) && role.access.length > 0
+                        );
+                      })
+                    );
+                  });
+                  if (hasAccess) {
                     return (
                       <NavItem
                         key={index}
@@ -207,15 +270,23 @@ const SideBar = () => {
                       </NavItem>
                     );
                   } else {
-                    return null; // Hide the link if access is empty
+                    return null; // Hide the link if user doesn't have access
                   }
                 }
               })}
 
             <div className={!isToggle ? "add-project" : "addProjectExpand"}>
               {pathName !== "/roles" &&
-                projectPlanPage &&
-                projectPlanPage.access.length > 0 && (
+                rolesWithAccess.some((roleWithAccess) => {
+                  return (
+                    roleWithAccess.path === "/projectPlan#ProjectSetup" &&
+                    roleWithAccess.roles.some((role) => {
+                      return (
+                        roles.includes(role.name) && role.access.length > 0
+                      );
+                    })
+                  );
+                }) && (
                   <NavItem
                     to="/projectPlan"
                     state={{ mode: "create" }}

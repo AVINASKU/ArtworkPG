@@ -77,7 +77,7 @@ import App from "../App";
 import { userUpdateAction } from "../store/actions/userActions.js";
 import { store } from "../store/store";
 import { RoleUser } from "../userRole";
-
+import { roles } from "../utils";
 export const updateUser = async (username, password) => {
   const userInformation = getUserInformation(username, password);
   if (userInformation) {
@@ -94,7 +94,7 @@ const getUserInformation = (username, password) => {
   if (user && user.password === password) {
     return {
       username: user.username,
-      role: user.role,
+      role: roles,
       permissions: user.permissions,
       bu: user.bu,
       region: user.region,

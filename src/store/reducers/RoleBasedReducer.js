@@ -1,5 +1,6 @@
 const initialState = {
   accessMatrix: [],
+  accessRoles: [],
   isLoading: false,
   error: null,
 };
@@ -20,6 +21,26 @@ const accessMatrixReducer = (state = initialState, action) => {
         error: null,
       };
     case "FETCH_ACCESS_MATRIX_FAILURE":
+      return {
+        ...state,
+        isLoading: false,
+        error: action.payload,
+      };
+
+    case "FETCH_ACCESS_ROLES_REQUEST":
+      return {
+        ...state,
+        isLoading: true,
+        error: null,
+      };
+    case "FETCH_ACCESS_ROLES_SUCCESS":
+      return {
+        ...state,
+        accessRoles: action?.payload,
+        isLoading: false,
+        error: null,
+      };
+    case "FETCH_ACCESS_ROLES_FAILURE":
       return {
         ...state,
         isLoading: false,
