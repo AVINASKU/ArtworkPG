@@ -188,6 +188,25 @@ const CPPFA = ({
                   </NavLink>
                 </li>
                 <li className="p-breadcrumb-chevron pi pi-chevron-right piChevronRightMargin"></li>
+                {url.length > 2 ? (
+                  <>
+                    <li className="">
+                      <NavLink
+                        to={`/${url[1]}/${url[2]}/${ProjectID}`}
+                        className="p-menuitem-link"
+                      >
+                        <span className="p-menuitem-text">
+                          {url[2] === "projectPlan"
+                            ? "Project Plan"
+                            : "All Projects"}
+                        </span>
+                      </NavLink>
+                    </li>
+                    <li className="p-breadcrumb-chevron pi pi-chevron-right piChevronRightMargin"></li>
+                  </>
+                ) : (
+                  ""
+                )}
                 <li className="">
                   <a href="#" className="p-menuitem-link">
                     <span className="p-menuitem-text">
@@ -199,7 +218,7 @@ const CPPFA = ({
             </nav>
           </div>
           <div className="p-dialog-header1">
-            <NavLink to={`/${myProjects}`}>{designIntent.Project_Name}</NavLink>
+            <NavLink to="/myProjects">{designIntent.Project_Name}</NavLink>
           </div>
         </div>
       }
@@ -240,7 +259,10 @@ const CPPFA = ({
                     designIntent.RiskLevel === ""
                   }
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
-                  disabled={isAccessEmpty || cppfaDialogFlag}
+                  disabled={
+                    isAccessEmpty ||
+                    (cppfaDialogFlag && designIntent.Task_Status === "Complete")
+                  }
                 />
                 <label className="radioLabel">Low Risk</label>
               </div>
@@ -252,7 +274,10 @@ const CPPFA = ({
                   value="Medium"
                   checked={designIntent.RiskLevel === "Medium"}
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
-                  disabled={isAccessEmpty || cppfaDialogFlag}
+                  disabled={
+                    isAccessEmpty ||
+                    (cppfaDialogFlag && designIntent.Task_Status === "Complete")
+                  }
                 />
                 <label className="radioLabel">Medium Risk</label>
               </div>
@@ -264,7 +289,10 @@ const CPPFA = ({
                   value="High"
                   checked={designIntent.RiskLevel === "High"}
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
-                  disabled={isAccessEmpty || cppfaDialogFlag}
+                  disabled={
+                    isAccessEmpty ||
+                    (cppfaDialogFlag && designIntent.Task_Status === "Complete")
+                  }
                 />
                 <label className="radioLabel">High Risk</label>
               </div>
@@ -302,14 +330,21 @@ const CPPFA = ({
                     )}
                   </p>
                 }
-                disabled={isAccessEmpty || cppfaDialogFlag}
+                disabled={
+                  isAccessEmpty ||
+                  (cppfaDialogFlag && designIntent.Task_Status === "Complete")
+                }
                 onValidationFail={(e) => onValidationFail(e)}
               />
             </Col>
             <Col></Col>
           </Row>
           <Row
-            hidden={riskLevel === "Low" || cppfaDialogFlag}
+            hidden={
+              riskLevel === "Low" ||
+              cppfaDialogFlag ||
+              designIntent.Task_Status === "Complete"
+            }
             className={
               (riskLevel !== "Low" && highRiskYesOrNo === "") || yesOrNo !== ""
                 ? "highRiskDataPaddingBottom"
@@ -371,11 +406,11 @@ const CPPFA = ({
           label="Confirm PPFA"
           onClick={handleSubmit}
           disabled={
-            cppfaDialogFlag
+            cppfaDialogFlag && designIntent.Task_Status === "Complete"
               ? true
-              : (isAccessEmpty || riskLevel !== "Low"
-                  ? yesOrNo === ""
-                  : false) || designIntent.Task_Status === "Complete"
+              : isAccessEmpty || riskLevel !== "Low"
+              ? yesOrNo === ""
+              : false
           }
         />
       </div>
