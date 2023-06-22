@@ -8,12 +8,10 @@ import { useSelector } from "react-redux";
 import ProjectPlanCompo from "../Projects/ProjectPlan/ProjectPlanCompo";
 import ConfirmationDialog from "./confirmationDialog";
 import TabsComponent from "./tabsComponent";
-import { getUnAuthoirzedAccess, CheckReadOnlyAccess } from "../../utils";
-
+import { hasEmptyAccessForProjectSetup } from "../../utils";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import ProjectListHeader from "../Projects/MyProjects/ProjectListHeader";
 import { ProjectService } from "../../service/PegaService";
-
 function ProjectSetup(props) {
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
@@ -21,22 +19,12 @@ function ProjectSetup(props) {
   const User = useSelector((state) => state.UserReducer);
   const userInformation = User.userInformation;
   const { accessMatrix } = useSelector((state) => state?.accessMatrixReducer);
+
   let path = "";
   if (window?.location?.pathname.includes("projectPlan")) {
     path = "/projectPlan";
   }
-
-  const accessDetails = getUnAuthoirzedAccess(
-    userInformation.role,
-    accessMatrix,
-    path
-  );
-
-  // Check if access is empty for the user's role and page
-  const isAccessEmpty = accessDetails === null || accessDetails.length === 0;
-  const isReadOnly = CheckReadOnlyAccess();
   const navigate = useNavigate();
-
   const [toggleButtons, setToggleButtons] = useState("Tabular");
   const [option, setOption] = useState("");
   const [visible, setVisible] = useState(false);
@@ -89,6 +77,7 @@ function ProjectSetup(props) {
   const onSearchClick = () => {
     isSearchSet(!isSearch);
   };
+  const isNoAccess = hasEmptyAccessForProjectSetup();
 
   const breadcrumb = (
     <div>
@@ -125,7 +114,7 @@ function ProjectSetup(props) {
   const [isColWidthSet, setColWidth] = useState(null);
 
   const [isFilterEnabled, setIsFilterEnabled] = useState(true);
-    // frozenCoulmns?.length || filters?.length || sortData?.length;
+  // frozenCoulmns?.length || filters?.length || sortData?.length;
 
   const isResetEnabled =
     // isReorderedColumn || isFilterEnabled ||
@@ -138,13 +127,13 @@ function ProjectSetup(props) {
 
   const test = (e) => {
     setIsFilterEnabled(e);
-  }
+  };
 
   const itemsData = [
     {
       name: "ProjectSetup",
       tabNameForDisplay: "Project Setup",
-      component: !isReadOnly ? (
+      component: isNoAccess ? (
         <div className="unauthorized-user">
           You are not authorized to access this page.
         </div>
@@ -327,7 +316,7 @@ function ProjectSetup(props) {
       id="projectActions"
       title="Actions"
       // disabled={false}
-      disabled={!isReadOnly}
+      disabled={isNoAccess}
       // data-popper-placement="bottom-end"
       // drop="down-end"
       align="end"

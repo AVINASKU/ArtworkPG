@@ -38,7 +38,7 @@ const ProjectPlanList = ({
   isSearch,
   setColWidth,
   childFunc,
-  test
+  test,
 }) => {
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
@@ -276,13 +276,17 @@ const ProjectPlanList = ({
     let currentUrlLastSeg = currentUrl.split("/")[3];
     const key = options?.key;
     const keyCode = key?.split("_");
-    const url = `MyTasks/${keyCode[0]}/${key}/${currentUrlLastSeg}`;
+    const locaiton = window.location.pathname;
+    const url = `${locaiton.split("/")[1]}/${locaiton.split("/")[2]}/${
+      keyCode[0]
+    }/${key}/${currentUrlLastSeg}`;
     return (
       <>
         {field === "Task" && (
           <span
             className={`${
-              (options.redirect === true || optionsData.Task) && optionsData.State !== "Awaiting"
+              (options.redirect === true || optionsData.Task) &&
+              optionsData.State !== "Awaiting"
                 ? "task-link"
                 : "task dependant-task"
             }`}

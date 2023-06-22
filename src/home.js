@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { updateUser } from "./apis/userApi";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { roles } from "./utils";
 
 function Home(props) {
   const user = props.username;
@@ -40,7 +41,12 @@ function Home(props) {
     const fetchData = async () => {
       if (combinedData.length > 0) {
         await updateUser(props.firstName, combinedData);
-        navigate("/myProjects");
+        if (roles.some((role) => role === "ProjectManager")) {
+          navigate("/myProjects");
+        } else {
+          // Set the redirect URL to AllProjects page for other roles or if the user doesn't have access to the "myProjects" page
+          navigate("/allProjects");
+        }
       }
     };
     fetchData();
