@@ -284,7 +284,9 @@ const CloneJobs = ({
     di_name =
       jobName +
       (jobName === "IQ_" ? (pantone ? pantone + "_" : "Pantone" + "_") : "") +
-      (selectedPrinter.length ? selectedPrinter + "_" : "Printer" + "_") +
+      (selectedPrinter.length
+        ? selectedPrinter.join(", ") + "_"
+        : "Printer" + "_") +
       (jobName !== "IQ_"
         ? printerProcess
           ? printerProcess + "_"

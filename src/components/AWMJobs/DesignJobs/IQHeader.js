@@ -108,7 +108,7 @@ const IQHeader = ({
               </label>
             </div>
           </div>
-          <div className="icon-items">
+          <div className="icon-items" style={{ textAlign: "center" }}>
             <img
               src={plusCollapseImg}
               onClick={() => setAddNewDesign && setAddNewDesign()}
