@@ -32,7 +32,7 @@ function ProjectPlanCompo(props) {
   const [activeSave, setActiveSave] = useState(true);
   // const [activeFlag, setActiveFlag] = useState(false);
   // Check if access is empty for the user's role and page
-  const isAccessEmpty = hasProjectPlanAccess();
+  const isAccessEmpty = CheckReadOnlyAccess();
   console.log(isAccessEmpty);
   const [activeFlag, setActiveFlag] = useState(!isAccessEmpty);
   const [loader, setLoader] = useState(false);
@@ -98,7 +98,7 @@ function ProjectPlanCompo(props) {
   useEffect(() => {
     getProjectPlanApi();
   }, [mode, props.tabNameForPP]);
-  
+
   const getRestructuredData = (apiData) => {
     let mainTempArr = [];
     let tasks = [];
