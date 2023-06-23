@@ -277,8 +277,7 @@ const ProjectPlanList = ({
     const key = options?.key;
     const keyCode = key?.split("_");
     const url = `MyTasks/${keyCode[0]}/${key}/${currentUrlLastSeg}`;
-    console.log("url", url);
-    console.log("url key", options.children.length === 0);
+    
     return (
       <>
         {field === "Task" && (
