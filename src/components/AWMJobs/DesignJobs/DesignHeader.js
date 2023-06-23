@@ -14,7 +14,7 @@ const DesignHeader = ({
   disabled,
   checkReadWriteAccess,
   taskName,
-  checkTaskISComplete
+  checkTaskISComplete,
 }) => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
@@ -37,13 +37,33 @@ const DesignHeader = ({
           <nav className="p-breadcrumb p-component" aria-label="Breadcrumb">
             <ul>
               <li className="p-breadcrumb-chevron pi pi-chevron-right"></li>
-              <li className="">
-                <NavLink to={`/${mytasks}`} className="p-menuitem-link">
-                  <span className="p-menuitem-text">
-                    {url[1] === "MyTasks" ? "My Tasks" : "All Tasks"}
-                  </span>
-                </NavLink>
-              </li>
+
+              {url[2] === "projectPlan" ? (
+                <>
+                  {" "}
+                  <li className="">
+                    <NavLink to={`/${mytasks}`} className="p-menuitem-link">
+                      <span className="p-menuitem-text">{mytasks}</span>
+                    </NavLink>{" "}
+                  </li>{" "}
+                  <li className="p-breadcrumb-chevron pi pi-chevron-right"></li>
+                  <li className="">
+                    <NavLink
+                      to={`/${mytasks}/${url[2]}/${url[5]}`}
+                      className="p-menuitem-link"
+                    >
+                      <span className="p-menuitem-text">{url[2]}</span>
+                    </NavLink>{" "}
+                  </li>
+                </>
+              ) : (
+                <li className="">
+                  <NavLink to={`/${mytasks}`} className="p-menuitem-link">
+                    <span className="p-menuitem-text">{mytasks}</span>
+                  </NavLink>{" "}
+                </li>
+              )}
+
               <li className="p-breadcrumb-chevron pi pi-chevron-right"></li>
               <li className="">
                 <a href="#" className="p-menuitem-link">
@@ -86,7 +106,11 @@ const DesignHeader = ({
               <label className="icon-label">filter</label>
             </div>
           </div>
-          <div className={ checkTaskISComplete ? "icon-items disabled": "icon-items"}>
+          <div
+            className={
+              checkTaskISComplete ? "icon-items disabled" : "icon-items"
+            }
+          >
             <img
               src={plusCollapseImg}
               onClick={() =>

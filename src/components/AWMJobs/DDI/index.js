@@ -12,7 +12,7 @@ import "../DesignJobs/index.scss";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { CheckReadOnlyAccess, Loading } from "../../../utils";
+import { hasAllAccess, Loading } from "../../../utils";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
@@ -43,7 +43,7 @@ function DDI() {
     TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Status === "Complete";
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
 
-  const checkReadWriteAccess = CheckReadOnlyAccess();
+  const checkReadWriteAccess = hasAllAccess();
 
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
@@ -96,23 +96,23 @@ function DDI() {
     setUpdated(!updated);
   };
 
-  const addData = (fieldName, index, value, Design_Intent_Name) => { 
-    if(checkTaskISComplete) 
-      return setEnableSubmit(true);
+  const addData = (fieldName, index, value, Design_Intent_Name) => {
+    if (checkTaskISComplete) return setEnableSubmit(true);
     let data = designIntent[index];
     data[fieldName] = value;
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
     let values = false;
-    const hasValues = designIntent.every(
-      (item) => {        
-        setEnableSubmit(true);
-       if(item.Select){
-          values = item.Agency_Reference !== "" && item.Cluster !== "";
-      } 
-      else{
+    const hasValues = designIntent.every((item) => {
+      setEnableSubmit(true);
+      if (item.Select) {
+        values = item.Agency_Reference !== "" && item.Cluster !== "";
+      } else {
         console.log("designIntent else", designIntent);
-        let data = designIntent.filter(item => item.Select && item.Agency_Reference !== "" && item.Cluster !== "");
+        let data = designIntent.filter(
+          (item) =>
+            item.Select && item.Agency_Reference !== "" && item.Cluster !== ""
+        );
         console.log("value else", data);
         if (data.length !== 0) {
           values = true;
@@ -120,10 +120,9 @@ function DDI() {
           values = false;
         }
       }
-        return values
-      }
-    );
-    setEnableSubmit(!hasValues);  
+      return values;
+    });
+    setEnableSubmit(!hasValues);
     setSubmittedDI(submittedDI);
   };
 
@@ -255,7 +254,9 @@ function DDI() {
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
-        {checkTaskISComplete && <div className="task-completion">This task is already submitted</div>}
+        {checkTaskISComplete && (
+          <div className="task-completion">This task is already submitted</div>
+        )}
         {loading || loader || designIntent === null ? (
           <Loading />
         ) : (
