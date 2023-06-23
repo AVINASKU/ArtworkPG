@@ -611,8 +611,8 @@ const ProjectPlanList = ({
     setSortData([column, direction]);
     localStorage.setItem("allProjectSortingData", JSON.stringify(sortData));
   };
-
   const pegadata1 = pegadata?.map((obj) => obj.data);
+  const pegadata2 = pegadata1?.map((obj) => { return {...obj, AWM_Project_ID: ProjectID}});
 
   const [showApproveDialogCPPFA, setShowApproveDialogCPPFA] = useState(false);
   const [selectedTaskApproveDialogCPPFA, setSelectedTaskApproveDialogCPPFA] =
@@ -660,7 +660,7 @@ const ProjectPlanList = ({
           onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
           showTaskDialog={showApproveDialogCPPFA}
           selectedTaskData={selectedTaskApproveDialogCPPFA}
-          pegadata={pegadata1}
+          pegadata={pegadata2}
           getProjectPlanApi={getProjectPlanApi}
           TaskDetailsData={TaskDetailsData}
         />
