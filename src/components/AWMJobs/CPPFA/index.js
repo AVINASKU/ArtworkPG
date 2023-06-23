@@ -69,8 +69,10 @@ const CPPFA = ({
       }
       pegadata.find((el) => {
         if (
-          (el.AWM_Project_ID === ProjectID && el.Task === "Define Color Development & Print Trial") ||
-          (el.AWM_Project_ID === ProjectID && el.Task_Name === "Define New Print Feasibility scope")
+          (el.AWM_Project_ID === ProjectID &&
+            el.Task === "Define Color Development & Print Trial") ||
+          (el.AWM_Project_ID === ProjectID &&
+            el.Task_Name === "Define New Print Feasibility scope")
         ) {
           setCppfaDialogFlag(true);
         }
@@ -222,9 +224,7 @@ const CPPFA = ({
               </ul>
             </nav>
           </div>
-          <div className="p-dialog-header1">
-            <NavLink to="/myProjects">{designIntent.Project_Name}</NavLink>
-          </div>
+          <div className="p-dialog-header1">{designIntent.Project_Name}</div>
         </div>
       }
     >
