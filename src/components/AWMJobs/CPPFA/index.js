@@ -77,6 +77,7 @@ const CPPFA = ({
           setCppfaDialogFlag(true);
         }
       });
+      console.log("TaskDetailsData:", TaskDetailsData);
     }
   }, [TaskDetailsData]);
 
