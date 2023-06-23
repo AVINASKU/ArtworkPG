@@ -16,7 +16,11 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import moment from "moment";
-import { CheckReadOnlyAccess, Loading } from "../../../utils";
+import {
+  CheckReadOnlyAccess,
+  Loading,
+  hasProjectPlanAccess,
+} from "../../../utils";
 import { getMyProject } from "../../../store/actions/ProjectActions";
 
 function ProjectPlanCompo(props) {
@@ -28,7 +32,8 @@ function ProjectPlanCompo(props) {
   const [activeSave, setActiveSave] = useState(true);
   // const [activeFlag, setActiveFlag] = useState(false);
   // Check if access is empty for the user's role and page
-  const isAccessEmpty = CheckReadOnlyAccess();
+  const isAccessEmpty = hasProjectPlanAccess();
+  console.log(isAccessEmpty);
   const [activeFlag, setActiveFlag] = useState(!isAccessEmpty);
   const [loader, setLoader] = useState(false);
   const navigate = useNavigate();

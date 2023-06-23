@@ -38,7 +38,7 @@ const ProjectPlanList = ({
   isSearch,
   setColWidth,
   childFunc,
-  test
+  test,
 }) => {
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
@@ -283,7 +283,13 @@ const ProjectPlanList = ({
       <>
         {field === "Task" && (
           <span
-            className={`${optionsData.State === "Awaiting" ? "dependant-task" : (options.children.length === 0) ? "task-link" : "task"}
+            className={`${
+              optionsData.State === "Awaiting"
+                ? "dependant-task"
+                : options.children.length === 0
+                ? "task-link"
+                : "task"
+            }
             `}
             onClick={() => {
               if (field && field.length && keyCode[0] !== "CPPFA") {

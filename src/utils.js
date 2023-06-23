@@ -3,7 +3,7 @@ import moment from "moment";
 import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchAccessMatrix } from "./store/actions/RoleBasedActions";
-
+import { TrainingMode } from "./trainingmode.js";
 export const changeDateFormat = (value) => {
   let newDate = value
     ? moment(value, "YYYYMMDDTHHmmss.SSS [GMT]").format("DD-MMM-YY")
@@ -140,14 +140,13 @@ export const optionList = (data, fieldName) => {
   const uniqueSMOs = new Set();
 
   // Iterate over the array and add "Artwork_SMO" values to the Set
-  if(data && data.length){
-  data.forEach((item) => {
-    if (item[fieldName] || item[fieldName]===0) {
-      uniqueSMOs.add(item[fieldName]);
-    }
-  });
+  if (data && data.length) {
+    data.forEach((item) => {
+      if (item[fieldName] || item[fieldName] === 0) {
+        uniqueSMOs.add(item[fieldName]);
+      }
+    });
   }
-
 
   // Convert the Set to an array
   const optionList = Array.from(uniqueSMOs);
@@ -155,17 +154,125 @@ export const optionList = (data, fieldName) => {
   return optionList;
 };
 
- export const generateUniqueKey = (fieldName) => {
-    const timestamp = new Date().getTime();
-    return `${fieldName}_${timestamp}`;
-  };
+// export const generateUniqueKey = (fieldName) => {
+//   const timestamp = new Date().getTime();
+//   return `${fieldName}_${timestamp}`;
+// };
 
-  export const addEllipsis = (text, maxLength)=>{
-  
-   if (text.length <= maxLength) {
+export const roles = TrainingMode?.map((selection) => selection.role.name);
+
+const GetPageRoles = () => {
+  const url = window.location.pathname;
+  const { accessRoles } = useSelector((state) => state?.accessMatrixReducer);
+  const matchingAccessRoles = accessRoles?.filter((accessRole) =>
+    url.includes(accessRole?.page)
+  );
+  // Extract the access roles for the specified roles
+  const extractedAccessRoles = matchingAccessRoles?.map((accessRole) => {
+    const roleAccess = accessRole?.roles?.filter((roleObj) =>
+      roles.includes(roleObj.name)
+    );
+    return {
+      page: accessRole.page,
+      path: accessRole.path,
+      roles: roleAccess,
+    };
+  });
+
+  // Convert the access roles to the desired format
+  const formattedAccessRoles = extractedAccessRoles?.map((accessRole) => ({
+    page: accessRole.page,
+    path: accessRole.path,
+    roles: accessRole.roles.map((roleObj) => ({
+      name: roleObj.name,
+      access: roleObj.access,
+    })),
+  }));
+
+  return formattedAccessRoles;
+};
+
+export const hasEmptyAccessForProjectSetup = () => {
+  const matchingPageRole = GetPageRoles()?.find((pageRole) => {
+    return (
+      pageRole.page === "projectPlan" && pageRole.path.includes("ProjectSetup")
+    );
+  });
+
+  if (matchingPageRole) {
+    return matchingPageRole.roles.every((role) => {
+      return role.access.length === 0;
+    });
+  }
+
+  return false;
+};
+
+export const hasProjectPlanAccess = () => {
+  const matchingPageRole = GetPageRoles()?.find((pageRole) => {
+    return (
+      pageRole.page === "projectPlan" && pageRole.path.includes("ProjectPlan")
+    );
+  });
+
+  if (matchingPageRole) {
+    const hasAllAccess = matchingPageRole.roles.some((role) => {
+      return (
+        role.access.includes("Read") &&
+        role.access.includes("Write") &&
+        role.access.includes("Edit") &&
+        role.access.includes("Delete")
+      );
+    });
+
+    if (hasAllAccess) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+export function hasAllAccess() {
+  return GetPageRoles()?.some((pageRole) => {
+    return pageRole?.roles?.some((role) => {
+      return (
+        role.access.includes("Read") &&
+        role.access.includes("Write") &&
+        role.access.includes("Edit") &&
+        role.access.includes("Delete")
+      );
+    });
+  });
+}
+
+// const hasReadAccess = (pageRoles) => {
+//   return pageRoles.some((pageRole) => {
+//     return pageRole.roles.some((role) => {
+//       return (
+//         role.access.includes("Read") &&
+//         !role.access.includes("Write") &&
+//         !role.access.includes("Edit") &&
+//         !role.access.includes("Delete")
+//       );
+//     });
+//   });
+// };
+
+// const hasReadAccessForMyProjects = hasReadAccess(
+//   pageRoles.filter((pageRole) => pageRole.page === urls?.split("/")[1])
+// );
+// // console.log(hasReadAccessForMyProjects); // true
+export const generateUniqueKey = (fieldName) => {
+  const timestamp = new Date().getTime();
+  return `${fieldName}_${timestamp}`;
+};
+
+export const addEllipsis = (text, maxLength) => {
+  if (text.length <= maxLength) {
     return text;
   }
 
   const trimmedText = text.substring(0, maxLength);
   return trimmedText + "...";
-  }
+};
