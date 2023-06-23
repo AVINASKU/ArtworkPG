@@ -15,7 +15,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import FooterButtons from "../AWMJobs/DesignJobs/FooterButtons";
 import "./index.scss";
-import { onSortData } from "../../utils";
+import { onSortData, Loading } from "../../utils";
 
 const projectId = "A-2316";
 
@@ -31,6 +31,8 @@ const DSBP = () => {
   const [totalNoOfDsbpId, setTotalNoOfDsbpId] = useState(0);
   const [totalNoOfPMP, setTotalNoOfPMP] = useState(0);
   const [totalNoOfPOA, setTotalNoOfPOA] = useState(0);
+  const [actionDialog, setActionDialog] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   const breadcrumb = [
     { label: "My Tasks", url: "/myTasks" },
@@ -133,6 +135,7 @@ const DSBP = () => {
   };
 
   const onActionSubmit = async (formData) => {
+    setLoader(true);
     console.log("submitted...!", formData);
     let updatedData = {};
     let updatedDataList = selected.map((pmpDetails)=>{
@@ -161,6 +164,8 @@ const DSBP = () => {
     const updatedPmpDetails = { ArtworkAgilityPMPs: updatedDataList };
     console.log("updatedDataObject", updatedPmpDetails);
     await onSubmitDsbpAction(updatedPmpDetails);
+    setActionDialog(false);
+    setLoader(false);
   };
 
 
@@ -200,38 +205,48 @@ const DSBP = () => {
 
   return (
     <div className="artwork-dsbp myProjectAnddAllProjectList">
-      <ArtworkHeader
-        breadcrumb={breadcrumb}
-        headerName={headerName}
-        selected={selected}
-        onActionSubmit={onActionSubmit}
-        label="Artwork Alignment"
-      />
-      <ProjectNameHeader />
-      <SelectDsbpId
-        dropdownlist={dropdownlist}
-        addDSBPIntoProject={addDSBPIntoProject}
-        totalNoOfDsbpId={totalNoOfDsbpId}
-        totalNoOfPMP={totalNoOfPMP}
-        totalNoOfPOA={totalNoOfPOA}
-      />
-      <AgilityList
-        selected={selected}
-        setSelected={setSelected}
-        selectAllChecked={selectAllChecked}
-        handleSelect={handleSelect}
-        handleSelectAll={handleSelectAll}
-        dsbpPmpData={dsbpPmpData}
-        filteredDsbpData={filteredDsbpData}
-        onSort={onSort}
-        onGlobalFilterChange={onGlobalFilterChange}
-        selectedFields={selectedFields}
-      />
-      <FooterButtons
-        handleCancel={handleCancel}
-        hideSaveButton={true}
-        onSubmit={onSubmit}
-      />
+      {loader || totalNoOfDsbpId === null ? (
+          <Loading />
+        ): (
+          <>
+            <ArtworkHeader
+              breadcrumb={breadcrumb}
+              headerName={headerName}
+              selected={selected}
+              onActionSubmit={onActionSubmit}
+              label="Artwork Alignment"
+              actionDialog={actionDialog}
+              setActionDialog={setActionDialog}
+            />
+            <ProjectNameHeader />
+            <SelectDsbpId
+              dropdownlist={dropdownlist}
+              addDSBPIntoProject={addDSBPIntoProject}
+              totalNoOfDsbpId={totalNoOfDsbpId}
+              totalNoOfPMP={totalNoOfPMP}
+              totalNoOfPOA={totalNoOfPOA}
+            />
+            <AgilityList
+              selected={selected}
+              setSelected={setSelected}
+              selectAllChecked={selectAllChecked}
+              handleSelect={handleSelect}
+              handleSelectAll={handleSelectAll}
+              dsbpPmpData={dsbpPmpData}
+              filteredDsbpData={filteredDsbpData}
+              onSort={onSort}
+              onGlobalFilterChange={onGlobalFilterChange}
+              selectedFields={selectedFields}
+              setDsbpPmpData={setDsbpPmpData}
+            />
+            <FooterButtons
+              handleCancel={handleCancel}
+              hideSaveButton={true}
+              onSubmit={onSubmit}
+            />
+          </>
+        )}
+      
     </div>
   );
 };
