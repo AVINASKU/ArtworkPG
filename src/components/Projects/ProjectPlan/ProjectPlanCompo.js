@@ -354,6 +354,7 @@ function ProjectPlanCompo(props) {
               setActiveSave={setActiveSave}
               getProjectPlanApi={getProjectPlanApi}
               isAccessEmpty={isAccessEmpty}
+              view={props.view}
             />
             {props.view === "Tabular" && (
               <div className="form-buttons" style={{ background: "#FAFAFA" }}>
