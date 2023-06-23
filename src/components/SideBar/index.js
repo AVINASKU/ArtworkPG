@@ -88,7 +88,7 @@ const SideBar = () => {
     removeCookie("region");
     removeCookie("initials");
     removeCookie("FirstName");
-    window.location.href = "https://awflowdev.pg.com";
+    navigate("/");
   };
   // Replace with the actual location path
   const accessDetails = getAccessDetails(userInformation.role, accessMatrix);
