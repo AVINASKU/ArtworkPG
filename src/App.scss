@@ -470,6 +470,55 @@ fieldset:disabled .btn {
       }
     }
   }
+  &.actionDialog{
+    .form-control{
+      max-width: 251px;
+      &.text-area{
+        border-radius: 14px;
+        height: 91px;
+        max-width: 100%;
+      }
+    }
+    .form-select{
+      max-width: 251px;
+      width: 251px;
+    }
+    .p-dialog-header{
+      border-top-right-radius: 20px;
+      border-top-left-radius: 20px;
+    }
+    label.form-label {
+      font-size: 14px;
+      font-weight: 700;
+      padding-right: 5px;
+      margin: 0;
+    }
+    ul{
+      list-style-type: none;
+      padding: 0;
+      height: 100%;
+      overflow: auto;
+    }
+    .p-dialog-content{
+      overflow-y: hidden;
+      height: 400px;
+    }
+    .p-datatable > .p-datatable-wrapper{
+      height: 100%;
+    }
+    &.dsbpCommonPopup{
+      .p-dialog-content{
+        height: auto;
+      }    
+      .info{
+        position: absolute;
+        left: 0;
+        bottom: -30px;
+      }  
+    }
+
+  }
+  
 }
 
 .margin-top-24 {
