@@ -103,6 +103,16 @@
   font-size: 10px;
   line-height: 12px;
 }
+.highRiskButton.btn:disabled {
+  color: #595959 !important;
+  width: 33px;
+  height: 20px;
+  border: 0.5px solid #ACACAC !important;
+  border-radius: 4px;
+  margin-right: 10px;
+  font-size: 10px;
+  line-height: 12px;
+}
 
 .highRiskErrorBorderColor {
   border-color: #FF0000 !important;
