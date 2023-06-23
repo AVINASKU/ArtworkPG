@@ -39,6 +39,7 @@ const ProjectPlanList = ({
   setColWidth,
   childFunc,
   test,
+  tabNameForPP
 }) => {
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
@@ -277,6 +278,7 @@ const ProjectPlanList = ({
     const key = options?.key;
     const keyCode = key?.split("_");
     const url = `MyTasks/${keyCode[0]}/${key}/${currentUrlLastSeg}`;
+    const dsbpUrl = `/DSBP`;
     
     return (
       <>
@@ -291,11 +293,13 @@ const ProjectPlanList = ({
             }
             `}
             onClick={() => {
-              if (field && field.length && keyCode[0] !== "CPPFA") {
+              if (field && field.length && keyCode[0] !== "CPPFA" && tabNameForPP !== "Input") {
                 (options.redirect === true || optionsData.Task) &&
                   navigate(`../${url}`, { replace: true });
-              } else {
+              } else if(field && field.length && keyCode[0] === "CPPFA") {
                 handleApproveDialogCPPFA(options);
+              } else{
+                navigate(`../${dsbpUrl}`, { replace: true });
               }
             }}
           >
