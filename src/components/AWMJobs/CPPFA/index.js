@@ -11,9 +11,8 @@ import { changeDateFormat, CheckReadOnlyAccess } from "../../../utils";
 import { FileUpload } from "primereact/fileupload";
 import { NavLink, useLocation } from "react-router-dom";
 import upload1 from "../../../assets/images/upload1.svg";
-import "./index.scss";
-import { getProjectPlan } from "../../../apis/projectPlanApi";
 import { getTasks } from "../../../store/actions/TaskActions";
+import "./index.scss";
 
 const CPPFA = ({
   showTaskDialog,
@@ -62,16 +61,22 @@ const CPPFA = ({
           setVersion(el.Version);
         }
       });
+      if (
+        designIntent.RiskLevel !== undefined &&
+        designIntent.RiskLevel !== ""
+      ) {
+        setRiskLevel(designIntent.RiskLevel);
+      }
+      pegadata.find((el) => {
+        if (
+          (el.AWM_Project_ID === ProjectID && el.Task === "Define Color Development & Print Trial") ||
+          (el.AWM_Project_ID === ProjectID && el.Task_Name === "Define New Print Feasibility scope")
+        ) {
+          setCppfaDialogFlag(true);
+        }
+      });
     }
   }, [TaskDetailsData]);
-
-  useEffect(() => {
-    pegadata.find((el) => {
-      if (el.Task === "Define Color Development & Print Trial") {
-        setCppfaDialogFlag(true);
-      }
-    });
-  }, []);
 
   const hideDialog = () => {
     setVisible(false);
@@ -125,7 +130,7 @@ const CPPFA = ({
         RiskLevel: riskLevel,
         NPFNeeded: cppfaDialogFlag ? String(false) : String(yesOrNo === "yes"),
         AWMTaskID: selectedTaskData.TaskID,
-        AWMProjectID: selectedTaskData.ProjectID,
+        AWMProjectID: ProjectID,
         Size: fileSize === 0 ? "1" : fileSize,
         Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
         Filename: fileName ? fileName.split(".").slice(0, -1).join(".") : null,
@@ -260,8 +265,7 @@ const CPPFA = ({
                   }
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
                   disabled={
-                    isAccessEmpty ||
-                    (cppfaDialogFlag && designIntent.Task_Status === "Complete")
+                    isAccessEmpty || designIntent.Task_Status === "Complete"
                   }
                 />
                 <label className="radioLabel">Low Risk</label>
@@ -275,8 +279,7 @@ const CPPFA = ({
                   checked={designIntent.RiskLevel === "Medium"}
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
                   disabled={
-                    isAccessEmpty ||
-                    (cppfaDialogFlag && designIntent.Task_Status === "Complete")
+                    isAccessEmpty || designIntent.Task_Status === "Complete"
                   }
                 />
                 <label className="radioLabel">Medium Risk</label>
@@ -290,8 +293,7 @@ const CPPFA = ({
                   checked={designIntent.RiskLevel === "High"}
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
                   disabled={
-                    isAccessEmpty ||
-                    (cppfaDialogFlag && designIntent.Task_Status === "Complete")
+                    isAccessEmpty || designIntent.Task_Status === "Complete"
                   }
                 />
                 <label className="radioLabel">High Risk</label>
@@ -331,8 +333,7 @@ const CPPFA = ({
                   </p>
                 }
                 disabled={
-                  isAccessEmpty ||
-                  (cppfaDialogFlag && designIntent.Task_Status === "Complete")
+                  isAccessEmpty || designIntent.Task_Status === "Complete"
                 }
                 onValidationFail={(e) => onValidationFail(e)}
               />
@@ -340,11 +341,7 @@ const CPPFA = ({
             <Col></Col>
           </Row>
           <Row
-            hidden={
-              riskLevel === "Low" ||
-              cppfaDialogFlag ||
-              designIntent.Task_Status === "Complete"
-            }
+            hidden={riskLevel === "Low" || cppfaDialogFlag}
             className={
               (riskLevel !== "Low" && highRiskYesOrNo === "") || yesOrNo !== ""
                 ? "highRiskDataPaddingBottom"
@@ -370,7 +367,11 @@ const CPPFA = ({
                     yesOrNo === "yes" ? "yesOrNoButtonsColor" : "btn-secondary"
                   }`}
                   onClick={() => setYesOrNo("yes")}
-                  disabled={isAccessEmpty}
+                  disabled={
+                    isAccessEmpty ||
+                    cppfaDialogFlag ||
+                    designIntent.Task_Status === "Complete"
+                  }
                 >
                   Yes
                 </button>
@@ -380,7 +381,11 @@ const CPPFA = ({
                     yesOrNo === "no" ? "yesOrNoButtonsColor" : "btn-secondary"
                   }`}
                   onClick={() => setYesOrNo("no")}
-                  disabled={isAccessEmpty}
+                  disabled={
+                    isAccessEmpty ||
+                    cppfaDialogFlag ||
+                    designIntent.Task_Status === "Complete"
+                  }
                 >
                   No
                 </button>
@@ -402,17 +407,21 @@ const CPPFA = ({
         </div>
       </div>
       <div className="p-dialog-footer confirmPPFA">
-        <Button
-          label="Confirm PPFA"
-          onClick={handleSubmit}
-          disabled={
-            cppfaDialogFlag && designIntent.Task_Status === "Complete"
-              ? true
-              : isAccessEmpty || riskLevel !== "Low"
-              ? designIntent.Task_Status !== "Complete" ? false : yesOrNo === ""
-              : false
-          }
-        />
+        {designIntent.Task_Status === "Complete" ? (
+          <Button label="Confirm PPFA" onClick={handleSubmit} disabled />
+        ) : (
+          <Button
+            label="Confirm PPFA"
+            onClick={handleSubmit}
+            disabled={
+              isAccessEmpty || riskLevel !== "Low"
+                ? cppfaDialogFlag
+                  ? false
+                  : yesOrNo === ""
+                : false
+            }
+          />
+        )}
       </div>
     </Dialog>
   );
