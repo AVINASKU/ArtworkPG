@@ -159,7 +159,17 @@ export const optionList = (data, fieldName) => {
 //   return `${fieldName}_${timestamp}`;
 // };
 
-export const roles = TrainingMode?.map((selection) => selection.role.name);
+export const roles = JSON.parse(localStorage.getItem("roles"))?.map(
+  (selection) => selection?.UserRole
+);
+
+export const BusinessUnit = JSON.parse(localStorage.getItem("roles"))?.map(
+  (selection) => selection?.UserBU
+);
+
+export const Regions = JSON.parse(localStorage.getItem("roles"))?.map(
+  (selection) => selection?.UserRegion
+);
 
 const GetPageRoles = () => {
   const url = window.location.pathname;

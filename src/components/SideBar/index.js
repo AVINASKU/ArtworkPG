@@ -94,9 +94,10 @@ const SideBar = () => {
   const accessDetails = getAccessDetails(userInformation.role, accessMatrix);
 
   const rolesWithAccess = accessRoles?.filter((accessRole) => {
-    const roleNames = accessRole.roles.map((role) => role.name);
-    return roleNames.some((roleName) => roles.includes(roleName));
+    const roleNames = accessRole?.roles?.map((role) => role.name);
+    return roleNames?.some((roleName) => roles.includes(roleName));
   });
+
   // console.log(hasEmptyAccessForMyProjects);
   const navItems = {
     data: [

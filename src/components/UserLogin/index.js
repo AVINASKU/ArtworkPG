@@ -20,25 +20,26 @@ function UserLogin() {
     e.preventDefault();
     const infoUpdated = await updateUser(username, password);
     setUserInfoUpdated(infoUpdated);
+    navigate("/roles");
   };
 
   useEffect(() => {
-    if (userInfoUpdated) {
-      if (userInformation?.username) {
-        setCredentialsValid(true);
-        if (roles.some((role) => role === "ProjectManager")) {
-          navigate("/myProjects");
-        } else {
-          // Set the redirect URL to AllProjects page for other roles or if the user doesn't have access to the "myProjects" page
-          navigate("/allProjects");
-        }
-      } else {
-        // alert("Invalid username or password");
-        setCredentialsValid(false);
-        setUsername("");
-        setPassword("");
-      }
-    }
+    // if (userInfoUpdated) {
+    //   if (userInformation?.username) {
+    //     setCredentialsValid(true);
+    //     if (roles.some((role) => role === "ProjectManager")) {
+    //       navigate("/myProjects");
+    //     } else {
+    //       // Set the redirect URL to AllProjects page for other roles or if the user doesn't have access to the "myProjects" page
+    //       navigate("/allProjects");
+    //     }
+    //   } else {
+    //     // alert("Invalid username or password");
+    //     setCredentialsValid(false);
+    //     setUsername("");
+    //     setPassword("");
+    //   }
+    // }
   }, [userInfoUpdated, userInformation]);
 
   return (
