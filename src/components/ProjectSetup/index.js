@@ -203,57 +203,60 @@ function ProjectSetup(props) {
               </div>
             </div>
           </div>
-          <div>
-            <nav className="subNav">
-              <div className="nav nav-tabs" id="nav-tab" role="tablist">
-                <button
-                  className={`nav-link ${
-                    tabNameForPP === "Design" ? "active" : ""
-                  }`}
-                  onClick={() => setTabNameForPP("Design")}
-                  id="nav-design-tab"
-                  data-bs-toggle="tab"
-                  data-bs-target="#nav-design"
-                  type="button"
-                  role="tab"
-                  aria-controls="nav-design"
-                  aria-selected="true"
-                >
-                  Design
-                </button>
-                <button
-                  className={`nav-link ${
-                    tabNameForPP === "Input" ? "active" : ""
-                  }`}
-                  onClick={() => setTabNameForPP("Input")}
-                  id="nav-input-tab"
-                  data-bs-toggle="tab"
-                  data-bs-target="#nav-input"
-                  type="button"
-                  role="tab"
-                  aria-controls="nav-input"
-                  aria-selected="true"
-                >
-                  Input
-                </button>
-                <button
-                  className={`nav-link ${
-                    tabNameForPP === "FAAssembly" ? "active" : ""
-                  }`}
-                  onClick={() => setTabNameForPP("FAAssembly")}
-                  id="nav-fAAssembly-tab"
-                  data-bs-toggle="tab"
-                  data-bs-target="#nav-fAAssembly"
-                  type="button"
-                  role="tab"
-                  aria-controls="nav-fAAssembly"
-                  aria-selected="false"
-                >
-                  FA Assembly
-                </button>
-              </div>
-            </nav>
-          </div>
+
+          {toggleButtons === "Tabular" && (
+            <div>
+              <nav className="subNav">
+                <div className="nav nav-tabs" id="nav-tab" role="tablist">
+                  <button
+                    className={`nav-link ${
+                      tabNameForPP === "Design" ? "active" : ""
+                    }`}
+                    onClick={() => setTabNameForPP("Design")}
+                    id="nav-design-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#nav-design"
+                    type="button"
+                    role="tab"
+                    aria-controls="nav-design"
+                    aria-selected="true"
+                  >
+                    Design
+                  </button>
+                  <button
+                    className={`nav-link ${
+                      tabNameForPP === "Input" ? "active" : ""
+                    }`}
+                    onClick={() => setTabNameForPP("Input")}
+                    id="nav-input-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#nav-input"
+                    type="button"
+                    role="tab"
+                    aria-controls="nav-input"
+                    aria-selected="true"
+                  >
+                    Input
+                  </button>
+                  <button
+                    className={`nav-link ${
+                      tabNameForPP === "FAAssembly" ? "active" : ""
+                    }`}
+                    onClick={() => setTabNameForPP("FAAssembly")}
+                    id="nav-fAAssembly-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#nav-fAAssembly"
+                    type="button"
+                    role="tab"
+                    aria-controls="nav-fAAssembly"
+                    aria-selected="false"
+                  >
+                    FA Assembly
+                  </button>
+                </div>
+              </nav>
+            </div>
+          )}
           <div className="tab-content" id="nav-tabContent">
             <div
               className={`tab-pane fade ${
@@ -269,6 +272,7 @@ function ProjectSetup(props) {
                 childFunc={childFunc}
                 test={test}
                 tabNameForPP={tabNameForPP}
+                view={toggleButtons}
               />
             </div>
             <div

@@ -23,8 +23,10 @@ import CPPFA from "./../../AWMJobs/CPPFA";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
+import GanttChart from "./GanttChart";
 
 const ProjectPlanList = ({
+  view,
   projectPlan,
   selectedProject,
   projectPlanDesign,
@@ -669,52 +671,55 @@ const ProjectPlanList = ({
         />
       )}
       <Suspense fallback={<div>Loading...</div>}>
-        <div className="card">
-          <ConfirmationPopUp
-            onSort={onSort}
-            setProjectFrozen={setProjectFrozen}
-            saveSettings={saveSettings}
-            projectData={pegadata1}
-            addFrozenColumns={addFrozenColumns}
-            onGlobalFilterChange={onGlobalFilterChange}
-            selectedColumnName={selectedColumnName}
-            ProjectFrozen={ProjectFrozen}
-            selectedFields={selectedCities}
-            setFrozenColumn={setFrozenColumn}
-            frozenCoulmns={frozenCoulmns}
-            sortData={sortData}
-            setSortData={setSortData}
-            setFilters={setFilters}
-            filters={filters}
-            op={op}
-            clearColumnWiseFilter={clearColumnWiseFilter}
-          />
-          <TreeTable
-            resizableColumns
-            dataKey="Task"
-            reorderableColumns
-            // scrollable
-            onColReorder={storeReorderedColumns}
-            value={filters.length ? filters : pegadata}
-            loading={loader}
-            className="mt-3 textAlignTreeTable"
-            // tableStyle={{ minWidth: "119rem", tableLayout: "auto" }}
-            tableStyle={{ width: "max-content", minWidth: "100%" }}
-            // filterDisplay={isSearch && "row"}
-            // filters={true}
-          >
-            {/* <Column header="" expander={true}></Column> */}
-            {dynamicColumns()}
-          </TreeTable>
-          {showTaskDialog && (
-            <TaskDialog
-              onClose={() => setShowTaskDialog(!showTaskDialog)}
-              showTaskDialog={showTaskDialog}
-              selectedTaskData={selectedTask}
-              flag={flag}
+        {view === "Tabular" && (
+          <div className="card">
+            <ConfirmationPopUp
+              onSort={onSort}
+              setProjectFrozen={setProjectFrozen}
+              saveSettings={saveSettings}
+              projectData={pegadata1}
+              addFrozenColumns={addFrozenColumns}
+              onGlobalFilterChange={onGlobalFilterChange}
+              selectedColumnName={selectedColumnName}
+              ProjectFrozen={ProjectFrozen}
+              selectedFields={selectedCities}
+              setFrozenColumn={setFrozenColumn}
+              frozenCoulmns={frozenCoulmns}
+              sortData={sortData}
+              setSortData={setSortData}
+              setFilters={setFilters}
+              filters={filters}
+              op={op}
+              clearColumnWiseFilter={clearColumnWiseFilter}
             />
-          )}
-        </div>
+            <TreeTable
+              resizableColumns
+              dataKey="Task"
+              reorderableColumns
+              // scrollable
+              onColReorder={storeReorderedColumns}
+              value={filters.length ? filters : pegadata}
+              loading={loader}
+              className="mt-3 textAlignTreeTable"
+              // tableStyle={{ minWidth: "119rem", tableLayout: "auto" }}
+              tableStyle={{ width: "max-content", minWidth: "100%" }}
+              // filterDisplay={isSearch && "row"}
+              // filters={true}
+            >
+              {/* <Column header="" expander={true}></Column> */}
+              {dynamicColumns()}
+            </TreeTable>
+            {showTaskDialog && (
+              <TaskDialog
+                onClose={() => setShowTaskDialog(!showTaskDialog)}
+                showTaskDialog={showTaskDialog}
+                selectedTaskData={selectedTask}
+                flag={flag}
+              />
+            )}
+          </div>
+        )}
+        {view === "GanttChart" && <GanttChart />}
       </Suspense>
     </div>
   );
