@@ -88,12 +88,12 @@ const SideBar = () => {
     removeCookie("region");
     removeCookie("initials");
     removeCookie("FirstName");
-    window.location.href = "https://awflowdev.pg.com";
+    navigate("/");
   };
   // Replace with the actual location path
   const accessDetails = getAccessDetails(userInformation.role, accessMatrix);
 
-  const rolesWithAccess = accessRoles.filter((accessRole) => {
+  const rolesWithAccess = accessRoles?.filter((accessRole) => {
     const roleNames = accessRole.roles.map((role) => role.name);
     return roleNames.some((roleName) => roles.includes(roleName));
   });
@@ -219,7 +219,7 @@ const SideBar = () => {
                   //   return null; // Hide the link if access is empty
                   // }
 
-                  const hasAccess = rolesWithAccess.some((roleWithAccess) => {
+                  const hasAccess = rolesWithAccess?.some((roleWithAccess) => {
                     return (
                       roleWithAccess.path === item.url &&
                       roleWithAccess.roles.some((role) => {
@@ -277,7 +277,7 @@ const SideBar = () => {
 
             <div className={!isToggle ? "add-project" : "addProjectExpand"}>
               {pathName !== "/roles" &&
-                rolesWithAccess.some((roleWithAccess) => {
+                rolesWithAccess?.some((roleWithAccess) => {
                   return (
                     roleWithAccess.path === "/projectPlan#ProjectSetup" &&
                     roleWithAccess.roles.some((role) => {

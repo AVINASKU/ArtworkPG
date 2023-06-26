@@ -47,7 +47,6 @@ function ProjectSetup(props) {
 
   let currentUrl = pathname.split("#");
   currentUrl = currentUrl[currentUrl.length - 1];
-
   useEffect(() => {
     if (!pathname.includes("#")) {
       setTabName("ProjectPlan");
@@ -269,6 +268,7 @@ function ProjectSetup(props) {
                 setColWidth={setColWidth}
                 childFunc={childFunc}
                 test={test}
+                tabNameForPP={tabNameForPP}
               />
             </div>
             <div
@@ -279,7 +279,13 @@ function ProjectSetup(props) {
               role="tabpanel"
               aria-labelledby="nav-input-tab"
             >
-              Input Data
+              <ProjectPlanCompo
+                isSearch={isSearch}
+                setColWidth={setColWidth}
+                childFunc={childFunc}
+                test={test}
+                tabNameForPP={tabNameForPP}
+              />
             </div>
             <div
               className={`tab-pane fade ${
