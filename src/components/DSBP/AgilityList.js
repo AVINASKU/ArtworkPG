@@ -69,7 +69,6 @@ const AgilityList = ({
 
   const addBody = (options, rowData) => {
     let field = rowData.field;
-    console.log("field", field);
     let FPCStagingFormula =
       options?.FPCStagingPage?.[0]?.FormulaCardStagingPage;
 
@@ -78,7 +77,6 @@ const AgilityList = ({
       concatenatedFPCStagingFormulaData =
         concatenatedFPCStagingFormula(FPCStagingFormula);
     }
-    console.log("field", field, concatenatedFPCStagingFormulaData?.[field]);
 
     return (
       <>
