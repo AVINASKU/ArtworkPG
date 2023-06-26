@@ -84,18 +84,15 @@ const DsbpActionDialog = ({
           <Row style={{ "height": "100%"}}>
           { updatedData[0]?.value === "Add to Project" ? (
                 <Col sm={12} style={{ "height": "100%"}}>
-                  <div style={{ "height": "100%"}}>
-                    PMP :
-                      <ul>
-                      {selected?.map((item) => {
-                          return (
-                            <li>
-                              {item.DSBP_PMP_PIMaterialID}
-                            </li>
-                          );
-                        })}
-                      </ul>
-                  </div>
+                  {selected && (
+                      <DataTable value={selected} dataKey="id" className="addToProjectTable" scrollable>
+                        <Column
+                          field="DSBP_PMP_PIMaterialID"
+                          header="PMP "
+                        ></Column>
+                        <Column field="DSBP_PMP_PIMaterialDescription" header="PMP Description"></Column>
+                      </DataTable>
+                  )}
                 </Col>
               ) : (
                   <>
