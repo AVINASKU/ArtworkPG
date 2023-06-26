@@ -38,12 +38,11 @@ const IQHeader = ({
             <ul>
               <li className="p-breadcrumb-chevron pi pi-chevron-right"></li>
               <li className="">
-                <NavLink
-                  to={`/${mytasks}/${url[2]}/${url[5]}`}
-                  className="p-menuitem-link"
-                >
-                  <span className="p-menuitem-text">{url[2]}</span>
-                </NavLink>{" "}
+                <NavLink to={`/${mytasks}`} className="p-menuitem-link">
+                  <span className="p-menuitem-text">
+                    {url[1] === "MyTasks" ? "My Tasks" : "All Tasks"}
+                  </span>
+                </NavLink>
               </li>
               <li className="p-breadcrumb-chevron pi pi-chevron-right"></li>
               <li className="">
