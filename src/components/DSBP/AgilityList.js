@@ -7,7 +7,8 @@ import { Dropdown } from "primereact/dropdown";
 import filter from "../../assets/images/filter.svg";
 import DSBPFilter from "./DSBPFilter";
 import "../Projects/MyProjects/index.scss";
-import DsbpDialog from "./DsbpDialog";
+import DsbpCommonPopup from "./DsbpCommonPopup";
+import DsbpRejectDialog from "./RejectDialog";
 import { generateUniqueKey } from "../../utils";
 import { onSortData } from "../../utils";
 
@@ -22,7 +23,8 @@ const AgilityList = ({
   selectedFields,
   onGlobalFilterChange,
   filteredDsbpData,
-  setDsbpPmpData
+  setDsbpPmpData,
+  onActionSubmit
 }) => {
   const [selectedColumnName, setSelectedColumnName] = useState(null);
   const columnName = [
@@ -59,7 +61,7 @@ const AgilityList = ({
   
   const [rejectDialog, setRejectDialog] = useState(false);
   const [rejectionData, setRejectionData] = useState(false);
-  const [rejectReason, setRejectReason] = useState("");
+  const [rejectFormData, setRejectFormData] = useState({});
 
   const addToProjectList = [
       { name: 'Yes', code: 'Yes' },
@@ -67,9 +69,6 @@ const AgilityList = ({
       { name: 'Reject', code: 'Reject' }
   ];
 
-  const rejectReasonList = [
-    { name: 'NA', code: 'NA' }
-];
 
   const onchangeAddToProject = (rowData, e, ele) => {
     console.log("hi",rowData, "data", e.target.value, "rowdata", rowData[ele]);
@@ -78,14 +77,9 @@ const AgilityList = ({
     setDsbpPmpData([...dsbpPmpData]);
     setRejectionData(rowData);
     if(e.target.value === "Reject")
-      setRejectDialog(true)
+      setRejectDialog(true);
+      setRejectFormData({})
   }
-
-  const handleRejectReasonChange = (e) => {
-    setRejectReason(e.target.value)
-    console.log("data")
-  };
-
 
   const addBody = (options, rowData) => {
     let field = rowData.field;
@@ -189,7 +183,6 @@ const AgilityList = ({
     }
   };
   return (
-    console.log("rejectDialog", rejectionData),
     <>
       <DSBPFilter
         op={op}
@@ -221,69 +214,19 @@ const AgilityList = ({
         {renderColumns()}
       </DataTable>
       {rejectDialog && (
-        <DsbpDialog
+        <DsbpCommonPopup
           actionHeader="Are you sure you want to reject this PMP?"
           dasbpDialog={rejectDialog}
           setDasbpDialog={setRejectDialog}
+          rejectFormData={rejectFormData}
+          onSubmit={() => onActionSubmit(rejectFormData, rejectionData)}
           >
-             <Row>
-              <Col sm={4} className="mb-3">
-                <div>
-                  <Form.Label>PMP : </Form.Label>
-                  <span>{rejectionData.DSBP_PMP_PIMaterialID}</span>
-                </div>
-              </Col>
-              <Col sm={8} className="mb-3">
-                <div className="d-flex align-items-start">
-                  <Form.Label>PMP Description : </Form.Label>
-                  <span style={{"flex": "1"}}>{rejectionData.DSBP_PMP_PIMaterialDescription}</span>
-                </div>
-              </Col>
-            </Row>
-            <Row>
-              <Col sm={12} className="mb-3">
-                <div>
-                  <Form.Group
-                      className="d-flex align-items-center"
-                      controlId="groupName.ControlInput1"
-                    >
-                      <Form.Label>Reject Reason :</Form.Label>
-                      <div>
-                        <Form.Select
-                          value={rejectReason}
-                          placeholder="Select"
-                          onChange={handleRejectReasonChange}
-                        >
-                          <option value="">Select</option>
-                          {rejectReasonList.map((reson) => (
-                            <option
-                              key={reson.code}
-                              value={reson.name}
-                            >
-                              {reson.name}
-                            </option>
-                          ))}
-                        </Form.Select>
-                      </div>
-                    </Form.Group>
-                </div>
-              </Col>
-            </Row>
-            <Row>
-              <Col sm={12} className="mb-3">
-                <div>
-                  <Form.Group
-                      className=""
-                      controlId="groupName.ControlInput1"
-                    >
-                      <Form.Label>Add Comment: :</Form.Label>
-                      <textarea class="form-control text-area" placeholder="Start typing here...."></textarea>
-                    </Form.Group>
-                </div>
-                <div className="info">* An e-mail will be sent to IL once submitted.</div>
-              </Col>
-            </Row>
-          </DsbpDialog>
+             <DsbpRejectDialog
+              rejectionData= {rejectionData}
+              rejectFormData={rejectFormData}
+              setRejectFormData={setRejectFormData}
+            />
+          </DsbpCommonPopup>
       )}
     </>
   );

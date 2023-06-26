@@ -4,21 +4,22 @@ import { Dialog } from "primereact/dialog";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
-const DsbpDialog = ({
+const DsbpCommonPopup = ({
     children,
   actionHeader,
   dasbpDialog,
-  setDasbpDialog
+  setDasbpDialog,
+  rejectFormData,
+  onSubmit
 }) => {
-
   const footerContent = (
     <div>
       <Button variant="secondary" onClick={() => setDasbpDialog(false)}>
         Cancel
       </Button>
       <Button
-      
-        onClick={() => setDasbpDialog(false)}
+        disabled={Object.keys(rejectFormData).length === 0}
+        onClick={onSubmit}
       >
         Submit
       </Button>
@@ -42,4 +43,4 @@ const DsbpDialog = ({
     )
   );
 };
-export default DsbpDialog;
+export default DsbpCommonPopup;
