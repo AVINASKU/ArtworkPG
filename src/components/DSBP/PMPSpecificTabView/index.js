@@ -130,11 +130,23 @@ const PMPSpecificTabView = ({ tabsList }) => {
       <table class="table table-sm table-hover">
         <tbody>
           <tr>
-            <td>{obj.decription}</td>
+            <td className="columnWidth">{obj.decription}</td>
             <td>Mark</td>
           </tr>
           <tr>
-            <td>{obj.decription}</td>
+            <td className="columnWidth">{obj.decription}</td>
+            <td>Jacob</td>
+          </tr>
+          <tr>
+            <td className="columnWidth">{obj.decription}</td>
+            <td>Jacob</td>
+          </tr>
+          <tr>
+            <td className="columnWidth">{obj.decription}</td>
+            <td>Jacob</td>
+          </tr>
+          <tr>
+            <td className="columnWidth">{obj.decription}</td>
             <td>Jacob</td>
           </tr>
         </tbody>
