@@ -110,7 +110,6 @@ const DSBP = () => {
   };
 
   const handleSelect = (item) => {
-    console.log("item", item);
     if (selected?.includes(item)) {
       setSelected(selected.filter((i) => i !== item));
     } else {
@@ -134,35 +133,50 @@ const DSBP = () => {
     }
   };
 
-  const onActionSubmit = async (formData) => {
+  const onActionSubmit = async (formData, data) => {
     setLoader(true);
-    console.log("submitted...!", formData);
     let updatedData = {};
-    let updatedDataList = selected.map((pmpDetails)=>{
+    let updatedDataList= [];    
+    if(data){
+      const pmpDetails = data;
       updatedData = {
         DSBP_InitiativeID: pmpDetails.DSBP_InitiativeID,
         DSBP_PMP_PIMaterialID: pmpDetails.DSBP_PMP_PIMaterialID
       };
-      if(formData === "AddToProject"){       
-        updatedData.FK_AWMProjectID = pmpDetails.FK_AWMProjectID;
-        updatedData.AWM_AddedToProject = "Yes";        
+      
+      if (formData?.RTA_RTARejectionReason !== undefined) {
+        updatedData.RTA_RTARejectionReason = formData?.RTA_RTARejectionReason;
       }
-      if (formData.AWM_AISE !== undefined) {
-        updatedData.AWM_AISE = formData?.AWM_AISE;
-      }
-      if (formData?.AWM_AssemblyMechanism !== undefined) {
-        updatedData.AWM_AssemblyMechanism = formData?.AWM_AssemblyMechanism;
-      }
-      if (formData?.AWM_Biocide !== undefined) {
-        updatedData.AWM_Biocide = formData?.AWM_Biocide;
-      }
-      if (formData?.AWM_GroupPMP !== undefined) {
-        updatedData.AWM_GroupPMP = formData?.AWM_GroupPMP;
-      }
-      return updatedData;
-    })
+      updatedDataList = [updatedData];
+    } else{
+      updatedDataList = selected?.map((pmpDetails)=>{
+        updatedData = {
+          DSBP_InitiativeID: pmpDetails.DSBP_InitiativeID,
+          DSBP_PMP_PIMaterialID: pmpDetails.DSBP_PMP_PIMaterialID
+        };
+        if(formData === "AddToProject"){       
+          updatedData.FK_AWMProjectID = pmpDetails.FK_AWMProjectID;
+          updatedData.AWM_AddedToProject = "Yes";        
+        }
+        if (formData.AWM_AISE !== undefined) {
+          updatedData.AWM_AISE = formData?.AWM_AISE;
+        }
+        if (formData?.AWM_AssemblyMechanism !== undefined) {
+          updatedData.AWM_AssemblyMechanism = formData?.AWM_AssemblyMechanism;
+        }
+        if (formData?.AWM_Biocide !== undefined) {
+          updatedData.AWM_Biocide = formData?.AWM_Biocide;
+        }
+        if (formData?.AWM_GroupPMP !== undefined) {
+          updatedData.AWM_GroupPMP = formData?.AWM_GroupPMP;
+        }
+        return updatedData;
+      });
+    }
+    console.log("updatedData", updatedDataList);
+   
     const updatedPmpDetails = { ArtworkAgilityPMPs: updatedDataList };
-    console.log("updatedDataObject", updatedPmpDetails);
+    console.log("updatedPmpDetails", updatedPmpDetails);
     await onSubmitDsbpAction(updatedPmpDetails);
     setActionDialog(false);
     setLoader(false);
@@ -238,6 +252,7 @@ const DSBP = () => {
               onGlobalFilterChange={onGlobalFilterChange}
               selectedFields={selectedFields}
               setDsbpPmpData={setDsbpPmpData}
+              onActionSubmit={onActionSubmit}
             />
             <FooterButtons
               handleCancel={handleCancel}
