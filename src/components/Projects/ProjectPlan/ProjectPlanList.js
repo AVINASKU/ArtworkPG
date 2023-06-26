@@ -278,7 +278,7 @@ const ProjectPlanList = ({
     const key = options?.key;
     const keyCode = key?.split("_");
     const url = `MyTasks/${keyCode[0]}/${key}/${currentUrlLastSeg}`;
-    const dsbpUrl = `/DSBP`;
+    const dsbpUrl = `/DSBP/${currentUrlLastSeg}`;
     
     return (
       <>
