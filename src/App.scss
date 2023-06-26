@@ -274,16 +274,16 @@ fieldset:disabled .btn {
     td,
     .p-datatable .p-datatable-tbody > tr > td {
       // background-color: #003da5;
-      border-bottom: 1px solid #acacac !important;
-      border-top: 1px solid #acacac !important;
+      border-bottom: 0.5px solid #acacac !important;
+      // border-top: 1px solid #acacac !important;
       font-size: 12px;
       // line-height: 20px;
       border-top: 0.5px solid #acacac !important;
       color: #595959;
-      text-align: center;
+      // text-align: center;
       background: #ffffff !important;
       padding: 2px !important;
-      border-width: 0.5px;
+      // border-width: 0.5px;
       text-align: center !important;
 
       // border: 2px solid gray !important;
@@ -470,6 +470,55 @@ fieldset:disabled .btn {
       }
     }
   }
+  &.actionDialog{
+    .form-control{
+      max-width: 251px;
+      &.text-area{
+        border-radius: 14px;
+        height: 91px;
+        max-width: 100%;
+      }
+    }
+    .form-select{
+      max-width: 251px;
+      width: 251px;
+    }
+    .p-dialog-header{
+      border-top-right-radius: 20px;
+      border-top-left-radius: 20px;
+    }
+    label.form-label {
+      font-size: 14px;
+      font-weight: 700;
+      padding-right: 5px;
+      margin: 0;
+    }
+    ul{
+      list-style-type: none;
+      padding: 0;
+      height: 100%;
+      overflow: auto;
+    }
+    .p-dialog-content{
+      overflow-y: hidden;
+      height: 400px;
+    }
+    .p-datatable > .p-datatable-wrapper{
+      height: 100%;
+    }
+    &.dsbpCommonPopup{
+      .p-dialog-content{
+        height: auto;
+      }    
+      .info{
+        position: absolute;
+        left: 0;
+        bottom: -30px;
+      }  
+    }
+
+  }
+  
 }
 
 .margin-top-24 {

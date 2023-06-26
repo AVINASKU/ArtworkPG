@@ -8,6 +8,12 @@
   .margin-right {
     margin-right: 20px;
   }
+  .p-datatable {
+    height: calc(100% - 280px);
+    .p-datatable-wrapper{
+      height: 100%;
+    }
+  }
 }
 .dsbp-select {
   .p-inputwrapper-filled {

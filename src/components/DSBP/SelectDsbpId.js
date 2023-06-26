@@ -17,7 +17,9 @@ const SelectDsbpId = ({
     return (
       <div className="city-option">
         <div className="city-name" onClick={(e) => e.stopPropagation()}>
-          {addEllipsis(option.InitiativeName, 50)}
+          {option.InitiativeID} --- {addEllipsis(option.InitiativeName, 40)}
+          {/* need to uncomment below code and romove line no 20 above code is only for i need to know the initivative id */}
+          {/* {addEllipsis(option.InitiativeName, 50)} */}
         </div>
         <div>
           <img

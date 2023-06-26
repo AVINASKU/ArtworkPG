@@ -19,7 +19,7 @@
   }
 
   .p-fluid .p-fileupload .p-button {
-    padding: 0
+    padding: 0;
   }
 
   .p-fileupload {
@@ -28,7 +28,7 @@
 }
 
 .ppfaDialogBorder {
-  border: 1px solid #ACACAC;
+  border: 1px solid #acacac;
   padding: 24px 24px 0 24px;
   border-radius: 4px;
 }
@@ -42,8 +42,8 @@
   }
 }
 
-.confirmPPFA>button {
-  background-color: #003DA5 !important;
+.confirmPPFA > button {
+  background-color: #003da5 !important;
   width: 93px;
   height: 40px;
   color: #fff !important;
@@ -53,7 +53,7 @@
 }
 
 .ppfaDialogTextColor {
-  color: #FF0000;
+  color: #ff0000;
   text-align: center;
 }
 
@@ -97,7 +97,7 @@
   color: #595959 !important;
   width: 33px;
   height: 20px;
-  border: 0.5px solid #ACACAC !important;
+  border: 0.5px solid #acacac !important;
   border-radius: 4px;
   margin-right: 10px;
   font-size: 10px;
@@ -107,7 +107,7 @@
   color: #595959 !important;
   width: 33px;
   height: 20px;
-  border: 0.5px solid #ACACAC !important;
+  border: 0.5px solid #acacac !important;
   border-radius: 4px;
   margin-right: 10px;
   font-size: 10px;
@@ -115,23 +115,23 @@
 }
 
 .highRiskErrorBorderColor {
-  border-color: #FF0000 !important;
+  border-color: #ff0000 !important;
 }
 
 .highRiskError {
-  color: #FF0000;
+  color: #ff0000;
   font-size: 8px;
   line-height: 10px;
   margin: 4px 0 10px 0;
 }
 
 .yesOrNoButtonsColor {
-  background-color: #003DA5;
+  background-color: #003da5;
   color: #ffffff !important;
 }
 
 .yesOrNoButtonsColor:hover {
-  background-color: #003DA5;
+  background-color: #003da5;
   color: black !important;
 }
 
@@ -142,5 +142,5 @@
 .fileSupportedData {
   font-size: 8px;
   line-height: 9.75px;
-  color: #5B5959;
+  color: #5b5959;
 }
