@@ -46,3 +46,19 @@ export const getDsbpPMPDetails = async (projectId, headers = {})=>{
   console.log("response get dsbp pmp ----->", addResponse);
   return addResponse?.data?.DSBPDetails?.DSBP_InitiativeIDPage;
 }
+
+export const onSubmitDsbpAction = async (
+  formData,
+  headers = {}
+) => {
+  const api = new Api();
+  const axiosInstance = await api.init({ headers });
+  let apiURL = `${DEVURL}/updatePMP`;
+  const addResponse = await axiosInstance({
+    url: apiURL,
+    method: "POST",
+    data: formData,
+  });
+  console.log("Hello hello ----->", addResponse);
+  return addResponse;
+};

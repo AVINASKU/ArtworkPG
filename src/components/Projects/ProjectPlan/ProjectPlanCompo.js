@@ -16,7 +16,11 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import moment from "moment";
-import { CheckReadOnlyAccess, Loading } from "../../../utils";
+import {
+  CheckReadOnlyAccess,
+  Loading,
+  hasProjectPlanAccess,
+} from "../../../utils";
 import { getMyProject } from "../../../store/actions/ProjectActions";
 
 function ProjectPlanCompo(props) {
@@ -29,6 +33,7 @@ function ProjectPlanCompo(props) {
   // const [activeFlag, setActiveFlag] = useState(false);
   // Check if access is empty for the user's role and page
   const isAccessEmpty = CheckReadOnlyAccess();
+  console.log(isAccessEmpty);
   const [activeFlag, setActiveFlag] = useState(!isAccessEmpty);
   const [loader, setLoader] = useState(false);
   const navigate = useNavigate();
@@ -92,84 +97,96 @@ function ProjectPlanCompo(props) {
 
   useEffect(() => {
     getProjectPlanApi();
-  }, [mode]);
+  }, [mode, props.tabNameForPP]);
 
   const getRestructuredData = (apiData) => {
     let mainTempArr = [];
+    let tasks = [];
+    if(props.tabNameForPP === "Input"){
+      tasks = [
+        {
+          name: "Start Artwork Alignment",
+          code: "SAA",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("SAA_")),
+        },
+      ]
+    } else {
+      tasks = [
+        {
+          name: "Define Design Intent",
+          code: "DDI",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("DDI_")),
+        },
+        {
+          name: "Upload Approved Design Intent",
+          code: "UADI",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("UADI_")),
+        },
+        {
+          name: "Define Design Template",
+          code: "DDT",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("DDT_")),
+        },
+        {
+          name: "Upload Regional Design Template",
+          code: "URDT",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("URDT_")),
+        },
+        {
+          name: "Approve Regional Design Template",
+          code: "ARDT",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("ARDT_")),
+        },
+        {
+          name: "Define Production Ready Art",
+          code: "DPRA",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("DPRA_")),
+        },
+        {
+          name: "Upload Production Ready Art",
+          code: "UPRA",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("UPRA_")),
+        },
+        {
+          name: "Approve Production Ready Art",
+          code: "APRA",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("APRA_")),
+        },
+  
+        {
+          name: "Confirm Preliminary print feasibility Assessment",
+          code: "CPPFA",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("CPPFA_")),
+        },
+        {
+          name: "Define Color Development & Print Trial",
+          code: "DNPF",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("DNPF_")),
+        },
+        {
+          name: "Confirm Color Development",
+          code: "CCD",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("CCD_")),
+        },
+        {
+          name: "Confirm Print Trial",
+          code: "CPT",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("CPT_")),
+        },
+        {
+          name: "Define New Ink Qualification scope",
+          code: "DNIQ",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("DNIQ_")),
+        },
+        {
+          name: "Confirm New Ink Qualification",
+          code: "CNIQ",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("CNIQ_")),
+        },
+      ];
+     
+    }
 
-    const tasks = [
-      {
-        name: "Define Design Intent",
-        code: "DDI",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("DDI_")),
-      },
-      {
-        name: "Upload Approved Design Intent",
-        code: "UADI",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("UADI_")),
-      },
-      {
-        name: "Define Design Template",
-        code: "DDT",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("DDT_")),
-      },
-      {
-        name: "Upload Regional Design Template",
-        code: "URDT",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("URDT_")),
-      },
-      {
-        name: "Approve Regional Design Template",
-        code: "ARDT",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("ARDT_")),
-      },
-      {
-        name: "Define Production Ready Art",
-        code: "DPRA",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("DPRA_")),
-      },
-      {
-        name: "Upload Production Ready Art",
-        code: "UPRA",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("UPRA_")),
-      },
-      {
-        name: "Approve Production Ready Art",
-        code: "APRA",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("APRA_")),
-      },
-
-      {
-        name: "Confirm Preliminary print feasibility Assessment",
-        code: "CPPFA",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("CPPFA_")),
-      },
-      {
-        name: "Define Color Development & Print Trial",
-        code: "DNPF",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("DNPF_")),
-      },
-      {
-        name: "Confirm Color Development",
-        code: "CCD",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("CCD_")),
-      },
-      {
-        name: "Confirm Print Trial",
-        code: "CPT",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("CPT_")),
-      },
-      {
-        name: "Define New Ink Qualification scope",
-        code: "DNIQ",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("DNIQ_")),
-      },
-      {
-        name: "Confirm New Ink Qualification",
-        code: "CNIQ",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("CNIQ_")),
-      },
-    ];
     tasks.forEach((task) => {
       if (task.data?.length === 1) {
         let tempObj = {};
@@ -276,6 +293,7 @@ function ProjectPlanCompo(props) {
         mainTempArr.push(tempObj);
       }
     });
+   
     return mainTempArr; //toBeReplacedWithapiData;
   };
 

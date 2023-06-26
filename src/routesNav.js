@@ -112,10 +112,6 @@ import URDT from "./components/AWMJobs/URDT/index.js";
 import CPPFA from "./components/AWMJobs/CPPFA/index.js";
 import DsbpPage from "./DsbpPage";
 
-import { checkReadOnlyAccess } from "./utils";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchAccessMatrix } from "./store/actions/RoleBasedActions";
-import { useLocation } from "react-router-dom";
 import Role from "./role";
 
 const RoutesNav = () => {
@@ -139,12 +135,21 @@ const RoutesNav = () => {
           path="/allProjects/projectPlan/:ProjectID"
           element={<ProjectCreation />}
         />
-        <Route path="/myTasks/DDI/:TaskID/:ProjectID" element={<DDI />} />
-        <Route path="/allTasks/DDI/:TaskID/:ProjectID" element={<DDI />} />
-        <Route path="/myTasks/UADI/:TaskID/:ProjectID" element={<UADI />} />
-        <Route path="/allTasks/UADI/:TaskID/:ProjectID" element={<UADI />} />
-        <Route path="/myTasks/DDT/:TaskID/:ProjectID" element={<DDT />} />
-        <Route path="/allTasks/DDT/:TaskID/:ProjectID" element={<DDT />} />
+        <Route path="/:page1/:page2/DDI/:TaskID/:ProjectID" element={<DDI />} />
+        <Route path="/:pageType/DDI/:TaskID/:ProjectID" element={<DDI />} />
+        <Route
+          path="/:page1/:page2/DDI/:TaskID/:ProjectID"
+          element={<UADI />}
+        />
+        <Route path="/:pageType/DDI/:TaskID/:ProjectID" element={<UADI />} />
+        <Route path="/:page1/:page2/DDI/:TaskID/:ProjectID" element={<DDT />} />
+        <Route path="/:pageType/DDI/:TaskID/:ProjectID" element={<DDT />} />
+        {/* <Route path="/myTasks/DDI/:TaskID/:ProjectID" element={<DDI />} /> */}
+        {/* <Route path="/allTasks/DDI/:TaskID/:ProjectID" element={<DDI />} /> */}
+        {/* <Route path="/myTasks/UADI/:TaskID/:ProjectID" element={<UADI />} />
+        <Route path="/allTasks/UADI/:TaskID/:ProjectID" element={<UADI />} /> */}
+        {/* <Route path="/myTasks/DDT/:TaskID/:ProjectID" element={<DDT />} />
+        <Route path="/allTasks/DDT/:TaskID/:ProjectID" element={<DDT />} /> */}
         <Route path="/myTasks/ARDT/:TaskID/:ProjectID" element={<ARDT />} />
         <Route path="/allTasks/ARDT/:TaskID/:ProjectID" element={<ARDT />} />
         <Route path="/myTasks/DPRA/:TaskID/:ProjectID" element={<DPRA />} />
@@ -170,7 +175,7 @@ const RoutesNav = () => {
         <Route path="/allTasks/DNPF/:TaskID/:ProjectID" element={<DNPF />} />
         <Route path="/myTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
         <Route path="/allTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
-        <Route path="/DSBP" element={<DsbpPage />} />
+        <Route path="/DSBP/:ProjectID" element={<DsbpPage />} />
         {/* <Route path="/reports" element={<Reports />} /> */}
       </Route>
     </Routes>

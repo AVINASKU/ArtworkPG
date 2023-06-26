@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { DataTable } from "primereact/datatable";
+import { Form, Row, Col, Button } from "react-bootstrap";
 import { Column } from "primereact/column";
+import { Dropdown } from "primereact/dropdown";
 // import filter from "../../../assets/images/filter.svg";
 import filter from "../../assets/images/filter.svg";
 import DSBPFilter from "./DSBPFilter";
 import "../Projects/MyProjects/index.scss";
+import DsbpCommonPopup from "./DsbpCommonPopup";
+import DsbpRejectDialog from "./RejectDialog";
 import { generateUniqueKey } from "../../utils";
 import { onSortData } from "../../utils";
 
@@ -18,6 +22,9 @@ const AgilityList = ({
   onSort,
   selectedFields,
   onGlobalFilterChange,
+  filteredDsbpData,
+  setDsbpPmpData,
+  onActionSubmit
 }) => {
   const [selectedColumnName, setSelectedColumnName] = useState(null);
   const columnName = [
@@ -26,7 +33,7 @@ const AgilityList = ({
     "DSBP_PMP_PIMaterialID",
     "DSBP_PO_PMP_poPoa",
     "DSBP_PO_PMP_poMaterialNumber",
-    "Add to Project",
+    "AWM_AddedToProject",
     "DSBP_PO_PMP_poLanguages",
     "DSBP_PMP_regulatoryStickeringCos",
     "DSBP_PMP_PIMaterialDescription",
@@ -51,22 +58,74 @@ const AgilityList = ({
     "PO FPC DESC",
   ];
   const op = useRef(null);
+  
+  const [rejectDialog, setRejectDialog] = useState(false);
+  const [rejectionData, setRejectionData] = useState(false);
+  const [rejectFormData, setRejectFormData] = useState({});
+
+  const addToProjectList = [
+      { name: 'Yes', code: 'Yes' },
+      { name: 'No', code: 'No' },
+      { name: 'Reject', code: 'Reject' }
+  ];
+
+
+  const onchangeAddToProject = (rowData, e, ele) => {
+    console.log("hi",rowData, "data", e.target.value, "rowdata", rowData[ele]);
+    rowData[ele] = e.target.value;
+    console.log("dsbpPmpData", dsbpPmpData);
+    setDsbpPmpData([...dsbpPmpData]);
+    setRejectionData(rowData);
+    if(e.target.value === "Reject")
+      setRejectDialog(true);
+      setRejectFormData({})
+  }
 
   const addBody = (options, rowData) => {
     let field = rowData.field;
     return (
       <>
-        <div className="flex align-items-center gap-2">
-          <input
-            type="checkbox"
-            className="p-checkbox-box p-highlight"
-            checked={selected?.some(
-              (item) => item.InitiativeID === options.InitiativeID
-            )}
-            onChange={() => handleSelect(options)}
-          />
-          {options[field]}
-        </div>
+        {field === "DSBP_InitiativeID" && (
+          <div className="flex align-items-center gap-2">
+            <input
+              type="checkbox"
+              className="p-checkbox-box p-highlight"
+              checked={selected?.includes(options)}
+              onChange={() => handleSelect(options)}
+            />
+            {options[field]}
+          </div>
+        )}
+        
+        {field === "AWM_AddedToProject" && (
+          <div className="d-flex">
+            <Form.Group
+              className={`mb-2`}
+              controlId="groupName.ControlInput1"
+            >
+              <div>
+                <Form.Select
+                  placeholder="Select"
+                  onChange={(e) => onchangeAddToProject(options, e, field)}
+                >
+                  <option value="">Select</option>
+                  {addToProjectList.map((data) => (
+                    <option
+                      key={data.code}
+                      value={data.name}
+                    >
+                      {data.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </div>
+            </Form.Group>
+          
+          </div>
+        )}
+        {field !== "DSBP_InitiativeID" &&
+          field !== "AWM_AddedToProject" &&
+          options[field]}
       </>
     );
   };
@@ -109,14 +168,14 @@ const AgilityList = ({
           <Column
             field={field}
             header={() => renderHeader(field)}
-            body={field === "DSBP_InitiativeID" && addBody}
+            body={addBody}
             key={field}
             columnKey={field}
             showFilterMenu={false}
             alignFrozen="left"
             filterField={field}
             style={{
-              width: "250px",
+              width: "100px",
             }}
           />
         );
@@ -142,7 +201,11 @@ const AgilityList = ({
         reorderableColumns
         responsiveLayout="scroll"
         columnResizeMode="expand"
-        value={dsbpPmpData}
+        value={
+          filteredDsbpData && filteredDsbpData.length
+            ? filteredDsbpData
+            : dsbpPmpData
+        }
         className="mt-3"
         tableStyle={{ width: "max-content", minWidth: "100%" }}
         selection={selected}
@@ -150,6 +213,21 @@ const AgilityList = ({
       >
         {renderColumns()}
       </DataTable>
+      {rejectDialog && (
+        <DsbpCommonPopup
+          actionHeader="Are you sure you want to reject this PMP?"
+          dasbpDialog={rejectDialog}
+          setDasbpDialog={setRejectDialog}
+          rejectFormData={rejectFormData}
+          onSubmit={() => onActionSubmit(rejectFormData, rejectionData)}
+          >
+             <DsbpRejectDialog
+              rejectionData= {rejectionData}
+              rejectFormData={rejectFormData}
+              setRejectFormData={setRejectFormData}
+            />
+          </DsbpCommonPopup>
+      )}
     </>
   );
 };

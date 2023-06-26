@@ -11,9 +11,8 @@ import { changeDateFormat, CheckReadOnlyAccess } from "../../../utils";
 import { FileUpload } from "primereact/fileupload";
 import { NavLink, useLocation } from "react-router-dom";
 import upload1 from "../../../assets/images/upload1.svg";
-import "./index.scss";
-import { getProjectPlan } from "../../../apis/projectPlanApi";
 import { getTasks } from "../../../store/actions/TaskActions";
+import "./index.scss";
 
 const CPPFA = ({
   showTaskDialog,
@@ -62,16 +61,25 @@ const CPPFA = ({
           setVersion(el.Version);
         }
       });
+      if (
+        designIntent.RiskLevel !== undefined &&
+        designIntent.RiskLevel !== ""
+      ) {
+        setRiskLevel(designIntent.RiskLevel);
+      }
+      pegadata.find((el) => {
+        if (
+          (el.AWM_Project_ID === ProjectID &&
+            el.Task === "Define Color Development & Print Trial") ||
+          (el.AWM_Project_ID === ProjectID &&
+            el.Task_Name === "Define New Print Feasibility scope")
+        ) {
+          setCppfaDialogFlag(true);
+        }
+      });
+      console.log("TaskDetailsData:", TaskDetailsData);
     }
   }, [TaskDetailsData]);
-
-  useEffect(() => {
-    pegadata.find((el) => {
-      if (el.Task === "Define Color Development & Print Trial") {
-        setCppfaDialogFlag(true);
-      }
-    });
-  }, []);
 
   const hideDialog = () => {
     setVisible(false);
@@ -125,7 +133,7 @@ const CPPFA = ({
         RiskLevel: riskLevel,
         NPFNeeded: cppfaDialogFlag ? String(false) : String(yesOrNo === "yes"),
         AWMTaskID: selectedTaskData.TaskID,
-        AWMProjectID: selectedTaskData.ProjectID,
+        AWMProjectID: ProjectID,
         Size: fileSize === 0 ? "1" : fileSize,
         Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
         Filename: fileName ? fileName.split(".").slice(0, -1).join(".") : null,
@@ -188,6 +196,25 @@ const CPPFA = ({
                   </NavLink>
                 </li>
                 <li className="p-breadcrumb-chevron pi pi-chevron-right piChevronRightMargin"></li>
+                {url.length > 2 ? (
+                  <>
+                    <li className="">
+                      <NavLink
+                        to={`/${url[1]}/${url[2]}/${ProjectID}`}
+                        className="p-menuitem-link"
+                      >
+                        <span className="p-menuitem-text">
+                          {url[2] === "projectPlan"
+                            ? "Project Plan"
+                            : "All Projects"}
+                        </span>
+                      </NavLink>
+                    </li>
+                    <li className="p-breadcrumb-chevron pi pi-chevron-right piChevronRightMargin"></li>
+                  </>
+                ) : (
+                  ""
+                )}
                 <li className="">
                   <a href="#" className="p-menuitem-link">
                     <span className="p-menuitem-text">
@@ -198,9 +225,7 @@ const CPPFA = ({
               </ul>
             </nav>
           </div>
-          <div className="p-dialog-header1">
-            <NavLink to={`/${myProjects}`}>{designIntent.Project_Name}</NavLink>
-          </div>
+          <div className="p-dialog-header1">{designIntent.Project_Name}</div>
         </div>
       }
     >
@@ -240,7 +265,9 @@ const CPPFA = ({
                     designIntent.RiskLevel === ""
                   }
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
-                  disabled={isAccessEmpty || cppfaDialogFlag}
+                  disabled={
+                    isAccessEmpty || designIntent.Task_Status === "Complete"
+                  }
                 />
                 <label className="radioLabel">Low Risk</label>
               </div>
@@ -252,7 +279,9 @@ const CPPFA = ({
                   value="Medium"
                   checked={designIntent.RiskLevel === "Medium"}
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
-                  disabled={isAccessEmpty || cppfaDialogFlag}
+                  disabled={
+                    isAccessEmpty || designIntent.Task_Status === "Complete"
+                  }
                 />
                 <label className="radioLabel">Medium Risk</label>
               </div>
@@ -264,7 +293,9 @@ const CPPFA = ({
                   value="High"
                   checked={designIntent.RiskLevel === "High"}
                   onChange={(e) => setRiskLevelFunc(e.target.value)}
-                  disabled={isAccessEmpty || cppfaDialogFlag}
+                  disabled={
+                    isAccessEmpty || designIntent.Task_Status === "Complete"
+                  }
                 />
                 <label className="radioLabel">High Risk</label>
               </div>
@@ -302,7 +333,9 @@ const CPPFA = ({
                     )}
                   </p>
                 }
-                disabled={isAccessEmpty || cppfaDialogFlag}
+                disabled={
+                  isAccessEmpty || designIntent.Task_Status === "Complete"
+                }
                 onValidationFail={(e) => onValidationFail(e)}
               />
             </Col>
@@ -335,7 +368,11 @@ const CPPFA = ({
                     yesOrNo === "yes" ? "yesOrNoButtonsColor" : "btn-secondary"
                   }`}
                   onClick={() => setYesOrNo("yes")}
-                  disabled={isAccessEmpty}
+                  disabled={
+                    isAccessEmpty ||
+                    cppfaDialogFlag ||
+                    designIntent.Task_Status === "Complete"
+                  }
                 >
                   Yes
                 </button>
@@ -345,7 +382,11 @@ const CPPFA = ({
                     yesOrNo === "no" ? "yesOrNoButtonsColor" : "btn-secondary"
                   }`}
                   onClick={() => setYesOrNo("no")}
-                  disabled={isAccessEmpty}
+                  disabled={
+                    isAccessEmpty ||
+                    cppfaDialogFlag ||
+                    designIntent.Task_Status === "Complete"
+                  }
                 >
                   No
                 </button>
@@ -367,17 +408,21 @@ const CPPFA = ({
         </div>
       </div>
       <div className="p-dialog-footer confirmPPFA">
-        <Button
-          label="Confirm PPFA"
-          onClick={handleSubmit}
-          disabled={
-            cppfaDialogFlag
-              ? true
-              : (isAccessEmpty || riskLevel !== "Low"
-                  ? yesOrNo === ""
-                  : false) || designIntent.Task_Status === "Complete"
-          }
-        />
+        {designIntent.Task_Status === "Complete" ? (
+          <Button label="Confirm PPFA" onClick={handleSubmit} disabled />
+        ) : (
+          <Button
+            label="Confirm PPFA"
+            onClick={handleSubmit}
+            disabled={
+              isAccessEmpty || riskLevel !== "Low"
+                ? cppfaDialogFlag
+                  ? false
+                  : yesOrNo === ""
+                : false
+            }
+          />
+        )}
       </div>
     </Dialog>
   );
