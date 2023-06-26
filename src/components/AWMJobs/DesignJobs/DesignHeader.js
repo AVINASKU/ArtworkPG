@@ -46,8 +46,7 @@ const DesignHeader = ({
                       <span className="p-menuitem-text">{mytasks}</span>
                     </NavLink>{" "}
                   </li>{" "}
-                  <li className="p-breadcrumb-chevron pi pi-chevron-right"></li>
-                  <li className="">
+                  <li className="p-breadcrumb-chevron pi pi-chevron-right">
                     <NavLink
                       to={`/${mytasks}/${url[2]}/${url[5]}`}
                       className="p-menuitem-link"
