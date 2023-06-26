@@ -102,14 +102,14 @@ function ProjectPlanCompo(props) {
   const getRestructuredData = (apiData) => {
     let mainTempArr = [];
     let tasks = [];
-    if(props.tabNameForPP === "Input"){
+    if (props.tabNameForPP === "Input") {
       tasks = [
         {
           name: "Start Artwork Alignment",
           code: "SAA",
           data: apiData.filter((data) => data.AWM_Task_ID.includes("SAA_")),
         },
-      ]
+      ];
     } else {
       tasks = [
         {
@@ -152,14 +152,14 @@ function ProjectPlanCompo(props) {
           code: "APRA",
           data: apiData.filter((data) => data.AWM_Task_ID.includes("APRA_")),
         },
-  
+
         {
           name: "Confirm Preliminary print feasibility Assessment",
           code: "CPPFA",
           data: apiData.filter((data) => data.AWM_Task_ID.includes("CPPFA_")),
         },
         {
-          name: "Define Color Development & Print Trial",
+          name: "Define New Print Feasibility Scope",
           code: "DNPF",
           data: apiData.filter((data) => data.AWM_Task_ID.includes("DNPF_")),
         },
@@ -184,7 +184,6 @@ function ProjectPlanCompo(props) {
           data: apiData.filter((data) => data.AWM_Task_ID.includes("CNIQ_")),
         },
       ];
-     
     }
 
     tasks.forEach((task) => {
@@ -202,7 +201,7 @@ function ProjectPlanCompo(props) {
 
           let dataObj = {};
           dataObj["Task"] = task.data[0]?.AWM_Task_ID.includes("DNPF_")
-            ? "Define Color Development & Print Trial"
+            ? "Define New Print Feasibility Scope"
             : task.data[0]?.Task_Name;
           dataObj["Dependency"] = task.data[0]?.Dependency;
           dataObj["Role"] = task.data[0]?.Role;
@@ -296,7 +295,7 @@ function ProjectPlanCompo(props) {
         }
       }
     });
-   
+
     return mainTempArr; //toBeReplacedWithapiData;
   };
 

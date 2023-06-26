@@ -88,6 +88,15 @@ const CloneJobs = ({
   const url = locationPath?.split("/");
   const pathName = url[2];
 
+  let Art_Brand = [];
+  Artwork_Brand?.forEach((obj) => {
+    Art_Brand.push(obj.Brand_Name);
+  });
+  let Art_Category = [];
+  Artwork_Category?.forEach((obj) => {
+    Art_Category.push(obj.Category_Name);
+  });
+
   useEffect(() => {
     let temp = [];
     isArray(Printer) &&
@@ -297,12 +306,9 @@ const CloneJobs = ({
           ? substrateData + "_"
           : "Substrate" + "_"
         : "") +
-      (Artwork_Brand
-        ? Artwork_Brand?.map((obj) => obj.Brand_Name)
-        : "Brand" + "_") +
-      (Artwork_Category
-        ? Artwork_Category?.map((obj) => obj.Category_Name)
-        : "Category" + "_") +
+      (Artwork_Brand ? Art_Brand.join(", ") : "Brand") +
+      "_" +
+      (Artwork_Category ? Art_Category.join(", ") : "Category") +
       "_" +
       Project_Name +
       "_" +
