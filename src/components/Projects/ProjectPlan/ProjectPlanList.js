@@ -38,7 +38,7 @@ const ProjectPlanList = ({
   isSearch,
   setColWidth,
   childFunc,
-  test
+  test,
 }) => {
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
@@ -276,15 +276,20 @@ const ProjectPlanList = ({
     let currentUrlLastSeg = currentUrl.split("/")[3];
     const key = options?.key;
     const keyCode = key?.split("_");
-    const url = `MyTasks/${keyCode[0]}/${key}/${currentUrlLastSeg}`;
-    console.log("url", url);
-    console.log("url key", options.children.length === 0);
+    const locaiton = window.location.pathname;
+    const url = `${locaiton.split("/")[1]}/${locaiton.split("/")[2]}/${
+      keyCode[0]
+    }/${key}/${currentUrlLastSeg}`;
     return (
       <>
         {field === "Task" && (
           <span
-            className={`${optionsData.State === "Awaiting" ? "dependant-task" : (options.children.length === 0) ? "task-link" : "task"}
-            `}
+            className={`${
+              (options.redirect === true || optionsData.Task) &&
+              optionsData.State !== "Awaiting"
+                ? "task-link"
+                : "task dependant-task"
+            }`}
             onClick={() => {
               if (field && field.length && keyCode[0] !== "CPPFA") {
                 (options.redirect === true || optionsData.Task) &&
