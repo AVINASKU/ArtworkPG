@@ -97,19 +97,19 @@ function ProjectPlanCompo(props) {
 
   useEffect(() => {
     getProjectPlanApi();
-  }, [mode, props.tabNameForPP]);
+  }, [mode, props?.tabNameForPP]);
 
   const getRestructuredData = (apiData) => {
     let mainTempArr = [];
     let tasks = [];
-    if(props.tabNameForPP === "Input"){
+    if (props?.tabNameForPP === "Input") {
       tasks = [
         {
           name: "Start Artwork Alignment",
           code: "SAA",
           data: apiData.filter((data) => data.AWM_Task_ID.includes("SAA_")),
         },
-      ]
+      ];
     } else {
       tasks = [
         {
@@ -152,7 +152,7 @@ function ProjectPlanCompo(props) {
           code: "APRA",
           data: apiData.filter((data) => data.AWM_Task_ID.includes("APRA_")),
         },
-  
+
         {
           name: "Confirm Preliminary print feasibility Assessment",
           code: "CPPFA",
@@ -184,7 +184,6 @@ function ProjectPlanCompo(props) {
           data: apiData.filter((data) => data.AWM_Task_ID.includes("CNIQ_")),
         },
       ];
-     
     }
 
     tasks.forEach((task) => {
@@ -293,7 +292,7 @@ function ProjectPlanCompo(props) {
         mainTempArr.push(tempObj);
       }
     });
-   
+
     return mainTempArr; //toBeReplacedWithapiData;
   };
 

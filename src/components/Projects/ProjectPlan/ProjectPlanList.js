@@ -39,6 +39,7 @@ const ProjectPlanList = ({
   setColWidth,
   childFunc,
   test,
+  tabNameForPP,
 }) => {
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
@@ -280,6 +281,7 @@ const ProjectPlanList = ({
     const url = `${locaiton.split("/")[1]}/${locaiton.split("/")[2]}/${
       keyCode[0]
     }/${key}/${currentUrlLastSeg}`;
+    const dsbpUrl = `/DSBP/${currentUrlLastSeg}`;
     return (
       <>
         {field === "Task" && (
