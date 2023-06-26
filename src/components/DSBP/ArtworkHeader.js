@@ -9,10 +9,9 @@ import DsbpActionDialog from "./DsbpActionDialog";
 import CustomizeView from "./CustomizeView";
 import "primeicons/primeicons.css";
 
-const ArtworkHeader = ({ label, headerName, selected, onActionSubmit }) => {
+const ArtworkHeader = ({ label, headerName, selected, onActionSubmit, actionDialog, setActionDialog }) => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
-  const [actionDialog, setActionDialog] = useState(false);
   const [actionHeader, setActionHeader] = useState("");
   
   const location = useLocation();
@@ -39,16 +38,17 @@ const ArtworkHeader = ({ label, headerName, selected, onActionSubmit }) => {
     {
       value: "Add to Project",
       key:"option-4",
-      header:"Add to Project"
+      header:"Are you sure you want to add these PMP to Project ?"
     }
   ];
 
   const handleAction=(e)=>{
     setActionHeader(e);
-    if(e !== "Add to Project")
-      setActionDialog(true);
-    else
-      onActionSubmit("AddToProject");
+    setActionDialog(true);
+    // if(e !== "Add to Project")
+    //   setActionDialog(true);
+    // else
+    //   onActionSubmit("AddToProject");
   }
   
   const url = locationPath?.split("/");
