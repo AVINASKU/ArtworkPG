@@ -24,7 +24,8 @@ const AgilityList = ({
   onGlobalFilterChange,
   filteredDsbpData,
   setDsbpPmpData,
-  onActionSubmit
+  onActionSubmit,
+  buWiseSortedColumnNames
 }) => {
   const [selectedColumnName, setSelectedColumnName] = useState(null);
   const columnName = [
@@ -162,18 +163,18 @@ const AgilityList = ({
   };
 
   const renderColumns = () => {
-    if (columnName && columnName.length) {
-      return columnName.map((field, index) => {
+    if (buWiseSortedColumnNames && buWiseSortedColumnNames.length) {
+      return buWiseSortedColumnNames.map((field, index) => {
         return (
           <Column
-            field={field}
-            header={() => renderHeader(field)}
+            field={field.Field_Name}
+            header={() => renderHeader(field.Field_Name)}
             body={addBody}
-            key={field}
-            columnKey={field}
+            key={field.Field_Name}
+            columnKey={field.Field_Name}
             showFilterMenu={false}
             alignFrozen="left"
-            filterField={field}
+            filterField={field.Field_Name}
             style={{
               width: "100px",
             }}

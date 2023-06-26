@@ -32,10 +32,19 @@ const DSBP = () => {
   const [actionDialog, setActionDialog] = useState(false);
   const [loader, setLoader] = useState(false);
   const [tableLoader, setTableLoader] = useState(false);
+  const [buWiseSortedColumnNames, setBuWiseSortedColumnNames] = useState(null);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
+  const allBUAttributesData = useSelector(
+    (state) => state.DropDownValuesReducer
+  );
+  const allBUAttributes = allBUAttributesData.DropDownValuesData;
 
-  console.log("selectedProjectDetails", selectedProjectDetails);
+  console.log(
+    "selectedProjectDetails",
+    selectedProjectDetails,
+    allBUAttributes
+  );
 
   const breadcrumb = [
     { label: "My Tasks", url: "/myTasks" },
@@ -49,12 +58,32 @@ const DSBP = () => {
   const ProjectID = selectedProjectDetails?.Project_ID;
 
   useEffect(() => {
-    //if(DropDownValuesData === null)
-    dispatch(getDropDownValues());
+    findAndSortBuWiseColumnNames();
+    // dispatch(getDropDownValues());
   }, [dispatch]);
 
+  const findAndSortBuWiseColumnNames = () => {
+    let buWiseAttributeList =
+      allBUAttributes?.ArtWorkProjectSetupPage?.Artwork_BU;
+    let attributeList = [];
+    if (buWiseAttributeList) {
+      attributeList =
+        buWiseAttributeList.find((item) => item.BU_Name === BU)
+          ?.Attribute_List || [];
+      console.log("attributeList", attributeList);
+    }
+    let sortedData = [];
+    if (attributeList && attributeList.length) {
+      sortedData = [...attributeList].sort((a, b) => {
+        return parseInt(a.Sequence) - parseInt(b.Sequence);
+      });
+      console.log("sorted data", sortedData);
+    }
+    setBuWiseSortedColumnNames(sortedData);
+  };
+
   async function fetchData() {
-  setTableLoader(true);
+    setTableLoader(true);
     const resp = await getDsbpPMPDetails(ProjectID);
     if (!resp) {
       setDsbpPmpData(null);
@@ -96,7 +125,7 @@ const DSBP = () => {
   }, [DropDownData]);
 
   const addDSBPIntoProject = async (InitiativeID, operation) => {
-  setTableLoader(true);
+    setTableLoader(true);
     console.log("dsbp id", InitiativeID, operation);
     if (operation === "add") {
       console.log("add operation");
@@ -249,21 +278,25 @@ const DSBP = () => {
             totalNoOfPMP={totalNoOfPMP}
             totalNoOfPOA={totalNoOfPOA}
           />
-          {tableLoader ? <Loading /> :
-          <AgilityList
-            selected={selected}
-            setSelected={setSelected}
-            selectAllChecked={selectAllChecked}
-            handleSelect={handleSelect}
-            handleSelectAll={handleSelectAll}
-            dsbpPmpData={dsbpPmpData}
-            filteredDsbpData={filteredDsbpData}
-            onSort={onSort}
-            onGlobalFilterChange={onGlobalFilterChange}
-            selectedFields={selectedFields}
-            setDsbpPmpData={setDsbpPmpData}
-            onActionSubmit={onActionSubmit}
-          /> }
+          {tableLoader ? (
+            <Loading />
+          ) : (
+            <AgilityList
+              selected={selected}
+              setSelected={setSelected}
+              selectAllChecked={selectAllChecked}
+              handleSelect={handleSelect}
+              handleSelectAll={handleSelectAll}
+              dsbpPmpData={dsbpPmpData}
+              filteredDsbpData={filteredDsbpData}
+              onSort={onSort}
+              onGlobalFilterChange={onGlobalFilterChange}
+              selectedFields={selectedFields}
+              setDsbpPmpData={setDsbpPmpData}
+              onActionSubmit={onActionSubmit}
+              buWiseSortedColumnNames={buWiseSortedColumnNames}
+            />
+          )}
           <FooterButtons
             handleCancel={handleCancel}
             hideSaveButton={true}
