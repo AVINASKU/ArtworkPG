@@ -238,10 +238,23 @@ function DNIQ() {
   };
 
   const checkFormValidity = (IQdata) => {
+    // console.log("IQ data Valid and selected: ", IQdata);
     const validTasks = IQdata?.filter((task) => {
-      return task?.Printer && task?.Select;
+      return task?.Printer?.length > 0 && task?.Select;
     });
-    if (validTasks.length > 0) {
+    const selectedTasks = IQdata?.filter((task) => {
+      return task?.Select;
+    });
+    // console.log(
+    //   "Valid and selected: ",
+    //   validTasks.length,
+    //   selectedTasks.length
+    // );
+    if (
+      validTasks?.length > 0 &&
+      selectedTasks?.length > 0 &&
+      validTasks?.length === selectedTasks?.length
+    ) {
       setFormValid(true);
     } else {
       setFormValid(false);
