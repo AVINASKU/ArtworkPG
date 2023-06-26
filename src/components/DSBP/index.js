@@ -16,6 +16,8 @@ import { useDispatch, useSelector } from "react-redux";
 import FooterButtons from "../AWMJobs/DesignJobs/FooterButtons";
 import "./index.scss";
 import { onSortData, Loading } from "../../utils";
+import { Button } from "primereact/button";
+import PMPSpecificTabView from "./PMPSpecificTabView";
 
 const projectId = "A-2316";
 
@@ -239,6 +241,23 @@ const DSBP = () => {
         <Loading />
       ) : (
         <>
+          <Button
+            className="btn button-layout"
+            variant="primary"
+            onClick={() => {
+              setTabsList([
+                ...tabsList,
+                {
+                  tabHeader: `Header ${num}`,
+                  decription: `Header ${num} data`,
+                },
+              ]);
+              setNum(num + 1);
+            }}
+          >
+            Add Tab
+          </Button>
+          <PMPSpecificTabView tabsList={tabsList} />
           <ArtworkHeader
             breadcrumb={breadcrumb}
             headerName={headerName}
@@ -256,21 +275,24 @@ const DSBP = () => {
             totalNoOfPMP={totalNoOfPMP}
             totalNoOfPOA={totalNoOfPOA}
           />
-          {tableLoader ? <Loading /> :
-          <AgilityList
-            selected={selected}
-            setSelected={setSelected}
-            selectAllChecked={selectAllChecked}
-            handleSelect={handleSelect}
-            handleSelectAll={handleSelectAll}
-            dsbpPmpData={dsbpPmpData}
-            filteredDsbpData={filteredDsbpData}
-            onSort={onSort}
-            onGlobalFilterChange={onGlobalFilterChange}
-            selectedFields={selectedFields}
-            setDsbpPmpData={setDsbpPmpData}
-            onActionSubmit={onActionSubmit}
-          /> }
+          {tableLoader ? (
+            <Loading />
+          ) : (
+            <AgilityList
+              selected={selected}
+              setSelected={setSelected}
+              selectAllChecked={selectAllChecked}
+              handleSelect={handleSelect}
+              handleSelectAll={handleSelectAll}
+              dsbpPmpData={dsbpPmpData}
+              filteredDsbpData={filteredDsbpData}
+              onSort={onSort}
+              onGlobalFilterChange={onGlobalFilterChange}
+              selectedFields={selectedFields}
+              setDsbpPmpData={setDsbpPmpData}
+              onActionSubmit={onActionSubmit}
+            />
+          )}
           <FooterButtons
             handleCancel={handleCancel}
             hideSaveButton={true}
