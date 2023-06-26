@@ -10,14 +10,12 @@ import {
   addDsbpToProject,
   deleteDsbpFromProject,
   getDsbpPMPDetails,
-  onSubmitDsbpAction
+  onSubmitDsbpAction,
 } from "../../apis/dsbpApi";
 import { useDispatch, useSelector } from "react-redux";
 import FooterButtons from "../AWMJobs/DesignJobs/FooterButtons";
 import "./index.scss";
 import { onSortData, Loading } from "../../utils";
-
-const projectId = "A-2316";
 
 const DSBP = () => {
   const navigate = useNavigate();
@@ -33,6 +31,11 @@ const DSBP = () => {
   const [totalNoOfPOA, setTotalNoOfPOA] = useState(0);
   const [actionDialog, setActionDialog] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [tableLoader, setTableLoader] = useState(false);
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
+
+  console.log("selectedProjectDetails", selectedProjectDetails);
 
   const breadcrumb = [
     { label: "My Tasks", url: "/myTasks" },
@@ -41,41 +44,46 @@ const DSBP = () => {
 
   const dispatch = useDispatch();
   const headerName = "Artwork Alignment";
-  const BU = "BABY CARE";
-  const Region = "EUROPE";
-  console.log("dropdown data", DropDownData);
+  const BU = selectedProjectDetails?.BU;
+  const Region = selectedProjectDetails?.Project_region;
+  const ProjectID = selectedProjectDetails?.Project_ID;
 
   useEffect(() => {
     //if(DropDownValuesData === null)
     dispatch(getDropDownValues());
   }, [dispatch]);
 
+  async function fetchData() {
+  setTableLoader(true);
+    const resp = await getDsbpPMPDetails(ProjectID);
+    if (!resp) {
+      setDsbpPmpData(null);
+    }
+    if (resp && resp.length) {
+      const transformedArray = resp.flatMap((item) =>
+        item.DSBP_PMP_PIMaterialIDPage.map((person) => ({
+          DSBP_InitiativeID: item.DSBP_InitiativeID,
+          ...person,
+        }))
+      );
+
+      setDsbpPmpData(transformedArray);
+      setTotalNoOfPMP(transformedArray.length);
+
+      const count = transformedArray.reduce((acc, obj) => {
+        if (obj.DSBP_PO_PMP_poPoa !== "") {
+          return acc + 1;
+        }
+        return acc;
+      }, 0);
+
+      setTotalNoOfPOA(count);
+    }
+    setTotalNoOfDsbpId(resp?.length);
+    setTableLoader(false);
+  }
 
   useEffect(() => {
-    async function fetchData() {
-      const resp = await getDsbpPMPDetails("A-2474");
-      if (resp && resp.length) {
-        const transformedArray = resp.flatMap((item) =>
-          item.DSBP_PMP_PIMaterialIDPage.map((person) => ({
-            DSBP_InitiativeID: item.DSBP_InitiativeID,
-            ...person,
-          }))
-        );
-
-        setDsbpPmpData(transformedArray);
-        setTotalNoOfPMP(transformedArray.length);
-
-        const count = transformedArray.reduce((acc, obj) => {
-          if (obj.DSBP_PO_PMP_poPoa !== "") {
-            return acc + 1;
-          }
-          return acc;
-        }, 0);
-
-        setTotalNoOfPOA(count);
-      }
-      setTotalNoOfDsbpId(resp.length);
-    }
     fetchData();
   }, []);
 
@@ -88,19 +96,21 @@ const DSBP = () => {
   }, [DropDownData]);
 
   const addDSBPIntoProject = async (InitiativeID, operation) => {
+  setTableLoader(true);
     console.log("dsbp id", InitiativeID, operation);
-    const projectId = "A-2316";
     if (operation === "add") {
       console.log("add operation");
-      let checkRes = await addDsbpToProject(projectId, InitiativeID);
+      let checkRes = await addDsbpToProject(ProjectID, InitiativeID);
       console.log("checkRes", checkRes);
     }
     if (operation === "delete") {
       console.log("delete operation");
-      let checkRes = await deleteDsbpFromProject(projectId, InitiativeID);
+      let checkRes = await deleteDsbpFromProject(ProjectID, InitiativeID);
       console.log("check delete Res", checkRes);
     }
     // fetch dsbp project data after delete / add
+    await fetchData();
+    setTableLoader(false);
   };
 
   const onSort = (column, direction) => (event) => {
@@ -136,27 +146,27 @@ const DSBP = () => {
   const onActionSubmit = async (formData, data) => {
     setLoader(true);
     let updatedData = {};
-    let updatedDataList= [];    
-    if(data){
+    let updatedDataList = [];
+    if (data) {
       const pmpDetails = data;
       updatedData = {
         DSBP_InitiativeID: pmpDetails.DSBP_InitiativeID,
-        DSBP_PMP_PIMaterialID: pmpDetails.DSBP_PMP_PIMaterialID
+        DSBP_PMP_PIMaterialID: pmpDetails.DSBP_PMP_PIMaterialID,
       };
-      
+
       if (formData?.RTA_RTARejectionReason !== undefined) {
         updatedData.RTA_RTARejectionReason = formData?.RTA_RTARejectionReason;
       }
       updatedDataList = [updatedData];
-    } else{
-      updatedDataList = selected?.map((pmpDetails)=>{
+    } else {
+      updatedDataList = selected?.map((pmpDetails) => {
         updatedData = {
           DSBP_InitiativeID: pmpDetails.DSBP_InitiativeID,
-          DSBP_PMP_PIMaterialID: pmpDetails.DSBP_PMP_PIMaterialID
+          DSBP_PMP_PIMaterialID: pmpDetails.DSBP_PMP_PIMaterialID,
         };
-        if(formData === "AddToProject"){       
+        if (formData === "AddToProject") {
           updatedData.FK_AWMProjectID = pmpDetails.FK_AWMProjectID;
-          updatedData.AWM_AddedToProject = "Yes";        
+          updatedData.AWM_AddedToProject = "Yes";
         }
         if (formData.AWM_AISE !== undefined) {
           updatedData.AWM_AISE = formData?.AWM_AISE;
@@ -174,14 +184,13 @@ const DSBP = () => {
       });
     }
     console.log("updatedData", updatedDataList);
-   
+
     const updatedPmpDetails = { ArtworkAgilityPMPs: updatedDataList };
     console.log("updatedPmpDetails", updatedPmpDetails);
     await onSubmitDsbpAction(updatedPmpDetails);
     setActionDialog(false);
     setLoader(false);
   };
-
 
   const handleCancel = () => {
     return navigate(`/myProjects`);
@@ -220,48 +229,48 @@ const DSBP = () => {
   return (
     <div className="artwork-dsbp myProjectAnddAllProjectList">
       {loader || totalNoOfDsbpId === null ? (
-          <Loading />
-        ): (
-          <>
-            <ArtworkHeader
-              breadcrumb={breadcrumb}
-              headerName={headerName}
-              selected={selected}
-              onActionSubmit={onActionSubmit}
-              label="Artwork Alignment"
-              actionDialog={actionDialog}
-              setActionDialog={setActionDialog}
-            />
-            <ProjectNameHeader />
-            <SelectDsbpId
-              dropdownlist={dropdownlist}
-              addDSBPIntoProject={addDSBPIntoProject}
-              totalNoOfDsbpId={totalNoOfDsbpId}
-              totalNoOfPMP={totalNoOfPMP}
-              totalNoOfPOA={totalNoOfPOA}
-            />
-            <AgilityList
-              selected={selected}
-              setSelected={setSelected}
-              selectAllChecked={selectAllChecked}
-              handleSelect={handleSelect}
-              handleSelectAll={handleSelectAll}
-              dsbpPmpData={dsbpPmpData}
-              filteredDsbpData={filteredDsbpData}
-              onSort={onSort}
-              onGlobalFilterChange={onGlobalFilterChange}
-              selectedFields={selectedFields}
-              setDsbpPmpData={setDsbpPmpData}
-              onActionSubmit={onActionSubmit}
-            />
-            <FooterButtons
-              handleCancel={handleCancel}
-              hideSaveButton={true}
-              onSubmit={onSubmit}
-            />
-          </>
-        )}
-      
+        <Loading />
+      ) : (
+        <>
+          <ArtworkHeader
+            breadcrumb={breadcrumb}
+            headerName={headerName}
+            selected={selected}
+            onActionSubmit={onActionSubmit}
+            label="Artwork Alignment"
+            actionDialog={actionDialog}
+            setActionDialog={setActionDialog}
+          />
+          <ProjectNameHeader selectedProjectDetails={selectedProjectDetails} />
+          <SelectDsbpId
+            dropdownlist={dropdownlist}
+            addDSBPIntoProject={addDSBPIntoProject}
+            totalNoOfDsbpId={totalNoOfDsbpId}
+            totalNoOfPMP={totalNoOfPMP}
+            totalNoOfPOA={totalNoOfPOA}
+          />
+          {tableLoader ? <Loading /> :
+          <AgilityList
+            selected={selected}
+            setSelected={setSelected}
+            selectAllChecked={selectAllChecked}
+            handleSelect={handleSelect}
+            handleSelectAll={handleSelectAll}
+            dsbpPmpData={dsbpPmpData}
+            filteredDsbpData={filteredDsbpData}
+            onSort={onSort}
+            onGlobalFilterChange={onGlobalFilterChange}
+            selectedFields={selectedFields}
+            setDsbpPmpData={setDsbpPmpData}
+            onActionSubmit={onActionSubmit}
+          /> }
+          <FooterButtons
+            handleCancel={handleCancel}
+            hideSaveButton={true}
+            onSubmit={onSubmit}
+          />
+        </>
+      )}
     </div>
   );
 };
