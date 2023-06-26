@@ -17,8 +17,6 @@ import FooterButtons from "../AWMJobs/DesignJobs/FooterButtons";
 import "./index.scss";
 import { onSortData, Loading } from "../../utils";
 
-const projectId = "A-2316";
-
 const DSBP = () => {
   const navigate = useNavigate();
   const [dropdownlist, setDropdownList] = useState(null);
@@ -33,6 +31,10 @@ const DSBP = () => {
   const [totalNoOfPOA, setTotalNoOfPOA] = useState(0);
   const [actionDialog, setActionDialog] = useState(false);
   const [loader, setLoader] = useState(false);
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
+
+  console.log("selectedProjectDetails", selectedProjectDetails);
 
   const breadcrumb = [
     { label: "My Tasks", url: "/myTasks" },
@@ -41,9 +43,9 @@ const DSBP = () => {
 
   const dispatch = useDispatch();
   const headerName = "Artwork Alignment";
-  const BU = "BABY CARE";
-  const Region = "EUROPE";
-  console.log("dropdown data", DropDownData);
+  const BU = selectedProjectDetails?.BU;
+  const Region = selectedProjectDetails?.Project_region;
+  const ProjectID = selectedProjectDetails?.Project_ID;
 
   useEffect(() => {
     //if(DropDownValuesData === null)
@@ -53,7 +55,7 @@ const DSBP = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const resp = await getDsbpPMPDetails("A-2474");
+      const resp = await getDsbpPMPDetails(ProjectID);
       if (resp && resp.length) {
         const transformedArray = resp.flatMap((item) =>
           item.DSBP_PMP_PIMaterialIDPage.map((person) => ({
@@ -74,7 +76,7 @@ const DSBP = () => {
 
         setTotalNoOfPOA(count);
       }
-      setTotalNoOfDsbpId(resp.length);
+      setTotalNoOfDsbpId(resp?.length);
     }
     fetchData();
   }, []);
@@ -232,7 +234,7 @@ const DSBP = () => {
               actionDialog={actionDialog}
               setActionDialog={setActionDialog}
             />
-            <ProjectNameHeader />
+            <ProjectNameHeader selectedProjectDetails={selectedProjectDetails} />
             <SelectDsbpId
               dropdownlist={dropdownlist}
               addDSBPIntoProject={addDSBPIntoProject}
