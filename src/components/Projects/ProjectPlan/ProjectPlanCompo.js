@@ -369,37 +369,40 @@ function ProjectPlanCompo(props) {
               setActiveSave={setActiveSave}
               getProjectPlanApi={getProjectPlanApi}
               isAccessEmpty={isAccessEmpty}
+              view={props.view}
             />
-            <div className="form-buttons" style={{ background: "#FAFAFA" }}>
-              <Button
-                className={
-                  !isAccessEmpty ? "btn btn-disabled" : "button-layout"
-                }
-                variant="secondary"
-                onClick={() => navigate("/myProjects")}
-                disabled={!isAccessEmpty}
-              >
-                Cancel
-              </Button>
+            {props.view === "Tabular" && (
+              <div className="form-buttons" style={{ background: "#FAFAFA" }}>
+                <Button
+                  className={
+                    !isAccessEmpty ? "btn btn-disabled" : "button-layout"
+                  }
+                  variant="secondary"
+                  onClick={() => navigate("/myProjects")}
+                  disabled={!isAccessEmpty}
+                >
+                  Cancel
+                </Button>
 
-              <Button
-                className={activeSave ? "btn btn-disabled" : "button-layout"}
-                variant="secondary"
-                onClick={onSave}
-                disabled={activeSave}
-              >
-                Save
-              </Button>
+                <Button
+                  className={activeSave ? "btn btn-disabled" : "button-layout"}
+                  variant="secondary"
+                  onClick={onSave}
+                  disabled={activeSave}
+                >
+                  Save
+                </Button>
 
-              <Button
-                className="button-layout"
-                variant="primary"
-                onClick={activate}
-                disabled={activeFlag}
-              >
-                Activate
-              </Button>
-            </div>
+                <Button
+                  className="button-layout"
+                  variant="primary"
+                  onClick={activate}
+                  disabled={activeFlag}
+                >
+                  Activate
+                </Button>
+              </div>
+            )}
           </>
         )}
       </>
