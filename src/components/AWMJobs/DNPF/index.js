@@ -205,7 +205,7 @@ function DNPF() {
         PrintingProcess: task?.Printing_Process,
         Substrate: task?.Substrate,
         Select: task?.Select.toString(),
-        PrintTrialNeeded: task?.Print_Trial_Needed,
+        PrintTrialNeeded: task?.Print_Trial_Needed.toString(),
         AdditionalInfo: task?.Additional_Info,
         Action: taskAction,
         Printer: task?.Printer,

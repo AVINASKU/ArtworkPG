@@ -362,8 +362,8 @@ const CloneJobs = ({
         style={{
           marginLeft: 15,
           marginRight: 15,
-          marginBottom: 15,
-          marginTop: 5,
+          marginBottom: 25,
+          marginTop: 25,
         }}
         className="label-header"
       >
