@@ -15,9 +15,10 @@ import {
 import { getDSBPDropdownData } from "../../../store/actions/DSBPActions";
 import { onSortData } from "../../../utils";
 import "./index.scss";
+import { Accordion } from "react-bootstrap";
 
 const projectId = "A-2316";
-const PMPSpecificTabView = ({ tabsList }) => {
+const PMPSpecificTabView = ({ tabsList, tabPanel, handleTabPanel }) => {
   const navigate = useNavigate();
   const [dropdownlist, setDropdownList] = useState(null);
   const [selectAllChecked, setSelectAllChecked] = useState(false);
@@ -114,50 +115,141 @@ const PMPSpecificTabView = ({ tabsList }) => {
   const onSubmit = () => {
     return navigate(`/myProjects`);
   };
-
   console.log("dropdownlist", dropdownlist);
 
   const onGlobalFilterChange = (e, colName) => {
     const value = e.value;
-
     console.log("value and e.value", value, e.value);
-
     setSelectedFields(value);
   };
 
   const tabsCompo = (obj) => (
     <div className="tabsCompoMain">
-      <table class="table table-sm table-hover">
-        <tbody>
-          <tr>
-            <td className="columnWidth">{obj.decription}</td>
-            <td>Mark</td>
-          </tr>
-          <tr>
-            <td className="columnWidth">{obj.decription}</td>
-            <td>Jacob</td>
-          </tr>
-          <tr>
-            <td className="columnWidth">{obj.decription}</td>
-            <td>Jacob</td>
-          </tr>
-          <tr>
-            <td className="columnWidth">{obj.decription}</td>
-            <td>Jacob</td>
-          </tr>
-          <tr>
-            <td className="columnWidth">{obj.decription}</td>
-            <td>Jacob</td>
-          </tr>
-        </tbody>
-      </table>
+      <Accordion defaultActiveKey="0" flush>
+        <Accordion.Item eventKey="0">
+          <Accordion.Header>Material Details</Accordion.Header>
+          <Accordion.Body>
+            <table class="table table-sm table-hover">
+              <tbody>
+                <tr>
+                  <td className="columnWidth">{obj.decription}</td>
+                  <td>Mark</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">{obj.decription}</td>
+                  <td>Jacob</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">{obj.decription}</td>
+                  <td>Jacob</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">{obj.decription}</td>
+                  <td>Jacob</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">{obj.decription}</td>
+                  <td>Jacob</td>
+                </tr>
+              </tbody>
+            </table>
+          </Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="1">
+          <Accordion.Header>AWM</Accordion.Header>
+          <Accordion.Body>
+            <table class="table table-sm table-hover">
+              <tbody>
+                <tr>
+                  <td className="columnWidth">{obj.decription}</td>
+                  <td>Mark</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">{obj.decription}</td>
+                  <td>Jacob</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">{obj.decription}</td>
+                  <td>Jacob</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">{obj.decription}</td>
+                  <td>Jacob</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">{obj.decription}</td>
+                  <td>Jacob</td>
+                </tr>
+              </tbody>
+            </table>
+          </Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="2">
+          <Accordion.Header>RTA Data</Accordion.Header>
+          <Accordion.Body>
+            <table class="table table-sm table-hover">
+              <tbody>
+                <tr>
+                  <td className="columnWidth">{obj.decription}</td>
+                  <td>Mark</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">{obj.decription}</td>
+                  <td>Jacob</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">{obj.decription}</td>
+                  <td>Jacob</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">{obj.decription}</td>
+                  <td>Jacob</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">{obj.decription}</td>
+                  <td>Jacob</td>
+                </tr>
+              </tbody>
+            </table>
+          </Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="3">
+          <Accordion.Header>DSBP Data</Accordion.Header>
+          <Accordion.Body>
+            <table class="table table-sm table-hover">
+              <tbody>
+                <tr>
+                  <td className="columnWidth">{obj.decription}</td>
+                  <td>Mark</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">{obj.decription}</td>
+                  <td>Jacob</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">{obj.decription}</td>
+                  <td>Jacob</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">{obj.decription}</td>
+                  <td>Jacob</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">{obj.decription}</td>
+                  <td>Jacob</td>
+                </tr>
+              </tbody>
+            </table>
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
     </div>
   );
 
   return (
     <div>
-      {tabsList.length > 1 ? (
-        <TabView activeIndex={1}>
+      {tabsList.length > 1 && tabPanel !== 0? (
+        <TabView activeIndex={tabPanel} onTabChange={(e) => handleTabPanel(e.index)}>
           {tabsList.map((obj, index) => (
             <TabPanel
               header={index === 0 ? "Artwork Alignment" : obj.tabHeader}

@@ -58,7 +58,7 @@ const DSBP = () => {
   }, [dispatch]);
 
   async function fetchData() {
-  setTableLoader(true);
+    setTableLoader(true);
     const resp = await getDsbpPMPDetails(ProjectID);
     if (!resp) {
       setDsbpPmpData(null);
@@ -100,7 +100,7 @@ const DSBP = () => {
   }, [DropDownData]);
 
   const addDSBPIntoProject = async (InitiativeID, operation) => {
-  setTableLoader(true);
+    setTableLoader(true);
     console.log("dsbp id", InitiativeID, operation);
     if (operation === "add") {
       console.log("add operation");
@@ -235,6 +235,8 @@ const DSBP = () => {
   ]);
   const [num, setNum] = useState(2);
 
+  const [tabPanel, handleTabPanel] = useState(1);
+
   return (
     <div className="artwork-dsbp myProjectAnddAllProjectList">
       {loader || totalNoOfDsbpId === null ? (
@@ -253,11 +255,16 @@ const DSBP = () => {
                 },
               ]);
               setNum(num + 1);
+              handleTabPanel(1);
             }}
           >
             Add Tab
           </Button>
-          <PMPSpecificTabView tabsList={tabsList} />
+          <PMPSpecificTabView
+            tabsList={tabsList}
+            tabPanel={tabPanel}
+            handleTabPanel={handleTabPanel}
+          />
           <ArtworkHeader
             breadcrumb={breadcrumb}
             headerName={headerName}
