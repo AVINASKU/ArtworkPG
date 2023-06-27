@@ -7,6 +7,7 @@ import DSBPFilter from "./DSBPFilter";
 import "../Projects/MyProjects/index.scss";
 import DsbpCommonPopup from "./DsbpCommonPopup";
 import DsbpRejectDialog from "./RejectDialog";
+import DsbpActionDialog from "./DsbpActionDialog";
 import { generateUniqueKey } from "../../utils";
 import { onSortData } from "../../utils";
 
@@ -29,8 +30,9 @@ const AgilityList = ({
   const op = useRef(null);
 
   const [rejectDialog, setRejectDialog] = useState(false);
-  const [rejectionData, setRejectionData] = useState(false);
+  const [onChangeData, setOnChangeData] = useState(false);
   const [rejectFormData, setRejectFormData] = useState({});
+  const [handleYesAddToPRoject, setHandleYesAddToPRoject] = useState(false);
 
   const addToProjectList = [
     { name: "Yes", code: "Yes" },
@@ -43,9 +45,10 @@ const AgilityList = ({
     rowData[ele] = e.target.value;
     console.log("dsbpPmpData", dsbpPmpData);
     setDsbpPmpData([...dsbpPmpData]);
-    setRejectionData(rowData);
+    setOnChangeData(rowData);
     if (e.target.value === "Reject") setRejectDialog(true);
     setRejectFormData({});
+    if (e.target.value === "Yes") setHandleYesAddToPRoject(true)
   };
 
   const projectNameOnClick = (e, options) => {
@@ -203,14 +206,24 @@ const AgilityList = ({
           dasbpDialog={rejectDialog}
           setDasbpDialog={setRejectDialog}
           rejectFormData={rejectFormData}
-          onSubmit={() => onActionSubmit(rejectFormData, rejectionData)}
+          onSubmit={() => onActionSubmit(rejectFormData, [onChangeData])}
         >
           <DsbpRejectDialog
-            rejectionData={rejectionData}
+            onChangeData={onChangeData}
             rejectFormData={rejectFormData}
             setRejectFormData={setRejectFormData}
           />
         </DsbpCommonPopup>
+      )}
+      {handleYesAddToPRoject && (
+        <DsbpActionDialog
+          actionHeader="Are you sure you want to add these PMP to Project ?"
+          actionDialog={handleYesAddToPRoject}
+          setActionDialog={setHandleYesAddToPRoject}
+          onChangeData={onChangeData}
+          rowData={onChangeData}
+          onActionSubmit={onActionSubmit}
+        />
       )}
     </>
   );

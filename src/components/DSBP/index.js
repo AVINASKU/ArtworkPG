@@ -176,19 +176,9 @@ const DSBP = () => {
     setLoader(true);
     let updatedData = {};
     let updatedDataList = [];
-    if (data) {
-      const pmpDetails = data;
-      updatedData = {
-        DSBP_InitiativeID: pmpDetails.DSBP_InitiativeID,
-        DSBP_PMP_PIMaterialID: pmpDetails.DSBP_PMP_PIMaterialID,
-      };
-
-      if (formData?.RTA_RTARejectionReason !== undefined) {
-        updatedData.RTA_RTARejectionReason = formData?.RTA_RTARejectionReason;
-      }
-      updatedDataList = [updatedData];
-    } else {
-      updatedDataList = selected?.map((pmpDetails) => {
+    const selectionData = data ? data : selected;
+    
+      updatedDataList = selectionData?.map((pmpDetails) => {
         updatedData = {
           DSBP_InitiativeID: pmpDetails.DSBP_InitiativeID,
           DSBP_PMP_PIMaterialID: pmpDetails.DSBP_PMP_PIMaterialID,
@@ -211,7 +201,7 @@ const DSBP = () => {
         }
         return updatedData;
       });
-    }
+    
     console.log("updatedData", updatedDataList);
 
     const updatedPmpDetails = { ArtworkAgilityPMPs: updatedDataList };

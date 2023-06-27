@@ -12,7 +12,8 @@ const DsbpActionDialog = ({
   actionNameObject,
   onActionSubmit,
   aiseList,
-  assemblyMechanismList
+  assemblyMechanismList,
+  rowData
 }) => {
   const [packageName, setPackageName] = useState("");
   const [groupName, setGroupName] = useState("");
@@ -20,11 +21,17 @@ const DsbpActionDialog = ({
   const [assemblyMechanismChange, setAssemblyMechanismChange] = useState("");
   const [bioside, setBioside] = useState("");
   const [formData, setFormData] = useState({});
+  if(rowData){
+    selected = [rowData];
+  }
 
-  let updatedData = actionNameObject.filter(
+  let updatedData = actionNameObject?.filter(
     (data) => data.header === actionHeader
   );
-
+  
+    // if((updatedData && updatedData[0]?.value === "Add to Project") || rowData){
+    //   setFormData("AddToProject")
+    // }
   const handleAiseChange = (e) => {
     setAISEName(e.target.value);
     setFormData({
@@ -57,20 +64,20 @@ const DsbpActionDialog = ({
   const footerContent = (
     <div>
       <Button variant="secondary" onClick={() => setActionDialog(false)}>
-      {updatedData[0]?.value === "Add to Project" ? "No" : "Cancel"}
+      {(updatedData && updatedData[0]?.value === "Add to Project") || rowData ? "No" : "Cancel"}
       </Button>
       <Button
-        disabled={updatedData[0]?.value === "Add to Project" ? false : Object.keys(formData).length === 0}
-        onClick={() => onActionSubmit(formData)}
+        disabled={(updatedData && updatedData[0]?.value === "Add to Project") || rowData ? false : Object.keys(formData).length === 0}
+        onClick={() => ((updatedData && updatedData[0]?.value === "Add to Project") || rowData) ? onActionSubmit("AddToProject", selected) : onActionSubmit(formData)}
       >
-        {updatedData[0]?.value === "Mass Update" ? "Update" : updatedData[0]?.value === "Add to Project" ? "Yes" : "Submit"}
+        {(updatedData && updatedData[0]?.value === "Mass Update") ? "Update" : (updatedData && updatedData[0]?.value === "Add to Project") || rowData ? "Yes" : "Submit"}
       </Button>
     </div>
   );
   console.log("selectedv action", selected);
 
   return (
-    console.log("formData", Object.keys(formData).length === 0),
+    console.log("formData", rowData),
     (
       <div className="card flex justify-content-center dsbp-action-dialog">
         <Dialog
@@ -82,7 +89,7 @@ const DsbpActionDialog = ({
           className="actionDialog"
         >
           <Row style={{ "height": "100%"}}>
-          { updatedData[0]?.value === "Add to Project" ? (
+          {rowData || (updatedData && updatedData[0]?.value === "Add to Project") ? (
                 <Col sm={12} style={{ "height": "100%"}}>
                   {selected && (
                       <DataTable value={selected} dataKey="id" className="addToProjectTable" scrollable>
@@ -97,7 +104,7 @@ const DsbpActionDialog = ({
               ) : (
                   <>
                     <Col sm={7} style={{ "height": "100%"}}>
-                      {selected && updatedData[0]?.value !== "Add to Project" && (
+                      {selected && updatedData && updatedData[0]?.value !== "Add to Project" && (
                         <div className="card" style={{ "height": "100%"}}>
                           <DataTable value={selected} dataKey="id" scrollable>
                             <Column
@@ -110,7 +117,7 @@ const DsbpActionDialog = ({
                       )}
                     </Col>
                     <Col sm={5}>
-                      {updatedData[0]?.value === "Mass Update" && (
+                      {updatedData && updatedData[0]?.value === "Mass Update" && (
                         <Row>
                           <Col sm={12}>
                             <Form.Group
@@ -174,7 +181,7 @@ const DsbpActionDialog = ({
                           </Col>
                         </Row>
                       )}
-                      {updatedData[0]?.value === "Group PMPs" && (
+                      {updatedData && updatedData[0]?.value === "Group PMPs" && (
                         <Form.Group
                           className={`mb-2`}
                           controlId="groupName.ControlInput1"
@@ -191,7 +198,7 @@ const DsbpActionDialog = ({
                           />
                         </Form.Group>
                       )}
-                      {updatedData[0]?.value === "Create POAA" && (
+                      {updatedData && updatedData[0]?.value === "Create POAA" && (
                         <Form.Group
                           className={`mb-2`}
                           controlId="groupName.ControlInput1"
