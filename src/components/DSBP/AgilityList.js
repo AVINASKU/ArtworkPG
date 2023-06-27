@@ -78,7 +78,10 @@ const AgilityList = ({
     setRejectionData(rowData);
     if(e.target.value === "Reject")
       setRejectDialog(true);
-      setRejectFormData({})
+      setRejectFormData({});
+    
+      if(e.target.value === "Yes")
+      setRejectDialog(true);
   }
 
   const addBody = (options, rowData) => {
