@@ -19,12 +19,12 @@ const SelectDsbpId = ({
 
 
   const cityOptionTemplate = (option) => {
+  let initiativeName = option.InitiativeID + "_" + option.InitiativeName + "_" + option.IL +"_" + option.Scope;
+  console.log("here here", initiativeName, option);
     return (
       <div className="city-option">
         <div className="city-name" onClick={(e) => e.stopPropagation()}>
-          {option.InitiativeID} -- {addEllipsis(option.InitiativeName, 40)}
-          {/* need to uncomment below code and romove line no 20 above code is only for i need to know the initivative id */}
-          {/* {addEllipsis(option.InitiativeName, 50)} */}
+          {addEllipsis(initiativeName, 75)}
         </div>
         <div>
           <img
@@ -104,15 +104,15 @@ const SelectDsbpId = ({
           itemTemplate={cityOptionTemplate}
           maxSelectedLabels={3}
           panelClassName="dsbp-multiselect-dropdown"
-          style={{ maxWidth: 330, width: "300%" }}
+          style={{ maxWidth: 370, width: "300%" }}
         />
 
         <div className="action-buttons margin-right">
-          <div>DSBP ID's : {NumberConversion(totalNoOfDsbpId)}</div>
-          <div>PMP's Locked : {NumberConversion(0)}</div>
-          <div> Added Project : {NumberConversion(1)}</div>
-          <div> Total PMP's: {NumberConversion(totalNoOfPMP)}</div>
-          <div> POA Created : {NumberConversion(totalNoOfPOA)}</div>
+          <div>DSBP ID's : <span style={{color:"#003DA5", fontWeight:600}}>{NumberConversion(totalNoOfDsbpId)} </span></div>
+          <div>PMP's Locked : <span style={{color:"#003DA5", fontWeight:600}}> {NumberConversion(0)} </span> </div>
+          <div> Added Project :<span style={{color:"#003DA5", fontWeight:600}}> {NumberConversion(1)} </span> </div>
+          <div> Total PMP's:<span style={{color:"#003DA5", fontWeight:600}}> {NumberConversion(totalNoOfPMP)} </span> </div>
+          <div> POA Created :<span style={{color:"#003DA5", fontWeight:600}}> {NumberConversion(totalNoOfPOA)} </span> </div>
         </div>
       </div>
       { selectDialog &&
