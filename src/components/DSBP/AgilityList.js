@@ -1,9 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { DataTable } from "primereact/datatable";
-import { Form, Row, Col, Button } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { Column } from "primereact/column";
-import { Dropdown } from "primereact/dropdown";
-// import filter from "../../../assets/images/filter.svg";
 import filter from "../../assets/images/filter.svg";
 import DSBPFilter from "./DSBPFilter";
 import "../Projects/MyProjects/index.scss";
@@ -24,68 +22,62 @@ const AgilityList = ({
   onGlobalFilterChange,
   filteredDsbpData,
   setDsbpPmpData,
-  onActionSubmit
+  onActionSubmit,
+  buWiseSortedColumnNames,
 }) => {
   const [selectedColumnName, setSelectedColumnName] = useState(null);
-  const columnName = [
-    "DSBP_InitiativeID",
-    "DSBP_IL",
-    "DSBP_PMP_PIMaterialID",
-    "DSBP_PO_PMP_poPoa",
-    "DSBP_PO_PMP_poMaterialNumber",
-    "AWM_AddedToProject",
-    "DSBP_PO_PMP_poLanguages",
-    "DSBP_PMP_regulatoryStickeringCos",
-    "DSBP_PMP_PIMaterialDescription",
-    "DSBP_InitiativeState",
-    "DSBP_PO_PMP_poPoaApprovedCountries",
-    "POA #",
-    "POAA Creation Status",
-    "Rejection reason",
-    "RTA Rejection Reason",
-    "Assign a Tagging",
-    "Assembly Mech",
-    "Artwork Reference Material",
-    "AISE",
-    "Biocide",
-    "Brand",
-    "Product Form/Sub Brand",
-    "PO Flavor/Scent",
-    "Ref COS",
-    "PO Languages",
-    "PO POA #",
-    "PO FPC",
-    "PO FPC DESC",
-  ];
   const op = useRef(null);
-  
+
   const [rejectDialog, setRejectDialog] = useState(false);
   const [rejectionData, setRejectionData] = useState(false);
   const [rejectFormData, setRejectFormData] = useState({});
 
   const addToProjectList = [
-      { name: 'Yes', code: 'Yes' },
-      { name: 'No', code: 'No' },
-      { name: 'Reject', code: 'Reject' }
+    { name: "Yes", code: "Yes" },
+    { name: "No", code: "No" },
+    { name: "Reject", code: "Reject" },
   ];
 
-
   const onchangeAddToProject = (rowData, e, ele) => {
-    console.log("hi",rowData, "data", e.target.value, "rowdata", rowData[ele]);
+    console.log("hi", rowData, "data", e.target.value, "rowdata", rowData[ele]);
     rowData[ele] = e.target.value;
     console.log("dsbpPmpData", dsbpPmpData);
     setDsbpPmpData([...dsbpPmpData]);
     setRejectionData(rowData);
-    if(e.target.value === "Reject")
-      setRejectDialog(true);
-      setRejectFormData({});
-    
-      if(e.target.value === "Yes")
-      setRejectDialog(true);
-  }
+    if (e.target.value === "Reject") setRejectDialog(true);
+    setRejectFormData({});
+  };
+
+  const projectNameOnClick = (e, options) => {
+    op.current.toggle(e);
+    setSelectedColumnName(options);
+  };
+
+  const concatenatedFPCStagingFormula = (data) => {
+    const concatenatedData = data.reduce((result, item) => {
+      for (const key in item) {
+        if (result.hasOwnProperty(key)) {
+          result[key] += `,${item[key]}`;
+        } else {
+          result[key] = item[key];
+        }
+      }
+      return result;
+    }, {});
+    return concatenatedData;
+  };
 
   const addBody = (options, rowData) => {
     let field = rowData.field;
+    let FPCStagingFormula =
+      options?.FPCStagingPage?.[0]?.FormulaCardStagingPage;
+
+    let concatenatedFPCStagingFormulaData = {};
+    if (FPCStagingFormula && FPCStagingFormula.length) {
+      concatenatedFPCStagingFormulaData =
+        concatenatedFPCStagingFormula(FPCStagingFormula);
+    }
+
     return (
       <>
         {field === "DSBP_InitiativeID" && (
@@ -99,13 +91,11 @@ const AgilityList = ({
             {options[field]}
           </div>
         )}
-        
+        {options?.FPCStagingPage?.[0][field]}
+        {concatenatedFPCStagingFormulaData?.[field]}
         {field === "AWM_AddedToProject" && (
           <div className="d-flex">
-            <Form.Group
-              className={`mb-2`}
-              controlId="groupName.ControlInput1"
-            >
+            <Form.Group className={`mb-2`} controlId="groupName.ControlInput1">
               <div>
                 <Form.Select
                   placeholder="Select"
@@ -113,17 +103,13 @@ const AgilityList = ({
                 >
                   <option value="">Select</option>
                   {addToProjectList.map((data) => (
-                    <option
-                      key={data.code}
-                      value={data.name}
-                    >
+                    <option key={data.code} value={data.name}>
                       {data.name}
                     </option>
                   ))}
                 </Form.Select>
               </div>
             </Form.Group>
-          
           </div>
         )}
         {field !== "DSBP_InitiativeID" &&
@@ -131,11 +117,6 @@ const AgilityList = ({
           options[field]}
       </>
     );
-  };
-
-  const projectNameOnClick = (e, options) => {
-    op.current.toggle(e);
-    setSelectedColumnName(options);
   };
 
   const renderHeader = (field, isFilterActivated = false) => {
@@ -165,18 +146,18 @@ const AgilityList = ({
   };
 
   const renderColumns = () => {
-    if (columnName && columnName.length) {
-      return columnName.map((field, index) => {
+    if (buWiseSortedColumnNames && buWiseSortedColumnNames.length) {
+      return buWiseSortedColumnNames.map((field, index) => {
         return (
           <Column
-            field={field}
-            header={() => renderHeader(field)}
+            field={field.Field_Name}
+            header={() => renderHeader(field.Field_Name)}
             body={addBody}
-            key={field}
-            columnKey={field}
+            key={field.Field_Name}
+            columnKey={field.Field_Name}
             showFilterMenu={false}
             alignFrozen="left"
-            filterField={field}
+            filterField={field.Field_Name}
             style={{
               width: "100px",
             }}
@@ -223,13 +204,13 @@ const AgilityList = ({
           setDasbpDialog={setRejectDialog}
           rejectFormData={rejectFormData}
           onSubmit={() => onActionSubmit(rejectFormData, rejectionData)}
-          >
-             <DsbpRejectDialog
-              rejectionData= {rejectionData}
-              rejectFormData={rejectFormData}
-              setRejectFormData={setRejectFormData}
-            />
-          </DsbpCommonPopup>
+        >
+          <DsbpRejectDialog
+            rejectionData={rejectionData}
+            rejectFormData={rejectFormData}
+            setRejectFormData={setRejectFormData}
+          />
+        </DsbpCommonPopup>
       )}
     </>
   );
