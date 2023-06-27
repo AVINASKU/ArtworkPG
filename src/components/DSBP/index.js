@@ -88,9 +88,9 @@ const DSBP = () => {
     if (!resp) {
       setDsbpPmpData(null);
     }
-    if (resp && resp.length) {
-      const transformedArray = resp.flatMap((item) =>
-        item.DSBP_PMP_PIMaterialIDPage.map((person) => ({
+    if (resp && resp?.length) {
+      const transformedArray = resp?.flatMap((item) =>
+        item.DSBP_PMP_PIMaterialIDPage?.map((person) => ({
           DSBP_InitiativeID: item.DSBP_InitiativeID,
           ...person,
         }))
@@ -100,7 +100,7 @@ const DSBP = () => {
       setTotalNoOfPMP(transformedArray.length);
 
       const count = transformedArray.reduce((acc, obj) => {
-        if (obj.DSBP_PO_PMP_poPoa !== "") {
+        if (obj?.DSBP_PO_PMP_poPoa !== "") {
           return acc + 1;
         }
         return acc;

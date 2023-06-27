@@ -3,6 +3,7 @@ import { MultiSelect } from "primereact/multiselect";
 import plusCollapseImg from "../../assets/images/plusCollapse.svg";
 import deleteIcon from "../../assets/images/deleteIcon.svg";
 import { addEllipsis } from "../../utils";
+import DsbpCommonPopup from "./DsbpCommonPopup";
 
 const SelectDsbpId = ({
   dropdownlist,
@@ -12,6 +13,10 @@ const SelectDsbpId = ({
   totalNoOfPOA,
 }) => {
   const [selectedCities, setSelectedCities] = useState([]);
+  const [selectDialog, setSelectDialog] = useState(false);
+  const [selectedDsbpData, setSelectedDsbpData] = useState({});
+  const [operation, setOperation] = useState({});
+
 
   const cityOptionTemplate = (option) => {
     return (
@@ -31,7 +36,7 @@ const SelectDsbpId = ({
               "disable-icons"
             }`}
             onClick={(e) => {
-              handleOptionSelection(option, "add");
+              onChangeSelect(option, "add");
             }}
             alt=""
             style={{ height: 12 }}
@@ -42,7 +47,7 @@ const SelectDsbpId = ({
             src={deleteIcon}
             onClick={(e) => {
               e.stopPropagation();
-              handleOptionSelection(option, "delete");
+              onChangeSelect(option, "delete");
               // if (selectedCities.includes(option.InitiativeName)) {
               //   const updatedCities = selectedCities.filter(
               //     (item) => item !== option.InitiativeName
@@ -64,7 +69,13 @@ const SelectDsbpId = ({
     );
   };
 
-  const handleOptionSelection = (option, operation) => {
+  const onChangeSelect = (option, operation) => {
+    setSelectDialog(true);
+    setSelectedDsbpData(option);
+    setOperation(operation);    
+  };
+  const handleOptionSelection = (option, operation) =>{
+    console.log("operation", operation)
     const updatedSelectedCities = [...selectedCities];
     const index = updatedSelectedCities.indexOf(option.InitiativeID);
     if (index > -1) {
@@ -74,7 +85,8 @@ const SelectDsbpId = ({
     }
     setSelectedCities(updatedSelectedCities); // Update selectedCities state
     addDSBPIntoProject(option.InitiativeID, operation);
-  };
+    setSelectDialog(false);
+  }
 
   return (
     <div style={{ textAlign: "initial" }}>
@@ -103,6 +115,21 @@ const SelectDsbpId = ({
           <div> POA Created : {totalNoOfPOA}</div>
         </div>
       </div>
+      { selectDialog &&
+        <DsbpCommonPopup
+          actionHeader={operation === "add" ? `Do you want to select this DSBP ID ?` : `Are you sure you want to delete this DSBP ID ?`}
+          dasbpDialog={selectDialog}
+          setDasbpDialog={setSelectDialog}
+          onSubmit={() => handleOptionSelection(selectedDsbpData, operation)}
+          
+          >
+            <>{selectedDsbpData.InitiativeName}
+              {operation !== "add" &&
+                <div style={{"color": "red", "fontSize": "10px", "paddingTop": "20px"}}>*Any changes you made will be lost</div>
+              }            
+            </>
+          </DsbpCommonPopup>
+      }
     </div>
   );
 };
