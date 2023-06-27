@@ -276,3 +276,8 @@ export const addEllipsis = (text, maxLength) => {
   const trimmedText = text.substring(0, maxLength);
   return trimmedText + "...";
 };
+
+export const NumberConversion = (number) => {
+  const convertedNumber = String(number).padStart(2, "0");
+  return convertedNumber;
+};

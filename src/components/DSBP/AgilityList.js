@@ -123,6 +123,7 @@ const AgilityList = ({
   };
 
   const renderHeader = (field, isFilterActivated = false) => {
+  let splittedCol = field.split("_").join(" ");
     return (
       <span key={field}>
         {field === "DSBP_InitiativeID" && (
@@ -143,7 +144,7 @@ const AgilityList = ({
               : "columnFilterIcon"
           }
         />
-        {field}
+        {splittedCol}
       </span>
     );
   };
@@ -162,7 +163,7 @@ const AgilityList = ({
             alignFrozen="left"
             filterField={field.Field_Name}
             style={{
-              width: "100px",
+              width: "250px",
             }}
           />
         );

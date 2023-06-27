@@ -78,18 +78,18 @@ const ArtworkHeader = ({ label, headerName, selected, onActionSubmit, actionDial
     }
   }, [actionDropDownValues]);
   return (
-    <div className="actions multiselect-padding">
+    <div className="actions">
       {showApproveDialogCPPFA && (
         <CustomizeView
           onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
           showTaskDialog={showApproveDialogCPPFA}
         />
       )}
-      <div className="actions multiselect-padding">
+      <div className="actions">
         <div>
           {/* <BreadCrumb model={breadcrumb} /> */}
           <nav
-            className="p-breadcrumb p-component multiselect-padding"
+            className="p-breadcrumb p-component"
             aria-label="Breadcrumb"
           >
             <ul>
@@ -109,7 +109,7 @@ const ArtworkHeader = ({ label, headerName, selected, onActionSubmit, actionDial
               </li>
             </ul>
           </nav>
-          <div className="project-title margin-left">{headerName}</div>
+          {/* <div className="project-title margin-left">{headerName}</div> */}
         </div>
         <div className="action-buttons">
           <button type="button" className="btn btn-secondary">

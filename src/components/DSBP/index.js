@@ -108,7 +108,7 @@ const DSBP = () => {
 
       setTotalNoOfPOA(count);
     }
-    setTotalNoOfDsbpId(resp?.length);
+    setTotalNoOfDsbpId(resp?.length || 0);
     setTableLoader(false);
   }
 

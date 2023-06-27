@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { MultiSelect } from "primereact/multiselect";
 import plusCollapseImg from "../../assets/images/plusCollapse.svg";
 import deleteIcon from "../../assets/images/deleteIcon.svg";
-import { addEllipsis } from "../../utils";
 import DsbpCommonPopup from "./DsbpCommonPopup";
+import { addEllipsis, NumberConversion } from "../../utils";
 
 const SelectDsbpId = ({
   dropdownlist,
@@ -22,7 +22,7 @@ const SelectDsbpId = ({
     return (
       <div className="city-option">
         <div className="city-name" onClick={(e) => e.stopPropagation()}>
-          {option.InitiativeID} --- {addEllipsis(option.InitiativeName, 40)}
+          {option.InitiativeID} -- {addEllipsis(option.InitiativeName, 40)}
           {/* need to uncomment below code and romove line no 20 above code is only for i need to know the initivative id */}
           {/* {addEllipsis(option.InitiativeName, 50)} */}
         </div>
@@ -108,11 +108,11 @@ const SelectDsbpId = ({
         />
 
         <div className="action-buttons margin-right">
-          <div>DSBP ID's : {totalNoOfDsbpId}</div>
-          <div>PMP's Locked : 00</div>
-          <div> Added Project : 01</div>
-          <div> Total PMP's: {totalNoOfPMP}</div>
-          <div> POA Created : {totalNoOfPOA}</div>
+          <div>DSBP ID's : {NumberConversion(totalNoOfDsbpId)}</div>
+          <div>PMP's Locked : {NumberConversion(0)}</div>
+          <div> Added Project : {NumberConversion(1)}</div>
+          <div> Total PMP's: {NumberConversion(totalNoOfPMP)}</div>
+          <div> POA Created : {NumberConversion(totalNoOfPOA)}</div>
         </div>
       </div>
       { selectDialog &&
