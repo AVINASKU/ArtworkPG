@@ -97,12 +97,11 @@ const AgilityList = ({
         {options?.FPCStagingPage?.[0][field]}
         {concatenatedFPCStagingFormulaData?.[field]}
         {field === "AWM_AddedToProject" && (
-          <div className="d-flex">
-            <Form.Group className={`mb-2`} controlId="groupName.ControlInput1">
-              <div>
+            <Form.Group controlId="groupName.ControlInput1" style={{textAlign:"-webkit-center"}}>
                 <Form.Select
                   placeholder="Select"
                   onChange={(e) => onchangeAddToProject(options, e, field)}
+                  style={{width:"80%", fontSize:12}}
                 >
                   <option value="">Select</option>
                   {addToProjectList.map((data) => (
@@ -111,9 +110,7 @@ const AgilityList = ({
                     </option>
                   ))}
                 </Form.Select>
-              </div>
             </Form.Group>
-          </div>
         )}
         {field !== "DSBP_InitiativeID" &&
           field !== "AWM_AddedToProject" &&

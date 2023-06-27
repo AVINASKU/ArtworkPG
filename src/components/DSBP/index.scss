@@ -14,6 +14,15 @@
       height: 100%;
     }
   }
+  .p-multiselect .p-multiselect-label.p-placeholder{
+  color: #595959;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 10px;
+  }
+  .p-multiselect .p-multiselect-label{
+  font-size: 12px;
+  }
 }
 .addToProjectTable{
   &.p-datatable.p-datatable-scrollable > .p-datatable-wrapper > .p-datatable-table > .p-datatable-thead, &.p-datatable .p-datatable-thead > tr > th{
