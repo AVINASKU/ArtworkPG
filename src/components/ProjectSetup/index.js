@@ -289,6 +289,7 @@ function ProjectSetup(props) {
                 childFunc={childFunc}
                 test={test}
                 tabNameForPP={tabNameForPP}
+                view={toggleButtons}
               />
             </div>
             <div

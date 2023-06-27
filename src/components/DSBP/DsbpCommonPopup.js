@@ -18,7 +18,7 @@ const DsbpCommonPopup = ({
         Cancel
       </Button>
       <Button
-        disabled={Object.keys(rejectFormData).length === 0}
+        disabled={rejectFormData && Object.keys(rejectFormData)?.length === 0}
         onClick={onSubmit}
       >
         Submit

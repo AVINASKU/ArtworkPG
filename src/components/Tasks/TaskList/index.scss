@@ -6,7 +6,6 @@ $fontWeight400: 400;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  text-align: center;
   // padding: 24px 15px 15px 15px;
   // padding: 0 15px 15px 15px;
 
@@ -433,10 +432,10 @@ div.flex.align-items-center.gap-2 {
 .p-multiselect-panel {
   z-index: 100000 !important;
 }
-.dropdown-menu{
+.dropdown-menu {
   width: 175px;
-  border-color: #003DA5;
-  box-shadow: 0px 6px 16px 0px #5959593D;
+  border-color: #003da5;
+  box-shadow: 0px 6px 16px 0px #5959593d;
 }
 .p-autocomplete {
   box-shadow: none !important;

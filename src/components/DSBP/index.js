@@ -36,10 +36,19 @@ const DSBP = () => {
   const [actionDialog, setActionDialog] = useState(false);
   const [loader, setLoader] = useState(false);
   const [tableLoader, setTableLoader] = useState(false);
+  const [buWiseSortedColumnNames, setBuWiseSortedColumnNames] = useState(null);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
+  const allBUAttributesData = useSelector(
+    (state) => state.DropDownValuesReducer
+  );
+  const allBUAttributes = allBUAttributesData.DropDownValuesData;
 
-  console.log("selectedProjectDetails", selectedProjectDetails);
+  console.log(
+    "selectedProjectDetails",
+    selectedProjectDetails,
+    allBUAttributes
+  );
 
   const breadcrumb = [
     { label: "My Tasks", url: "/myTasks" },
@@ -53,9 +62,29 @@ const DSBP = () => {
   const ProjectID = selectedProjectDetails?.Project_ID;
 
   useEffect(() => {
-    //if(DropDownValuesData === null)
-    dispatch(getDropDownValues());
+    findAndSortBuWiseColumnNames();
+    // dispatch(getDropDownValues());
   }, [dispatch]);
+
+  const findAndSortBuWiseColumnNames = () => {
+    let buWiseAttributeList =
+      allBUAttributes?.ArtWorkProjectSetupPage?.Artwork_BU;
+    let attributeList = [];
+    if (buWiseAttributeList) {
+      attributeList =
+        buWiseAttributeList.find((item) => item.BU_Name === BU)
+          ?.Attribute_List || [];
+      console.log("attributeList", attributeList);
+    }
+    let sortedData = [];
+    if (attributeList && attributeList.length) {
+      sortedData = [...attributeList].sort((a, b) => {
+        return parseInt(a.Sequence) - parseInt(b.Sequence);
+      });
+      console.log("sorted data", sortedData);
+    }
+    setBuWiseSortedColumnNames(sortedData);
+  };
 
   async function fetchData() {
     setTableLoader(true);
@@ -63,9 +92,9 @@ const DSBP = () => {
     if (!resp) {
       setDsbpPmpData(null);
     }
-    if (resp && resp.length) {
-      const transformedArray = resp.flatMap((item) =>
-        item.DSBP_PMP_PIMaterialIDPage.map((person) => ({
+    if (resp && resp?.length) {
+      const transformedArray = resp?.flatMap((item) =>
+        item.DSBP_PMP_PIMaterialIDPage?.map((person) => ({
           DSBP_InitiativeID: item.DSBP_InitiativeID,
           ...person,
         }))
@@ -75,7 +104,7 @@ const DSBP = () => {
       setTotalNoOfPMP(transformedArray.length);
 
       const count = transformedArray.reduce((acc, obj) => {
-        if (obj.DSBP_PO_PMP_poPoa !== "") {
+        if (obj?.DSBP_PO_PMP_poPoa !== "") {
           return acc + 1;
         }
         return acc;
@@ -298,6 +327,7 @@ const DSBP = () => {
               selectedFields={selectedFields}
               setDsbpPmpData={setDsbpPmpData}
               onActionSubmit={onActionSubmit}
+              buWiseSortedColumnNames={buWiseSortedColumnNames}
             />
           )}
           <FooterButtons

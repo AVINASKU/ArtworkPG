@@ -138,7 +138,20 @@ function DNPF() {
     const validTasks = CDdata?.filter((task) => {
       return task?.Printing_Process && task?.Substrate && task?.Select;
     });
-    if (validTasks.length > 0) {
+    const selectedTasks = CDdata?.filter((task) => {
+      return task?.Select;
+    });
+
+    // console.log(
+    //   "Valid and selected: ",
+    //   validTasks.length,
+    //   selectedTasks.length
+    // );
+    if (
+      validTasks?.length > 0 &&
+      selectedTasks?.length > 0 &&
+      validTasks?.length === selectedTasks?.length
+    ) {
       setFormValid(true);
     } else {
       setFormValid(false);
@@ -191,8 +204,8 @@ function DNPF() {
         DesignJobID: taskDesignJobID,
         PrintingProcess: task?.Printing_Process,
         Substrate: task?.Substrate,
-        Select: task?.Select.toString(),
-        PrintTrialNeeded: task?.Print_Trial_Needed,
+        Select: task?.Select?.toString(),
+        PrintTrialNeeded: task?.Print_Trial_Needed?.toString(),
         AdditionalInfo: task?.Additional_Info,
         Action: taskAction,
         Printer: task?.Printer,
