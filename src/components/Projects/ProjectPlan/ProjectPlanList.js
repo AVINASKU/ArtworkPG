@@ -23,10 +23,8 @@ import CPPFA from "./../../AWMJobs/CPPFA";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
-import GanttChart from "./GanttChart";
 
 const ProjectPlanList = ({
-  view,
   projectPlan,
   selectedProject,
   projectPlanDesign,
@@ -41,7 +39,6 @@ const ProjectPlanList = ({
   setColWidth,
   childFunc,
   test,
-  tabNameForPP
 }) => {
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
@@ -279,29 +276,26 @@ const ProjectPlanList = ({
     let currentUrlLastSeg = currentUrl.split("/")[3];
     const key = options?.key;
     const keyCode = key?.split("_");
-    const url = `MyTasks/${keyCode[0]}/${key}/${currentUrlLastSeg}`;
-    const dsbpUrl = `/DSBP/${currentUrlLastSeg}`;
-    
+    const locaiton = window.location.pathname;
+    const url = `${locaiton.split("/")[1]}/${locaiton.split("/")[2]}/${
+      keyCode[0]
+    }/${key}/${currentUrlLastSeg}`;
     return (
       <>
         {field === "Task" && (
           <span
             className={`${
-              optionsData.State === "Awaiting"
-                ? "dependant-task"
-                : options.children.length === 0
+              (options.redirect === true || optionsData.Task) &&
+              optionsData.State !== "Awaiting"
                 ? "task-link"
-                : "task"
-            }
-            `}
+                : "task dependant-task"
+            }`}
             onClick={() => {
-              if (field && field.length && keyCode[0] !== "CPPFA" && tabNameForPP !== "Input") {
+              if (field && field.length && keyCode[0] !== "CPPFA") {
                 (options.redirect === true || optionsData.Task) &&
                   navigate(`../${url}`, { replace: true });
-              } else if(field && field.length && keyCode[0] === "CPPFA") {
+              } else {
                 handleApproveDialogCPPFA(options);
-              } else{
-                navigate(`../${dsbpUrl}`, { replace: true });
               }
             }}
           >
@@ -616,8 +610,8 @@ const ProjectPlanList = ({
     setSortData([column, direction]);
     localStorage.setItem("allProjectSortingData", JSON.stringify(sortData));
   };
+
   const pegadata1 = pegadata?.map((obj) => obj.data);
-  const pegadata2 = pegadata1?.map((obj) => { return {...obj, AWM_Project_ID: ProjectID}});
 
   const [showApproveDialogCPPFA, setShowApproveDialogCPPFA] = useState(false);
   const [selectedTaskApproveDialogCPPFA, setSelectedTaskApproveDialogCPPFA] =
@@ -665,61 +659,58 @@ const ProjectPlanList = ({
           onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
           showTaskDialog={showApproveDialogCPPFA}
           selectedTaskData={selectedTaskApproveDialogCPPFA}
-          pegadata={pegadata2}
+          pegadata={pegadata1}
           getProjectPlanApi={getProjectPlanApi}
           TaskDetailsData={TaskDetailsData}
         />
       )}
       <Suspense fallback={<div>Loading...</div>}>
-        {view === "Tabular" && (
-          <div className="card">
-            <ConfirmationPopUp
-              onSort={onSort}
-              setProjectFrozen={setProjectFrozen}
-              saveSettings={saveSettings}
-              projectData={pegadata1}
-              addFrozenColumns={addFrozenColumns}
-              onGlobalFilterChange={onGlobalFilterChange}
-              selectedColumnName={selectedColumnName}
-              ProjectFrozen={ProjectFrozen}
-              selectedFields={selectedCities}
-              setFrozenColumn={setFrozenColumn}
-              frozenCoulmns={frozenCoulmns}
-              sortData={sortData}
-              setSortData={setSortData}
-              setFilters={setFilters}
-              filters={filters}
-              op={op}
-              clearColumnWiseFilter={clearColumnWiseFilter}
+        <div className="card">
+          <ConfirmationPopUp
+            onSort={onSort}
+            setProjectFrozen={setProjectFrozen}
+            saveSettings={saveSettings}
+            projectData={pegadata1}
+            addFrozenColumns={addFrozenColumns}
+            onGlobalFilterChange={onGlobalFilterChange}
+            selectedColumnName={selectedColumnName}
+            ProjectFrozen={ProjectFrozen}
+            selectedFields={selectedCities}
+            setFrozenColumn={setFrozenColumn}
+            frozenCoulmns={frozenCoulmns}
+            sortData={sortData}
+            setSortData={setSortData}
+            setFilters={setFilters}
+            filters={filters}
+            op={op}
+            clearColumnWiseFilter={clearColumnWiseFilter}
+          />
+          <TreeTable
+            resizableColumns
+            dataKey="Task"
+            reorderableColumns
+            // scrollable
+            onColReorder={storeReorderedColumns}
+            value={filters.length ? filters : pegadata}
+            loading={loader}
+            className="mt-3 textAlignTreeTable"
+            // tableStyle={{ minWidth: "119rem", tableLayout: "auto" }}
+            tableStyle={{ width: "max-content", minWidth: "100%" }}
+            // filterDisplay={isSearch && "row"}
+            // filters={true}
+          >
+            {/* <Column header="" expander={true}></Column> */}
+            {dynamicColumns()}
+          </TreeTable>
+          {showTaskDialog && (
+            <TaskDialog
+              onClose={() => setShowTaskDialog(!showTaskDialog)}
+              showTaskDialog={showTaskDialog}
+              selectedTaskData={selectedTask}
+              flag={flag}
             />
-            <TreeTable
-              resizableColumns
-              dataKey="Task"
-              reorderableColumns
-              // scrollable
-              onColReorder={storeReorderedColumns}
-              value={filters.length ? filters : pegadata}
-              loading={loader}
-              className="mt-3 textAlignTreeTable"
-              // tableStyle={{ minWidth: "119rem", tableLayout: "auto" }}
-              tableStyle={{ width: "max-content", minWidth: "100%" }}
-              // filterDisplay={isSearch && "row"}
-              // filters={true}
-            >
-              {/* <Column header="" expander={true}></Column> */}
-              {dynamicColumns()}
-            </TreeTable>
-            {showTaskDialog && (
-              <TaskDialog
-                onClose={() => setShowTaskDialog(!showTaskDialog)}
-                showTaskDialog={showTaskDialog}
-                selectedTaskData={selectedTask}
-                flag={flag}
-              />
-            )}
-          </div>
-        )}
-        {view === "GanttChart" && <GanttChart />}
+          )}
+        </div>
       </Suspense>
     </div>
   );
