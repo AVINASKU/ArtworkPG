@@ -125,205 +125,202 @@ const PMPSpecificTabView = ({ tabsList, tabPanel, handleTabPanel }) => {
   };
 
   const tabsCompo = (obj) => (
-    <div className="tabsCompoMain">
-      <Accordion defaultActiveKey="0" flush>
-        <Accordion.Item eventKey="0">
-          <Accordion.Header>Material Details</Accordion.Header>
-          <Accordion.Body>
-            <table class="table table-sm table-hover">
-              <tbody>
-                <tr>
-                  <td className="columnWidth">DSBP_InitiativeID</td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">DSBP_PMP_PIMaterialNumber</td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">
-                    DSBP_PMP_PIMaterialDescription
-                  </td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">AWReadinessGateStatus</td>
-                  <td>{obj.decription}</td>
-                </tr>
-              </tbody>
-            </table>
-          </Accordion.Body>
-        </Accordion.Item>
-        <Accordion.Item eventKey="1">
-          <Accordion.Header>AWM</Accordion.Header>
-          <Accordion.Body>
-            <table class="table table-sm table-hover">
-              <tbody>
-                <tr>
-                  <td className="columnWidth">AWM_AddedToProject</td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">AWM_AWJStatus</td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">AWM_POARequested</td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">AWM_AssemblyMechanism</td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">AWM_GroupPMP</td>
-                  <td>{obj.decription}</td>
-                </tr>
-              </tbody>
-            </table>
-          </Accordion.Body>
-        </Accordion.Item>
-        <Accordion.Item eventKey="2">
-          <Accordion.Header>RTA Data</Accordion.Header>
-          <Accordion.Body>
-            <table class="table table-sm table-hover">
-              <tbody>
-                <tr>
-                  <td className="columnWidth">RTA_POANumber</td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">RTA_RTAPOAStatus</td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">RTA_RTARejectionReason</td>
-                  <td>{obj.decription}</td>
-                </tr>
-              </tbody>
-            </table>
-          </Accordion.Body>
-        </Accordion.Item>
-        <Accordion.Item eventKey="3">
-          <Accordion.Header>DSBP Data</Accordion.Header>
-          <Accordion.Body>
-            <table class="table table-sm table-hover">
-              <tbody>
-                <tr>
-                  <td className="columnWidth">PICountry_Countries</td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">PILanguage_Languages</td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">
-                    DSBP_PO_PMP_poPoaApprovedCountries
-                  </td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">DSBP_PO_PMP_poLanguages</td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">
-                    DSBP_PMP_PIPackagingComponentType
-                  </td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">DSM_PMP_PrintingProcess</td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">POA_POANumber</td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">DSBP_PMP_artworkComment</td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">DSBP_PMP_promo</td>
-                  <td>{obj.decription}</td>
-                </tr>
-              </tbody>
-            </table>
-          </Accordion.Body>
-        </Accordion.Item>
-        <Accordion.Item eventKey="4">
-          <Accordion.Header>DSBP PO Data</Accordion.Header>
-          <Accordion.Body>
-            <table class="table table-sm table-hover">
-              <tbody>
-                <tr>
-                  <td className="columnWidth">DSBP_PO_PMP_poMaterialNumber</td>
-                  <td>{obj.decription}</td>
-                </tr>
-              </tbody>
-            </table>
-          </Accordion.Body>
-        </Accordion.Item>
-        <Accordion.Item eventKey="5">
-          <Accordion.Header>FPC Data</Accordion.Header>
-          <Accordion.Body>
-            <table class="table table-sm table-hover">
-              <tbody>
-                <tr>
-                  <td className="columnWidth">DSBP_FPC_FPCCode</td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">DSBP_FPC_FPCDescription</td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">DSBP_FPC_Brand</td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">DSBP_FPC_Category</td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">DSBP_FPC_ProductForm</td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">POFPC_poFPCCode</td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">POFPC_poBrandName</td>
-                  <td>{obj.decription}</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">POFPC_poFPCDescription</td>
-                  <td>{obj.decription}</td>
-                </tr>
-              </tbody>
-            </table>
-          </Accordion.Body>
-        </Accordion.Item>
-      </Accordion>
+    <div className="tabsCompo">
+      <div className="acceptChanges">
+        <button>Accept Changes</button>
+      </div>
+      <div className="tabsCompoMain">
+        <Accordion defaultActiveKey="0" flush>
+          <Accordion.Item eventKey="0">
+            <Accordion.Header>Material Details</Accordion.Header>
+            <Accordion.Body>
+              <table class="table table-sm table-hover">
+                <tbody>
+                  <tr>
+                    <td className="columnWidth">DSBP_InitiativeID</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">DSBP_PMP_PIMaterialNumber</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">
+                      DSBP_PMP_PIMaterialDescription
+                    </td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">AWReadinessGateStatus</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="1">
+            <Accordion.Header>AWM</Accordion.Header>
+            <Accordion.Body>
+              <table class="table table-sm table-hover">
+                <tbody>
+                  <tr>
+                    <td className="columnWidth">AWM_AddedToProject</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">AWM_AWJStatus</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">AWM_POARequested</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">AWM_AssemblyMechanism</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">AWM_GroupPMP</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="2">
+            <Accordion.Header>RTA Data</Accordion.Header>
+            <Accordion.Body>
+              <table class="table table-sm table-hover">
+                <tbody>
+                  <tr>
+                    <td className="columnWidth">RTA_POANumber</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">RTA_RTAPOAStatus</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">RTA_RTARejectionReason</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="3">
+            <Accordion.Header>DSBP Data</Accordion.Header>
+            <Accordion.Body>
+              <table class="table table-sm table-hover">
+                <tbody>
+                  <tr>
+                    <td className="columnWidth">PICountry_Countries</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">PILanguage_Languages</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">
+                      DSBP_PO_PMP_poPoaApprovedCountries
+                    </td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">DSBP_PO_PMP_poLanguages</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">
+                      DSBP_PMP_PIPackagingComponentType
+                    </td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">DSM_PMP_PrintingProcess</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">POA_POANumber</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">DSBP_PMP_artworkComment</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">DSBP_PMP_promo</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="4">
+            <Accordion.Header>DSBP PO Data</Accordion.Header>
+            <Accordion.Body>
+              <table class="table table-sm table-hover">
+                <tbody>
+                  <tr>
+                    <td className="columnWidth">
+                      DSBP_PO_PMP_poMaterialNumber
+                    </td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="5">
+            <Accordion.Header>FPC Data</Accordion.Header>
+            <Accordion.Body>
+              <table class="table table-sm table-hover">
+                <tbody>
+                  <tr>
+                    <td className="columnWidth">DSBP_FPC_FPCCode</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">DSBP_FPC_FPCDescription</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">DSBP_FPC_Brand</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">DSBP_FPC_Category</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">DSBP_FPC_ProductForm</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">POFPC_poFPCCode</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">POFPC_poBrandName</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                  <tr>
+                    <td className="columnWidth">POFPC_poFPCDescription</td>
+                    <td>{obj.decription}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </Accordion.Body>
+          </Accordion.Item>
+        </Accordion>
+      </div>
       <div className="form-buttons" style={{ background: "#FAFAFA" }}>
-        <Button
-          className="button-layout"
-          variant="secondary"
-          // onClick={() => navigate("/myProjects")}
-          // disabled={!isAccessEmpty}
-        >
+        <Button className="button-layout" variant="secondary">
           Cancel
         </Button>
 
-        <Button
-          className="button-layout"
-          variant="primary"
-          // onClick={onSave}
-          // disabled={activeSave}
-        >
+        <Button className="button-layout DSBPsubmit" variant="primary">
           Submit
         </Button>
       </div>
