@@ -5,12 +5,12 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
 const DsbpCommonPopup = ({
-    children,
+  children,
   actionHeader,
   dasbpDialog,
   setDasbpDialog,
   rejectFormData,
-  onSubmit
+  onSubmit,
 }) => {
   const footerContent = (
     <div>
@@ -27,20 +27,18 @@ const DsbpCommonPopup = ({
   );
 
   return (
-    (
-      <div className="card flex justify-content-center dsbp-action-dialog">
-        <Dialog
-          header={actionHeader}
-          visible={dasbpDialog}
-          style={{ width: "40vw" }}
-          onHide={() => setDasbpDialog(false)}
-          footer={footerContent}
-          className="actionDialog dsbpCommonPopup"
-        >
-          {children}
-        </Dialog>
-      </div>
-    )
+    <div className="card flex justify-content-center dsbp-action-dialog">
+      <Dialog
+        header={actionHeader}
+        visible={dasbpDialog}
+        style={{ width: "40vw" }}
+        onHide={() => setDasbpDialog(false)}
+        footer={footerContent}
+        className="actionDialog dsbpCommonPopup"
+      >
+        {children}
+      </Dialog>
+    </div>
   );
 };
 export default DsbpCommonPopup;
