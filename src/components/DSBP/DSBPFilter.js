@@ -16,7 +16,6 @@ const DSBPFilter = ({
   frozenUpdated,
 }) => {
   const optionList1 = optionList(dsbpPmpData, selectedColumnName);
-  console.log("dsbp pmp data", dsbpPmpData, optionList1, selectedColumnName);
   let jsonColumnWidth = localStorage.getItem("columnWidthDSBPArtwork");
   let allColumns = JSON.parse(jsonColumnWidth);
 

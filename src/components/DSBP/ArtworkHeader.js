@@ -78,7 +78,6 @@ const ArtworkHeader = ({
       actionDropDownValues !== undefined &&
       actionDropDownValues.length !== 0
     ) {
-      console.log("actionDropDownValues", actionDropDownValues);
       setAISEList(actionDropDownValues.AISE);
       setAssemblyMechanismList(actionDropDownValues.Assembly_Mechanism);
     }

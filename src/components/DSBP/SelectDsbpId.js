@@ -12,6 +12,7 @@ const SelectDsbpId = ({
   totalNoOfDsbpId,
   totalNoOfPMP,
   totalNoOfPOA,
+  totalNoOfAddedProject
 }) => {
   const [selectedCities, setSelectedCities] = useState([]);
   const [selectDialog, setSelectDialog] = useState(false);
@@ -133,7 +134,7 @@ const SelectDsbpId = ({
             Added Project :
             <span style={{ color: "#003DA5", fontWeight: 600 }}>
               {" "}
-              {NumberConversion(1)}{" "}
+              {NumberConversion(totalNoOfAddedProject)}{" "}
             </span>{" "}
           </div>
           <div>
