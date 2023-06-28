@@ -132,24 +132,22 @@ const PMPSpecificTabView = ({ tabsList, tabPanel, handleTabPanel }) => {
             <table class="table table-sm table-hover">
               <tbody>
                 <tr>
-                  <td className="columnWidth">{obj.decription}</td>
-                  <td>Mark</td>
+                  <td className="columnWidth">DSBP_InitiativeID</td>
+                  <td>{obj.decription}</td>
                 </tr>
                 <tr>
-                  <td className="columnWidth">{obj.decription}</td>
-                  <td>Jacob</td>
+                  <td className="columnWidth">DSBP_PMP_PIMaterialNumber</td>
+                  <td>{obj.decription}</td>
                 </tr>
                 <tr>
-                  <td className="columnWidth">{obj.decription}</td>
-                  <td>Jacob</td>
+                  <td className="columnWidth">
+                    DSBP_PMP_PIMaterialDescription
+                  </td>
+                  <td>{obj.decription}</td>
                 </tr>
                 <tr>
-                  <td className="columnWidth">{obj.decription}</td>
-                  <td>Jacob</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">{obj.decription}</td>
-                  <td>Jacob</td>
+                  <td className="columnWidth">AWReadinessGateStatus</td>
+                  <td>{obj.decription}</td>
                 </tr>
               </tbody>
             </table>
@@ -161,24 +159,24 @@ const PMPSpecificTabView = ({ tabsList, tabPanel, handleTabPanel }) => {
             <table class="table table-sm table-hover">
               <tbody>
                 <tr>
-                  <td className="columnWidth">{obj.decription}</td>
-                  <td>Mark</td>
+                  <td className="columnWidth">AWM_AddedToProject</td>
+                  <td>{obj.decription}</td>
                 </tr>
                 <tr>
-                  <td className="columnWidth">{obj.decription}</td>
-                  <td>Jacob</td>
+                  <td className="columnWidth">AWM_AWJStatus</td>
+                  <td>{obj.decription}</td>
                 </tr>
                 <tr>
-                  <td className="columnWidth">{obj.decription}</td>
-                  <td>Jacob</td>
+                  <td className="columnWidth">AWM_POARequested</td>
+                  <td>{obj.decription}</td>
                 </tr>
                 <tr>
-                  <td className="columnWidth">{obj.decription}</td>
-                  <td>Jacob</td>
+                  <td className="columnWidth">AWM_AssemblyMechanism</td>
+                  <td>{obj.decription}</td>
                 </tr>
                 <tr>
-                  <td className="columnWidth">{obj.decription}</td>
-                  <td>Jacob</td>
+                  <td className="columnWidth">AWM_GroupPMP</td>
+                  <td>{obj.decription}</td>
                 </tr>
               </tbody>
             </table>
@@ -190,24 +188,16 @@ const PMPSpecificTabView = ({ tabsList, tabPanel, handleTabPanel }) => {
             <table class="table table-sm table-hover">
               <tbody>
                 <tr>
-                  <td className="columnWidth">{obj.decription}</td>
-                  <td>Mark</td>
+                  <td className="columnWidth">RTA_POANumber</td>
+                  <td>{obj.decription}</td>
                 </tr>
                 <tr>
-                  <td className="columnWidth">{obj.decription}</td>
-                  <td>Jacob</td>
+                  <td className="columnWidth">RTA_RTAPOAStatus</td>
+                  <td>{obj.decription}</td>
                 </tr>
                 <tr>
-                  <td className="columnWidth">{obj.decription}</td>
-                  <td>Jacob</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">{obj.decription}</td>
-                  <td>Jacob</td>
-                </tr>
-                <tr>
-                  <td className="columnWidth">{obj.decription}</td>
-                  <td>Jacob</td>
+                  <td className="columnWidth">RTA_RTARejectionReason</td>
+                  <td>{obj.decription}</td>
                 </tr>
               </tbody>
             </table>
@@ -219,24 +209,98 @@ const PMPSpecificTabView = ({ tabsList, tabPanel, handleTabPanel }) => {
             <table class="table table-sm table-hover">
               <tbody>
                 <tr>
-                  <td className="columnWidth">{obj.decription}</td>
-                  <td>Mark</td>
+                  <td className="columnWidth">PICountry_Countries</td>
+                  <td>{obj.decription}</td>
                 </tr>
                 <tr>
-                  <td className="columnWidth">{obj.decription}</td>
-                  <td>Jacob</td>
+                  <td className="columnWidth">PILanguage_Languages</td>
+                  <td>{obj.decription}</td>
                 </tr>
                 <tr>
-                  <td className="columnWidth">{obj.decription}</td>
-                  <td>Jacob</td>
+                  <td className="columnWidth">
+                    DSBP_PO_PMP_poPoaApprovedCountries
+                  </td>
+                  <td>{obj.decription}</td>
                 </tr>
                 <tr>
-                  <td className="columnWidth">{obj.decription}</td>
-                  <td>Jacob</td>
+                  <td className="columnWidth">DSBP_PO_PMP_poLanguages</td>
+                  <td>{obj.decription}</td>
                 </tr>
                 <tr>
-                  <td className="columnWidth">{obj.decription}</td>
-                  <td>Jacob</td>
+                  <td className="columnWidth">
+                    DSBP_PMP_PIPackagingComponentType
+                  </td>
+                  <td>{obj.decription}</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">DSM_PMP_PrintingProcess</td>
+                  <td>{obj.decription}</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">POA_POANumber</td>
+                  <td>{obj.decription}</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">DSBP_PMP_artworkComment</td>
+                  <td>{obj.decription}</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">DSBP_PMP_promo</td>
+                  <td>{obj.decription}</td>
+                </tr>
+              </tbody>
+            </table>
+          </Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="4">
+          <Accordion.Header>DSBP PO Data</Accordion.Header>
+          <Accordion.Body>
+            <table class="table table-sm table-hover">
+              <tbody>
+                <tr>
+                  <td className="columnWidth">DSBP_PO_PMP_poMaterialNumber</td>
+                  <td>{obj.decription}</td>
+                </tr>
+              </tbody>
+            </table>
+          </Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="5">
+          <Accordion.Header>FPC Data</Accordion.Header>
+          <Accordion.Body>
+            <table class="table table-sm table-hover">
+              <tbody>
+                <tr>
+                  <td className="columnWidth">DSBP_FPC_FPCCode</td>
+                  <td>{obj.decription}</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">DSBP_FPC_FPCDescription</td>
+                  <td>{obj.decription}</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">DSBP_FPC_Brand</td>
+                  <td>{obj.decription}</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">DSBP_FPC_Category</td>
+                  <td>{obj.decription}</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">DSBP_FPC_ProductForm</td>
+                  <td>{obj.decription}</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">POFPC_poFPCCode</td>
+                  <td>{obj.decription}</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">POFPC_poBrandName</td>
+                  <td>{obj.decription}</td>
+                </tr>
+                <tr>
+                  <td className="columnWidth">POFPC_poFPCDescription</td>
+                  <td>{obj.decription}</td>
                 </tr>
               </tbody>
             </table>
@@ -248,8 +312,11 @@ const PMPSpecificTabView = ({ tabsList, tabPanel, handleTabPanel }) => {
 
   return (
     <div>
-      {tabsList.length > 1 && tabPanel !== 0? (
-        <TabView activeIndex={tabPanel} onTabChange={(e) => handleTabPanel(e.index)}>
+      {tabsList.length > 1 && tabPanel !== 0 ? (
+        <TabView
+          activeIndex={tabPanel}
+          onTabChange={(e) => handleTabPanel(e.index)}
+        >
           {tabsList.map((obj, index) => (
             <TabPanel
               header={index === 0 ? "Artwork Alignment" : obj.tabHeader}
