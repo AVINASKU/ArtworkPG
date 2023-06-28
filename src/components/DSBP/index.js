@@ -79,7 +79,35 @@ const DSBP = () => {
       });
       console.log("sorted data", sortedData);
     }
+
     setBuWiseSortedColumnNames(sortedData);
+    let jsonColumnWidth = localStorage.getItem("columnWidthDSBPArtwork");
+    let columnWidth = JSON.parse(jsonColumnWidth);
+    if (!columnWidth || !columnWidth.length) {
+      if (sortedData && sortedData.length) {
+        sortedData.map((list) => {
+          list["width"] = 250;
+          list["freeze"] = false;
+          list["sortAtoZ"] = false;
+          list["sortZtoA"] = false;
+        });
+      }
+      localStorage.setItem(
+        "columnWidthDSBPArtwork",
+        JSON.stringify(sortedData)
+      );
+    }
+
+    if (columnWidth && columnWidth.length) {
+      let sortedData1 = [];
+      sortedData1 = [...columnWidth].sort((a, b) => {
+        return parseInt(a.Sequence) - parseInt(b.Sequence);
+      });
+      localStorage.setItem(
+        "columnWidthDSBPArtwork",
+        JSON.stringify(sortedData1)
+      );
+    }
   };
 
   async function fetchData() {
@@ -142,7 +170,7 @@ const DSBP = () => {
     setTableLoader(false);
   };
 
-  const onSort = (column, direction) => (event) => {
+  const onSort = (column, direction) => {
     const sortedData = onSortData(column, direction, dsbpPmpData);
     setDsbpPmpData(sortedData);
     console.log("sorted data", sortedData);

@@ -20,7 +20,7 @@ const SelectDsbpId = ({
 
   const cityOptionTemplate = (option) => {
   let initiativeName = option.InitiativeID + "_" + option.InitiativeName + "_" + option.IL +"_" + option.Scope;
-  console.log("here here", initiativeName, option);
+  // console.log("here here", initiativeName, option);
     return (
       <div className="city-option">
         <div className="city-name" onClick={(e) => e.stopPropagation()}>
