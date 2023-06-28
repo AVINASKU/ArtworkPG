@@ -181,31 +181,31 @@ const DSBP = () => {
     let updatedData = {};
     let updatedDataList = [];
     const selectionData = data ? data : selected;
-    
-      updatedDataList = selectionData?.map((pmpDetails) => {
-        updatedData = {
-          DSBP_InitiativeID: pmpDetails.DSBP_InitiativeID,
-          DSBP_PMP_PIMaterialID: pmpDetails.DSBP_PMP_PIMaterialID,
-        };
-        if (formData === "AddToProject") {
-          updatedData.FK_AWMProjectID = pmpDetails.FK_AWMProjectID;
-          updatedData.AWM_AddedToProject = "Yes";
-        }
-        if (formData.AWM_AISE !== undefined) {
-          updatedData.AWM_AISE = formData?.AWM_AISE;
-        }
-        if (formData?.AWM_AssemblyMechanism !== undefined) {
-          updatedData.AWM_AssemblyMechanism = formData?.AWM_AssemblyMechanism;
-        }
-        if (formData?.AWM_Biocide !== undefined) {
-          updatedData.AWM_Biocide = formData?.AWM_Biocide;
-        }
-        if (formData?.AWM_GroupPMP !== undefined) {
-          updatedData.AWM_GroupPMP = formData?.AWM_GroupPMP;
-        }
-        return updatedData;
-      });
-    
+
+    updatedDataList = selectionData?.map((pmpDetails) => {
+      updatedData = {
+        DSBP_InitiativeID: pmpDetails.DSBP_InitiativeID,
+        DSBP_PMP_PIMaterialID: pmpDetails.DSBP_PMP_PIMaterialID,
+      };
+      if (formData === "AddToProject") {
+        updatedData.FK_AWMProjectID = pmpDetails.FK_AWMProjectID;
+        updatedData.AWM_AddedToProject = "Yes";
+      }
+      if (formData.AWM_AISE !== undefined) {
+        updatedData.AWM_AISE = formData?.AWM_AISE;
+      }
+      if (formData?.AWM_AssemblyMechanism !== undefined) {
+        updatedData.AWM_AssemblyMechanism = formData?.AWM_AssemblyMechanism;
+      }
+      if (formData?.AWM_Biocide !== undefined) {
+        updatedData.AWM_Biocide = formData?.AWM_Biocide;
+      }
+      if (formData?.AWM_GroupPMP !== undefined) {
+        updatedData.AWM_GroupPMP = formData?.AWM_GroupPMP;
+      }
+      return updatedData;
+    });
+
     console.log("updatedData", updatedDataList);
 
     const updatedPmpDetails = { ArtworkAgilityPMPs: updatedDataList };
@@ -279,52 +279,59 @@ const DSBP = () => {
           >
             Add Tab
           </Button>
-          <PMPSpecificTabView
-            tabsList={tabsList}
-            tabPanel={tabPanel}
-            handleTabPanel={handleTabPanel}
-          />
-          <ArtworkHeader
-            breadcrumb={breadcrumb}
-            headerName={headerName}
-            selected={selected}
-            onActionSubmit={onActionSubmit}
-            label="Artwork Alignment"
-            actionDialog={actionDialog}
-            setActionDialog={setActionDialog}
-          />
-          <ProjectNameHeader selectedProjectDetails={selectedProjectDetails} />
-          <SelectDsbpId
-            dropdownlist={dropdownlist}
-            addDSBPIntoProject={addDSBPIntoProject}
-            totalNoOfDsbpId={totalNoOfDsbpId}
-            totalNoOfPMP={totalNoOfPMP}
-            totalNoOfPOA={totalNoOfPOA}
-          />
-          {tableLoader ? (
-            <Loading />
-          ) : (
-            <AgilityList
-              selected={selected}
-              setSelected={setSelected}
-              selectAllChecked={selectAllChecked}
-              handleSelect={handleSelect}
-              handleSelectAll={handleSelectAll}
-              dsbpPmpData={dsbpPmpData}
-              filteredDsbpData={filteredDsbpData}
-              onSort={onSort}
-              onGlobalFilterChange={onGlobalFilterChange}
-              selectedFields={selectedFields}
-              setDsbpPmpData={setDsbpPmpData}
-              onActionSubmit={onActionSubmit}
-              buWiseSortedColumnNames={buWiseSortedColumnNames}
+          {tabsList.length > 1 && tabPanel !== 0 ? (
+            <PMPSpecificTabView
+              tabsList={tabsList}
+              tabPanel={tabPanel}
+              handleTabPanel={handleTabPanel}
             />
+          ) : (
+            <>
+              <ArtworkHeader
+                breadcrumb={breadcrumb}
+                headerName={headerName}
+                selected={selected}
+                onActionSubmit={onActionSubmit}
+                label="Artwork Alignment"
+                actionDialog={actionDialog}
+                setActionDialog={setActionDialog}
+              />
+              <ProjectNameHeader
+                selectedProjectDetails={selectedProjectDetails}
+              />
+              <SelectDsbpId
+                dropdownlist={dropdownlist}
+                addDSBPIntoProject={addDSBPIntoProject}
+                totalNoOfDsbpId={totalNoOfDsbpId}
+                totalNoOfPMP={totalNoOfPMP}
+                totalNoOfPOA={totalNoOfPOA}
+              />
+              {tableLoader ? (
+                <Loading />
+              ) : (
+                <AgilityList
+                  selected={selected}
+                  setSelected={setSelected}
+                  selectAllChecked={selectAllChecked}
+                  handleSelect={handleSelect}
+                  handleSelectAll={handleSelectAll}
+                  dsbpPmpData={dsbpPmpData}
+                  filteredDsbpData={filteredDsbpData}
+                  onSort={onSort}
+                  onGlobalFilterChange={onGlobalFilterChange}
+                  selectedFields={selectedFields}
+                  setDsbpPmpData={setDsbpPmpData}
+                  onActionSubmit={onActionSubmit}
+                  buWiseSortedColumnNames={buWiseSortedColumnNames}
+                />
+              )}
+              <FooterButtons
+                handleCancel={handleCancel}
+                hideSaveButton={true}
+                onSubmit={onSubmit}
+              />
+            </>
           )}
-          <FooterButtons
-            handleCancel={handleCancel}
-            hideSaveButton={true}
-            onSubmit={onSubmit}
-          />
         </>
       )}
     </div>

@@ -3,7 +3,7 @@
   border-radius: 24px 24px 0 0;
   height: 400px;
   overflow-y: auto;
-  padding: 18px;
+  margin: 18px;
 
   table td {
     padding: 13px 24px !important;
@@ -21,6 +21,9 @@
   // .accordion .accordion-item .accordion-header:first-child {
   //   border-radius: 4px 4px 0 0;
   // }
+  .accordion {
+    margin: 0;
+  }
   .accordion .accordion-item .accordion-header {
     background-color: rgba(214, 236, 255, 1);
     border-radius: 4px 4px 0 0 !important;

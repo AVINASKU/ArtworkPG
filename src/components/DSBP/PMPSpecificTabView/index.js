@@ -16,6 +16,7 @@ import { getDSBPDropdownData } from "../../../store/actions/DSBPActions";
 import { onSortData } from "../../../utils";
 import "./index.scss";
 import { Accordion } from "react-bootstrap";
+import { Button } from "primereact/button";
 
 const projectId = "A-2316";
 const PMPSpecificTabView = ({ tabsList, tabPanel, handleTabPanel }) => {
@@ -307,6 +308,25 @@ const PMPSpecificTabView = ({ tabsList, tabPanel, handleTabPanel }) => {
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
+      <div className="form-buttons" style={{ background: "#FAFAFA" }}>
+        <Button
+          className="button-layout"
+          variant="secondary"
+          // onClick={() => navigate("/myProjects")}
+          // disabled={!isAccessEmpty}
+        >
+          Cancel
+        </Button>
+
+        <Button
+          className="button-layout"
+          variant="primary"
+          // onClick={onSave}
+          // disabled={activeSave}
+        >
+          Submit
+        </Button>
+      </div>
     </div>
   );
 
