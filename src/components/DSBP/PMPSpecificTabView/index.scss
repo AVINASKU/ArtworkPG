@@ -1,9 +1,9 @@
 .tabsCompoMain {
   // background-color: #eaecea;
   border-radius: 24px 24px 0 0;
-  height: 358px;
+  height: 317px;
   overflow-y: auto;
-  margin: 18px 18px 14px 18px;
+  margin: 16px 18px 14px 18px;
 
   table td {
     padding: 13px 24px !important;
@@ -71,6 +71,25 @@
 }
 
 .tabsCompo {
+  .acceptChanges {
+    text-align: right;
+    text-decoration: underline;
+    color: rgba(0, 61, 165, 1);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19.5px;
+    margin: 24px 24px 0 0;
+
+    button {
+      border: none;
+      background: inherit;
+      text-decoration: underline;
+    }
+    button:hover {
+      color: #4F46E5;
+    }
+  }
+
   .form-buttons {
     display: flex;
     justify-content: flex-end;
