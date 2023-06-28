@@ -125,6 +125,7 @@ const PMPSpecificTabView = ({ tabsList, tabPanel, handleTabPanel }) => {
   };
 
   const tabsCompo = (obj) => (
+    <div className="tabsCompo">
     <div className="tabsCompoMain">
       <Accordion defaultActiveKey="0" flush>
         <Accordion.Item eventKey="0">
@@ -308,6 +309,7 @@ const PMPSpecificTabView = ({ tabsList, tabPanel, handleTabPanel }) => {
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
+      </div>
       <div className="form-buttons" style={{ background: "#FAFAFA" }}>
         <Button
           className="button-layout"
@@ -319,7 +321,7 @@ const PMPSpecificTabView = ({ tabsList, tabPanel, handleTabPanel }) => {
         </Button>
 
         <Button
-          className="button-layout"
+          className="button-layout DSBPsubmit"
           variant="primary"
           // onClick={onSave}
           // disabled={activeSave}

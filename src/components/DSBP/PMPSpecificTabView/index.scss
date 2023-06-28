@@ -1,14 +1,15 @@
 .tabsCompoMain {
   // background-color: #eaecea;
   border-radius: 24px 24px 0 0;
-  height: 400px;
+  height: 358px;
   overflow-y: auto;
-  margin: 18px;
+  margin: 18px 18px 14px 18px;
 
   table td {
     padding: 13px 24px !important;
     text-align: left !important;
   }
+
   table td:after {
     width: 0;
   }
@@ -24,13 +25,16 @@
   .accordion {
     margin: 0;
   }
+
   .accordion .accordion-item .accordion-header {
     background-color: rgba(214, 236, 255, 1);
     border-radius: 4px 4px 0 0 !important;
   }
+
   .accordion-body {
     padding: inherit;
   }
+
   .accordion-button {
     box-shadow: none !important;
     outline: none !important;
@@ -41,25 +45,65 @@
     background-color: rgba(214, 236, 255, 1) !important;
     width: fit-content;
     margin-right: 2px;
+
     &::after {
       margin-left: 1006px;
       position: absolute;
     }
   }
-.collapsed {
-  background-color: rgba(255, 239, 216, 1) !important;
-}
-.accordion .accordion-item .accordion-header:has(.collapsed) {
-  background-color: rgba(255, 239, 216, 1);
-}
+
+  .collapsed {
+    background-color: rgba(255, 239, 216, 1) !important;
+  }
+
+  .accordion .accordion-item .accordion-header:has(.collapsed) {
+    background-color: rgba(255, 239, 216, 1);
+  }
+
   .accordion-button:not(.collapsed) {
     background: rgba(214, 236, 255, 1);
     color: #003da5;
   }
-  tr:nth-child(even) > td {
+
+  tr:nth-child(even)>td {
     background: red !important;
   }
 }
+
+.tabsCompo {
+  .form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0;
+    margin-right: 40px;
+    gap: 24px;
+
+    .btn,
+    .btn:disabled {
+      @extend .btn;
+    }
+  }
+
+  .p-button {
+    width: 90px;
+    height: 32px;
+    color: rgba(0, 61, 165, 1);
+    background: #ffffff;
+    border: 1px solid rgba(0, 61, 165, 1);
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 11.52px;
+    padding: 10px, 24px, 10px, 24px;
+    border-radius: 20px;
+  }
+
+  .DSBPsubmit {
+    background-color: rgba(0, 61, 165, 1);
+    color: rgba(255, 255, 255, 1);
+  }
+}
+
 .p-tabview .p-tabview-panels {
   padding: 0 !important;
 }
