@@ -304,6 +304,12 @@ function CNIQ() {
                     version={version}
                     date={date}
                     checkReadWriteAccess={checkReadWriteAccess}
+                    Artwork_Brand={
+                      TaskDetailsData?.ArtworkAgilityPage?.Artwork_Brand
+                    }
+                    Artwork_Category={
+                      TaskDetailsData?.ArtworkAgilityPage?.Artwork_Category
+                    }
                   />
                 );
               }

@@ -15,6 +15,22 @@
     }
   }
 }
+.addToProjectTable{
+  &.p-datatable.p-datatable-scrollable > .p-datatable-wrapper > .p-datatable-table > .p-datatable-thead, &.p-datatable .p-datatable-thead > tr > th{
+    background: white;
+    border: 0;
+    padding: 0;
+  }
+  &.p-datatable .p-datatable-tbody {
+    > tr > td{
+      border: 0;
+      padding-left: 0;
+    }
+    > tr:first-child td{
+      padding-top: 7px;
+    }
+  }
+}
 .dsbp-select {
   .p-inputwrapper-filled {
     border: 1px solid blue;
