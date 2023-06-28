@@ -25,6 +25,10 @@ const AgilityList = ({
   setDsbpPmpData,
   onActionSubmit,
   buWiseSortedColumnNames,
+  setTabsList, 
+  tabsList,
+  handleTabPanel,
+  tabPanel
 }) => {
   const [selectedColumnName, setSelectedColumnName] = useState(null);
   const op = useRef(null);
@@ -96,6 +100,22 @@ const AgilityList = ({
         )}
         {options?.FPCStagingPage?.[0][field]}
         {concatenatedFPCStagingFormulaData?.[field]}
+        {field === "DSBP_PMP_PIMaterialNumber" && (
+            <a className= "tabView"
+              onClick={() => {
+                setTabsList([
+                  ...tabsList,
+                  {
+                    tabHeader: `${options[field]}`,
+                    decription: `Header ${options[field]} data`,
+                  },
+                ]);
+                handleTabPanel(1)
+              }}
+            >
+            {options[field]}
+          </a>
+        )}
         {field === "AWM_AddedToProject" && (
           <div className="d-flex">
             <Form.Group className={`mb-2`} controlId="groupName.ControlInput1">
@@ -117,6 +137,7 @@ const AgilityList = ({
         )}
         {field !== "DSBP_InitiativeID" &&
           field !== "AWM_AddedToProject" &&
+          field !== "DSBP_PMP_PIMaterialNumber" &&
           options[field]}
       </>
     );
