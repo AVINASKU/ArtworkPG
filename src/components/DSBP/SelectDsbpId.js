@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { MultiSelect } from "primereact/multiselect";
 import plusCollapseImg from "../../assets/images/plusCollapse.svg";
 import deleteIcon from "../../assets/images/deleteIcon.svg";
-import { addEllipsis } from "../../utils";
 import DsbpCommonPopup from "./DsbpCommonPopup";
+import { addEllipsis } from "../../utils";
+import { NumberConversion } from "./utils";
 
 const SelectDsbpId = ({
   dropdownlist,
@@ -11,20 +12,27 @@ const SelectDsbpId = ({
   totalNoOfDsbpId,
   totalNoOfPMP,
   totalNoOfPOA,
+  totalNoOfAddedProject
 }) => {
   const [selectedCities, setSelectedCities] = useState([]);
   const [selectDialog, setSelectDialog] = useState(false);
   const [selectedDsbpData, setSelectedDsbpData] = useState({});
   const [operation, setOperation] = useState({});
 
-
   const cityOptionTemplate = (option) => {
+    let initiativeName =
+      option.InitiativeID +
+      "_" +
+      option.InitiativeName +
+      "_" +
+      option.IL +
+      "_" +
+      option.Scope;
+    // console.log("here here", initiativeName, option);
     return (
       <div className="city-option">
         <div className="city-name" onClick={(e) => e.stopPropagation()}>
-          {option.InitiativeID} --- {addEllipsis(option.InitiativeName, 40)}
-          {/* need to uncomment below code and romove line no 20 above code is only for i need to know the initivative id */}
-          {/* {addEllipsis(option.InitiativeName, 50)} */}
+          {addEllipsis(initiativeName, 75)}
         </div>
         <div>
           <img
@@ -72,10 +80,10 @@ const SelectDsbpId = ({
   const onChangeSelect = (option, operation) => {
     setSelectDialog(true);
     setSelectedDsbpData(option);
-    setOperation(operation);    
+    setOperation(operation);
   };
-  const handleOptionSelection = (option, operation) =>{
-    console.log("operation", operation)
+  const handleOptionSelection = (option, operation) => {
+    console.log("operation", operation);
     const updatedSelectedCities = [...selectedCities];
     const index = updatedSelectedCities.indexOf(option.InitiativeID);
     if (index > -1) {
@@ -86,7 +94,7 @@ const SelectDsbpId = ({
     setSelectedCities(updatedSelectedCities); // Update selectedCities state
     addDSBPIntoProject(option.InitiativeID, operation);
     setSelectDialog(false);
-  }
+  };
 
   return (
     <div style={{ textAlign: "initial" }}>
@@ -104,32 +112,72 @@ const SelectDsbpId = ({
           itemTemplate={cityOptionTemplate}
           maxSelectedLabels={3}
           panelClassName="dsbp-multiselect-dropdown"
-          style={{ maxWidth: 330, width: "300%" }}
+          style={{ maxWidth: 370, width: "300%" }}
         />
 
         <div className="action-buttons margin-right">
-          <div>DSBP ID's : {totalNoOfDsbpId}</div>
-          <div>PMP's Locked : 00</div>
-          <div> Added Project : 01</div>
-          <div> Total PMP's: {totalNoOfPMP}</div>
-          <div> POA Created : {totalNoOfPOA}</div>
+          <div>
+            DSBP ID's :{" "}
+            <span style={{ color: "#003DA5", fontWeight: 600 }}>
+              {NumberConversion(totalNoOfDsbpId)}{" "}
+            </span>
+          </div>
+          <div>
+            PMP's Locked :{" "}
+            <span style={{ color: "#003DA5", fontWeight: 600 }}>
+              {" "}
+              {NumberConversion(0)}{" "}
+            </span>{" "}
+          </div>
+          <div>
+            {" "}
+            Added Project :
+            <span style={{ color: "#003DA5", fontWeight: 600 }}>
+              {" "}
+              {NumberConversion(totalNoOfAddedProject)}{" "}
+            </span>{" "}
+          </div>
+          <div>
+            {" "}
+            Total PMP's:
+            <span style={{ color: "#003DA5", fontWeight: 600 }}>
+              {" "}
+              {NumberConversion(totalNoOfPMP)}{" "}
+            </span>{" "}
+          </div>
+          <div>
+            {" "}
+            POA Created :
+            <span style={{ color: "#003DA5", fontWeight: 600 }}>
+              {" "}
+              {NumberConversion(totalNoOfPOA)}{" "}
+            </span>{" "}
+          </div>
         </div>
       </div>
-      { selectDialog &&
+      {selectDialog && (
         <DsbpCommonPopup
-          actionHeader={operation === "add" ? `Do you want to select this DSBP ID ?` : `Are you sure you want to delete this DSBP ID ?`}
+          actionHeader={
+            operation === "add"
+              ? `Do you want to select this DSBP ID ?`
+              : `Are you sure you want to delete this DSBP ID ?`
+          }
           dasbpDialog={selectDialog}
           setDasbpDialog={setSelectDialog}
           onSubmit={() => handleOptionSelection(selectedDsbpData, operation)}
-          
-          >
-            <>{selectedDsbpData.InitiativeName}
-              {operation !== "add" &&
-                <div style={{"color": "red", "fontSize": "10px", "paddingTop": "20px"}}>*Any changes you made will be lost</div>
-              }            
-            </>
-          </DsbpCommonPopup>
-      }
+        >
+          <>
+            {selectedDsbpData.InitiativeName}
+            {operation !== "add" && (
+              <div
+                style={{ color: "red", fontSize: "10px", paddingTop: "20px" }}
+              >
+                *Any changes you made will be lost
+              </div>
+            )}
+          </>
+        </DsbpCommonPopup>
+      )}
     </div>
   );
 };

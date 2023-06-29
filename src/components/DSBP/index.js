@@ -5,7 +5,6 @@ import SelectDsbpId from "./SelectDsbpId";
 import ProjectNameHeader from "./ProjectNameHeader";
 import AgilityList from "./AgilityList";
 import { getDSBPDropdownData } from "../../store/actions/DSBPActions";
-import { getDropDownValues } from "../../store/actions/dropDownValuesAction";
 import {
   addDsbpToProject,
   deleteDsbpFromProject,
@@ -33,6 +32,7 @@ const DSBP = () => {
   const [totalNoOfDsbpId, setTotalNoOfDsbpId] = useState(0);
   const [totalNoOfPMP, setTotalNoOfPMP] = useState(0);
   const [totalNoOfPOA, setTotalNoOfPOA] = useState(0);
+  const [totalNoOfAddedProject, setTotalNoOfAddedProject] = useState(0);
   const [actionDialog, setActionDialog] = useState(false);
   const [loader, setLoader] = useState(false);
   const [tableLoader, setTableLoader] = useState(false);
@@ -43,12 +43,6 @@ const DSBP = () => {
     (state) => state.DropDownValuesReducer
   );
   const allBUAttributes = allBUAttributesData.DropDownValuesData;
-
-  console.log(
-    "selectedProjectDetails",
-    selectedProjectDetails,
-    allBUAttributes
-  );
 
   const breadcrumb = [
     { label: "My Tasks", url: "/myTasks" },
@@ -74,16 +68,42 @@ const DSBP = () => {
       attributeList =
         buWiseAttributeList.find((item) => item.BU_Name === BU)
           ?.Attribute_List || [];
-      console.log("attributeList", attributeList);
     }
     let sortedData = [];
     if (attributeList && attributeList.length) {
       sortedData = [...attributeList].sort((a, b) => {
         return parseInt(a.Sequence) - parseInt(b.Sequence);
       });
-      console.log("sorted data", sortedData);
     }
+
     setBuWiseSortedColumnNames(sortedData);
+    let jsonColumnWidth = localStorage.getItem("columnWidthDSBPArtwork");
+    let columnWidth = JSON.parse(jsonColumnWidth);
+    if (!columnWidth || !columnWidth.length) {
+      if (sortedData && sortedData.length) {
+        sortedData.map((list) => {
+          list["width"] = 250;
+          list["freeze"] = false;
+          list["sortAtoZ"] = false;
+          list["sortZtoA"] = false;
+        });
+      }
+      localStorage.setItem(
+        "columnWidthDSBPArtwork",
+        JSON.stringify(sortedData)
+      );
+    }
+
+    if (columnWidth && columnWidth.length) {
+      let sortedData1 = [];
+      sortedData1 = [...columnWidth].sort((a, b) => {
+        return parseInt(a.Sequence) - parseInt(b.Sequence);
+      });
+      localStorage.setItem(
+        "columnWidthDSBPArtwork",
+        JSON.stringify(sortedData1)
+      );
+    }
   };
 
   async function fetchData() {
@@ -111,8 +131,15 @@ const DSBP = () => {
       }, 0);
 
       setTotalNoOfPOA(count);
+      const noOfAddedProject = transformedArray.reduce((acc, obj) => {
+        if (obj?.AWM_AddedToProject === "Yes") {
+          return acc + 1;
+        }
+        return acc;
+      }, 0);
+      setTotalNoOfAddedProject(noOfAddedProject);
     }
-    setTotalNoOfDsbpId(resp?.length);
+    setTotalNoOfDsbpId(resp?.length || 0);
     setTableLoader(false);
   }
 
@@ -130,14 +157,11 @@ const DSBP = () => {
 
   const addDSBPIntoProject = async (InitiativeID, operation) => {
     setTableLoader(true);
-    console.log("dsbp id", InitiativeID, operation);
     if (operation === "add") {
-      console.log("add operation");
       let checkRes = await addDsbpToProject(ProjectID, InitiativeID);
       console.log("checkRes", checkRes);
     }
     if (operation === "delete") {
-      console.log("delete operation");
       let checkRes = await deleteDsbpFromProject(ProjectID, InitiativeID);
       console.log("check delete Res", checkRes);
     }
@@ -146,10 +170,9 @@ const DSBP = () => {
     setTableLoader(false);
   };
 
-  const onSort = (column, direction) => (event) => {
+  const onSort = (column, direction) => {
     const sortedData = onSortData(column, direction, dsbpPmpData);
     setDsbpPmpData(sortedData);
-    console.log("sorted data", sortedData);
   };
 
   const handleSelect = (item) => {
@@ -223,11 +246,8 @@ const DSBP = () => {
     return navigate(`/myProjects`);
   };
 
-  console.log("dropdownlist", dropdownlist);
-
   const onGlobalFilterChange = (e, colName) => {
     const value = e.value;
-    console.log("value and e.value", value, e.value);
     setSelectedFields(value);
     const artworkValues = value;
 
@@ -244,7 +264,6 @@ const DSBP = () => {
           }
         }
       });
-      console.log("filtered dsbp data", filteredDsbpData);
       setFilteredDsbpData(filteredDsbpData);
     } else setFilteredDsbpData([]);
   };
@@ -305,6 +324,7 @@ const DSBP = () => {
                 totalNoOfDsbpId={totalNoOfDsbpId}
                 totalNoOfPMP={totalNoOfPMP}
                 totalNoOfPOA={totalNoOfPOA}
+                totalNoOfAddedProject={totalNoOfAddedProject}
               />
               {tableLoader ? (
                 <Loading />

@@ -9,10 +9,19 @@
     margin-right: 20px;
   }
   .p-datatable {
-    height: calc(100% - 280px);
+    height: calc(100% - 175px);
     .p-datatable-wrapper{
       height: 100%;
     }
+  }
+  .p-multiselect .p-multiselect-label.p-placeholder{
+  color: #595959;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 10px;
+  }
+  .p-multiselect .p-multiselect-label{
+  font-size: 12px;
   }
 }
 .addToProjectTable{
@@ -69,7 +78,7 @@
 
   .city-name {
     flex: 1;
-    width: 380px;
+    width: 600px;
   }
 
   .add-new-design-intent-icon,
