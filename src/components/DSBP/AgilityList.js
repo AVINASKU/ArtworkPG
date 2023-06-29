@@ -244,23 +244,13 @@ const AgilityList = ({
     setFieldUpdated(!fieldUpdated);
   };
 
+  const timestamp = new Date().getTime();
+
   return (
     <>
-      <DSBPFilter
-        op={op}
-        onSort={onSort}
-        selectedColumnName={selectedColumnName}
-        dsbpPmpData={dsbpPmpData}
-        selectedFields={selectedFields}
-        onGlobalFilterChange={onGlobalFilterChange}
-        setFrozenUpdated={setFrozenUpdated}
-        frozenUpdated={frozenUpdated}
-        setFieldUpdated={setFieldUpdated}
-        fieldUpdated={fieldUpdated}
-      />
-
       <DataTable
-        dataKey="DSBP_PMP_PIMaterialID"
+        // dataKey="DSBP_PMP_PIMaterialID"
+        key={"DSBP_PMP_PIMaterialID" + timestamp}
         scrollable
         resizableColumns
         // key={generateUniqueKey("artwork")}
@@ -281,6 +271,18 @@ const AgilityList = ({
       >
         {renderColumns()}
       </DataTable>
+      <DSBPFilter
+        op={op}
+        onSort={onSort}
+        selectedColumnName={selectedColumnName}
+        dsbpPmpData={dsbpPmpData}
+        selectedFields={selectedFields}
+        onGlobalFilterChange={onGlobalFilterChange}
+        setFrozenUpdated={setFrozenUpdated}
+        frozenUpdated={frozenUpdated}
+        setFieldUpdated={setFieldUpdated}
+        fieldUpdated={fieldUpdated}
+      />
       {rejectDialog && (
         <DsbpCommonPopup
           actionHeader="Are you sure you want to reject this PMP?"

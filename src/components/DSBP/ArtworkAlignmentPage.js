@@ -290,6 +290,8 @@ const ArtworkAlignment = ({
             fieldUpdated={fieldUpdated}
             buWiseSortedColumnNames={buWiseSortedColumnNames}
             setBuWiseSortedColumnNames={setBuWiseSortedColumnNames}
+            setDsbpPmpData={setDsbpPmpData}
+            dsbpPmpData={dsbpPmpData}
           />
           <ProjectNameHeader selectedProjectDetails={selectedProjectDetails} />
           <SelectDsbpId

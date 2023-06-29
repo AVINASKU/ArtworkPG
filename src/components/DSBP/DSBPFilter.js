@@ -181,7 +181,7 @@ const DSBPFilter = ({
 
   return (
     <span>
-      <OverlayPanel ref={op}>{confirmPopData()}</OverlayPanel>
+      <OverlayPanel  className="overlay" ref={op}>{confirmPopData()}</OverlayPanel>
     </span>
   );
 };
