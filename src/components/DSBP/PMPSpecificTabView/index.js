@@ -126,9 +126,9 @@ const PMPSpecificTabView = ({ tabsList, tabPanel, handleTabPanel }) => {
 
   const tabsCompo = (obj) => (
     <div className="tabsCompo">
-      <div className="acceptChanges">
+      {/* <div className="acceptChanges">
         <button>Accept Changes</button>
-      </div>
+      </div> */}
       <div className="tabsCompoMain">
         <Accordion defaultActiveKey="0" flush>
           <Accordion.Item eventKey="0">
