@@ -1,0 +1,86 @@
+.tabsCompoMain {
+  // background-color: #eaecea;
+  border-radius: 24px 24px 0 0;
+  height: 400px;
+  overflow-y: auto;
+  margin: 18px;
+
+  table td {
+    padding: 13px 24px !important;
+    text-align: left !important;
+  }
+  table td:after {
+    width: 0;
+  }
+
+  .columnWidth {
+    width: 360px;
+    background-color: rgba(233, 241, 255, 1) !important;
+  }
+
+  // .accordion .accordion-item .accordion-header:first-child {
+  //   border-radius: 4px 4px 0 0;
+  // }
+  .accordion {
+    margin: 0;
+  }
+  .accordion .accordion-item .accordion-header {
+    background-color: rgba(214, 236, 255, 1);
+    border-radius: 4px 4px 0 0 !important;
+  }
+  .accordion-body {
+    padding: inherit;
+  }
+  .accordion-button {
+    box-shadow: none !important;
+    outline: none !important;
+    border-radius: 4px 0 0 0 !important;
+    padding-left: 30px;
+    font-size: 14px;
+    color: #003da5;
+    background-color: rgba(214, 236, 255, 1) !important;
+    width: fit-content;
+    margin-right: 2px;
+    &::after {
+      margin-left: 1006px;
+      position: absolute;
+    }
+  }
+.collapsed {
+  background-color: rgba(255, 239, 216, 1) !important;
+}
+.accordion .accordion-item .accordion-header:has(.collapsed) {
+  background-color: rgba(255, 239, 216, 1);
+}
+  .accordion-button:not(.collapsed) {
+    background: rgba(214, 236, 255, 1);
+    color: #003da5;
+  }
+}
+.p-tabview .p-tabview-panels {
+  padding: 0 !important;
+}
+.p-tabview .p-tabview-nav {
+  border: 0;
+  li {
+    .p-tabview-nav-link{
+      padding: 10px;
+      border-radius: 8px;
+      border: 0;
+      margin: 0;
+    }
+    &.p-highlight .p-tabview-nav-link{
+      background: #003DA5;
+      border-color: #003DA5;
+      color: #fff;
+    }
+  }
+  .p-tabview-ink-bar{
+    display: none;
+  }
+}
+button.close-button {
+  border: 0;
+  padding-left: 10px;
+  background: transparent;
+}

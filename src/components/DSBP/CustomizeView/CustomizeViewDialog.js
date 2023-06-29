@@ -68,17 +68,19 @@ const CustomizeViewDialog = ({
       (obj) => obj.ID === parseInt(data[dropType], 10)
     );
     if (index >= -1) {
-      const newList1 = [...list1Data];
       console.log("dropType:", dropType);
-      if (dropType === "drop1" || dropType === "drop2") {
         if (!_.includes(list2Data, list1Data[index])) {
           setList2Func([...list2Data, list1Data[index]]);
+        } else {
+          if(dropType === "drop2") {
+          const index3 = list3.findIndex((obj) => obj.ID === parseInt(data.drop1, 10));
+          if (index3 >= -1) {
+            const newList3 = [...list3];
+            newList3.splice(index3, 1);
+            setList3(newList3);
+          }
         }
-      } else {
-        setList2Func([...list2Data, list1Data[index]]);
-        newList1.splice(index, 1);
-      }
-      setList1Func(newList1);
+        }
     }
   };
 
@@ -158,7 +160,7 @@ const CustomizeViewDialog = ({
                   )
                 }
               >
-                <DraggableList list={list3} type="" />
+                <DraggableList list={list3} type="drop2" />
               </Droppable>
             </div>
           </Col>
