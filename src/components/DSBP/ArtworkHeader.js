@@ -9,11 +9,18 @@ import DsbpActionDialog from "./DsbpActionDialog";
 import CustomizeView from "./CustomizeView";
 import "primeicons/primeicons.css";
 
-const ArtworkHeader = ({ label, headerName, selected, onActionSubmit, actionDialog, setActionDialog }) => {
+const ArtworkHeader = ({
+  label,
+  headerName,
+  selected,
+  onActionSubmit,
+  actionDialog,
+  setActionDialog,
+}) => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
   const [actionHeader, setActionHeader] = useState("");
-  
+
   const location = useLocation();
   const locationPath = location?.pathname;
   const { DropDownValuesData, loading } = useSelector(
@@ -22,35 +29,35 @@ const ArtworkHeader = ({ label, headerName, selected, onActionSubmit, actionDial
   const actionNameObject = [
     {
       value: "Mass Update",
-      key:"option-1",
-      header:"Mass Update"
+      key: "option-1",
+      header: "Mass Update",
     },
     {
       value: "Create POAA",
-      key:"option-2",
-      header:"Are you sure you want to create POAs for below PMPs in RTA ?"
+      key: "option-2",
+      header: "Are you sure you want to create POAs for below PMPs in RTA ?",
     },
     {
       value: "Group PMPs",
-      key:"option-3",
-      header:"Are you sure you want to group these PMPs ?"
+      key: "option-3",
+      header: "Are you sure you want to group these PMPs ?",
     },
     {
       value: "Add to Project",
-      key:"option-4",
-      header:"Are you sure you want to add these PMP to Project ?"
-    }
+      key: "option-4",
+      header: "Are you sure you want to add these PMP to Project ?",
+    },
   ];
 
-  const handleAction=(e)=>{
+  const handleAction = (e) => {
     setActionHeader(e);
     setActionDialog(true);
     // if(e !== "Add to Project")
     //   setActionDialog(true);
     // else
     //   onActionSubmit("AddToProject");
-  }
-  
+  };
+
   const url = locationPath?.split("/");
   const mytasks = url[1];
   const [showApproveDialogCPPFA, setShowApproveDialogCPPFA] = useState(false);
@@ -61,8 +68,7 @@ const ArtworkHeader = ({ label, headerName, selected, onActionSubmit, actionDial
   useEffect(() => {
     if (DropDownValuesData) {
       setActionDropDownValues(
-        DropDownValuesData?.ArtworkAgilityTasksPage.Artwork_Alignment
-        || []
+        DropDownValuesData?.ArtworkAgilityTasksPage.Artwork_Alignment || []
       );
     }
   }, [DropDownValuesData]);
@@ -72,26 +78,22 @@ const ArtworkHeader = ({ label, headerName, selected, onActionSubmit, actionDial
       actionDropDownValues !== undefined &&
       actionDropDownValues.length !== 0
     ) {
-      console.log("actionDropDownValues", actionDropDownValues);
       setAISEList(actionDropDownValues.AISE);
       setAssemblyMechanismList(actionDropDownValues.Assembly_Mechanism);
     }
   }, [actionDropDownValues]);
   return (
-    <div className="actions multiselect-padding">
+    <div className="actions">
       {showApproveDialogCPPFA && (
         <CustomizeView
           onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
           showTaskDialog={showApproveDialogCPPFA}
         />
       )}
-      <div className="actions multiselect-padding">
+      <div className="actions">
         <div>
           {/* <BreadCrumb model={breadcrumb} /> */}
-          <nav
-            className="p-breadcrumb p-component multiselect-padding"
-            aria-label="Breadcrumb"
-          >
+          <nav className="p-breadcrumb p-component" aria-label="Breadcrumb">
             <ul>
               <li className="p-breadcrumb-chevron pi pi-chevron-right"></li>
               <li className="">
@@ -109,7 +111,7 @@ const ArtworkHeader = ({ label, headerName, selected, onActionSubmit, actionDial
               </li>
             </ul>
           </nav>
-          <div className="project-title margin-left">{headerName}</div>
+          {/* <div className="project-title margin-left">{headerName}</div> */}
         </div>
         <div className="action-buttons">
           <button type="button" className="btn btn-secondary">

@@ -12,9 +12,30 @@ const DSBPFilter = ({
   dsbpPmpData,
   selectedFields,
   onGlobalFilterChange,
+  setFrozenUpdated,
+  frozenUpdated,
 }) => {
-  console.log("field", selectedColumnName);
   const optionList1 = optionList(dsbpPmpData, selectedColumnName);
+  let jsonColumnWidth = localStorage.getItem("columnWidthDSBPArtwork");
+  let allColumns = JSON.parse(jsonColumnWidth);
+
+  let checkSelectedColumnIsFreeze = false;
+  let checkSelectedColumnIsSortAtoZ = false;
+  let checkSelectedColumnIsSortZtoA = false;
+
+  if (allColumns) {
+    let checkSelectedColumn = allColumns.filter(
+      (item) => item.Field_Name === selectedColumnName
+    );
+    checkSelectedColumnIsFreeze = checkSelectedColumn[0]?.freeze === true;
+    checkSelectedColumnIsSortAtoZ = checkSelectedColumn[0]?.sortAtoZ === true;
+    checkSelectedColumnIsSortZtoA = checkSelectedColumn[0]?.sortZtoA === true;
+  }
+
+  // allColumns.filter(
+  //   (item) => item.Field_Name === selectedColumnName && item.freeze === true
+  // ).length;
+  // console.log("hello", checkSelectedColumnIsFreeze, checkSelectedColumn);
 
   const confirmPopData = () => {
     return (
@@ -49,16 +70,83 @@ const DSBPFilter = ({
         <div
           id="sortZtoA"
           className="sortAndFrozen"
-          onClick={onSort(selectedColumnName, "desc")}
+          onClick={() => {
+            allColumns.map((ele) => {
+              if (ele.Field_Name === selectedColumnName) {
+                ele["sortZtoA"] = !ele.sortZtoA;
+                ele["sortAtoZ"] = false;
+                console.log("ele", ele, ele.Field_Name);
+              } else {
+                ele["sortZtoA"] = false;
+                ele["sortAtoZ"] = false;
+              }
+            });
+            localStorage.setItem(
+              "columnWidthDSBPArtwork",
+              JSON.stringify(allColumns)
+            );
+            onSort(selectedColumnName, "desc");
+            setFrozenUpdated(!frozenUpdated);
+          }}
         >
-          <div> Sort z to a</div>
+          {checkSelectedColumnIsSortZtoA ? (
+            <div style={{ color: "#003DA5", fontWeight: 600 }}>
+              Sort z to a{" "}
+            </div>
+          ) : (
+            <div> Sort z to a</div>
+          )}
         </div>
         <div
           id="sortAtoZ"
           className="sortAndFrozen"
-          onClick={onSort(selectedColumnName, "asc")}
+          onClick={() => {
+            allColumns.map((ele) => {
+              if (ele.Field_Name === selectedColumnName) {
+                ele["sortAtoZ"] = !ele.sortAtoZ;
+                ele["sortZtoA"] = false;
+                console.log("ele", ele, ele.Field_Name);
+              } else {
+                ele["sortZtoA"] = false;
+                ele["sortAtoZ"] = false;
+              }
+            });
+            localStorage.setItem(
+              "columnWidthDSBPArtwork",
+              JSON.stringify(allColumns)
+            );
+            setFrozenUpdated(!frozenUpdated);
+            onSort(selectedColumnName, "asc");
+          }}
         >
-          <div> Sort a to z</div>
+          {checkSelectedColumnIsSortAtoZ ? (
+            <div style={{ color: "#003DA5", fontWeight: 600 }}>Sort a to z</div>
+          ) : (
+            <div> Sort a to z</div>
+          )}
+        </div>
+        <div
+          id="frozen"
+          className="sortAndFrozen"
+          onClick={() => {
+            allColumns.map((ele) => {
+              if (ele.Field_Name === selectedColumnName) {
+                ele["freeze"] = !ele.freeze;
+                console.log("ele", ele, ele.Field_Name);
+              }
+            });
+            localStorage.setItem(
+              "columnWidthDSBPArtwork",
+              JSON.stringify(allColumns)
+            );
+            setFrozenUpdated(!frozenUpdated);
+          }}
+        >
+          {checkSelectedColumnIsFreeze ? (
+            <div style={{ color: "#003DA5", fontWeight: 600 }}>Freeze </div>
+          ) : (
+            <div> Freeze</div>
+          )}
         </div>
         <div className="multiSelect">
           <MultiSelect
