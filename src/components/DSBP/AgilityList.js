@@ -37,6 +37,7 @@ const AgilityList = ({
   const [onChangeData, setOnChangeData] = useState(false);
   const [rejectFormData, setRejectFormData] = useState({});
   const [handleYesAddToPRoject, setHandleYesAddToPRoject] = useState(false);
+  const [frozenUpdated , setFrozenUpdated] = useState(false);
 
   const addToProjectList = [
     { name: "Yes", code: "Yes" },
@@ -85,6 +86,8 @@ const AgilityList = ({
         concatenatedFPCStagingFormula(FPCStagingFormula);
     }
 
+    console.log("DSBP_PMP_AWReadinessGateStatus", options?.AWM_AddedToProject);
+
     return (
       <>
         {field === "DSBP_InitiativeID" && (
@@ -117,23 +120,23 @@ const AgilityList = ({
           </a>
         )}
         {field === "AWM_AddedToProject" && (
-          <div className="d-flex">
-            <Form.Group className={`mb-2`} controlId="groupName.ControlInput1">
-              <div>
-                <Form.Select
-                  placeholder="Select"
-                  onChange={(e) => onchangeAddToProject(options, e, field)}
-                >
-                  <option value="">Select</option>
-                  {addToProjectList.map((data) => (
-                    <option key={data.code} value={data.name}>
-                      {data.name}
-                    </option>
-                  ))}
-                </Form.Select>
-              </div>
-            </Form.Group>
-          </div>
+          <Form.Group
+            controlId="groupName.ControlInput1"
+            style={{ textAlign: "-webkit-center" }}
+          >
+            <Form.Select
+              placeholder="Select"
+              onChange={(e) => onchangeAddToProject(options, e, field)}
+              style={{ width: "80%", fontSize: 12 }}
+            >
+              <option value="">Select</option>
+              {addToProjectList.map((data) => (
+                <option key={data.code} value={data.name}>
+                  {data.name}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
         )}
         {field !== "DSBP_InitiativeID" &&
           field !== "AWM_AddedToProject" &&
@@ -144,6 +147,7 @@ const AgilityList = ({
   };
 
   const renderHeader = (field, isFilterActivated = false) => {
+    let splittedCol = field.split("_").join(" ");
     return (
       <span key={field}>
         {field === "DSBP_InitiativeID" && (
@@ -164,18 +168,23 @@ const AgilityList = ({
               : "columnFilterIcon"
           }
         />
-        {field}
+        {splittedCol}
       </span>
     );
   };
 
   const renderColumns = () => {
-    if (buWiseSortedColumnNames && buWiseSortedColumnNames.length) {
-      return buWiseSortedColumnNames.map((field, index) => {
+    let jsonColumnWidth = localStorage.getItem("columnWidthDSBPArtwork");
+    let allColumns = JSON.parse(jsonColumnWidth);
+
+    if (allColumns && allColumns.length) {
+      return allColumns.map((field, index) => {
         return (
           <Column
             field={field.Field_Name}
             header={() => renderHeader(field.Field_Name)}
+            frozen={field.freeze}
+            className={field.freeze ? "font-bold" : ""}
             body={addBody}
             key={field.Field_Name}
             columnKey={field.Field_Name}
@@ -183,13 +192,51 @@ const AgilityList = ({
             alignFrozen="left"
             filterField={field.Field_Name}
             style={{
-              width: "100px",
+              width: field.width,
             }}
           />
         );
       });
     }
   };
+
+  const onColumnResizeEnd = (event) => {
+    let columnWidth = [];
+    let jsonColumnWidth = localStorage.getItem("columnWidthDSBPArtwork");
+    if (jsonColumnWidth) {
+      columnWidth = JSON.parse(jsonColumnWidth);
+    }
+    if (columnWidth) {
+      columnWidth.map((list) => {
+        if (event.column.props.field === list.Field_Name) {
+          list.width = event.element.offsetWidth;
+        }
+      });
+    }
+    localStorage.setItem("columnWidthDSBPArtwork", JSON.stringify(columnWidth));
+  };
+
+  const storeReorderedColumns = (e) => {
+    let columnNames = [];
+    let jsonColumnNames = localStorage.getItem("columnWidthDSBPArtwork");
+    if (jsonColumnNames) {
+      columnNames = JSON.parse(jsonColumnNames);
+    }
+    const shiftedArray = [...columnNames]; // Create a copy of the array
+    // Find the index of the element to be shifted
+    if (e?.dragIndex !== -1) {
+      const [removed] = shiftedArray.splice(e?.dragIndex, 1); // Remove the element from the array
+      // shiftedArray.unshift(removed); // Place the removed element at the beginning of the array
+      shiftedArray.splice(e?.dropIndex, 0, removed);
+    }
+    shiftedArray.map((ele, index) => (ele.Sequence = index));
+    console.log("shiftedArray", shiftedArray);
+    localStorage.setItem(
+      "columnWidthDSBPArtwork",
+      JSON.stringify(shiftedArray)
+    );
+  };
+
   return (
     <>
       <DSBPFilter
@@ -199,6 +246,8 @@ const AgilityList = ({
         dsbpPmpData={dsbpPmpData}
         selectedFields={selectedFields}
         onGlobalFilterChange={onGlobalFilterChange}
+        setFrozenUpdated={setFrozenUpdated}
+        frozenUpdated={frozenUpdated}
       />
 
       <DataTable
@@ -207,6 +256,8 @@ const AgilityList = ({
         resizableColumns
         // key={generateUniqueKey("artwork")}
         reorderableColumns
+        onColumnResizeEnd={onColumnResizeEnd}
+        onColReorder={storeReorderedColumns}
         responsiveLayout="scroll"
         columnResizeMode="expand"
         value={
