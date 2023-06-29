@@ -25,10 +25,12 @@ const AgilityList = ({
   setDsbpPmpData,
   onActionSubmit,
   buWiseSortedColumnNames,
-  setTabsList, 
+  setTabsList,
   tabsList,
   handleTabPanel,
-  tabPanel
+  tabPanel,
+  setFieldUpdated,
+  fieldUpdated,
 }) => {
   const [selectedColumnName, setSelectedColumnName] = useState(null);
   const op = useRef(null);
@@ -37,7 +39,7 @@ const AgilityList = ({
   const [onChangeData, setOnChangeData] = useState(false);
   const [rejectFormData, setRejectFormData] = useState({});
   const [handleYesAddToPRoject, setHandleYesAddToPRoject] = useState(false);
-  const [frozenUpdated , setFrozenUpdated] = useState(false);
+  const [frozenUpdated, setFrozenUpdated] = useState(false);
 
   const addToProjectList = [
     { name: "Yes", code: "Yes" },
@@ -53,7 +55,7 @@ const AgilityList = ({
     setOnChangeData(rowData);
     if (e.target.value === "Reject") setRejectDialog(true);
     setRejectFormData({});
-    if (e.target.value === "Yes") setHandleYesAddToPRoject(true)
+    if (e.target.value === "Yes") setHandleYesAddToPRoject(true);
   };
 
   const projectNameOnClick = (e, options) => {
@@ -86,7 +88,7 @@ const AgilityList = ({
         concatenatedFPCStagingFormula(FPCStagingFormula);
     }
 
-    console.log("DSBP_PMP_AWReadinessGateStatus", options?.AWM_AddedToProject);
+    // console.log("DSBP_PMP_AWReadinessGateStatus", options?.AWM_AddedToProject);
 
     return (
       <>
@@ -104,18 +106,19 @@ const AgilityList = ({
         {options?.FPCStagingPage?.[0][field]}
         {concatenatedFPCStagingFormulaData?.[field]}
         {field === "DSBP_PMP_PIMaterialNumber" && (
-            <a className= "tabView"
-              onClick={() => {
-                setTabsList([
-                  ...tabsList,
-                  {
-                    tabHeader: `${options[field]}`,
-                    decription: `Header ${options[field]} data`,
-                  },
-                ]);
-                handleTabPanel(1)
-              }}
-            >
+          <a
+            className="tabView"
+            onClick={() => {
+              setTabsList([
+                ...tabsList,
+                {
+                  tabHeader: `${options[field]}`,
+                  decription: `Header ${options[field]} data`,
+                },
+              ]);
+              handleTabPanel(1);
+            }}
+          >
             {options[field]}
           </a>
         )}
@@ -214,6 +217,7 @@ const AgilityList = ({
       });
     }
     localStorage.setItem("columnWidthDSBPArtwork", JSON.stringify(columnWidth));
+    setFieldUpdated(!fieldUpdated);
   };
 
   const storeReorderedColumns = (e) => {
@@ -229,12 +233,15 @@ const AgilityList = ({
       // shiftedArray.unshift(removed); // Place the removed element at the beginning of the array
       shiftedArray.splice(e?.dropIndex, 0, removed);
     }
-    shiftedArray.map((ele, index) => (ele.Sequence = index));
-    console.log("shiftedArray", shiftedArray);
+    shiftedArray.map((ele, index) => {
+      ele["Sequence"] = index;
+      ele["reorder"] = true;
+    });
     localStorage.setItem(
       "columnWidthDSBPArtwork",
       JSON.stringify(shiftedArray)
     );
+    setFieldUpdated(!fieldUpdated);
   };
 
   return (
@@ -248,6 +255,8 @@ const AgilityList = ({
         onGlobalFilterChange={onGlobalFilterChange}
         setFrozenUpdated={setFrozenUpdated}
         frozenUpdated={frozenUpdated}
+        setFieldUpdated={setFieldUpdated}
+        fieldUpdated={fieldUpdated}
       />
 
       <DataTable

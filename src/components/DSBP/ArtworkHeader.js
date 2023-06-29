@@ -7,6 +7,8 @@ import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import DsbpActionDialog from "./DsbpActionDialog";
 import CustomizeView from "./CustomizeView";
+import filter from "../../assets/images/filter.svg";
+import BlueFilterIcon from "../../assets/images/BlueFilterIcon.svg";
 import "primeicons/primeicons.css";
 
 const ArtworkHeader = ({
@@ -16,6 +18,10 @@ const ArtworkHeader = ({
   onActionSubmit,
   actionDialog,
   setActionDialog,
+  setFieldUpdated,
+  fieldUpdated,
+  buWiseSortedColumnNames,
+  setBuWiseSortedColumnNames,
 }) => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
@@ -64,6 +70,26 @@ const ArtworkHeader = ({
   const [actionDropDownValues, setActionDropDownValues] = useState([]);
   const [aiseList, setAISEList] = useState([]);
   const [assemblyMechanismList, setAssemblyMechanismList] = useState([]);
+  let jsonColumnWidth = localStorage.getItem("columnWidthDSBPArtwork");
+  let allColumns = JSON.parse(jsonColumnWidth);
+  let isFilterActivated = [];
+
+  if (allColumns) {
+    isFilterActivated = allColumns.filter((ele) => {
+      if (
+        ele.freeze === true ||
+        ele.sortAtoZ === true ||
+        ele.sortZtoA === true ||
+        ele.width !== 250 ||
+        ele?.reorder === true
+      ) {
+        return ele;
+      }
+    });
+  }
+  console.log("isfilteractivated", isFilterActivated);
+
+  // let isFilterActivated = true;
 
   useEffect(() => {
     if (DropDownValuesData) {
@@ -113,7 +139,41 @@ const ArtworkHeader = ({
           </nav>
           {/* <div className="project-title margin-left">{headerName}</div> */}
         </div>
-        <div className="action-buttons">
+        <div className="header-buttons">
+          <div style={{ top: 30 }}>
+            {isFilterActivated.length ? (
+              <img
+                src={BlueFilterIcon}
+                alt="filter logo"
+                onClick={() => {
+                  buWiseSortedColumnNames.map((ele) => {
+                    if (ele) {
+                      ele["sortZtoA"] = false;
+                      ele["sortAtoZ"] = false;
+                      ele["freeze"] = false;
+                      ele["width"] = 250;
+                      ele["reorder"] = false;
+                    }
+                  });
+                  localStorage.setItem(
+                    "columnWidthDSBPArtwork",
+                    JSON.stringify(buWiseSortedColumnNames)
+                  );
+                  setFieldUpdated(!fieldUpdated);
+                  setBuWiseSortedColumnNames(buWiseSortedColumnNames);
+                }}
+                className="header-icons"
+              />
+            ) : (
+              <img
+                src={filter}
+                alt="filter logo"
+                // onClick={() => clearColumnWiseFilter()}
+                className="header-icons"
+              />
+            )}
+          </div>
+
           <button type="button" className="btn btn-secondary">
             Confirm Full Scope in
           </button>

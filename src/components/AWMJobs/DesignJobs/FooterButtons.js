@@ -17,7 +17,7 @@ const FooterButtons = ({
   const locationPath = location?.pathname;
   const url = locationPath?.split("/");
   const pathName = url[2];
-  console.log("checkReadWriteAccess in footer", checkReadWriteAccess);
+  // console.log("checkReadWriteAccess in footer", checkReadWriteAccess);
   return (
     <div
       className={bottomFixed ? "form-buttons bottom-fixed" : "form-buttons"}

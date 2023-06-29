@@ -14,6 +14,8 @@ const DSBPFilter = ({
   onGlobalFilterChange,
   setFrozenUpdated,
   frozenUpdated,
+  setFieldUpdated,
+  fieldUpdated,
 }) => {
   const optionList1 = optionList(dsbpPmpData, selectedColumnName);
   let jsonColumnWidth = localStorage.getItem("columnWidthDSBPArtwork");
@@ -22,6 +24,7 @@ const DSBPFilter = ({
   let checkSelectedColumnIsFreeze = false;
   let checkSelectedColumnIsSortAtoZ = false;
   let checkSelectedColumnIsSortZtoA = false;
+  let isFilterActivated = false;
 
   if (allColumns) {
     let checkSelectedColumn = allColumns.filter(
@@ -32,10 +35,10 @@ const DSBPFilter = ({
     checkSelectedColumnIsSortZtoA = checkSelectedColumn[0]?.sortZtoA === true;
   }
 
-  // allColumns.filter(
-  //   (item) => item.Field_Name === selectedColumnName && item.freeze === true
-  // ).length;
-  // console.log("hello", checkSelectedColumnIsFreeze, checkSelectedColumn);
+  isFilterActivated =
+    checkSelectedColumnIsFreeze ||
+    checkSelectedColumnIsSortAtoZ ||
+    checkSelectedColumnIsSortZtoA;
 
   const confirmPopData = () => {
     return (
@@ -48,23 +51,36 @@ const DSBPFilter = ({
           >
             Clear all filter
           </div>
-          <div className="clearAllFilterDiv">
-            {/* {isFilterActivated ? (
+          <div className="clearAllFilterDiv" style={{ top: 30 }}>
+            {isFilterActivated ? (
               <img
                 src={BlueFilterIcon}
                 alt="filter logo"
-                // onClick={() => clearColumnWiseFilter()}
+                onClick={() => {
+                  allColumns.map((ele) => {
+                    if (ele.Field_Name === selectedColumnName) {
+                      ele["sortZtoA"] = false;
+                      ele["sortAtoZ"] = false;
+                      ele["freeze"] = false;
+                      console.log("ele", ele, ele.Field_Name);
+                    }
+                  });
+                  localStorage.setItem(
+                    "columnWidthDSBPArtwork",
+                    JSON.stringify(allColumns)
+                  );
+                  setFrozenUpdated(!frozenUpdated);
+                }}
                 className="header-icons"
               />
-            ) : ( */}
-            {
+            ) : (
               <img
                 src={filter}
                 alt="filter logo"
                 // onClick={() => clearColumnWiseFilter()}
                 className="header-icons"
               />
-            }
+            )}
           </div>
         </div>
         <div
@@ -132,7 +148,6 @@ const DSBPFilter = ({
             allColumns.map((ele) => {
               if (ele.Field_Name === selectedColumnName) {
                 ele["freeze"] = !ele.freeze;
-                console.log("ele", ele, ele.Field_Name);
               }
             });
             localStorage.setItem(
@@ -140,6 +155,7 @@ const DSBPFilter = ({
               JSON.stringify(allColumns)
             );
             setFrozenUpdated(!frozenUpdated);
+            setFieldUpdated(!fieldUpdated);
           }}
         >
           {checkSelectedColumnIsFreeze ? (
