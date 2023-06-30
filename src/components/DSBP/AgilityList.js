@@ -49,6 +49,14 @@ const AgilityList = ({
   const [handleYesAddToPRoject, setHandleYesAddToPRoject] = useState(false);
   const [frozenUpdated, setFrozenUpdated] = useState(false);
 
+    const allBUAttributesData = useSelector(
+    (state) => state.DropDownValuesReducer
+  );
+  const allBUAttributes = allBUAttributesData.DropDownValuesData;
+
+  let aiseList = allBUAttributes?.ArtworkAgilityTasksPage?.Artwork_Alignment?.AISE;
+  let  assemblyMechanismList = allBUAttributes?.ArtworkAgilityTasksPage?.Artwork_Alignment?.Assembly_Mechanism;
+
   const addToProjectList = [
     { name: "Yes", code: "Yes" },
     { name: "No", code: "No" },
@@ -56,6 +64,7 @@ const AgilityList = ({
   ];
 
   const onchangeAddToProject = (rowData, e, ele) => {
+  console.log("rowData", rowData, e.target.value , rowData[ele]);
     rowData[ele] = e.target.value;
     setDsbpPmpData([...dsbpPmpData]);
     setOnChangeData(rowData);
@@ -156,6 +165,43 @@ const AgilityList = ({
             </Form.Select>
           </Form.Group>
         )}
+        {field === "AWM_AISE" && (
+           <Form.Group
+            controlId="groupName.ControlInput1"
+            style={{ textAlign: "-webkit-center" }}
+          >
+            <Form.Select
+              placeholder="Select"
+              style={{ width: "80%", fontSize: 12 }}
+            >
+              <option value="">Select</option>
+              {aiseList.map((data) => (
+                <option key={data.code} value={data.AWM_AISE}>
+                  {data.AWM_AISE || options[field]}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+        )}
+          {field === "AWM_AssemblyMechanism" && (
+           <Form.Group
+            controlId="groupName.ControlInput1"
+            style={{ textAlign: "-webkit-center" }}
+          >
+            <Form.Select
+              placeholder="Select"
+              style={{ width: "80%", fontSize: 12 }}
+            >
+              <option value="">Select</option>
+              {assemblyMechanismList.map((data) => (
+                <option key={data.code} value={data.AWM_AssemblyMechanism}>
+                  {data.AWM_AssemblyMechanism || options[field]}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+        )}
+
         {field !== "DSBP_InitiativeID" &&
           field !== "AWM_AddedToProject" &&
           field !== "DSBP_PMP_PIMaterialNumber" &&
