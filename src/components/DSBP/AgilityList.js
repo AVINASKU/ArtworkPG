@@ -88,8 +88,6 @@ const AgilityList = ({
         concatenatedFPCStagingFormula(FPCStagingFormula);
     }
 
-    // console.log("DSBP_PMP_AWReadinessGateStatus", options?.AWM_AddedToProject);
-
     return (
       <>
         {field === "DSBP_InitiativeID" && (

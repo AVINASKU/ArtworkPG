@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MultiSelect } from "primereact/multiselect";
 import plusCollapseImg from "../../assets/images/plusCollapse.svg";
 import deleteIcon from "../../assets/images/deleteIcon.svg";
@@ -12,12 +12,18 @@ const SelectDsbpId = ({
   totalNoOfDsbpId,
   totalNoOfPMP,
   totalNoOfPOA,
-  totalNoOfAddedProject
+  totalNoOfAddedProject,
+  totalNoOfPMPLocked,
+  listOfInitiativeId
 }) => {
   const [selectedCities, setSelectedCities] = useState([]);
   const [selectDialog, setSelectDialog] = useState(false);
   const [selectedDsbpData, setSelectedDsbpData] = useState({});
   const [operation, setOperation] = useState({});
+
+  useEffect(()=>{
+  setSelectedCities(listOfInitiativeId);
+  },[listOfInitiativeId])
 
   const cityOptionTemplate = (option) => {
     let initiativeName =
@@ -56,12 +62,6 @@ const SelectDsbpId = ({
             onClick={(e) => {
               e.stopPropagation();
               onChangeSelect(option, "delete");
-              // if (selectedCities.includes(option.InitiativeName)) {
-              //   const updatedCities = selectedCities.filter(
-              //     (item) => item !== option.InitiativeName
-              //   );
-              //   setSelectedCities(updatedCities);
-              // }
             }}
             alt="filter logo"
             className={`header-icons ${
@@ -126,12 +126,12 @@ const SelectDsbpId = ({
             PMP's Locked :{" "}
             <span style={{ color: "#003DA5", fontWeight: 600 }}>
               {" "}
-              {NumberConversion(0)}{" "}
+              {NumberConversion(totalNoOfPMPLocked)}{" "}
             </span>{" "}
           </div>
           <div>
             {" "}
-            Added Project :
+            Added to Project :
             <span style={{ color: "#003DA5", fontWeight: 600 }}>
               {" "}
               {NumberConversion(totalNoOfAddedProject)}{" "}
