@@ -1,10 +1,9 @@
 .tabsCompoMain {
   // background-color: #eaecea;
   border-radius: 24px 24px 0 0;
-  height: 400px;
   overflow-y: auto;
-  margin: 18px;
-
+  height: 100%;
+  margin-top: 18px;
   table td {
     padding: 13px 24px !important;
     text-align: left !important;
@@ -23,10 +22,16 @@
   // }
   .accordion {
     margin: 0;
+    height: 100%;
   }
   .accordion .accordion-item .accordion-header {
     background-color: rgba(214, 236, 255, 1);
     border-radius: 4px 4px 0 0 !important;
+  }
+  .accordion-flush .accordion-collapse{
+    height: 100%;
+    overflow: auto;
+    padding-bottom: 20px;
   }
   .accordion-body {
     padding: inherit;
@@ -41,25 +46,43 @@
     background-color: rgba(214, 236, 255, 1) !important;
     width: fit-content;
     margin-right: 2px;
+    width: 100%;
     &::after {
-      margin-left: 1006px;
+      right: 20px;
       position: absolute;
     }
   }
 .collapsed {
   background-color: rgba(255, 239, 216, 1) !important;
 }
-.accordion .accordion-item .accordion-header:has(.collapsed) {
-  background-color: rgba(255, 239, 216, 1);
+.accordion .accordion-item {
+  height: 100%;
+  overflow: hidden;
+  .accordion-header:has(.collapsed) {
+    background-color: rgba(255, 239, 216, 1);
+  }
 }
   .accordion-button:not(.collapsed) {
     background: rgba(214, 236, 255, 1);
     color: #003da5;
   }
 }
-.p-tabview .p-tabview-panels {
-  padding: 0 !important;
+.p-tabview{
+  height: 100%;
+  .p-tabview-panel{
+    height: 100%;
+    .tabsCompo{
+      height: 100%;
+      overflow: hidden;
+    }
+  }
+  .p-tabview-panels {
+    padding: 0 !important;
+    height: calc(100% - 50px);
+    overflow: auto;
+  }
 }
+
 .p-tabview .p-tabview-nav {
   border: 0;
   li {

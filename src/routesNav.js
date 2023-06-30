@@ -111,6 +111,7 @@ import UPRA from "./components/AWMJobs/UPRA/index.js";
 import URDT from "./components/AWMJobs/URDT/index.js";
 import CPPFA from "./components/AWMJobs/CPPFA/index.js";
 import DsbpPage from "./DsbpPage";
+import DsbpTabPage from "./DsbpTabPage";
 
 import Role from "./role";
 
@@ -176,6 +177,7 @@ const RoutesNav = () => {
         <Route path="/myTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
         <Route path="/allTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
         <Route path="/DSBP/:ProjectID" element={<DsbpPage />} />
+        <Route path="/DSBP/tab" element={<DsbpTabPage />} />
         {/* <Route path="/reports" element={<Reports />} /> */}
       </Route>
     </Routes>

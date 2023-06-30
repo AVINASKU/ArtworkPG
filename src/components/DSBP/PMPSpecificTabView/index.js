@@ -4,23 +4,73 @@ import ArtworkAlignment from "../ArtworkAlignmentPage";
 import "./index.scss";
 import { Accordion } from "react-bootstrap";
 import { Button } from "primereact/button";
+import {
+  ArtWorkTabValuesAction
+} from "../../../store/actions/ArtWorkTabValuesActions";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const PMPSpecificTabView = ({ tabsList, setTabsList, tabPanel, handleTabPanel }) => {
-  const [filteredDataList, setFilteredDataList] = useState(tabsList);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { artWorkTabValuesData } = useSelector((state) => state.ArtWorkTabValuesReducer);
+  const { selectedProject } = useSelector((state) => state.ProjectSetupReducer);
+  const [storesTabList, setStoresTabDataList] = useState(artWorkTabValuesData);
+  const [filteredDataList, setFilteredDataList] = useState(tabsList === undefined ? artWorkTabValuesData : tabsList);
+  const [tabPanelList, setTabPanelList] = useState(1);
+  const navigateToDSBP = () => {
+    navigate(`../DSBP/${selectedProject?.Project_ID}`);
+  };
 
   useEffect(() => {
+    if(tabsList === undefined)
+      setFilteredDataList(artWorkTabValuesData);
+    else
     setFilteredDataList(tabsList);
-  }, [tabsList]);
+  }, [artWorkTabValuesData]);
 
   useEffect(() => {
-    handleTabPanel(tabsList.length - 1);
+    if(tabsList === undefined){
+      setTabPanelList(artWorkTabValuesData?.length - 1);
+    } else {
+      setTabPanelList(tabsList.length - 1);
+    }    
+    dispatch(ArtWorkTabValuesAction(artWorkTabValuesData));
   }, []);
 
-  useEffect(() => {
-    if (tabPanel >= tabsList.length) {
-      handleTabPanel(tabsList.length - 1);
+  useEffect(() => {   
+    if (tabPanelList >= storesTabList?.length) {
+      setTabPanelList(storesTabList.length - 1);
     }
-  }, [tabsList, tabPanel]);
+    storesTabList !== undefined && dispatch(ArtWorkTabValuesAction(storesTabList));   
+  }, [storesTabList, tabPanelList]);
+
+  useEffect(() => {
+    if (artWorkTabValuesData) {
+      setStoresTabDataList(
+        artWorkTabValuesData || []
+      );
+    }
+  }, [artWorkTabValuesData]);
+
+  const renderData = (tabData) => {
+    let jsonColumnWidth = localStorage.getItem("columnWidthDSBPArtwork");
+    let allColumns = JSON.parse(jsonColumnWidth);
+    const convertedInObject = [tabData];
+    if (allColumns && allColumns.length) {
+      return allColumns.map((field, index) => {
+        const value = field?.Field_Name;
+        const filteredItems = convertedInObject?.filter(item => item && item[value] !== undefined);
+        return filteredItems.map(item => (
+          <tr key={item[value]}>
+            <td className="columnWidth">{field.Field_Name}</td>
+            <td>{item[value]}</td>
+          </tr>
+        ));
+      });
+    }
+    return null; // return null if there are no columns or tabData is empty
+  };
   
   const tabsCompo = (obj) => (
     <div className="tabsCompo">
@@ -29,207 +79,24 @@ const PMPSpecificTabView = ({ tabsList, setTabsList, tabPanel, handleTabPanel })
           <Accordion.Item eventKey="0">
             <Accordion.Header>Material Details</Accordion.Header>
             <Accordion.Body>
-              <table class="table table-sm table-hover">
+              <table className="table table-sm table-hover">
                 <tbody>
-                  <tr>
-                    <td className="columnWidth">DSBP_InitiativeID</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">DSBP_PMP_PIMaterialNumber</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">
-                      DSBP_PMP_PIMaterialDescription
-                    </td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">AWReadinessGateStatus</td>
-                    <td>{obj.decription}</td>
-                  </tr>
+                  {renderData(obj?.description)}
                 </tbody>
               </table>
             </Accordion.Body>
           </Accordion.Item>
-          {/* <Accordion.Item eventKey="1">
-            <Accordion.Header>AWM</Accordion.Header>
-            <Accordion.Body>
-              <table class="table table-sm table-hover">
-                <tbody>
-                  <tr>
-                    <td className="columnWidth">AWM_AddedToProject</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">AWM_AWJStatus</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">AWM_POARequested</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">AWM_AssemblyMechanism</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">AWM_GroupPMP</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </Accordion.Body>
-          </Accordion.Item>
-          <Accordion.Item eventKey="2">
-            <Accordion.Header>RTA Data</Accordion.Header>
-            <Accordion.Body>
-              <table class="table table-sm table-hover">
-                <tbody>
-                  <tr>
-                    <td className="columnWidth">RTA_POANumber</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">RTA_RTAPOAStatus</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">RTA_RTARejectionReason</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </Accordion.Body>
-          </Accordion.Item>
-          <Accordion.Item eventKey="3">
-            <Accordion.Header>DSBP Data</Accordion.Header>
-            <Accordion.Body>
-              <table class="table table-sm table-hover">
-                <tbody>
-                  <tr>
-                    <td className="columnWidth">PICountry_Countries</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">PILanguage_Languages</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">
-                      DSBP_PO_PMP_poPoaApprovedCountries
-                    </td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">DSBP_PO_PMP_poLanguages</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">
-                      DSBP_PMP_PIPackagingComponentType
-                    </td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">DSM_PMP_PrintingProcess</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">POA_POANumber</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">DSBP_PMP_artworkComment</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">DSBP_PMP_promo</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </Accordion.Body>
-          </Accordion.Item>
-          <Accordion.Item eventKey="4">
-            <Accordion.Header>DSBP PO Data</Accordion.Header>
-            <Accordion.Body>
-              <table class="table table-sm table-hover">
-                <tbody>
-                  <tr>
-                    <td className="columnWidth">
-                      DSBP_PO_PMP_poMaterialNumber
-                    </td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </Accordion.Body>
-          </Accordion.Item>
-          <Accordion.Item eventKey="5">
-            <Accordion.Header>FPC Data</Accordion.Header>
-            <Accordion.Body>
-              <table class="table table-sm table-hover">
-                <tbody>
-                  <tr>
-                    <td className="columnWidth">DSBP_FPC_FPCCode</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">DSBP_FPC_FPCDescription</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">DSBP_FPC_Brand</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">DSBP_FPC_Category</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">DSBP_FPC_ProductForm</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">POFPC_poFPCCode</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">POFPC_poBrandName</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                  <tr>
-                    <td className="columnWidth">POFPC_poFPCDescription</td>
-                    <td>{obj.decription}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </Accordion.Body>
-          </Accordion.Item> */}
         </Accordion>
-      </div>
-      <div className="form-buttons" style={{ background: "#FAFAFA" }}>
-        <Button className="button-layout" variant="secondary">
-          Cancel
-        </Button>
-
-        <Button className="button-layout DSBPsubmit" variant="primary">
-          Submit
-        </Button>
       </div>
     </div>
   );
 
   const handleDelete = (index) => {
-    
-    const updatedDataList = [...tabsList];
+    const updatedDataList = [...storesTabList];
     updatedDataList.splice(index, 1);
-    setTabsList(updatedDataList);
-    console.log("updatedDataList handleDelete", updatedDataList);
-    if (tabPanel >= tabsList.length) {
-      handleTabPanel(tabsList.length - 1); // Select the last tab if the active tab is deleted
+    setStoresTabDataList(updatedDataList);
+    if (tabPanelList >= storesTabList.length) {
+      setTabPanelList(storesTabList.length - 1); // Select the last tab if the active tab is deleted
     }
   };
 
@@ -245,36 +112,39 @@ const PMPSpecificTabView = ({ tabsList, setTabsList, tabPanel, handleTabPanel })
       </div>
     );
   };
+  const onTabChange = (index) =>{
+    tabsList !== undefined ? handleTabPanel(index) : setTabPanelList(index);
+    if(index === 0){
+      return navigateToDSBP();
+    }
+  }
   const renderTabs = () => {
     return filteredDataList.map((obj, index) => (
       <TabPanel
         key={index}
-        header={<CustomTabHeader tabHeader={index === 0 ? "Artwork Alignment" : obj.tabHeader} index={index} />}
+        header={<CustomTabHeader tabHeader={index === 0 ? "Art Work Alignment" : obj.tabHeader} index={index} />}
         scrollable
       >
-        {index === 0 ? (
-          <ArtworkAlignment />
-        ) : (
-          tabsCompo(obj)                
+        {index !== 0 && (
+          tabsCompo(obj)
         )}
       </TabPanel>
     ));
   };
 
   return (
-    console.log("updatedDataList handleDelete 11", tabsList.length, tabPanel >= tabsList.length),
-    <div>
-      {tabsList.length > 1 && tabPanel !== 0 ? (
-        <TabView
-          activeIndex={tabPanel}
-          onTabChange={(e) => handleTabPanel(e.index)}
-        >
-          {renderTabs()}
-        </TabView>
-      ) : (
-        <ArtworkAlignment />
+    <>
+      {(artWorkTabValuesData?.length > 1 ||  tabsList?.length > 1) && (tabPanelList !== 0 || tabPanel !== 0) ? (
+          <TabView
+            activeIndex={tabPanel || tabPanelList}
+            onTabChange={(e) => onTabChange(e.index)}
+          >
+            {renderTabs()}
+          </TabView>
+        ) : (
+          navigateToDSBP()
       )}
-    </div>
+    </>
   );
 };
 

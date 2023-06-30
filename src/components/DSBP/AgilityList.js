@@ -8,6 +8,11 @@ import "../Projects/MyProjects/index.scss";
 import DsbpCommonPopup from "./DsbpCommonPopup";
 import DsbpRejectDialog from "./RejectDialog";
 import DsbpActionDialog from "./DsbpActionDialog";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  ArtWorkTabValuesAction
+} from "../../../src/store/actions/ArtWorkTabValuesActions";
 import { generateUniqueKey } from "../../utils";
 import { onSortData } from "../../utils";
 
@@ -30,6 +35,9 @@ const AgilityList = ({
   handleTabPanel,
   tabPanel
 }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { artWorkTabValuesData } = useSelector((state) => state.ArtWorkTabValuesReducer);
   const [selectedColumnName, setSelectedColumnName] = useState(null);
   const op = useRef(null);
 
@@ -46,9 +54,7 @@ const AgilityList = ({
   ];
 
   const onchangeAddToProject = (rowData, e, ele) => {
-    console.log("hi", rowData, "data", e.target.value, "rowdata", rowData[ele]);
     rowData[ele] = e.target.value;
-    console.log("dsbpPmpData", dsbpPmpData);
     setDsbpPmpData([...dsbpPmpData]);
     setOnChangeData(rowData);
     if (e.target.value === "Reject") setRejectDialog(true);
@@ -75,6 +81,25 @@ const AgilityList = ({
     return concatenatedData;
   };
 
+  const onHandlePmpTabView = (options, field) => {
+    const selectedTab = {
+      tabHeader: options[field],
+      description: options
+    };
+  
+    let updatedTabsList = [];
+    if (tabsList.some(tab => JSON.stringify(tab) === JSON.stringify(selectedTab))) {
+      // selectedTab is already present
+    } else {
+      updatedTabsList = [...tabsList, selectedTab];
+    }
+    const newArray = [...artWorkTabValuesData, ...updatedTabsList];
+    const uniqueArray = Array.from(new Set(newArray.map(obj => JSON.stringify(obj)))).map(JSON.parse);
+    dispatch(ArtWorkTabValuesAction(uniqueArray));
+    navigate("/DSBP/tab", { replace: true });
+  };
+  
+
   const addBody = (options, rowData) => {
     let field = rowData.field;
     let FPCStagingFormula =
@@ -85,8 +110,6 @@ const AgilityList = ({
       concatenatedFPCStagingFormulaData =
         concatenatedFPCStagingFormula(FPCStagingFormula);
     }
-
-    console.log("DSBP_PMP_AWReadinessGateStatus", options?.AWM_AddedToProject);
 
     return (
       <>
@@ -104,18 +127,7 @@ const AgilityList = ({
         {options?.FPCStagingPage?.[0][field]}
         {concatenatedFPCStagingFormulaData?.[field]}
         {field === "DSBP_PMP_PIMaterialNumber" && (
-            <a className= "tabView"
-              onClick={() => {
-                setTabsList([
-                  ...tabsList,
-                  {
-                    tabHeader: `${options[field]}`,
-                    decription: `Header ${options[field]} data`,
-                  },
-                ]);
-                handleTabPanel(1)
-              }}
-            >
+          <a className="tabView" onClick={() => onHandlePmpTabView(options, field)}>
             {options[field]}
           </a>
         )}
@@ -230,7 +242,6 @@ const AgilityList = ({
       shiftedArray.splice(e?.dropIndex, 0, removed);
     }
     shiftedArray.map((ele, index) => (ele.Sequence = index));
-    console.log("shiftedArray", shiftedArray);
     localStorage.setItem(
       "columnWidthDSBPArtwork",
       JSON.stringify(shiftedArray)

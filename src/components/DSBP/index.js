@@ -7,7 +7,6 @@ const DSBP = () => {
   const [tabsList, setTabsList] = useState([
     { tabHeader: "Header 1", decription: "Header 1 data" },
   ]);
-  const [num, setNum] = useState(2);
 
   const [tabPanel, handleTabPanel] = useState(1);
   useEffect(()=>{
@@ -15,7 +14,6 @@ const DSBP = () => {
   },[tabsList])
 
   return (
-    console.log("updatedDataLi index", tabPanel),
     (
       <>
         {tabsList.length > 1 && tabPanel !== 0 ? (

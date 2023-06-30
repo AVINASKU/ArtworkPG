@@ -12,6 +12,7 @@ import DropDownValuesReducer from "./DropDownValuesReducer";
 import accessMatrixReducer from "./RoleBasedReducer";
 import ssoReducer from "./SSOReducer";
 import DSBPDropdownReducer from "./DSBPReducer";
+import ArtWorkTabValuesReducer from "./ArtWorkTabValuesReducer";
 
 export default combineReducers({
   myProject: ProjectReducer,
@@ -27,4 +28,5 @@ export default combineReducers({
   accessMatrixReducer,
    ssoReducer,
    DSBPDropdownReducer,
+   ArtWorkTabValuesReducer
 });
