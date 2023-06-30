@@ -17,7 +17,12 @@ import FooterButtons from "../AWMJobs/DesignJobs/FooterButtons";
 import "./index.scss";
 import { onSortData, Loading } from "../../utils";
 
-const ArtworkAlignment = ({setTabsList, tabsList, handleTabPanel, tabPanel}) => {
+const ArtworkAlignment = ({
+  setTabsList,
+  tabsList,
+  handleTabPanel,
+  tabPanel,
+}) => {
   const navigate = useNavigate();
   const [dropdownlist, setDropdownList] = useState(null);
   const [selectAllChecked, setSelectAllChecked] = useState(false);
@@ -33,6 +38,7 @@ const ArtworkAlignment = ({setTabsList, tabsList, handleTabPanel, tabPanel}) => 
   const [actionDialog, setActionDialog] = useState(false);
   const [loader, setLoader] = useState(false);
   const [tableLoader, setTableLoader] = useState(false);
+  const [fieldUpdated, setFieldUpdated] = useState(false);
   const [buWiseSortedColumnNames, setBuWiseSortedColumnNames] = useState(null);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
@@ -72,10 +78,10 @@ const ArtworkAlignment = ({setTabsList, tabsList, handleTabPanel, tabPanel}) => 
         return parseInt(a.Sequence) - parseInt(b.Sequence);
       });
     }
-
     setBuWiseSortedColumnNames(sortedData);
     let jsonColumnWidth = localStorage.getItem("columnWidthDSBPArtwork");
     let columnWidth = JSON.parse(jsonColumnWidth);
+
     if (!columnWidth || !columnWidth.length) {
       if (sortedData && sortedData.length) {
         sortedData.map((list) => {
@@ -83,6 +89,7 @@ const ArtworkAlignment = ({setTabsList, tabsList, handleTabPanel, tabPanel}) => 
           list["freeze"] = false;
           list["sortAtoZ"] = false;
           list["sortZtoA"] = false;
+          list["reorder"] = false;
         });
       }
       localStorage.setItem(
@@ -201,31 +208,31 @@ const ArtworkAlignment = ({setTabsList, tabsList, handleTabPanel, tabPanel}) => 
     let updatedData = {};
     let updatedDataList = [];
     const selectionData = data ? data : selected;
-    
-      updatedDataList = selectionData?.map((pmpDetails) => {
-        updatedData = {
-          DSBP_InitiativeID: pmpDetails.DSBP_InitiativeID,
-          DSBP_PMP_PIMaterialID: pmpDetails.DSBP_PMP_PIMaterialID,
-        };
-        if (formData === "AddToProject") {
-          updatedData.FK_AWMProjectID = pmpDetails.FK_AWMProjectID;
-          updatedData.AWM_AddedToProject = "Yes";
-        }
-        if (formData.AWM_AISE !== undefined) {
-          updatedData.AWM_AISE = formData?.AWM_AISE;
-        }
-        if (formData?.AWM_AssemblyMechanism !== undefined) {
-          updatedData.AWM_AssemblyMechanism = formData?.AWM_AssemblyMechanism;
-        }
-        if (formData?.AWM_Biocide !== undefined) {
-          updatedData.AWM_Biocide = formData?.AWM_Biocide;
-        }
-        if (formData?.AWM_GroupPMP !== undefined) {
-          updatedData.AWM_GroupPMP = formData?.AWM_GroupPMP;
-        }
-        return updatedData;
-      });
-    
+
+    updatedDataList = selectionData?.map((pmpDetails) => {
+      updatedData = {
+        DSBP_InitiativeID: pmpDetails.DSBP_InitiativeID,
+        DSBP_PMP_PIMaterialID: pmpDetails.DSBP_PMP_PIMaterialID,
+      };
+      if (formData === "AddToProject") {
+        updatedData.FK_AWMProjectID = pmpDetails.FK_AWMProjectID;
+        updatedData.AWM_AddedToProject = "Yes";
+      }
+      if (formData.AWM_AISE !== undefined) {
+        updatedData.AWM_AISE = formData?.AWM_AISE;
+      }
+      if (formData?.AWM_AssemblyMechanism !== undefined) {
+        updatedData.AWM_AssemblyMechanism = formData?.AWM_AssemblyMechanism;
+      }
+      if (formData?.AWM_Biocide !== undefined) {
+        updatedData.AWM_Biocide = formData?.AWM_Biocide;
+      }
+      if (formData?.AWM_GroupPMP !== undefined) {
+        updatedData.AWM_GroupPMP = formData?.AWM_GroupPMP;
+      }
+      return updatedData;
+    });
+
     console.log("updatedData", updatedDataList);
 
     const updatedPmpDetails = { ArtworkAgilityPMPs: updatedDataList };
@@ -270,56 +277,62 @@ const ArtworkAlignment = ({setTabsList, tabsList, handleTabPanel, tabPanel}) => 
       {loader || totalNoOfDsbpId === null ? (
         <Loading />
       ) : (
-            <>
-              <ArtworkHeader
-                breadcrumb={breadcrumb}
-                headerName={headerName}
-                selected={selected}
-                onActionSubmit={onActionSubmit}
-                label="Artwork Alignment"
-                actionDialog={actionDialog}
-                setActionDialog={setActionDialog}
-              />
-              <ProjectNameHeader
-                selectedProjectDetails={selectedProjectDetails}
-              />
-              <SelectDsbpId
-                dropdownlist={dropdownlist}
-                addDSBPIntoProject={addDSBPIntoProject}
-                totalNoOfDsbpId={totalNoOfDsbpId}
-                totalNoOfPMP={totalNoOfPMP}
-                totalNoOfPOA={totalNoOfPOA}
-                totalNoOfAddedProject={totalNoOfAddedProject}
-              />
-              {tableLoader ? (
-                <Loading />
-              ) : (
-                <AgilityList
-                  selected={selected}
-                  setSelected={setSelected}
-                  selectAllChecked={selectAllChecked}
-                  handleSelect={handleSelect}
-                  handleSelectAll={handleSelectAll}
-                  dsbpPmpData={dsbpPmpData}
-                  filteredDsbpData={filteredDsbpData}
-                  onSort={onSort}
-                  onGlobalFilterChange={onGlobalFilterChange}
-                  selectedFields={selectedFields}
-                  setDsbpPmpData={setDsbpPmpData}
-                  onActionSubmit={onActionSubmit}
-                  buWiseSortedColumnNames={buWiseSortedColumnNames}
-                  setTabsList={setTabsList}
-                  tabsList={tabsList}
-                  handleTabPanel={handleTabPanel}
-                  tabPanel={tabPanel}
-                />
-              )}
-              <FooterButtons
-                handleCancel={handleCancel}
-                hideSaveButton={true}
-                onSubmit={onSubmit}
-              />
-            </>
+        <>
+          <ArtworkHeader
+            breadcrumb={breadcrumb}
+            headerName={headerName}
+            selected={selected}
+            onActionSubmit={onActionSubmit}
+            label="Artwork Alignment"
+            actionDialog={actionDialog}
+            setActionDialog={setActionDialog}
+            setFieldUpdated={setFieldUpdated}
+            fieldUpdated={fieldUpdated}
+            buWiseSortedColumnNames={buWiseSortedColumnNames}
+            setBuWiseSortedColumnNames={setBuWiseSortedColumnNames}
+            setDsbpPmpData={setDsbpPmpData}
+            dsbpPmpData={dsbpPmpData}
+          />
+          <ProjectNameHeader selectedProjectDetails={selectedProjectDetails} />
+          <SelectDsbpId
+            dropdownlist={dropdownlist}
+            addDSBPIntoProject={addDSBPIntoProject}
+            totalNoOfDsbpId={totalNoOfDsbpId}
+            totalNoOfPMP={totalNoOfPMP}
+            totalNoOfPOA={totalNoOfPOA}
+            totalNoOfAddedProject={totalNoOfAddedProject}
+          />
+          {tableLoader ? (
+            <Loading />
+          ) : (
+            <AgilityList
+              selected={selected}
+              setSelected={setSelected}
+              selectAllChecked={selectAllChecked}
+              handleSelect={handleSelect}
+              handleSelectAll={handleSelectAll}
+              dsbpPmpData={dsbpPmpData}
+              filteredDsbpData={filteredDsbpData}
+              onSort={onSort}
+              onGlobalFilterChange={onGlobalFilterChange}
+              selectedFields={selectedFields}
+              setDsbpPmpData={setDsbpPmpData}
+              onActionSubmit={onActionSubmit}
+              buWiseSortedColumnNames={buWiseSortedColumnNames}
+              setTabsList={setTabsList}
+              tabsList={tabsList}
+              handleTabPanel={handleTabPanel}
+              tabPanel={tabPanel}
+              setFieldUpdated={setFieldUpdated}
+              fieldUpdated={fieldUpdated}
+            />
+          )}
+          <FooterButtons
+            handleCancel={handleCancel}
+            hideSaveButton={true}
+            onSubmit={onSubmit}
+          />
+        </>
       )}
     </div>
   );
