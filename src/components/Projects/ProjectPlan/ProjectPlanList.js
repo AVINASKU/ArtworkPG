@@ -19,6 +19,9 @@ import "./index.scss";
 import TaskDialog from "../../TaskDialog";
 import ApproveDesignDialog from "./ApproveDesignDialog";
 import { useLocation, useParams } from "react-router-dom";
+import {
+  ArtWorkTabValuesAction
+} from "../../../store/actions/ArtWorkTabValuesActions";
 import CPPFA from "./../../AWMJobs/CPPFA";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { useDispatch, useSelector } from "react-redux";
@@ -301,6 +304,7 @@ const ProjectPlanList = ({
               } else if(field && field.length && keyCode[0] === "CPPFA") {
                 handleApproveDialogCPPFA(options);
               } else{
+                dispatch(ArtWorkTabValuesAction([]));
                 navigate(`../${dsbpUrl}`, { replace: true });
               }
             }}
