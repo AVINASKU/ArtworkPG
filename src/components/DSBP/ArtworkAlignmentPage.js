@@ -34,12 +34,14 @@ const ArtworkAlignment = ({
   const [totalNoOfDsbpId, setTotalNoOfDsbpId] = useState(0);
   const [totalNoOfPMP, setTotalNoOfPMP] = useState(0);
   const [totalNoOfPOA, setTotalNoOfPOA] = useState(0);
+  const [totalNoOfPMPLocked, setTotalNoOfPMPLocked] = useState(0);
   const [totalNoOfAddedProject, setTotalNoOfAddedProject] = useState(0);
   const [actionDialog, setActionDialog] = useState(false);
   const [loader, setLoader] = useState(false);
   const [tableLoader, setTableLoader] = useState(false);
   const [fieldUpdated, setFieldUpdated] = useState(false);
   const [buWiseSortedColumnNames, setBuWiseSortedColumnNames] = useState(null);
+  const [listOfInitiativeId , setListOfInitiativeId] = useState([]);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const allBUAttributesData = useSelector(
@@ -127,6 +129,12 @@ const ArtworkAlignment = ({
       setDsbpPmpData(transformedArray);
       setTotalNoOfPMP(transformedArray.length);
 
+        const initiativeIDs = transformedArray.map(task => task.DSBP_InitiativeID);
+  const uniqueIDs = [...new Set(initiativeIDs)];
+    console.log("initiative id", uniqueIDs);
+
+  setListOfInitiativeId(uniqueIDs);
+
       const count = transformedArray.reduce((acc, obj) => {
         if (obj?.DSBP_PO_PMP_poPoa !== "") {
           return acc + 1;
@@ -142,6 +150,15 @@ const ArtworkAlignment = ({
         return acc;
       }, 0);
       setTotalNoOfAddedProject(noOfAddedProject);
+
+      const notOfPMPLocked = transformedArray.reduce((acc, obj) => {
+        if (obj?.DSBP_PMP_AWReadinessGateStatus === "TRUE") {
+          return acc + 1;
+        }
+        return acc;
+      }, 0);
+
+      setTotalNoOfPMPLocked(notOfPMPLocked);
     }
     setTotalNoOfDsbpId(resp?.length || 0);
     setTableLoader(false);
@@ -156,7 +173,8 @@ const ArtworkAlignment = ({
   }, [dispatch]);
 
   useEffect(() => {
-    setDropdownList(DropDownData.DSBPDropdownData);
+      setDropdownList(DropDownData.DSBPDropdownData);
+
   }, [DropDownData]);
 
   const addDSBPIntoProject = async (InitiativeID, operation) => {
@@ -301,6 +319,8 @@ const ArtworkAlignment = ({
             totalNoOfPMP={totalNoOfPMP}
             totalNoOfPOA={totalNoOfPOA}
             totalNoOfAddedProject={totalNoOfAddedProject}
+            totalNoOfPMPLocked = {totalNoOfPMPLocked}
+            listOfInitiativeId={listOfInitiativeId}
           />
           {tableLoader ? (
             <Loading />
