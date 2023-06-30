@@ -7,7 +7,8 @@ import Header from "../Headers";
 
 const PageLayout = (props) => {
   const pathname = window.location.pathname;
-  const isPath = pathname.includes("projectPlan");
+  const isPath = pathname.includes("tab");
+  const className = `wrapper ${isPath ? "tab-wrapper" : ""}`;
   return (
     <ThemeProvider
       breakpoints={["xxxl", "xxl", "xl", "lg", "md", "sm", "xs", "xxs"]}
@@ -21,7 +22,7 @@ const PageLayout = (props) => {
               <Header />
             </div>
             <div className="main-container">
-              <div className="wrapper">{props.children}</div>
+              <div className={className}>{props.children}</div>
             </div>
           </Col>
         </Row>

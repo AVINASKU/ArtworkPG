@@ -109,6 +109,13 @@
         height: auto;
       }
     }
+    &.tab-wrapper{
+      border: 0 !important;
+      & > .content-layout{
+        background: rgba(1, 104, 191, 0.07);
+        padding-top: 0;
+      }
+    }
   }
 
   .comon-wrapper {
