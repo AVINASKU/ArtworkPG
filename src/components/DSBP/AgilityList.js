@@ -95,7 +95,11 @@ const AgilityList = ({
     } else {
       updatedTabsList = [...tabsList, selectedTab];
     }
-    const newArray = [...artWorkTabValuesData, ...updatedTabsList];
+    
+    const newArray = Array.isArray(artWorkTabValuesData)
+      ? [...artWorkTabValuesData, ...updatedTabsList]
+      : updatedTabsList;
+    
     const uniqueArray = Array.from(new Set(newArray.map(obj => JSON.stringify(obj)))).map(JSON.parse);
     dispatch(ArtWorkTabValuesAction(uniqueArray));
     navigate("/DSBP/tab", { replace: true });
