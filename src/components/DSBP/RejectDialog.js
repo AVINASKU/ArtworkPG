@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import { Form, Row, Col } from "react-bootstrap";
 
 const RejectDialog = ({
-  rejectionData,
+  onChangeData,
   rejectFormData,
   setRejectFormData
 }) => {
@@ -22,20 +22,19 @@ const RejectDialog = ({
 
 
   return (
-    console.log("data", rejectFormData),
     <div>
       <Row>
         <Col sm={4} className="mb-3">
           <div>
             <Form.Label>PMP : </Form.Label>
-            <span>{rejectionData.DSBP_PMP_PIMaterialID}</span>
+            <span>{onChangeData?.DSBP_PMP_PIMaterialID}</span>
           </div>
         </Col>
         <Col sm={8} className="mb-3">
           <div className="d-flex align-items-start">
             <Form.Label>PMP Description : </Form.Label>
             <span style={{ flex: "1" }}>
-              {rejectionData.DSBP_PMP_PIMaterialDescription}
+              {onChangeData?.DSBP_PMP_PIMaterialDescription}
             </span>
           </div>
         </Col>
