@@ -111,6 +111,7 @@
     }
     &.tab-wrapper{
       border: 0 !important;
+      border-radius: 0;
       & > .content-layout{
         background: rgba(1, 104, 191, 0.07);
         padding-top: 0;

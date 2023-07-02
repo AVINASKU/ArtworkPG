@@ -9,9 +9,6 @@ const DSBP = () => {
   ]);
 
   const [tabPanel, handleTabPanel] = useState(1);
-  useEffect(()=>{
-
-  },[tabsList])
 
   return (
     (

@@ -22,12 +22,13 @@ const RejectDialog = ({
 
 
   return (
+    console.log("onChangeData", onChangeData),
     <div>
       <Row>
         <Col sm={4} className="mb-3">
           <div>
             <Form.Label>PMP : </Form.Label>
-            <span>{onChangeData?.DSBP_PMP_PIMaterialID}</span>
+            <span>{onChangeData?.DSBP_PMP_PIMaterialNumber}</span>
           </div>
         </Col>
         <Col sm={8} className="mb-3">
