@@ -10,9 +10,7 @@ import DsbpRejectDialog from "./RejectDialog";
 import DsbpActionDialog from "./DsbpActionDialog";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  ArtWorkTabValuesAction
-} from "../../../src/store/actions/ArtWorkTabValuesActions";
+import { ArtWorkTabValuesAction } from "../../../src/store/actions/ArtWorkTabValuesActions";
 import { generateUniqueKey } from "../../utils";
 import { onSortData } from "../../utils";
 
@@ -39,7 +37,9 @@ const AgilityList = ({
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { artWorkTabValuesData } = useSelector((state) => state.ArtWorkTabValuesReducer);
+  const { artWorkTabValuesData } = useSelector(
+    (state) => state.ArtWorkTabValuesReducer
+  );
   const [selectedColumnName, setSelectedColumnName] = useState(null);
   const op = useRef(null);
 
@@ -48,14 +48,18 @@ const AgilityList = ({
   const [rejectFormData, setRejectFormData] = useState({});
   const [handleYesAddToPRoject, setHandleYesAddToPRoject] = useState(false);
   const [frozenUpdated, setFrozenUpdated] = useState(false);
+  const [addedDataForSave, setAddedDataForSave] = useState([]);
 
-    const allBUAttributesData = useSelector(
+  const allBUAttributesData = useSelector(
     (state) => state.DropDownValuesReducer
   );
   const allBUAttributes = allBUAttributesData.DropDownValuesData;
 
-  let aiseList = allBUAttributes?.ArtworkAgilityTasksPage?.Artwork_Alignment?.AISE;
-  let  assemblyMechanismList = allBUAttributes?.ArtworkAgilityTasksPage?.Artwork_Alignment?.Assembly_Mechanism;
+  let aiseList =
+    allBUAttributes?.ArtworkAgilityTasksPage?.Artwork_Alignment?.AISE;
+  let assemblyMechanismList =
+    allBUAttributes?.ArtworkAgilityTasksPage?.Artwork_Alignment
+      ?.Assembly_Mechanism;
 
   const addToProjectList = [
     { name: "Yes", code: "Yes" },
@@ -64,13 +68,14 @@ const AgilityList = ({
   ];
 
   const onchangeAddToProject = (rowData, e, ele) => {
-  console.log("rowData", rowData, e.target.value , rowData[ele]);
+    console.log("rowData", rowData, e.target.value, rowData[ele]);
     rowData[ele] = e.target.value;
     setDsbpPmpData([...dsbpPmpData]);
     setOnChangeData(rowData);
     if (e.target.value === "Reject") setRejectDialog(true);
     setRejectFormData({});
-    if (e.target.value === "Yes") setHandleYesAddToPRoject(true);
+    if (e.target.value === "Yes" || e.target.value !== "Reject")
+      setHandleYesAddToPRoject(true);
   };
 
   const projectNameOnClick = (e, options) => {
@@ -95,25 +100,42 @@ const AgilityList = ({
   const onHandlePmpTabView = (options, field) => {
     const selectedTab = {
       tabHeader: options[field],
-      description: options
+      description: options,
     };
-  
+
     let updatedTabsList = [];
-    if (tabsList.some(tab => JSON.stringify(tab) === JSON.stringify(selectedTab))) {
+    if (
+      tabsList.some(
+        (tab) => JSON.stringify(tab) === JSON.stringify(selectedTab)
+      )
+    ) {
       // selectedTab is already present
     } else {
       updatedTabsList = [...tabsList, selectedTab];
     }
-    
+
     const newArray = Array.isArray(artWorkTabValuesData)
       ? [...artWorkTabValuesData, ...updatedTabsList]
       : updatedTabsList;
-    
-    const uniqueArray = Array.from(new Set(newArray.map(obj => JSON.stringify(obj)))).map(JSON.parse);
+
+    const uniqueArray = Array.from(
+      new Set(newArray.map((obj) => JSON.stringify(obj)))
+    ).map(JSON.parse);
     dispatch(ArtWorkTabValuesAction(uniqueArray));
     navigate("/DSBP/tab", { replace: true });
   };
+
+  const onChangeSelectField = (option, e, field) => {
+    console.log("heelo hello", addedDataForSave);
+    let updatedData = {};
+    updatedData.DSBP_InitiativeID = option.DSBP_InitiativeID;
+    updatedData.DSBP_PMP_PIMaterialID = option.DSBP_PMP_PIMaterialID;
+    updatedData[field] = e.target.value;
+    addedDataForSave.push(updatedData);
+    setAddedDataForSave(addedDataForSave);
+  };
   
+  console.log("option", addedDataForSave);
 
   const addBody = (options, rowData) => {
     let field = rowData.field;
@@ -142,7 +164,10 @@ const AgilityList = ({
         {options?.FPCStagingPage?.[0][field]}
         {concatenatedFPCStagingFormulaData?.[field]}
         {field === "DSBP_PMP_PIMaterialNumber" && (
-          <a className="tabView" onClick={() => onHandlePmpTabView(options, field)}>
+          <a
+            className="tabView"
+            onClick={() => onHandlePmpTabView(options, field)}
+          >
             {options[field]}
           </a>
         )}
@@ -153,6 +178,7 @@ const AgilityList = ({
           >
             <Form.Select
               placeholder="Select"
+              value={options[field]}
               onChange={(e) => onchangeAddToProject(options, e, field)}
               style={{ width: "80%", fontSize: 12 }}
             >
@@ -166,30 +192,34 @@ const AgilityList = ({
           </Form.Group>
         )}
         {field === "AWM_AISE" && (
-           <Form.Group
+          <Form.Group
             controlId="groupName.ControlInput1"
             style={{ textAlign: "-webkit-center" }}
           >
             <Form.Select
               placeholder="Select"
+              value={options[field]}
+              onChange={(e) => onChangeSelectField(options, e, field)}
               style={{ width: "80%", fontSize: 12 }}
             >
               <option value="">Select</option>
               {aiseList.map((data) => (
-                <option key={data.code} value={data.AWM_AISE}>
-                  {data.AWM_AISE || options[field]}
+                <option key={data.AWM_AISE} value={data.AWM_AISE}>
+                  {data.AWM_AISE}
                 </option>
               ))}
             </Form.Select>
           </Form.Group>
         )}
-          {field === "AWM_AssemblyMechanism" && (
-           <Form.Group
+        {field === "AWM_AssemblyMechanism" && (
+          <Form.Group
             controlId="groupName.ControlInput1"
             style={{ textAlign: "-webkit-center" }}
           >
             <Form.Select
               placeholder="Select"
+              value={options[field]}
+              onChange={(e) => onChangeSelectField(options, e, field)}
               style={{ width: "80%", fontSize: 12 }}
             >
               <option value="">Select</option>
@@ -202,9 +232,29 @@ const AgilityList = ({
           </Form.Group>
         )}
 
+        {field === "AWM_Sellable" && (
+          <Form.Group
+            controlId="groupName.ControlInput1"
+            style={{ textAlign: "-webkit-center" }}
+          >
+            <Form.Control type="text" placeholder="Enter Sellable" />
+          </Form.Group>
+        )}
+
+        {field === "AWM_Biocide" && (
+          <Form.Group
+            controlId="groupName.ControlInput1"
+            style={{ textAlign: "-webkit-center" }}
+          >
+            <Form.Control type="text" placeholder="Enter Biocide" />
+          </Form.Group>
+        )}
+
         {field !== "DSBP_InitiativeID" &&
           field !== "AWM_AddedToProject" &&
           field !== "DSBP_PMP_PIMaterialNumber" &&
+          field !== "AWM_AISE" &&
+          field !== "AWM_AssemblyMechanism" &&
           options[field]}
       </>
     );
