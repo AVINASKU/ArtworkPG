@@ -23,7 +23,9 @@ const ArtworkHeader = ({
   buWiseSortedColumnNames,
   setBuWiseSortedColumnNames,
   setDsbpPmpData,
-  dsbpPmpData
+  dsbpPmpData,
+  setTableRender,
+  tableRender
 }) => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
@@ -164,6 +166,7 @@ const ArtworkHeader = ({
                   setFieldUpdated(!fieldUpdated);
                   setBuWiseSortedColumnNames(buWiseSortedColumnNames);
                   setDsbpPmpData(dsbpPmpData);
+                  setTableRender(!tableRender);
                 }}
                 className="header-icons"
               />

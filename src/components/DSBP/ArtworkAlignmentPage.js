@@ -43,6 +43,7 @@ const ArtworkAlignment = ({
   const [buWiseSortedColumnNames, setBuWiseSortedColumnNames] = useState(null);
   const [listOfInitiativeId, setListOfInitiativeId] = useState([]);
     const [addSavedData, setSavedData] = useState([]);
+    const [tableRender, setTableRender] = useState(false);
 
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
@@ -172,7 +173,7 @@ const ArtworkAlignment = ({
   }, []);
 
   useEffect(() => {
-    dispatch(getDSBPDropdownData(BU, Region));
+    dispatch(getDSBPDropdownData(BU, Region, ProjectID));
   }, [dispatch]);
 
   useEffect(() => {
@@ -227,7 +228,9 @@ const ArtworkAlignment = ({
     if(addSavedData && addSavedData.length){
     const updatedPmpDetails = { ArtworkAgilityPMPs: addSavedData };
   await onSubmitDsbpAction(updatedPmpDetails);
+
   };
+    setSavedData([]);
   }
 
   const onActionSubmit = async (formData, data) => {
@@ -322,6 +325,8 @@ const ArtworkAlignment = ({
             setBuWiseSortedColumnNames={setBuWiseSortedColumnNames}
             setDsbpPmpData={setDsbpPmpData}
             dsbpPmpData={dsbpPmpData}
+            setTableRender={setTableRender}
+            tableRender={tableRender}
           />
           <ProjectNameHeader selectedProjectDetails={selectedProjectDetails} />
           <SelectDsbpId
@@ -359,6 +364,8 @@ const ArtworkAlignment = ({
               fieldUpdated={fieldUpdated}
               setSavedData={setSavedData}
               addSavedData={addSavedData}
+              tableRender={tableRender}
+              setTableRender={setTableRender}
             />
           )}
           <FooterButtons

@@ -36,6 +36,8 @@ const AgilityList = ({
   fieldUpdated,
   setSavedData,
   addSavedData,
+  tableRender,
+  setTableRender
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -68,6 +70,8 @@ const AgilityList = ({
     { name: "No", code: "No" },
     { name: "Reject", code: "Reject" },
   ];
+
+  console.log("tableRender", tableRender);
 
   const onchangeAddToProject = (rowData, e, ele) => {
     console.log("rowData", rowData, e.target.value, rowData[ele]);
@@ -266,6 +270,7 @@ const AgilityList = ({
           >
             <Form.Control
               type="text"
+              value={options[field]}
               onChange={(e) => onChangeSelectField(options, e, field)}
               placeholder="Enter Sellable"
             />
@@ -279,6 +284,7 @@ const AgilityList = ({
           >
             <Form.Control
               type="text"
+              value={options[field]}
               onChange={(e) => onChangeSelectField(options, e, field)}
               placeholder="Enter Biocide"
             />
@@ -366,6 +372,7 @@ const AgilityList = ({
     }
     localStorage.setItem("columnWidthDSBPArtwork", JSON.stringify(columnWidth));
     setFieldUpdated(!fieldUpdated);
+    setTableRender(false);
   };
 
   const storeReorderedColumns = (e) => {
@@ -390,6 +397,7 @@ const AgilityList = ({
       JSON.stringify(shiftedArray)
     );
     setFieldUpdated(!fieldUpdated);
+    setTableRender(false);
   };
 
   const timestamp = new Date().getTime();
@@ -398,7 +406,7 @@ const AgilityList = ({
     <>
       <DataTable
         dataKey="DSBP_PMP_PIMaterialID"
-        // key={"DSBP_PMP_PIMaterialID" + timestamp}
+        key={tableRender ? `"DSBP_PMP_PIMaterialID" + timestamp`:""}
         scrollable
         resizableColumns
         // key={generateUniqueKey("artwork")}
