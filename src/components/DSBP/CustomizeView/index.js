@@ -1,61 +1,43 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import CustomizeViewDialog from "./CustomizeViewDialog";
 
 const CustomizeView = ({ showTaskDialog, onClose }) => {
-  const objects1 = [
-    {
-      ID: 1,
-      Color: "yellow",
-    },
-    {
-      ID: 2,
-      Color: "orange",
-    },
-    {
-      ID: 3,
-      Color: "brown",
-    },
-    {
-      ID: 7,
-      Color: "blue",
-    },
-    {
-      ID: 8,
-      Color: "red",
-    },
-    {
-      ID: 9,
-      Color: "green",
-    },
-    {
-      ID: 10,
-      Color: "purple",
-    },
-    {
-      ID: 11,
-      Color: "Test1",
-    },
-    {
-      ID: 12,
-      Color: "Test2",
-    },
-    {
-      ID: 13,
-      Color: "Test3",
-    },
-  ];
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
+  const BU = selectedProjectDetails?.BU;
+  const allBUAttributesData = useSelector(
+    (state) => state.DropDownValuesReducer
+  );
+  const allBUAttributes = allBUAttributesData.DropDownValuesData;
 
-  const objects2 = [];
-  const objects3 = [];
+  let buWiseAttributeList =
+    allBUAttributes?.ArtWorkProjectSetupPage?.Artwork_BU;
+  let attributeList = [];
+  if (buWiseAttributeList) {
+    attributeList =
+      buWiseAttributeList.find((item) => item.BU_Name === BU)?.Attribute_List ||
+      [];
+  }
+
+  let availableFields = [];
+  if (attributeList && attributeList.length) {
+    availableFields = [...attributeList].sort((a, b) => {
+      return parseInt(a.Sequence) - parseInt(b.Sequence);
+    });
+  }
+
+  const selectedFields = [];
+  const freezedColumns = [];
 
   return (
     <>
       <CustomizeViewDialog
         onClose={onClose}
         showTaskDialog={showTaskDialog}
-        objects1={objects1}
-        objects2={objects2}
-        objects3={objects3}
+        availableFields={availableFields}
+        selectedFields={selectedFields}
+        freezedColumns={freezedColumns}
       />
     </>
   );
