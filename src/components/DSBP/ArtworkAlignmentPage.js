@@ -17,12 +17,7 @@ import FooterButtons from "../AWMJobs/DesignJobs/FooterButtons";
 import "./index.scss";
 import { onSortData, Loading } from "../../utils";
 
-const ArtworkAlignment = ({
-  setTabsList,
-  tabsList,
-  handleTabPanel,
-  tabPanel,
-}) => {
+const ArtworkAlignment = () => {
   const navigate = useNavigate();
   const [dropdownlist, setDropdownList] = useState(null);
   const [selectAllChecked, setSelectAllChecked] = useState(false);
@@ -43,8 +38,9 @@ const ArtworkAlignment = ({
   const [buWiseSortedColumnNames, setBuWiseSortedColumnNames] = useState(null);
   const [listOfInitiativeId, setListOfInitiativeId] = useState([]);
   const [addSavedData, setSavedData] = useState([]);
+  const [handleYesAddToPRoject, setHandleYesAddToPRoject] = useState(false);
+  const [rejectDialog, setRejectDialog] = useState(false);
   const [tableRender, setTableRender] = useState(false);
-
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const allBUAttributesData = useSelector(
@@ -300,6 +296,7 @@ const ArtworkAlignment = ({
       if (formData === "AddToProject") {
         updatedData.FK_AWMProjectID = pmpDetails.FK_AWMProjectID;
         updatedData.AWM_AddedToProject = "Yes";
+        setHandleYesAddToPRoject(false);
       }
       if (formData.AWM_AISE !== undefined) {
         updatedData.AWM_AISE = formData?.AWM_AISE;
@@ -313,13 +310,16 @@ const ArtworkAlignment = ({
       if (formData?.AWM_GroupPMP !== undefined) {
         updatedData.AWM_GroupPMP = formData?.AWM_GroupPMP;
       }
+      if (formData?.RTA_RTARejectionReason !== undefined) {
+        updatedData.RTA_RTARejectionReason = formData?.RTA_RTARejectionReason;
+      }
+      if (formData?.RejectionNotes !== undefined) {
+        updatedData.RejectionNotes = formData?.RejectionNotes;
+      }
+      setRejectDialog(false);
       return updatedData;
     });
-
-    console.log("updatedData", updatedDataList);
-
     const updatedPmpDetails = { ArtworkAgilityPMPs: updatedDataList };
-    console.log("updatedPmpDetails", updatedPmpDetails);
     await onSubmitDsbpAction(updatedPmpDetails);
     setActionDialog(false);
     setLoader(false);
@@ -408,14 +408,14 @@ const ArtworkAlignment = ({
               setDsbpPmpData={setDsbpPmpData}
               onActionSubmit={onActionSubmit}
               buWiseSortedColumnNames={buWiseSortedColumnNames}
-              setTabsList={setTabsList}
-              tabsList={tabsList}
-              handleTabPanel={handleTabPanel}
-              tabPanel={tabPanel}
               setFieldUpdated={setFieldUpdated}
               fieldUpdated={fieldUpdated}
               setSavedData={setSavedData}
               addSavedData={addSavedData}
+              handleYesAddToPRoject={handleYesAddToPRoject}
+              setHandleYesAddToPRoject={setHandleYesAddToPRoject}
+              rejectDialog={rejectDialog}
+              setRejectDialog={setRejectDialog}
               tableRender={tableRender}
               setTableRender={setTableRender}
             />

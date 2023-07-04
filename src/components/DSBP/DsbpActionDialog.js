@@ -3,6 +3,7 @@ import { Form, Row, Col, Button } from "react-bootstrap";
 import { Dialog } from "primereact/dialog";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { useSelector } from "react-redux";
 
 const DsbpActionDialog = ({
   actionHeader,
@@ -20,7 +21,10 @@ const DsbpActionDialog = ({
   const [aiseName, setAISEName] = useState("");
   const [assemblyMechanismChange, setAssemblyMechanismChange] = useState("");
   const [bioside, setBioside] = useState("");
+  const [sellable, setSellable] = useState("");
   const [formData, setFormData] = useState({});
+  
+  const { selectedProject } = useSelector((state) => state.ProjectSetupReducer);
   if(rowData){
     selected = [rowData];
   }
@@ -51,6 +55,11 @@ const DsbpActionDialog = ({
   const handleBiosideChange = (e) => {
     setBioside(e.target.value);
     setFormData({ ...formData, AWM_Biocide: e.target.value });
+  };
+
+  const handleSellableChange = (e) => {
+    setSellable(e.target.value);
+    setFormData({ ...formData, AWM_Sellable: e.target.value });
   };
 
   const handleGroupName = (e) => {
@@ -94,7 +103,7 @@ const DsbpActionDialog = ({
                   {selected && (
                       <DataTable value={selected} dataKey="id" className="addToProjectTable" scrollable>
                         <Column
-                          field="DSBP_PMP_PIMaterialID"
+                          field="DSBP_PMP_PIMaterialNumber"
                           header="PMP "
                         ></Column>
                         <Column field="DSBP_PMP_PIMaterialDescription" header="PMP Description"></Column>
@@ -108,7 +117,7 @@ const DsbpActionDialog = ({
                         <div className="card" style={{ "height": "100%"}}>
                           <DataTable value={selected} dataKey="id" scrollable>
                             <Column
-                              field="DSBP_PMP_PIMaterialID"
+                              field="DSBP_PMP_PIMaterialNumber"
                               header="PMP "
                             ></Column>
                             <Column field="DSBP_PMP_PIMaterialDescription" header="PMP Description"></Column>
@@ -144,41 +153,61 @@ const DsbpActionDialog = ({
                               </div>
                             </Form.Group>
                           </Col>
-                          <Col sm={12}>
-                            <Form.Group
-                              className={`mb-2`}
-                              controlId="groupName.ControlInput1"
-                            >
-                              <Form.Label>AISE</Form.Label>
-                              <Form.Select
-                                value={aiseName}
-                                placeholder="Select AISE"
-                                onChange={handleAiseChange}
-                              >
-                                <option value="">Select AISE</option>
-                                {aiseList.map((aise) => (
-                                  <option key={aise.code} value={aise.AWM_AISE}>
-                                    {aise.AWM_AISE}
-                                  </option>
-                                ))}
-                              </Form.Select>
-                            </Form.Group>
-                          </Col>
-                          <Col sm={12}>
-                            <Form.Group
-                              className={`mb-2`}
-                              controlId="groupName.ControlInput1"
-                            >
-                              <Form.Label>Bioside</Form.Label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Enter Bioside"
-                                onChange={handleBiosideChange}
-                                value={bioside}
-                              />
-                            </Form.Group>
-                          </Col>
+                          {selectedProject?.BU === "Home Care" &&
+                            <>
+                              <Col sm={12}>
+                                <Form.Group
+                                  className={`mb-2`}
+                                  controlId="groupName.ControlInput1"
+                                >
+                                  <Form.Label>AISE</Form.Label>
+                                  <Form.Select
+                                    value={aiseName}
+                                    placeholder="Select AISE"
+                                    onChange={handleAiseChange}
+                                  >
+                                    <option value="">Select AISE</option>
+                                    {aiseList.map((aise) => (
+                                      <option key={aise.code} value={aise.AWM_AISE}>
+                                        {aise.AWM_AISE}
+                                      </option>
+                                    ))}
+                                  </Form.Select>
+                                </Form.Group>
+                              </Col>
+                              <Col sm={12}>
+                                <Form.Group
+                                  className={`mb-2`}
+                                  controlId="groupName.ControlInput1"
+                                >
+                                  <Form.Label>Bioside</Form.Label>
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Enter Bioside"
+                                    onChange={handleBiosideChange}
+                                    value={bioside}
+                                  />
+                                </Form.Group>
+                              </Col>
+                              <Col sm={12}>
+                                <Form.Group
+                                  className={`mb-2`}
+                                  controlId="groupName.ControlInput1"
+                                >
+                                  <Form.Label>Sellable</Form.Label>
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Enter Sellable"
+                                    onChange={handleSellableChange}
+                                    value={sellable}
+                                  />
+                                </Form.Group>
+                              </Col>
+                            </>
+                          }
+                          
                         </Row>
                       )}
                       {updatedData && updatedData[0]?.value === "Group PMPs" && (

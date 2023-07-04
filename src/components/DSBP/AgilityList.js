@@ -28,16 +28,18 @@ const AgilityList = ({
   setDsbpPmpData,
   onActionSubmit,
   buWiseSortedColumnNames,
-  setTabsList,
-  tabsList,
   handleTabPanel,
   tabPanel,
   setFieldUpdated,
   fieldUpdated,
   setSavedData,
   addSavedData,
+  handleYesAddToPRoject,
+  setHandleYesAddToPRoject,
+  rejectDialog,
+  setRejectDialog,
   tableRender,
-  setTableRender,
+  setTableRender
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -47,12 +49,15 @@ const AgilityList = ({
   const [selectedColumnName, setSelectedColumnName] = useState(null);
   const op = useRef(null);
 
-  const [rejectDialog, setRejectDialog] = useState(false);
+  
   const [onChangeData, setOnChangeData] = useState(false);
   const [rejectFormData, setRejectFormData] = useState({});
-  const [handleYesAddToPRoject, setHandleYesAddToPRoject] = useState(false);
   const [frozenUpdated, setFrozenUpdated] = useState(false);
   const [addedDataForSave, setAddedDataForSave] = useState([]);
+  const [tabsList, setTabsList] = useState([
+    { tabHeader: "Header 1", decription: "Header 1 data" },
+  ]);
+
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const allBUAttributesData = useSelector(
