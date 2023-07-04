@@ -25,17 +25,25 @@ const ArtworkHeader = ({
   setDsbpPmpData,
   dsbpPmpData,
   setTableRender,
-  tableRender
+  tableRender,
 }) => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
   const [actionHeader, setActionHeader] = useState("");
-
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
   const location = useLocation();
   const locationPath = location?.pathname;
   const { DropDownValuesData, loading } = useSelector(
     (state) => state.DropDownValuesReducer
   );
+  const BU = selectedProjectDetails?.BU;
+  // check whether project is from home care or baby care
+  let isBUHomeCare = false;
+  if (BU === "Home Care") {
+    isBUHomeCare = true;
+  }
+
   const actionNameObject = [
     {
       value: "Mass Update",
@@ -74,7 +82,12 @@ const ArtworkHeader = ({
   const [actionDropDownValues, setActionDropDownValues] = useState([]);
   const [aiseList, setAISEList] = useState([]);
   const [assemblyMechanismList, setAssemblyMechanismList] = useState([]);
-  let jsonColumnWidth = localStorage.getItem("columnWidthDSBPArtwork");
+  // let jsonColumnWidth = localStorage.getItem("columnWidthDSBPArtwork");
+
+  let jsonColumnWidth = isBUHomeCare
+    ? localStorage.getItem("columnWidthDSBPArtworkHomeCare")
+    : localStorage.getItem("columnWidthDSBPArtworkBabyCare");
+
   let allColumns = JSON.parse(jsonColumnWidth);
   let isFilterActivated = [];
 

@@ -4,6 +4,7 @@ import filter from "../../assets/images/filter.svg";
 import BlueFilterIcon from "../../assets/images/BlueFilterIcon.svg";
 import { optionList } from "../../utils";
 import { MultiSelect } from "primereact/multiselect";
+import { useSelector } from "react-redux";
 
 const DSBPFilter = ({
   op,
@@ -18,7 +19,19 @@ const DSBPFilter = ({
   fieldUpdated,
 }) => {
   const optionList1 = optionList(dsbpPmpData, selectedColumnName);
-  let jsonColumnWidth = localStorage.getItem("columnWidthDSBPArtwork");
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
+  const BU = selectedProjectDetails?.BU;
+  // check whether project is from home care or baby care
+  let isBUHomeCare = false;
+  if (BU === "Home Care") {
+    isBUHomeCare = true;
+  }
+  // let jsonColumnWidth = localStorage.getItem("columnWidthDSBPArtwork");
+  let jsonColumnWidth = isBUHomeCare
+    ? localStorage.getItem("columnWidthDSBPArtworkHomeCare")
+    : localStorage.getItem("columnWidthDSBPArtworkBabyCare");
+
   let allColumns = JSON.parse(jsonColumnWidth);
 
   let checkSelectedColumnIsFreeze = false;
@@ -65,10 +78,15 @@ const DSBPFilter = ({
                       console.log("ele", ele, ele.Field_Name);
                     }
                   });
-                  localStorage.setItem(
-                    "columnWidthDSBPArtwork",
-                    JSON.stringify(allColumns)
-                  );
+                  isBUHomeCare
+                    ? localStorage.setItem(
+                        "columnWidthDSBPArtworkHomeCare",
+                        JSON.stringify(allColumns)
+                      )
+                    : localStorage.setItem(
+                        "columnWidthDSBPArtworkBabyCare",
+                        JSON.stringify(allColumns)
+                      );
                   setFrozenUpdated(!frozenUpdated);
                 }}
                 className="header-icons"
@@ -97,10 +115,15 @@ const DSBPFilter = ({
                 ele["sortAtoZ"] = false;
               }
             });
-            localStorage.setItem(
-              "columnWidthDSBPArtwork",
-              JSON.stringify(allColumns)
-            );
+            isBUHomeCare
+              ? localStorage.setItem(
+                  "columnWidthDSBPArtworkHomeCare",
+                  JSON.stringify(allColumns)
+                )
+              : localStorage.setItem(
+                  "columnWidthDSBPArtworkBabyCare",
+                  JSON.stringify(allColumns)
+                );
             onSort(selectedColumnName, "desc");
             setFrozenUpdated(!frozenUpdated);
           }}
@@ -127,10 +150,15 @@ const DSBPFilter = ({
                 ele["sortAtoZ"] = false;
               }
             });
-            localStorage.setItem(
-              "columnWidthDSBPArtwork",
-              JSON.stringify(allColumns)
-            );
+            isBUHomeCare
+              ? localStorage.setItem(
+                  "columnWidthDSBPArtworkHomeCare",
+                  JSON.stringify(allColumns)
+                )
+              : localStorage.setItem(
+                  "columnWidthDSBPArtworkBabyCare",
+                  JSON.stringify(allColumns)
+                );
             setFrozenUpdated(!frozenUpdated);
             onSort(selectedColumnName, "asc");
           }}
@@ -150,10 +178,15 @@ const DSBPFilter = ({
                 ele["freeze"] = !ele.freeze;
               }
             });
-            localStorage.setItem(
-              "columnWidthDSBPArtwork",
-              JSON.stringify(allColumns)
-            );
+            isBUHomeCare
+              ? localStorage.setItem(
+                  "columnWidthDSBPArtworkHomeCare",
+                  JSON.stringify(allColumns)
+                )
+              : localStorage.setItem(
+                  "columnWidthDSBPArtworkBabyCare",
+                  JSON.stringify(allColumns)
+                );
             setFrozenUpdated(!frozenUpdated);
             setFieldUpdated(!fieldUpdated);
           }}
@@ -181,7 +214,9 @@ const DSBPFilter = ({
 
   return (
     <span>
-      <OverlayPanel  className="overlay" ref={op}>{confirmPopData()}</OverlayPanel>
+      <OverlayPanel className="overlay" ref={op}>
+        {confirmPopData()}
+      </OverlayPanel>
     </span>
   );
 };
