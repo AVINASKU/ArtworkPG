@@ -41,7 +41,9 @@ const ArtworkAlignment = ({
   const [tableLoader, setTableLoader] = useState(false);
   const [fieldUpdated, setFieldUpdated] = useState(false);
   const [buWiseSortedColumnNames, setBuWiseSortedColumnNames] = useState(null);
-  const [listOfInitiativeId , setListOfInitiativeId] = useState([]);
+  const [listOfInitiativeId, setListOfInitiativeId] = useState([]);
+    const [addSavedData, setSavedData] = useState([]);
+
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const allBUAttributesData = useSelector(
@@ -68,6 +70,7 @@ const ArtworkAlignment = ({
   const findAndSortBuWiseColumnNames = () => {
     let buWiseAttributeList =
       allBUAttributes?.ArtWorkProjectSetupPage?.Artwork_BU;
+    console.log("all buWiseAttributeList", allBUAttributes);
     let attributeList = [];
     if (buWiseAttributeList) {
       attributeList =
@@ -129,11 +132,11 @@ const ArtworkAlignment = ({
       setDsbpPmpData(transformedArray);
       setTotalNoOfPMP(transformedArray.length);
 
-        const initiativeIDs = transformedArray.map(task => task.DSBP_InitiativeID);
-  const uniqueIDs = [...new Set(initiativeIDs)];
-    console.log("initiative id", uniqueIDs);
-
-  setListOfInitiativeId(uniqueIDs);
+      const initiativeIDs = transformedArray.map(
+        (task) => task.DSBP_InitiativeID
+      );
+      const uniqueIDs = [...new Set(initiativeIDs)];
+      setListOfInitiativeId(uniqueIDs);
 
       const count = transformedArray.reduce((acc, obj) => {
         if (obj?.DSBP_PO_PMP_poPoa !== "") {
@@ -173,8 +176,7 @@ const ArtworkAlignment = ({
   }, [dispatch]);
 
   useEffect(() => {
-      setDropdownList(DropDownData.DSBPDropdownData);
-
+    setDropdownList(DropDownData.DSBPDropdownData);
   }, [DropDownData]);
 
   const addDSBPIntoProject = async (InitiativeID, operation) => {
@@ -221,6 +223,13 @@ const ArtworkAlignment = ({
     }
   };
 
+  const onSubmit = async()=>{
+    if(addSavedData && addSavedData.length){
+    const updatedPmpDetails = { ArtworkAgilityPMPs: addSavedData };
+  await onSubmitDsbpAction(updatedPmpDetails);
+  };
+  }
+
   const onActionSubmit = async (formData, data) => {
     setLoader(true);
     let updatedData = {};
@@ -264,9 +273,9 @@ const ArtworkAlignment = ({
     return navigate(`/myProjects`);
   };
 
-  const onSubmit = () => {
-    return navigate(`/myProjects`);
-  };
+  // const onSubmit = () => {
+  //   return navigate(`/myProjects`);
+  // };
 
   const onGlobalFilterChange = (e, colName) => {
     const value = e.value;
@@ -290,6 +299,9 @@ const ArtworkAlignment = ({
     } else setFilteredDsbpData([]);
   };
 
+
+  let checkLength = addSavedData.length;
+  console.log("hello ---------", fieldUpdated, checkLength);
   return (
     <div className="artwork-dsbp myProjectAnddAllProjectList">
       {loader || totalNoOfDsbpId === null ? (
@@ -319,7 +331,7 @@ const ArtworkAlignment = ({
             totalNoOfPMP={totalNoOfPMP}
             totalNoOfPOA={totalNoOfPOA}
             totalNoOfAddedProject={totalNoOfAddedProject}
-            totalNoOfPMPLocked = {totalNoOfPMPLocked}
+            totalNoOfPMPLocked={totalNoOfPMPLocked}
             listOfInitiativeId={listOfInitiativeId}
           />
           {tableLoader ? (
@@ -345,12 +357,16 @@ const ArtworkAlignment = ({
               tabPanel={tabPanel}
               setFieldUpdated={setFieldUpdated}
               fieldUpdated={fieldUpdated}
+              setSavedData={setSavedData}
+              addSavedData={addSavedData}
             />
           )}
           <FooterButtons
             handleCancel={handleCancel}
             hideSaveButton={true}
             onSubmit={onSubmit}
+            formValid={!checkLength}
+            checkReadWriteAccess={!false}
           />
         </>
       )}
