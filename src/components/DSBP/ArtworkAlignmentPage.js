@@ -40,7 +40,7 @@ const ArtworkAlignment = () => {
   const [addSavedData, setSavedData] = useState([]);
   const [handleYesAddToPRoject, setHandleYesAddToPRoject] = useState(false);
   const [rejectDialog, setRejectDialog] = useState(false);
-
+  const [tableRender, setTableRender] = useState(false);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const allBUAttributesData = useSelector(
@@ -65,50 +65,104 @@ const ArtworkAlignment = () => {
   }, [dispatch]);
 
   const findAndSortBuWiseColumnNames = () => {
-    let buWiseAttributeList =
-      allBUAttributes?.ArtWorkProjectSetupPage?.Artwork_BU;
-    console.log("all buWiseAttributeList", allBUAttributes);
-    let attributeList = [];
-    if (buWiseAttributeList) {
-      attributeList =
-        buWiseAttributeList.find((item) => item.BU_Name === BU)
-          ?.Attribute_List || [];
-    }
-    let sortedData = [];
-    if (attributeList && attributeList.length) {
-      sortedData = [...attributeList].sort((a, b) => {
-        return parseInt(a.Sequence) - parseInt(b.Sequence);
-      });
-    }
-    setBuWiseSortedColumnNames(sortedData);
-    let jsonColumnWidth = localStorage.getItem("columnWidthDSBPArtwork");
-    let columnWidth = JSON.parse(jsonColumnWidth);
-
-    if (!columnWidth || !columnWidth.length) {
-      if (sortedData && sortedData.length) {
-        sortedData.map((list) => {
-          list["width"] = 250;
-          list["freeze"] = false;
-          list["sortAtoZ"] = false;
-          list["sortZtoA"] = false;
-          list["reorder"] = false;
+    if (BU === "Baby Care") {
+      let buWiseAttributeList =
+        allBUAttributes?.ArtWorkProjectSetupPage?.Artwork_BU;
+      // console.log("all buWiseAttributeList", allBUAttributes);
+      let attributeList = [];
+      if (buWiseAttributeList) {
+        attributeList =
+          buWiseAttributeList.find((item) => item.BU_Name === BU)
+            ?.Attribute_List || [];
+      }
+      console.log("attribute list", attributeList);
+      let sortedData = [];
+      if (attributeList && attributeList.length) {
+        sortedData = [...attributeList].sort((a, b) => {
+          return parseInt(a.Sequence) - parseInt(b.Sequence);
         });
       }
-      localStorage.setItem(
-        "columnWidthDSBPArtwork",
-        JSON.stringify(sortedData)
+      setBuWiseSortedColumnNames(sortedData);
+      let jsonColumnWidth = localStorage.getItem(
+        "columnWidthDSBPArtworkBabyCare"
       );
-    }
+      let columnWidth = JSON.parse(jsonColumnWidth);
+      if (!columnWidth || !columnWidth.length) {
+        if (sortedData && sortedData.length) {
+          sortedData.map((list) => {
+            list["width"] = 250;
+            list["freeze"] = false;
+            list["sortAtoZ"] = false;
+            list["sortZtoA"] = false;
+            list["reorder"] = false;
+          });
+        }
+        localStorage.setItem(
+          "columnWidthDSBPArtworkBabyCare",
+          JSON.stringify(sortedData)
+        );
+      }
 
-    if (columnWidth && columnWidth.length) {
-      let sortedData1 = [];
-      sortedData1 = [...columnWidth].sort((a, b) => {
-        return parseInt(a.Sequence) - parseInt(b.Sequence);
-      });
-      localStorage.setItem(
-        "columnWidthDSBPArtwork",
-        JSON.stringify(sortedData1)
+      if (columnWidth && columnWidth.length) {
+        let sortedData1 = [];
+        sortedData1 = [...columnWidth].sort((a, b) => {
+          return parseInt(a.Sequence) - parseInt(b.Sequence);
+        });
+        localStorage.setItem(
+          "columnWidthDSBPArtworkBabyCare",
+          JSON.stringify(sortedData1)
+        );
+      }
+    }
+    if (BU === "Home Care") {
+      let buWiseAttributeList =
+        allBUAttributes?.ArtWorkProjectSetupPage?.Artwork_BU;
+      // console.log("all buWiseAttributeList", allBUAttributes);
+      let attributeList = [];
+      if (buWiseAttributeList) {
+        attributeList =
+          buWiseAttributeList.find((item) => item.BU_Name === BU)
+            ?.Attribute_List || [];
+      }
+      console.log("attribute list", attributeList);
+      let sortedData = [];
+      if (attributeList && attributeList.length) {
+        sortedData = [...attributeList].sort((a, b) => {
+          return parseInt(a.Sequence) - parseInt(b.Sequence);
+        });
+      }
+      setBuWiseSortedColumnNames(sortedData);
+      let jsonColumnWidth = localStorage.getItem(
+        "columnWidthDSBPArtworkHomeCare"
       );
+      let columnWidth = JSON.parse(jsonColumnWidth);
+
+      if (!columnWidth || !columnWidth.length) {
+        if (sortedData && sortedData.length) {
+          sortedData.map((list) => {
+            list["width"] = 250;
+            list["freeze"] = false;
+            list["sortAtoZ"] = false;
+            list["sortZtoA"] = false;
+            list["reorder"] = false;
+          });
+        }
+        localStorage.setItem(
+          "columnWidthDSBPArtworkHomeCare",
+          JSON.stringify(sortedData)
+        );
+      }
+
+      if (columnWidth && columnWidth.length) {
+        let sortedData1 = [];
+        sortedData1 = [...columnWidth].sort((a, b) => {
+          return parseInt(a.Sequence) - parseInt(b.Sequence);
+        });
+        localStorage.setItem(
+          "columnWidthDSBPArtworkHomeCare",
+          JSON.stringify(sortedData1)
+        );
+      }
     }
   };
 
@@ -169,7 +223,7 @@ const ArtworkAlignment = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(getDSBPDropdownData(BU, Region));
+    dispatch(getDSBPDropdownData(BU, Region, ProjectID));
   }, [dispatch]);
 
   useEffect(() => {
@@ -220,12 +274,13 @@ const ArtworkAlignment = () => {
     }
   };
 
-  const onSubmit = async()=>{
-    if(addSavedData && addSavedData.length){
-    const updatedPmpDetails = { ArtworkAgilityPMPs: addSavedData };
-  await onSubmitDsbpAction(updatedPmpDetails);
+  const onSubmit = async () => {
+    if (addSavedData && addSavedData.length) {
+      const updatedPmpDetails = { ArtworkAgilityPMPs: addSavedData };
+      await onSubmitDsbpAction(updatedPmpDetails);
+    }
+    setSavedData([]);
   };
-  }
 
   const onActionSubmit = async (formData, data) => {
     setLoader(true);
@@ -300,7 +355,6 @@ const ArtworkAlignment = () => {
     } else setFilteredDsbpData([]);
   };
 
-
   let checkLength = addSavedData.length;
   console.log("hello ---------", fieldUpdated, checkLength);
   return (
@@ -323,6 +377,8 @@ const ArtworkAlignment = () => {
             setBuWiseSortedColumnNames={setBuWiseSortedColumnNames}
             setDsbpPmpData={setDsbpPmpData}
             dsbpPmpData={dsbpPmpData}
+            setTableRender={setTableRender}
+            tableRender={tableRender}
           />
           <ProjectNameHeader selectedProjectDetails={selectedProjectDetails} />
           <SelectDsbpId
@@ -360,6 +416,8 @@ const ArtworkAlignment = () => {
               setHandleYesAddToPRoject={setHandleYesAddToPRoject}
               rejectDialog={rejectDialog}
               setRejectDialog={setRejectDialog}
+              tableRender={tableRender}
+              setTableRender={setTableRender}
             />
           )}
           <FooterButtons

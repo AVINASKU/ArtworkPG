@@ -37,7 +37,9 @@ const AgilityList = ({
   handleYesAddToPRoject,
   setHandleYesAddToPRoject,
   rejectDialog,
-  setRejectDialog
+  setRejectDialog,
+  tableRender,
+  setTableRender
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -56,6 +58,8 @@ const AgilityList = ({
     { tabHeader: "Header 1", decription: "Header 1 data" },
   ]);
 
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
   const allBUAttributesData = useSelector(
     (state) => state.DropDownValuesReducer
   );
@@ -72,6 +76,13 @@ const AgilityList = ({
     { name: "No", code: "No" },
     { name: "Reject", code: "Reject" },
   ];
+
+  const BU = selectedProjectDetails?.BU;
+  // check whether project is from home care or baby care
+  let isBUHomeCare = false;
+  if (BU === "Home Care") {
+    isBUHomeCare = true;
+  }
 
   const onchangeAddToProject = (rowData, e, ele) => {
     console.log("rowData", rowData, e.target.value, rowData[ele]);
@@ -270,6 +281,7 @@ const AgilityList = ({
           >
             <Form.Control
               type="text"
+              value={options[field]}
               onChange={(e) => onChangeSelectField(options, e, field)}
               placeholder="Enter Sellable"
             />
@@ -283,6 +295,7 @@ const AgilityList = ({
           >
             <Form.Control
               type="text"
+              value={options[field]}
               onChange={(e) => onChangeSelectField(options, e, field)}
               placeholder="Enter Biocide"
             />
@@ -329,7 +342,9 @@ const AgilityList = ({
   };
 
   const renderColumns = () => {
-    let jsonColumnWidth = localStorage.getItem("columnWidthDSBPArtwork");
+    let jsonColumnWidth = isBUHomeCare
+      ? localStorage.getItem("columnWidthDSBPArtworkHomeCare")
+      : localStorage.getItem("columnWidthDSBPArtworkBabyCare");
     let allColumns = JSON.parse(jsonColumnWidth);
 
     if (allColumns && allColumns.length) {
@@ -357,7 +372,9 @@ const AgilityList = ({
 
   const onColumnResizeEnd = (event) => {
     let columnWidth = [];
-    let jsonColumnWidth = localStorage.getItem("columnWidthDSBPArtwork");
+    let jsonColumnWidth = isBUHomeCare
+      ? localStorage.getItem("columnWidthDSBPArtworkHomeCare")
+      : localStorage.getItem("columnWidthDSBPArtworkBabyCare");
     if (jsonColumnWidth) {
       columnWidth = JSON.parse(jsonColumnWidth);
     }
@@ -368,13 +385,26 @@ const AgilityList = ({
         }
       });
     }
-    localStorage.setItem("columnWidthDSBPArtwork", JSON.stringify(columnWidth));
+    // localStorage.setItem("columnWidthDSBPArtwork", JSON.stringify(columnWidth));
+    isBUHomeCare
+      ? localStorage.setItem(
+          "columnWidthDSBPArtworkHomeCare",
+          JSON.stringify(columnWidth)
+        )
+      : localStorage.setItem(
+          "columnWidthDSBPArtworkBabyCare",
+          JSON.stringify(columnWidth)
+        );
     setFieldUpdated(!fieldUpdated);
+    setTableRender(false);
   };
 
   const storeReorderedColumns = (e) => {
     let columnNames = [];
-    let jsonColumnNames = localStorage.getItem("columnWidthDSBPArtwork");
+    // let jsonColumnNames = localStorage.getItem("columnWidthDSBPArtwork");
+    let jsonColumnNames = isBUHomeCare
+      ? localStorage.getItem("columnWidthDSBPArtworkHomeCare")
+      : localStorage.getItem("columnWidthDSBPArtworkBabyCare");
     if (jsonColumnNames) {
       columnNames = JSON.parse(jsonColumnNames);
     }
@@ -389,11 +419,22 @@ const AgilityList = ({
       ele["Sequence"] = index;
       ele["reorder"] = true;
     });
-    localStorage.setItem(
-      "columnWidthDSBPArtwork",
-      JSON.stringify(shiftedArray)
-    );
+
+    isBUHomeCare
+      ? localStorage.setItem(
+          "columnWidthDSBPArtworkHomeCare",
+          JSON.stringify(shiftedArray)
+        )
+      : localStorage.setItem(
+          "columnWidthDSBPArtworkBabyCare",
+          JSON.stringify(shiftedArray)
+        );
+    // localStorage.setItem(
+    //   "columnWidthDSBPArtwork",
+    //   JSON.stringify(shiftedArray)
+    // );
     setFieldUpdated(!fieldUpdated);
+    setTableRender(false);
   };
 
   const timestamp = new Date().getTime();
@@ -402,7 +443,7 @@ const AgilityList = ({
     <>
       <DataTable
         dataKey="DSBP_PMP_PIMaterialID"
-        // key={"DSBP_PMP_PIMaterialID" + timestamp}
+        key={tableRender ? `"DSBP_PMP_PIMaterialID" + timestamp` : ""}
         scrollable
         resizableColumns
         // key={generateUniqueKey("artwork")}
