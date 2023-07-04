@@ -42,6 +42,8 @@ const ArtworkAlignment = ({
   const [fieldUpdated, setFieldUpdated] = useState(false);
   const [buWiseSortedColumnNames, setBuWiseSortedColumnNames] = useState(null);
   const [listOfInitiativeId, setListOfInitiativeId] = useState([]);
+    const [addSavedData, setSavedData] = useState([]);
+
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const allBUAttributesData = useSelector(
@@ -221,6 +223,13 @@ const ArtworkAlignment = ({
     }
   };
 
+  const onSubmit = async()=>{
+    if(addSavedData && addSavedData.length){
+    const updatedPmpDetails = { ArtworkAgilityPMPs: addSavedData };
+  await onSubmitDsbpAction(updatedPmpDetails);
+  };
+  }
+
   const onActionSubmit = async (formData, data) => {
     setLoader(true);
     let updatedData = {};
@@ -264,9 +273,9 @@ const ArtworkAlignment = ({
     return navigate(`/myProjects`);
   };
 
-  const onSubmit = () => {
-    return navigate(`/myProjects`);
-  };
+  // const onSubmit = () => {
+  //   return navigate(`/myProjects`);
+  // };
 
   const onGlobalFilterChange = (e, colName) => {
     const value = e.value;
@@ -290,6 +299,9 @@ const ArtworkAlignment = ({
     } else setFilteredDsbpData([]);
   };
 
+
+  let checkLength = addSavedData.length;
+  console.log("hello ---------", fieldUpdated, checkLength);
   return (
     <div className="artwork-dsbp myProjectAnddAllProjectList">
       {loader || totalNoOfDsbpId === null ? (
@@ -345,12 +357,16 @@ const ArtworkAlignment = ({
               tabPanel={tabPanel}
               setFieldUpdated={setFieldUpdated}
               fieldUpdated={fieldUpdated}
+              setSavedData={setSavedData}
+              addSavedData={addSavedData}
             />
           )}
           <FooterButtons
             handleCancel={handleCancel}
             hideSaveButton={true}
             onSubmit={onSubmit}
+            formValid={!checkLength}
+            checkReadWriteAccess={!false}
           />
         </>
       )}

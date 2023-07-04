@@ -34,6 +34,8 @@ const AgilityList = ({
   tabPanel,
   setFieldUpdated,
   fieldUpdated,
+  setSavedData,
+  addSavedData,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -126,21 +128,46 @@ const AgilityList = ({
   };
 
   const onChangeSelectField = (option, e, field) => {
-    console.log("heelo hello", addedDataForSave);
-    let updatedData = {};
-    updatedData.DSBP_InitiativeID = option.DSBP_InitiativeID;
-    updatedData.DSBP_PMP_PIMaterialID = option.DSBP_PMP_PIMaterialID;
-    updatedData[field] = e.target.value;
-    addedDataForSave.push(updatedData);
-    setAddedDataForSave(addedDataForSave);
+    option[field] = e.target.value;
+    setAddedDataForSave({ ...addedDataForSave, option });
+
+    if (addSavedData && addSavedData.length) {
+      addSavedData.map((ele) => {
+        if (
+          ele.DSBP_InitiativeID === option.DSBP_InitiativeID &&
+          ele.DSBP_PMP_PIMaterialID === option.DSBP_PMP_PIMaterialID
+        ) {
+          ele[field] = e.target.value;
+          return ele;
+        }
+      });
+    }
+    let checkDataIsPresentOrNot = addSavedData.filter(
+      (ele) =>
+        ele.DSBP_InitiativeID === option.DSBP_InitiativeID &&
+        ele.DSBP_PMP_PIMaterialID === option.DSBP_PMP_PIMaterialID
+    );
+    if (!checkDataIsPresentOrNot.length) {
+      let updatedData = {};
+      updatedData.DSBP_InitiativeID = option.DSBP_InitiativeID;
+      updatedData.DSBP_PMP_PIMaterialID = option.DSBP_PMP_PIMaterialID;
+      updatedData[field] = e.target.value;
+      addSavedData.push(updatedData);
+    }
+    console.log("add saved data", addSavedData);
+    setSavedData(addSavedData);
+    setFieldUpdated(!fieldUpdated);
   };
-  
+
   console.log("option", addedDataForSave);
 
   const addBody = (options, rowData) => {
     let field = rowData.field;
     let FPCStagingFormula =
       options?.FPCStagingPage?.[0]?.FormulaCardStagingPage;
+    // if(field === "AWM_AISE"){
+    //  console.log("field", options[field]);
+    // }
 
     let concatenatedFPCStagingFormulaData = {};
     if (FPCStagingFormula && FPCStagingFormula.length) {
@@ -237,7 +264,11 @@ const AgilityList = ({
             controlId="groupName.ControlInput1"
             style={{ textAlign: "-webkit-center" }}
           >
-            <Form.Control type="text" placeholder="Enter Sellable" />
+            <Form.Control
+              type="text"
+              onChange={(e) => onChangeSelectField(options, e, field)}
+              placeholder="Enter Sellable"
+            />
           </Form.Group>
         )}
 
@@ -246,7 +277,11 @@ const AgilityList = ({
             controlId="groupName.ControlInput1"
             style={{ textAlign: "-webkit-center" }}
           >
-            <Form.Control type="text" placeholder="Enter Biocide" />
+            <Form.Control
+              type="text"
+              onChange={(e) => onChangeSelectField(options, e, field)}
+              placeholder="Enter Biocide"
+            />
           </Form.Group>
         )}
 
@@ -255,6 +290,8 @@ const AgilityList = ({
           field !== "DSBP_PMP_PIMaterialNumber" &&
           field !== "AWM_AISE" &&
           field !== "AWM_AssemblyMechanism" &&
+          field !== "AWM_Biocide" &&
+          field !== "AWM_Sellable" &&
           options[field]}
       </>
     );
@@ -360,8 +397,8 @@ const AgilityList = ({
   return (
     <>
       <DataTable
-        // dataKey="DSBP_PMP_PIMaterialID"
-        key={"DSBP_PMP_PIMaterialID" + timestamp}
+        dataKey="DSBP_PMP_PIMaterialID"
+        // key={"DSBP_PMP_PIMaterialID" + timestamp}
         scrollable
         resizableColumns
         // key={generateUniqueKey("artwork")}
