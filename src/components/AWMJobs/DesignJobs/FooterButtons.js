@@ -50,7 +50,7 @@ const FooterButtons = ({
             className="button-layout"
             type="submit"
             onClick={() => onSubmit()}
-            disabled={formValid || !checkReadWriteAccess}
+            disabled={checkReadWriteAccess !== undefined ? (formValid || !checkReadWriteAccess) : formValid}
           >
             Submit
           </Button>

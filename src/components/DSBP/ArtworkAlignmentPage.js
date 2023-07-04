@@ -17,12 +17,7 @@ import FooterButtons from "../AWMJobs/DesignJobs/FooterButtons";
 import "./index.scss";
 import { onSortData, Loading } from "../../utils";
 
-const ArtworkAlignment = ({
-  setTabsList,
-  tabsList,
-  handleTabPanel,
-  tabPanel,
-}) => {
+const ArtworkAlignment = () => {
   const navigate = useNavigate();
   const [dropdownlist, setDropdownList] = useState(null);
   const [selectAllChecked, setSelectAllChecked] = useState(false);
@@ -351,10 +346,6 @@ const ArtworkAlignment = ({
               setDsbpPmpData={setDsbpPmpData}
               onActionSubmit={onActionSubmit}
               buWiseSortedColumnNames={buWiseSortedColumnNames}
-              setTabsList={setTabsList}
-              tabsList={tabsList}
-              handleTabPanel={handleTabPanel}
-              tabPanel={tabPanel}
               setFieldUpdated={setFieldUpdated}
               fieldUpdated={fieldUpdated}
               setSavedData={setSavedData}

@@ -69,6 +69,11 @@
     .tabsCompo{
       height: 100%;
       overflow: hidden;
+      .form-select{
+        max-width: 208px;
+        font-size: 12px;
+      }
+
     }
   }
   .p-tabview-panels {
@@ -98,8 +103,20 @@
           display: flex;
           align-items: center;
           justify-content: center;
+        }
+        button.close-button {
+          border: 0;
+          padding-left: 10px;
+          background: transparent;
+          color: inherit;
+        }
       }
-      }
+      button.close-button {
+  border: 0;
+  padding-left: 10px;
+  background: transparent;
+  color: inherit;
+}
     }
     &.p-highlight .p-tabview-nav-link{
       background: #003DA5;
@@ -110,10 +127,4 @@
   .p-tabview-ink-bar{
     display: none;
   }
-}
-button.close-button {
-  border: 0;
-  padding-left: 10px;
-  background: transparent;
-  color: inherit;
 }

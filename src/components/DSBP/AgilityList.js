@@ -28,8 +28,6 @@ const AgilityList = ({
   setDsbpPmpData,
   onActionSubmit,
   buWiseSortedColumnNames,
-  setTabsList,
-  tabsList,
   handleTabPanel,
   tabPanel,
   setFieldUpdated,
@@ -51,6 +49,9 @@ const AgilityList = ({
   const [handleYesAddToPRoject, setHandleYesAddToPRoject] = useState(false);
   const [frozenUpdated, setFrozenUpdated] = useState(false);
   const [addedDataForSave, setAddedDataForSave] = useState([]);
+  const [tabsList, setTabsList] = useState([
+    { tabHeader: "Header 1", decription: "Header 1 data" },
+  ]);
 
   const allBUAttributesData = useSelector(
     (state) => state.DropDownValuesReducer

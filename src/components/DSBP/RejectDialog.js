@@ -7,19 +7,28 @@ const RejectDialog = ({
   setRejectFormData
 }) => {
     const [rejectReason, setRejectReason] = useState("");
+    const [rejectionComment, setRejectionComment] = useState("");
     const rejectReasonList = [
         { name: 'NA', code: 'NA' }
     ];
 
     const handleRejectReasonChange = (e) => {
-        setRejectReason(e.target.value)
-        console.log("data", e.target.value)
-        setRejectFormData({
-            ...rejectFormData,
-            RTA_RTARejectionReason: e.target.value,
-          });
-      };
+      setRejectReason(e.target.value)
+      console.log("data", e.target.value)
+      setRejectFormData({
+          ...rejectFormData,
+          RTA_RTARejectionReason: e.target.value,
+        });
+    };
 
+    const handleRejectCommentChange = (e) => {
+      setRejectionComment(e.target.value)
+      console.log("data", e.target.value)
+      setRejectFormData({
+          ...rejectFormData,
+          RejectionNotes: e.target.value,
+        });
+    };
 
   return (
     console.log("onChangeData", onChangeData),
@@ -74,6 +83,8 @@ const RejectDialog = ({
               <textarea
                 class="form-control text-area"
                 placeholder="Start typing here...."
+                onChange={handleRejectCommentChange}
+                value={rejectionComment}
               ></textarea>
             </Form.Group>
           </div>

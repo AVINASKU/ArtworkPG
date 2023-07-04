@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { TabView, TabPanel } from "primereact/tabview";
 import { Form } from "react-bootstrap";
-import ArtworkAlignment from "../ArtworkAlignmentPage";
 import "./index.scss";
 import { Accordion } from "react-bootstrap";
-import { Button } from "primereact/button";
+import { Loading } from "../../../utils";
 import {
   ArtWorkTabValuesAction
 } from "../../../store/actions/ArtWorkTabValuesActions";
+import {
+  onSubmitDsbpAction,
+  getDsbpPMPDetails
+} from "../../../apis/dsbpApi";
 import DsbpCommonPopup from "../DsbpCommonPopup";
 import DsbpRejectDialog from "../RejectDialog";
 import DsbpActionDialog from "../DsbpActionDialog";
+import FooterButtons from "../../AWMJobs/DesignJobs/FooterButtons";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -19,7 +23,7 @@ const PMPSpecificTabView = () => {
   const navigate = useNavigate();
   const { artWorkTabValuesData } = useSelector((state) => state.ArtWorkTabValuesReducer);
   const { selectedProject } = useSelector((state) => state.ProjectSetupReducer);
-  const { DropDownValuesData, loading } = useSelector(
+  const { DropDownValuesData } = useSelector(
     (state) => state.DropDownValuesReducer
   );
   const [storesTabList, setStoresTabDataList] = useState(artWorkTabValuesData);
@@ -38,6 +42,9 @@ const PMPSpecificTabView = () => {
   const [bioside, setBioside] = useState("");
   const [groupName, setGroupName] = useState("");
   const [sellable, setSellable] = useState("");
+  const [formData, setFormData] = useState({});
+  const [selectedTab, setSelectedTabData] = useState({});
+  const [loader, setLoader] = useState(false);
 
   const navigateToDSBP = () => {
     navigate(`../DSBP/${selectedProject?.Project_ID}`);
@@ -80,17 +87,39 @@ const PMPSpecificTabView = () => {
     if (tabPanelList >= storesTabList?.length) {
       setTabPanelList(storesTabList.length - 1);
     }
-    storesTabList !== undefined && dispatch(ArtWorkTabValuesAction(storesTabList));   
+    storesTabList !== undefined && dispatch(ArtWorkTabValuesAction(storesTabList));
+    setSelectedTabData(artWorkTabValuesData[tabPanelList]);
+    console.log("artWorkTabValuesData[tabPanelList]",artWorkTabValuesData[tabPanelList])
     if(artWorkTabValuesData[tabPanelList]){
       const selectedTabData = artWorkTabValuesData[tabPanelList];
-      setAddToProjectValue(selectedTabData?.description.AWM_AddedToProject);
-      setAssemblyMechanismChange(selectedTabData?.description.AWM_AssemblyMechanism);
-      setAISEName(selectedTabData?.description.AWM_AISE);
-      setBioside(selectedTabData?.description.AWM_Biocide);
-      setSellable(selectedTabData?.description.AWM_Sellable);
-      setGroupName(selectedTabData?.description.AWM_GroupPMP);
+      if(selectedTabData?.description !== undefined){
+        setAddToProjectValue(selectedTabData?.description?.AWM_AddedToProject);
+        setAssemblyMechanismChange(selectedTabData?.description?.AWM_AssemblyMechanism);
+        setAISEName(selectedTabData?.description?.AWM_AISE);
+        setBioside(selectedTabData?.description?.AWM_Biocide);
+        setSellable(selectedTabData?.description?.AWM_Sellable);
+        setGroupName(selectedTabData?.description?.AWM_GroupPMP);
+        }
+      
     }
+    setFormData({})
   }, [storesTabList, tabPanelList]);
+
+  useEffect(() => {   
+    setSelectedTabData(artWorkTabValuesData[tabPanelList]);
+    if(artWorkTabValuesData[tabPanelList]){
+      const selectedTabData = artWorkTabValuesData[tabPanelList];
+      if(selectedTabData?.description !== undefined){
+        setAddToProjectValue(selectedTabData?.description?.AWM_AddedToProject);
+        setAssemblyMechanismChange(selectedTabData?.description?.AWM_AssemblyMechanism);
+        setAISEName(selectedTabData?.description?.AWM_AISE);
+        setBioside(selectedTabData?.description?.AWM_Biocide);
+        setSellable(selectedTabData?.description?.AWM_Sellable);
+        setGroupName(selectedTabData?.description?.AWM_GroupPMP);
+        }
+    }
+    setFormData({})
+  }, [artWorkTabValuesData]);
 
   useEffect(() => {
     if (artWorkTabValuesData) {
@@ -103,7 +132,6 @@ const PMPSpecificTabView = () => {
   const onchangeAddToProject = (rowData, e, ele) => {
     rowData[ele] = e.target.value;
     setOnChangeData(rowData);
-    console.log("rowData", rowData);
     if (e.target.value === "Reject") setRejectDialog(true);
     setRejectFormData({});
     if (e.target.value === "Yes") setHandleYesAddToPRoject(true);
@@ -111,22 +139,108 @@ const PMPSpecificTabView = () => {
 
   const handleAiseChange = (e) => {
     setAISEName(e.target.value);
+    setFormData({
+      ...formData,
+      AWM_AISE: e.target.value,
+    });
     
   };
   const handleAssemblyMechanismChange = (e) => {
     setAssemblyMechanismChange(e.target.value);
+    setFormData({
+      ...formData,
+      AWM_AssemblyMechanism: e.target.value,
+    });
   };
 
   const handleBiosideChange = (e) => {
     setBioside(e.target.value);
+    setFormData({ ...formData, AWM_Biocide: e.target.value });
   };
 
   const handleSellableChange = (e) => {
     setSellable(e.target.value);
+    setFormData({ ...formData, AWM_Sellable: e.target.value });
   };
 
   const handleGroupName = (e) => {
     setGroupName(e.target.value)
+    setFormData({
+      ...formData,
+      AWM_GroupPMP: e.target.value,
+    });
+  };
+
+  const handleCancel = () => {
+    return navigate(`/myProjects`);
+  };
+
+  const updateArtWorkTabValuesData = (updatedNewData) => {
+    console.log("updatedArtWorkTabValuesData updatedNewData", updatedNewData)
+    console.log("updatedArtWorkTabValuesData selectedTab", selectedTab)
+    let submittionData = {};
+    submittionData = {
+      tabHeader: selectedTab.tabHeader,
+      description: updatedNewData && updatedNewData[0]
+    };
+    console.log("updatedArtWorkTabValuesData submittionData", submittionData)
+    const indexToUpdate = artWorkTabValuesData.findIndex(
+      (tab) => tab.tabHeader === submittionData.tabHeader
+    );
+    console.log("updatedArtWorkTabValuesData indexToUpdate", indexToUpdate);
+    if (indexToUpdate !== -1) {
+      // Create a copy of the artWorkTabValuesData array
+      const updatedArtWorkTabValuesData = [...artWorkTabValuesData];
+
+      // Replace the element at the index with the selectedTab object
+      updatedArtWorkTabValuesData[indexToUpdate] = submittionData;
+
+      // Update the state with the updated array
+      setStoresTabDataList(updatedArtWorkTabValuesData);
+      console.log("updatedArtWorkTabValuesData updatedArtWorkTabValuesData", updatedArtWorkTabValuesData);
+    }
+  };
+
+  const onSubmit = async (rejectFormData) => {
+    setLoader(true);
+    let updatedData = {};
+    console.log("updatedData selectedTab", selectedTab);
+    const selectionFormData = rejectFormData ? rejectFormData : formData;
+    updatedData = {
+      DSBP_InitiativeID: selectedTab?.description.DSBP_InitiativeID,
+      DSBP_PMP_PIMaterialID: selectedTab?.description.DSBP_PMP_PIMaterialID,
+    };
+    if (selectionFormData === "AddToProject") {
+      updatedData.FK_AWMProjectID = selectedTab?.description.FK_AWMProjectID;
+      updatedData.AWM_AddedToProject = "Yes";
+      setHandleYesAddToPRoject(false)
+    } else {
+      updatedData = { ...updatedData, ...selectionFormData };
+    }
+    setRejectDialog(false)
+    console.log("updatedData", updatedData);
+
+    const updatedPmpDetails = { ArtworkAgilityPMPs: [updatedData] };
+
+    await onSubmitDsbpAction(updatedPmpDetails);
+    const resp = await getDsbpPMPDetails(selectedProject.Project_ID);
+
+    let updatedNewData =
+      resp &&
+      resp[0].DSBP_PMP_PIMaterialIDPage?.filter(
+        (data) =>
+          data.DSBP_PMP_PIMaterialID ===
+          selectedTab.description.DSBP_PMP_PIMaterialID
+      );
+    updatedNewData = updatedNewData.map((data) => ({
+      DSBP_InitiativeID: resp && resp[0].DSBP_InitiativeID,
+      ...data,
+    }));
+
+    console.log("updatedNewData data", updatedNewData);
+    updateArtWorkTabValuesData(updatedNewData);
+    setFormData({})
+    setLoader(false);
   };
 
   const renderData = (tabData) => {
@@ -146,7 +260,6 @@ const PMPSpecificTabView = () => {
                 {field.Field_Name === "AWM_AddedToProject" &&
                   <Form.Group
                     controlId="groupName.ControlInput1"
-                    style={{ textAlign: "-webkit-center" }}
                   >
                     <Form.Select
                       value={addToProjectValue}
@@ -260,6 +373,7 @@ const PMPSpecificTabView = () => {
                 field.Field_Name !== "AWM_AssemblyMechanism" &&
                 field.Field_Name !== "AWM_Biocide" &&
                 field.Field_Name !== "AWM_Sellable" &&
+                field.Field_Name !== "AWM_GroupPMP" &&
                   item[value]
                 }
               </td>
@@ -323,50 +437,67 @@ const PMPSpecificTabView = () => {
         header={<CustomTabHeader tabHeader={index === 0 ? "Art Work Alignment" : obj.tabHeader} index={index} />}
         scrollable
       >
-        {index !== 0 && (
-          tabsCompo(obj)
+        <>
+        {loader ? (
+          <Loading />
+        ) : (
+          index !== 0 && (
+            tabsCompo(obj)
+          )
         )}
+        </>
+        
       </TabPanel>
     ));
   };
 
   return (
-    console.log("tabPanelList", tabPanelList, filteredDataList),
-    <>
-      {(artWorkTabValuesData?.length > 1) && (tabPanelList !== 0) ? (
-          <TabView
-            activeIndex={tabPanelList}
-            onTabChange={(e) => onTabChange(e.index)}
-          >
-            {renderTabs()}
-          </TabView>
-        ) : (
-          navigateToDSBP()
-      )}
-      {rejectDialog && (
-        <DsbpCommonPopup
-          actionHeader="Are you sure you want to reject this PMP?"
-          dasbpDialog={rejectDialog}
-          setDasbpDialog={setRejectDialog}
-          rejectFormData={rejectFormData}
-        >
-          <DsbpRejectDialog
-            onChangeData={onChangeData}
-            rejectFormData={rejectFormData}
-            setRejectFormData={setRejectFormData}
+    console.log("artWorkTabValuesData", artWorkTabValuesData),
+    console.log("selectedTab", selectedTab),
+    
+          <>
+          {(artWorkTabValuesData?.length > 1) && (tabPanelList !== 0) ? (
+              <TabView
+                activeIndex={tabPanelList}
+                onTabChange={(e) => onTabChange(e.index)}
+              >
+                {renderTabs()}
+              </TabView>
+            ) : (
+              navigateToDSBP()
+          )}
+          {rejectDialog && (
+            <DsbpCommonPopup
+              actionHeader="Are you sure you want to reject this PMP?"
+              dasbpDialog={rejectDialog}
+              setDasbpDialog={setRejectDialog}
+              rejectFormData={rejectFormData}
+              onSubmit={() => onSubmit(rejectFormData)}
+            >
+              <DsbpRejectDialog
+                onChangeData={onChangeData}
+                rejectFormData={rejectFormData}
+                setRejectFormData={setRejectFormData}
+              />
+            </DsbpCommonPopup>
+          )}
+          {handleYesAddToPRoject && (
+            <DsbpActionDialog
+              actionHeader="Are you sure you want to add these PMP to Project ?"
+              actionDialog={handleYesAddToPRoject}
+              setActionDialog={setHandleYesAddToPRoject}
+              onChangeData={onChangeData}
+              rowData={onChangeData}
+              onActionSubmit={onSubmit}
+            />
+          )}
+          <FooterButtons
+            handleCancel={handleCancel}
+            hideSaveButton={true}
+            onSubmit={onSubmit}
+            formValid={ Object.keys(formData).length === 0}
           />
-        </DsbpCommonPopup>
-      )}
-      {handleYesAddToPRoject && (
-        <DsbpActionDialog
-          actionHeader="Are you sure you want to add these PMP to Project ?"
-          actionDialog={handleYesAddToPRoject}
-          setActionDialog={setHandleYesAddToPRoject}
-          onChangeData={onChangeData}
-          rowData={onChangeData}
-        />
-      )}
-    </>
+        </>
   );
 };
 
