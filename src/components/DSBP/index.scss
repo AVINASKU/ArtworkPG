@@ -9,24 +9,43 @@
     margin-right: 20px;
   }
   .p-datatable {
-    height: calc(100% - 280px);
-    .p-datatable-wrapper{
+    height: calc(100% - 175px);
+    .p-datatable-wrapper {
       height: 100%;
     }
   }
+  .p-multiselect .p-multiselect-label.p-placeholder {
+    color: #595959;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 10px;
+  }
+  .p-multiselect .p-multiselect-label {
+    font-size: 12px;
+  }
+  .header-buttons {
+    gap: 6px;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+  }
 }
-.addToProjectTable{
-  &.p-datatable.p-datatable-scrollable > .p-datatable-wrapper > .p-datatable-table > .p-datatable-thead, &.p-datatable .p-datatable-thead > tr > th{
+.addToProjectTable {
+  &.p-datatable.p-datatable-scrollable
+    > .p-datatable-wrapper
+    > .p-datatable-table
+    > .p-datatable-thead,
+  &.p-datatable .p-datatable-thead > tr > th {
     background: white;
     border: 0;
     padding: 0;
   }
   &.p-datatable .p-datatable-tbody {
-    > tr > td{
+    > tr > td {
       border: 0;
       padding-left: 0;
     }
-    > tr:first-child td{
+    > tr:first-child td {
       padding-top: 7px;
     }
   }
@@ -69,7 +88,7 @@
 
   .city-name {
     flex: 1;
-    width: 380px;
+    width: 600px;
   }
 
   .add-new-design-intent-icon,
@@ -82,8 +101,13 @@
     pointer-events: none;
   }
   .ellipsis {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
+a.tabView {
+  cursor: pointer;
+  color: #003da5;
+  text-decoration: none;
 }

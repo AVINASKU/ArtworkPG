@@ -2,9 +2,9 @@ import axios from "axios";
 import * as types from "./../types/types";
 import { DEVURL } from "../../apis/envUrl";
 
-export const getDSBPDropdownData = (BU, Region) => async (dispatch) => {
+export const getDSBPDropdownData = (BU, Region, ProjectID) => async (dispatch) => {
   try {
-    const res = await axios.get(`${DEVURL}/fetchDSBPID/${BU}/${Region}`);
+    const res = await axios.get(`${DEVURL}/fetchDSBPID/${BU}/${Region}/${ProjectID}`);
 
     if (res?.data === null) {
       dispatch({

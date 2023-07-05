@@ -11,13 +11,14 @@ const FooterButtons = ({
   checkReadWriteAccess,
   bottomFixed,
   cptFormValid,
-  checkTaskISComplete
+  checkTaskISComplete,
+  hideSaveButton
 }) => {
   const location = useLocation();
   const locationPath = location?.pathname;
   const url = locationPath?.split("/");
   const pathName = url[2];
-  console.log("checkReadWriteAccess in footer", checkReadWriteAccess);
+  console.log("checkReadWriteAccess in footer", checkReadWriteAccess, formValid);
   return (
     <div
       className={bottomFixed ? "form-buttons bottom-fixed" : "form-buttons"}
@@ -33,7 +34,7 @@ const FooterButtons = ({
       </Button>
       {!approve && (
         <>
-          {pathName !== "CNIQ" && pathName !== "CCD" && pathName !== "CPT" && (
+          {hideSaveButton || (pathName !== "CNIQ" && pathName !== "CCD" && pathName !== "CPT") && (
             <Button
               className={
                 !checkTaskISComplete || checkReadWriteAccess ? "button-layout" : "button-layout btn btn-disabled"
@@ -49,7 +50,7 @@ const FooterButtons = ({
             className="button-layout"
             type="submit"
             onClick={() => onSubmit()}
-            disabled={formValid || !checkReadWriteAccess}
+            disabled={checkReadWriteAccess !== undefined ? (formValid || !checkReadWriteAccess) : formValid}
           >
             Submit
           </Button>
