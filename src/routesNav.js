@@ -136,6 +136,10 @@ const RoutesNav = () => {
           path="/allProjects/projectPlan/:ProjectID"
           element={<ProjectCreation />}
         />
+        <Route
+          path="/myProjects/artworkAlignment/:ProjectID"
+          element={<ProjectCreation />}
+        />
         <Route path="/:page1/:page2/DDI/:TaskID/:ProjectID" element={<DDI />} />
         <Route path="/:pageType/DDI/:TaskID/:ProjectID" element={<DDI />} />
         <Route

@@ -47,7 +47,7 @@ const PMPSpecificTabView = () => {
   const [loader, setLoader] = useState(false);
 
   const navigateToDSBP = () => {
-    navigate(`../DSBP/${selectedProject?.Project_ID}`);
+    navigate(`/myProjects/artworkAlignment/${selectedProject?.Project_ID}`)
   };
 
   const addToProjectList = [
@@ -89,7 +89,6 @@ const PMPSpecificTabView = () => {
     }
     storesTabList !== undefined && dispatch(ArtWorkTabValuesAction(storesTabList));
     setSelectedTabData(artWorkTabValuesData[tabPanelList]);
-    console.log("artWorkTabValuesData[tabPanelList]",artWorkTabValuesData[tabPanelList])
     if(artWorkTabValuesData[tabPanelList]){
       const selectedTabData = artWorkTabValuesData[tabPanelList];
       if(selectedTabData?.description !== undefined){
@@ -130,11 +129,18 @@ const PMPSpecificTabView = () => {
   }, [artWorkTabValuesData]);
 
   const onchangeAddToProject = (rowData, e, ele) => {
+    setAddToProjectValue(e.target.value)
     rowData[ele] = e.target.value;
     setOnChangeData(rowData);
     if (e.target.value === "Reject") setRejectDialog(true);
     setRejectFormData({});
     if (e.target.value === "Yes") setHandleYesAddToPRoject(true);
+    if(e.target.value === "No"){
+      setFormData({
+        ...formData,
+        AWM_AddedToProject: e.target.value,
+      });
+    }
   };
 
   const handleAiseChange = (e) => {
@@ -218,7 +224,6 @@ const PMPSpecificTabView = () => {
       updatedData = { ...updatedData, ...selectionFormData };
     }
     setRejectDialog(false)
-    console.log("updatedData", updatedData);
 
     const updatedPmpDetails = { ArtworkAgilityPMPs: [updatedData] };
 
@@ -452,8 +457,7 @@ const PMPSpecificTabView = () => {
   };
 
   return (
-    console.log("artWorkTabValuesData", artWorkTabValuesData),
-    console.log("selectedTab", selectedTab),
+    console.log("artWorkTabValuesData filteredDataList", filteredDataList),
     
           <>
           {(artWorkTabValuesData?.length > 1) && (tabPanelList !== 0) ? (
