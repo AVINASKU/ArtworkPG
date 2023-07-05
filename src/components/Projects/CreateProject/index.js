@@ -49,6 +49,7 @@ function AddProject(props) {
   const userInformation = User.userInformation;
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
+  const { myProject } = useSelector((state) => state.myProject);
   const mode = projectSetup.mode;
   const id = `PG-AAS-WORK ${selectedProjectDetails.Project_ID}`;
   const awmProjectId = selectedProjectDetails.Project_ID;
@@ -117,6 +118,10 @@ function AddProject(props) {
 
   const { DropDownValuesData, loading } = useSelector(
     (state) => state.DropDownValuesReducer
+  );
+
+  let projectData = myProject.find(
+    (project) => project.Project_ID === selectedProjectDetails.Project_ID
   );
 
   useEffect(() => {
@@ -940,7 +945,7 @@ function AddProject(props) {
       BU: bu,
       Project_region: region?.Region_Name,
       Cluster: cluster,
-      Project_Scale: scale,
+      Project_Scale: scale?.Scale_Name,
       Tier: Tier?.Label_Name,
       Project_State: selectedProjectDetails.Project_State,
       Project_Type: projectType,
@@ -1406,6 +1411,10 @@ function AddProject(props) {
                             style={{
                               width: 160,
                             }}
+                            disabled={
+                              mode !== "create" &&
+                              projectData?.Project_State === "Active"
+                            }
                           />
                           {option.value !== "PF" && (
                             <Form.Control
@@ -1425,7 +1434,11 @@ function AddProject(props) {
                                   }));
                                 }
                               }}
-                              disabled={!textBoxEnabled[option.value]}
+                              disabled={
+                                !textBoxEnabled[option.value] ||
+                                (mode !== "create" &&
+                                  projectData?.Project_State === "Active")
+                              }
                               // style={textBoxEnabled[option.value] ? {} : { opacity: 0.5 }}
                               style={{
                                 width: 40,
@@ -1451,6 +1464,10 @@ function AddProject(props) {
                           onChange={handleCheckboxChange}
                           checked
                           style={{ width: 160 }}
+                          disabled={
+                            mode !== "create" &&
+                            projectData?.Project_State === "Active"
+                          }
                         />
                         <Form.Control
                           type="number"
@@ -1464,6 +1481,10 @@ function AddProject(props) {
                               setPOA("");
                             }
                           }}
+                          disabled={
+                            mode !== "create" &&
+                            projectData?.Project_State === "Active"
+                          }
                           style={{
                             width: 40,
                             height: 27,
@@ -1496,7 +1517,10 @@ function AddProject(props) {
                             placeholder="Select Estimated SOS"
                             inputId={field.name}
                             value={sosDate}
-                            onChange={(e) => setSOSDate(e.target.value)}
+                            onChange={(e) => {
+                              // console.log("SOS date: ", e.target.value);
+                              setSOSDate(e.target.value);
+                            }}
                             dateFormat="d-M-y"
                             showIcon={true}
                             minDate={sopDate !== "" ? sopDate : minDate}
@@ -1527,7 +1551,10 @@ function AddProject(props) {
                             placeholder="Select Estimated SOP"
                             inputId={field.name}
                             value={sopDate}
-                            onChange={(e) => setSOPDate(e.target.value)}
+                            onChange={(e) => {
+                              // console.log("SOP date: ", e.target.value);
+                              setSOPDate(e.target.value);
+                            }}
                             dateFormat="d-M-y"
                             showIcon={true}
                             minDate={printerDate !== "" ? printerDate : minDate}
@@ -1564,7 +1591,10 @@ function AddProject(props) {
                             placeholder="Select Estimated AW@Printer"
                             inputId={field.name}
                             value={printerDate}
-                            onChange={(e) => setPrinterDate(e.target.value)}
+                            onChange={(e) => {
+                              // console.log("Printer date: ", e.target.value);
+                              setPrinterDate(e.target.value);
+                            }}
                             dateFormat="d-M-y"
                             showIcon={true}
                             minDate={
@@ -1601,7 +1631,10 @@ function AddProject(props) {
                             placeholder="Select Estimated AW Readiness"
                             inputId={field.name}
                             value={readinessDate}
-                            onChange={(e) => setReadinessDate(e.target.value)}
+                            onChange={(e) => {
+                              // console.log("Rediness date: ", e.target.value);
+                              setReadinessDate(e.target.value);
+                            }}
                             dateFormat="d-M-y"
                             showIcon={true}
                             minDate={minDate}
