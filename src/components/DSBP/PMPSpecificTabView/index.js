@@ -129,13 +129,14 @@ const PMPSpecificTabView = () => {
   }, [artWorkTabValuesData]);
 
   const onchangeAddToProject = (rowData, e, ele) => {
-    setAddToProjectValue(e.target.value)
+    
     rowData[ele] = e.target.value;
     setOnChangeData(rowData);
     if (e.target.value === "Reject") setRejectDialog(true);
     setRejectFormData({});
     if (e.target.value === "Yes") setHandleYesAddToPRoject(true);
     if(e.target.value === "No"){
+      setAddToProjectValue(e.target.value)
       setFormData({
         ...formData,
         AWM_AddedToProject: e.target.value,
@@ -210,14 +211,14 @@ const PMPSpecificTabView = () => {
   const onSubmit = async (rejectFormData) => {
     setLoader(true);
     let updatedData = {};
-    console.log("updatedData selectedTab", selectedTab);
     const selectionFormData = rejectFormData ? rejectFormData : formData;
     updatedData = {
       DSBP_InitiativeID: selectedTab?.description.DSBP_InitiativeID,
       DSBP_PMP_PIMaterialID: selectedTab?.description.DSBP_PMP_PIMaterialID,
+      DSBP_PMP_PIMaterialNumber: selectedTab?.description.DSBP_PMP_PIMaterialNumber
     };
     if (selectionFormData === "AddToProject") {
-      updatedData.FK_AWMProjectID = selectedTab?.description.FK_AWMProjectID;
+      updatedData.FK_AWMProjectID = selectedProject?.Project_ID;
       updatedData.AWM_AddedToProject = "Yes";
       setHandleYesAddToPRoject(false)
     } else {
@@ -241,8 +242,6 @@ const PMPSpecificTabView = () => {
       DSBP_InitiativeID: resp && resp[0].DSBP_InitiativeID,
       ...data,
     }));
-
-    console.log("updatedNewData data", updatedNewData);
     updateArtWorkTabValuesData(updatedNewData);
     setFormData({})
     setLoader(false);

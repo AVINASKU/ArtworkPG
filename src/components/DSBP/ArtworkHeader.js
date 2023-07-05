@@ -70,10 +70,6 @@ const ArtworkHeader = ({
   const handleAction = (e) => {
     setActionHeader(e);
     setActionDialog(true);
-    // if(e !== "Add to Project")
-    //   setActionDialog(true);
-    // else
-    //   onActionSubmit("AddToProject");
   };
 
   const url = locationPath?.split("/");
@@ -208,6 +204,7 @@ const ArtworkHeader = ({
             align="end"
             variant="secondary"
             onSelect={handleAction}
+            disabled={selected.length === 0}
           >
             {actionNameObject?.map((item) => {
               return (

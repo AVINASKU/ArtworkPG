@@ -31,7 +31,7 @@ const DsbpCommonPopup = ({
       <Dialog
         header={actionHeader}
         visible={dasbpDialog}
-        style={{ width: "40vw" }}
+        style={{ width: "500px" }}
         onHide={() => setDasbpDialog(false)}
         footer={footerContent}
         className="actionDialog dsbpCommonPopup"
