@@ -1479,72 +1479,41 @@ function AddProject(props) {
                 </Row>
               </Col>
               <Col>
-                <Row>
-                  <Form.Group className="mb-2" controlId="sop.readiness">
-                    <Form.Label>Estimated SOS</Form.Label>
-                    {/*
-                {errors.sopDate && (
-                  <span className="error-text">Please select a SOP Date</span>
-                )} */}
-                    <Controller
-                      name="date"
-                      control={form.control}
-                      rules={{ required: "Date is required." }}
-                      render={({ field, fieldState }) => (
-                        <>
-                          <Calendar
-                            placeholder="Select Estimated SOS"
-                            inputId={field.name}
-                            value={sosDate}
-                            onChange={(e) => setSOSDate(e.target.value)}
-                            dateFormat="d-M-y"
-                            showIcon={true}
-                            minDate={sopDate !== "" ? sopDate : minDate}
-                            style={{
-                              width: 208,
-                              fontSize: "12px",
-                              fontWeight: 1500,
-                            }}
-                            className={classNames({
-                              "p-invalid": fieldState.error,
-                            })}
-                          />
-                        </>
-                      )}
-                    />
-                  </Form.Group>
-                </Row>
-                <Row>
-                  <Form.Group className={`mb-2`} controlId="sop.readiness">
-                    <Form.Label>Estimated SOP</Form.Label>
-                    <Controller
-                      name="date"
-                      control={form.control}
-                      rules={{ required: "Date is required." }}
-                      render={({ field, fieldState }) => (
-                        <>
-                          <Calendar
-                            placeholder="Select Estimated SOP"
-                            inputId={field.name}
-                            value={sopDate}
-                            onChange={(e) => setSOPDate(e.target.value)}
-                            dateFormat="d-M-y"
-                            showIcon={true}
-                            minDate={printerDate !== "" ? printerDate : minDate}
-                            maxDate={sosDate}
-                            className={classNames({
-                              "p-invalid": fieldState.error,
-                            })}
-                            style={{
-                              fontSize: "12px",
-                              fontWeight: 1500,
-                            }}
-                          />
-                        </>
-                      )}
-                    />
-                  </Form.Group>
-                </Row>
+              <Row>
+                <Form.Group
+                  className={`mb-2 ${!readinessDate && "error-valid"}`}
+                  controlId="sop.readiness"
+                >
+                  <Form.Label>
+                    Estimated AW Readiness <sup>*</sup>
+                  </Form.Label>
+                  <Controller
+                    name="date"
+                    control={form.control}
+                    rules={{ required: "Date is required." }}
+                    render={({ field, fieldState }) => (
+                      <>
+                        <Calendar
+                          placeholder="Select Estimated AW Readiness"
+                          inputId={field.name}
+                          value={readinessDate}
+                          onChange={(e) => setReadinessDate(e.target.value)}
+                          dateFormat="d-M-y"
+                          showIcon={true}
+                          minDate={minDate}
+                          maxDate={printerDate}
+                          className={classNames({
+                            "p-invalid": fieldState.error,
+                          })}
+                        />
+                      </>
+                    )}
+                  />
+                  {/* {!readinessDate && (
+                <span className="error-text">Field Remaining</span>
+              )} */}
+                </Form.Group>
+              </Row>
                 <Row>
                   <Form.Group
                     className={`mb-2 ${!printerDate && "error-valid"}`}
@@ -1584,13 +1553,8 @@ function AddProject(props) {
                   </Form.Group>
                 </Row>
                 <Row>
-                  <Form.Group
-                    className={`mb-2 ${!readinessDate && "error-valid"}`}
-                    controlId="sop.readiness"
-                  >
-                    <Form.Label>
-                      Estimated AW Readiness <sup>*</sup>
-                    </Form.Label>
+                  <Form.Group className={`mb-2`} controlId="sop.readiness">
+                    <Form.Label>Estimated SOP</Form.Label>
                     <Controller
                       name="date"
                       control={form.control}
@@ -1598,26 +1562,62 @@ function AddProject(props) {
                       render={({ field, fieldState }) => (
                         <>
                           <Calendar
-                            placeholder="Select Estimated AW Readiness"
+                            placeholder="Select Estimated SOP"
                             inputId={field.name}
-                            value={readinessDate}
-                            onChange={(e) => setReadinessDate(e.target.value)}
+                            value={sopDate}
+                            onChange={(e) => setSOPDate(e.target.value)}
                             dateFormat="d-M-y"
                             showIcon={true}
-                            minDate={minDate}
-                            maxDate={printerDate}
+                            minDate={printerDate !== "" ? printerDate : minDate}
+                            maxDate={sosDate}
                             className={classNames({
                               "p-invalid": fieldState.error,
                             })}
+                            style={{
+                              fontSize: "12px",
+                              fontWeight: 1500,
+                            }}
                           />
                         </>
                       )}
                     />
-                    {/* {!readinessDate && (
-                  <span className="error-text">Field Remaining</span>
-                )} */}
                   </Form.Group>
                 </Row>
+              <Row>
+                <Form.Group className="mb-2" controlId="sop.readiness">
+                  <Form.Label>Estimated SOS</Form.Label>
+                  {/*
+              {errors.sopDate && (
+                <span className="error-text">Please select a SOP Date</span>
+              )} */}
+                  <Controller
+                    name="date"
+                    control={form.control}
+                    rules={{ required: "Date is required." }}
+                    render={({ field, fieldState }) => (
+                      <>
+                        <Calendar
+                          placeholder="Select Estimated SOS"
+                          inputId={field.name}
+                          value={sosDate}
+                          onChange={(e) => setSOSDate(e.target.value)}
+                          dateFormat="d-M-y"
+                          showIcon={true}
+                          minDate={sopDate !== "" ? sopDate : minDate}
+                          style={{
+                            width: 208,
+                            fontSize: "12px",
+                            fontWeight: 1500,
+                          }}
+                          className={classNames({
+                            "p-invalid": fieldState.error,
+                          })}
+                        />
+                      </>
+                    )}
+                  />
+                </Form.Group>
+              </Row>
                 <Row>
                   <Form.Group className="mb-2" controlId="il.SelectMultiple">
                     <Form.Label>IL</Form.Label>
