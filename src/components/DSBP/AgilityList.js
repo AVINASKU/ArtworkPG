@@ -77,6 +77,20 @@ const AgilityList = ({
     { name: "Reject", code: "Reject" },
   ];
 
+  const addToProjectListYes = [
+    { name: "Yes", code: "Yes" }
+  ];
+
+  const addToProjectListNo = [
+    { name: "Yes", code: "Yes" },
+    { name: "No", code: "No" },
+  ];
+
+    const addToProjectListReject = [
+    { name: "Yes", code: "Yes" },
+    { name: "No", code: "No" },
+  ];
+
   const BU = selectedProjectDetails?.BU;
   // check whether project is from home care or baby care
   let isBUHomeCare = false;
@@ -178,14 +192,15 @@ const AgilityList = ({
 
   console.log("option", addedDataForSave);
 
+
+
   const addBody = (options, rowData) => {
     let field = rowData.field;
     let FPCStagingFormula =
       options?.FPCStagingPage?.[0]?.FormulaCardStagingPage;
     // if(field === "AWM_AISE"){
     //  console.log("field", options[field]);
-    // }
-
+    // 
     let concatenatedFPCStagingFormulaData = {};
     if (FPCStagingFormula && FPCStagingFormula.length) {
       concatenatedFPCStagingFormulaData =
@@ -227,7 +242,26 @@ const AgilityList = ({
               style={{ width: "80%", fontSize: 12 }}
             >
               <option value="">Select</option>
-              {addToProjectList?.map((data) => (
+              {options[field] === "Yes" && 
+              addToProjectListYes?.map((data) => (
+                <option key={data.code} value={data.name}>
+                  {data.name}
+                </option>
+              ))}
+              {options[field] === "No" && 
+              addToProjectListNo?.map((data) => (
+                <option key={data.code} value={data.name}>
+                  {data.name}
+                </option>
+              ))}
+               {options[field] === "Reject" && 
+              addToProjectListReject?.map((data) => (
+                <option key={data.code} value={data.name}>
+                  {data.name}
+                </option>
+              ))}
+              {options[field] === "" && 
+              addToProjectList?.map((data) => (
                 <option key={data.code} value={data.name}>
                   {data.name}
                 </option>
