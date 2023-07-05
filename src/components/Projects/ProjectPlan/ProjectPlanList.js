@@ -44,7 +44,8 @@ const ProjectPlanList = ({
   setColWidth,
   childFunc,
   test,
-  tabNameForPP
+  tabNameForPP,
+  setTabName
 }) => {
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
@@ -283,7 +284,6 @@ const ProjectPlanList = ({
     const key = options?.key;
     const keyCode = key?.split("_");
     const url = `MyTasks/${keyCode[0]}/${key}/${currentUrlLastSeg}`;
-    const dsbpUrl = `/DSBP/${currentUrlLastSeg}`;
     
     return (
       <>
@@ -305,7 +305,10 @@ const ProjectPlanList = ({
                 handleApproveDialogCPPFA(options);
               } else{
                 dispatch(ArtWorkTabValuesAction([]));
-                navigate(`../${dsbpUrl}`, { replace: true });
+                setTabName("artworkAlignment");
+                navigate(
+                  `/myProjects/artworkAlignment/${selectedProject?.Project_ID}`
+                );
               }
             }}
           >
