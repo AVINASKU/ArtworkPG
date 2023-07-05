@@ -26,7 +26,7 @@ const RejectDialog = ({
       console.log("data", e.target.value)
       setRejectFormData({
           ...rejectFormData,
-          RejectionNotes: e.target.value,
+          RejectionComment: e.target.value,
         });
     };
 

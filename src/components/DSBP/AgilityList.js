@@ -225,7 +225,7 @@ const AgilityList = ({
               style={{ width: "80%", fontSize: 12 }}
             >
               <option value="">Select</option>
-              {addToProjectList.map((data) => (
+              {addToProjectList?.map((data) => (
                 <option key={data.code} value={data.name}>
                   {data.name}
                 </option>
@@ -245,7 +245,7 @@ const AgilityList = ({
               style={{ width: "80%", fontSize: 12 }}
             >
               <option value="">Select</option>
-              {aiseList.map((data) => (
+              {aiseList?.map((data) => (
                 <option key={data.AWM_AISE} value={data.AWM_AISE}>
                   {data.AWM_AISE}
                 </option>
@@ -265,7 +265,7 @@ const AgilityList = ({
               style={{ width: "80%", fontSize: 12 }}
             >
               <option value="">Select</option>
-              {assemblyMechanismList.map((data) => (
+              {assemblyMechanismList?.map((data) => (
                 <option key={data.code} value={data.AWM_AssemblyMechanism}>
                   {data.AWM_AssemblyMechanism || options[field]}
                 </option>
