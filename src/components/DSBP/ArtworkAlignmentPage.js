@@ -301,9 +301,10 @@ const ArtworkAlignment = () => {
       updatedData = {
         DSBP_InitiativeID: pmpDetails.DSBP_InitiativeID,
         DSBP_PMP_PIMaterialID: pmpDetails.DSBP_PMP_PIMaterialID,
+        DSBP_PMP_PIMaterialNumber: pmpDetails.DSBP_PMP_PIMaterialNumber,
+        FK_AWMProjectID: ProjectID
       };
       if (formData === "AddToProject") {
-        updatedData.FK_AWMProjectID = ProjectID;
         updatedData.AWM_AddedToProject = "Yes";
         setHandleYesAddToPRoject(false);
       }
@@ -322,8 +323,11 @@ const ArtworkAlignment = () => {
       if (formData?.RTA_RTARejectionReason !== undefined) {
         updatedData.RTA_RTARejectionReason = formData?.RTA_RTARejectionReason;
       }
-      if (formData?.RejectionNotes !== undefined) {
-        updatedData.RejectionNotes = formData?.RejectionNotes;
+      if (formData?.RejectionComment !== undefined) {
+        updatedData.RejectionComment = formData?.RejectionComment;
+      }
+      if (formData?.AWM_Sellable !== undefined) {
+        updatedData.AWM_Sellable = formData?.AWM_Sellable;
       }
       setRejectDialog(false);
       return updatedData;
@@ -331,6 +335,7 @@ const ArtworkAlignment = () => {
     const updatedPmpDetails = { ArtworkAgilityPMPs: updatedDataList };
     await onSubmitDsbpAction(updatedPmpDetails);
     setActionDialog(false);
+    setSelected([]);
     setLoader(false);
   };
 
