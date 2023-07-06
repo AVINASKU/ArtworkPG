@@ -66,7 +66,8 @@ export const getDsbpPMPDetails = async (projectId, headers = {}) => {
 export const onSubmitDsbpAction = async (formData, headers = {}) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL = `${DEVURL}/updatePMP`;
+  // let apiURL = `${DEVURL}/updatePMP`;
+  let apiURL = "https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/UpdatePMP";
   const addResponse = await axiosInstance({
     url: apiURL,
     method: "POST",

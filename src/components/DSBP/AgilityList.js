@@ -48,7 +48,6 @@ const AgilityList = ({
   );
   const [selectedColumnName, setSelectedColumnName] = useState(null);
   const op = useRef(null);
-
   
   const [onChangeData, setOnChangeData] = useState(false);
   const [rejectFormData, setRejectFormData] = useState({});
@@ -64,7 +63,7 @@ const AgilityList = ({
     (state) => state.DropDownValuesReducer
   );
   const allBUAttributes = allBUAttributesData.DropDownValuesData;
-
+  const ProjectID = selectedProjectDetails?.Project_ID;
   let aiseList =
     allBUAttributes?.ArtworkAgilityTasksPage?.Artwork_Alignment?.AISE;
   let assemblyMechanismList =
@@ -181,7 +180,8 @@ const AgilityList = ({
       let updatedData = {};
       updatedData.DSBP_InitiativeID = option.DSBP_InitiativeID;
       updatedData.DSBP_PMP_PIMaterialID = option.DSBP_PMP_PIMaterialID;
-      updatedData.FK_AWMProjectID ="A-2828";
+      updatedData.DSBP_PMP_PIMaterialNumber = option.DSBP_PMP_PIMaterialNumber;
+      updatedData.FK_AWMProjectID =ProjectID;
       updatedData[field] = e.target.value;
       addSavedData.push(updatedData);
     }
@@ -189,10 +189,6 @@ const AgilityList = ({
     setSavedData(addSavedData);
     setFieldUpdated(!fieldUpdated);
   };
-
-  console.log("option", addedDataForSave);
-
-
 
   const addBody = (options, rowData) => {
     let field = rowData.field;

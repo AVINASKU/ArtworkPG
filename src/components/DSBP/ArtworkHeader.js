@@ -104,9 +104,6 @@ const ArtworkHeader = ({
       }
     });
   }
-  console.log("isfilteractivated", isFilterActivated);
-
-  // let isFilterActivated = true;
 
   useEffect(() => {
     if (DropDownValuesData) {
@@ -152,9 +149,18 @@ const ArtworkHeader = ({
                   <span className="p-menuitem-text">{label}</span>
                 </a>
               </li>
+              <li className="project-title margin-left">
+                <NavLink to={`/myProjects`} className="p-menuitem-link">
+                  <span
+                    className="p-menuitem-text"
+                    style={{ color: "#003DA5", fontWeight: 600, fontSize: 15 }}
+                  >
+                    {selectedProjectDetails?.Project_Name}
+                  </span>
+                </NavLink>
+              </li>
             </ul>
           </nav>
-          {/* <div className="project-title margin-left">{headerName}</div> */}
         </div>
         <div className="header-buttons">
           <div style={{ top: 30 }}>
@@ -172,8 +178,12 @@ const ArtworkHeader = ({
                       ele["reorder"] = false;
                     }
                   });
+                  isBUHomeCare ? 
                   localStorage.setItem(
-                    "columnWidthDSBPArtwork",
+                    "columnWidthDSBPArtworkHomeCare",
+                    JSON.stringify(buWiseSortedColumnNames)
+                  ) : localStorage.setItem(
+                    "columnWidthDSBPArtworkBabyCare",
                     JSON.stringify(buWiseSortedColumnNames)
                   );
                   setFieldUpdated(!fieldUpdated);
