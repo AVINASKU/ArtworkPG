@@ -302,10 +302,10 @@ const ArtworkAlignment = () => {
       updatedData = {
         DSBP_InitiativeID: pmpDetails.DSBP_InitiativeID,
         DSBP_PMP_PIMaterialID: pmpDetails.DSBP_PMP_PIMaterialID,
-        DSBP_PMP_PIMaterialNumber: pmpDetails.DSBP_PMP_PIMaterialNumber
+        DSBP_PMP_PIMaterialNumber: pmpDetails.DSBP_PMP_PIMaterialNumber,
+        FK_AWMProjectID: ProjectID
       };
       if (formData === "AddToProject") {
-        updatedData.FK_AWMProjectID = ProjectID;
         updatedData.AWM_AddedToProject = "Yes";
         setHandleYesAddToPRoject(false);
       }
