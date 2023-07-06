@@ -87,7 +87,7 @@ const AgilityList = ({
 
     const addToProjectListReject = [
     { name: "Yes", code: "Yes" },
-    { name: "No", code: "No" },
+    { name: "Reject", code: "Reject" },
   ];
 
   const BU = selectedProjectDetails?.BU;
