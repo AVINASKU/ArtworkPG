@@ -5,7 +5,6 @@ import SelectDsbpId from "./SelectDsbpId";
 import ProjectNameHeader from "./ProjectNameHeader";
 import AgilityList from "./AgilityList";
 import { getDSBPDropdownData } from "../../store/actions/DSBPActions";
-import { getDropDownValues } from "../../store/actions/dropDownValuesAction";
 import {
   addDsbpToProject,
   deleteDsbpFromProject,
@@ -366,7 +365,6 @@ const ArtworkAlignment = () => {
   };
 
   let checkLength = addSavedData.length;
-  console.log("hello ---------", fieldUpdated, checkLength);
   return (
     <div className="artwork-dsbp myProjectAnddAllProjectList">
       {loader || totalNoOfDsbpId === null ? (
@@ -389,8 +387,8 @@ const ArtworkAlignment = () => {
             dsbpPmpData={dsbpPmpData}
             setTableRender={setTableRender}
             tableRender={tableRender}
+            selectedProjectDetails={selectedProjectDetails}
           />
-          <ProjectNameHeader selectedProjectDetails={selectedProjectDetails} />
           <SelectDsbpId
             dropdownlist={dropdownlist}
             addDSBPIntoProject={addDSBPIntoProject}
