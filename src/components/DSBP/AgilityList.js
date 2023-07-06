@@ -39,7 +39,7 @@ const AgilityList = ({
   rejectDialog,
   setRejectDialog,
   tableRender,
-  setTableRender
+  setTableRender,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -48,7 +48,7 @@ const AgilityList = ({
   );
   const [selectedColumnName, setSelectedColumnName] = useState(null);
   const op = useRef(null);
-  
+
   const [onChangeData, setOnChangeData] = useState(false);
   const [rejectFormData, setRejectFormData] = useState({});
   const [frozenUpdated, setFrozenUpdated] = useState(false);
@@ -76,16 +76,14 @@ const AgilityList = ({
     { name: "Reject", code: "Reject" },
   ];
 
-  const addToProjectListYes = [
-    { name: "Yes", code: "Yes" }
-  ];
+  const addToProjectListYes = [{ name: "Yes", code: "Yes" }];
 
   const addToProjectListNo = [
     { name: "Yes", code: "Yes" },
     { name: "No", code: "No" },
   ];
 
-    const addToProjectListReject = [
+  const addToProjectListReject = [
     { name: "Yes", code: "Yes" },
     { name: "Reject", code: "Reject" },
   ];
@@ -164,7 +162,6 @@ const AgilityList = ({
         if (
           ele.DSBP_InitiativeID === option.DSBP_InitiativeID &&
           ele.DSBP_PMP_PIMaterialID === option.DSBP_PMP_PIMaterialID
-          
         ) {
           ele[field] = e.target.value;
           return ele;
@@ -181,7 +178,7 @@ const AgilityList = ({
       updatedData.DSBP_InitiativeID = option.DSBP_InitiativeID;
       updatedData.DSBP_PMP_PIMaterialID = option.DSBP_PMP_PIMaterialID;
       updatedData.DSBP_PMP_PIMaterialNumber = option.DSBP_PMP_PIMaterialNumber;
-      updatedData.FK_AWMProjectID =ProjectID;
+      updatedData.FK_AWMProjectID = ProjectID;
       updatedData[field] = e.target.value;
       addSavedData.push(updatedData);
     }
@@ -196,7 +193,7 @@ const AgilityList = ({
       options?.FPCStagingPage?.[0]?.FormulaCardStagingPage;
     // if(field === "AWM_AISE"){
     //  console.log("field", options[field]);
-    // 
+    //
     let concatenatedFPCStagingFormulaData = {};
     if (FPCStagingFormula && FPCStagingFormula.length) {
       concatenatedFPCStagingFormulaData =
@@ -238,30 +235,30 @@ const AgilityList = ({
               style={{ width: "80%", fontSize: 12 }}
             >
               <option value="">Select</option>
-              {options[field] === "Yes" && 
-              addToProjectListYes?.map((data) => (
-                <option key={data.code} value={data.name}>
-                  {data.name}
-                </option>
-              ))}
-              {options[field] === "No" && 
-              addToProjectListNo?.map((data) => (
-                <option key={data.code} value={data.name}>
-                  {data.name}
-                </option>
-              ))}
-               {options[field] === "Reject" && 
-              addToProjectListReject?.map((data) => (
-                <option key={data.code} value={data.name}>
-                  {data.name}
-                </option>
-              ))}
-              {options[field] === "" && 
-              addToProjectList?.map((data) => (
-                <option key={data.code} value={data.name}>
-                  {data.name}
-                </option>
-              ))}
+              {options[field] === "Yes" &&
+                addToProjectListYes?.map((data) => (
+                  <option key={data.code} value={data.name}>
+                    {data.name}
+                  </option>
+                ))}
+              {options[field] === "No" &&
+                addToProjectListNo?.map((data) => (
+                  <option key={data.code} value={data.name}>
+                    {data.name}
+                  </option>
+                ))}
+              {options[field] === "Reject" &&
+                addToProjectListReject?.map((data) => (
+                  <option key={data.code} value={data.name}>
+                    {data.name}
+                  </option>
+                ))}
+              {options[field] === "" &&
+                addToProjectList?.map((data) => (
+                  <option key={data.code} value={data.name}>
+                    {data.name}
+                  </option>
+                ))}
             </Form.Select>
           </Form.Group>
         )}
