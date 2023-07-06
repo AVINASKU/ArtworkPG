@@ -151,6 +151,7 @@ const AgilityList = ({
         if (
           ele.DSBP_InitiativeID === option.DSBP_InitiativeID &&
           ele.DSBP_PMP_PIMaterialID === option.DSBP_PMP_PIMaterialID
+          
         ) {
           ele[field] = e.target.value;
           return ele;
@@ -166,6 +167,7 @@ const AgilityList = ({
       let updatedData = {};
       updatedData.DSBP_InitiativeID = option.DSBP_InitiativeID;
       updatedData.DSBP_PMP_PIMaterialID = option.DSBP_PMP_PIMaterialID;
+      updatedData.FK_AWMProjectID ="A-2828";
       updatedData[field] = e.target.value;
       addSavedData.push(updatedData);
     }

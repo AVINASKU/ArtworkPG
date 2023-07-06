@@ -43,6 +43,7 @@ const ArtworkAlignment = () => {
   const [tableRender, setTableRender] = useState(false);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
+  const [mappedPOAS, setMappedPOAS] = useState([]);
   const allBUAttributesData = useSelector(
     (state) => state.DropDownValuesReducer
   );
@@ -180,6 +181,15 @@ const ArtworkAlignment = () => {
         }))
       );
 
+      const filteredIds = Array.from(
+        new Set(
+          transformedArray
+            .filter((item) => item.DSBP_PO_PMP_poPoa !== "")
+            .map((item) => item.DSBP_InitiativeID)
+        )
+      );
+
+      setMappedPOAS(filteredIds);
       setDsbpPmpData(transformedArray);
       setTotalNoOfPMP(transformedArray.length);
 
@@ -395,6 +405,7 @@ const ArtworkAlignment = () => {
             totalNoOfAddedProject={totalNoOfAddedProject}
             totalNoOfPMPLocked={totalNoOfPMPLocked}
             listOfInitiativeId={listOfInitiativeId}
+            mappedPOAS={mappedPOAS}
           />
           {tableLoader ? (
             <Loading />
