@@ -86,7 +86,7 @@
 
 // export default RoutesNav;
 import React, { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useParams } from "react-router-dom";
 // import Home from "./home.js";
 import { Outlet } from "react-router-dom";
 import AllProjects from "./components/Projects/AllProjects/index";
@@ -116,6 +116,7 @@ import DsbpTabPage from "./DsbpTabPage";
 import Role from "./role";
 
 const RoutesNav = () => {
+  const params = useParams();
   return (
     <Routes>
       <Route path="/" element={<Outlet />}>
@@ -130,15 +131,15 @@ const RoutesNav = () => {
         <Route path="/projectPlan" element={<ProjectCreation />} />
         <Route
           path="/myProjects/projectPlan/:ProjectID"
-          element={<ProjectCreation />}
+          element={<ProjectCreation key={params.ProjectID} />}
         />
         <Route
           path="/allProjects/projectPlan/:ProjectID"
-          element={<ProjectCreation />}
+          element={<ProjectCreation key={params.ProjectID}/>}
         />
         <Route
           path="/myProjects/artworkAlignment/:ProjectID"
-          element={<ProjectCreation />}
+          element={<ProjectCreation key={params.ProjectID} />}
         />
         <Route path="/:page1/:page2/DDI/:TaskID/:ProjectID" element={<DDI />} />
         <Route path="/:pageType/DDI/:TaskID/:ProjectID" element={<DDI />} />
