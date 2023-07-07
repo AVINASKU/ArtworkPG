@@ -146,19 +146,10 @@ class DragAndDrop extends Component {
   };
 
   resetToPGDefault = () => {
-    const { entities } = this.state;
-        let obj = entities.columns.freezedColumns.fieldsData;
-        // obj= []
-        console.log("obj:", obj);
-
-        // if (id === "freezedColumns") {
-        //   if (fieldName === obj) {
-        //     const f = entities.tasks[fieldName];
-        //     f.Sequence = index + 1;
-        //   }
-        //   // console.log("handleSubmit:", column.fieldsData, entities);
-        // }
-    // this.setState({ entities: entities(this.props.availableFields) });
+    let { entities } = this.state;
+    let obj = entities.columns.freezedColumns.fieldsData;
+    const data = obj.length > 0 ? obj.splice(0, obj.length) : entities;
+    entities = {...entities, data };
   };
 
   handleSubmit = async () => {
