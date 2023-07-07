@@ -101,6 +101,36 @@ const ArtworkHeader = ({
     });
   }
 
+    const breadcrumb = (
+    <div style={{marginLeft:10}}>
+      <nav
+        className="p-breadcrumb p-component ProjectPlanBreadCrum"
+        aria-label="Breadcrumb"
+      >
+        <ul>
+          <li className="">
+            <NavLink to={`/${url[1]}`} className="p-menuitem-link">
+              <span className="p-menuitem-text">
+                {url[1] === "allProjects" ? "All Projects" : "My Projects"}
+              </span>
+            </NavLink>
+          </li>
+          <li className="p-breadcrumb-chevron pi pi-chevron-right piChevronRightMargin"></li>
+          <li className="">
+            <a href="#" className="p-menuitem-link">
+              <span className="p-menuitem-text">{headerName}</span>
+            </a>
+          </li>
+          <li>
+              <div className="project-name">
+                {selectedProjectDetails.Project_Name}
+              </div>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  );
+
   useEffect(() => {
     if (DropDownValuesData) {
       setActionDropDownValues(
@@ -128,35 +158,7 @@ const ArtworkHeader = ({
       )}
       <div className="actions">
         <div>
-          {/* <BreadCrumb model={breadcrumb} /> */}
-          <nav className="p-breadcrumb p-component" aria-label="Breadcrumb">
-            <ul>
-              <li className="p-breadcrumb-chevron pi pi-chevron-right"></li>
-              <li className="">
-                <NavLink to={`/${mytasks}`} className="p-menuitem-link">
-                  <span className="p-menuitem-text">
-                    {url[1] === "MyTasks" ? "My Tasks" : "All Tasks"}
-                  </span>
-                </NavLink>
-              </li>
-              <li className="p-breadcrumb-chevron pi pi-chevron-right"></li>
-              <li className="">
-                <a href="#" className="p-menuitem-link">
-                  <span className="p-menuitem-text">{label}</span>
-                </a>
-              </li>
-              <li className="project-title margin-left">
-                <NavLink to={`/myProjects`} className="p-menuitem-link">
-                  <span
-                    className="p-menuitem-text"
-                    style={{ color: "#003DA5", fontWeight: 600, fontSize: 15 }}
-                  >
-                    {selectedProjectDetails?.Project_Name}
-                  </span>
-                </NavLink>
-              </li>
-            </ul>
-          </nav>
+          {breadcrumb}
         </div>
         <div className="header-buttons">
           <div style={{ top: 30 }}>

@@ -22,7 +22,7 @@ const FooterButtons = ({
   return (
     <div
       className={bottomFixed ? "form-buttons bottom-fixed" : "form-buttons"}
-      style={{ padding: 15, background: "#FAFAFA" }}
+      style={{ background: "#FAFAFA" }}
     >
       <Button
         className={checkReadWriteAccess ? "button-layout" : "btn btn-disabled"}

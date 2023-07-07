@@ -3,17 +3,17 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./index.scss";
 
 
-const TabsComponent = ({ items, tabName, actionButton, setTabName }) => {
+const TabsComponent = ({ items, tabName, actionButton, setTabName, basePage }) => {
   const navigate = useNavigate();
   let { ProjectID } = useParams();
 
   const handleClick = (item) => {
-    if(item !== "artworkAlignment"){
-      navigate(`/myProjects/projectPlan/${ProjectID}`);
+    if(ProjectID !== undefined){
+      navigate(`/${basePage}/${item}/${ProjectID}`);
     } else {
-      navigate(`/myProjects/artworkAlignment/${ProjectID}`)
+      navigate(`/${item}`);
     }
-    setTabName(item)    
+    setTabName(item)   
   }
   return (
     <>
