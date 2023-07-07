@@ -26,6 +26,15 @@ const SelectDsbpId = ({
     setSelectedCities(listOfInitiativeId);
   }, [listOfInitiativeId]);
 
+      let selectedInitiativeName =
+      selectedDsbpData?.InitiativeID +
+      "_" +
+      selectedDsbpData?.InitiativeName +
+      "_" +
+      selectedDsbpData?.IL +
+      "_" +
+      selectedDsbpData?.Scope;
+
   const cityOptionTemplate = (option) => {
     let initiativeName =
       option.InitiativeID +
@@ -188,7 +197,7 @@ const SelectDsbpId = ({
           okButtonShow={operation === "poaCreated" ? true : false}
         >
           <>
-            {selectedDsbpData.InitiativeName}
+            {selectedInitiativeName}
             {operation === "delete" && (
               <div
                 style={{ color: "red", fontSize: "10px", paddingTop: "20px" }}
