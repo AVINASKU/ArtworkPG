@@ -27,17 +27,12 @@ const CustomizeView = ({ showTaskDialog, onClose }) => {
     });
   }
 
-  const selectedFields = [];
-  const freezedColumns = [];
-
   return (
     <>
       <CustomizeViewDialog
         onClose={onClose}
         showTaskDialog={showTaskDialog}
         availableFields={availableFields}
-        selectedFields={selectedFields}
-        freezedColumns={freezedColumns}
       />
     </>
   );
