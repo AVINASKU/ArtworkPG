@@ -32,7 +32,6 @@ function ProjectSetup(props) {
   const location = useLocation();
   const locationPath = location?.pathname;
   const url = locationPath?.split("/");
-
   const getData = (option) => {
     setVisible(true);
     setOption(option);
@@ -45,22 +44,19 @@ function ProjectSetup(props) {
     console.log("reject");
   };
  
-  const [tabName, setTabName] = useState(url[2]);
+  const [tabName, setTabName] = useState(url[2] !== undefined ? url[2] : url[1]);
   const [tabNameForPP, setTabNameForPP] = useState("Design");
-  const pathname = window.location.href;
-  let currentUrl = pathname.split("#");
-  currentUrl = currentUrl[currentUrl.length - 1];
 
   let items = "";
-  if (tabName === "ProjectSetup") {
+  if (tabName === "projectSetup") {
     items = "Project Setup";
   } else if (tabName === "projectPlan") {
     items = "Project Plan";
   } else if (tabName === "artworkAlignment") {
     items = "Art work Alignment";
-  } else if (tabName === "Mapping") {
-    items = "Mapping";
-  } else if (tabName === "ReadinessPerPMP") {
+  } else if (tabName === "mapping") {
+    items = "mapping";
+  } else if (tabName === "readinessPerPMP") {
     items = "ReadinessPerPMP";
   }
 
@@ -123,7 +119,7 @@ function ProjectSetup(props) {
 
   const itemsData = [
     {
-      name: "ProjectSetup",
+      name: "projectSetup",
       tabNameForDisplay: "Project Setup",
       component: isNoAccess ? (
         <div className="unauthorized-user">
@@ -307,12 +303,12 @@ function ProjectSetup(props) {
       component: <ArtworkAlignment />,
     },
     {
-      name: "Mapping",
+      name: "mapping",
       tabNameForDisplay: "Mapping",
       component: <>Mapping Data</>,
     },
     {
-      name: "ReadinessPerPMP",
+      name: "readinessPerPMP",
       tabNameForDisplay: "Readiness Per PMP",
       component: <>Readiness Per PMP Data</>,
     },
@@ -373,6 +369,7 @@ function ProjectSetup(props) {
           items={itemsData}
           actionButton={actionButton}
           setTabName={setTabName}
+          basePage={url[1]}
         />
       </div>
     </div>

@@ -280,7 +280,8 @@ const ProjectPlanList = ({
     const field = rowData.field;
     const optionsData = options.data;
     const currentUrl = location.pathname;
-    let currentUrlLastSeg = currentUrl.split("/")[3];
+    let currentUrlLastSeg = currentUrl?.split("/")[3];
+    let currentUrlBasePage = currentUrl?.split("/")[1];
     const key = options?.key;
     const keyCode = key?.split("_");
     const url = `MyTasks/${keyCode[0]}/${key}/${currentUrlLastSeg}`;
@@ -307,7 +308,7 @@ const ProjectPlanList = ({
                 dispatch(ArtWorkTabValuesAction([]));
                 setTabName("artworkAlignment");
                 navigate(
-                  `/myProjects/artworkAlignment/${selectedProject?.Project_ID}`
+                  `/${currentUrlBasePage}/artworkAlignment/${selectedProject?.Project_ID}`
                 );
               }
             }}
