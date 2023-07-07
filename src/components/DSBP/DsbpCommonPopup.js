@@ -11,18 +11,27 @@ const DsbpCommonPopup = ({
   setDasbpDialog,
   rejectFormData,
   onSubmit,
+  okButtonShow,
 }) => {
   const footerContent = (
     <div>
-      <Button variant="secondary" onClick={() => setDasbpDialog(false)}>
-        Cancel
-      </Button>
-      <Button
-        disabled={rejectFormData && Object.keys(rejectFormData)?.length === 0}
-        onClick={onSubmit}
-      >
-        Submit
-      </Button>
+      {okButtonShow ? (
+        <Button onClick={() => setDasbpDialog(false)}>OK</Button>
+      ) : (
+        <>
+          <Button variant="secondary" onClick={() => setDasbpDialog(false)}>
+            Cancel
+          </Button>
+          <Button
+            disabled={
+              rejectFormData && Object.keys(rejectFormData)?.length === 0
+            }
+            onClick={onSubmit}
+          >
+            Submit
+          </Button>
+        </>
+      )}
     </div>
   );
 
@@ -31,7 +40,7 @@ const DsbpCommonPopup = ({
       <Dialog
         header={actionHeader}
         visible={dasbpDialog}
-        style={{ width: "40vw" }}
+        style={{ width: "500px" }}
         onHide={() => setDasbpDialog(false)}
         footer={footerContent}
         className="actionDialog dsbpCommonPopup"

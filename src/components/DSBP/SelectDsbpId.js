@@ -14,16 +14,17 @@ const SelectDsbpId = ({
   totalNoOfPOA,
   totalNoOfAddedProject,
   totalNoOfPMPLocked,
-  listOfInitiativeId
+  listOfInitiativeId,
+  mappedPOAS,
 }) => {
   const [selectedCities, setSelectedCities] = useState([]);
   const [selectDialog, setSelectDialog] = useState(false);
   const [selectedDsbpData, setSelectedDsbpData] = useState({});
   const [operation, setOperation] = useState({});
 
-  useEffect(()=>{
-  setSelectedCities(listOfInitiativeId);
-  },[listOfInitiativeId])
+  useEffect(() => {
+    setSelectedCities(listOfInitiativeId);
+  }, [listOfInitiativeId]);
 
   const cityOptionTemplate = (option) => {
     let initiativeName =
@@ -78,9 +79,15 @@ const SelectDsbpId = ({
   };
 
   const onChangeSelect = (option, operation) => {
+    console.log("option", option, mappedPOAS);
+
+    if (operation === "delete" && mappedPOAS.includes(option.InitiativeID)) {
+      setOperation("poaCreated");
+    } else {
+      setOperation(operation);
+    }
     setSelectDialog(true);
     setSelectedDsbpData(option);
-    setOperation(operation);
   };
   const handleOptionSelection = (option, operation) => {
     console.log("operation", operation);
@@ -95,6 +102,23 @@ const SelectDsbpId = ({
     addDSBPIntoProject(option.InitiativeID, operation);
     setSelectDialog(false);
   };
+
+  let title;
+
+  switch (operation) {
+    case "delete":
+      title = "Are you sure you want to delete this DSBP ID ?";
+      break;
+    case "add":
+      title = "Do you want to select this DSBP ID ?";
+      break;
+    case "poaCreated":
+      title = "This DSBP can't be deleted as POAs already created.";
+      break;
+    default:
+      title = "Unknown operation";
+      break;
+  }
 
   return (
     <div style={{ textAlign: "initial" }}>
@@ -157,18 +181,15 @@ const SelectDsbpId = ({
       </div>
       {selectDialog && (
         <DsbpCommonPopup
-          actionHeader={
-            operation === "add"
-              ? `Do you want to select this DSBP ID ?`
-              : `Are you sure you want to delete this DSBP ID ?`
-          }
+          actionHeader={title}
           dasbpDialog={selectDialog}
           setDasbpDialog={setSelectDialog}
           onSubmit={() => handleOptionSelection(selectedDsbpData, operation)}
+          okButtonShow={operation === "poaCreated" ? true : false}
         >
           <>
             {selectedDsbpData.InitiativeName}
-            {operation !== "add" && (
+            {operation === "delete" && (
               <div
                 style={{ color: "red", fontSize: "10px", paddingTop: "20px" }}
               >

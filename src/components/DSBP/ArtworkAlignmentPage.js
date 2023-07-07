@@ -5,7 +5,6 @@ import SelectDsbpId from "./SelectDsbpId";
 import ProjectNameHeader from "./ProjectNameHeader";
 import AgilityList from "./AgilityList";
 import { getDSBPDropdownData } from "../../store/actions/DSBPActions";
-import { getDropDownValues } from "../../store/actions/dropDownValuesAction";
 import {
   addDsbpToProject,
   deleteDsbpFromProject,
@@ -43,6 +42,7 @@ const ArtworkAlignment = () => {
   const [tableRender, setTableRender] = useState(false);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
+  const [mappedPOAS, setMappedPOAS] = useState([]);
   const allBUAttributesData = useSelector(
     (state) => state.DropDownValuesReducer
   );
@@ -180,6 +180,15 @@ const ArtworkAlignment = () => {
         }))
       );
 
+      const filteredIds = Array.from(
+        new Set(
+          transformedArray
+            .filter((item) => item.DSBP_PO_PMP_poPoa !== "")
+            .map((item) => item.DSBP_InitiativeID)
+        )
+      );
+
+      setMappedPOAS(filteredIds);
       setDsbpPmpData(transformedArray);
       setTotalNoOfPMP(transformedArray.length);
 
@@ -292,9 +301,10 @@ const ArtworkAlignment = () => {
       updatedData = {
         DSBP_InitiativeID: pmpDetails.DSBP_InitiativeID,
         DSBP_PMP_PIMaterialID: pmpDetails.DSBP_PMP_PIMaterialID,
+        DSBP_PMP_PIMaterialNumber: pmpDetails.DSBP_PMP_PIMaterialNumber,
+        FK_AWMProjectID: ProjectID
       };
       if (formData === "AddToProject") {
-        updatedData.FK_AWMProjectID = pmpDetails.FK_AWMProjectID;
         updatedData.AWM_AddedToProject = "Yes";
         setHandleYesAddToPRoject(false);
       }
@@ -313,8 +323,11 @@ const ArtworkAlignment = () => {
       if (formData?.RTA_RTARejectionReason !== undefined) {
         updatedData.RTA_RTARejectionReason = formData?.RTA_RTARejectionReason;
       }
-      if (formData?.RejectionNotes !== undefined) {
-        updatedData.RejectionNotes = formData?.RejectionNotes;
+      if (formData?.RejectionComment !== undefined) {
+        updatedData.RejectionComment = formData?.RejectionComment;
+      }
+      if (formData?.AWM_Sellable !== undefined) {
+        updatedData.AWM_Sellable = formData?.AWM_Sellable;
       }
       setRejectDialog(false);
       return updatedData;
@@ -322,6 +335,7 @@ const ArtworkAlignment = () => {
     const updatedPmpDetails = { ArtworkAgilityPMPs: updatedDataList };
     await onSubmitDsbpAction(updatedPmpDetails);
     setActionDialog(false);
+    setSelected([]);
     setLoader(false);
   };
 
@@ -356,7 +370,6 @@ const ArtworkAlignment = () => {
   };
 
   let checkLength = addSavedData.length;
-  console.log("hello ---------", fieldUpdated, checkLength);
   return (
     <div className="artwork-dsbp myProjectAnddAllProjectList">
       {loader || totalNoOfDsbpId === null ? (
@@ -379,8 +392,8 @@ const ArtworkAlignment = () => {
             dsbpPmpData={dsbpPmpData}
             setTableRender={setTableRender}
             tableRender={tableRender}
+            selectedProjectDetails={selectedProjectDetails}
           />
-          <ProjectNameHeader selectedProjectDetails={selectedProjectDetails} />
           <SelectDsbpId
             dropdownlist={dropdownlist}
             addDSBPIntoProject={addDSBPIntoProject}
@@ -390,6 +403,7 @@ const ArtworkAlignment = () => {
             totalNoOfAddedProject={totalNoOfAddedProject}
             totalNoOfPMPLocked={totalNoOfPMPLocked}
             listOfInitiativeId={listOfInitiativeId}
+            mappedPOAS={mappedPOAS}
           />
           {tableLoader ? (
             <Loading />

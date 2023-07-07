@@ -56,6 +56,18 @@ const PMPSpecificTabView = () => {
     { name: "Reject", code: "Reject" },
   ];
 
+  const addToProjectListYes = [{ name: "Yes", code: "Yes" }];
+
+  const addToProjectListNo = [
+    { name: "Yes", code: "Yes" },
+    { name: "No", code: "No" },
+  ];
+
+  const addToProjectListReject = [
+    { name: "Yes", code: "Yes" },
+    { name: "Reject", code: "Reject" },
+  ];
+
   useEffect(() => {
     if (DropDownValuesData) {
       setActionDropDownValues(
@@ -104,7 +116,7 @@ const PMPSpecificTabView = () => {
     setFormData({})
   }, [storesTabList, tabPanelList]);
 
-  useEffect(() => {   
+  useEffect(() => {
     setSelectedTabData(artWorkTabValuesData[tabPanelList]);
     if(artWorkTabValuesData[tabPanelList]){
       const selectedTabData = artWorkTabValuesData[tabPanelList];
@@ -117,7 +129,8 @@ const PMPSpecificTabView = () => {
         setGroupName(selectedTabData?.description?.AWM_GroupPMP);
         }
     }
-    setFormData({})
+    setFormData({});
+    setAddToProjectValue("")
   }, [artWorkTabValuesData]);
 
   useEffect(() => {
@@ -129,13 +142,14 @@ const PMPSpecificTabView = () => {
   }, [artWorkTabValuesData]);
 
   const onchangeAddToProject = (rowData, e, ele) => {
-    setAddToProjectValue(e.target.value)
+    
     rowData[ele] = e.target.value;
     setOnChangeData(rowData);
     if (e.target.value === "Reject") setRejectDialog(true);
     setRejectFormData({});
     if (e.target.value === "Yes") setHandleYesAddToPRoject(true);
     if(e.target.value === "No"){
+      setAddToProjectValue(e.target.value)
       setFormData({
         ...formData,
         AWM_AddedToProject: e.target.value,
@@ -210,14 +224,14 @@ const PMPSpecificTabView = () => {
   const onSubmit = async (rejectFormData) => {
     setLoader(true);
     let updatedData = {};
-    console.log("updatedData selectedTab", selectedTab);
     const selectionFormData = rejectFormData ? rejectFormData : formData;
     updatedData = {
       DSBP_InitiativeID: selectedTab?.description.DSBP_InitiativeID,
       DSBP_PMP_PIMaterialID: selectedTab?.description.DSBP_PMP_PIMaterialID,
+      DSBP_PMP_PIMaterialNumber: selectedTab?.description.DSBP_PMP_PIMaterialNumber,
+      FK_AWMProjectID: selectedProject?.Project_ID
     };
     if (selectionFormData === "AddToProject") {
-      updatedData.FK_AWMProjectID = selectedTab?.description.FK_AWMProjectID;
       updatedData.AWM_AddedToProject = "Yes";
       setHandleYesAddToPRoject(false)
     } else {
@@ -241,8 +255,6 @@ const PMPSpecificTabView = () => {
       DSBP_InitiativeID: resp && resp[0].DSBP_InitiativeID,
       ...data,
     }));
-
-    console.log("updatedNewData data", updatedNewData);
     updateArtWorkTabValuesData(updatedNewData);
     setFormData({})
     setLoader(false);
@@ -273,11 +285,35 @@ const PMPSpecificTabView = () => {
                       style={{ fontSize: 12 }}
                     >
                       <option value="">Select</option>
-                      {addToProjectList.map((data) => (
-                        <option key={data.code} value={data.name}>
-                          {data.name}
-                        </option>
-                      ))}
+                      {addToProjectValue === "" &&
+                        addToProjectList.map((data) => (
+                          <option key={data.code} value={data.name}>
+                            {data.name}
+                          </option>
+                        ))
+                      }
+                      {addToProjectValue === "Yes" &&
+                        addToProjectListYes.map((data) => (
+                          <option key={data.code} value={data.name}>
+                            {data.name}
+                          </option>
+                        ))
+                      }
+                      {addToProjectValue === "No" &&
+                        addToProjectListNo.map((data) => (
+                          <option key={data.code} value={data.name}>
+                            {data.name}
+                          </option>
+                        ))
+                      }
+                      {addToProjectValue === "Reject" &&
+                        addToProjectListReject.map((data) => (
+                          <option key={data.code} value={data.name}>
+                            {data.name}
+                          </option>
+                        ))
+                      }
+                      
                     </Form.Select>
                   </Form.Group>
                 }
