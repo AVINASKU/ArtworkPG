@@ -482,7 +482,7 @@ const PMPSpecificTabView = () => {
         key={index}
         header={
           <CustomTabHeader
-            tabHeader={index === 0 ? "Art Work Alignment" : obj.tabHeader}
+            tabHeader={index === 0 ? "Artwork Alignment" : obj.tabHeader}
             index={index}
           />
         }
