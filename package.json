@@ -4,8 +4,8 @@
   "private": true,
   "dependencies": {
     "@azure/storage-blob": "^12.12.0",
-    "@bryntum/gantt": "^5.3.7",
-    "@bryntum/gantt-react": "^5.3.7",
+    "@bryntum/gantt": "5.4.0",
+    "@bryntum/gantt-react": "5.4.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",

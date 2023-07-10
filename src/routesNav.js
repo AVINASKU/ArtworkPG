@@ -114,6 +114,7 @@ import DsbpPage from "./DsbpPage";
 import DsbpTabPage from "./DsbpTabPage";
 
 import Role from "./role";
+import Gantt from "./components/Gantt";
 
 const RoutesNav = () => {
   const params = useParams();
@@ -127,9 +128,11 @@ const RoutesNav = () => {
         <Route path="/allProjects" element={<AllProjects />} />
         <Route path="/myTasks" element={<MyTasksPage />} />
         <Route path="/AllTasks" element={<AllTasksPage />} />
+        <Route path="/Gantt" element={<Gantt />} />
         {/* <Route path="/createProject" element={<AddProject />} /> */}
         {/* projectPlan */}
         <Route path="/projectPlan" element={<ProjectCreation />} />
+        {/* <Route path="/projectPlan/:ProjectID" element={<Gantt />} /> */}
         <Route
           path="/myProjects/projectPlan/:ProjectID"
           element={<ProjectCreation key={`projectPlan-${params.ProjectID}`} />}

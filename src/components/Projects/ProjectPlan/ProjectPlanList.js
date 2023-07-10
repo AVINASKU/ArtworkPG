@@ -19,14 +19,12 @@ import "./index.scss";
 import TaskDialog from "../../TaskDialog";
 import ApproveDesignDialog from "./ApproveDesignDialog";
 import { useLocation, useParams } from "react-router-dom";
-import {
-  ArtWorkTabValuesAction
-} from "../../../store/actions/ArtWorkTabValuesActions";
+import { ArtWorkTabValuesAction } from "../../../store/actions/ArtWorkTabValuesActions";
 import CPPFA from "./../../AWMJobs/CPPFA";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
-import GanttChart from "./GanttChart";
+import Gantt from "../../Gantt";
 
 const ProjectPlanList = ({
   view,
@@ -84,6 +82,7 @@ const ProjectPlanList = ({
   };
 
   useEffect(() => {
+    console.log("pegadata: ",pegadata);
     (async () => {
       try {
         let filteredPegaDataJson = localStorage.getItem("columnWiseFilterData");
@@ -299,12 +298,17 @@ const ProjectPlanList = ({
             }
             `}
             onClick={() => {
-              if (field && field.length && keyCode[0] !== "CPPFA" && tabNameForPP !== "Input") {
+              if (
+                field &&
+                field.length &&
+                keyCode[0] !== "CPPFA" &&
+                tabNameForPP !== "Input"
+              ) {
                 (options.redirect === true || optionsData.Task) &&
                   navigate(`../${url}`, { replace: true });
-              } else if(field && field.length && keyCode[0] === "CPPFA") {
+              } else if (field && field.length && keyCode[0] === "CPPFA") {
                 handleApproveDialogCPPFA(options);
-              } else{
+              } else {
                 dispatch(ArtWorkTabValuesAction([]));
                 setTabName("artworkAlignment");
                 navigate(
@@ -625,7 +629,9 @@ const ProjectPlanList = ({
     localStorage.setItem("allProjectSortingData", JSON.stringify(sortData));
   };
   const pegadata1 = pegadata?.map((obj) => obj.data);
-  const pegadata2 = pegadata1?.map((obj) => { return {...obj, AWM_Project_ID: ProjectID}});
+  const pegadata2 = pegadata1?.map((obj) => {
+    return { ...obj, AWM_Project_ID: ProjectID };
+  });
 
   const [showApproveDialogCPPFA, setShowApproveDialogCPPFA] = useState(false);
   const [selectedTaskApproveDialogCPPFA, setSelectedTaskApproveDialogCPPFA] =
@@ -727,8 +733,9 @@ const ProjectPlanList = ({
             )}
           </div>
         )}
-        {view === "GanttChart" && <GanttChart />}
+        {/* {view === "GanttChart" && <Gantt />} */}
       </Suspense>
+      {view === "GanttChart" && <Gantt />}
     </div>
   );
 };
