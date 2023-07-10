@@ -104,7 +104,15 @@ function Role() {
   };
   const onNaviagate = () => {
     setDisplayBasic(false);
-    navigate("/myProjects");
+    const roles = userInfo?.ArtworkAgilityPage?.UserGroup?.map((selection) =>
+      selection?.UserRole?.map((role) => role?.Name)
+    ).flat();
+
+    if (roles && roles.includes("project manager")) {
+      navigate("/myProjects");
+    } else {
+      navigate("/allProjects");
+    }
   };
   const renderFooter = () => {
     return (
