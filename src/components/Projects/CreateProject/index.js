@@ -168,6 +168,11 @@ function AddProject(props) {
     }
   };
 
+  const formatPayloadDate = (date) => {
+    const formattedDate = moment(date, 'ddd MMM DD YYYY HH:mm:ss [GMT]ZZ (z)').format('YYYY-MM-DD[T]HH:mm:ss.SSS[Z]')
+    return formattedDate;
+  };
+
   useEffect(() => {
     //  if(DropDownValuesData === null)
     dispatch(getDropDownValues());
@@ -861,10 +866,10 @@ function AddProject(props) {
 
         POAs: "true",
         Estimated_ofPOAs: POA !== "" ? POA.toString() : "1",
-        Estimated_SOP: sopDate,
-        Estimated_SOS: sosDate,
-        Estimated_AW_Printer: printerDate,
-        Estimated_AW_Readiness: readinessDate,
+        Estimated_SOP: formatPayloadDate(sopDate),
+        Estimated_SOS: formatPayloadDate(sosDate),
+        Estimated_AW_Printer: formatPayloadDate(printerDate),
+        Estimated_AW_Readiness: formatPayloadDate(readinessDate),
         IL: iL,
         Tier: Tier?.Label_Name,
         InitiativeGroupName: groupName,
@@ -946,8 +951,8 @@ function AddProject(props) {
       Project_Type: projectType,
       IL: iL,
       PM: pm,
-      Estimated_SOS: sosDate,
-      Estimated_SOP: sopDate,
+      Estimated_SOS: formatPayloadDate(sosDate),
+      Estimated_SOP: formatPayloadDate(sopDate),
       Comments: comments,
       Buffer_To_Work: "",
       Project_Code: ProjectCode,
@@ -995,8 +1000,8 @@ function AddProject(props) {
           ? "1"
           : designScopeList.CICs.toString(),
       Estimated_No_Of_POAs: POA !== "" ? POA.toString() : "1",
-      Estimated_AW_Readiness: readinessDate,
-      Estimated_AW_Printer: printerDate,
+      Estimated_AW_Readiness: formatPayloadDate(readinessDate),
+      Estimated_AW_Printer: formatPayloadDate(printerDate),
       Artwork_Brand: ArtworkBrand,
       Artwork_Category: ArtworkCategory,
       Artwork_SMO: ArtworkSMO,
@@ -1620,7 +1625,7 @@ function AddProject(props) {
               </Row>
                 <Row>
                   <Form.Group className="mb-2" controlId="il.SelectMultiple">
-                    <Form.Label>IL</Form.Label>
+                    <Form.Label>Initiative Leader</Form.Label>
                     <div>
                       <Form.Control
                         placeholder="Enter IL"
@@ -1633,7 +1638,7 @@ function AddProject(props) {
                 <Row>
                   <Form.Group className={PMAlert ? "error-text" : ""}>
                     <Form.Label className={PMAlert ? "error-text" : ""}>
-                      PM <sup>*</sup>
+                      Project Manager <sup>*</sup>
                     </Form.Label>
                     <div>
                       <Form.Select
