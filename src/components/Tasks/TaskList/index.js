@@ -334,6 +334,7 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
     const projectID = rowData?.AWM_Project_ID;
     const TaskCode = taskId?.split("_");
     const url = `${TaskCode[0]}/${taskId}/${projectID}`;
+    const artworkAlignmentUrl = `artworkAlignment/${projectID}`
     return (
       <div className="flex align-items-center gap-2">
         <input
@@ -342,19 +343,28 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
           checked={selected?.includes(rowData)}
           onChange={() => handleSelect(rowData)}
         />
-        {TaskCode[0] !== "CPPFA" ? (
-          <NavLink className="task_name" to={url}>
-            {rowData.Task_Name}
-          </NavLink>
-        ) : (
-          <NavLink
-            className="task_name"
-            to=""
-            onClick={() => handleApproveDialogCPPFA(rowData)}
-          >
-            {rowData.Task_Name}
-          </NavLink>
+        { TaskCode[0] === "SAA" && (
+            <NavLink className="task_name" to={artworkAlignmentUrl}>
+              {rowData.Task_Name}
+            </NavLink>
+          )}
+          {
+          TaskCode[0] === "CPPFA" && (
+          (
+            <NavLink
+              className="task_name"
+              to=""
+              onClick={() => handleApproveDialogCPPFA(rowData)}
+            >
+              {rowData.Task_Name}
+            </NavLink>
+          )
         )}
+        {TaskCode[0] !== "CPPFA" &&  TaskCode[0] !== "SAA" &&
+          <NavLink className="task_name" to={url}>
+          {rowData.Task_Name}
+        </NavLink>
+        }
       </div>
     );
   };
