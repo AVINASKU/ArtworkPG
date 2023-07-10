@@ -166,6 +166,14 @@ const RoutesNav = () => {
             path="/allProjects/artworkAlignment/:ProjectID"
             element={<ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />}
           />
+          <Route
+            path="/myTasks/artworkAlignment/:ProjectID"
+            element={<ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />}
+          />
+          <Route
+            path="/allTasks/artworkAlignment/:ProjectID"
+            element={<ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />}
+          />
         {/* artworkAlignment */}
         
         {/* mapping */}
