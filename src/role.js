@@ -4,9 +4,11 @@ import RolesHeader from "./components/UserRoles/RolesHeader";
 import Roles from "./components/UserRoles/Roles";
 import RoleFooter from "./components/UserRoles/RoleFooter";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
-import { updateUser } from "./apis/userApi";
+import { updateUser, updateUserProfile } from "./apis/userApi";
+
 function Role() {
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState("");
@@ -17,6 +19,11 @@ function Role() {
   const [displayUserRole, setdisplayUserRole] = useState(true);
   const [imageOn, setImageOn] = useState(true);
   const [displayBasic, setDisplayBasic] = useState(false);
+  const [userInfo, setUserInfo] = useState();
+  const [userGroups, setUserGroups] = useState([]); // Declare userGroups outside of useEffect
+  const User = useSelector((state) => state.UserReducer);
+  const userInformation = User.userInformation;
+
   const toggleImage = () => {
     setImageOn(!imageOn);
     setdisplayUserRole(!displayUserRole);
@@ -50,46 +57,48 @@ function Role() {
     setSelectedCategory("");
     setSelectedRegion("");
     setRemovedRows([]);
+    updateUserProfile("", "", "");
+    setUserInfo();
     localStorage.removeItem("roles");
   };
+  useEffect(() => {
+    if (userInfo) {
+      const roles = userInfo?.ArtworkAgilityPage?.UserGroup?.map((selection) =>
+        selection?.UserRole?.map((role) => role?.Name)
+      ).flat();
 
-  const handleSubmit = () => {
-    const roles = [];
+      const BusinessUnit = userInfo?.ArtworkAgilityPage?.UserGroup?.map(
+        (selection) => selection?.UserBU?.map((role) => role?.BU_Name)
+      ).flat();
 
-    for (let i = 0; i < roleCount; i++) {
-      if (removedRows.includes(i + 1)) {
-        continue; // Skip removed row
+      const Regions = userInfo?.ArtworkAgilityPage?.UserGroup?.map(
+        (selection) => selection?.UserRegion?.map((role) => role?.Region_Name)
+      ).flat();
+
+      if (roles && BusinessUnit && Regions) {
+        updateUserProfile(roles, BusinessUnit, Regions);
       }
-      const roleObject = {
-        UserID: "chatterjee.pc.2",
-        UserBU: selectedCategory[i],
-        UserRole: selectedRole[i],
-        UserRegion: selectedRegion[i],
-      };
-
-      roles.push(roleObject);
     }
-    localStorage.setItem("roles", JSON.stringify(roles));
+  }, [userInfo]);
+  const handleSubmit = async () => {
+    setUserInfo();
+    const userGroup = {
+      GroupName: "Default",
+      UserRegion: selectedRegion.map((region) => ({ Region_Name: region })),
+      UserRole: selectedRole.map((role) => ({ Name: role })),
+      UserBU: selectedCategory.map((category) => ({ BU_Name: category })),
+    };
+    // const operatorId = userInformation?.userid?.split("@")[0];
+    const data = {
+      ArtworkAgilityPage: {
+        PM: userInformation?.userid,
+        UserGroup: [userGroup],
+      },
+    };
+    setUserInfo(data);
     setDisplayBasic(true);
-    // Send POST request
-    fetch(
-      "https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1/updatetraininguserdetails",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ArtworkAgilityTasks: roles,
-        }),
-      }
-    )
-      .then((response) => response.json())
-
-      .catch((error) => {
-        // Handle any errors that occurred during the request
-      });
   };
+
   const onHide = () => {
     setDisplayBasic(false);
   };
@@ -114,7 +123,11 @@ function Role() {
       </div>
     );
   };
-  const rolesFromLocalStorage = JSON.parse(localStorage.getItem("roles"));
+  useEffect(() => {
+    const userGroupsData = userInfo?.ArtworkAgilityPage?.UserGroup;
+    setUserGroups(userGroupsData); // Update userGroups state with the retrieved data
+  }, [userInfo]);
+
   return (
     <>
       <PageLayout>
@@ -162,16 +175,34 @@ function Role() {
         onHide={onHide}
         footer={renderFooter}
       >
-        <ul>
-          {rolesFromLocalStorage &&
-            rolesFromLocalStorage.map((role, index) => (
-              <li key={index}>
-                <strong>Role:</strong> {role?.UserRole}
-                <strong>BU:</strong> {role?.UserBU}
-                <strong>Region:</strong> {role?.UserRole}
-              </li>
-            ))}
-        </ul>
+        {userGroups &&
+          userGroups.map((group, index) => (
+            <ol className="list-roles" key={index}>
+              {group.UserRole &&
+                group.UserRole.map(
+                  (role, roleIndex) =>
+                    group.UserBU &&
+                    group.UserBU.map(
+                      (bu, buIndex) =>
+                        group.UserRegion &&
+                        group.UserRegion.map(
+                          (region, regionIndex) =>
+                            roleIndex === buIndex &&
+                            buIndex === regionIndex && (
+                              <li
+                                key={`${roleIndex}-${buIndex}-${regionIndex}`}
+                              >
+                                <div>
+                                  {role.Name},{bu.BU_Name},{region.Region_Name}
+                                </div>
+                              </li>
+                            )
+                        )
+                    )
+                )}
+            </ol>
+          ))}
+
         <h6 className="project-title">Click yes to continue</h6>
       </Dialog>
     </>

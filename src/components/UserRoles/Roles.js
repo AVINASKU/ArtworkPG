@@ -81,8 +81,8 @@ const Roles = ({
                         <input
                           type="radio"
                           name={`roleButton${i}`}
-                          value="Project Manager"
-                          checked={selectedRoles[i - 1] === "Project Manager"}
+                          value="ProjectManager"
+                          checked={selectedRoles[i - 1] === "ProjectManager"}
                           onChange={(e) => handleRoleChange(e, i)}
                           disabled={displayUserRole}
                         />
@@ -122,8 +122,8 @@ const Roles = ({
                         <input
                           type="radio"
                           name={`roleButton${i}`}
-                          value="Task Owner"
-                          checked={selectedRoles[i - 1] === "Task Owner"}
+                          value="TaskOwner"
+                          checked={selectedRoles[i - 1] === "TaskOwner"}
                           onChange={(e) => handleRoleChange(e, i)}
                           disabled={displayUserRole}
                         />
@@ -163,10 +163,8 @@ const Roles = ({
                         <input
                           type="radio"
                           name={`roleButton${i}`}
-                          value="External Task Owner"
-                          checked={
-                            selectedRoles[i - 1] === "External Task Owner"
-                          }
+                          value="ExternalTaskOwner"
+                          checked={selectedRoles[i - 1] === "ExternalTaskOwner"}
                           onChange={(e) => handleRoleChange(e, i)}
                           disabled={displayUserRole}
                         />
@@ -194,8 +192,8 @@ const Roles = ({
                         <input
                           type="radio"
                           name={`roleButton${i}`}
-                          value="Capacity Manager"
-                          checked={selectedRoles[i - 1] === "Capacity Manager"}
+                          value="CapacityManager"
+                          checked={selectedRoles[i - 1] === "CapacityManager"}
                           onChange={(e) => handleRoleChange(e, i)}
                           disabled={displayUserRole}
                         />

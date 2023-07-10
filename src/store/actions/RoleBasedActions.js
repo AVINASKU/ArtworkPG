@@ -1,4 +1,5 @@
 import { accessMatrix } from "../../accessMatrix";
+import { accessRoles } from "../../accessRoles";
 
 export const fetchAccessMatrix = () => async (dispatch) => {
   dispatch({ type: "FETCH_ACCESS_MATRIX_REQUEST" });
@@ -18,9 +19,7 @@ export const fetchAccessRoles = () => async (dispatch) => {
   dispatch({ type: "FETCH_ACCESS_ROLES_REQUEST" });
 
   try {
-    const roles = JSON.parse(localStorage.getItem("roles")); // Fetch roles from local storage
-    const response = roles; // Use the fetched roles as the response
-
+    const response = accessRoles;
     dispatch({
       type: "FETCH_ACCESS_ROLES_SUCCESS",
       payload: response,
