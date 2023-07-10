@@ -1,6 +1,8 @@
 // @flow
+import _ from "lodash";
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
+import "../index.scss";
 
 const primaryButton = 0;
 const keyCodes = {
@@ -21,6 +23,7 @@ const Task = ({
   selectionCount,
   isGhosting,
   singleDragFlag,
+  entities,
 }) => {
   const onKeyDown = (event, provided, snapshot) => {
     if (event.defaultPrevented) {
@@ -106,6 +109,13 @@ const Task = ({
                   ? { backgroundColor: "gray" }
                   : {}
               }
+              className={`${
+                entities.columns.availableFields.fieldsData.find((r, ind) =>
+                  entities.columns.selectedFields.fieldsData.includes(r) && index === ind
+                )
+                  ? "test"
+                  : ""
+              }`}
             >
               {task.Field_Name}
             </div>

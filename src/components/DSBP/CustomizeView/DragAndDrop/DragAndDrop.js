@@ -219,6 +219,7 @@ class DragAndDrop extends Component {
                 toggleSelection={this.toggleSelection}
                 toggleSelectionInGroup={this.toggleSelectionInGroup}
                 multiSelectTo={this.multiSelectTo}
+                entities={entities}
               />
             ))}
           </div>

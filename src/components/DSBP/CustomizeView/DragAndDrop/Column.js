@@ -20,6 +20,7 @@ const Column = ({
   toggleSelection,
   toggleSelectionInGroup,
   multiSelectTo,
+  entities
 }) => {
   return (
     <div className="columnMain">
@@ -51,6 +52,7 @@ const Column = ({
                   toggleSelectionInGroup={toggleSelectionInGroup}
                   multiSelectTo={multiSelectTo}
                   singleDragFlag={draggingTaskId !== task.Field_Name}
+                  entities={entities}
                 />
               );
             })}
