@@ -32,7 +32,7 @@ function ProjectPlanCompo(props) {
   const [activeSave, setActiveSave] = useState(true);
   // const [activeFlag, setActiveFlag] = useState(false);
   // Check if access is empty for the user's role and page
-  const isAccessEmpty = hasProjectPlanAccess();
+  const isAccessEmpty = CheckReadOnlyAccess();
   console.log(isAccessEmpty);
   const [activeFlag, setActiveFlag] = useState(!isAccessEmpty);
   const [loader, setLoader] = useState(false);
@@ -97,190 +97,206 @@ function ProjectPlanCompo(props) {
 
   useEffect(() => {
     getProjectPlanApi();
-  }, [mode]);
+  }, [mode, props.tabNameForPP]);
 
   const getRestructuredData = (apiData) => {
     let mainTempArr = [];
+    let tasks = [];
+    if (props.tabNameForPP === "Input") {
+      tasks = [
+        {
+          name: "Start Artwork Alignment",
+          code: "SAA",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("SAA_")),
+        },
+      ];
+    } else {
+      tasks = [
+        {
+          name: "Define Design Intent",
+          code: "DDI",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("DDI_")),
+        },
+        {
+          name: "Upload Approved Design Intent",
+          code: "UADI",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("UADI_")),
+        },
+        {
+          name: "Define Design Template",
+          code: "DDT",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("DDT_")),
+        },
+        {
+          name: "Upload Regional Design Template",
+          code: "URDT",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("URDT_")),
+        },
+        {
+          name: "Approve Regional Design Template",
+          code: "ARDT",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("ARDT_")),
+        },
+        {
+          name: "Define Production Ready Art",
+          code: "DPRA",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("DPRA_")),
+        },
+        {
+          name: "Upload Production Ready Art",
+          code: "UPRA",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("UPRA_")),
+        },
+        {
+          name: "Approve Production Ready Art",
+          code: "APRA",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("APRA_")),
+        },
 
-    const tasks = [
-      {
-        name: "Define Design Intent",
-        code: "DDI",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("DDI_")),
-      },
-      {
-        name: "Upload Approved Design Intent",
-        code: "UADI",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("UADI_")),
-      },
-      {
-        name: "Define Design Template",
-        code: "DDT",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("DDT_")),
-      },
-      {
-        name: "Upload Regional Design Template",
-        code: "URDT",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("URDT_")),
-      },
-      {
-        name: "Approve Regional Design Template",
-        code: "ARDT",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("ARDT_")),
-      },
-      {
-        name: "Define Production Ready Art",
-        code: "DPRA",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("DPRA_")),
-      },
-      {
-        name: "Upload Production Ready Art",
-        code: "UPRA",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("UPRA_")),
-      },
-      {
-        name: "Approve Production Ready Art",
-        code: "APRA",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("APRA_")),
-      },
+        {
+          name: "Confirm Preliminary print feasibility Assessment",
+          code: "CPPFA",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("CPPFA_")),
+        },
+        {
+          name: "Define New Print Feasibility Scope",
+          code: "DNPF",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("DNPF_")),
+        },
+        {
+          name: "Confirm Color Development",
+          code: "CCD",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("CCD_")),
+        },
+        {
+          name: "Confirm Print Trial",
+          code: "CPT",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("CPT_")),
+        },
+        {
+          name: "Define New Ink Qualification scope",
+          code: "DNIQ",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("DNIQ_")),
+        },
+        {
+          name: "Confirm New Ink Qualification",
+          code: "CNIQ",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("CNIQ_")),
+        },
+      ];
+    }
 
-      {
-        name: "Confirm Preliminary print feasibility Assessment",
-        code: "CPPFA",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("CPPFA_")),
-      },
-      {
-        name: "Define Color Development & Print Trial",
-        code: "DNPF",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("DNPF_")),
-      },
-      {
-        name: "Confirm Color Development",
-        code: "CCD",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("CCD_")),
-      },
-      {
-        name: "Confirm Print Trial",
-        code: "CPT",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("CPT_")),
-      },
-      {
-        name: "Define New Ink Qualification scope",
-        code: "DNIQ",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("DNIQ_")),
-      },
-      {
-        name: "Confirm New Ink Qualification",
-        code: "CNIQ",
-        data: apiData.filter((data) => data.AWM_Task_ID.includes("CNIQ_")),
-      },
-    ];
     tasks.forEach((task) => {
-      if (task.data?.length === 1) {
-        let tempObj = {};
-        tempObj["key"] = task.data[0].AWM_Task_ID;
-
-        let dataObj = {};
-        dataObj["Task"] = task.data[0].AWM_Task_ID.includes("CCD_")
-          ? "Confirm Color Development"
-          : task.data[0].AWM_Task_ID.includes("CPT_")
-          ? "Confirm Print Trial"
-          : task.data[0].AWM_Task_ID.includes("DNPF_")
-          ? "Define Color Development & Print Trial"
-          : task.data[0].AWM_Task_ID.includes("CNIQ")
-          ? "Confirm Ink Qualification"
-          : task.data[0].Task_Name;
-        dataObj["Dependency"] = task.data[0].Dependency;
-        dataObj["Role"] = task.data[0].Role;
-        dataObj["RoleOptions"] = task.data[0].RoleOptions;
-        dataObj["Assignee"] = task.data[0].Assignee;
-        dataObj["OwnerOptions"] = task.data[0].OwnerOptions;
-        dataObj["State"] = task.data[0].State;
-        dataObj["Duration"] = task.data[0].Duration;
-        dataObj["StartDate"] = task.data[0].Start_Date;
-        dataObj["EndDate"] = task.data[0].End_Date;
-        dataObj["ConsumedBuffer"] = task.data[0].Consumed_Buffer;
-        dataObj["HelpNeeded"] = task.data[0].Help_Needed;
-
-        tempObj["data"] = dataObj;
-        tempObj["children"] = [];
-        tempObj["redirect"] = true;
-
-        mainTempArr.push(tempObj);
-      } else if (task.data?.length > 1) {
-        let tempObj = {};
-        let tempArr = [];
-        let pStartDate = "";
-        let pEndDate = "";
-        let startDateArr = [];
-        let endDateArr = [];
-
-        tempObj["key"] = task.code;
-        let dataObj = {};
-        dataObj["Task"] = `${task.name} (X${task.data?.length})`;
-        dataObj["Dependency"] = task.data[0].Dependency;
-        dataObj["Role"] = "";
-        dataObj["RoleOptions"] = "";
-        dataObj["Assignee"] = "";
-        dataObj["OwnerOptions"] = "";
-        dataObj["State"] = "";
-        dataObj["Duration"] = "";
-
-        dataObj["ConsumedBuffer"] = "";
-        dataObj["HelpNeeded"] = false;
-
-        tempObj["data"] = dataObj;
-        tempObj["redirect"] = true;
-
-        //child array creation
-
-        task.data.forEach((dt, index) => {
-          dt.Start_Date && startDateArr?.push(dt.Start_Date);
-          dt.End_Date && endDateArr?.push(dt.End_Date);
-          pStartDate =
-            startDateArr.length > 0 &&
-            moment.min(
-              startDateArr.map((date) =>
-                moment(date, "YYYYMMDDTHHmmss.SSS [GMT]")
-              )
-            );
-          pEndDate =
-            endDateArr.length > 0 &&
-            moment.max(
-              endDateArr.map((date) =>
-                moment(date, "YYYYMMDDTHHmmss.SSS [GMT]")
-              )
-            );
+      if (task.data?.length > 0) {
+        if (
+          task.data[0]?.AWM_Task_ID.includes("DDI_") ||
+          task.data[0]?.AWM_Task_ID.includes("DDT_") ||
+          task.data[0]?.AWM_Task_ID.includes("DPRA_") ||
+          task.data[0]?.AWM_Task_ID.includes("CPPFA_") ||
+          task.data[0]?.AWM_Task_ID.includes("DNPF_") ||
+          task.data[0]?.AWM_Task_ID.includes("DNIQ_") ||
+          task.data[0]?.AWM_Task_ID.includes("SAA_")
+        ) {
           let tempObj = {};
-          tempObj["key"] = dt.AWM_Task_ID;
+          tempObj["key"] = task.data[0]?.AWM_Task_ID;
 
           let dataObj = {};
-          dataObj["Task"] = `${index + 1}). ${dt.Task_Name}`;
-          dataObj["Dependency"] = dt.Dependency;
-          dataObj["Role"] = dt.Role;
-          dataObj["RoleOptions"] = dt.RoleOptions;
-          dataObj["Assignee"] = dt.Assignee;
-          dataObj["OwnerOptions"] = dt.OwnerOptions;
-          dataObj["State"] = dt.State;
-          dataObj["Duration"] = dt.Duration;
-          dataObj["StartDate"] = dt.Start_Date;
-          dataObj["EndDate"] = dt.End_Date;
-          dataObj["ConsumedBuffer"] = dt.Consumed_Buffer;
-          dataObj["HelpNeeded"] = dt.Help_Needed;
+          dataObj["Task"] = task.data[0]?.AWM_Task_ID.includes("DNPF_")
+            ? "Define New Print Feasibility Scope"
+            : task.data[0]?.Task_Name;
+          dataObj["Dependency"] = task.data[0]?.Dependency;
+          dataObj["Role"] = task.data[0]?.Role;
+          dataObj["RoleOptions"] = task.data[0]?.RoleOptions;
+          dataObj["Assignee"] = task.data[0]?.Assignee;
+          dataObj["OwnerOptions"] = task.data[0]?.OwnerOptions;
+          dataObj["State"] = task.data[0]?.State;
+          dataObj["Duration"] = task.data[0]?.Duration;
+          dataObj["StartDate"] = task.data[0]?.Start_Date;
+          dataObj["EndDate"] = task.data[0]?.End_Date;
+          dataObj["ConsumedBuffer"] = task.data[0]?.Consumed_Buffer;
+          dataObj["HelpNeeded"] = task.data[0]?.Help_Needed;
 
           tempObj["data"] = dataObj;
           tempObj["children"] = [];
+          tempObj["redirect"] = true;
 
-          tempArr.push(tempObj);
-        });
-        dataObj["StartDate"] = pStartDate;
-        dataObj["EndDate"] = pEndDate;
+          mainTempArr.push(tempObj);
+        } else {
+          let tempObj = {};
+          let tempArr = [];
+          let pStartDate = "";
+          let pEndDate = "";
+          let startDateArr = [];
+          let endDateArr = [];
 
-        tempObj["children"] = tempArr;
+          tempObj["key"] = task.code;
+          let dataObj = {};
+          dataObj["Task"] = `${task.name} (X${task.data?.length})`;
+          dataObj["Dependency"] = task.data[0]?.Dependency;
+          dataObj["Role"] = "";
+          dataObj["RoleOptions"] = "";
+          dataObj["Assignee"] = "";
+          dataObj["OwnerOptions"] = "";
+          dataObj["State"] = "";
+          dataObj["Duration"] = "";
 
-        mainTempArr.push(tempObj);
+          dataObj["ConsumedBuffer"] = "";
+          dataObj["HelpNeeded"] = false;
+
+          tempObj["data"] = dataObj;
+          tempObj["redirect"] = true;
+
+          //child array creation
+
+          task.data.forEach((dt, index) => {
+            dt.Start_Date && startDateArr?.push(dt.Start_Date);
+            dt.End_Date && endDateArr?.push(dt.End_Date);
+            pStartDate =
+              startDateArr.length > 0 &&
+              moment.min(
+                startDateArr.map((date) =>
+                  moment(date, "YYYYMMDDTHHmmss.SSS [GMT]")
+                )
+              );
+            pEndDate =
+              endDateArr.length > 0 &&
+              moment.max(
+                endDateArr.map((date) =>
+                  moment(date, "YYYYMMDDTHHmmss.SSS [GMT]")
+                )
+              );
+            let tempObj = {};
+            tempObj["key"] = dt.AWM_Task_ID;
+
+            let dataObj = {};
+            dataObj["Task"] = `${index + 1}). ${dt.Task_Name}`;
+            dataObj["Dependency"] = dt.Dependency;
+            dataObj["Role"] = dt.Role;
+            dataObj["RoleOptions"] = dt.RoleOptions;
+            dataObj["Assignee"] = dt.Assignee;
+            dataObj["OwnerOptions"] = dt.OwnerOptions;
+            dataObj["State"] = dt.State;
+            dataObj["Duration"] = dt.Duration;
+            dataObj["StartDate"] = dt.Start_Date;
+            dataObj["EndDate"] = dt.End_Date;
+            dataObj["ConsumedBuffer"] = dt.Consumed_Buffer;
+            dataObj["HelpNeeded"] = dt.Help_Needed;
+
+            tempObj["data"] = dataObj;
+            tempObj["children"] = [];
+
+            tempArr.push(tempObj);
+          });
+          dataObj["StartDate"] = pStartDate;
+          dataObj["EndDate"] = pEndDate;
+
+          tempObj["children"] = tempArr;
+
+          mainTempArr.push(tempObj);
+        }
       }
     });
+
     return mainTempArr; //toBeReplacedWithapiData;
   };
 
@@ -354,37 +370,41 @@ function ProjectPlanCompo(props) {
               setActiveSave={setActiveSave}
               getProjectPlanApi={getProjectPlanApi}
               isAccessEmpty={isAccessEmpty}
+              view={props.view}
+              setTabName={props.setTabName}
             />
-            <div className="form-buttons" style={{ background: "#FAFAFA" }}>
-              <Button
-                className={
-                  !isAccessEmpty ? "btn btn-disabled" : "button-layout"
-                }
-                variant="secondary"
-                onClick={() => navigate("/myProjects")}
-                disabled={!isAccessEmpty}
-              >
-                Cancel
-              </Button>
+            {props.view === "Tabular" && (
+              <div className="form-buttons" style={{ background: "#FAFAFA" }}>
+                <Button
+                  className={
+                    !isAccessEmpty ? "btn btn-disabled" : "button-layout"
+                  }
+                  variant="secondary"
+                  onClick={() => navigate("/myProjects")}
+                  disabled={!isAccessEmpty}
+                >
+                  Cancel
+                </Button>
 
-              <Button
-                className={activeSave ? "btn btn-disabled" : "button-layout"}
-                variant="secondary"
-                onClick={onSave}
-                disabled={activeSave}
-              >
-                Save
-              </Button>
+                <Button
+                  className={activeSave ? "btn btn-disabled" : "button-layout"}
+                  variant="secondary"
+                  onClick={onSave}
+                  disabled={activeSave}
+                >
+                  Save
+                </Button>
 
-              <Button
-                className="button-layout"
-                variant="primary"
-                onClick={activate}
-                disabled={activeFlag}
-              >
-                Activate
-              </Button>
-            </div>
+                <Button
+                  className="button-layout"
+                  variant="primary"
+                  onClick={activate}
+                  disabled={activeFlag}
+                >
+                  Activate
+                </Button>
+              </div>
+            )}
           </>
         )}
       </>

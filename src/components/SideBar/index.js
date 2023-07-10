@@ -280,7 +280,7 @@ const SideBar = () => {
               {pathName !== "/roles" &&
                 rolesWithAccess?.some((roleWithAccess) => {
                   return (
-                    roleWithAccess.path === "/projectPlan#ProjectSetup" &&
+                    roleWithAccess.path === "/projectSetup" &&
                     roleWithAccess.roles.some((role) => {
                       return (
                         roles.includes(role.name) && role.access.length > 0
@@ -297,7 +297,7 @@ const SideBar = () => {
                   >
                     {!isToggle ? (
                       <NavLink
-                        to="/projectPlan#ProjectSetup"
+                        to="/projectSetup"
                         state={{ mode: "create" }}
                         className="nav-link"
                         onClick={() => {
@@ -312,7 +312,7 @@ const SideBar = () => {
                       </NavLink>
                     ) : (
                       <NavLink
-                        to="/projectPlan#ProjectSetup"
+                        to="/projectSetup"
                         state={{ mode: "create" }}
                         className="nav-link"
                         onClick={() => {

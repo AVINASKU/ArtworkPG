@@ -1,13 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { DataTable } from "primereact/datatable";
-import { Form, Row, Col, Button } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { Column } from "primereact/column";
-import { Dropdown } from "primereact/dropdown";
-// import filter from "../../../assets/images/filter.svg";
 import filter from "../../assets/images/filter.svg";
 import DSBPFilter from "./DSBPFilter";
 import "../Projects/MyProjects/index.scss";
-import DsbpDialog from "./DsbpDialog";
+import DsbpCommonPopup from "./DsbpCommonPopup";
+import DsbpRejectDialog from "./RejectDialog";
+import DsbpActionDialog from "./DsbpActionDialog";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { ArtWorkTabValuesAction } from "../../../src/store/actions/ArtWorkTabValuesActions";
 import { generateUniqueKey } from "../../utils";
 import { onSortData } from "../../utils";
 
@@ -22,73 +25,181 @@ const AgilityList = ({
   selectedFields,
   onGlobalFilterChange,
   filteredDsbpData,
-  setDsbpPmpData
+  setDsbpPmpData,
+  onActionSubmit,
+  buWiseSortedColumnNames,
+  handleTabPanel,
+  tabPanel,
+  setFieldUpdated,
+  fieldUpdated,
+  setSavedData,
+  addSavedData,
+  handleYesAddToPRoject,
+  setHandleYesAddToPRoject,
+  rejectDialog,
+  setRejectDialog,
+  tableRender,
+  setTableRender,
 }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { artWorkTabValuesData } = useSelector(
+    (state) => state.ArtWorkTabValuesReducer
+  );
   const [selectedColumnName, setSelectedColumnName] = useState(null);
-  const columnName = [
-    "DSBP_InitiativeID",
-    "DSBP_IL",
-    "DSBP_PMP_PIMaterialID",
-    "DSBP_PO_PMP_poPoa",
-    "DSBP_PO_PMP_poMaterialNumber",
-    "AWM_AddedToProject",
-    "DSBP_PO_PMP_poLanguages",
-    "DSBP_PMP_regulatoryStickeringCos",
-    "DSBP_PMP_PIMaterialDescription",
-    "DSBP_InitiativeState",
-    "DSBP_PO_PMP_poPoaApprovedCountries",
-    "POA #",
-    "POAA Creation Status",
-    "Rejection reason",
-    "RTA Rejection Reason",
-    "Assign a Tagging",
-    "Assembly Mech",
-    "Artwork Reference Material",
-    "AISE",
-    "Biocide",
-    "Brand",
-    "Product Form/Sub Brand",
-    "PO Flavor/Scent",
-    "Ref COS",
-    "PO Languages",
-    "PO POA #",
-    "PO FPC",
-    "PO FPC DESC",
-  ];
   const op = useRef(null);
-  
-  const [rejectDialog, setRejectDialog] = useState(false);
-  const [rejectionData, setRejectionData] = useState(false);
-  const [rejectReason, setRejectReason] = useState("");
+
+  const [onChangeData, setOnChangeData] = useState(false);
+  const [rejectFormData, setRejectFormData] = useState({});
+  const [frozenUpdated, setFrozenUpdated] = useState(false);
+  const [addedDataForSave, setAddedDataForSave] = useState([]);
+  const [tabsList, setTabsList] = useState([
+    { tabHeader: "Header 1", decription: "Header 1 data" },
+  ]);
+
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
+  const allBUAttributesData = useSelector(
+    (state) => state.DropDownValuesReducer
+  );
+  const allBUAttributes = allBUAttributesData.DropDownValuesData;
+  const ProjectID = selectedProjectDetails?.Project_ID;
+  let aiseList =
+    allBUAttributes?.ArtworkAgilityTasksPage?.Artwork_Alignment?.AISE;
+  let assemblyMechanismList =
+    allBUAttributes?.ArtworkAgilityTasksPage?.Artwork_Alignment
+      ?.Assembly_Mechanism;
 
   const addToProjectList = [
-      { name: 'Yes', code: 'Yes' },
-      { name: 'No', code: 'No' },
-      { name: 'Reject', code: 'Reject' }
+    { name: "Yes", code: "Yes" },
+    { name: "No", code: "No" },
+    { name: "Reject", code: "Reject" },
   ];
 
-  const rejectReasonList = [
-    { name: 'NA', code: 'NA' }
-];
+  const addToProjectListYes = [{ name: "Yes", code: "Yes" }];
 
-  const onchangeAddToProject = (rowData, e, ele) => {
-    console.log("hi",rowData, "data", e.target.value, "rowdata", rowData[ele]);
-    rowData[ele] = e.target.value;
-    console.log("dsbpPmpData", dsbpPmpData);
-    setDsbpPmpData([...dsbpPmpData]);
-    setRejectionData(rowData);
-    if(e.target.value === "Reject")
-      setRejectDialog(true)
+  const addToProjectListNo = [
+    { name: "Yes", code: "Yes" },
+    { name: "No", code: "No" },
+  ];
+
+  const addToProjectListReject = [
+    { name: "Yes", code: "Yes" },
+    { name: "Reject", code: "Reject" },
+  ];
+
+  const BU = selectedProjectDetails?.BU;
+  // check whether project is from home care or baby care
+  let isBUHomeCare = false;
+  if (BU === "Home Care") {
+    isBUHomeCare = true;
   }
 
-  const handleRejectReasonChange = (e) => {
-    setRejectReason(e.target.value)
-    console.log("data")
+  const onchangeAddToProject = (rowData, e, ele) => {
+    console.log("rowData", rowData, e.target.value, rowData[ele]);
+    rowData[ele] = e.target.value;
+    setDsbpPmpData([...dsbpPmpData]);
+    setOnChangeData(rowData);
+    if (e.target.value === "Reject") setRejectDialog(true);
+    setRejectFormData({});
+    if (e.target.value === "Yes" || e.target.value !== "Reject")
+      setHandleYesAddToPRoject(true);
   };
 
+  const projectNameOnClick = (e, options) => {
+    op.current.toggle(e);
+    setSelectedColumnName(options);
+  };
+
+  const concatenatedFPCStagingFormula = (data) => {
+    const concatenatedData = data.reduce((result, item) => {
+      for (const key in item) {
+        if (result.hasOwnProperty(key)) {
+          result[key] += `,${item[key]}`;
+        } else {
+          result[key] = item[key];
+        }
+      }
+      return result;
+    }, {});
+    return concatenatedData;
+  };
+
+  const onHandlePmpTabView = (options, field) => {
+    const selectedTab = {
+      tabHeader: options[field],
+      description: options,
+    };
+
+    let updatedTabsList = [];
+    if (
+      tabsList.some(
+        (tab) => JSON.stringify(tab) === JSON.stringify(selectedTab)
+      )
+    ) {
+      // selectedTab is already present
+    } else {
+      updatedTabsList = [...tabsList, selectedTab];
+    }
+
+    const newArray = Array.isArray(artWorkTabValuesData)
+      ? [...artWorkTabValuesData, ...updatedTabsList]
+      : updatedTabsList;
+
+    const uniqueArray = Array.from(
+      new Set(newArray.map((obj) => JSON.stringify(obj)))
+    ).map(JSON.parse);
+    dispatch(ArtWorkTabValuesAction(uniqueArray));
+    navigate("/DSBP/tab", { replace: true });
+  };
+
+  const onChangeSelectField = (option, e, field) => {
+    option[field] = e.target.value;
+    setAddedDataForSave({ ...addedDataForSave, option });
+
+    if (addSavedData && addSavedData.length) {
+      addSavedData.map((ele) => {
+        if (
+          ele.DSBP_InitiativeID === option.DSBP_InitiativeID &&
+          ele.DSBP_PMP_PIMaterialID === option.DSBP_PMP_PIMaterialID
+        ) {
+          ele[field] = e.target.value;
+          return ele;
+        }
+      });
+    }
+    let checkDataIsPresentOrNot = addSavedData.filter(
+      (ele) =>
+        ele.DSBP_InitiativeID === option.DSBP_InitiativeID &&
+        ele.DSBP_PMP_PIMaterialID === option.DSBP_PMP_PIMaterialID
+    );
+    if (!checkDataIsPresentOrNot.length) {
+      let updatedData = {};
+      updatedData.DSBP_InitiativeID = option.DSBP_InitiativeID;
+      updatedData.DSBP_PMP_PIMaterialID = option.DSBP_PMP_PIMaterialID;
+      updatedData.DSBP_PMP_PIMaterialNumber = option.DSBP_PMP_PIMaterialNumber;
+      updatedData.FK_AWMProjectID = ProjectID;
+      updatedData[field] = e.target.value;
+      addSavedData.push(updatedData);
+    }
+    console.log("add saved data", addSavedData);
+    setSavedData(addSavedData);
+    setFieldUpdated(!fieldUpdated);
+  };
 
   const addBody = (options, rowData) => {
     let field = rowData.field;
+    let FPCStagingFormula =
+      options?.FPCStagingPage?.[0]?.FormulaCardStagingPage;
+    // if(field === "AWM_AISE"){
+    //  console.log("field", options[field]);
+    //
+    let concatenatedFPCStagingFormulaData = {};
+    if (FPCStagingFormula && FPCStagingFormula.length) {
+      concatenatedFPCStagingFormulaData =
+        concatenatedFPCStagingFormula(FPCStagingFormula);
+    }
+
     return (
       <>
         {field === "DSBP_InitiativeID" && (
@@ -102,46 +213,138 @@ const AgilityList = ({
             {options[field]}
           </div>
         )}
-        
-        {field === "AWM_AddedToProject" && (
-          <div className="d-flex">
-            <Form.Group
-              className={`mb-2`}
-              controlId="groupName.ControlInput1"
-            >
-              <div>
-                <Form.Select
-                  placeholder="Select"
-                  onChange={(e) => onchangeAddToProject(options, e, field)}
-                >
-                  <option value="">Select</option>
-                  {addToProjectList.map((data) => (
-                    <option
-                      key={data.code}
-                      value={data.name}
-                    >
-                      {data.name}
-                    </option>
-                  ))}
-                </Form.Select>
-              </div>
-            </Form.Group>
-          
-          </div>
+        {options?.FPCStagingPage?.[0][field]}
+        {concatenatedFPCStagingFormulaData?.[field]}
+        {field === "DSBP_PMP_PIMaterialNumber" && (
+          <a
+            className="tabView"
+            onClick={() => onHandlePmpTabView(options, field)}
+          >
+            {options[field]}
+          </a>
         )}
+        {field === "AWM_AddedToProject" && (
+          <Form.Group
+            controlId="groupName.ControlInput1"
+            style={{ textAlign: "-webkit-center" }}
+          >
+            <Form.Select
+              placeholder="Select"
+              value={options[field]}
+              onChange={(e) => onchangeAddToProject(options, e, field)}
+              style={{ width: "80%", fontSize: 12 }}
+            >
+              <option value="">Select</option>
+              {options[field] === "Yes" &&
+                addToProjectListYes?.map((data) => (
+                  <option key={data.code} value={data.name}>
+                    {data.name}
+                  </option>
+                ))}
+              {options[field] === "No" &&
+                addToProjectListNo?.map((data) => (
+                  <option key={data.code} value={data.name}>
+                    {data.name}
+                  </option>
+                ))}
+              {options[field] === "Reject" &&
+                addToProjectListReject?.map((data) => (
+                  <option key={data.code} value={data.name}>
+                    {data.name}
+                  </option>
+                ))}
+              {options[field] === "" &&
+                addToProjectList?.map((data) => (
+                  <option key={data.code} value={data.name}>
+                    {data.name}
+                  </option>
+                ))}
+            </Form.Select>
+          </Form.Group>
+        )}
+        {field === "AWM_AISE" && (
+          <Form.Group
+            controlId="groupName.ControlInput1"
+            style={{ textAlign: "-webkit-center" }}
+          >
+            <Form.Select
+              placeholder="Select"
+              value={options[field]}
+              onChange={(e) => onChangeSelectField(options, e, field)}
+              style={{ width: "80%", fontSize: 12 }}
+            >
+              <option value="">Select</option>
+              {aiseList?.map((data) => (
+                <option key={data.AWM_AISE} value={data.AWM_AISE}>
+                  {data.AWM_AISE}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+        )}
+        {field === "AWM_AssemblyMechanism" && (
+          <Form.Group
+            controlId="groupName.ControlInput1"
+            style={{ textAlign: "-webkit-center" }}
+          >
+            <Form.Select
+              placeholder="Select"
+              value={options[field]}
+              onChange={(e) => onChangeSelectField(options, e, field)}
+              style={{ width: "80%", fontSize: 12 }}
+            >
+              <option value="">Select</option>
+              {assemblyMechanismList?.map((data) => (
+                <option key={data.code} value={data.AWM_AssemblyMechanism}>
+                  {data.AWM_AssemblyMechanism || options[field]}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+        )}
+
+        {field === "AWM_Sellable" && (
+          <Form.Group
+            controlId="groupName.ControlInput1"
+            style={{ textAlign: "-webkit-center" }}
+          >
+            <Form.Control
+              type="text"
+              value={options[field]}
+              onChange={(e) => onChangeSelectField(options, e, field)}
+              placeholder="Enter Sellable"
+            />
+          </Form.Group>
+        )}
+
+        {field === "AWM_Biocide" && (
+          <Form.Group
+            controlId="groupName.ControlInput1"
+            style={{ textAlign: "-webkit-center" }}
+          >
+            <Form.Control
+              type="text"
+              value={options[field]}
+              onChange={(e) => onChangeSelectField(options, e, field)}
+              placeholder="Enter Biocide"
+            />
+          </Form.Group>
+        )}
+
         {field !== "DSBP_InitiativeID" &&
           field !== "AWM_AddedToProject" &&
+          field !== "DSBP_PMP_PIMaterialNumber" &&
+          field !== "AWM_AISE" &&
+          field !== "AWM_AssemblyMechanism" &&
+          field !== "AWM_Biocide" &&
+          field !== "AWM_Sellable" &&
           options[field]}
       </>
     );
   };
 
-  const projectNameOnClick = (e, options) => {
-    op.current.toggle(e);
-    setSelectedColumnName(options);
-  };
-
   const renderHeader = (field, isFilterActivated = false) => {
+    let splittedCol = field.split("_").join(" ");
     return (
       <span key={field}>
         {field === "DSBP_InitiativeID" && (
@@ -162,50 +365,120 @@ const AgilityList = ({
               : "columnFilterIcon"
           }
         />
-        {field}
+        {splittedCol}
       </span>
     );
   };
 
   const renderColumns = () => {
-    if (columnName && columnName.length) {
-      return columnName.map((field, index) => {
+    let jsonColumnWidth = isBUHomeCare
+      ? localStorage.getItem("columnWidthDSBPArtworkHomeCare")
+      : localStorage.getItem("columnWidthDSBPArtworkBabyCare");
+    let allColumns = JSON.parse(jsonColumnWidth);
+
+    if (allColumns && allColumns.length) {
+      return allColumns.map((field, index) => {
         return (
           <Column
-            field={field}
-            header={() => renderHeader(field)}
+            field={field.Field_Name}
+            header={() => renderHeader(field.Field_Name)}
+            frozen={field.freeze}
+            className={field.freeze ? "font-bold" : ""}
             body={addBody}
-            key={field}
-            columnKey={field}
+            key={field.Field_Name}
+            columnKey={field.Field_Name}
             showFilterMenu={false}
             alignFrozen="left"
-            filterField={field}
+            filterField={field.Field_Name}
             style={{
-              width: "100px",
+              width: field.width,
             }}
           />
         );
       });
     }
   };
-  return (
-    console.log("rejectDialog", rejectionData),
-    <>
-      <DSBPFilter
-        op={op}
-        onSort={onSort}
-        selectedColumnName={selectedColumnName}
-        dsbpPmpData={dsbpPmpData}
-        selectedFields={selectedFields}
-        onGlobalFilterChange={onGlobalFilterChange}
-      />
 
+  const onColumnResizeEnd = (event) => {
+    let columnWidth = [];
+    let jsonColumnWidth = isBUHomeCare
+      ? localStorage.getItem("columnWidthDSBPArtworkHomeCare")
+      : localStorage.getItem("columnWidthDSBPArtworkBabyCare");
+    if (jsonColumnWidth) {
+      columnWidth = JSON.parse(jsonColumnWidth);
+    }
+    if (columnWidth) {
+      columnWidth.map((list) => {
+        if (event.column.props.field === list.Field_Name) {
+          list.width = event.element.offsetWidth;
+        }
+      });
+    }
+    // localStorage.setItem("columnWidthDSBPArtwork", JSON.stringify(columnWidth));
+    isBUHomeCare
+      ? localStorage.setItem(
+          "columnWidthDSBPArtworkHomeCare",
+          JSON.stringify(columnWidth)
+        )
+      : localStorage.setItem(
+          "columnWidthDSBPArtworkBabyCare",
+          JSON.stringify(columnWidth)
+        );
+    setFieldUpdated(!fieldUpdated);
+    setTableRender(false);
+  };
+
+  const storeReorderedColumns = (e) => {
+    let columnNames = [];
+    // let jsonColumnNames = localStorage.getItem("columnWidthDSBPArtwork");
+    let jsonColumnNames = isBUHomeCare
+      ? localStorage.getItem("columnWidthDSBPArtworkHomeCare")
+      : localStorage.getItem("columnWidthDSBPArtworkBabyCare");
+    if (jsonColumnNames) {
+      columnNames = JSON.parse(jsonColumnNames);
+    }
+    const shiftedArray = [...columnNames]; // Create a copy of the array
+    // Find the index of the element to be shifted
+    if (e?.dragIndex !== -1) {
+      const [removed] = shiftedArray.splice(e?.dragIndex, 1); // Remove the element from the array
+      // shiftedArray.unshift(removed); // Place the removed element at the beginning of the array
+      shiftedArray.splice(e?.dropIndex, 0, removed);
+    }
+    shiftedArray.map((ele, index) => {
+      ele["Sequence"] = index;
+      ele["reorder"] = true;
+    });
+
+    isBUHomeCare
+      ? localStorage.setItem(
+          "columnWidthDSBPArtworkHomeCare",
+          JSON.stringify(shiftedArray)
+        )
+      : localStorage.setItem(
+          "columnWidthDSBPArtworkBabyCare",
+          JSON.stringify(shiftedArray)
+        );
+    // localStorage.setItem(
+    //   "columnWidthDSBPArtwork",
+    //   JSON.stringify(shiftedArray)
+    // );
+    setFieldUpdated(!fieldUpdated);
+    setTableRender(false);
+  };
+
+  const timestamp = new Date().getTime();
+
+  return (
+    <>
       <DataTable
         dataKey="DSBP_PMP_PIMaterialID"
+        key={tableRender ? `"DSBP_PMP_PIMaterialID" + timestamp` : ""}
         scrollable
         resizableColumns
         // key={generateUniqueKey("artwork")}
         reorderableColumns
+        onColumnResizeEnd={onColumnResizeEnd}
+        onColReorder={storeReorderedColumns}
         responsiveLayout="scroll"
         columnResizeMode="expand"
         value={
@@ -220,70 +493,42 @@ const AgilityList = ({
       >
         {renderColumns()}
       </DataTable>
+      <DSBPFilter
+        op={op}
+        onSort={onSort}
+        selectedColumnName={selectedColumnName}
+        dsbpPmpData={dsbpPmpData}
+        selectedFields={selectedFields}
+        onGlobalFilterChange={onGlobalFilterChange}
+        setFrozenUpdated={setFrozenUpdated}
+        frozenUpdated={frozenUpdated}
+        setFieldUpdated={setFieldUpdated}
+        fieldUpdated={fieldUpdated}
+      />
       {rejectDialog && (
-        <DsbpDialog
+        <DsbpCommonPopup
           actionHeader="Are you sure you want to reject this PMP?"
           dasbpDialog={rejectDialog}
           setDasbpDialog={setRejectDialog}
-          >
-             <Row>
-              <Col sm={4} className="mb-3">
-                <div>
-                  <Form.Label>PMP : </Form.Label>
-                  <span>{rejectionData.DSBP_PMP_PIMaterialID}</span>
-                </div>
-              </Col>
-              <Col sm={8} className="mb-3">
-                <div className="d-flex align-items-start">
-                  <Form.Label>PMP Description : </Form.Label>
-                  <span style={{"flex": "1"}}>{rejectionData.DSBP_PMP_PIMaterialDescription}</span>
-                </div>
-              </Col>
-            </Row>
-            <Row>
-              <Col sm={12} className="mb-3">
-                <div>
-                  <Form.Group
-                      className="d-flex align-items-center"
-                      controlId="groupName.ControlInput1"
-                    >
-                      <Form.Label>Reject Reason :</Form.Label>
-                      <div>
-                        <Form.Select
-                          value={rejectReason}
-                          placeholder="Select"
-                          onChange={handleRejectReasonChange}
-                        >
-                          <option value="">Select</option>
-                          {rejectReasonList.map((reson) => (
-                            <option
-                              key={reson.code}
-                              value={reson.name}
-                            >
-                              {reson.name}
-                            </option>
-                          ))}
-                        </Form.Select>
-                      </div>
-                    </Form.Group>
-                </div>
-              </Col>
-            </Row>
-            <Row>
-              <Col sm={12} className="mb-3">
-                <div>
-                  <Form.Group
-                      className=""
-                      controlId="groupName.ControlInput1"
-                    >
-                      <Form.Label>Add Comment: :</Form.Label>
-                      <textarea class="form-control text-area" placeholder="Start typing here...."></textarea>
-                    </Form.Group>
-                </div>
-                <div className="info">* An e-mail will be sent to IL once submitted.</div>
-              </Col>
-            </Row>
-          </DsbpDialog>
+          rejectFormData={rejectFormData}
+          onSubmit={() => onActionSubmit(rejectFormData, [onChangeData])}
+        >
+          <DsbpRejectDialog
+            onChangeData={onChangeData}
+            rejectFormData={rejectFormData}
+            setRejectFormData={setRejectFormData}
+          />
+        </DsbpCommonPopup>
+      )}
+      {handleYesAddToPRoject && (
+        <DsbpActionDialog
+          actionHeader="Are you sure you want to add these PMP to Project ?"
+          actionDialog={handleYesAddToPRoject}
+          setActionDialog={setHandleYesAddToPRoject}
+          onChangeData={onChangeData}
+          rowData={onChangeData}
+          onActionSubmit={onActionSubmit}
+        />
       )}
     </>
   );

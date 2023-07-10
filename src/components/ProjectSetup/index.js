@@ -9,9 +9,10 @@ import ProjectPlanCompo from "../Projects/ProjectPlan/ProjectPlanCompo";
 import ConfirmationDialog from "./confirmationDialog";
 import TabsComponent from "./tabsComponent";
 import { hasEmptyAccessForProjectSetup } from "../../utils";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import ProjectListHeader from "../Projects/MyProjects/ProjectListHeader";
 import { ProjectService } from "../../service/PegaService";
+import ArtworkAlignment from "../DSBP/ArtworkAlignmentPage";
 function ProjectSetup(props) {
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
@@ -19,7 +20,7 @@ function ProjectSetup(props) {
   const User = useSelector((state) => state.UserReducer);
   const userInformation = User.userInformation;
   const { accessMatrix } = useSelector((state) => state?.accessMatrixReducer);
-
+  let { ProjectID } = useParams();
   let path = "";
   if (window?.location?.pathname.includes("projectPlan")) {
     path = "/projectPlan";
@@ -28,7 +29,9 @@ function ProjectSetup(props) {
   const [toggleButtons, setToggleButtons] = useState("Tabular");
   const [option, setOption] = useState("");
   const [visible, setVisible] = useState(false);
-
+  const location = useLocation();
+  const locationPath = location?.pathname;
+  const url = locationPath?.split("/");
   const getData = (option) => {
     setVisible(true);
     setOption(option);
@@ -40,39 +43,24 @@ function ProjectSetup(props) {
   const reject = () => {
     console.log("reject");
   };
-  const [tabName, setTabName] = useState("ProjectPlan");
+ 
+  const [tabName, setTabName] = useState(url[2] !== undefined ? url[2] : url[1]);
   const [tabNameForPP, setTabNameForPP] = useState("Design");
 
-  const pathname = window.location.href;
-
-  let currentUrl = pathname.split("#");
-  currentUrl = currentUrl[currentUrl.length - 1];
-
-  useEffect(() => {
-    if (!pathname.includes("#")) {
-      setTabName("ProjectPlan");
-    } else if (currentUrl) {
-      setTabName(currentUrl);
-    }
-  }, [tabName, currentUrl]);
-
   let items = "";
-  if (tabName === "ProjectSetup") {
+  if (tabName === "projectSetup") {
     items = "Project Setup";
-  } else if (tabName === "ProjectPlan") {
+  } else if (tabName === "projectPlan") {
     items = "Project Plan";
-  } else if (tabName === "ArtworkAlignment") {
+  } else if (tabName === "artworkAlignment") {
     items = "Art work Alignment";
-  } else if (tabName === "Mapping") {
-    items = "Mapping";
-  } else if (tabName === "ReadinessPerPMP") {
+  } else if (tabName === "mapping") {
+    items = "mapping";
+  } else if (tabName === "readinessPerPMP") {
     items = "ReadinessPerPMP";
   }
 
-  const location = useLocation();
-  const locationPath = location?.pathname;
-  const url = locationPath?.split("/");
-
+ 
   const [isSearch, isSearchSet] = useState(false);
   const onSearchClick = () => {
     isSearchSet(!isSearch);
@@ -131,7 +119,7 @@ function ProjectSetup(props) {
 
   const itemsData = [
     {
-      name: "ProjectSetup",
+      name: "projectSetup",
       tabNameForDisplay: "Project Setup",
       component: isNoAccess ? (
         <div className="unauthorized-user">
@@ -147,7 +135,7 @@ function ProjectSetup(props) {
       ),
     },
     {
-      name: "ProjectPlan",
+      name: "projectPlan",
       tabNameForDisplay: "Project Plan",
       component: (
         <div className="projectSetupParent project-plan-wrapper">
@@ -204,57 +192,60 @@ function ProjectSetup(props) {
               </div>
             </div>
           </div>
-          <div>
-            <nav className="subNav">
-              <div className="nav nav-tabs" id="nav-tab" role="tablist">
-                <button
-                  className={`nav-link ${
-                    tabNameForPP === "Design" ? "active" : ""
-                  }`}
-                  onClick={() => setTabNameForPP("Design")}
-                  id="nav-design-tab"
-                  data-bs-toggle="tab"
-                  data-bs-target="#nav-design"
-                  type="button"
-                  role="tab"
-                  aria-controls="nav-design"
-                  aria-selected="true"
-                >
-                  Design
-                </button>
-                <button
-                  className={`nav-link ${
-                    tabNameForPP === "Input" ? "active" : ""
-                  }`}
-                  onClick={() => setTabNameForPP("Input")}
-                  id="nav-input-tab"
-                  data-bs-toggle="tab"
-                  data-bs-target="#nav-input"
-                  type="button"
-                  role="tab"
-                  aria-controls="nav-input"
-                  aria-selected="true"
-                >
-                  Input
-                </button>
-                <button
-                  className={`nav-link ${
-                    tabNameForPP === "FAAssembly" ? "active" : ""
-                  }`}
-                  onClick={() => setTabNameForPP("FAAssembly")}
-                  id="nav-fAAssembly-tab"
-                  data-bs-toggle="tab"
-                  data-bs-target="#nav-fAAssembly"
-                  type="button"
-                  role="tab"
-                  aria-controls="nav-fAAssembly"
-                  aria-selected="false"
-                >
-                  FA Assembly
-                </button>
-              </div>
-            </nav>
-          </div>
+
+          {toggleButtons === "Tabular" && (
+            <div>
+              <nav className="subNav">
+                <div className="nav nav-tabs" id="nav-tab" role="tablist">
+                  <button
+                    className={`nav-link ${
+                      tabNameForPP === "Design" ? "active" : ""
+                    }`}
+                    onClick={() => setTabNameForPP("Design")}
+                    id="nav-design-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#nav-design"
+                    type="button"
+                    role="tab"
+                    aria-controls="nav-design"
+                    aria-selected="true"
+                  >
+                    Design
+                  </button>
+                  <button
+                    className={`nav-link ${
+                      tabNameForPP === "Input" ? "active" : ""
+                    }`}
+                    onClick={() => setTabNameForPP("Input")}
+                    id="nav-input-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#nav-input"
+                    type="button"
+                    role="tab"
+                    aria-controls="nav-input"
+                    aria-selected="true"
+                  >
+                    Input
+                  </button>
+                  <button
+                    className={`nav-link ${
+                      tabNameForPP === "FAAssembly" ? "active" : ""
+                    }`}
+                    onClick={() => setTabNameForPP("FAAssembly")}
+                    id="nav-fAAssembly-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#nav-fAAssembly"
+                    type="button"
+                    role="tab"
+                    aria-controls="nav-fAAssembly"
+                    aria-selected="false"
+                  >
+                    FA Assembly
+                  </button>
+                </div>
+              </nav>
+            </div>
+          )}
           <div className="tab-content" id="nav-tabContent">
             <div
               className={`tab-pane fade ${
@@ -269,6 +260,9 @@ function ProjectSetup(props) {
                 setColWidth={setColWidth}
                 childFunc={childFunc}
                 test={test}
+                tabNameForPP={tabNameForPP}
+                view={toggleButtons}
+                setTabName={setTabName}
               />
             </div>
             <div
@@ -279,7 +273,15 @@ function ProjectSetup(props) {
               role="tabpanel"
               aria-labelledby="nav-input-tab"
             >
-              Input Data
+              <ProjectPlanCompo
+                isSearch={isSearch}
+                setColWidth={setColWidth}
+                childFunc={childFunc}
+                test={test}
+                tabNameForPP={tabNameForPP}
+                view={toggleButtons}
+                setTabName={setTabName}
+              />
             </div>
             <div
               className={`tab-pane fade ${
@@ -296,17 +298,17 @@ function ProjectSetup(props) {
       ),
     },
     {
-      name: "ArtworkAlignment",
+      name: "artworkAlignment",
       tabNameForDisplay: "Artwork Alignment",
-      component: <>Artwork Alignment Data</>,
+      component: <ArtworkAlignment />,
     },
     {
-      name: "Mapping",
+      name: "mapping",
       tabNameForDisplay: "Mapping",
       component: <>Mapping Data</>,
     },
     {
-      name: "ReadinessPerPMP",
+      name: "readinessPerPMP",
       tabNameForDisplay: "Readiness Per PMP",
       component: <>Readiness Per PMP Data</>,
     },
@@ -366,6 +368,8 @@ function ProjectSetup(props) {
           tabName={tabName}
           items={itemsData}
           actionButton={actionButton}
+          setTabName={setTabName}
+          basePage={url[1]}
         />
       </div>
     </div>

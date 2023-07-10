@@ -125,7 +125,7 @@ const AddNewDesignContent = ({
           </div>
         </Col>
         <Col sm={2}>
-          <div>
+          <div className="d-flex flex-column">
             <label htmlFor="agency">Agency Reference * </label>
             <InputText
               id="agency"
@@ -143,7 +143,7 @@ const AddNewDesignContent = ({
           )}
         </Col>
         <Col sm={2}>
-          <div>
+          <div className="d-flex flex-column">
             <label htmlFor="cluster">Cluster * </label>
             <InputText
               id="cluster"
@@ -162,8 +162,8 @@ const AddNewDesignContent = ({
         </Col>
         {checkBU && (
           <Col sm={2} className="set-autocomplete-height">
-            <div>
-              <label htmlFor="cluster">Tier </label>
+            <div className="d-flex flex-column">
+              <label htmlFor="tier">Tier </label>
               <AutoComplete
                 value={tier}
                 suggestions={items}
@@ -177,7 +177,7 @@ const AddNewDesignContent = ({
         )}
 
         <Col sm={2}>
-          <div>
+          <div className="d-flex flex-column">
             <label htmlFor="additional">Additional Info </label>
             <InputText
               id="additional"
