@@ -20,6 +20,7 @@ const Task = ({
   isSelected,
   selectionCount,
   isGhosting,
+  singleDragFlag,
 }) => {
   const onKeyDown = (event, provided, snapshot) => {
     if (event.defaultPrevented) {
@@ -101,7 +102,7 @@ const Task = ({
           >
             <div
               style={
-                isSelected && selectionCount > 0
+                (isSelected && selectionCount > 0) || !singleDragFlag
                   ? { backgroundColor: "gray" }
                   : {}
               }

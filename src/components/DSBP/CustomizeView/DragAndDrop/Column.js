@@ -50,6 +50,7 @@ const Column = ({
                   toggleSelection={toggleSelection}
                   toggleSelectionInGroup={toggleSelectionInGroup}
                   multiSelectTo={multiSelectTo}
+                  singleDragFlag={draggingTaskId !== task.Field_Name}
                 />
               );
             })}
