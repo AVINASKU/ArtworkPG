@@ -46,9 +46,9 @@ const reorderSingleDrag = ({
   // remove from home column
   const newHomeTaskIds = [...home.fieldsData];
   // cut and paste record
-  newHomeTaskIds.splice(source.index, 1);
+  // newHomeTaskIds.splice(source.index, 1);
   // Copy and paste record
-  // newHomeTaskIds.splice(source.index, 0);
+  newHomeTaskIds.splice(source.index, 0);
 
   // add to foreign column
   const newForeignTaskIds = [...foreign.fieldsData];

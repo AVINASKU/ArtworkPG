@@ -1,5 +1,6 @@
 .artwork-dsbp {
   padding-top: 8px;
+  position: relative;
   .multiselect-padding {
     margin-bottom: 10px;
   }
@@ -29,6 +30,14 @@
     align-items: center;
     display: flex;
     flex-direction: row;
+  }
+  .form-buttons{
+    position: absolute;
+    background: white;
+    text-align: right;
+    width: 100%;
+    left: 0;
+    bottom: 0;
   }
 }
 .addToProjectTable {
