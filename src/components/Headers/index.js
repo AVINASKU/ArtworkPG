@@ -43,11 +43,14 @@ const userid = sessionObj?.userid;
 const Header = () => {
   const User = useSelector((state) => state.UserReducer);
   const userInformation = User.userInformation;
+  const Role = User?.userProfile;
+  const roles = Role?.role || [];
+  const rolesString = roles.join(", ");
   return (
     <div className="header">
       <div>
         <h1>
-          Welcome Back, {userInformation.username} ({userInformation.role})!
+          Welcome Back, {userInformation.username} ({rolesString})!
         </h1>
         {/* <div className="user-date-time">
           <p>{formattedDate(userInformation.loginTime)}</p>

@@ -18,7 +18,7 @@ import {
   fetchAccessMatrix,
   fetchAccessRoles,
 } from "../../store/actions/RoleBasedActions";
-import { getAccessDetails, roles } from "../../utils";
+import { getAccessDetails } from "../../utils";
 import { updateMode } from "../../store/actions/ProjectSetupActions";
 import { updateUser } from "../../apis/userApi";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
@@ -32,6 +32,8 @@ const SideBar = () => {
   const { accessRoles } = useSelector((state) => state?.accessMatrixReducer);
   const User = useSelector((state) => state.UserReducer);
   const userInformation = User.userInformation;
+  const Role = User?.userProfile;
+  const roles = Role?.role || [];
   const [isToggle, setIsToggle] = useState(
     JSON.parse(sessionStorage.getItem("sideBarOpen"))
   );
@@ -93,10 +95,12 @@ const SideBar = () => {
   // Replace with the actual location path
   const accessDetails = getAccessDetails(userInformation.role, accessMatrix);
 
-  const rolesWithAccess = accessRoles?.filter((accessRole) => {
-    const roleNames = accessRole.roles.map((role) => role.name);
-    return roleNames.some((roleName) => roles.includes(roleName));
-  });
+  const rolesWithAccess = Array.isArray(accessRoles)
+    ? accessRoles.filter((accessRole) => {
+        const roleNames = accessRole?.roles?.map((role) => role.name);
+        return roleNames?.some((roleName) => roles?.includes(roleName));
+      })
+    : [];
   // console.log(hasEmptyAccessForMyProjects);
   const navItems = {
     data: [
@@ -279,7 +283,7 @@ const SideBar = () => {
               {pathName !== "/roles" &&
                 rolesWithAccess?.some((roleWithAccess) => {
                   return (
-                    roleWithAccess.path === "/projectSetup" &&
+                    roleWithAccess.path === "/projectPlan#ProjectSetup" &&
                     roleWithAccess.roles.some((role) => {
                       return (
                         roles.includes(role.name) && role.access.length > 0
@@ -296,7 +300,7 @@ const SideBar = () => {
                   >
                     {!isToggle ? (
                       <NavLink
-                        to="/projectSetup"
+                        to="/projectPlan#ProjectSetup"
                         state={{ mode: "create" }}
                         className="nav-link"
                         onClick={() => {
@@ -311,7 +315,7 @@ const SideBar = () => {
                       </NavLink>
                     ) : (
                       <NavLink
-                        to="/projectSetup"
+                        to="/projectPlan#ProjectSetup"
                         state={{ mode: "create" }}
                         className="nav-link"
                         onClick={() => {
