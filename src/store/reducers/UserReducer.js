@@ -18,7 +18,7 @@ const UserReducer = (state = initialState, action) => {
     case types.USER_PROFILE_DATA:
       return {
         ...state,
-        userProfile: action.payload.user_profile || {},
+        userProfile: action.payload || {},
         userRole: action.payload.user_role,
       };
 

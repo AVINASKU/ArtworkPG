@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { RoleUser } from "../../userRole";
 import PgLogo from "../../assets/images/logo.svg";
 import { updateUser } from "../../apis/userApi";
 import "./index.scss";
 import { useSelector } from "react-redux";
-import { roles } from "../../utils";
 
 function UserLogin() {
   const User = useSelector((state) => state.UserReducer);
@@ -16,9 +14,9 @@ function UserLogin() {
   const [credentialsValid, setCredentialsValid] = useState(true);
   const [userInfoUpdated, setUserInfoUpdated] = useState(false);
   const navigate = useNavigate();
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const infoUpdated = await updateUser(username, password);
+    const infoUpdated = updateUser(username, password);
     setUserInfoUpdated(infoUpdated);
   };
 
@@ -26,21 +24,15 @@ function UserLogin() {
     if (userInfoUpdated) {
       if (userInformation?.username) {
         setCredentialsValid(true);
-        if (roles.some((role) => role === "ProjectManager")) {
-          navigate("/myProjects");
-        } else {
-          // Set the redirect URL to AllProjects page for other roles or if the user doesn't have access to the "myProjects" page
-          navigate("/allProjects");
-        }
+        navigate("/roles");
+        // navigate("/myProjects");
       } else {
-        // alert("Invalid username or password");
         setCredentialsValid(false);
         setUsername("");
         setPassword("");
       }
     }
-  }, [userInfoUpdated, userInformation]);
-
+  }, [userInfoUpdated, userInformation, navigate]);
   return (
     <div className="login-screen">
       <div className="userList">

@@ -159,37 +159,59 @@ export const optionList = (data, fieldName) => {
 //   return `${fieldName}_${timestamp}`;
 // };
 
-export const roles = TrainingMode?.map((selection) => selection.role.name);
+export const roles = JSON.parse(localStorage.getItem("roles"))?.map(
+  (selection) => selection?.UserRole
+);
 
+export const BusinessUnit = JSON.parse(localStorage.getItem("roles"))
+  ?.ArtworkAgilityPage?.UserGroup?.map((selection) =>
+    selection?.UserBU?.map((role) => role?.BU_Name)
+  )
+  .flat();
+
+export const Regions = JSON.parse(localStorage.getItem("roles"))
+  ?.ArtworkAgilityPage?.UserGroup?.map((selection) =>
+    selection?.UserRegion?.map((role) => role?.Region_Name)
+  )
+  .flat();
+
+//get this data from training mode json
 const GetPageRoles = () => {
   const url = window.location.pathname;
   const { accessRoles } = useSelector((state) => state?.accessMatrixReducer);
-  const matchingAccessRoles = accessRoles?.filter((accessRole) =>
-    url.includes(accessRole?.page)
-  );
-  // Extract the access roles for the specified roles
-  const extractedAccessRoles = matchingAccessRoles?.map((accessRole) => {
-    const roleAccess = accessRole?.roles?.filter((roleObj) =>
-      roles.includes(roleObj.name)
+  const UserProfile = useSelector((state) => state.UserReducer);
+  const Role = UserProfile?.userProfile;
+  const roles = Role?.role || [];
+  if (Array.isArray(accessRoles)) {
+    const matchingAccessRoles = accessRoles.filter((accessRole) =>
+      url?.includes(accessRole?.page)
     );
-    return {
+    // Extract the access roles for the specified roles
+    const extractedAccessRoles = matchingAccessRoles.map((accessRole) => {
+      const roleAccess = accessRole?.roles?.filter((roleObj) =>
+        roles?.includes(roleObj.name)
+      );
+      return {
+        page: accessRole.page,
+        path: accessRole.path,
+        roles: roleAccess,
+      };
+    });
+
+    // Convert the access roles to the desired format
+    const formattedAccessRoles = extractedAccessRoles.map((accessRole) => ({
       page: accessRole.page,
       path: accessRole.path,
-      roles: roleAccess,
-    };
-  });
+      roles: accessRole?.roles?.map((roleObj) => ({
+        name: roleObj.name,
+        access: roleObj.access,
+      })),
+    }));
 
-  // Convert the access roles to the desired format
-  const formattedAccessRoles = extractedAccessRoles?.map((accessRole) => ({
-    page: accessRole.page,
-    path: accessRole.path,
-    roles: accessRole.roles.map((roleObj) => ({
-      name: roleObj.name,
-      access: roleObj.access,
-    })),
-  }));
+    return formattedAccessRoles;
+  }
 
-  return formattedAccessRoles;
+  return [];
 };
 
 export const hasEmptyAccessForProjectSetup = () => {
@@ -201,7 +223,7 @@ export const hasEmptyAccessForProjectSetup = () => {
 
   if (matchingPageRole) {
     return matchingPageRole.roles.every((role) => {
-      return role.access.length === 0;
+      return role?.access?.length === 0;
     });
   }
 
@@ -216,7 +238,7 @@ export const hasProjectPlanAccess = () => {
   });
 
   if (matchingPageRole) {
-    const hasAllAccess = matchingPageRole.roles.some((role) => {
+    const hasAllAccess = matchingPageRole?.roles.some((role) => {
       return (
         role.access.includes("Read") &&
         role.access.includes("Write") &&

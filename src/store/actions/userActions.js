@@ -5,8 +5,9 @@ export const userUpdateAction = (data) => ({
   type: types.UPDATE_USER,
 });
 
-// For User Profile
-export const userProfileAction = (data) => ({
-  payload: data,
-  type: types.USER_PROFILE_DATA,
-});
+export const userProfileAction = (data) => {
+  return {
+    payload: data,
+    type: types.USER_PROFILE_DATA,
+  };
+};
