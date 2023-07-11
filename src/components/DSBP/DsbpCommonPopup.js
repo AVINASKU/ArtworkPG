@@ -5,42 +5,49 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
 const DsbpCommonPopup = ({
-    children,
+  children,
   actionHeader,
   dasbpDialog,
   setDasbpDialog,
   rejectFormData,
-  onSubmit
+  onSubmit,
+  okButtonShow,
 }) => {
   const footerContent = (
     <div>
-      <Button variant="secondary" onClick={() => setDasbpDialog(false)}>
-        Cancel
-      </Button>
-      <Button
-        disabled={rejectFormData && Object.keys(rejectFormData)?.length === 0}
-        onClick={onSubmit}
-      >
-        Submit
-      </Button>
+      {okButtonShow ? (
+        <Button onClick={() => setDasbpDialog(false)}>OK</Button>
+      ) : (
+        <>
+          <Button variant="secondary" onClick={() => setDasbpDialog(false)}>
+            Cancel
+          </Button>
+          <Button
+            disabled={
+              rejectFormData && Object.keys(rejectFormData)?.length === 0
+            }
+            onClick={onSubmit}
+          >
+            Submit
+          </Button>
+        </>
+      )}
     </div>
   );
 
   return (
-    (
-      <div className="card flex justify-content-center dsbp-action-dialog">
-        <Dialog
-          header={actionHeader}
-          visible={dasbpDialog}
-          style={{ width: "40vw" }}
-          onHide={() => setDasbpDialog(false)}
-          footer={footerContent}
-          className="actionDialog dsbpCommonPopup"
-        >
-          {children}
-        </Dialog>
-      </div>
-    )
+    <div className="card flex justify-content-center dsbp-action-dialog">
+      <Dialog
+        header={actionHeader}
+        visible={dasbpDialog}
+        style={{ width: "500px" }}
+        onHide={() => setDasbpDialog(false)}
+        footer={footerContent}
+        className="actionDialog dsbpCommonPopup"
+      >
+        {children}
+      </Dialog>
+    </div>
   );
 };
 export default DsbpCommonPopup;

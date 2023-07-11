@@ -1,0 +1,130 @@
+.tabsCompoMain {
+  // background-color: #eaecea;
+  border-radius: 8px 8px 0 0;
+  overflow-y: auto;
+  height: 100%;
+  table td:after {
+    width: 0;
+  }
+
+  .columnWidth {
+    width: 320px;
+    background-color: #EDF4FA;
+  }
+
+  // .accordion .accordion-item .accordion-header:first-child {
+  //   border-radius: 4px 4px 0 0;
+  // }
+  .accordion {
+    margin: 0;
+    height: 100%;
+    .accordion-item{
+      height: 100%;
+      overflow: hidden;
+      .accordion-header:has(.collapsed) {
+        background-color: rgba(255, 239, 216, 1);
+      }
+      .accordion-header {
+        background-color: rgba(214, 236, 255, 1);
+        border-radius: 4px 4px 0 0 !important;
+      }
+    }
+    &.accordion-flush .accordion-collapse{
+      height: 100%;
+      overflow: auto;
+      padding-bottom: 20px;
+    }
+    .accordion-body {
+      padding: 0px;
+    }
+    .accordion-button {
+      box-shadow: none;
+      outline: none;
+      padding-left: 30px;
+      font-size: 14px;
+      color: #003da5;
+      background-color: #D6ECFF !important;
+      width: fit-content;
+      margin-right: 2px;
+      width: 100%;
+      padding: 8px;
+      &::after {
+        right: 20px;
+        position: absolute;
+      }
+      &:not(.collapsed) {
+        background: rgba(214, 236, 255, 1);
+        color: #003da5;
+      }
+    }   
+    .collapsed {
+      background-color: rgba(255, 239, 216, 1);
+    }
+  }  
+}
+.p-tabview{
+  height: 100%;
+  .p-tabview-panel{
+    height: 100%;
+    .tabsCompo{
+      height: 100%;
+      overflow: hidden;
+      .form-select{
+        max-width: 208px;
+        font-size: 12px;
+      }
+
+    }
+  }
+  .p-tabview-panels {
+    padding: 10px;
+    height: calc(100% - 50px);
+    overflow: auto;
+    background-color: white;
+    margin-top: 10px;
+    border-radius: 10px 10px 0 0;
+  }
+}
+
+.p-tabview .p-tabview-nav {
+  border: 0;
+  background-color: transparent;
+  gap: 15px;
+  li {
+    .p-tabview-nav-link{
+      padding: 10px;
+      border-radius: 8px;
+      border: 0;
+      margin: 0;
+      .p-tabview-title{
+        font-size: 12px;
+        line-height: 14px;
+        .custom-tab-header {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        button.close-button {
+          border: 0;
+          padding-left: 10px;
+          background: transparent;
+          color: inherit;
+        }
+      }
+      button.close-button {
+  border: 0;
+  padding-left: 10px;
+  background: transparent;
+  color: inherit;
+}
+    }
+    &.p-highlight .p-tabview-nav-link{
+      background: #003DA5;
+      border-color: #003DA5;
+      color: #fff;
+    }
+  }
+  .p-tabview-ink-bar{
+    display: none;
+  }
+}

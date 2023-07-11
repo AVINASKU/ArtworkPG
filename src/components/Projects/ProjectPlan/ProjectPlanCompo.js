@@ -194,7 +194,8 @@ function ProjectPlanCompo(props) {
           task.data[0]?.AWM_Task_ID.includes("DPRA_") ||
           task.data[0]?.AWM_Task_ID.includes("CPPFA_") ||
           task.data[0]?.AWM_Task_ID.includes("DNPF_") ||
-          task.data[0]?.AWM_Task_ID.includes("DNIQ_")
+          task.data[0]?.AWM_Task_ID.includes("DNIQ_") ||
+          task.data[0]?.AWM_Task_ID.includes("SAA_")
         ) {
           let tempObj = {};
           tempObj["key"] = task.data[0]?.AWM_Task_ID;
@@ -370,6 +371,7 @@ function ProjectPlanCompo(props) {
               getProjectPlanApi={getProjectPlanApi}
               isAccessEmpty={isAccessEmpty}
               view={props.view}
+              setTabName={props.setTabName}
             />
             {props.view === "Tabular" && (
               <div className="form-buttons" style={{ background: "#FAFAFA" }}>

@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import React, { useState, useEffect } from "react";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
@@ -9,14 +10,14 @@ import _ from "lodash";
 const CustomizeViewDialog = ({
   showTaskDialog,
   onClose,
-  objects1,
-  objects2,
-  objects3,
+  availableFields,
+  selectedFields,
+  freezedColumns,
 }) => {
-
-  const [list1, setList1] = React.useState(objects1);
-  const [list2, setList2] = React.useState(objects2);
-  const [list3, setList3] = React.useState(objects3);
+  const [availableFieldsList, setAvailableFieldsList] =
+    useState(availableFields);
+  const [selectedFieldsList, setSelectedFieldsList] = useState(selectedFields);
+  const [freezedColumnsList, setFreezedColumnsList] = useState(freezedColumns);
 
   const [visible, setVisible] = useState(showTaskDialog);
 
@@ -25,10 +26,10 @@ const CustomizeViewDialog = ({
   }, [showTaskDialog]);
 
   useEffect(() => {
-    if (_.isEqual(list2.sort(), list3.sort())) {
-      console.log("list3:", list3);
+    if (_.isEqual(selectedFieldsList.sort(), freezedColumnsList.sort())) {
+      // console.log("freezedColumnsList:", freezedColumnsList);
     }
-  }, [list3]);
+  }, [freezedColumnsList]);
 
   const hideDialog = () => {
     setVisible(false);
@@ -36,20 +37,33 @@ const CustomizeViewDialog = ({
   };
 
   const resetToPGDefault = () => {
-    setList3([]);
+    setFreezedColumnsList([]);
   };
 
   const handleSubmit = async () => {
-    localStorage.setItem("dsbpFreezedColumnsData", JSON.stringify(list3));
+    if (availableFieldsList && availableFieldsList.length) {
+      availableFieldsList.filter((list) => {
+        if (selectedFieldsList.includes(list)) {
+          list["select"] = true;
+        }
+        if (freezedColumnsList.includes(list)) {
+          list["freeze"] = true;
+        }
+      });
+    }
+    localStorage.setItem(
+      "columnWidthDSBPArtwork",
+      JSON.stringify(availableFieldsList)
+    );
     await hideDialog();
   };
 
   const DraggableList = ({ list, type }) => {
     return (
       <div>
-        {list.map(({ Color, ID }) => (
-          <Draggable type={type} data={ID} key={ID}>
-            <div>{Color}</div>
+        {list.map(({ Field_Name, Sequence }) => (
+          <Draggable type={type} data={Sequence} key={Sequence}>
+            <div>{Field_Name}</div>
           </Draggable>
         ))}
       </div>
@@ -64,37 +78,43 @@ const CustomizeViewDialog = ({
     setList2Func,
     dropType
   ) => {
-    const index = list1Data.findIndex(
-      (obj) => obj.ID === parseInt(data[dropType], 10)
-    );
+    const index = list1Data.findIndex((obj) => obj.Sequence === data[dropType]);
     if (index >= -1) {
-      const newList1 = [...list1Data];
       console.log("dropType:", dropType);
-      if (dropType === "drop1" || dropType === "drop2") {
-        if (!_.includes(list2Data, list1Data[index])) {
-          setList2Func([...list2Data, list1Data[index]]);
-        }
-      } else {
+      if (!_.includes(list2Data, list1Data[index])) {
         setList2Func([...list2Data, list1Data[index]]);
-        newList1.splice(index, 1);
+      } else {
+        if (dropType === "drop2") {
+          const index3 = freezedColumnsList.findIndex(
+            (obj) => obj.Sequence === data.drop1
+          );
+          if (index3 >= -1) {
+            const newList3 = [...freezedColumnsList];
+            newList3.splice(index3, 1);
+            setFreezedColumnsList(newList3);
+          }
+        }
       }
-      setList1Func(newList1);
     }
   };
 
   const onItemDrop = (data, data1) => {
-    const index = list2.findIndex((obj) => obj.ID === parseInt(data.drop1, 10));
-    const index3 = list3.findIndex((obj) => obj.ID === parseInt(data.drop1, 10));
+    const index = selectedFieldsList.findIndex(
+      (obj) => obj.Sequence === data.drop1
+    );
+    const index3 = freezedColumnsList.findIndex(
+      (obj) => obj.Sequence === data.drop1
+    );
     if (index >= -1) {
-        // setList1([...list1, { ...list2[index] }]);
-      const newList2 = [...list2];
+      // setAvailableFieldsList([...availableFieldsList, { ...selectedFieldsList[index] }]);
+      const newList2 = [...selectedFieldsList];
       newList2.splice(index, 1);
-      setList2(newList2);
+      setSelectedFieldsList(newList2);
     }
     if (index3 >= -1) {
-      const newList3 = [...list3];
+      const newList3 = [...freezedColumnsList];
       newList3.splice(index3, 1);
-      setList3(newList3);
+      setFreezedColumnsList(newList3);
     }
   };
 
@@ -116,7 +136,7 @@ const CustomizeViewDialog = ({
                 data="Hello"
                 onDrop={(e, e1) => onItemDrop(e, e1)}
               >
-                <DraggableList list={list1} type="drop2" />
+                <DraggableList list={availableFieldsList} type="drop2" />
               </Droppable>
             </div>
           </Col>
@@ -129,15 +149,15 @@ const CustomizeViewDialog = ({
                 onDrop={(e) =>
                   onAppointmentDrop(
                     e,
-                    list1,
-                    list2,
-                    setList1,
-                    setList2,
+                    availableFieldsList,
+                    selectedFieldsList,
+                    setAvailableFieldsList,
+                    setSelectedFieldsList,
                     "drop2"
                   )
                 }
               >
-                <DraggableList list={list2} type="drop1" />
+                <DraggableList list={selectedFieldsList} type="drop1" />
               </Droppable>
             </div>
           </Col>
@@ -150,15 +170,15 @@ const CustomizeViewDialog = ({
                 onDrop={(e) =>
                   onAppointmentDrop(
                     e,
-                    list2,
-                    list3,
-                    setList2,
-                    setList3,
+                    selectedFieldsList,
+                    freezedColumnsList,
+                    setSelectedFieldsList,
+                    setFreezedColumnsList,
                     "drop1"
                   )
                 }
               >
-                <DraggableList list={list3} type="" />
+                <DraggableList list={freezedColumnsList} type="drop2" />
               </Droppable>
             </div>
           </Col>

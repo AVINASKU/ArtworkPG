@@ -35,7 +35,7 @@ export const deleteDsbpFromProject = async (
   return addResponse;
 };
 
-export const getDsbpPMPDetails = async (projectId, headers = {})=>{
+export const getDsbpPMPDetails = async (projectId, headers = {}) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
   let apiURL = `${DEVURL}/getDSBPPMPDetails/${projectId}`;
@@ -43,17 +43,31 @@ export const getDsbpPMPDetails = async (projectId, headers = {})=>{
     url: apiURL,
     method: "GET",
   });
-  console.log("response get dsbp pmp ----->", addResponse);
-  return addResponse?.data?.DSBPDetails?.DSBP_InitiativeIDPage;
-}
+  let response = addResponse?.data?.DSBPDetails?.DSBP_InitiativeIDPage;
+  let filteredResp = [];
+  // If initiative id is mapped to project but don't have an data against with initiative 
+  //id in brain then pega team is sending only initiative id
+  // Below code we need to remove once pega team fix this issue
+  if (response) {
+    filteredResp = response.filter(
+      (ele) => ele.DSBP_InitiativeID && ele.DSBP_PMP_PIMaterialIDPage
+    );
+  }
+  console.log(
+    "response get dsbp pmp ----->",
+    addResponse?.data?.DSBPDetails?.DSBP_InitiativeIDPage,
+    "filter----",
+    filteredResp
+  );
 
-export const onSubmitDsbpAction = async (
-  formData,
-  headers = {}
-) => {
+  return filteredResp;
+};
+
+export const onSubmitDsbpAction = async (formData, headers = {}) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
   let apiURL = `${DEVURL}/updatePMP`;
+  // let apiURL = "https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/UpdatePMP";
   const addResponse = await axiosInstance({
     url: apiURL,
     method: "POST",

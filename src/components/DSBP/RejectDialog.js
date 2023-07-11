@@ -2,40 +2,49 @@ import React, {useState} from "react";
 import { Form, Row, Col } from "react-bootstrap";
 
 const RejectDialog = ({
-  rejectionData,
+  onChangeData,
   rejectFormData,
   setRejectFormData
 }) => {
     const [rejectReason, setRejectReason] = useState("");
+    const [rejectionComment, setRejectionComment] = useState("");
     const rejectReasonList = [
         { name: 'NA', code: 'NA' }
     ];
 
     const handleRejectReasonChange = (e) => {
-        setRejectReason(e.target.value)
-        console.log("data", e.target.value)
-        setRejectFormData({
-            ...rejectFormData,
-            RTA_RTARejectionReason: e.target.value,
-          });
-      };
+      setRejectReason(e.target.value)
+      console.log("data", e.target.value)
+      setRejectFormData({
+          ...rejectFormData,
+          RTA_RTARejectionReason: e.target.value,
+        });
+    };
 
+    const handleRejectCommentChange = (e) => {
+      setRejectionComment(e.target.value)
+      console.log("data", e.target.value)
+      setRejectFormData({
+          ...rejectFormData,
+          RejectionComment: e.target.value,
+        });
+    };
 
   return (
-    console.log("data", rejectFormData),
+    console.log("onChangeData", onChangeData),
     <div>
       <Row>
         <Col sm={4} className="mb-3">
           <div>
             <Form.Label>PMP : </Form.Label>
-            <span>{rejectionData.DSBP_PMP_PIMaterialID}</span>
+            <span>{onChangeData?.DSBP_PMP_PIMaterialNumber}</span>
           </div>
         </Col>
         <Col sm={8} className="mb-3">
           <div className="d-flex align-items-start">
             <Form.Label>PMP Description : </Form.Label>
             <span style={{ flex: "1" }}>
-              {rejectionData.DSBP_PMP_PIMaterialDescription}
+              {onChangeData?.DSBP_PMP_PIMaterialDescription}
             </span>
           </div>
         </Col>
@@ -74,6 +83,8 @@ const RejectDialog = ({
               <textarea
                 class="form-control text-area"
                 placeholder="Start typing here...."
+                onChange={handleRejectCommentChange}
+                value={rejectionComment}
               ></textarea>
             </Form.Group>
           </div>

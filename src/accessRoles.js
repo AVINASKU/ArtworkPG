@@ -153,4 +153,26 @@ export const accessRoles = [
       },
     ],
   },
+  {
+    page: "projectPlan",
+    path: "/projectSetup",
+    roles: [
+      {
+        name: "ProjectManager",
+        access: ["Read", "Write", "Edit", "Delete"],
+      },
+      {
+        name: "CapacityManager",
+        access: [],
+      },
+      {
+        name: "TaskOwner",
+        access: ["Read"],
+      },
+      {
+        name: "ExternalTaskOwner",
+        access: ["Read"],
+      },
+    ],
+  },
 ];

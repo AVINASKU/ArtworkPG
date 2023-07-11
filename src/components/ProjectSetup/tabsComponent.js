@@ -1,11 +1,20 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./index.scss";
 
-const TabsComponent = ({ items, tabName, actionButton }) => {
-  const location = useLocation();
-  const currentUrl = location.pathname;
 
+const TabsComponent = ({ items, tabName, actionButton, setTabName, basePage }) => {
+  const navigate = useNavigate();
+  let { ProjectID } = useParams();
+
+  const handleClick = (item) => {
+    if(ProjectID !== undefined){
+      navigate(`/${basePage}/${item}/${ProjectID}`);
+    } else {
+      navigate(`/${item}`);
+    }
+    setTabName(item)   
+  }
   return (
     <>
       <div className="tabComponent">
@@ -16,19 +25,20 @@ const TabsComponent = ({ items, tabName, actionButton }) => {
                 key={index + 1}
                 className={`${obj.name === tabName ? "active" : ""}`}
               >
-                <a data-toggle="tab" href={`${currentUrl}#${obj.name}`}>
+                  <a data-toggle="tab" onClick={() => handleClick(obj.name)}>
                   {obj.tabNameForDisplay}
                 </a>
               </li>
             ))}
           </ul>
         </div>
-        <div
-          className="actionButtonsForTabComponent"
-          hidden={tabName === "ProjectSetup"}
-        >
-          {actionButton}
-        </div>
+        {tabName === "projectPlan" && 
+          <div
+            className="actionButtonsForTabComponent"
+          >
+            {actionButton}
+          </div>
+        }        
       </div>
       <div className="tab-content">
         {items.map((obj, index) => (

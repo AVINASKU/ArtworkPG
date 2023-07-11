@@ -19,6 +19,7 @@ import "./index.scss";
 import TaskDialog from "../../TaskDialog";
 import ApproveDesignDialog from "./ApproveDesignDialog";
 import { useLocation, useParams } from "react-router-dom";
+import { ArtWorkTabValuesAction } from "../../../store/actions/ArtWorkTabValuesActions";
 import CPPFA from "./../../AWMJobs/CPPFA";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { useDispatch, useSelector } from "react-redux";
@@ -39,6 +40,8 @@ const ProjectPlanList = ({
   setColWidth,
   childFunc,
   test,
+  tabNameForPP,
+  setTabName,
 }) => {
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
@@ -273,13 +276,12 @@ const ProjectPlanList = ({
     const field = rowData.field;
     const optionsData = options.data;
     const currentUrl = location.pathname;
-    let currentUrlLastSeg = currentUrl.split("/")[3];
+    let currentUrlLastSeg = currentUrl?.split("/")[3];
+    let currentUrlBasePage = currentUrl?.split("/")[1];
     const key = options?.key;
     const keyCode = key?.split("_");
-    const locaiton = window.location.pathname;
-    const url = `${locaiton.split("/")[1]}/${locaiton.split("/")[2]}/${
-      keyCode[0]
-    }/${key}/${currentUrlLastSeg}`;
+    const url = `MyTasks/${keyCode[0]}/${key}/${currentUrlLastSeg}`;
+
     return (
       <>
         {field === "Task" && (
@@ -291,11 +293,22 @@ const ProjectPlanList = ({
                 : "task dependant-task"
             }`}
             onClick={() => {
-              if (field && field.length && keyCode[0] !== "CPPFA") {
+              if (
+                field &&
+                field.length &&
+                keyCode[0] !== "CPPFA" &&
+                tabNameForPP !== "Input"
+              ) {
                 (options.redirect === true || optionsData.Task) &&
                   navigate(`../${url}`, { replace: true });
-              } else {
+              } else if (field && field.length && keyCode[0] === "CPPFA") {
                 handleApproveDialogCPPFA(options);
+              } else {
+                dispatch(ArtWorkTabValuesAction([]));
+                setTabName("artworkAlignment");
+                navigate(
+                  `/${currentUrlBasePage}/artworkAlignment/${selectedProject?.Project_ID}`
+                );
               }
             }}
           >

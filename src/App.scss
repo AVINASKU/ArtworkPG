@@ -33,7 +33,7 @@ a,
 p,
 div {
   font-family: "Montserrat" !important;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .btn{
@@ -513,7 +513,8 @@ fieldset:disabled .btn {
       .info{
         position: absolute;
         left: 0;
-        bottom: -30px;
+        bottom: -20px;
+        font-size: 10px;
       }  
     }
 
@@ -567,4 +568,7 @@ input, textarea{
 }
 span.task {
   pointer-events: none;
+}
+.table>tbody>tr>td{
+  font-size: 12px;
 }
