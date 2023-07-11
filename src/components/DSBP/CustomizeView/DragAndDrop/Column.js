@@ -20,7 +20,8 @@ const Column = ({
   toggleSelection,
   toggleSelectionInGroup,
   multiSelectTo,
-  entities
+  entities,
+  droppableId
 }) => {
   return (
     <div className="columnMain">
@@ -44,7 +45,7 @@ const Column = ({
                 <Task
                   task={task}
                   index={index}
-                  key={task.Field_Name}
+                  key={task.Field_Name + index}
                   isSelected={isSelected}
                   isGhosting={isGhosting}
                   selectionCount={selectedTaskIds.length}
@@ -53,6 +54,7 @@ const Column = ({
                   multiSelectTo={multiSelectTo}
                   singleDragFlag={draggingTaskId !== task.Field_Name}
                   entities={entities}
+                  droppableId={droppableId}
                 />
               );
             })}

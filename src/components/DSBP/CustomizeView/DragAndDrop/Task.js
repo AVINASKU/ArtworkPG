@@ -24,6 +24,7 @@ const Task = ({
   isGhosting,
   singleDragFlag,
   entities,
+  droppableId,
 }) => {
   const onKeyDown = (event, provided, snapshot) => {
     if (event.defaultPrevented) {
@@ -86,6 +87,8 @@ const Task = ({
     toggleSelection(task.Field_Name);
   };
 
+  console.log("droppableId:", droppableId, entities);
+
   return (
     <Draggable draggableId={task.Field_Name} index={index}>
       {(provided, snapshot) => {
@@ -106,12 +109,19 @@ const Task = ({
             <div
               style={
                 (isSelected && selectionCount > 0) || !singleDragFlag
-                  ? { backgroundColor: "gray" }
+                  ? {
+                      backgroundColor: "#c2bdbd",
+                      color: "#000",
+                      fontWeight: "900",
+                    }
                   : {}
               }
               className={`${
-                entities.columns.availableFields.fieldsData.find((r, ind) =>
-                  entities.columns.selectedFields.fieldsData.includes(r) && index === ind
+                entities.columns.availableFields.fieldsData &&
+                entities.columns.availableFields.fieldsData.find(
+                  (r, ind) =>
+                    entities.columns.selectedFields.fieldsData.includes(r) &&
+                    index === ind
                 )
                   ? "test"
                   : ""

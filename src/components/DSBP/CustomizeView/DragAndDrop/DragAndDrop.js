@@ -16,6 +16,7 @@ class DragAndDrop extends Component {
       entities: entities1(this.props.availableFields),
       selectedTaskIds: [],
       draggingTaskId: null,
+      droppableId: null,
     };
   }
 
@@ -33,16 +34,20 @@ class DragAndDrop extends Component {
 
   onDragStart = (start) => {
     const id = start.draggableId;
+    console.log("start:", start);
     const selected = this.state.selectedTaskIds.find((taskId) => taskId === id);
     // if dragging an item that is not selected - unselect all items
     if (!selected) {
       this.unselectAll();
     }
-    this.setState({ draggingTaskId: start.draggableId });
+    this.setState({
+      draggingTaskId: id,
+      droppableId: start.source.droppableId,
+    });
   };
 
   onDragEnd = (result) => {
-    // console.log("result:", result);
+    console.log("result:", result);
     const destination = result.destination;
     const source = result.source;
     // nothing to do
@@ -149,7 +154,7 @@ class DragAndDrop extends Component {
     let { entities } = this.state;
     let obj = entities.columns.freezedColumns.fieldsData;
     const data = obj.length > 0 ? obj.splice(0, obj.length) : entities;
-    entities = {...entities, data };
+    entities = { ...entities, data };
   };
 
   handleSubmit = async () => {
@@ -200,7 +205,7 @@ class DragAndDrop extends Component {
   };
 
   render() {
-    const entities = this.state.entities;
+    const { entities, droppableId } = this.state;
     const selected = this.state.selectedTaskIds;
     return (
       <>
@@ -220,6 +225,7 @@ class DragAndDrop extends Component {
                 toggleSelectionInGroup={this.toggleSelectionInGroup}
                 multiSelectTo={this.multiSelectTo}
                 entities={entities}
+                droppableId={droppableId}
               />
             ))}
           </div>

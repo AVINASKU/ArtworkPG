@@ -140,19 +140,40 @@ const RoutesNav = () => {
         />
         {/* projectPlan */}
         {/* projectSetup */}
-        <Route
-          path="/projectSetup"
-          element={<ProjectCreation key="projectSetup" />}
-        />
-        <Route
-          path="/myProjects/projectSetup/:ProjectID"
-          element={<ProjectCreation key={`projectSetup-${params.ProjectID}`} />}
-        />
-        <Route
-          path="/allProjects/projectSetup/:ProjectID"
-          element={<ProjectCreation key={`projectSetup-${params.ProjectID}`} />}
-        />
-        {/* projectSetup */}
+          <Route
+            path="/projectSetup"
+            element={<ProjectCreation key="projectSetup" />}
+          />
+          <Route
+            path="/myProjects/projectSetup/:ProjectID"
+            element={<ProjectCreation key={`projectSetup-${params.ProjectID}`} />}
+          />
+          <Route
+            path="/allProjects/projectSetup/:ProjectID"
+            element={<ProjectCreation key={`projectSetup-${params.ProjectID}`} />}
+          />
+         {/* projectSetup */}
+          {/* artworkAlignment */}
+          <Route
+            path="/artworkAlignment"
+            element={<ProjectCreation key="artworkAlignment" />}
+          />
+          <Route
+            path="/myProjects/artworkAlignment/:ProjectID"
+            element={<ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />}
+          />
+          <Route
+            path="/allProjects/artworkAlignment/:ProjectID"
+            element={<ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />}
+          />
+          <Route
+            path="/myTasks/artworkAlignment/:ProjectID"
+            element={<ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />}
+          />
+          <Route
+            path="/allTasks/artworkAlignment/:ProjectID"
+            element={<ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />}
+          />
         {/* artworkAlignment */}
         <Route
           path="/artworkAlignment"
