@@ -140,61 +140,95 @@ const RoutesNav = () => {
         />
         {/* projectPlan */}
         {/* projectSetup */}
-          <Route
-            path="/projectSetup"
-            element={<ProjectCreation key="projectSetup" />}
-          />
-          <Route
-            path="/myProjects/projectSetup/:ProjectID"
-            element={<ProjectCreation key={`projectSetup-${params.ProjectID}`} />}
-          />
-          <Route
-            path="/allProjects/projectSetup/:ProjectID"
-            element={<ProjectCreation key={`projectSetup-${params.ProjectID}`} />}
-          />
-         {/* projectSetup */}
-          {/* artworkAlignment */}
-          <Route
-            path="/artworkAlignment"
-            element={<ProjectCreation key="artworkAlignment" />}
-          />
-          <Route
-            path="/myProjects/artworkAlignment/:ProjectID"
-            element={<ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />}
-          />
-          <Route
-            path="/allProjects/artworkAlignment/:ProjectID"
-            element={<ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />}
-          />
+        <Route
+          path="/projectSetup"
+          element={<ProjectCreation key="projectSetup" />}
+        />
+        <Route
+          path="/myProjects/projectSetup/:ProjectID"
+          element={<ProjectCreation key={`projectSetup-${params.ProjectID}`} />}
+        />
+        <Route
+          path="/allProjects/projectSetup/:ProjectID"
+          element={<ProjectCreation key={`projectSetup-${params.ProjectID}`} />}
+        />
+        {/* projectSetup */}
         {/* artworkAlignment */}
-        
+        <Route
+          path="/artworkAlignment"
+          element={<ProjectCreation key="artworkAlignment" />}
+        />
+        <Route
+          path="/myProjects/artworkAlignment/:ProjectID"
+          element={
+            <ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />
+          }
+        />
+        <Route
+          path="/allProjects/artworkAlignment/:ProjectID"
+          element={
+            <ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />
+          }
+        />
+        <Route
+          path="/myTasks/artworkAlignment/:ProjectID"
+          element={
+            <ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />
+          }
+        />
+        <Route
+          path="/allTasks/artworkAlignment/:ProjectID"
+          element={
+            <ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />
+          }
+        />
+        {/* artworkAlignment */}
+        <Route
+          path="/artworkAlignment"
+          element={<ProjectCreation key="artworkAlignment" />}
+        />
+        <Route
+          path="/myProjects/artworkAlignment/:ProjectID"
+          element={
+            <ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />
+          }
+        />
+        <Route
+          path="/allProjects/artworkAlignment/:ProjectID"
+          element={
+            <ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />
+          }
+        />
+        {/* artworkAlignment */}
+
         {/* mapping */}
-          <Route
-            path="/mapping"
-            element={<ProjectCreation key="mapping" />}
-          />
-          <Route
-            path="/myProjects/mapping/:ProjectID"
-            element={<ProjectCreation key={`mapping-${params.ProjectID}`} />}
-          />
-          <Route
-            path="/allProjects/mapping/:ProjectID"
-            element={<ProjectCreation key={`mapping-${params.ProjectID}`} />}
-          />
+        <Route path="/mapping" element={<ProjectCreation key="mapping" />} />
+        <Route
+          path="/myProjects/mapping/:ProjectID"
+          element={<ProjectCreation key={`mapping-${params.ProjectID}`} />}
+        />
+        <Route
+          path="/allProjects/mapping/:ProjectID"
+          element={<ProjectCreation key={`mapping-${params.ProjectID}`} />}
+        />
         {/* mapping */}
         {/* readinessPerPMP */}
         <Route
-            path="/readinessPerPMP"
-            element={<ProjectCreation key="readinessPerPMP" />}
-          />
-          <Route
-            path="/myProjects/readinessPerPMP/:ProjectID"
-            element={<ProjectCreation key={`readinessPerPMP-${params.ProjectID}`} />}
-          />
-          <Route
-            path="/allProjects/readinessPerPMP/:ProjectID"
-            element={<ProjectCreation key={`readinessPerPMP-${params.ProjectID}`} />}
-          />
+          path="/readinessPerPMP"
+          element={<ProjectCreation key="readinessPerPMP" />}
+        />
+        <Route
+          path="/myProjects/readinessPerPMP/:ProjectID"
+          element={
+            <ProjectCreation key={`readinessPerPMP-${params.ProjectID}`} />
+          }
+        />
+        <Route
+          path="/allProjects/readinessPerPMP/:ProjectID"
+          element={
+            <ProjectCreation key={`readinessPerPMP-${params.ProjectID}`} />
+          }
+        />
         {/* readinessPerPMP */}
         <Route path="/:page1/:page2/DDI/:TaskID/:ProjectID" element={<DDI />} />
         <Route path="/:pageType/DDI/:TaskID/:ProjectID" element={<DDI />} />
@@ -205,12 +239,13 @@ const RoutesNav = () => {
         <Route path="/:pageType/DDI/:TaskID/:ProjectID" element={<UADI />} />
         <Route path="/:page1/:page2/DDI/:TaskID/:ProjectID" element={<DDT />} />
         <Route path="/:pageType/DDI/:TaskID/:ProjectID" element={<DDT />} />
+
         {/* <Route path="/myTasks/DDI/:TaskID/:ProjectID" element={<DDI />} /> */}
         {/* <Route path="/allTasks/DDI/:TaskID/:ProjectID" element={<DDI />} /> */}
-        {/* <Route path="/myTasks/UADI/:TaskID/:ProjectID" element={<UADI />} />
-        <Route path="/allTasks/UADI/:TaskID/:ProjectID" element={<UADI />} /> */}
-        {/* <Route path="/myTasks/DDT/:TaskID/:ProjectID" element={<DDT />} />
-        <Route path="/allTasks/DDT/:TaskID/:ProjectID" element={<DDT />} /> */}
+        <Route path="/myTasks/UADI/:TaskID/:ProjectID" element={<UADI />} />
+        <Route path="/allTasks/UADI/:TaskID/:ProjectID" element={<UADI />} />
+        <Route path="/myTasks/DDT/:TaskID/:ProjectID" element={<DDT />} />
+        <Route path="/allTasks/DDT/:TaskID/:ProjectID" element={<DDT />} />
         <Route path="/myTasks/ARDT/:TaskID/:ProjectID" element={<ARDT />} />
         <Route path="/allTasks/ARDT/:TaskID/:ProjectID" element={<ARDT />} />
         <Route path="/myTasks/DPRA/:TaskID/:ProjectID" element={<DPRA />} />
