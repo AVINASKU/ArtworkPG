@@ -276,12 +276,13 @@ const ProjectPlanList = ({
     const field = rowData.field;
     const optionsData = options.data;
     const currentUrl = location.pathname;
-    let currentUrlLastSeg = currentUrl?.split("/")[3];
-    let currentUrlBasePage = currentUrl?.split("/")[1];
+    let currentUrlLastSeg = currentUrl.split("/")[3];
     const key = options?.key;
     const keyCode = key?.split("_");
-    const url = `MyTasks/${keyCode[0]}/${key}/${currentUrlLastSeg}`;
-
+    const locaiton = window.location.pathname;
+    const url = `${locaiton.split("/")[1]}/${locaiton.split("/")[2]}/${
+      keyCode[0]
+    }/${key}/${currentUrlLastSeg}`;
     return (
       <>
         {field === "Task" && (
@@ -293,22 +294,11 @@ const ProjectPlanList = ({
                 : "task dependant-task"
             }`}
             onClick={() => {
-              if (
-                field &&
-                field.length &&
-                keyCode[0] !== "CPPFA" &&
-                tabNameForPP !== "Input"
-              ) {
+              if (field && field.length && keyCode[0] !== "CPPFA") {
                 (options.redirect === true || optionsData.Task) &&
                   navigate(`../${url}`, { replace: true });
-              } else if (field && field.length && keyCode[0] === "CPPFA") {
-                handleApproveDialogCPPFA(options);
               } else {
-                dispatch(ArtWorkTabValuesAction([]));
-                setTabName("artworkAlignment");
-                navigate(
-                  `/${currentUrlBasePage}/artworkAlignment/${selectedProject?.Project_ID}`
-                );
+                handleApproveDialogCPPFA(options);
               }
             }}
           >
