@@ -179,22 +179,21 @@ $width: 100%;
   &.project-setup-wrapper {
     // height: 100%;
     position: relative;
-    .tabular-add-project{
+    .tabular-add-project {
       overflow: hidden;
-      form{
+      form {
         height: 100%;
         overflow: hidden auto;
-        padding-bottom: 90px;        
+        padding-bottom: 90px;
       }
     }
   }
-  &.project-plan-wrapper{
-    .tab-content{
-      height: auto;
+  &.project-plan-wrapper {
+    .tab-content {
+      // height: auto;
       overflow: initial;
       padding: 0;
     }
-   
   }
   .form-buttons{
     padding: 1rem 11px;
@@ -272,7 +271,7 @@ $width: 100%;
 
 // TabsComponent Styles Start
 .tab-content {
-  height: calc(100% - 30px);
+  height: calc(100% - 55px);
   overflow: hidden;
   position: relative;
   padding-bottom: 20px;
@@ -283,7 +282,7 @@ $width: 100%;
   }
 }
 
-.tab-content>.active {
+.tab-content > .active {
   padding: 10px 20px;
   display: contents !important;
 }
@@ -329,14 +328,14 @@ ul.nav.nav-tabs {
     border-bottom: 2.5px solid rgba(0, 61, 165, 1);
   }
 
-  .nav-tabs li>a {
+  .nav-tabs li > a {
     color: rgba(172, 172, 172, 1);
     font-weight: 500;
     font-size: 14px;
     line-height: 17.07px;
   }
 
-  .nav-tabs li.active>a {
+  .nav-tabs li.active > a {
     color: rgba(0, 61, 165, 1);
   }
 }
@@ -372,10 +371,10 @@ span.right {
   margin-right: 9.81px;
 }
 .tabComponent {
-  display:flex;
+  display: flex;
   align-items: center;
-  li{
-    a{
+  li {
+    a {
       cursor: pointer;
     }
   }
