@@ -550,6 +550,9 @@ const ProjectList = (props) => {
       );
       isCustomViewIsAddedMyProject(true);
     }
+    if (selectedCategories.length === 0) {
+      isCustomViewIsAddedMyProject(true);
+    }
     setVisible(false);
   };
 
