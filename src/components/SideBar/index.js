@@ -307,11 +307,22 @@ const SideBar = () => {
                           dispatch(updateMode("create"));
                         }}
                       >
-                        <img
-                          src={plusCollapseImg}
-                          className="collapse-img"
-                          alt=""
-                        />
+                        <OverlayTrigger
+                          placement="right"
+                          overlay={
+                            <Tooltip className="tooltip">
+                              <div className="toolname">Create Project</div>
+                            </Tooltip>
+                          }
+                        >
+                          <div>
+                            <img
+                              src={plusCollapseImg}
+                              className="collapse-img"
+                              alt=""
+                            />
+                          </div>
+                        </OverlayTrigger>
                       </NavLink>
                     ) : (
                       <NavLink
@@ -334,12 +345,27 @@ const SideBar = () => {
                 )}
               <NavItem onClick={handleLogout}>
                 {!isToggle ? (
-                  <img src={LogoutImg} className="collapse-img" alt="" />
+                  <NavLink to="/" className="nav-link">
+                    <OverlayTrigger
+                      placement="right"
+                      overlay={
+                        <Tooltip className="tooltip">
+                          <div className="toolname">Log out</div>
+                        </Tooltip>
+                      }
+                    >
+                      <div>
+                        <img src={LogoutImg} className="collapse-img" alt="" />
+                      </div>
+                    </OverlayTrigger>
+                  </NavLink>
                 ) : (
+                  // <img src={LogoutImg} className="collapse-img" alt="" />
                   <NavLink to="/" className="nav-link">
                     {isToggle && (
                       <span className="logout">
                         <img src={LogoutImg} alt="logout" />
+                        <p className="create"> Log out </p>
                       </span>
                     )}
                   </NavLink>
