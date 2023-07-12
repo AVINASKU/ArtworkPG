@@ -257,6 +257,11 @@ div.p-selectbutton.p-buttonset.p-component {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+
+  label {
+    margin-bottom: 0px;
+    margin-top: 3px;
+  }
 }
 
 #tasksActions {
