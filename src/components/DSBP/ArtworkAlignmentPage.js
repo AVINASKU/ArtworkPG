@@ -53,7 +53,7 @@ const ArtworkAlignment = () => {
     { label: "Approve Regional Design Template" },
   ];
 
-  const userHasAccess = !hasAllAccess();
+  const userHasAccess = hasAllAccess();
 
   const dispatch = useDispatch();
   const headerName = "Artwork Alignment";
