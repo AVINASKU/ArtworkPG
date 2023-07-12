@@ -17,11 +17,16 @@ export const getMyProject = (userInformation) => async (dispatch) => {
       });
     } else {
       if (res.status === 200) {
-        const orderByData = _.orderBy(res.data.ArtworkAgilityProjects, ['Timestamp'], ['desc'])
+        const orderByData = _.orderBy(
+          res.data.ArtworkAgilityProjects,
+          ["Timestamp"],
+          ["desc"]
+        );
         dispatch({
           type: types.GET_PROJECT_DETAILS_SUCCESS,
           payload: orderByData,
         });
+        return orderByData;
       } else {
         dispatch({
           type: types.GET_PROJECT_DETAILS_ERROR,
@@ -49,7 +54,11 @@ export const getAllProject = (userInformation) => async (dispatch) => {
       });
     } else {
       if (res.status === 200) {
-        const orderByData = _.orderBy(res.data.ArtworkAgilityProjects, ['Timestamp'], ['desc'])
+        const orderByData = _.orderBy(
+          res.data.ArtworkAgilityProjects,
+          ["Timestamp"],
+          ["desc"]
+        );
         dispatch({
           type: types.GET_ALL_PROJECT_DETAILS_SUCCESS,
           payload: orderByData,
