@@ -11,7 +11,7 @@ import { getAllProject } from "../../../store/actions/ProjectActions";
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
-import _ from "lodash";
+import _, { isArray } from "lodash";
 import ProjectNameHeader from "../MyProjects/ProjectNameHeader";
 import CustomisedView from "../MyProjects/CustomisedView";
 import { generateUniqueKey } from "../../../utils";
@@ -314,11 +314,15 @@ const AllProjectList = (props) => {
             style={{ color: "#003DA5", cursor: "pointer" }}
             onClick={() => {
               if (field && field.length) {
-                let option = allProjectList.allProjects.find(
+                let option = isArray(allProjectList.allProjects) && allProjectList.allProjects.find(
                   (project) => project.Project_ID === projectId
                 );
                 dispatch(selectedProject(option, "All Projects"));
-                navigate(`${currentUrl}/projectPlan/${projectId}`);
+                if(option.Action === "Draft"){
+                  navigate(`${currentUrl}/projectSetup/${projectId}`);
+                }else{
+                  navigate(`${currentUrl}/projectPlan/${projectId}`);
+                }
               }
             }}
           >
@@ -331,11 +335,15 @@ const AllProjectList = (props) => {
             style={{ color: "#003DA5", cursor: "pointer" }}
             onClick={() => {
               if (field && field.length) {
-                let option = allProjectList.allProjects.find(
+                let option = isArray(allProjectList.allProjects) && allProjectList.allProjects.find(
                   (project) => project.Project_ID === projectId
                 );
                 dispatch(selectedProject(option, "All Projects"));
-                navigate(`${currentUrl}/projectPlan/${projectId}`);
+                if(option.Action === "Draft"){
+                  navigate(`${currentUrl}/projectSetup/${projectId}`);
+                }else{
+                  navigate(`${currentUrl}/projectPlan/${projectId}`);
+                }
               }
             }}
           >
