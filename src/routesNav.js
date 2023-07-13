@@ -110,6 +110,7 @@ import APRA from "./components/AWMJobs/APRA/index.js";
 import UPRA from "./components/AWMJobs/UPRA/index.js";
 import URDT from "./components/AWMJobs/URDT/index.js";
 import CPPFA from "./components/AWMJobs/CPPFA/index.js";
+import UBD from "./components/AWMJobs/UBD/index.js";
 import DsbpPage from "./DsbpPage";
 import DsbpTabPage from "./DsbpTabPage";
 
@@ -249,6 +250,7 @@ const RoutesNav = () => {
         <Route path="/myTasks/ARDT/:TaskID/:ProjectID" element={<ARDT />} />
         <Route path="/allTasks/ARDT/:TaskID/:ProjectID" element={<ARDT />} />
         <Route path="/myTasks/DPRA/:TaskID/:ProjectID" element={<DPRA />} />
+        <Route path="/myTasks/UBD/:TaskID/:ProjectID" element={<UBD />} />
         <Route path="/allTasks/DPRA/:TaskID/:ProjectID" element={<DPRA />} />
         <Route path="/myTasks/APRA/:TaskID/:ProjectID" element={<APRA />} />
         <Route path="/allTasks/APRA/:TaskID/:ProjectID" element={<APRA />} />
