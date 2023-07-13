@@ -18,7 +18,7 @@ import {
   fetchAccessMatrix,
   fetchAccessRoles,
 } from "../../store/actions/RoleBasedActions";
-import { getAccessDetails } from "../../utils";
+import { getAccessDetails, hasAllAccess } from "../../utils";
 import { updateMode } from "../../store/actions/ProjectSetupActions";
 import { updateUser } from "../../apis/userApi";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
@@ -41,6 +41,8 @@ const SideBar = () => {
   const [expandedIndex, setExpandedIndex] = useState(null);
   const [cookies, setCookie, removeCookie] = useCookies();
 
+  const isNoAccess = hasAllAccess();
+
   useEffect(() => {
     dispatch(fetchAccessMatrix());
     dispatch(fetchAccessRoles());
@@ -53,7 +55,7 @@ const SideBar = () => {
     //   setExpandedIndex(null);
     // }
   };
-  const sidebarWidth = isToggle ? "100px" : "68px";
+  const sidebarWidth = isToggle ? "100px" : "25px";
   function toggleSubMenu(index) {
     setIsToggle(true);
 
@@ -251,9 +253,7 @@ const SideBar = () => {
                         >
                           {isToggle ? (
                             <>
-                              <div>
-                                <img src={item.img} alt="logos" />
-                              </div>
+                              <img src={item.img} alt="logos" />
                               <div>{isToggle ? item.name : ""}</div>
                             </>
                           ) : (
@@ -297,12 +297,15 @@ const SideBar = () => {
                     onClick={() => {
                       dispatch(updateMode("create"));
                     }}
+                    className={
+                      location.pathname === "projectSetup" ? "active" : ""
+                    }
                   >
                     {!isToggle ? (
                       <NavLink
                         to="/projectSetup"
                         state={{ mode: "create" }}
-                        className="nav-link"
+                        className={`nav-link ${isToggle && "parent-link"}`}
                         onClick={() => {
                           dispatch(updateMode("create"));
                         }}
@@ -310,17 +313,16 @@ const SideBar = () => {
                         <OverlayTrigger
                           placement="right"
                           overlay={
-                            <Tooltip className="tooltip">
+                            <Tooltip
+                              className="tooltip"
+                              style={{ marginLeft: "-0.5%" }}
+                            >
                               <div className="toolname">Create Project</div>
                             </Tooltip>
                           }
                         >
                           <div>
-                            <img
-                              src={plusCollapseImg}
-                              className="collapse-img"
-                              alt=""
-                            />
+                            <img src={plusCollapseImg} alt="" />
                           </div>
                         </OverlayTrigger>
                       </NavLink>
@@ -328,45 +330,55 @@ const SideBar = () => {
                       <NavLink
                         to="/projectSetup"
                         state={{ mode: "create" }}
-                        className="nav-link"
+                        className={`nav-link ${isToggle && "parent-link"}`}
                         onClick={() => {
                           dispatch(updateMode("create"));
                         }}
                       >
-                        <img
-                          src={plusCollapseImg}
-                          className="collapse-img"
-                          alt=""
-                        />
-                        <p className="create"> Create Project </p>
+                        <img src={plusCollapseImg} alt="" />
+                        <div> Create Project </div>
                       </NavLink>
                     )}
                   </NavItem>
                 )}
-              <NavItem onClick={handleLogout}>
+              <NavItem
+                onClick={handleLogout}
+                className={location.pathname === "" ? "active" : ""}
+              >
                 {!isToggle ? (
-                  <NavLink to="/" className="nav-link">
+                  <NavLink
+                    to="/"
+                    className={`nav-link ${isToggle && "parent-link"}`}
+                  >
                     <OverlayTrigger
                       placement="right"
                       overlay={
-                        <Tooltip className="tooltip">
+                        <Tooltip
+                          className="tooltip"
+                          style={{ marginLeft: "-0.5%" }}
+                        >
                           <div className="toolname">Log out</div>
                         </Tooltip>
                       }
                     >
                       <div>
-                        <img src={LogoutImg} className="collapse-img" alt="" />
+                        <img src={LogoutImg} alt="" />
                       </div>
                     </OverlayTrigger>
                   </NavLink>
                 ) : (
-                  // <img src={LogoutImg} className="collapse-img" alt="" />
-                  <NavLink to="/" className="nav-link">
+                  <NavLink
+                    to="/"
+                    className={`nav-link ${isToggle && "parent-link"}`}
+                  >
                     {isToggle && (
-                      <span className="logout">
+                      <>
                         <img src={LogoutImg} alt="logout" />
-                        <p className="create"> Log out </p>
-                      </span>
+                        <div className={`${!isNoAccess ? "logoutColor" : ""}`}>
+                          {" "}
+                          Log out{" "}
+                        </div>
+                      </>
                     )}
                   </NavLink>
                 )}
@@ -375,7 +387,6 @@ const SideBar = () => {
           </Nav>
         </div>
       </Col>
-      {/* <AddProject visible={visible} setVisible={setVisible} /> */}
     </>
   );
 };
