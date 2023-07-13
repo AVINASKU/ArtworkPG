@@ -7,7 +7,7 @@ import { Col, Row } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
 import { submitCPPFA } from "../../../store/actions/taskDetailAction";
-import { changeDateFormat, CheckReadOnlyAccess } from "../../../utils";
+import { changeDateFormat, hasAllAccess } from "../../../utils";
 import { FileUpload } from "primereact/fileupload";
 import { NavLink, useLocation } from "react-router-dom";
 import upload1 from "../../../assets/images/upload1.svg";
@@ -30,15 +30,17 @@ const CPPFA = ({
   const [visible, setVisible] = useState(showTaskDialog);
   const [designIntent, setDesignIntent] = useState({});
   const [version, setVersion] = useState("V0");
-  // const isAccessEmpty = url[1] === "AllTasks" ? true : CheckReadOnlyAccess();
-  let isAccessEmpty = false;
-  if (url[1] === "AllTasks") {
-    isAccessEmpty = true;
-  } else if (url[1] === "MyTasks" || url[2] === "projectPlan") {
-    isAccessEmpty = false;
-  }
-  // const isAccessEmpty = false;
+  let allAccess=hasAllAccess();
+  let isAccessEmpty = allAccess;
+
+  // if (url[1] === "AllTasks") {
+  //   isAccessEmpty = true;
+  // } else if (url[1] === "MyTasks" || url[2] === "projectPlan") {
+  //   isAccessEmpty = false;
+  // }
   const dispatch = useDispatch();
+
+  console.log("pranali check is access", isAccessEmpty, url[1]);
 
   const { TaskID, ProjectID } = selectedTaskData;
   const [cppfaDialogFlag, setCppfaDialogFlag] = useState(false);

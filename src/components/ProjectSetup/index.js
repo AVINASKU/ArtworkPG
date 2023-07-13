@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import ProjectPlanCompo from "../Projects/ProjectPlan/ProjectPlanCompo";
 import ConfirmationDialog from "./confirmationDialog";
 import TabsComponent from "./tabsComponent";
-import { hasEmptyAccessForProjectSetup } from "../../utils";
+import { hasAllAccess } from "../../utils";
 import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import ProjectListHeader from "../Projects/MyProjects/ProjectListHeader";
 import { ProjectService } from "../../service/PegaService";
@@ -65,7 +65,7 @@ function ProjectSetup(props) {
   const onSearchClick = () => {
     isSearchSet(!isSearch);
   };
-  const isNoAccess = hasEmptyAccessForProjectSetup();
+  const isNoAccess = hasAllAccess();
 
   const breadcrumb = (
     <div>
@@ -121,7 +121,7 @@ function ProjectSetup(props) {
     {
       name: "projectSetup",
       tabNameForDisplay: "Project Setup",
-      component: isNoAccess ? (
+      component: !isNoAccess ? (
         <div className="unauthorized-user">
           You are not authorized to access this page.
         </div>
@@ -315,9 +315,8 @@ function ProjectSetup(props) {
   ];
   const actionButton = (
     <DropdownButton
-      id="projectActions"
+      id={!isNoAccess && "projectActions"}
       title="Actions"
-      // disabled={false}
       disabled={isNoAccess}
       // data-popper-placement="bottom-end"
       // drop="down-end"
