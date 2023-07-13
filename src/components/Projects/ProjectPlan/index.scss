@@ -80,11 +80,11 @@ $fontWeight400: 400;
   }
 
   .textAlignTreeTable {
-    height: calc(100vh - 212px);
+    height: calc(100vh - 260px);
     overflow: auto;
 
     .p-treetable-wrapper {
-      height: calc(100% - 43px);
+      height: calc(100% - 52px);
       overflow-x: auto;
   
       thead.p-treetable-thead {
@@ -373,10 +373,6 @@ img[disabled] {
 .columnHeader {
   display: flex;
   width: max-content;
-}
-.card {
-  height: 403px;
-  overflow-y: auto;
 }
 
 // APrrove Dialog Styles Start

@@ -202,7 +202,7 @@ $width: 100%;
     text-align: right;
     width: 100%;
     left: 0;
-    bottom: 48px;
+    bottom: 55px;
   }
 }
 
@@ -377,6 +377,9 @@ span.right {
     a {
       cursor: pointer;
     }
+  }
+  .actionButtonsForTabComponent {
+    margin-right: 10px;
   }
 }
 // TabsComponent Styles End
