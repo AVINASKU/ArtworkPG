@@ -16,6 +16,7 @@ const SelectDsbpId = ({
   totalNoOfPMPLocked,
   listOfInitiativeId,
   mappedPOAS,
+  userHasAccess
 }) => {
   const [selectedCities, setSelectedCities] = useState([]);
   const [selectDialog, setSelectDialog] = useState(false);
@@ -146,6 +147,7 @@ const SelectDsbpId = ({
           maxSelectedLabels={3}
           panelClassName="dsbp-multiselect-dropdown"
           style={{ maxWidth: 370, width: "300%" }}
+          disabled={userHasAccess}
         />
 
         <div className="action-buttons margin-right">
