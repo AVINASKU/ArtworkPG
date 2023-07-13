@@ -4,6 +4,7 @@ import { Row, Col } from "react-bootstrap";
 import { Checkbox } from "primereact/checkbox";
 import deleteIcon from "../../../assets/images/deleteIcon.svg";
 import { AutoComplete } from "primereact/autocomplete";
+import plusCollapseImg from "../../../assets/images/plusCollapse.svg";
 
 const AddNewDesignContent = ({
   index,
@@ -17,7 +18,8 @@ const AddNewDesignContent = ({
   checkBU,
   setSubmitActive,
   checkReadWriteAccess,
-  taskName
+  taskName,
+  setAddNewDesign,
 }) => {
   const { Agency_Reference, Additional_Info, event, Select, Cluster } = item;
 
@@ -59,16 +61,33 @@ const AddNewDesignContent = ({
           }}
           className="font-color"
         >
-          {!di_name ? `${taskName} ${index + 1}` : di_name}
+          {taskName === "Graphic Adaption Brief*"
+            ? !di_name
+              ? `${taskName}`
+              : di_name
+            : !di_name
+            ? `${taskName} ${index + 1}`
+            : di_name}
+          {/* {!di_name ? `${taskName} ${index + 1}` : di_name} */}
         </div>
         <div>
-          <img
-            src={deleteIcon}
-            alt="filter logo"
-            onClick={() => checkReadWriteAccess && handleDelete(index)}
-            className="header-icons"
-            disabled={!checkReadWriteAccess}
-          />
+          {taskName === "Graphic Adaption Brief*" ? (
+            <img
+              src={plusCollapseImg}
+              alt="filter logo"
+              onClick={() => setAddNewDesign()}
+              className="header-icons"
+              // disabled={!checkReadWriteAccess}
+            />
+          ) : (
+            <img
+              src={deleteIcon}
+              alt="filter logo"
+              onClick={() => checkReadWriteAccess && handleDelete(index)}
+              className="header-icons"
+              disabled={!checkReadWriteAccess}
+            />
+          )}
         </div>
       </>
     );

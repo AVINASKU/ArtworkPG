@@ -74,59 +74,60 @@ const DesignHeader = ({
           </nav>
           <div className="project-title">{headerName}</div>
         </div>
-
-        <div className="action-buttons">
-          <div className="icon-items">
-            <Checkbox
-              onChange={(e) => {
-                setChecked(e.checked);
-                onSelectAll(e.checked);
-              }}
-              checked={checked}
-              className="margin-right"
-              disabled={(!onSelectAll && true) || !checkReadWriteAccess}
-            ></Checkbox>
-            <div className="icon-label">
-              <label
-                className={disabled && "disable-buttons"}
-                disabled={!checkReadWriteAccess}
-              >
-                {" "}
-                Select All
-              </label>
+        {label !== "Upload Graphic Adaption Brief Document" && (
+          <div className="action-buttons">
+            <div className="icon-items">
+              <Checkbox
+                onChange={(e) => {
+                  setChecked(e.checked);
+                  onSelectAll(e.checked);
+                }}
+                checked={checked}
+                className="margin-right"
+                disabled={(!onSelectAll && true) || !checkReadWriteAccess}
+              ></Checkbox>
+              <div className="icon-label">
+                <label
+                  className={disabled && "disable-buttons"}
+                  disabled={!checkReadWriteAccess}
+                >
+                  {" "}
+                  Select All
+                </label>
+              </div>
             </div>
-          </div>
-          <div className="icon-items">
-            <img
-              src={filter}
-              alt="filter logo"
-              className="filter-icon filter-color-change"
-            />
-            <div>
-              <label className="icon-label">filter</label>
+            <div className="icon-items">
+              <img
+                src={filter}
+                alt="filter logo"
+                className="filter-icon filter-color-change"
+              />
+              <div>
+                <label className="icon-label">filter</label>
+              </div>
             </div>
-          </div>
-          <div
-            className={
-              checkTaskISComplete ? "icon-items disabled" : "icon-items"
-            }
-          >
-            <img
-              src={plusCollapseImg}
-              onClick={() =>
-                checkReadWriteAccess && setAddNewDesign && setAddNewDesign()
+            <div
+              className={
+                checkTaskISComplete ? "icon-items disabled" : "icon-items"
               }
-              className="add-new-design-intent-icon"
-              alt=""
-              disabled={(!setAddNewDesign && true) || !checkReadWriteAccess}
-            />
-            <div className="icon-label">
-              <label className={disabled && "disable-buttons"}>
-                Add {taskName}
-              </label>
+            >
+              <img
+                src={plusCollapseImg}
+                onClick={() =>
+                  checkReadWriteAccess && setAddNewDesign && setAddNewDesign()
+                }
+                className="add-new-design-intent-icon"
+                alt=""
+                disabled={(!setAddNewDesign && true) || !checkReadWriteAccess}
+              />
+              <div className="icon-label">
+                <label className={disabled && "disable-buttons"}>
+                  Add {taskName}
+                </label>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

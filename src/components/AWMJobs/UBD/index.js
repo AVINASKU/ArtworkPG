@@ -17,7 +17,7 @@ import { CheckReadOnlyAccess } from "../../../utils";
 import { useLocation } from "react-router-dom";
 import "../DesignJobs/index.scss";
 
-const headerName = "Define Production Ready Art";
+const headerName = "Upload Graphic Adaption Brief Document";
 const roleName = "PRA_";
 
 function UBD() {
@@ -105,26 +105,26 @@ function UBD() {
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
     let values = false;
-    const hasValues = designIntent.every(
-      (item) => {        
-        setEnableSubmit(true);
-       if(item.Select){
-          values = item.Agency_Reference !== "" && item.Cluster !== "";
-      } 
-        else{
-          console.log("designIntent else", designIntent);
-          let data = designIntent.filter(item => item.Select && item.Agency_Reference !== "" && item.Cluster !== "");
-          console.log("value else", data);
-          if (data.length !== 0) {
-            values = true;
-          } else {
-            values = false;
-          }
+    const hasValues = designIntent.every((item) => {
+      setEnableSubmit(true);
+      if (item.Select) {
+        values = item.Agency_Reference !== "" && item.Cluster !== "";
+      } else {
+        console.log("designIntent else", designIntent);
+        let data = designIntent.filter(
+          (item) =>
+            item.Select && item.Agency_Reference !== "" && item.Cluster !== ""
+        );
+        console.log("value else", data);
+        if (data.length !== 0) {
+          values = true;
+        } else {
+          values = false;
         }
-        return values
       }
-    );
-    setEnableSubmit(!hasValues);  
+      return values;
+    });
+    setEnableSubmit(!hasValues);
     setSubmittedDI(submittedDI);
   };
 
@@ -244,12 +244,12 @@ function UBD() {
 
   return (
     <PageLayout>
-      3333333333<DesignHeader
+      <DesignHeader
         setAddNewDesign={addNewEmptyDesign}
         onSelectAll={onSelectAll}
         breadcrumb={breadcrumb}
         headerName={headerName}
-        label="Define Production Ready Art"
+        label="Upload Graphic Adaption Brief Document"
         checkReadWriteAccess={checkReadWriteAccess}
         taskName="Production Ready Art"
       />
@@ -264,6 +264,7 @@ function UBD() {
             if (item && item?.Action !== "delete") {
               return (
                 <AddNewDesignContent
+                  setAddNewDesign={addNewEmptyDesign}
                   key={item.Design_Job_ID}
                   {...data}
                   item={item}
@@ -275,7 +276,7 @@ function UBD() {
                   Brand={Brand}
                   Category={Category}
                   checkReadWriteAccess={checkReadWriteAccess}
-                  taskName="Production Ready Art"
+                  taskName="Graphic Adaption Brief*"
                 />
               );
             }
