@@ -230,7 +230,7 @@ const ArtworkAlignment = () => {
 
   useEffect(() => {
     fetchData();
-  }, [customizeViewFields]);
+  }, []);
 
   useEffect(() => {
     dispatch(getDSBPDropdownData(BU, Region, ProjectID));
