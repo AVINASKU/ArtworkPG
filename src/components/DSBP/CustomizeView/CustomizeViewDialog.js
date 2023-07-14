@@ -3,7 +3,7 @@ import { Dialog } from "primereact/dialog";
 import DragAndDrop from "./DragAndDrop/DragAndDrop";
 import "./index.scss";
 
-const CustomizeViewDialog = ({ showTaskDialog, onClose, availableFields }) => {
+const CustomizeViewDialog = ({ showTaskDialog, onClose, availableFields, setCustomizeViewFields, customizeViewFields }) => {
   const [visible, setVisible] = useState(showTaskDialog);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const CustomizeViewDialog = ({ showTaskDialog, onClose, availableFields }) => {
       header={<div className="p-dialog-header1">Customize View</div>}
     >
       <div className="p-fluid popup-details">
-        <DragAndDrop availableFields={availableFields} hideDialog={hideDialog} />
+        <DragAndDrop availableFields={availableFields} hideDialog={hideDialog} setCustomizeViewFields={setCustomizeViewFields} customizeViewFields={customizeViewFields} />
       </div>
     </Dialog>
   );

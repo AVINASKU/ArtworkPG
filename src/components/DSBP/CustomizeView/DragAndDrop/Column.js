@@ -29,9 +29,11 @@ const Column = ({
       <Droppable droppableId={column.id}>
         {(provided, snapshot) => (
           <div
-            className="dragAndDropColumn"
+          className={`dragAndDropColumn ${
+            snapshot.isDraggingOver ? "draggingOver" : ""
+          }`}
             ref={provided.innerRef}
-            isDraggingOver={snapshot.isDraggingOver}
+            // isDraggingOver={snapshot.isDraggingOver}
             {...provided.droppableProps}
           >
             {tasks.map((task, index) => {
@@ -55,6 +57,8 @@ const Column = ({
                   singleDragFlag={draggingTaskId !== task.Field_Name}
                   entities={entities}
                   droppableId={droppableId}
+                  selectedTaskIds={selectedTaskIds}
+                  columnId={column.id}
                 />
               );
             })}

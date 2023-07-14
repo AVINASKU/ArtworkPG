@@ -1,262 +1,244 @@
-// @flow
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import Column from "./Column";
 import entities1 from "./Data";
 import { mutliDragAwareReorder, multiSelectTo as multiSelect } from "./Utils";
 import { DragDropContext } from "react-beautiful-dnd";
 import { Button } from "primereact/button";
 
-const getTasks = (entities, columnId) =>
-  entities.columns[columnId].fieldsData.map((taskId) => entities.tasks[taskId]);
+const getTasks = (entities, columnId) => entities?.columns[columnId]?.fieldsData.map((taskId) => entities.tasks[taskId]);
 
-class DragAndDrop extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      entities: entities1(this.props.availableFields),
-      selectedTaskIds: [],
-      draggingTaskId: null,
-      droppableId: null,
-    };
-  }
+const DragAndDrop = (props) => {
+  const [entities, setEntities] = useState(props.availableFields && entities1(props.availableFields));
+  const [selectedTaskIds, setSelectedTaskIds] = useState([]);
+  const [draggingTaskId, setDraggingTaskId] = useState(null);
+  const [localDestination, setLocalDestination] = useState(null);
 
-  componentDidMount() {
-    window.addEventListener("click", this.onWindowClick);
-    window.addEventListener("keydown", this.onWindowKeyDown);
-    window.addEventListener("touchend", this.onWindowTouchEnd);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("click", this.onWindowClick);
-    window.removeEventListener("keydown", this.onWindowKeyDown);
-    window.removeEventListener("touchend", this.onWindowTouchEnd);
-  }
-
-  onDragStart = (start) => {
-    const id = start.draggableId;
-    console.log("start:", start);
-    const selected = this.state.selectedTaskIds.find((taskId) => taskId === id);
-    // if dragging an item that is not selected - unselect all items
-    if (!selected) {
-      this.unselectAll();
+  useEffect(() => {
+    if(props.customizeViewFields !== "[]"){
+      const updatedData = {
+        ...entities,
+        columns: JSON.parse(props.customizeViewFields)
+      };
+      if(updatedData !== undefined)
+        setEntities(updatedData)
+    } else {
+      setEntities(props.availableFields && entities1(props.availableFields))      
     }
-    this.setState({
-      draggingTaskId: id,
-      droppableId: start.source.droppableId,
-    });
+  }, [props.customizeViewFields])
+
+  useEffect(() => {
+    const onWindowClick = (event) => {
+      if (!event.defaultPrevented) {
+        unselectAll();
+      }
+    };
+
+    const onWindowKeyDown = (event) => {
+      if (!event.defaultPrevented && event.key === "Escape") {
+        unselectAll();
+      }
+    };
+
+    const onWindowTouchEnd = (event) => {
+      if (!event.defaultPrevented) {
+        unselectAll();
+      }
+    };
+
+    window.addEventListener("click", onWindowClick);
+    window.addEventListener("keydown", onWindowKeyDown);
+    window.addEventListener("touchend", onWindowTouchEnd);
+
+    return () => {
+      window.removeEventListener("click", onWindowClick);
+      window.removeEventListener("keydown", onWindowKeyDown);
+      window.removeEventListener("touchend", onWindowTouchEnd);
+    };
+  }, []);
+
+  const onDragStart = (start) => {
+    const id = start.draggableId;
+    const selected = selectedTaskIds.find((taskId) => taskId === id);
+    if (!selected) {
+      unselectAll();
+    }
+    setDraggingTaskId(id);
   };
 
-  onDragEnd = (result) => {
-    console.log("result:", result);
+  const onDragEnd = (result) => {
     const destination = result.destination;
     const source = result.source;
-    // nothing to do
+    const draggableId = result.draggableId;
+
     if (!destination || result.reason === "CANCEL") {
-      this.setState({
-        draggingTaskId: null,
-      });
+      setDraggingTaskId(null);
+      setLocalDestination(null);
       return;
     }
+
     const processed = mutliDragAwareReorder({
-      entities: this.state.entities,
-      selectedTaskIds: this.state.selectedTaskIds,
+      draggableId,
+      entities,
+      selectedTaskIds,
       source,
       destination,
     });
-    this.setState({
-      ...processed,
-      draggingTaskId: null,
-    });
+    processed !== undefined && setEntities(processed?.entities);
+    setDraggingTaskId(null);
+    setLocalDestination(destination);
   };
 
-  onWindowKeyDown = (event) => {
+  const onWindowKeyDown = (event) => {
     if (event.defaultPrevented) {
       return;
     }
     if (event.key === "Escape") {
-      this.unselectAll();
+      unselectAll();
     }
   };
 
-  onWindowClick = (event) => {
+  const onWindowClick = (event) => {
     if (event.defaultPrevented) {
       return;
     }
-    this.unselectAll();
+    unselectAll();
   };
 
-  onWindowTouchEnd = (event) => {
+  const onWindowTouchEnd = (event) => {
     if (event.defaultPrevented) {
       return;
     }
-    this.unselectAll();
+    unselectAll();
   };
 
-  toggleSelection = (taskId) => {
-    const selectedTaskIds = this.state.selectedTaskIds;
+  const toggleSelection = (taskId) => {
     const wasSelected = selectedTaskIds.includes(taskId);
     const newTaskIds = (() => {
-      // Task was not previously selected
-      // now will be the only selected item
       if (!wasSelected) {
         return [taskId];
       }
-      // Task was part of a selected group
-      // will now become the only selected item
       if (selectedTaskIds.length > 1) {
         return [taskId];
       }
-
-      // task was previously selected but not in a group
-      // we will now clear the selection
       return [];
     })();
-    this.setState({ selectedTaskIds: newTaskIds });
+    setSelectedTaskIds(newTaskIds);
   };
 
-  toggleSelectionInGroup = (taskId) => {
-    const selectedTaskIds = this.state.selectedTaskIds;
+  const toggleSelectionInGroup = (taskId) => {
     const index = selectedTaskIds.indexOf(taskId);
-    // if not selected - add it to the selected items
     if (index === -1) {
-      this.setState({ selectedTaskIds: [...selectedTaskIds, taskId] });
-      return;
+      setSelectedTaskIds([...selectedTaskIds, taskId]);
+    } else {
+      const shallow = [...selectedTaskIds];
+      shallow.splice(index, 1);
+      setSelectedTaskIds(shallow);
     }
-    // it was previously selected and now needs to be removed from the group
-    const shallow = [...selectedTaskIds];
-    shallow.splice(index, 1);
-    this.setState({ selectedTaskIds: shallow });
   };
 
-  // This behaviour matches the MacOSX finder selection
-  multiSelectTo = (newTaskId) => {
-    const updated = multiSelect(
-      this.state.entities,
-      this.state.selectedTaskIds,
-      newTaskId
-    );
+  const multiSelectTo = (newTaskId) => {
+    const updated = multiSelect(entities, selectedTaskIds, newTaskId);
     if (updated == null) {
       return;
     }
-
-    this.setState({
-      selectedTaskIds: updated,
-    });
+    setSelectedTaskIds(updated);
   };
 
-  unselectAll = () => {
-    this.setState({
-      selectedTaskIds: [],
-    });
+  const unselectAll = () => {
+    setSelectedTaskIds([]);
   };
 
-  resetToPGDefault = () => {
-    let { entities } = this.state;
+  const resetToPGDefault = () => {
     let obj = entities.columns.freezedColumns.fieldsData;
-    const data = obj.length > 0 ? obj.splice(0, obj.length) : entities;
-    entities = { ...entities, data };
-  };
+    let selectedObj = entities.columns.selectedFields.fieldsData;
+    let data = [];
+    let freezeData = [];
+    if (obj.length > 0 && selectedObj.length > 0) {
+      freezeData = obj.splice(0, obj.length);
+      data = selectedObj.splice(0, selectedObj.length);
+    } else if (selectedObj.length > 0) {
+      data = selectedObj.splice(0, selectedObj.length);
+    }
 
-  handleSubmit = async () => {
-    const { entities } = this.state;
-    const selectedFieldsData = [];
-    const freezedColumnsData = [];
-    entities.columnOrder.find((id) => {
-      const column = entities.columns[id];
-
-      if (column.fieldsData.length > 0 && id !== "availableFields") {
-        column.fieldsData.find((fieldName, index) => {
-          // console.log("handleSubmit 1:", entities.tasks[fieldName], entities);
-          const obj = entities.tasks[fieldName]["Field_Name"];
-          if (id === "selectedFields") {
-            if (fieldName === obj) {
-              const d = entities.tasks[fieldName];
-              d.Sequence = index + 1;
-              selectedFieldsData.push(d);
-            }
-          }
-          if (id === "freezedColumns") {
-            if (fieldName === obj) {
-              const f = entities.tasks[fieldName];
-              f.Sequence = index + 1;
-              freezedColumnsData.push(f);
-            }
-            // console.log("handleSubmit:", column.fieldsData, entities);
-          }
-        });
+    const updatedData = {
+      ...entities,
+      columns: {
+        ...entities.columns,
+        availableFields: {
+          ...entities.columns.availableFields,
+          fieldsData: [
+            ...data,
+            ...freezeData,
+            ...entities.columns.availableFields.fieldsData            
+          ]
+        }
       }
-    });
-    console.log("handleSubmit:", selectedFieldsData, freezedColumnsData);
-    // if (availableFieldsList && availableFieldsList.length) {
-    //   availableFieldsList.filter((list) => {
-    //     if (selectedFieldsList.includes(list)) {
-    //       list["select"] = true;
-    //     }
-    //     if (freezedColumnsList.includes(list)) {
-    //       list["freeze"] = true;
-    //     }
-    //   });
-    // }
-    // localStorage.setItem(
-    //   "columnWidthDSBPArtwork",
-    //   JSON.stringify(availableFieldsList)
-    // );
-    // await this.props.hideDialog();
+    };
+    setEntities(updatedData);
+    localStorage.setItem("customizeViewFields", JSON.stringify([]));
+    props.setCustomizeViewFields(JSON.stringify([]));
+    props.hideDialog();
   };
 
-  render() {
-    const { entities, droppableId } = this.state;
-    const selected = this.state.selectedTaskIds;
-    return (
-      <>
-        <DragDropContext
-          onDragStart={this.onDragStart}
-          onDragEnd={this.onDragEnd}
-        >
-          <div style={{ display: "flex" }}>
-            {entities.columnOrder.map((columnId) => (
-              <Column
-                column={entities.columns[columnId]}
-                tasks={getTasks(entities, columnId)}
-                selectedTaskIds={selected}
-                key={columnId}
-                draggingTaskId={this.state.draggingTaskId}
-                toggleSelection={this.toggleSelection}
-                toggleSelectionInGroup={this.toggleSelectionInGroup}
-                multiSelectTo={this.multiSelectTo}
-                entities={entities}
-                droppableId={droppableId}
-              />
-            ))}
-          </div>
-        </DragDropContext>
-        <div className="form-buttons dsbp-form-buttons">
-          <Button
-            className="btn button-layout firstAndSecond"
-            variant="secondary"
-            onClick={() => this.props.hideDialog()}
-          >
-            Cancel
-          </Button>
-
-          <Button
-            className="btn button-layout firstAndSecond"
-            variant="secondary"
-            onClick={() => this.resetToPGDefault()}
-          >
-            Reset to P&G Default
-          </Button>
-
-          <Button
-            className="btn button-layout updateButton"
-            variant="primary"
-            onClick={this.handleSubmit}
-          >
-            Update
-          </Button>
-        </div>
-      </>
+  const handleSubmit = async () => {
+    console.log("handleSubmit entities.columns", entities.columns)
+    props.setCustomizeViewFields(JSON.stringify([]));
+    localStorage.setItem(
+      "customizeViewFields",
+      JSON.stringify(entities.columns)
     );
-  }
-}
+    props.setCustomizeViewFields(JSON.stringify(entities.columns));
+    props.hideDialog();
+  };
+  const selected = selectedTaskIds;
+
+  return (
+    <>
+      <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+        <div style={{ display: "flex" }}>
+          {entities.columnOrder.map((columnId) => (
+            <Column
+              column={entities.columns[columnId]}
+              tasks={getTasks(entities, columnId)}
+              selectedTaskIds={selected}
+              key={columnId}
+              draggingTaskId={draggingTaskId}
+              toggleSelection={toggleSelection}
+              toggleSelectionInGroup={toggleSelectionInGroup}
+              multiSelectTo={multiSelectTo}
+              entities={entities}
+              droppableId={localDestination ? localDestination.droppableId : null}
+            />
+          ))}
+        </div>
+      </DragDropContext>
+      <div className="form-buttons dsbp-form-buttons">
+        <Button
+          className="btn button-layout firstAndSecond"
+          variant="secondary"
+          onClick={() => props.hideDialog()}
+        >
+          Cancel
+        </Button>
+
+        <Button
+          className="btn button-layout firstAndSecond"
+          variant="secondary"
+          onClick={resetToPGDefault}
+        >
+          Reset to P&G Default
+        </Button>
+
+        <Button
+          className="btn button-layout updateButton"
+          variant="primary"
+          onClick={handleSubmit}
+        >
+          Update
+        </Button>
+      </div>
+    </>
+  );
+};
+
 export default DragAndDrop;

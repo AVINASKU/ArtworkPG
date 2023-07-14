@@ -25,6 +25,7 @@ const Task = ({
   singleDragFlag,
   entities,
   droppableId,
+  selectedTaskIds
 }) => {
   const onKeyDown = (event, provided, snapshot) => {
     if (event.defaultPrevented) {
@@ -41,6 +42,22 @@ const Task = ({
     performAction(event);
   };
 
+  const copySelectedTasksToClipboard = () => {
+    // Get the selected tasks from the state or props
+  
+    // Create a new array to hold the copied tasks
+    const copiedTasks = [];
+  
+    // Iterate over the selectedTaskIds and add the corresponding tasks to the copiedTasks array
+    selectedTaskIds.forEach((taskId) => {
+      const task = entities.tasks[taskId];
+      copiedTasks.push(task);
+    });
+  
+    // Convert the copiedTasks array to a JSON string and copy it to the clipboard
+    const jsonString = JSON.stringify(copiedTasks);
+    navigator.clipboard.writeText(jsonString);
+  };
   // Using onClick as it will be correctly
   // preventing if there was a drag
   const onClick = (event) => {
@@ -50,20 +67,25 @@ const Task = ({
     if (event.button !== primaryButton) {
       return;
     }
-    // marking the event as used
     event.preventDefault();
     performAction(event);
+    if (event.shiftKey) {
+      // Initiate copy operation if Shift key is pressed
+      copySelectedTasksToClipboard();
+    }
   };
+  
 
   const onTouchEnd = (event) => {
     if (event.defaultPrevented) {
       return;
     }
-    // marking the event as used
-    // we would also need to add some extra logic to prevent the click
-    // if this element was an anchor
     event.preventDefault();
     toggleSelectionInGroup(task.Field_Name);
+    if (event.nativeEvent.shiftKey) {
+      // Initiate copy operation if Shift key is pressed
+      copySelectedTasksToClipboard();
+    }
   };
 
   // Determines if the platform specific toggle selection in group key was used
@@ -86,8 +108,6 @@ const Task = ({
     }
     toggleSelection(task.Field_Name);
   };
-
-  console.log("droppableId:", droppableId, entities);
 
   return (
     <Draggable draggableId={task.Field_Name} index={index}>

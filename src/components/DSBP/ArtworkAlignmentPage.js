@@ -43,6 +43,7 @@ const ArtworkAlignment = () => {
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const [mappedPOAS, setMappedPOAS] = useState([]);
+  const [customizeViewFields, setCustomizeViewFields] = useState(localStorage.getItem("customizeViewFields"));
   const allBUAttributesData = useSelector(
     (state) => state.DropDownValuesReducer
   );
@@ -229,7 +230,7 @@ const ArtworkAlignment = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [customizeViewFields]);
 
   useEffect(() => {
     dispatch(getDSBPDropdownData(BU, Region, ProjectID));
@@ -393,6 +394,8 @@ const ArtworkAlignment = () => {
             setTableRender={setTableRender}
             tableRender={tableRender}
             selectedProjectDetails={selectedProjectDetails}
+            customizeViewFields={customizeViewFields}
+            setCustomizeViewFields={setCustomizeViewFields}
           />
           <SelectDsbpId
             dropdownlist={dropdownlist}
@@ -432,6 +435,8 @@ const ArtworkAlignment = () => {
               setRejectDialog={setRejectDialog}
               tableRender={tableRender}
               setTableRender={setTableRender}
+              customizeViewFields={customizeViewFields}
+              setCustomizeViewFields={setCustomizeViewFields}
             />
           )}
           <FooterButtons

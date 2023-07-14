@@ -20,6 +20,9 @@ const reorderSingleDrag = ({
   source,
   destination,
 }) => {
+  if(source.droppableId === "freezedColumns" && destination.droppableId === "availableFields"){
+    return;
+  }
   // moving in the same list
   if (source.droppableId === destination.droppableId) {
     const column = entities.columns[source.droppableId];
@@ -49,18 +52,12 @@ const reorderSingleDrag = ({
 
   // remove from home column
   const newHomeTaskIds = [...home.fieldsData];
-  console.log("newHomeTaskIds:", newHomeTaskIds, selectedTaskIds);
  
   // Copy and paste record
-  if (
-    source.droppableId === "selectedFields" &&
-    destination.droppableId === "freezedColumns"
-  ) {
-    newHomeTaskIds.splice(source.index, 0);
-  } else {
- // cut and paste record
+  // newHomeTaskIds.splice(source.index, 0);
+
  newHomeTaskIds.splice(source.index, 1);
-  }
+  
 
   // add to foreign column
   const newForeignTaskIds = [...foreign.fieldsData];
@@ -163,13 +160,6 @@ const reorderMultiDrag = ({
   const final = withRemovedTasks[destination.droppableId];
   const withInserted = (() => {
     const base = [...final.fieldsData];
-     // Copy and paste record
-  if (
-    source.droppableId === "selectedFields" &&
-    destination.droppableId === "freezedColumns"
-  ) {
-    console.log("base:", base, insertAtIndex, orderedSelectedTaskIds);
-  }
 
     base.splice(insertAtIndex, 0, ...orderedSelectedTaskIds);
     return base;

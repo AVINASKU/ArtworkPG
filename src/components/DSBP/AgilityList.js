@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Form } from "react-bootstrap";
 import { Column } from "primereact/column";
@@ -40,6 +40,8 @@ const AgilityList = ({
   setRejectDialog,
   tableRender,
   setTableRender,
+  customizeViewFields,
+  setCustomizeViewFields
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -95,8 +97,11 @@ const AgilityList = ({
     isBUHomeCare = true;
   }
 
+  useEffect(() => {
+    setCustomizeViewFields(customizeViewFields);
+  }, [customizeViewFields]);
+
   const onchangeAddToProject = (rowData, e, ele) => {
-    console.log("rowData", rowData, e.target.value, rowData[ele]);
     rowData[ele] = e.target.value;
     setDsbpPmpData([...dsbpPmpData]);
     setOnChangeData(rowData);
@@ -182,7 +187,6 @@ const AgilityList = ({
       updatedData[field] = e.target.value;
       addSavedData.push(updatedData);
     }
-    console.log("add saved data", addSavedData);
     setSavedData(addSavedData);
     setFieldUpdated(!fieldUpdated);
   };
@@ -191,9 +195,6 @@ const AgilityList = ({
     let field = rowData.field;
     let FPCStagingFormula =
       options?.FPCStagingPage?.[0]?.FormulaCardStagingPage;
-    // if(field === "AWM_AISE"){
-    //  console.log("field", options[field]);
-    //
     let concatenatedFPCStagingFormulaData = {};
     if (FPCStagingFormula && FPCStagingFormula.length) {
       concatenatedFPCStagingFormulaData =
@@ -202,17 +203,16 @@ const AgilityList = ({
 
     return (
       <>
-        {field === "DSBP_InitiativeID" && (
-          <div className="flex align-items-center gap-2">
-            <input
-              type="checkbox"
-              className="p-checkbox-box p-highlight"
-              checked={selected?.includes(options)}
-              onChange={() => handleSelect(options)}
-            />
-            {options[field]}
-          </div>
-        )}
+        {field === "field_0" && ( // Add this condition to render a checkbox
+        <div className="flex align-items-center gap-2">
+          <input
+            type="checkbox"
+            className="p-checkbox-box p-highlight"
+            checked={selected?.includes(options)}
+            onChange={() => handleSelect(options)}
+          />
+        </div>
+      )}
         {options?.FPCStagingPage?.[0][field]}
         {concatenatedFPCStagingFormulaData?.[field]}
         {field === "DSBP_PMP_PIMaterialNumber" && (
@@ -331,29 +331,35 @@ const AgilityList = ({
           </Form.Group>
         )}
 
-        {field !== "DSBP_InitiativeID" &&
+        {
           field !== "AWM_AddedToProject" &&
           field !== "DSBP_PMP_PIMaterialNumber" &&
           field !== "AWM_AISE" &&
           field !== "AWM_AssemblyMechanism" &&
           field !== "AWM_Biocide" &&
           field !== "AWM_Sellable" &&
+          field !== "field_0" &&
           options[field]}
       </>
     );
   };
 
   const renderHeader = (field, isFilterActivated = false) => {
-    let splittedCol = field.split("_").join(" ");
-    return (
-      <span key={field}>
-        {field === "DSBP_InitiativeID" && (
+    if (field === "checkbox") { // Render checkbox in header
+      return (
+        <div className="flex align-items-center gap-2">
           <input
             type="checkbox"
+            className="p-checkbox-box p-highlight"
             checked={selectAllChecked}
             onChange={handleSelectAll}
           />
-        )}
+        </div>
+      );
+    }
+    let splittedCol = field.split("_").join(" ");
+    return (
+      <span key={field}>
         <img
           src={filter}
           key={field}
@@ -375,29 +381,96 @@ const AgilityList = ({
       ? localStorage.getItem("columnWidthDSBPArtworkHomeCare")
       : localStorage.getItem("columnWidthDSBPArtworkBabyCare");
     let allColumns = JSON.parse(jsonColumnWidth);
-
-    if (allColumns && allColumns.length) {
-      return allColumns.map((field, index) => {
-        return (
+  
+    // customize fields
+    let jsonValue = customizeViewFields ? JSON.parse(customizeViewFields) : null;
+    if (jsonValue && Object.keys(jsonValue).length !== 0) {
+      let selectedData = jsonValue?.selectedFields?.fieldsData || [];
+      let freezedData = jsonValue?.freezedColumns?.fieldsData || [];
+        const filteredColumns = [];
+        // Add freezedData columns in the specified order
+        freezedData?.forEach(fieldName => {
+          const column = allColumns.find(col => col.Field_Name === fieldName);
+          if (column) {
+              column.freeze = true;
+              filteredColumns.push(column);
+          }
+        });
+        // Add selectedData columns in the specified order
+        selectedData?.forEach(fieldName => {
+          const column = allColumns.find(col => col.Field_Name === fieldName);
+          if (column) {
+              filteredColumns.push(column);
+          }
+        });
+      if (filteredColumns && filteredColumns.length) {
+        return [
+          // Checkbox column
           <Column
-            field={field.Field_Name}
-            header={() => renderHeader(field.Field_Name)}
-            frozen={field.freeze}
-            className={field.freeze ? "font-bold" : ""}
+            key="checkbox"
             body={addBody}
-            key={field.Field_Name}
-            columnKey={field.Field_Name}
-            showFilterMenu={false}
-            alignFrozen="left"
-            filterField={field.Field_Name}
-            style={{
-              width: field.width,
-            }}
-          />
-        );
-      });
+            frozen={true}
+            columnKey="checkbox"
+            header={() => renderHeader("checkbox")}
+            style={{ width: "40px" }}
+          />,
+          // Rest of the columns
+          ...filteredColumns.map((field, index) => {
+          return (
+            <Column
+              field={field.Field_Name}
+              header={() => renderHeader(field.Field_Name)}
+              frozen={field.freeze}
+              className={field.freeze ? "font-bold" : ""}
+              body={addBody}
+              key={field.Field_Name}
+              columnKey={field.Field_Name}
+              showFilterMenu={false}
+              alignFrozen="left"
+              filterField={field.Field_Name}
+              style={{
+                width: field.width,
+              }}
+            />
+          );
+        })];
+      }
+    } else {
+      if (allColumns && allColumns.length) {
+        return [
+          // Checkbox column
+          <Column
+            key="checkbox"
+            body={addBody}
+            frozen={true}
+            columnKey="checkbox"
+            header={() => renderHeader("checkbox")}
+            style={{ width: "40px" }}
+          />,
+          // Rest of the columns
+          ...allColumns.map((field, index) => {
+          return (
+            <Column
+              field={field.Field_Name}
+              header={() => renderHeader(field.Field_Name)}
+              frozen={field.freeze}
+              className={field.freeze ? "font-bold" : ""}
+              body={addBody}
+              key={field.Field_Name}
+              columnKey={field.Field_Name}
+              showFilterMenu={false}
+              alignFrozen="left"
+              filterField={field.Field_Name}
+              style={{
+                width: field.width,
+              }}
+            />
+          );
+        })];
+      }
     }
   };
+  
 
   const onColumnResizeEnd = (event) => {
     let columnWidth = [];

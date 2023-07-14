@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import CustomizeViewDialog from "./CustomizeViewDialog";
 
-const CustomizeView = ({ showTaskDialog, onClose }) => {
+const CustomizeView = ({ showTaskDialog, onClose, setCustomizeViewFields, customizeViewFields }) => {
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const BU = selectedProjectDetails?.BU;
@@ -33,6 +33,8 @@ const CustomizeView = ({ showTaskDialog, onClose }) => {
         onClose={onClose}
         showTaskDialog={showTaskDialog}
         availableFields={availableFields}
+        setCustomizeViewFields={setCustomizeViewFields}
+        customizeViewFields={customizeViewFields}
       />
     </>
   );
