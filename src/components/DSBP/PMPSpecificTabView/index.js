@@ -197,7 +197,7 @@ const PMPSpecificTabView = () => {
   };
 
   const handleCancel = () => {
-    return navigate(`/myProjects`);
+    return navigateToDSBP();
   };
 
   const updateArtWorkTabValuesData = (updatedNewData) => {
@@ -537,6 +537,7 @@ const PMPSpecificTabView = () => {
           hideSaveButton={true}
           onSubmit={onSubmit}
           formValid={Object.keys(formData).length === 0}
+          checkReadWriteAccess={!false}
         />
       </>
     )
