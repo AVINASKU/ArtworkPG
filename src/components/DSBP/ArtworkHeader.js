@@ -29,9 +29,11 @@ const ArtworkHeader = ({
   customizeViewFields,
   setCustomizeViewFields,
   userHasAccess,
+  isDependencyMapping,
 }) => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
+  const [toggleButtons, setToggleButtons] = useState("Tabular");
   const [actionHeader, setActionHeader] = useState("");
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
@@ -104,8 +106,8 @@ const ArtworkHeader = ({
     });
   }
 
-    const breadcrumb = (
-    <div>
+  const breadcrumb = (
+    <div style={{ marginLeft: 10 }}>
       <nav
         className="p-breadcrumb p-component ProjectPlanBreadCrum"
         aria-label="Breadcrumb"
@@ -125,9 +127,9 @@ const ArtworkHeader = ({
             </a>
           </li>
           <li>
-              <div className="project-name">
-                {selectedProjectDetails.Project_Name}
-              </div>
+            <div className="project-name">
+              {selectedProjectDetails.Project_Name}
+            </div>
           </li>
         </ul>
       </nav>
@@ -162,9 +164,7 @@ const ArtworkHeader = ({
         />
       )}
       <div className="actions">
-        <div>
-          {breadcrumb}
-        </div>
+        <div>{breadcrumb}</div>
         <div className="header-buttons">
           <div style={{ top: 30 }}>
             {isFilterActivated.length && !userHasAccess ? (
@@ -181,14 +181,15 @@ const ArtworkHeader = ({
                       ele["reorder"] = false;
                     }
                   });
-                  isBUHomeCare ? 
-                  localStorage.setItem(
-                    "columnWidthDSBPArtworkHomeCare",
-                    JSON.stringify(buWiseSortedColumnNames)
-                  ) : localStorage.setItem(
-                    "columnWidthDSBPArtworkBabyCare",
-                    JSON.stringify(buWiseSortedColumnNames)
-                  );
+                  isBUHomeCare
+                    ? localStorage.setItem(
+                        "columnWidthDSBPArtworkHomeCare",
+                        JSON.stringify(buWiseSortedColumnNames)
+                      )
+                    : localStorage.setItem(
+                        "columnWidthDSBPArtworkBabyCare",
+                        JSON.stringify(buWiseSortedColumnNames)
+                      );
                   setFieldUpdated(!fieldUpdated);
                   setBuWiseSortedColumnNames(buWiseSortedColumnNames);
                   setDsbpPmpData(dsbpPmpData);
@@ -206,14 +207,47 @@ const ArtworkHeader = ({
               />
             )}
           </div>
-
-          <button type="button" disabled={userHasAccess} className="btn btn-secondary">
-            Confirm Full Scope in
-          </button>
+          {isDependencyMapping ? (
+            <div
+                  className="btn-group btn-group-toggle"
+                  data-toggle="buttons"
+                >
+                  <div className="col projectPlanButtons">
+                    <label
+                      className={` btn border border-secondary ${
+                        toggleButtons === "Tabular"
+                          ? "ganttChartTabular active"
+                          : ""
+                      }`}
+                      onClick={() => setToggleButtons("Tabular")}
+                    >
+                      Tabular
+                    </label>
+                    <label
+                      className={` btn border border-secondary ${
+                        toggleButtons === "Visual"
+                          ? "ganttChartTabular active"
+                          : ""
+                      }`}
+                      onClick={() => setToggleButtons("Visual")}
+                    >
+                      Visual
+                    </label>
+                  </div>
+                </div>
+          ) : (
+            <button
+              type="button"
+              disabled={userHasAccess}
+              className="btn btn-secondary"
+            >
+              Confirm Full Scope in
+            </button>
+          )}
           <button
             type="button"
             className="btn btn-secondary"
-            disabled = {userHasAccess}
+            disabled={userHasAccess}
             onClick={() => !userHasAccess && setShowApproveDialogCPPFA(true)}
           >
             Customize View

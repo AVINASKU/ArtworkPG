@@ -45,7 +45,7 @@ export const getDsbpPMPDetails = async (projectId, headers = {}) => {
   });
   let response = addResponse?.data?.DSBPDetails?.DSBP_InitiativeIDPage;
   let filteredResp = [];
-  // If initiative id is mapped to project but don't have an data against with initiative 
+  // If initiative id is mapped to project but don't have an data against with initiative
   //id in brain then pega team is sending only initiative id
   // Below code we need to remove once pega team fix this issue
   if (response) {
@@ -75,4 +75,21 @@ export const onSubmitDsbpAction = async (formData, headers = {}) => {
   });
   console.log("Hello hello ----->", addResponse);
   return addResponse;
+};
+
+export const getDependencyMappingDetails = async (projectId, headers = {}) => {
+  const api = new Api();
+  const axiosInstance = await api.init({ headers });
+  let apiURL = `${DEVURL}/getDependencyMappingDetails/${projectId}`;
+  const addResponse = await axiosInstance({
+    url: apiURL,
+    method: "GET",
+  });
+  let response = addResponse?.data?.DSBPDetails;
+  console.log("response dependency mapping ----->", response);
+  const dependencyTableData = response?.DSBP_InitiativeIDPage[0]?.DSBP_PMP_PIMaterialIDPage;
+  const isRDTData = response?.DSBP_RDT_Page;
+  const isIQData = [];
+  const isCDPTData = [];
+  return {dependencyTableData, isRDTData, isIQData, isCDPTData};
 };
