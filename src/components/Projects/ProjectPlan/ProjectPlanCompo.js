@@ -22,6 +22,7 @@ import {
   hasAllAccess,
 } from "../../../utils";
 import { getMyProject } from "../../../store/actions/ProjectActions";
+import { isArray } from "lodash";
 
 function ProjectPlanCompo(props) {
   const toast = useRef(null);
@@ -66,7 +67,7 @@ function ProjectPlanCompo(props) {
 
   useEffect(() => {
     setActiveFlag(false);
-    let projectData = myProject.find(
+    let projectData = isArray(myProject) && myProject.find(
       (project) => project.Project_ID === ProjectID
     );
     const firstTime = projectPlanDesign.some(

@@ -23,6 +23,7 @@ import {
 import { RoleUser } from "../../../userRole";
 import { useDispatch, useSelector } from "react-redux";
 import { getMyProject } from "../../../store/actions/ProjectActions";
+import { isArray } from "lodash";
 
 const defaultCheckedItems = {
   DI: false,
@@ -124,7 +125,7 @@ function AddProject(props) {
     (state) => state.DropDownValuesReducer
   );
 
-  let projectData = myProject.find(
+  let projectData = isArray(myProject) && myProject.find(
     (project) => project.Project_ID === selectedProjectDetails.Project_ID
   );
 
