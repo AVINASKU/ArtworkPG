@@ -27,7 +27,9 @@ const AddNewDesignContent = ({
   taskName2,
   setAddNewDesign,
   displayBriefDocument,
-  displayBriefDocumentData,
+  clickCount,
+  displayBriefDocumentDataGraphicAdaption,
+  displayBriefDocumentDataReferenceDocuments,
 }) => {
   const { Agency_Reference, Additional_Info, event, Select, Cluster } = item;
 
@@ -111,8 +113,9 @@ const AddNewDesignContent = ({
                 src={plusCollapseImg}
                 alt="filter logo"
                 // onClick={() => setAddNewDesign()}
-                onClick={() => displayBriefDocument(mydata)}
+                onClick={() => displayBriefDocument(mydata, taskName)}
                 className="header-icons"
+                style={{ paddingRight: "4px" }}
                 // disabled={!checkReadWriteAccess}
               />
               <span className="font-color">Add files</span>
@@ -196,6 +199,7 @@ console.log("selectDialog:",selectDialog);
           }}
         >
           <Col sm={1}>
+            <label style={{ paddingRight: "3px" }}>{clickCount}</label>
             <label htmlFor="select"> Upload File</label>
             <div>
             <FileUpload
@@ -239,11 +243,11 @@ console.log("selectDialog:",selectDialog);
                   setSelectDialog(true);
                   setData(taskName);
                   // if (checkReadWriteAccess) {
-                  // displayBriefDocumentData.map((index) => {
-                  //   handleDelete(index);
-                  //   console.log("let us see this", index);
-                  // });
-                  // console.log("handle click clicked", index);
+                  displayBriefDocumentDataGraphicAdaption.map((index) => {
+                    handleDelete(index);
+                    console.log("let us see this", index);
+                  });
+                  console.log("handle click clicked", index);
                 }}
                 // }
                 className="header-icons"
@@ -254,7 +258,13 @@ console.log("selectDialog:",selectDialog);
       </>
     );
     // displayBriefDocument(mydata);
-    return displayBriefDocumentData;
+    console.log("faskname is", taskName);
+    const displayData =
+      taskName === "Graphic Adaption Brief*"
+        ? displayBriefDocumentDataGraphicAdaption
+        : displayBriefDocumentDataReferenceDocuments;
+
+    return displayData;
   };
 
   let mydata;
@@ -307,15 +317,15 @@ console.log("selectDialog:",selectDialog);
               padding: 5,
               marginTop: 10,
             }}
-          ></div>
-          <label>Graphic Adaption Brief 1</label>
+          >
+            <label>Graphic Adaption Brief 1</label>
+          </div>
           {BriefDocument(taskName)}
           <div className="design-intent-header">
             {DesignHeader(di_name, taskName2)}
           </div>
-          <label>{taskName2}</label>
           {BriefDocument(taskName2)}
-          {/* {displayBriefDocumentData} */}
+          {/* {  displayBriefDocumentDataGraphicAdaption} */}
         </>
       ) : (
         <Row
