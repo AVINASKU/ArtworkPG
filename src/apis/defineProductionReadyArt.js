@@ -19,17 +19,21 @@ export const saveDefineProductionReadyArt = async (
     data: formData,
   });
 
-  console.log("response", DefineProductionReadyArt, formData);
+  console.log("response vesponse", DefineProductionReadyArt, formData);
 
   return true;
 };
 
-export const submitDefineProductionReadyArt = async (formData, id, headers = {}) => {
+export const submitDefineProductionReadyArt = async (
+  formData,
+  id,
+  headers = {}
+) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
   let apiURL;
   //https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v2/assignments/ASSIGN-WORKLIST PG-AAS-WORK D-806!PRODUCTIONREADYART_FLOW/actions/DefineProductionReadyArt
-  
+
   apiURL = `${DEVURL}/definePRA/${id}`;
 
   const submitDefineProductionReadyArtData = await axiosInstance({

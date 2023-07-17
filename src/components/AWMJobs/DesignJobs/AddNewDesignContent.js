@@ -5,6 +5,8 @@ import { Checkbox } from "primereact/checkbox";
 import deleteIcon from "../../../assets/images/deleteIcon.svg";
 import { AutoComplete } from "primereact/autocomplete";
 import plusCollapseImg from "../../../assets/images/plusCollapse.svg";
+import upVersion from "../../../assets/images/upVersion.svg";
+import upload from "../../../assets/images/upload.svg";
 
 const AddNewDesignContent = ({
   index,
@@ -19,7 +21,10 @@ const AddNewDesignContent = ({
   setSubmitActive,
   checkReadWriteAccess,
   taskName,
+  taskName2,
   setAddNewDesign,
+  displayBriefDocument,
+  displayBriefDocumentData,
 }) => {
   const { Agency_Reference, Additional_Info, event, Select, Cluster } = item;
 
@@ -61,7 +66,8 @@ const AddNewDesignContent = ({
           }}
           className="font-color"
         >
-          {taskName === "Graphic Adaption Brief*"
+          {taskName === "Graphic Adaption Brief*" ||
+          taskName2 === "Other Reference Documents & Assets"
             ? !di_name
               ? `${taskName}`
               : di_name
@@ -71,14 +77,19 @@ const AddNewDesignContent = ({
           {/* {!di_name ? `${taskName} ${index + 1}` : di_name} */}
         </div>
         <div>
-          {taskName === "Graphic Adaption Brief*" ? (
-            <img
-              src={plusCollapseImg}
-              alt="filter logo"
-              onClick={() => setAddNewDesign()}
-              className="header-icons"
-              // disabled={!checkReadWriteAccess}
-            />
+          {taskName === "Graphic Adaption Brief*" ||
+          taskName2 === "Other Reference Documents & Assets" ? (
+            <div>
+              <img
+                src={plusCollapseImg}
+                alt="filter logo"
+                // onClick={() => setAddNewDesign()}
+                onClick={() => displayBriefDocument(mydata)}
+                className="header-icons"
+                // disabled={!checkReadWriteAccess}
+              />
+              <span className="font-color">Add files</span>
+            </div>
           ) : (
             <img
               src={deleteIcon}
@@ -93,6 +104,68 @@ const AddNewDesignContent = ({
     );
   };
 
+  const BriefDocument = (taskName) => {
+    mydata = (
+      <>
+        <Row
+          style={{
+            marginLeft: 15,
+            marginRight: 15,
+            marginBottom: 15,
+            marginTop: 5,
+          }}
+        >
+          <Col sm={1}>
+            <label htmlFor="select"> Upload File</label>
+            <div>
+              <img
+                src={upload}
+                alt="filter logo"
+                // onClick={() => checkReadWriteAccess && handleDelete(index)}
+                className="header-icons"
+                disabled={!checkReadWriteAccess}
+              ></img>
+            </div>
+          </Col>
+          <Col sm={4}>
+            <label>Up Version</label>
+            <div>
+              <img
+                src={upVersion}
+                alt="filter logo"
+                // onClick={() => checkReadWriteAccess && handleDelete(index)}
+                className="header-icons"
+                disabled={!checkReadWriteAccess}
+              ></img>
+            </div>
+          </Col>
+          <Col sm={1}>
+            <label>Delete</label>
+            <div>
+              <img
+                src={deleteIcon}
+                alt="filter logo"
+                onClick={() => {
+                  // if (checkReadWriteAccess) {
+                  displayBriefDocumentData.map((index) => {
+                    handleDelete(index);
+                    console.log("let us see this", index);
+                  });
+                  console.log("handle click clicked", index);
+                }}
+                // }
+                className="header-icons"
+              ></img>
+            </div>
+          </Col>
+        </Row>
+      </>
+    );
+    // displayBriefDocument(mydata);
+    return displayBriefDocumentData;
+  };
+
+  let mydata;
   let di_name;
   let clubBrandName =
     Brand?.length && Brand.map((item) => item.Brand_Name).join(", ");
@@ -120,97 +193,118 @@ const AddNewDesignContent = ({
   return (
     <div>
       <div className="design-intent-header">{DesignHeader(di_name)}</div>
-      <Row
-        style={{
-          marginLeft: 15,
-          marginRight: 15,
-          marginBottom: 15,
-          marginTop: 5,
-        }}
-      >
-        <Col sm={1}>
-          <label htmlFor="select"> Select</label>
-          <div>
-            <Checkbox
-              onChange={(e) => {
-                addData("Select", index, e.checked, di_name);
-                setChecked(e.checked);
-                // setSubmitActive(e.checked ? false : true);
-              }}
-              checked={event === "submit" ? true : checked}
-              disabled={!checkReadWriteAccess}
-              className="margin-right"
-            ></Checkbox>
+      {taskName === "Graphic Adaption Brief*" ? (
+        <>
+          <div
+            className="font-color"
+            style={{
+              marginLeft: 20,
+              padding: 5,
+              marginTop: 10,
+            }}
+          ></div>
+          <label>Graphic Adaption Brief 1</label>
+          {BriefDocument(taskName)}
+          <div className="design-intent-header">
+            {DesignHeader(di_name, taskName2)}
           </div>
-        </Col>
-        <Col sm={2}>
-          <div className="d-flex flex-column">
-            <label htmlFor="agency">Agency Reference * </label>
-            <InputText
-              id="agency"
-              value={agencyRef}
-              onChange={(e) => {
-                addData("Agency_Reference", index, e.target.value, di_name);
-                setAgency(e.target.value);
-              }}
-              disabled={!checkReadWriteAccess}
-              aria-describedby="agency-help"
-            />
-          </div>
-          {(agencyRef === "" || agencyRef === undefined) && (
-            <div className="error-text-di">Field Remaining</div>
-          )}
-        </Col>
-        <Col sm={2}>
-          <div className="d-flex flex-column">
-            <label htmlFor="cluster">Cluster * </label>
-            <InputText
-              id="cluster"
-              value={clusters}
-              onChange={(e) => {
-                addData("Cluster", index, e.target.value, di_name);
-                setCluster(e.target.value);
-              }}
-              disabled={!checkReadWriteAccess}
-              aria-describedby="cluster-help"
-            />
-          </div>
-          {(clusters === "" || clusters === undefined) && (
-            <span className="error-text-di">Field Remaining</span>
-          )}{" "}
-        </Col>
-        {checkBU && (
-          <Col sm={2} className="set-autocomplete-height">
-            <div className="d-flex flex-column">
-              <label htmlFor="tier">Tier </label>
-              <AutoComplete
-                value={tier}
-                suggestions={items}
-                completeMethod={search}
-                onChange={(e) => setTier(e.value)}
-                dropdown
+          <label>{taskName2}</label>
+          {BriefDocument(taskName2)}
+          {/* {displayBriefDocumentData} */}
+        </>
+      ) : (
+        <Row
+          style={{
+            marginLeft: 15,
+            marginRight: 15,
+            marginBottom: 15,
+            marginTop: 5,
+          }}
+        >
+          <Col sm={1}>
+            <label htmlFor="select"> Select</label>
+            <div>
+              <Checkbox
+                onChange={(e) => {
+                  addData("Select", index, e.checked, di_name);
+                  setChecked(e.checked);
+                  // setSubmitActive(e.checked ? false : true);
+                }}
+                checked={event === "submit" ? true : checked}
                 disabled={!checkReadWriteAccess}
+                className="margin-right"
+              ></Checkbox>
+            </div>
+          </Col>
+          <Col sm={2}>
+            <div className="d-flex flex-column">
+              <label htmlFor="agency">Agency Reference * </label>
+              <InputText
+                id="agency"
+                value={agencyRef}
+                onChange={(e) => {
+                  addData("Agency_Reference", index, e.target.value, di_name);
+                  setAgency(e.target.value);
+                }}
+                disabled={!checkReadWriteAccess}
+                aria-describedby="agency-help"
+              />
+            </div>
+            {(agencyRef === "" || agencyRef === undefined) && (
+              <div className="error-text-di">Field Remaining</div>
+            )}
+          </Col>
+          <Col sm={2}>
+            <div className="d-flex flex-column">
+              <label htmlFor="cluster">Cluster * </label>
+              <InputText
+                id="cluster"
+                value={clusters}
+                onChange={(e) => {
+                  addData("Cluster", index, e.target.value, di_name);
+                  setCluster(e.target.value);
+                }}
+                disabled={!checkReadWriteAccess}
+                aria-describedby="cluster-help"
+              />
+            </div>
+            {(clusters === "" || clusters === undefined) && (
+              <span className="error-text-di">Field Remaining</span>
+            )}{" "}
+          </Col>
+          {checkBU && (
+            <Col sm={2} className="set-autocomplete-height">
+              <div className="d-flex flex-column">
+                <label htmlFor="tier">Tier </label>
+                <AutoComplete
+                  value={tier}
+                  suggestions={items}
+                  completeMethod={search}
+                  onChange={(e) => setTier(e.value)}
+                  dropdown
+                  disabled={!checkReadWriteAccess}
+                />
+              </div>
+            </Col>
+          )}
+
+          <Col sm={2}>
+            <div className="d-flex flex-column">
+              <label htmlFor="additional">Additional Info </label>
+              <InputText
+                id="additional"
+                value={additionalInformation}
+                onChange={(e) => {
+                  addData("Additional_Info", index, e.target.value, di_name);
+                  setAdditionalInfo(e.target.value);
+                }}
+                disabled={!checkReadWriteAccess}
+                aria-describedby="info-help"
               />
             </div>
           </Col>
-        )}
-
-        <Col sm={2}>
-          <div className="d-flex flex-column">
-            <label htmlFor="additional">Additional Info </label>
-            <InputText
-              id="additional"
-              value={additionalInformation}
-              onChange={(e) => {
-                addData("Additional_Info", index, e.target.value, di_name);
-                setAdditionalInfo(e.target.value);
-              }}
-              disabled={!checkReadWriteAccess}
-              aria-describedby="info-help"
-            />
-          </div>
-        </Col>
-      </Row>
+        </Row>
+      )}
     </div>
   );
 };

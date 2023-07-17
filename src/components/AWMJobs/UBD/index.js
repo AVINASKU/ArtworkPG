@@ -25,6 +25,7 @@ function UBD() {
   const [designIntent, setDesignIntent] = useState([]);
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
+  const [displayBriefDocumentData, setDisplayBriefDocumentData] = useState([]);
   const [enableSubmit, setEnableSubmit] = useState(true);
   const [projectData, setProjectData] = useState([]);
   const [loader, setLoader] = useState(false);
@@ -34,6 +35,7 @@ function UBD() {
   const { TaskDetailsData, loading } = useSelector(
     (state) => state.TaskDetailsReducer
   );
+  console.log("TaskDetailsData is", TaskDetailsData);
   const { allProjects } = useSelector((state) => state.myProject);
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
 
@@ -74,18 +76,40 @@ function UBD() {
     return navigate(`/${currentUrl?.split("/")[1]}`);
   };
 
+  // const handleDelete = (index) => {
+  //   console.log("lindex lindex is", index);
+  //   const sub = designIntent.map((item, i) => {
+  //     if (i === index) {
+  //       item.Action = "delete";
+  //     }
+  //     return item;
+  //   });
+  //   setDesignIntent(sub);
+  // };
+
   const handleDelete = (index) => {
-    console.log("index", index);
-    const sub = designIntent.map((item, i) => {
-      if (i === index) {
-        item.Action = "delete";
-      }
-      return item;
+    console.log("lindex lindex is", index);
+    const sub = displayBriefDocumentData.map((item, i) => {
+      // if (i === index) {
+      //   item.Action = "delete";
+      // }
+      // return item;
+      console.log("nitem is", item);
+      console.log("ni is", i);
     });
-    setDesignIntent(sub);
+    // setDesignIntent(sub);
+  };
+
+  const displayBriefDocument = (val) => {
+    // setDisplayBriefDocumentData(displayBriefDocumentData.push(val));
+    setDisplayBriefDocumentData([...displayBriefDocumentData, val]);
+    console.log("valval is", displayBriefDocumentData);
+
+    // displayBriefDocumentData.push(val);
   };
 
   const addNewEmptyDesign = () => {
+    console.log("designIntent is", designIntent);
     designIntent.push({
       Design_Job_ID: designIntent.length + 1,
       isNew: true,
@@ -189,7 +213,7 @@ function UBD() {
       },
       pageInstructions: updatedDataList,
     };
-    console.log("formData", formData);
+    console.log("formData formData is", formData);
     await submitDefineProductionReadyArt(formData, id, headers);
     setLoader(false);
     navigate(`/${currentUrl?.split("/")[1]}`);
@@ -276,7 +300,10 @@ function UBD() {
                   Brand={Brand}
                   Category={Category}
                   checkReadWriteAccess={checkReadWriteAccess}
+                  displayBriefDocument={displayBriefDocument}
+                  displayBriefDocumentData={displayBriefDocumentData}
                   taskName="Graphic Adaption Brief*"
+                  taskName2="Other Reference Documents & Assets"
                 />
               );
             }
