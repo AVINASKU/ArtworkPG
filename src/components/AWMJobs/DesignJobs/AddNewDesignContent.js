@@ -25,7 +25,9 @@ const AddNewDesignContent = ({
   taskName2,
   setAddNewDesign,
   displayBriefDocument,
-  displayBriefDocumentData,
+  clickCount,
+  displayBriefDocumentDataGraphicAdaption,
+  displayBriefDocumentDataReferenceDocuments,
 }) => {
   const { Agency_Reference, Additional_Info, event, Select, Cluster } = item;
 
@@ -57,7 +59,7 @@ const AddNewDesignContent = ({
     setChecked(Select);
   }, [Select]);
 
-  const DesignHeader = (di_name) => {
+  const DesignHeader = (di_name, taskName) => {
     return (
       <>
         <div
@@ -77,7 +79,7 @@ const AddNewDesignContent = ({
             ? `${taskName} ${index + 1}`
             : di_name}
 
-          <OverlayTrigger
+          {/* <OverlayTrigger
             placement="right"
             show
             overlay={
@@ -95,7 +97,7 @@ const AddNewDesignContent = ({
             <div className="infoIcon">
               <img src={infoIcon} alt="" />
             </div>
-          </OverlayTrigger>
+          </OverlayTrigger> */}
           {/* {!di_name ? `${taskName} ${index + 1}` : di_name} */}
         </div>
         <div>
@@ -106,8 +108,9 @@ const AddNewDesignContent = ({
                 src={plusCollapseImg}
                 alt="filter logo"
                 // onClick={() => setAddNewDesign()}
-                onClick={() => displayBriefDocument(mydata)}
+                onClick={() => displayBriefDocument(mydata, taskName)}
                 className="header-icons"
+                style={{ paddingRight: "4px" }}
                 // disabled={!checkReadWriteAccess}
               />
               <span className="font-color">Add files</span>
@@ -138,6 +141,7 @@ const AddNewDesignContent = ({
           }}
         >
           <Col sm={1}>
+            <label style={{ paddingRight: "3px" }}>{clickCount}</label>
             <label htmlFor="select"> Upload File</label>
             <div>
               <img
@@ -169,7 +173,7 @@ const AddNewDesignContent = ({
                 alt="filter logo"
                 onClick={() => {
                   // if (checkReadWriteAccess) {
-                  displayBriefDocumentData.map((index) => {
+                  displayBriefDocumentDataGraphicAdaption.map((index) => {
                     handleDelete(index);
                     console.log("let us see this", index);
                   });
@@ -184,7 +188,13 @@ const AddNewDesignContent = ({
       </>
     );
     // displayBriefDocument(mydata);
-    return displayBriefDocumentData;
+    console.log("faskname is", taskName);
+    const displayData =
+      taskName === "Graphic Adaption Brief*"
+        ? displayBriefDocumentDataGraphicAdaption
+        : displayBriefDocumentDataReferenceDocuments;
+
+    return displayData;
   };
 
   let mydata;
@@ -214,7 +224,9 @@ const AddNewDesignContent = ({
 
   return (
     <div>
-      <div className="design-intent-header">{DesignHeader(di_name)}</div>
+      <div className="design-intent-header">
+        {DesignHeader(di_name, taskName)}
+      </div>
       {taskName === "Graphic Adaption Brief*" ? (
         <>
           <div
@@ -224,15 +236,15 @@ const AddNewDesignContent = ({
               padding: 5,
               marginTop: 10,
             }}
-          ></div>
-          <label>Graphic Adaption Brief 1</label>
+          >
+            <label>Graphic Adaption Brief 1</label>
+          </div>
           {BriefDocument(taskName)}
           <div className="design-intent-header">
             {DesignHeader(di_name, taskName2)}
           </div>
-          <label>{taskName2}</label>
           {BriefDocument(taskName2)}
-          {/* {displayBriefDocumentData} */}
+          {/* {  displayBriefDocumentDataGraphicAdaption} */}
         </>
       ) : (
         <Row

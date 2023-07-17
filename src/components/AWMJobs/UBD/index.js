@@ -25,11 +25,19 @@ function UBD() {
   const [designIntent, setDesignIntent] = useState([]);
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
-  const [displayBriefDocumentData, setDisplayBriefDocumentData] = useState([]);
+  const [
+    displayBriefDocumentDataGraphicAdaption,
+    setDisplayBriefDocumentDataGraphicAdaption,
+  ] = useState([]);
+  const [
+    displayBriefDocumentDataReferenceDocuments,
+    setDisplayBriefDocumentDataReferenceDocuments,
+  ] = useState([]);
   const [enableSubmit, setEnableSubmit] = useState(true);
   const [projectData, setProjectData] = useState([]);
   const [loader, setLoader] = useState(false);
   let { TaskID, ProjectID } = useParams();
+  const [clickCount, setClickCount] = useState(1);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { TaskDetailsData, loading } = useSelector(
@@ -89,7 +97,7 @@ function UBD() {
 
   const handleDelete = (index) => {
     console.log("lindex lindex is", index);
-    const sub = displayBriefDocumentData.map((item, i) => {
+    const sub = displayBriefDocumentDataGraphicAdaption.map((item, i) => {
       // if (i === index) {
       //   item.Action = "delete";
       // }
@@ -100,12 +108,23 @@ function UBD() {
     // setDesignIntent(sub);
   };
 
-  const displayBriefDocument = (val) => {
-    // setDisplayBriefDocumentData(displayBriefDocumentData.push(val));
-    setDisplayBriefDocumentData([...displayBriefDocumentData, val]);
-    console.log("valval is", displayBriefDocumentData);
+  const displayBriefDocument = (val, taskName) => {
+    taskName === "Graphic Adaption Brief*" &&
+      setDisplayBriefDocumentDataGraphicAdaption([
+        ...displayBriefDocumentDataGraphicAdaption,
+        val,
+      ]);
+    taskName === "Other Reference Documents & Assets" &&
+      setDisplayBriefDocumentDataReferenceDocuments([
+        ...displayBriefDocumentDataReferenceDocuments,
+        val,
+      ]);
 
-    // displayBriefDocumentData.push(val);
+    //   setDisplayBriefDocumentDataGraphicAdaption([...displayBriefDocumentDataGraphicAdaption, val]);
+    setClickCount(clickCount + 1);
+    console.log("taskName taskName is", taskName);
+
+    // displayBriefDocumentDataGraphicAdaption.push(val);
   };
 
   const addNewEmptyDesign = () => {
@@ -301,9 +320,15 @@ function UBD() {
                   Category={Category}
                   checkReadWriteAccess={checkReadWriteAccess}
                   displayBriefDocument={displayBriefDocument}
-                  displayBriefDocumentData={displayBriefDocumentData}
+                  displayBriefDocumentDataGraphicAdaption={
+                    displayBriefDocumentDataGraphicAdaption
+                  }
+                  displayBriefDocumentDataReferenceDocuments={
+                    displayBriefDocumentDataReferenceDocuments
+                  }
                   taskName="Graphic Adaption Brief*"
                   taskName2="Other Reference Documents & Assets"
+                  clickCount={clickCount}
                 />
               );
             }
