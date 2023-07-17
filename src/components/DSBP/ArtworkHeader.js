@@ -105,7 +105,7 @@ const ArtworkHeader = ({
   }
 
     const breadcrumb = (
-    <div style={{marginLeft:10}}>
+    <div>
       <nav
         className="p-breadcrumb p-component ProjectPlanBreadCrum"
         aria-label="Breadcrumb"
@@ -152,7 +152,7 @@ const ArtworkHeader = ({
     }
   }, [actionDropDownValues]);
   return (
-    <div className="actions">
+    <div>
       {showApproveDialogCPPFA && (
         <CustomizeView
           onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}

@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 const ProjectNameHeader = ({ selectedProjectDetails }) => {
   return (
-    <div className=" margin-left" style={{ textAlign: "initial" }}>
+    <div>
     
       <NavLink to={`/myProjects`} className="p-menuitem-link">
         <span
