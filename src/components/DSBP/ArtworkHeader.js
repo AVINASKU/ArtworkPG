@@ -26,6 +26,8 @@ const ArtworkHeader = ({
   dsbpPmpData,
   setTableRender,
   tableRender,
+  customizeViewFields,
+  setCustomizeViewFields,
   userHasAccess,
 }) => {
   const navigate = useNavigate();
@@ -155,6 +157,8 @@ const ArtworkHeader = ({
         <CustomizeView
           onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
           showTaskDialog={showApproveDialogCPPFA}
+          setCustomizeViewFields={setCustomizeViewFields}
+          customizeViewFields={customizeViewFields}
         />
       )}
       <div className="actions">

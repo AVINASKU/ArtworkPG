@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import CustomizeViewDialog from "./CustomizeViewDialog";
 
-const CustomizeView = ({ showTaskDialog, onClose }) => {
+const CustomizeView = ({ showTaskDialog, onClose, setCustomizeViewFields, customizeViewFields }) => {
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const BU = selectedProjectDetails?.BU;
@@ -27,17 +27,14 @@ const CustomizeView = ({ showTaskDialog, onClose }) => {
     });
   }
 
-  const selectedFields = [];
-  const freezedColumns = [];
-
   return (
     <>
       <CustomizeViewDialog
         onClose={onClose}
         showTaskDialog={showTaskDialog}
         availableFields={availableFields}
-        selectedFields={selectedFields}
-        freezedColumns={freezedColumns}
+        setCustomizeViewFields={setCustomizeViewFields}
+        customizeViewFields={customizeViewFields}
       />
     </>
   );
