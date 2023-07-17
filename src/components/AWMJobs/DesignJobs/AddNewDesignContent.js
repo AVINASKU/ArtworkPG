@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { InputText } from "primereact/inputtext";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Checkbox } from "primereact/checkbox";
 import deleteIcon from "../../../assets/images/deleteIcon.svg";
+import infoIcon from "../../../assets/images/infoIcon.svg";
 import { AutoComplete } from "primereact/autocomplete";
 import plusCollapseImg from "../../../assets/images/plusCollapse.svg";
 import upVersion from "../../../assets/images/upVersion.svg";
@@ -63,6 +64,7 @@ const AddNewDesignContent = ({
           style={{
             marginLeft: 20,
             padding: 5,
+            display: "flex",
           }}
           className="font-color"
         >
@@ -74,6 +76,26 @@ const AddNewDesignContent = ({
             : !di_name
             ? `${taskName} ${index + 1}`
             : di_name}
+
+          <OverlayTrigger
+            placement="right"
+            show
+            overlay={
+              <Tooltip className="tooltip1" style={{ margin: "0 0 0 -7px" }}>
+                <div className="toolname1">
+                  TExtTExtTExtTExt TExt dddd TExtTExtTExtTExt TExt dd333
+                  TExtTExtTExtTExt TExt dddd TExtTExtTExtTExt TExt dd333
+                  TExtTExtTExtTExt TExt dddd TExtTExtTExtTExt TExt dd333
+                  TExtTExtTExtTExt TExt dddd TExtTExtTExtTExt TExt dd333
+                  TExtTExtTExtTExt TExt dddd TExtTExtTExtTExt TExt dd333
+                </div>
+              </Tooltip>
+            }
+          >
+            <div className="infoIcon">
+              <img src={infoIcon} alt="" />
+            </div>
+          </OverlayTrigger>
           {/* {!di_name ? `${taskName} ${index + 1}` : di_name} */}
         </div>
         <div>

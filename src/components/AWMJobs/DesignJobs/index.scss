@@ -1,12 +1,14 @@
 .header-margin {
   margin-right: 5%;
 }
+
 .content {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   background-color: "#EDF4FA";
 }
+
 .design-intent-header {
   background-color: rgb(237, 244, 250);
   display: flex;
@@ -19,10 +21,12 @@
 .font-color {
   color: #003da5;
 }
+
 .approve-design-intent {
   .p-button.p-button-rounded {
     border: hidden !important;
   }
+
   padding: 10px;
 }
 
@@ -38,19 +42,23 @@
     line-height: 12px;
     font-size: 10px;
   }
+
   .p-autocomplete-dropdown {
     border: 1px solid #ced4da;
     background: #ffffff;
     color: #ced4da;
   }
 }
+
 .col-sm-2 {
   position: relative;
 }
+
 .p-fileupload {
   position: relative;
   width: 100%;
   padding-top: 16px;
+
   .p-button,
   .p-button:hover {
     background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15.6166 9.24763L15.6166 13.1908C15.6036 13.9477 15.2911 14.6686 14.7474 15.1953C14.2037 15.7221 13.4733 16.0117 12.7163 16.0007L2.90022 16.0007C2.14329 16.0117 1.41288 15.7221 0.869187 15.1953C0.325497 14.6686 0.0129153 13.9477 -1.22836e-07 13.1908L-2.98002e-07 9.18349C0.00190862 9.06692 0.0499384 8.95586 0.133569 8.87463C0.217199 8.79341 0.329613 8.74864 0.446187 8.75013C0.562718 8.74878 0.675047 8.7936 0.758646 8.8748C0.842244 8.95599 0.89032 9.06697 0.892374 9.18349L0.892375 13.1908C0.901179 13.7147 1.11759 14.2137 1.49407 14.5782C1.87055 14.9426 2.3763 15.1427 2.90022 15.1345L12.7163 15.1345C13.2403 15.1427 13.746 14.9426 14.1225 14.5782C14.499 14.2137 14.7154 13.7147 14.7242 13.1908L14.7242 9.24763C14.7242 9.12929 14.7712 9.0158 14.8549 8.93212C14.9385 8.84845 15.052 8.80144 15.1704 8.80144C15.2887 8.80144 15.4022 8.84845 15.4859 8.93212C15.5695 9.0158 15.6166 9.12929 15.6166 9.24763ZM11.1547 4.26483C11.1548 4.32433 11.143 4.38326 11.12 4.43814C11.0971 4.49303 11.0633 4.54276 11.0208 4.58441C10.9349 4.66885 10.8192 4.71617 10.6987 4.71617C10.5783 4.71617 10.4626 4.66885 10.3766 4.58441L8.26116 2.48398L8.26116 11.6453C8.26042 11.7651 8.21242 11.8796 8.1276 11.9642C8.04278 12.0487 7.92801 12.0962 7.80828 12.0965C7.74856 12.0977 7.68922 12.0868 7.63379 12.0645C7.57835 12.0423 7.52794 12.0092 7.48555 11.9671C7.44316 11.925 7.40965 11.8748 7.387 11.8196C7.36436 11.7643 7.35304 11.7051 7.35373 11.6453L7.35373 2.48454L5.23935 4.58441C5.15351 4.66882 5.03793 4.71612 4.91754 4.71612C4.79715 4.71612 4.68158 4.66882 4.59573 4.58441C4.55306 4.54284 4.51915 4.49314 4.496 4.43826C4.47284 4.38337 4.46091 4.3244 4.46091 4.26483C4.46091 4.20526 4.47284 4.14629 4.496 4.0914C4.51915 4.03651 4.55306 3.98682 4.59573 3.94525L7.48647 1.07571C7.52838 1.03294 7.57847 0.999051 7.63376 0.976054C7.68905 0.953057 7.7484 0.941424 7.80828 0.941848C7.9285 0.943127 8.04352 0.991133 8.12898 1.07571L11.0208 3.94581C11.0633 3.98739 11.0969 4.03703 11.1199 4.09182C11.1429 4.1466 11.1547 4.20542 11.1547 4.26483Z' fill='%23003DA5' stroke='%23003DA5' stroke-width='0.5'/%3E%3C/svg%3E") !important;
@@ -70,16 +78,19 @@
       color: red;
     }
   }
+
   .p-button[aria-label="Upload"],
   .p-button[aria-label="Cancel"],
   .p-button-icon {
     display: none;
   }
+
   .p-fileupload-buttonbar {
     background: transparent;
     border: 0;
     padding: 0 20px;
   }
+
   .p-fileupload-content {
     background: #ffffff;
     padding: 10px;
@@ -90,19 +101,23 @@
     position: absolute;
     top: 69%;
     left: 0;
+
     .p-progressbar {
       display: none;
     }
   }
+
   .p-fileupload-row {
     display: flex;
     align-items: center;
     padding: 0;
     margin: 0;
     height: 30px;
+
     div {
       font-size: 10px;
     }
+
     .p-badge,
     .p-button {
       display: none;
@@ -114,6 +129,7 @@
 .disabled-text {
   color: #acacac;
 }
+
 .enabled-text {
   color: #595959;
 }
@@ -122,19 +138,74 @@
   opacity: 0.5;
   pointer-events: none;
 }
+
 .delete-icons {
   cursor: pointer;
 }
+
 sup {
   color: red;
 }
+
 .footer-buttons {
   padding: 5;
   background: "#FAFAFA";
 }
-.align-item-center{
+
+.align-item-center {
   align-items: center;
   justify-content: center;
   display: flex;
   height: 100%;
 }
+
+// AddNewDesignContent Styles Start
+.infoIcon {
+  margin-left: 2px;
+}
+
+.tooltip1 {
+  color: #fff;
+  background-color: transparent;
+  border-color: #007bff;
+  margin-left: -1.5%;
+  z-index: 10000000 !important;
+
+  .tooltip-inner {
+    background-color: rgba(254, 254, 254, 1) !important;
+    width: 281px;
+    height: 193px;
+    border-radius: 2px;
+    border: solid 1px rgba(172, 172, 172, 1);
+    margin-left: 13px;
+    overflow-y: auto;
+  }
+}
+
+.toolname1 {
+  color: rgba(89, 89, 89, 1);
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  background: transparent;
+}
+
+.tooltip1>.tooltip-arrow {
+  left: 10px;
+  top: -8px !important;
+}
+
+.tooltip1>.tooltip-arrow::before {
+  border: 1px solid rgb(172, 172, 172);
+  width: 16.86px;
+  height: 16.86px;
+  border-right-color: transparent !important;
+  border-top-color: transparent !important;
+  transform: rotate(45deg);
+  right: -9px;
+  background-color: #fff;
+  top: 50%;
+}
+
+// AddNewDesignContent Styles End
