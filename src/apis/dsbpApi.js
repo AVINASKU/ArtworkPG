@@ -88,8 +88,8 @@ export const getDependencyMappingDetails = async (projectId, headers = {}) => {
   let response = addResponse?.data?.DSBPDetails;
   console.log("response dependency mapping ----->", response);
   const dependencyTableData = response?.DSBP_InitiativeIDPage[0]?.DSBP_PMP_PIMaterialIDPage;
-  const isRDTData = response?.DSBP_RDT_Page;
-  const isIQData = [];
-  const isCDPTData = [];
+  const isRDTData = response?.AWM_RDT_Page;
+  const isIQData = response?.AWM_IQ_Page;
+  const isCDPTData = response?.AWM_CDPT_Page;
   return {dependencyTableData, isRDTData, isIQData, isCDPTData};
 };

@@ -127,23 +127,23 @@ const DependencyMappingList = ({
     }
   };
 
-  const rowClassName = (rowData) => {
-    let field = rowData.field;
-    console.log("field and options", rowData.DSBP_PMP_PIMaterialNumber);
-    if (
-      rowData.DSBP_PMP_PIMaterialNumber === "90039166" ||
-      rowData.DSBP_PMP_PIMaterialNumber === "90062074"
-    ) {
-      return "white-bg-color"; // class name for highlighted rows
-    }
-    return "pink-bg-color"; // default class name for other rows
-  };
+  // const rowClassName = (rowData) => {
+  //   let field = rowData.field;
+  //   console.log("field and options", rowData.DSBP_PMP_PIMaterialNumber);
+  //   if (
+  //     rowData.DSBP_PMP_PIMaterialNumber === "90039166" ||
+  //     rowData.DSBP_PMP_PIMaterialNumber === "90062074"
+  //   ) {
+  //     return "white-bg-color"; // class name for highlighted rows
+  //   }
+  //   return "pink-bg-color"; // default class name for other rows
+  // };
 
   return (
     <DataTable
-      dataKey="DSBP_PMP_PIMaterialID"
+      // dataKey="DSBP_PMP_PIMaterialID"
       value={dependencyMappingData}
-      rowClassName={rowClassName}
+      // rowClassName={rowClassName}
       className="mt-3"
       responsiveLayout="scroll"
       columnResizeMode="expand"
