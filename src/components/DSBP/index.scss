@@ -1,45 +1,50 @@
-.artwork-dsbp {
-  padding-top: 8px;
-  position: relative;
-  .multiselect-padding {
-    margin-bottom: 10px;
-  }
-  .margin-left {
-    margin-left: 10px;
-  }
-  .margin-right {
-    margin-right: 20px;
-  }
-  .p-datatable {
-    height: calc(100% - 140px);
-    .p-datatable-wrapper {
-      height: 100%;
+.content-layout .tabular-view .myProjectAnddAllProjectList{
+  &.artwork-dsbp {
+    height: calc(100% + 19px);
+    padding-top: 8px;
+    position: relative;
+    .multiselect-padding {
+      margin-bottom: 10px;
+    }
+    .margin-left {
+      margin-left: 16px;
+    }
+    .margin-right {
+      margin-right: 20px;
+    }
+    .p-datatable {
+      height: calc(100% - 152px);
+      .p-datatable-wrapper {
+        height: 100%;
+      }
+    }
+    .p-multiselect .p-multiselect-label.p-placeholder {
+      color: #595959;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 10px;
+    }
+    .p-multiselect .p-multiselect-label {
+      font-size: 12px;
+    }
+    .header-buttons {
+      gap: 6px;
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+    }
+    .form-buttons{
+      padding: 1rem;
+      position: absolute;
+      background: white;
+      text-align: right;
+      width: 100%;
+      left: 0;
+      bottom: 0;
     }
   }
-  .p-multiselect .p-multiselect-label.p-placeholder {
-    color: #595959;
-    font-size: 12px;
-    font-weight: 500;
-    line-height: 10px;
-  }
-  .p-multiselect .p-multiselect-label {
-    font-size: 12px;
-  }
-  .header-buttons {
-    gap: 6px;
-    align-items: center;
-    display: flex;
-    flex-direction: row;
-  }
-  .form-buttons{
-    position: absolute;
-    background: white;
-    text-align: right;
-    width: 100%;
-    left: 0;
-    bottom: 0;
-  }
 }
+
 .addToProjectTable {
   &.p-datatable.p-datatable-scrollable
     > .p-datatable-wrapper
