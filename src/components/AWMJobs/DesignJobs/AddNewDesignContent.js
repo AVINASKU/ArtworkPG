@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Checkbox } from "primereact/checkbox";
@@ -8,6 +8,8 @@ import { AutoComplete } from "primereact/autocomplete";
 import plusCollapseImg from "../../../assets/images/plusCollapse.svg";
 import upVersion from "../../../assets/images/upVersion.svg";
 import upload from "../../../assets/images/upload.svg";
+import DsbpCommonPopup from "../../DSBP/DsbpCommonPopup";
+import { FileUpload } from "primereact/fileupload";
 
 const AddNewDesignContent = ({
   index,
@@ -57,6 +59,28 @@ const AddNewDesignContent = ({
     setChecked(Select);
   }, [Select]);
 
+  const tooltip = (
+    <OverlayTrigger
+      placement="right"
+      // show
+      overlay={
+        <Tooltip className="tooltip1" style={{ margin: "0 0 0 -7px" }}>
+          <div className="toolname1">
+            TExtTExtTExtTExt TExt dddd TExtTExtTExtTExt TExt dd333
+            TExtTExtTExtTExt TExt dddd TExtTExtTExtTExt TExt dd333
+            TExtTExtTExtTExt TExt dddd TExtTExtTExtTExt TExt dd333
+            TExtTExtTExtTExt TExt dddd TExtTExtTExtTExt TExt dd333
+            TExtTExtTExtTExt TExt dddd TExtTExtTExtTExt TExt dd333
+          </div>
+        </Tooltip>
+      }
+    >
+      <div className="infoIcon">
+        <img src={infoIcon} alt="" />
+      </div>
+    </OverlayTrigger>
+  );
+
   const DesignHeader = (di_name) => {
     return (
       <>
@@ -76,26 +100,7 @@ const AddNewDesignContent = ({
             : !di_name
             ? `${taskName} ${index + 1}`
             : di_name}
-
-          <OverlayTrigger
-            placement="right"
-            show
-            overlay={
-              <Tooltip className="tooltip1" style={{ margin: "0 0 0 -7px" }}>
-                <div className="toolname1">
-                  TExtTExtTExtTExt TExt dddd TExtTExtTExtTExt TExt dd333
-                  TExtTExtTExtTExt TExt dddd TExtTExtTExtTExt TExt dd333
-                  TExtTExtTExtTExt TExt dddd TExtTExtTExtTExt TExt dd333
-                  TExtTExtTExtTExt TExt dddd TExtTExtTExtTExt TExt dd333
-                  TExtTExtTExtTExt TExt dddd TExtTExtTExtTExt TExt dd333
-                </div>
-              </Tooltip>
-            }
-          >
-            <div className="infoIcon">
-              <img src={infoIcon} alt="" />
-            </div>
-          </OverlayTrigger>
+          {tooltip}
           {/* {!di_name ? `${taskName} ${index + 1}` : di_name} */}
         </div>
         <div>
@@ -126,6 +131,59 @@ const AddNewDesignContent = ({
     );
   };
 
+     
+  const [selectDialog, setSelectDialog] = useState(false);
+  const [data, setData] = useState({});
+  
+  const [azureFile, setAzureFile] = useState("");
+  const [fileName, setFileName] = useState("");
+console.log("selectDialog:",selectDialog);
+  const handledelete = (data, data1) => {
+  };
+  const [totalSize, setTotalSize] = useState(0);
+  const fileUploadRef = useRef(null);
+  
+  const onTemplateUpload = (e) => {
+    let _totalSize = 0;
+
+    e.files.forEach((file) => {
+      _totalSize += file.size || 0;
+    });
+
+    setTotalSize(_totalSize);
+  };
+
+  const itemTemplate = (file) => {
+    // setformattedValue(file.size);
+    return (
+      <div className="upload-row">
+        <img role="presentation" src={file.objectURL} width={50} />
+        <div className="flex flex-column text-left ml-3">{di_name}</div>
+      </div>
+    );
+  };
+  const onTemplateSelect = (e) => {
+    const renamedFile = {
+      objectURL: e.files[0].objectURL,
+      lastModified: e.files[0].lastModified,
+      lastModifiedDate: e.files[0].lastModifiedDate,
+      name: di_name,
+      size: e.files[0].size,
+      type: e.files[0].type,
+      webkitRelativePath: e.files[0].webkitRelativePath,
+    };
+    setAzureFile(renamedFile);
+    let _totalSize = totalSize;
+    let files = e.files;
+    Object.keys(files).forEach((key) => {
+      _totalSize += files[key].size || 0;
+    });
+
+    setTotalSize(_totalSize);
+    setAzureFile(renamedFile);
+    setFileName(di_name);
+  };
+
   const BriefDocument = (taskName) => {
     mydata = (
       <>
@@ -140,13 +198,23 @@ const AddNewDesignContent = ({
           <Col sm={1}>
             <label htmlFor="select"> Upload File</label>
             <div>
-              <img
+            <FileUpload
+              ref={fileUploadRef}
+              name="demo[]"
+              url="/api/upload"
+              accept="image/*"
+              customUpload
+              onUpload={onTemplateUpload}
+              onSelect={onTemplateSelect}
+              itemTemplate={itemTemplate}
+            />
+              {/* <img
                 src={upload}
                 alt="filter logo"
                 // onClick={() => checkReadWriteAccess && handleDelete(index)}
                 className="header-icons"
                 disabled={!checkReadWriteAccess}
-              ></img>
+              ></img> */}
             </div>
           </Col>
           <Col sm={4}>
@@ -168,12 +236,14 @@ const AddNewDesignContent = ({
                 src={deleteIcon}
                 alt="filter logo"
                 onClick={() => {
+                  setSelectDialog(true);
+                  setData(taskName);
                   // if (checkReadWriteAccess) {
-                  displayBriefDocumentData.map((index) => {
-                    handleDelete(index);
-                    console.log("let us see this", index);
-                  });
-                  console.log("handle click clicked", index);
+                  // displayBriefDocumentData.map((index) => {
+                  //   handleDelete(index);
+                  //   console.log("let us see this", index);
+                  // });
+                  // console.log("handle click clicked", index);
                 }}
                 // }
                 className="header-icons"
@@ -214,6 +284,19 @@ const AddNewDesignContent = ({
 
   return (
     <div>
+      {selectDialog && (
+        <DsbpCommonPopup
+          actionHeader="Are you sure you want to delete this file ?"
+          dasbpDialog={selectDialog}
+          setDasbpDialog={setSelectDialog}
+          onSubmit={() => handledelete()}
+          okButtonShow={false}
+        >
+          <>
+            {data}
+          </>
+        </DsbpCommonPopup>
+      )}
       <div className="design-intent-header">{DesignHeader(di_name)}</div>
       {taskName === "Graphic Adaption Brief*" ? (
         <>
