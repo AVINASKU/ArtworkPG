@@ -1,14 +1,14 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState, useRef } from "react";
 import AddProject from "../Projects/CreateProject";
-import { DropdownButton, Dropdown } from "react-bootstrap";
+import { DropdownButton, Dropdown, Accordion } from "react-bootstrap";
 import "primeicons/primeicons.css";
 import "./index.scss";
 import { useSelector } from "react-redux";
 import ProjectPlanCompo from "../Projects/ProjectPlan/ProjectPlanCompo";
 import ConfirmationDialog from "./confirmationDialog";
 import TabsComponent from "./tabsComponent";
-import { hasEmptyAccessForProjectSetup } from "../../utils";
+import { hasAllAccess } from "../../utils";
 import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import ProjectListHeader from "../Projects/MyProjects/ProjectListHeader";
 import { ProjectService } from "../../service/PegaService";
@@ -65,7 +65,7 @@ function ProjectSetup(props) {
   const onSearchClick = () => {
     isSearchSet(!isSearch);
   };
-  const isNoAccess = hasEmptyAccessForProjectSetup();
+  const isNoAccess = hasAllAccess();
 
   const breadcrumb = (
     <div>
@@ -121,7 +121,7 @@ function ProjectSetup(props) {
     {
       name: "projectSetup",
       tabNameForDisplay: "Project Setup",
-      component: isNoAccess ? (
+      component: !isNoAccess ? (
         <div className="unauthorized-user">
           You are not authorized to access this page.
         </div>
@@ -195,7 +195,31 @@ function ProjectSetup(props) {
 
           {toggleButtons === "Tabular" && (
             <div>
-              <nav className="subNav">
+              <Accordion className="projectPlanAccordian" defaultActiveKey="2">
+                <Accordion.Item eventKey="2">
+                  <Accordion.Header>Design</Accordion.Header>
+                  <Accordion.Body>
+                    <ProjectPlanCompo
+                      isSearch={isSearch}
+                      setColWidth={setColWidth}
+                      childFunc={childFunc}
+                      test={test}
+                      tabNameForPP={tabNameForPP}
+                      view={toggleButtons}
+                      setTabName={setTabName}
+                    />
+                  </Accordion.Body>
+                </Accordion.Item>
+                <Accordion.Item eventKey="3">
+                  <Accordion.Header>Input</Accordion.Header>
+                  <Accordion.Body>Input</Accordion.Body>
+                </Accordion.Item>
+                <Accordion.Item eventKey="4">
+                  <Accordion.Header>FA Assembly</Accordion.Header>
+                  <Accordion.Body>FA Assembly</Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
+              {/* <nav className="subNav">
                 <div className="nav nav-tabs" id="nav-tab" role="tablist">
                   <button
                     className={`nav-link ${
@@ -243,10 +267,10 @@ function ProjectSetup(props) {
                     FA Assembly
                   </button>
                 </div>
-              </nav>
+              </nav> */}
             </div>
           )}
-          <div className="tab-content" id="nav-tabContent">
+          {/* <div className="tab-content" id="nav-tabContent">
             <div
               className={`tab-pane fade ${
                 tabNameForPP === "Design" ? "show active" : ""
@@ -293,7 +317,7 @@ function ProjectSetup(props) {
             >
               FA Assembly Data
             </div>
-          </div>
+          </div> */}
         </div>
       ),
     },
@@ -315,9 +339,8 @@ function ProjectSetup(props) {
   ];
   const actionButton = (
     <DropdownButton
-      id="projectActions"
+      id={!isNoAccess && "projectActions"}
       title="Actions"
-      // disabled={false}
       disabled={isNoAccess}
       // data-popper-placement="bottom-end"
       // drop="down-end"

@@ -16,6 +16,7 @@ const SelectDsbpId = ({
   totalNoOfPMPLocked,
   listOfInitiativeId,
   mappedPOAS,
+  userHasAccess
 }) => {
   const [selectedCities, setSelectedCities] = useState([]);
   const [selectDialog, setSelectDialog] = useState(false);
@@ -60,10 +61,11 @@ const SelectDsbpId = ({
               "disable-icons"
             }`}
             onClick={(e) => {
-              onChangeSelect(option, "add");
+             !userHasAccess && onChangeSelect(option, "add");
             }}
             alt=""
             style={{ height: 12 }}
+            disabled={userHasAccess}
           />
         </div>
         <div>
@@ -71,7 +73,7 @@ const SelectDsbpId = ({
             src={deleteIcon}
             onClick={(e) => {
               e.stopPropagation();
-              onChangeSelect(option, "delete");
+            !userHasAccess &&  onChangeSelect(option, "delete");
             }}
             alt="filter logo"
             className={`header-icons ${
@@ -81,6 +83,7 @@ const SelectDsbpId = ({
               "disable-icons"
             }`}
             style={{ height: 12 }}
+            disabled={userHasAccess}
           />
         </div>
       </div>
@@ -146,6 +149,7 @@ const SelectDsbpId = ({
           maxSelectedLabels={3}
           panelClassName="dsbp-multiselect-dropdown"
           style={{ maxWidth: 370, width: "300%" }}
+          
         />
 
         <div className="action-buttons margin-right">

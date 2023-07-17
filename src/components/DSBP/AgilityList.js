@@ -41,7 +41,8 @@ const AgilityList = ({
   tableRender,
   setTableRender,
   customizeViewFields,
-  setCustomizeViewFields
+  setCustomizeViewFields,
+  userHasAccess,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -209,7 +210,8 @@ const AgilityList = ({
             type="checkbox"
             className="p-checkbox-box p-highlight"
             checked={selected?.includes(options)}
-            onChange={() => handleSelect(options)}
+            onChange={() => !userHasAccess && handleSelect(options)}
+            disabled={userHasAccess}
           />
         </div>
       )}
@@ -218,7 +220,8 @@ const AgilityList = ({
         {field === "DSBP_PMP_PIMaterialNumber" && (
           <a
             className="tabView"
-            onClick={() => onHandlePmpTabView(options, field)}
+            disabled={userHasAccess}
+            onClick={() => !userHasAccess && onHandlePmpTabView(options, field)}
           >
             {options[field]}
           </a>
@@ -231,7 +234,8 @@ const AgilityList = ({
             <Form.Select
               placeholder="Select"
               value={options[field]}
-              onChange={(e) => onchangeAddToProject(options, e, field)}
+              disabled={userHasAccess}
+              onChange={(e) => !userHasAccess && onchangeAddToProject(options, e, field)}
               style={{ width: "80%", fontSize: 12 }}
             >
               <option value="">Select</option>
@@ -270,7 +274,8 @@ const AgilityList = ({
             <Form.Select
               placeholder="Select"
               value={options[field]}
-              onChange={(e) => onChangeSelectField(options, e, field)}
+              disabled={userHasAccess}
+              onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               style={{ width: "80%", fontSize: 12 }}
             >
               <option value="">Select</option>
@@ -290,7 +295,8 @@ const AgilityList = ({
             <Form.Select
               placeholder="Select"
               value={options[field]}
-              onChange={(e) => onChangeSelectField(options, e, field)}
+              disabled={userHasAccess}
+              onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               style={{ width: "80%", fontSize: 12 }}
             >
               <option value="">Select</option>
@@ -311,7 +317,8 @@ const AgilityList = ({
             <Form.Control
               type="text"
               value={options[field]}
-              onChange={(e) => onChangeSelectField(options, e, field)}
+              disabled={userHasAccess}
+              onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               placeholder="Enter Sellable"
             />
           </Form.Group>
@@ -325,7 +332,8 @@ const AgilityList = ({
             <Form.Control
               type="text"
               value={options[field]}
-              onChange={(e) => onChangeSelectField(options, e, field)}
+              disabled={userHasAccess}
+              onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               placeholder="Enter Biocide"
             />
           </Form.Group>
@@ -352,6 +360,7 @@ const AgilityList = ({
             type="checkbox"
             className="p-checkbox-box p-highlight"
             checked={selectAllChecked}
+            disabled = {userHasAccess}
             onChange={handleSelectAll}
           />
         </div>
@@ -364,7 +373,8 @@ const AgilityList = ({
           src={filter}
           key={field}
           alt="Column Filter"
-          onClick={(e) => projectNameOnClick(e, field)}
+          disabled={userHasAccess}
+          onClick={(e) => !userHasAccess && projectNameOnClick(e, field)}
           className={
             isFilterActivated
               ? "columnFilterIcon filter-color-change"

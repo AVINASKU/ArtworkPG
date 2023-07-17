@@ -4,7 +4,7 @@ import { MultiSelect } from "primereact/multiselect";
 import { Calendar } from "primereact/calendar";
 import { Controller, useForm } from "react-hook-form";
 import { classNames } from "primereact/utils";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { createNewProject, editProject } from "../../../apis/projectSetupApi";
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 import { updateProjectPlanAction } from "../../../store/actions/ProjectPlanActions";
@@ -22,6 +22,8 @@ import {
 } from "../../../categories";
 import { RoleUser } from "../../../userRole";
 import { useDispatch, useSelector } from "react-redux";
+import { getMyProject } from "../../../store/actions/ProjectActions";
+import { isArray } from "lodash";
 
 const defaultCheckedItems = {
   DI: false,
@@ -45,13 +47,17 @@ function AddProject(props) {
   const toast = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const locationPath = location?.pathname;
+  const url = locationPath?.split("/");
   const User = useSelector((state) => state.UserReducer);
   const userInformation = User.userInformation;
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
+  const { myProject } = useSelector((state) => state.myProject);
   const mode = projectSetup.mode;
-  const id = `PG-AAS-WORK ${selectedProjectDetails.Project_ID}`;
-  const awmProjectId = selectedProjectDetails.Project_ID;
+  // const id = `PG-AAS-WORK ${selectedProjectDetails.Project_ID}`;
+  let awmProjectId = selectedProjectDetails.Project_ID;
   const prePopuSmo = [];
   selectedProjectDetails?.Artwork_SMO?.forEach((obj) => {
     if (obj.code !== "") {
@@ -119,6 +125,10 @@ function AddProject(props) {
     (state) => state.DropDownValuesReducer
   );
 
+  let projectData = isArray(myProject) && myProject.find(
+    (project) => project.Project_ID === selectedProjectDetails.Project_ID
+  );
+
   useEffect(() => {
     RoleUser.users.map((role) => {
       if (role.username === userInformation.username) {
@@ -165,6 +175,18 @@ function AddProject(props) {
       return formattedDate;
     } else {
       return "";
+    }
+  };
+
+  const formatPayloadDate = (date) => {
+    if (date) {
+      const formattedDate = moment(
+        date,
+        "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ (z)"
+      ).format("YYYY-MM-DD[T]HH:mm:ss.SSS[Z]");
+      return formattedDate;
+    } else {
+      return date;
     }
   };
 
@@ -861,10 +883,10 @@ function AddProject(props) {
 
         POAs: "true",
         Estimated_ofPOAs: POA !== "" ? POA.toString() : "1",
-        Estimated_SOP: sopDate,
-        Estimated_SOS: sosDate,
-        Estimated_AW_Printer: printerDate,
-        Estimated_AW_Readiness: readinessDate,
+        Estimated_SOP: formatPayloadDate(sopDate),
+        Estimated_SOS: formatPayloadDate(sosDate),
+        Estimated_AW_Printer: formatPayloadDate(printerDate),
+        Estimated_AW_Readiness: formatPayloadDate(readinessDate),
         IL: iL,
         Tier: Tier?.Label_Name,
         InitiativeGroupName: groupName,
@@ -940,14 +962,14 @@ function AddProject(props) {
       BU: bu,
       Project_region: region?.Region_Name,
       Cluster: cluster,
-      Project_Scale: scale,
+      Project_Scale: scale?.Scale_Name,
       Tier: Tier?.Label_Name,
       Project_State: selectedProjectDetails.Project_State,
       Project_Type: projectType,
       IL: iL,
       PM: pm,
-      Estimated_SOS: sosDate,
-      Estimated_SOP: sopDate,
+      Estimated_SOS: formatPayloadDate(sosDate),
+      Estimated_SOP: formatPayloadDate(sopDate),
       Comments: comments,
       Buffer_To_Work: "",
       Project_Code: ProjectCode,
@@ -995,8 +1017,8 @@ function AddProject(props) {
           ? "1"
           : designScopeList.CICs.toString(),
       Estimated_No_Of_POAs: POA !== "" ? POA.toString() : "1",
-      Estimated_AW_Readiness: readinessDate,
-      Estimated_AW_Printer: printerDate,
+      Estimated_AW_Readiness: formatPayloadDate(readinessDate),
+      Estimated_AW_Printer: formatPayloadDate(printerDate),
       Artwork_Brand: ArtworkBrand,
       Artwork_Category: ArtworkCategory,
       Artwork_SMO: ArtworkSMO,
@@ -1012,7 +1034,10 @@ function AddProject(props) {
       const formData = collectFormData("Active", mode);
       console.log("formData collectFormData: ", mode, formData);
       setFormData(formData);
-      await createNewProject(formData);
+      const response = await createNewProject(formData);
+      if (response?.data?.ID) {
+        awmProjectId = response?.data?.ID.split("PG-AAS-WORK ")[1];
+      }
       // if (response?.data?.ID) {
       //   showStatus("success", "Success", "Submit Successful", "navigate");
       //   // alert("Submit Successful");
@@ -1027,7 +1052,7 @@ function AddProject(props) {
       const formData = collectFormData("Active", mode);
       console.log("formData collectFormData: ", mode, formData);
       setFormData(formData);
-
+      let id = `PG-AAS-WORK ${awmProjectId}`;
       let method = "PATCH";
       const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
       await editProject(formData, id, method, headers);
@@ -1050,8 +1075,27 @@ function AddProject(props) {
       await editProject(formData, awmProjectId, method, headers);
     }
     setSpinnerText("");
-    setLoader(false);
-    navigate("/myProjects");
+
+    // alert(awmProjectId);
+    const projectsList = await dispatch(getMyProject(userInformation));
+    const currentProject = projectsList.find(
+      (project) => project.Project_ID === awmProjectId
+    );
+    // alert(JSON.stringify(currentProject));
+
+    if (currentProject) {
+      if (url[1] === "projectSetup" || url[1] === "myProjects") {
+        await dispatch(selectedProject(currentProject, "My Projects"));
+        awmProjectId = currentProject.Project_ID;
+        setLoader(false);
+        navigate(`/myProjects/projectPlan/${awmProjectId}`);
+      } else if (url[1] === "allProjects") {
+        await dispatch(selectedProject(currentProject, "All Projects"));
+        awmProjectId = currentProject.Project_ID;
+        setLoader(false);
+        navigate(`/allProjects/projectPlan/${awmProjectId}`);
+      }
+    }
   };
   const onSaveAsDraft = async () => {
     setSpinnerText("Saving");
@@ -1406,6 +1450,10 @@ function AddProject(props) {
                             style={{
                               width: 160,
                             }}
+                            disabled={
+                              mode !== "create" &&
+                              projectData?.Project_State === "Active"
+                            }
                           />
                           {option.value !== "PF" && (
                             <Form.Control
@@ -1425,7 +1473,11 @@ function AddProject(props) {
                                   }));
                                 }
                               }}
-                              disabled={!textBoxEnabled[option.value]}
+                              disabled={
+                                !textBoxEnabled[option.value] ||
+                                (mode !== "create" &&
+                                  projectData?.Project_State === "Active")
+                              }
                               // style={textBoxEnabled[option.value] ? {} : { opacity: 0.5 }}
                               style={{
                                 width: 40,
@@ -1451,6 +1503,10 @@ function AddProject(props) {
                           onChange={handleCheckboxChange}
                           checked
                           style={{ width: 160 }}
+                          disabled={
+                            mode !== "create" &&
+                            projectData?.Project_State === "Active"
+                          }
                         />
                         <Form.Control
                           type="number"
@@ -1464,6 +1520,10 @@ function AddProject(props) {
                               setPOA("");
                             }
                           }}
+                          disabled={
+                            mode !== "create" &&
+                            projectData?.Project_State === "Active"
+                          }
                           style={{
                             width: 40,
                             height: 27,
@@ -1479,41 +1539,41 @@ function AddProject(props) {
                 </Row>
               </Col>
               <Col>
-              <Row>
-                <Form.Group
-                  className={`mb-2 ${!readinessDate && "error-valid"}`}
-                  controlId="sop.readiness"
-                >
-                  <Form.Label>
-                    Estimated AW Readiness <sup>*</sup>
-                  </Form.Label>
-                  <Controller
-                    name="date"
-                    control={form.control}
-                    rules={{ required: "Date is required." }}
-                    render={({ field, fieldState }) => (
-                      <>
-                        <Calendar
-                          placeholder="Select Estimated AW Readiness"
-                          inputId={field.name}
-                          value={readinessDate}
-                          onChange={(e) => setReadinessDate(e.target.value)}
-                          dateFormat="d-M-y"
-                          showIcon={true}
-                          minDate={minDate}
-                          maxDate={printerDate}
-                          className={classNames({
-                            "p-invalid": fieldState.error,
-                          })}
-                        />
-                      </>
-                    )}
-                  />
-                  {/* {!readinessDate && (
+                <Row>
+                  <Form.Group
+                    className={`mb-2 ${!readinessDate && "error-valid"}`}
+                    controlId="sop.readiness"
+                  >
+                    <Form.Label>
+                      Estimated AW Readiness <sup>*</sup>
+                    </Form.Label>
+                    <Controller
+                      name="date"
+                      control={form.control}
+                      rules={{ required: "Date is required." }}
+                      render={({ field, fieldState }) => (
+                        <>
+                          <Calendar
+                            placeholder="Select Estimated AW Readiness"
+                            inputId={field.name}
+                            value={readinessDate}
+                            onChange={(e) => setReadinessDate(e.target.value)}
+                            dateFormat="d-M-y"
+                            showIcon={true}
+                            minDate={minDate}
+                            maxDate={printerDate}
+                            className={classNames({
+                              "p-invalid": fieldState.error,
+                            })}
+                          />
+                        </>
+                      )}
+                    />
+                    {/* {!readinessDate && (
                 <span className="error-text">Field Remaining</span>
               )} */}
-                </Form.Group>
-              </Row>
+                  </Form.Group>
+                </Row>
                 <Row>
                   <Form.Group
                     className={`mb-2 ${!printerDate && "error-valid"}`}
@@ -1583,44 +1643,44 @@ function AddProject(props) {
                     />
                   </Form.Group>
                 </Row>
-              <Row>
-                <Form.Group className="mb-2" controlId="sop.readiness">
-                  <Form.Label>Estimated SOS</Form.Label>
-                  {/*
+                <Row>
+                  <Form.Group className="mb-2" controlId="sop.readiness">
+                    <Form.Label>Estimated SOS</Form.Label>
+                    {/*
               {errors.sopDate && (
                 <span className="error-text">Please select a SOP Date</span>
               )} */}
-                  <Controller
-                    name="date"
-                    control={form.control}
-                    rules={{ required: "Date is required." }}
-                    render={({ field, fieldState }) => (
-                      <>
-                        <Calendar
-                          placeholder="Select Estimated SOS"
-                          inputId={field.name}
-                          value={sosDate}
-                          onChange={(e) => setSOSDate(e.target.value)}
-                          dateFormat="d-M-y"
-                          showIcon={true}
-                          minDate={sopDate !== "" ? sopDate : minDate}
-                          style={{
-                            width: 208,
-                            fontSize: "12px",
-                            fontWeight: 1500,
-                          }}
-                          className={classNames({
-                            "p-invalid": fieldState.error,
-                          })}
-                        />
-                      </>
-                    )}
-                  />
-                </Form.Group>
-              </Row>
+                    <Controller
+                      name="date"
+                      control={form.control}
+                      rules={{ required: "Date is required." }}
+                      render={({ field, fieldState }) => (
+                        <>
+                          <Calendar
+                            placeholder="Select Estimated SOS"
+                            inputId={field.name}
+                            value={sosDate}
+                            onChange={(e) => setSOSDate(e.target.value)}
+                            dateFormat="d-M-y"
+                            showIcon={true}
+                            minDate={sopDate !== "" ? sopDate : minDate}
+                            style={{
+                              width: 208,
+                              fontSize: "12px",
+                              fontWeight: 1500,
+                            }}
+                            className={classNames({
+                              "p-invalid": fieldState.error,
+                            })}
+                          />
+                        </>
+                      )}
+                    />
+                  </Form.Group>
+                </Row>
                 <Row>
                   <Form.Group className="mb-2" controlId="il.SelectMultiple">
-                    <Form.Label>IL</Form.Label>
+                    <Form.Label>Initiative Leader</Form.Label>
                     <div>
                       <Form.Control
                         placeholder="Enter IL"
@@ -1633,7 +1693,7 @@ function AddProject(props) {
                 <Row>
                   <Form.Group className={PMAlert ? "error-text" : ""}>
                     <Form.Label className={PMAlert ? "error-text" : ""}>
-                      PM <sup>*</sup>
+                      Project Manager <sup>*</sup>
                     </Form.Label>
                     <div>
                       <Form.Select
@@ -1780,7 +1840,7 @@ function AddProject(props) {
                 type="submit"
                 disabled={!formValid}
               >
-                Submit
+                Next
               </Button>
             </div>
           </Form>

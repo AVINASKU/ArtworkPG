@@ -14,7 +14,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import FooterButtons from "../AWMJobs/DesignJobs/FooterButtons";
 import "./index.scss";
-import { onSortData, Loading } from "../../utils";
+import { onSortData, Loading, hasAllAccess } from "../../utils";
 
 const ArtworkAlignment = () => {
   const navigate = useNavigate();
@@ -53,6 +53,8 @@ const ArtworkAlignment = () => {
     { label: "My Tasks", url: "/myTasks" },
     { label: "Approve Regional Design Template" },
   ];
+
+  const userHasAccess = hasAllAccess();
 
   const dispatch = useDispatch();
   const headerName = "Artwork Alignment";
@@ -396,6 +398,7 @@ const ArtworkAlignment = () => {
             selectedProjectDetails={selectedProjectDetails}
             customizeViewFields={customizeViewFields}
             setCustomizeViewFields={setCustomizeViewFields}
+            userHasAccess={userHasAccess}
           />
           <SelectDsbpId
             dropdownlist={dropdownlist}
@@ -407,6 +410,7 @@ const ArtworkAlignment = () => {
             totalNoOfPMPLocked={totalNoOfPMPLocked}
             listOfInitiativeId={listOfInitiativeId}
             mappedPOAS={mappedPOAS}
+            userHasAccess={userHasAccess}
           />
           {tableLoader ? (
             <Loading />
@@ -437,6 +441,7 @@ const ArtworkAlignment = () => {
               setTableRender={setTableRender}
               customizeViewFields={customizeViewFields}
               setCustomizeViewFields={setCustomizeViewFields}
+              userHasAccess={userHasAccess}
             />
           )}
           <FooterButtons
@@ -444,7 +449,7 @@ const ArtworkAlignment = () => {
             hideSaveButton={true}
             onSubmit={onSubmit}
             formValid={!checkLength}
-            checkReadWriteAccess={!false}
+            checkReadWriteAccess={!userHasAccess}
           />
         </>
       )}

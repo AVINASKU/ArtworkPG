@@ -13,7 +13,7 @@ import {
   // updateProject,
 } from "../../../store/actions/ProjectActions";
 import { changeDateFormat, onSortData, Loading } from "../../../utils";
-import _ from "lodash";
+import _, { isArray } from "lodash";
 
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 import ProjectNameHeader from "./ProjectNameHeader";
@@ -185,21 +185,21 @@ const ProjectList = (props) => {
             if (field.Artwork_Category) {
               let categoryNames = field?.Artwork_Category?.map(
                 (item) => item.Category_Name
-              ).join(",");
+              ).join(", ");
               field.Artwork_Category = categoryNames;
             }
 
             if (field.Artwork_SMO) {
               let SMOName = field?.Artwork_SMO?.map(
                 (item) => item.SMO_Name
-              ).join(",");
+              ).join(", ");
               field.Artwork_SMO = SMOName;
             }
 
             if (field.Artwork_Brand) {
               let brandName = field?.Artwork_Brand?.map(
                 (item) => item.Brand_Name
-              ).join(",");
+              ).join(", ");
               field.Artwork_Brand = brandName;
             }
 
@@ -329,11 +329,15 @@ const ProjectList = (props) => {
             style={{ color: "#003DA5", cursor: "pointer" }}
             onClick={() => {
               if (field && field.length) {
-                let option = myProjectList.myProject.find(
+                let option = isArray(myProjectList.myProject) && myProjectList.myProject.find(
                   (project) => project.Project_ID === projectId
                 );
                 dispatch(selectedProject(option, "My Projects"));
-                navigate(`${currentUrl}/projectPlan/${projectId}`);
+                if(option.Action === "Draft"){
+                  navigate(`${currentUrl}/projectSetup/${projectId}`);
+                }else{
+                  navigate(`${currentUrl}/projectPlan/${projectId}`);
+                }
               }
             }}
           >
@@ -346,11 +350,15 @@ const ProjectList = (props) => {
             style={{ color: "#003DA5", cursor: "pointer" }}
             onClick={() => {
               if (field && field.length) {
-                let option = myProjectList.myProject.find(
+                let option = isArray(myProjectList.myProject) && myProjectList.myProject.find(
                   (project) => project.Project_ID === projectId
                 );
                 dispatch(selectedProject(option, "My Projects"));
-                navigate(`${currentUrl}/projectPlan/${projectId}`);
+                if(option.Action === "Draft"){
+                  navigate(`${currentUrl}/projectSetup/${projectId}`);
+                }else{
+                  navigate(`${currentUrl}/projectPlan/${projectId}`);
+                }
               }
             }}
           >
@@ -548,6 +556,9 @@ const ProjectList = (props) => {
         "isCustomViewIsAddedMyProject",
         JSON.stringify(true)
       );
+      isCustomViewIsAddedMyProject(true);
+    }
+    if (selectedCategories.length === 0) {
       isCustomViewIsAddedMyProject(true);
     }
     setVisible(false);

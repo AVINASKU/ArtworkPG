@@ -11,7 +11,7 @@ import { getAllProject } from "../../../store/actions/ProjectActions";
 import { selectedProject } from "../../../store/actions/ProjectSetupActions";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
-import _ from "lodash";
+import _, { isArray } from "lodash";
 import ProjectNameHeader from "../MyProjects/ProjectNameHeader";
 import CustomisedView from "../MyProjects/CustomisedView";
 import { generateUniqueKey } from "../../../utils";
@@ -167,21 +167,21 @@ const AllProjectList = (props) => {
             if (field.Artwork_Category) {
               let categoryNames = field?.Artwork_Category?.map(
                 (item) => item.Category_Name
-              ).join(",");
+              ).join(", ");
               field.Artwork_Category = categoryNames;
             }
 
             if (field.Artwork_SMO) {
               let SMOName = field?.Artwork_SMO?.map(
                 (item) => item.SMO_Name
-              ).join(",");
+              ).join(", ");
               field.Artwork_SMO = SMOName;
             }
 
             if (field.Artwork_Brand) {
               let brandName = field?.Artwork_Brand?.map(
                 (item) => item.Brand_Name
-              ).join(",");
+              ).join(", ");
               field.Artwork_Brand = brandName;
             }
 
@@ -314,11 +314,15 @@ const AllProjectList = (props) => {
             style={{ color: "#003DA5", cursor: "pointer" }}
             onClick={() => {
               if (field && field.length) {
-                let option = allProjectList.allProjects.find(
+                let option = isArray(allProjectList.allProjects) && allProjectList.allProjects.find(
                   (project) => project.Project_ID === projectId
                 );
                 dispatch(selectedProject(option, "All Projects"));
-                navigate(`${currentUrl}/projectPlan/${projectId}`);
+                if(option.Action === "Draft"){
+                  navigate(`${currentUrl}/projectSetup/${projectId}`);
+                }else{
+                  navigate(`${currentUrl}/projectPlan/${projectId}`);
+                }
               }
             }}
           >
@@ -331,11 +335,15 @@ const AllProjectList = (props) => {
             style={{ color: "#003DA5", cursor: "pointer" }}
             onClick={() => {
               if (field && field.length) {
-                let option = allProjectList.allProjects.find(
+                let option = isArray(allProjectList.allProjects) && allProjectList.allProjects.find(
                   (project) => project.Project_ID === projectId
                 );
                 dispatch(selectedProject(option, "All Projects"));
-                navigate(`${currentUrl}/projectPlan/${projectId}`);
+                if(option.Action === "Draft"){
+                  navigate(`${currentUrl}/projectSetup/${projectId}`);
+                }else{
+                  navigate(`${currentUrl}/projectPlan/${projectId}`);
+                }
               }
             }}
           >

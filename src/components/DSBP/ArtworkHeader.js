@@ -27,7 +27,8 @@ const ArtworkHeader = ({
   setTableRender,
   tableRender,
   customizeViewFields,
-  setCustomizeViewFields
+  setCustomizeViewFields,
+  userHasAccess,
 }) => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
@@ -166,7 +167,7 @@ const ArtworkHeader = ({
         </div>
         <div className="header-buttons">
           <div style={{ top: 30 }}>
-            {isFilterActivated.length ? (
+            {isFilterActivated.length && !userHasAccess ? (
               <img
                 src={BlueFilterIcon}
                 alt="filter logo"
@@ -199,19 +200,21 @@ const ArtworkHeader = ({
               <img
                 src={filter}
                 alt="filter logo"
+                disabled={userHasAccess}
                 // onClick={() => clearColumnWiseFilter()}
                 className="header-icons"
               />
             )}
           </div>
 
-          <button type="button" className="btn btn-secondary">
+          <button type="button" disabled={userHasAccess} className="btn btn-secondary">
             Confirm Full Scope in
           </button>
           <button
             type="button"
             className="btn btn-secondary"
-            onClick={() => setShowApproveDialogCPPFA(true)}
+            disabled = {userHasAccess}
+            onClick={() => !userHasAccess && setShowApproveDialogCPPFA(true)}
           >
             Customize View
           </button>
@@ -220,7 +223,7 @@ const ArtworkHeader = ({
             align="end"
             variant="secondary"
             onSelect={handleAction}
-            disabled={selected.length === 0}
+            disabled={selected.length === 0 || userHasAccess}
           >
             {actionNameObject?.map((item) => {
               return (
