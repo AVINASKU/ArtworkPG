@@ -197,7 +197,7 @@ function ProjectSetup(props) {
             <div>
               <Accordion className="projectPlanAccordian" defaultActiveKey="2">
                 <Accordion.Item eventKey="2">
-                  <Accordion.Header>Design</Accordion.Header>
+                  <Accordion.Header onClick={() => setTabNameForPP("Design")}>Design</Accordion.Header>
                   <Accordion.Body>
                     <ProjectPlanCompo
                       isSearch={isSearch}
@@ -211,8 +211,18 @@ function ProjectSetup(props) {
                   </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="3">
-                  <Accordion.Header>Input</Accordion.Header>
-                  <Accordion.Body>Input</Accordion.Body>
+                  <Accordion.Header onClick={() => setTabNameForPP("Input")}>Input</Accordion.Header>
+                  <Accordion.Body>
+                    <ProjectPlanCompo
+                    isSearch={isSearch}
+                    setColWidth={setColWidth}
+                    childFunc={childFunc}
+                    test={test}
+                    tabNameForPP={tabNameForPP}
+                    view={toggleButtons}
+                    setTabName={setTabName}
+                  />
+                  </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="4">
                   <Accordion.Header>FA Assembly</Accordion.Header>
