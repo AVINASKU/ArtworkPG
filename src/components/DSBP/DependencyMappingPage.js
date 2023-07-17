@@ -28,41 +28,44 @@ const DependencyMapping = () => {
   async function fetchData() {
     const { dependencyTableData, isRDTData, isIQData, isCDPTData } =
       await getDependencyMappingDetails("A-2002");
-      
-    const transformedData = dependencyTableData.map((item) => ({
-      DSBP_InitiativeID: item.DSBP_InitiativeID,
-      DSBP_PMP_PIMaterialNumber: item.DSBP_PMP_PIMaterialNumber,
-      DSBP_PMP_PIMaterialDescription: item.DSBP_PMP_PIMaterialDescription,
-      DSBP_PMP_PIMaterialID: item.DSBP_PMP_PIMaterialID,
-      DSM_PICountry_Countries: item.DSM_PICountry_Countries,
-      DSM_PILanguage_Languages: item.DSM_PILanguage_Languages,
-      DSM_PMP_PMPPackagingComponentType: item.DSM_PMP_PMPPackagingComponentType,
-      DSM_PMP_PackagingSize: item.DSM_PMP_PackagingSize,
-      DSM_PMP_PrinterPrimary: item.DSM_PMP_PrinterPrimary,
-      DSM_PMP_PrinterSecondary: item.DSM_PMP_PrinterSecondary,
-      DSM_PMP_PrintingProcess: item.DSM_PMP_PrintingProcess,
-      DSM_PMP_SubstrateColor: item.DSM_PMP_SubstrateColor,
-      DSM_PMP_TD_TDStatus: item.DSM_PMP_TD_TDStatus,
-      DSM_PMP_TD_TDValue: item.DSM_PMP_TD_TDValue,
-      DSM_PO_PMP_poMaterialNumber: item.DSM_PO_PMP_poMaterialNumber,
-      ...item?.FPCStagingPage?.[0],
-      ...item?.AWM_CIC_Page?.[0],
-    }));
 
-    console.log("AWM_CIC_Page", transformedData);
+    console.log("dependency table data", dependencyTableData);
+    if (dependencyTableData && dependencyTableData.length) {
+      const transformedData = dependencyTableData.map((item) => ({
+        DSBP_InitiativeID: item.DSBP_InitiativeID,
+        DSBP_PMP_PIMaterialNumber: item.DSBP_PMP_PIMaterialNumber,
+        DSBP_PMP_PIMaterialDescription: item.DSBP_PMP_PIMaterialDescription,
+        DSBP_PMP_PIMaterialID: item.DSBP_PMP_PIMaterialID,
+        DSM_PICountry_Countries: item.DSM_PICountry_Countries,
+        DSM_PILanguage_Languages: item.DSM_PILanguage_Languages,
+        DSM_PMP_PMPPackagingComponentType:
+          item.DSM_PMP_PMPPackagingComponentType,
+        DSM_PMP_PackagingSize: item.DSM_PMP_PackagingSize,
+        DSM_PMP_PrinterPrimary: item.DSM_PMP_PrinterPrimary,
+        DSM_PMP_PrinterSecondary: item.DSM_PMP_PrinterSecondary,
+        DSM_PMP_PrintingProcess: item.DSM_PMP_PrintingProcess,
+        DSM_PMP_SubstrateColor: item.DSM_PMP_SubstrateColor,
+        DSM_PMP_TD_TDStatus: item.DSM_PMP_TD_TDStatus,
+        DSM_PMP_TD_TDValue: item.DSM_PMP_TD_TDValue,
+        DSM_PO_PMP_poMaterialNumber: item.DSM_PO_PMP_poMaterialNumber,
+        ...item?.FPCStagingPage?.[0],
+        ...item?.AWM_CIC_Page?.[0],
+      }));
 
+      console.log("AWM_CIC_Page", transformedData);
 
-    let columnNames = Object.keys(transformedData[2]);
-    const filteredColumnNames = columnNames.filter(
-      (property) => property !== "FPCStagingPage"
-    );
-    filteredColumnNames.unshift("CIC_Needed");
-    if (isRDTData && isRDTData.length) {
-      filteredColumnNames.unshift("RDT");
+      let columnNames = Object.keys(transformedData[2]);
+      const filteredColumnNames = columnNames.filter(
+        (property) => property !== "FPCStagingPage"
+      );
+      filteredColumnNames.unshift("CIC_Needed");
+      if (isRDTData && isRDTData.length) {
+        filteredColumnNames.unshift("RDT");
+      }
+      setDependencyColumnNames(filteredColumnNames);
+      setDependencyMappingData(transformedData);
+      console.log("response in component", transformedData);
     }
-    setDependencyColumnNames(filteredColumnNames);
-    setDependencyMappingData(transformedData);
-    console.log("response in component", transformedData);
   }
 
   const onSubmit = async () => {
