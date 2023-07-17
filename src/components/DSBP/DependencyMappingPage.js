@@ -11,7 +11,7 @@ import "./index.scss";
 const headerName = "Dependency Mapping";
 const DependencyMapping = () => {
   const [dependencyMappingData, setDependencyMappingData] = useState([]);
-  const [dependencyColumnNames , setDependencyColumnNames] = useState([]);
+  const [dependencyColumnNames, setDependencyColumnNames] = useState([]);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const ProjectID = selectedProjectDetails?.Project_ID;
@@ -23,7 +23,7 @@ const DependencyMapping = () => {
 
   useEffect(() => {
     fetchData();
-  },[ProjectID]);
+  }, [ProjectID]);
 
   async function fetchData() {
     const { dependencyTableData, isRDTData, isIQData, isCDPTData } =
@@ -34,14 +34,13 @@ const DependencyMapping = () => {
       ...item?.FPCStagingPage?.[0],
     }));
 
-  
-
     let columnNames = Object.keys(transformedData[0]);
-
-    const filteredColumnNames = columnNames.filter(property => property !== "FPCStagingPage");
+    const filteredColumnNames = columnNames.filter(
+      (property) => property !== "FPCStagingPage"
+    );
     filteredColumnNames.unshift("CIC_Needed");
-      if(isRDTData && isRDTData.length){
-    filteredColumnNames.unshift("RDT");
+    if (isRDTData && isRDTData.length) {
+      filteredColumnNames.unshift("RDT");
     }
     setDependencyColumnNames(filteredColumnNames);
     setDependencyMappingData(transformedData);
@@ -73,9 +72,12 @@ const DependencyMapping = () => {
           // tableRender={tableRender}
           selectedProjectDetails={selectedProjectDetails}
           userHasAccess={userHasAccess}
-          isDependencyMapping = {true}
+          isDependencyMapping={true}
         />
-        <DependencyMappingList dependencyMappingData={dependencyMappingData} dependencyColumnNames={dependencyColumnNames} />
+        <DependencyMappingList
+          dependencyMappingData={dependencyMappingData}
+          dependencyColumnNames={dependencyColumnNames}
+        />
         <FooterButtons
           handleCancel={handleCancel}
           hideSaveButton={true}
