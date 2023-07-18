@@ -60,6 +60,8 @@ const ProjectPlanList = ({
   const [selectedTaskApproveDialog, setSelectedTaskApproveDialog] = useState(
     []
   );
+  const [updatedData, setUpdatedData] = useState([]);
+
   const dispatch = useDispatch();
   const [flag, setFlag] = useState("");
   const [loader, setLoader] = useState(false);
@@ -93,7 +95,7 @@ const ProjectPlanList = ({
           setFilters(filteredPegaData);
           setSelectedCities(filteredPegaData);
           setPegaData(projectPlan);
-        } else {
+            } else {
           setPegaData(projectPlan);
         }
         // according to pathname we need to call api and store column name in local storage
@@ -288,183 +290,183 @@ const ProjectPlanList = ({
     
     return (
       <>
-        {field === "Task" && (
-          <span
-            className={`${
-              optionsData.State === "Awaiting"
-                ? "dependant-task"
-                : options.children.length === 0
-                ? "task-link"
-                : "task"
-            }
-            `}
-            onClick={() => {
+              {field === "Task" && (
+                <span
+                  className={`${
+                    optionsData.State === "Awaiting"
+                      ? "dependant-task"
+                      : options.children.length === 0
+                      ? "task-link"
+                      : "task"
+                  }
+              `}
+                  onClick={() => {
               if (field && field.length && keyCode[0] !== "CPPFA" && tabNameForPP !== "Input") {
-                (options.redirect === true || optionsData.Task) &&
-                  navigate(`../${url}`, { replace: true });
+                      (options.redirect === true || optionsData.Task) &&
+                        navigate(`../${url}`, { replace: true });
               } else if(field && field.length && keyCode[0] === "CPPFA") {
-                handleApproveDialogCPPFA(options);
+                      handleApproveDialogCPPFA(options);
               } else{
-                dispatch(ArtWorkTabValuesAction([]));
-                setTabName("artworkAlignment");
-                navigate(
-                  `/${currentUrlBasePage}/artworkAlignment/${selectedProject?.Project_ID}`
-                );
-              }
-            }}
-          >
-            {optionsData[field]}
-          </span>
-        )}
-
-        {options.children && options.children.length > 0 ? (
-          <>
-            {(field === "Role" ||
-              field === "Owner" ||
-              field === "State" ||
-              field === "Duration") && (
-              <img
-                src={hyphen}
-                alt="Hyphen"
-                onClick={(e) => {
-                  op.current.toggle(e);
-                }}
-              />
-            )}
-          </>
-        ) : (
-          <>
-            {(field === "Role" || field === "Owner") && (
-              <div className="d-flex">
-                <Dropdown
-                  editable
-                  value={
-                    field === "Role"
-                      ? options?.data[field]
-                      : options?.data[field]
-                      ? options?.data[field]
-                      : options?.data["Assignee"]
-                  }
-                  onChange={(e) => onDropdownChange(options, e, field)}
-                  options={
-                    field === "Role"
-                      ? optionsData["RoleOptions"]
-                      : field === "Owner"
-                      ? optionsData["OwnerOptions"]
-                      : []
-                  }
-                  optionLabel="Name"
-                  placeholder={`Select ${field}`}
-                  className="w-full md:w-14rem"
-                  disabled={!isAccessEmpty}
-                />
-
-                {field === "Owner" && options.key.includes("ARDT_") && (
-                  <img
-                    src={override}
-                    alt="Override"
-                    onClick={() => handleApproveDialog(options)}
-                    // onClick={(e) => {
-                    //   op.current.toggle(e);
-                    //   setSelectedColumnName(options);
-                    // }}
-                    className="overrideIcon"
-                  />
-                )}
-              </div>
-            )}
-            {field === "State" && optionsData[field] === "Complete" ? (
-              <>
-                <img
-                  src={complete}
-                  alt="Check"
-                  onClick={(e) => {
-                    op.current.toggle(e);
+                      dispatch(ArtWorkTabValuesAction([]));
+                      setTabName("artworkAlignment");
+                      navigate(
+                        `/${currentUrlBasePage}/artworkAlignment/${selectedProject?.Project_ID}`
+                      );
+                    }
                   }}
-                  className="iconsStyle"
-                />
-                <span className="iconsTextStyle" onClick={() => {}}>
+                >
                   {optionsData[field]}
                 </span>
-              </>
+              )}
+
+              {options.children && options.children.length > 0 ? (
+                <>
+                  {(field === "Role" ||
+                    field === "Owner" ||
+                    field === "State" ||
+                    field === "Duration") && (
+                    <img
+                      src={hyphen}
+                      alt="Hyphen"
+                      onClick={(e) => {
+                        op.current.toggle(e);
+                      }}
+                    />
+                  )}
+                </>
+              ) : (
+                <>
+                  {(field === "Role" || field === "Owner") && (
+                    <div className="d-flex">
+                      <Dropdown
+                        editable
+                        value={
+                          field === "Role"
+                            ? options?.data[field]
+                            : options?.data[field]
+                            ? options?.data[field]
+                            : options?.data["Assignee"]
+                        }
+                        onChange={(e) => onDropdownChange(options, e, field)}
+                        options={
+                          field === "Role"
+                            ? optionsData["RoleOptions"]
+                            : field === "Owner"
+                            ? optionsData["OwnerOptions"]
+                            : []
+                        }
+                        optionLabel="Name"
+                        placeholder={`Select ${field}`}
+                        className="w-full md:w-14rem"
+                        disabled={!isAccessEmpty}
+                      />
+
+                      {field === "Owner" && options.key.includes("ARDT_") && (
+                        <img
+                          src={override}
+                          alt="Override"
+                          onClick={() => handleApproveDialog(options)}
+                          // onClick={(e) => {
+                          //   op.current.toggle(e);
+                          //   setSelectedColumnName(options);
+                          // }}
+                          className="overrideIcon"
+                        />
+                      )}
+                    </div>
+                  )}
+                  {field === "State" && optionsData[field] === "Complete" ? (
+                    <>
+                      <img
+                        src={complete}
+                        alt="Check"
+                        onClick={(e) => {
+                          op.current.toggle(e);
+                        }}
+                        className="iconsStyle"
+                      />
+                      <span className="iconsTextStyle" onClick={() => {}}>
+                        {optionsData[field]}
+                      </span>
+                    </>
             ) : field === "State" && optionsData[field] === "In Progress" ? (
-              <>
-                <img
-                  src={inprogress}
-                  alt="In Progress"
-                  onClick={(e) => {
-                    op.current.toggle(e);
-                  }}
-                  className="iconsStyle"
-                />
-                <span
-                  className="iconsTextStyle iconInprogress"
-                  onClick={() => {}}
-                >
-                  {optionsData[field]}
-                </span>
-              </>
+                    <>
+                      <img
+                        src={inprogress}
+                        alt="In Progress"
+                        onClick={(e) => {
+                          op.current.toggle(e);
+                        }}
+                        className="iconsStyle"
+                      />
+                      <span
+                        className="iconsTextStyle iconInprogress"
+                        onClick={() => {}}
+                      >
+                        {optionsData[field]}
+                      </span>
+                    </>
             ) : field === "State" && optionsData[field] === "Available" ? (
-              <>
-                <img
-                  src={available}
-                  alt="Lock"
-                  onClick={(e) => {
-                    op.current.toggle(e);
-                  }}
-                  className="iconsStyle"
-                />
+                    <>
+                      <img
+                        src={available}
+                        alt="Lock"
+                        onClick={(e) => {
+                          op.current.toggle(e);
+                        }}
+                        className="iconsStyle"
+                      />
                 <span className="iconsTextStyle iconLock" onClick={() => {}}>
-                  {optionsData[field]}
-                </span>
-              </>
-            ) : field === "State" && optionsData[field] === "Awaiting" ? (
-              <>
-                <img
-                  src={Awaiting}
-                  alt="Awaiting"
-                  onClick={(e) => {
-                    op.current.toggle(e);
-                  }}
-                  className="iconsStyle"
-                />
-                <span
-                  className="iconsTextStyle iconAwaiting"
-                  onClick={() => {}}
-                >
-                  {optionsData[field]}
-                </span>
-              </>
-            ) : (
-              <>{field === "State" && optionsData[field]}</>
-            )}
-            {field === "Duration" && (
-              <InputNumber
-                className="input-duration"
-                inputId="integeronly"
-                value={options?.data[field]}
-                onValueChange={(e) => onDurationChange(options, e, field)}
-                disabled={!isAccessEmpty}
-              />
-            )}
-          </>
-        )}
+                        {optionsData[field]}
+                      </span>
+                    </>
+                  ) : field === "State" && optionsData[field] === "Awaiting" ? (
+                    <>
+                      <img
+                        src={Awaiting}
+                        alt="Awaiting"
+                        onClick={(e) => {
+                          op.current.toggle(e);
+                        }}
+                        className="iconsStyle"
+                      />
+                      <span
+                        className="iconsTextStyle iconAwaiting"
+                        onClick={() => {}}
+                      >
+                        {optionsData[field]}
+                      </span>
+                    </>
+                  ) : (
+                    <>{field === "State" && optionsData[field]}</>
+                  )}
+                  {field === "Duration" && (
+                    <InputNumber
+                      className="input-duration"
+                      inputId="integeronly"
+                      value={options?.data[field]}
+                      onValueChange={(e) => onDurationChange(options, e, field)}
+                      disabled={!isAccessEmpty}
+                    />
+                  )}
+                </>
+              )}
 
-        {field === "HelpNeeded" && formatHelpNeeded(optionsData[field])}
+              {field === "HelpNeeded" && formatHelpNeeded(optionsData[field])}
 
-        {field === "StartDate" && changeDateFormat(optionsData[field])}
-        {field === "EndDate" && (
-          <span>{changeDateFormat(optionsData[field])}</span>
-        )}
-        {field !== "Task" &&
-          field !== "Role" &&
-          field !== "Owner" &&
-          field !== "State" &&
-          field !== "StartDate" &&
-          field !== "EndDate" &&
-          field !== "Duration" &&
-          field !== "HelpNeeded" && <>{optionsData[field]}</>}
-      </>
+              {field === "StartDate" && changeDateFormat(optionsData[field])}
+              {field === "EndDate" && (
+                <span>{changeDateFormat(optionsData[field])}</span>
+              )}
+              {field !== "Task" &&
+                field !== "Role" &&
+                field !== "Owner" &&
+                field !== "State" &&
+                field !== "StartDate" &&
+                field !== "EndDate" &&
+                field !== "Duration" &&
+                field !== "HelpNeeded" && <>{optionsData[field]}</>}
+            </>
     );
   };
 
@@ -512,6 +514,22 @@ const ProjectPlanList = ({
   useEffect(() => {
     pegadata && updateProjectPlanDesign();
   }, [pegadata]);
+
+  useEffect(() => {
+    const startArtworkAlignmentData = pegadata?.filter(item => item.data.Task === "Start Artwork Alignment");
+    const otherTasksData = pegadata?.filter(item => item.data.Task !== "Start Artwork Alignment");
+
+    const filteredData = {
+      startArtworkAlignment: startArtworkAlignmentData,
+      otherTasks: otherTasksData
+    };
+    console.log("filteredData", filteredData);
+    if(tabNameForPP === "Input"){
+      setUpdatedData(filteredData.startArtworkAlignment)
+    } else{
+      setUpdatedData(filteredData.otherTasks)
+    }
+  }, [tabNameForPP]);
 
   const onDropdownChange = (rowData, { value }, ele) => {
     // Update the data with the new value
@@ -706,7 +724,7 @@ const ProjectPlanList = ({
               reorderableColumns
               // scrollable
               onColReorder={storeReorderedColumns}
-              value={filters.length ? filters : pegadata}
+              value={filters.length ? filters : updatedData}
               loading={loader}
               className="textAlignTreeTable"
               // tableStyle={{ minWidth: "119rem", tableLayout: "auto" }}
