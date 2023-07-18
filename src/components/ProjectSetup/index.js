@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, lazy, Suspense } from "react";
 import moment from "moment";
 import { Toast } from "primereact/toast";
 import { isArray } from "lodash";
@@ -27,7 +27,9 @@ import { Button } from "react-bootstrap";
 import ProjectListHeader from "../Projects/MyProjects/ProjectListHeader";
 import { ProjectService } from "../../service/PegaService";
 import ArtworkAlignment from "../DSBP/ArtworkAlignmentPage";
+// import DependencyMapping from "../DSBP/DependencyMappingPage";
 
+const DependencyMapping = lazy(() => import('../DSBP/DependencyMappingPage'));
 
 function ProjectSetup(props) {
   const toast = useRef(null);
@@ -614,7 +616,9 @@ function ProjectSetup(props) {
     {
       name: "mapping",
       tabNameForDisplay: "Mapping",
-      component: <>Mapping Data</>,
+      component: tabName === "mapping" && <Suspense fallback={<div>Loading Component</div>}>
+         <DependencyMapping/>
+      </Suspense>,
     },
     {
       name: "readinessPerPMP",
