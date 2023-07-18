@@ -33,7 +33,7 @@ function ProjectPlanCompo(props) {
   const [activeSave, setActiveSave] = useState(true);
   // const [activeFlag, setActiveFlag] = useState(false);
   // Check if access is empty for the user's role and page
-  const isAccessEmpty = !hasAllAccess();
+  const isAccessEmpty = hasAllAccess();
   console.log("is access empty", isAccessEmpty);
   const [activeFlag, setActiveFlag] = useState(!isAccessEmpty);
   const [loader, setLoader] = useState(false);

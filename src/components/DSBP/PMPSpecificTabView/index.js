@@ -125,6 +125,7 @@ const PMPSpecificTabView = () => {
 
   useEffect(() => {
     setSelectedTabData(artWorkTabValuesData[tabPanelList]);
+    setAddToProjectValue("");
     if (artWorkTabValuesData[tabPanelList]) {
       const selectedTabData = artWorkTabValuesData[tabPanelList];
       if (selectedTabData?.description !== undefined) {
@@ -138,8 +139,7 @@ const PMPSpecificTabView = () => {
         setGroupName(selectedTabData?.description?.AWM_GroupPMP);
       }
     }
-    setFormData({});
-    setAddToProjectValue("");
+    setFormData({});    
   }, [artWorkTabValuesData]);
 
   useEffect(() => {
@@ -197,7 +197,7 @@ const PMPSpecificTabView = () => {
   };
 
   const handleCancel = () => {
-    return navigate(`/myProjects`);
+    return navigateToDSBP();
   };
 
   const updateArtWorkTabValuesData = (updatedNewData) => {
@@ -537,6 +537,7 @@ const PMPSpecificTabView = () => {
           hideSaveButton={true}
           onSubmit={onSubmit}
           formValid={Object.keys(formData).length === 0}
+          checkReadWriteAccess={!false}
         />
       </>
     )
