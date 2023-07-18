@@ -218,8 +218,18 @@ sup {
   transform: rotate(45deg);
   right: -9px;
   background-color: #fff;
-  top: -19px;
+  top: -24px;
   // top: 50%;
+}
+.upload-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.upload-wrap-delete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 // AddNewDesignContent Styles End

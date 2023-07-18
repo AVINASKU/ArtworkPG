@@ -211,6 +211,8 @@ console.log("selectDialog:",selectDialog);
     setFileName(di_name);
   };
 
+  const cancelOptions = { icon: 'pi pi-fw pi-times', iconOnly: true, className: 'custom-cancel-btn p-button-danger p-button-rounded p-button-outlined' };
+
   const BriefDocument = (taskName) => {
     mydata = (
       <>
@@ -222,13 +224,17 @@ console.log("selectDialog:",selectDialog);
             marginTop: 5,
           }}
         >
-          <Col sm={1}>
+          <Col sm={2} style={{ display: "flex" }}>
             <div style={{display: "flex", width: "max-content"}}>
             <div style={{ paddingRight: "8px" }}><label>{clickCount}.</label></div>
-            <div style={{ paddingRight: "6px" }}><label htmlFor="select"> Upload File </label></div>
-              {tooltip}
             </div>
-            <div>
+            <div className="upload-wrap">
+            <div  style={{ display: "flex" }}>
+              <label htmlFor="select" style={{ paddingRight: "6px" }}> Upload File </label>
+              {tooltip}
+              </div>
+              
+              <div>
               <FileUpload
                 ref={fileUploadRef}
                 name="demo[]"
@@ -247,8 +253,41 @@ console.log("selectDialog:",selectDialog);
                 disabled={!checkReadWriteAccess}
               ></img> */}
             </div>
+            </div>
+            
           </Col>
-          <Col sm={4} style={{marginLeft: 44}}>
+          <Col sm={2} style={{ display: "flex" }}>
+            <div style={{display: "flex", width: "max-content"}}>
+            </div>
+            <div className="upload-wrap">
+            <div  style={{ display: "flex" }}>
+              <label htmlFor="select" style={{ paddingRight: "6px" }}> Up Version </label>
+              </div>
+              
+              <div>
+              <FileUpload
+                ref={fileUploadRef}
+                name="demo[]"
+                url="/api/upload"
+                accept="image/*"
+                customUpload
+                onUpload={onTemplateUpload}
+                onSelect={onTemplateSelect}
+                itemTemplate={itemTemplate}
+                // cancelOptions={cancelOptions}
+              />
+              {/* <img
+                src={upload}
+                alt="filter logo"
+                // onClick={() => checkReadWriteAccess && handleDelete(index)}
+                className="header-icons"
+                disabled={!checkReadWriteAccess}
+              ></img> */}
+            </div>
+            </div>
+            
+          </Col>
+          {/* <Col sm={4} style={{marginLeft: 44}}>
             <label>Up Version</label>
             <div>
               <img
@@ -259,8 +298,37 @@ console.log("selectDialog:",selectDialog);
                 disabled={!checkReadWriteAccess}
               ></img>
             </div>
+          </Col> */}
+          <Col sm={2}>
+            <div className="upload-wrap-delete">
+              <label htmlFor="select" style={{ paddingBottom: "15px" }}> Delete </label>
+              <img
+                src={deleteIcon}
+                alt="filter logo"
+                onClick={() => {
+                  setSelectDialog(true);
+                  setData(taskName);
+                  // if (checkReadWriteAccess) {
+                  displayBriefDocumentDataGraphicAdaption.map((index) => {
+                    handleDelete(index);
+                    console.log("let us see this", index);
+                  });
+                  console.log("handle click clicked", index);
+                }}
+                // }
+                className="header-icons"
+              />
+              {/* <img
+                src={upload}
+                alt="filter logo"
+                // onClick={() => checkReadWriteAccess && handleDelete(index)}
+                className="header-icons"
+                disabled={!checkReadWriteAccess}
+              ></img> */}
+            </div>
+            
           </Col>
-          <Col sm={1}>
+          {/* <Col sm={1}>
             <label>Delete</label>
             <div>
               <img
@@ -280,7 +348,7 @@ console.log("selectDialog:",selectDialog);
                 className="header-icons"
               ></img>
             </div>
-          </Col>
+          </Col> */}
         </Row>
       </>
     );
