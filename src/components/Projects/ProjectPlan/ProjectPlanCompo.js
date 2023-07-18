@@ -10,7 +10,7 @@ import {
 } from "../../../utils";
 
 function ProjectPlanCompo(props) {
-  const { view, setTabName, setUpdatedProjectPlanDesignData, setActiveSave, getProjectPlanApi, loader } = props;
+  const { view, setTabName, setUpdatedProjectPlanDesignData, setActiveSave, getProjectPlanApi, loader, tabNameForPP } = props;
   const toast = useRef(null);
   const [pegadata, setPegaData] = useState(null);
   // Check if access is empty for the user's role and page
@@ -46,6 +46,7 @@ function ProjectPlanCompo(props) {
               isAccessEmpty={isAccessEmpty}
               view={view}
               setTabName={setTabName}
+              tabNameForPP={tabNameForPP}
             />
           </>
         )}

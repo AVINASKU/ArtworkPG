@@ -103,8 +103,10 @@ function ProjectSetup(props) {
   }, [updatedProjectPlanDesignData]);
 
   useEffect(() => {
-    getProjectPlanApi();
-  }, [mode, tabNameForPP]);
+    if(tabName === "projectPlan" || url[2] === "projectPlan"){
+      getProjectPlanApi();
+    }    
+  }, [mode]);
 
   const getProjectPlanApi = async () => {
     setLoader(true);
@@ -122,15 +124,6 @@ function ProjectSetup(props) {
   const getRestructuredData = (apiData) => {
     let mainTempArr = [];
     let tasks = [];
-    if (tabNameForPP === "Input") {
-      tasks = [
-        {
-          name: "Start Artwork Alignment",
-          code: "SAA",
-          data: apiData.filter((data) => data.AWM_Task_ID.includes("SAA_")),
-        },
-      ];
-    } else {
       tasks = [
         {
           name: "Define Design Intent",
@@ -203,8 +196,13 @@ function ProjectSetup(props) {
           code: "CNIQ",
           data: apiData.filter((data) => data.AWM_Task_ID.includes("CNIQ_")),
         },
+        {
+          name: "Start Artwork Alignment",
+          code: "SAA",
+          data: apiData.filter((data) => data.AWM_Task_ID.includes("SAA_")),
+        }
       ];
-    }
+    // }
 
     tasks.forEach((task) => {
       if (task.data?.length > 0) {
@@ -455,7 +453,7 @@ function ProjectSetup(props) {
         <div className="unauthorized-user">
           You are not authorized to access this page.
         </div>
-      ) : (
+      ) : ( tabName === "projectSetup" &&
         <div className="projectSetupParent project-setup-wrapper">
           <div className="actions">
             <div className="breadCrumbParent">{breadcrumb}</div>
@@ -467,7 +465,7 @@ function ProjectSetup(props) {
     {
       name: "projectPlan",
       tabNameForDisplay: "Project Plan",
-      component: (
+      component: (tabName === "projectPlan" && 
         <div className="projectSetupParent project-plan-wrapper">
           <div className="breadCrumbParent">
             <div className="row">
@@ -590,7 +588,7 @@ function ProjectSetup(props) {
                     onClick={onSave}
                     disabled={activeSave}
                   >
-                    setup Save
+                    Save
                   </Button>
 
                   <Button
@@ -611,7 +609,7 @@ function ProjectSetup(props) {
     {
       name: "artworkAlignment",
       tabNameForDisplay: "Artwork Alignment",
-      component: <ArtworkAlignment />,
+      component: tabName === "artworkAlignment" && <ArtworkAlignment />,
     },
     {
       name: "mapping",
