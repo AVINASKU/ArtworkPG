@@ -133,9 +133,9 @@ const SelectDsbpId = ({
   }
 
   return (
-    <div style={{ textAlign: "initial" }}>
-      <div className="margin-left">Select DSBP ID</div>
-      <div className="actions margin-left dsbp-select">
+    <div className="margin-left">
+      <div>Select DSBP ID</div>
+      <div className="actions dsbp-select p-0">
         <MultiSelect
           value={selectedCities}
           // onChange={(e) => multiSelectOnChange(e)}

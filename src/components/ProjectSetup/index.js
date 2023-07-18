@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, lazy, Suspense } from "react";
 import AddProject from "../Projects/CreateProject";
 import { DropdownButton, Dropdown, Accordion } from "react-bootstrap";
 import "primeicons/primeicons.css";
@@ -13,6 +13,10 @@ import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import ProjectListHeader from "../Projects/MyProjects/ProjectListHeader";
 import { ProjectService } from "../../service/PegaService";
 import ArtworkAlignment from "../DSBP/ArtworkAlignmentPage";
+// import DependencyMapping from "../DSBP/DependencyMappingPage";
+
+const DependencyMapping = lazy(() => import('../DSBP/DependencyMappingPage'));
+
 function ProjectSetup(props) {
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
@@ -197,7 +201,7 @@ function ProjectSetup(props) {
             <div>
               <Accordion className="projectPlanAccordian" defaultActiveKey="2">
                 <Accordion.Item eventKey="2">
-                  <Accordion.Header>Design</Accordion.Header>
+                  <Accordion.Header onClick={() => setTabNameForPP("Design")}>Design</Accordion.Header>
                   <Accordion.Body>
                     <ProjectPlanCompo
                       isSearch={isSearch}
@@ -211,8 +215,18 @@ function ProjectSetup(props) {
                   </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="3">
-                  <Accordion.Header>Input</Accordion.Header>
-                  <Accordion.Body>Input</Accordion.Body>
+                  <Accordion.Header onClick={() => setTabNameForPP("Input")}>Input</Accordion.Header>
+                  <Accordion.Body>
+                    <ProjectPlanCompo
+                    isSearch={isSearch}
+                    setColWidth={setColWidth}
+                    childFunc={childFunc}
+                    test={test}
+                    tabNameForPP={tabNameForPP}
+                    view={toggleButtons}
+                    setTabName={setTabName}
+                  />
+                  </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="4">
                   <Accordion.Header>FA Assembly</Accordion.Header>
@@ -329,7 +343,9 @@ function ProjectSetup(props) {
     {
       name: "mapping",
       tabNameForDisplay: "Mapping",
-      component: <>Mapping Data</>,
+      component: <Suspense fallback={<div>Loading Component</div>}>
+         <DependencyMapping/>
+      </Suspense>,
     },
     {
       name: "readinessPerPMP",
