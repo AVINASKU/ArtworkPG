@@ -366,8 +366,10 @@ const AddNewDesignContent = ({
           actionHeader="Are you sure you want to delete this file ?"
           dasbpDialog={selectDialog}
           setDasbpDialog={setSelectDialog}
+          rejectFormData={[{}]}
           onSubmit={() => handledelete()}
           okButtonShow={false}
+          deleteButtonShow={true}
         >
           <>{data}</>
         </DsbpCommonPopup>

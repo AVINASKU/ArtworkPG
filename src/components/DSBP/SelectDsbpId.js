@@ -199,6 +199,7 @@ const SelectDsbpId = ({
           setDasbpDialog={setSelectDialog}
           onSubmit={() => handleOptionSelection(selectedDsbpData, operation)}
           okButtonShow={operation === "poaCreated" ? true : false}
+          deleteButtonShow={false}
         >
           <>
             {selectedInitiativeName}

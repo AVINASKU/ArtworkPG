@@ -12,6 +12,7 @@ const DsbpCommonPopup = ({
   rejectFormData,
   onSubmit,
   okButtonShow,
+  deleteButtonShow,
 }) => {
   const footerContent = (
     <div>
@@ -22,14 +23,25 @@ const DsbpCommonPopup = ({
           <Button variant="secondary" onClick={() => setDasbpDialog(false)}>
             Cancel
           </Button>
-          <Button
-            disabled={
-              rejectFormData && Object.keys(rejectFormData)?.length === 0
-            }
-            onClick={onSubmit}
-          >
-            Submit
-          </Button>
+          {deleteButtonShow ? (
+            <Button
+              disabled={
+                rejectFormData && Object.keys(rejectFormData)?.length === 0
+              }
+              onClick={onSubmit}
+            >
+              Delete
+            </Button>
+          ) : (
+            <Button
+              disabled={
+                rejectFormData && Object.keys(rejectFormData)?.length === 0
+              }
+              onClick={onSubmit}
+            >
+              Submit
+            </Button>
+          )}
         </>
       )}
     </div>

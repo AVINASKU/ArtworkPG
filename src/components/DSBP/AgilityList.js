@@ -595,6 +595,7 @@ const AgilityList = ({
           setDasbpDialog={setRejectDialog}
           rejectFormData={rejectFormData}
           onSubmit={() => onActionSubmit(rejectFormData, [onChangeData])}
+          deleteButtonShow={false}
         >
           <DsbpRejectDialog
             onChangeData={onChangeData}
