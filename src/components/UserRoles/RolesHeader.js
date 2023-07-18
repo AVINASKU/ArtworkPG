@@ -6,14 +6,13 @@ import toggleOn from "../../assets/images/toggleOn.svg";
 
 // import toggleoff from "./../src/assets/images/toggleoff.svg";
 
-const RolesHeader = ({ header, addRole }) => {
-  const [displayUserRole, setdisplayUserRole] = useState(false);
-  const [imageOn, setImageOn] = useState(true);
-
-  const toggleImage = () => {
-    setImageOn(!imageOn);
-    setdisplayUserRole(!displayUserRole);
-  };
+const RolesHeader = ({
+  header,
+  addRole,
+  displayUserRole,
+  imageOn,
+  toggleImage,
+}) => {
   const addRoles = () => {
     addRole();
   };
@@ -31,8 +30,8 @@ const RolesHeader = ({ header, addRole }) => {
           />
         </span>
         <button
-          className={`addRule ${displayUserRole ? "enabled" : "disabled"}`}
-          // disabled={displayUserRole}
+          className={`addRule ${!displayUserRole ? "enabled" : "disabled"}`}
+          disabled={displayUserRole}
           onClick={addRole}
         >
           <img

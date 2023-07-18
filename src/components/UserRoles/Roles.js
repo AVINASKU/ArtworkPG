@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Roles.scss";
 import Accordion from "react-bootstrap/Accordion";
 
@@ -10,30 +10,38 @@ const Roles = ({
   selectedCategory,
   selectedRegion,
   roleCount,
+  removedRows,
+  displayUserRole,
+  setRemovedRows,
 }) => {
-  const [removedRows, setRemovedRows] = useState([]);
-
   const [selectedRoles, setSelectedRoles] = useState(selectedRole);
   const [selectedCategories, setSelectedCategories] =
     useState(selectedCategory);
   const [selectedRegions, setSelectedRegions] = useState(selectedRegion);
-
+  useEffect(() => {
+    setSelectedRoles(selectedRole);
+    setSelectedCategories(selectedCategory);
+    setSelectedRegions(selectedRegion);
+  }, [selectedRole, selectedCategory, selectedRegion]);
   const handleRoleChange = (e, rowIndex) => {
     const newSelectedRoles = [...selectedRoles];
     newSelectedRoles[rowIndex - 1] = e.target.value;
     setSelectedRoles(newSelectedRoles);
+    onRoleChange(newSelectedRoles); // Pass the updated state value
   };
 
   const handleCategoryChange = (e, rowIndex) => {
     const newSelectedCategories = [...selectedCategories];
     newSelectedCategories[rowIndex - 1] = e.target.value;
     setSelectedCategories(newSelectedCategories);
+    onCategoryChange(newSelectedCategories); // Pass the updated state value
   };
 
   const handleRegionChange = (e, rowIndex) => {
     const newSelectedRegions = [...selectedRegions];
     newSelectedRegions[rowIndex - 1] = e.target.value;
     setSelectedRegions(newSelectedRegions);
+    onRegionChange(newSelectedRegions); // Pass the updated state value
   };
   const handleRemove = (rowIndex) => {
     setRemovedRows((prevRemovedRows) => [...prevRemovedRows, rowIndex]);
@@ -73,9 +81,10 @@ const Roles = ({
                         <input
                           type="radio"
                           name={`roleButton${i}`}
-                          value="Project Manager"
-                          checked={selectedRoles[i - 1] === "Project Manager"}
+                          value="ProjectManager"
+                          checked={selectedRoles[i - 1] === "ProjectManager"}
                           onChange={(e) => handleRoleChange(e, i)}
+                          disabled={displayUserRole}
                         />
                       </div>
                     </td>
@@ -88,6 +97,7 @@ const Roles = ({
                           value="Baby Care"
                           checked={selectedCategories[i - 1] === "Baby Care"}
                           onChange={(e) => handleCategoryChange(e, i)}
+                          disabled={displayUserRole}
                         />
                       </div>
                     </td>
@@ -100,6 +110,7 @@ const Roles = ({
                           value="Europe"
                           checked={selectedRegions[i - 1] === "Europe"}
                           onChange={(e) => handleRegionChange(e, i)}
+                          disabled={displayUserRole}
                         />
                       </div>
                     </td>
@@ -111,9 +122,10 @@ const Roles = ({
                         <input
                           type="radio"
                           name={`roleButton${i}`}
-                          value="Task Owner"
-                          checked={selectedRoles[i - 1] === "Task Owner"}
+                          value="TaskOwner"
+                          checked={selectedRoles[i - 1] === "TaskOwner"}
                           onChange={(e) => handleRoleChange(e, i)}
+                          disabled={displayUserRole}
                         />
                       </div>
                     </td>
@@ -126,6 +138,7 @@ const Roles = ({
                           value="Home Care"
                           checked={selectedCategories[i - 1] === "Home Care"}
                           onChange={(e) => handleCategoryChange(e, i)}
+                          disabled={displayUserRole}
                         />
                       </div>
                     </td>
@@ -138,6 +151,7 @@ const Roles = ({
                           value="North America"
                           checked={selectedRegions[i - 1] === "North America"}
                           onChange={(e) => handleRegionChange(e, i)}
+                          disabled={displayUserRole}
                         />
                       </div>
                     </td>
@@ -149,11 +163,10 @@ const Roles = ({
                         <input
                           type="radio"
                           name={`roleButton${i}`}
-                          value="External Task Owner"
-                          checked={
-                            selectedRoles[i - 1] === "External Task Owner"
-                          }
+                          value="ExternalTaskOwner"
+                          checked={selectedRoles[i - 1] === "ExternalTaskOwner"}
                           onChange={(e) => handleRoleChange(e, i)}
+                          disabled={displayUserRole}
                         />
                       </div>
                     </td>
@@ -166,6 +179,7 @@ const Roles = ({
                           value="Oral Care"
                           checked={selectedCategories[i - 1] === "Oral Care"}
                           onChange={(e) => handleCategoryChange(e, i)}
+                          disabled={displayUserRole}
                         />
                       </div>
                     </td>
@@ -178,9 +192,10 @@ const Roles = ({
                         <input
                           type="radio"
                           name={`roleButton${i}`}
-                          value="Capacity Manager"
-                          checked={selectedRoles[i - 1] === "Capacity Manager"}
+                          value="CapacityManager"
+                          checked={selectedRoles[i - 1] === "CapacityManager"}
                           onChange={(e) => handleRoleChange(e, i)}
+                          disabled={displayUserRole}
                         />
                       </div>
                     </td>

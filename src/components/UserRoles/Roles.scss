@@ -40,9 +40,19 @@
   }
 }
 
+.project-title {
+  text-align: center;
+}
 //   .role-details h3 {
 //     display: flex;
 //     flex-direction: column;
 //     justify-content: flex-end;
 //     height: 20px;
 //   }
+
+.list-roles {
+  li {
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+  }
+}

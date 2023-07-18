@@ -167,21 +167,21 @@ const AllProjectList = (props) => {
             if (field.Artwork_Category) {
               let categoryNames = field?.Artwork_Category?.map(
                 (item) => item.Category_Name
-              ).join(",");
+              ).join(", ");
               field.Artwork_Category = categoryNames;
             }
 
             if (field.Artwork_SMO) {
               let SMOName = field?.Artwork_SMO?.map(
                 (item) => item.SMO_Name
-              ).join(",");
+              ).join(", ");
               field.Artwork_SMO = SMOName;
             }
 
             if (field.Artwork_Brand) {
               let brandName = field?.Artwork_Brand?.map(
                 (item) => item.Brand_Name
-              ).join(",");
+              ).join(", ");
               field.Artwork_Brand = brandName;
             }
 
