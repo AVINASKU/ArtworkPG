@@ -8,6 +8,7 @@ import { AutoComplete } from "primereact/autocomplete";
 import plusCollapseImg from "../../../assets/images/plusCollapse.svg";
 import upVersion from "../../../assets/images/upVersion.svg";
 import upload from "../../../assets/images/upload.svg";
+import editName from "../../../assets/images/editName.svg";
 
 const AddNewDesignContent = ({
   index,
@@ -25,7 +26,8 @@ const AddNewDesignContent = ({
   taskName2,
   setAddNewDesign,
   displayBriefDocument,
-  clickCount,
+  clickCountGraphicAdaption,
+  clickCountReferenceDocuments,
   displayBriefDocumentDataGraphicAdaption,
   displayBriefDocumentDataReferenceDocuments,
 }) => {
@@ -37,6 +39,8 @@ const AddNewDesignContent = ({
   const [additionalInformation, setAdditionalInfo] = useState(Additional_Info);
   const [tier, setTier] = useState("");
   const [items, setItems] = useState([]);
+  const [graphicAdaptionBriefName, setGraphicAdaptionBriefName] =
+    useState(false);
 
   useEffect(() => {
     if (item) {
@@ -59,6 +63,12 @@ const AddNewDesignContent = ({
     setChecked(Select);
   }, [Select]);
 
+  const handleChange = (name, change) => {
+    // setGraphicAdaptionBriefName(change);
+    // console.log("name is name", name);
+    console.log("name is name", change);
+  };
+  let z;
   const DesignHeader = (di_name, taskName) => {
     return (
       <>
@@ -129,7 +139,7 @@ const AddNewDesignContent = ({
     );
   };
 
-  const BriefDocument = (taskName) => {
+  const BriefDocument = (taskName, p) => {
     mydata = (
       <>
         <Row
@@ -141,7 +151,16 @@ const AddNewDesignContent = ({
           }}
         >
           <Col sm={1}>
-            <label style={{ paddingRight: "3px" }}>{clickCount}</label>
+            <label style={{ paddingRight: "3px" }}>
+              {console.log(
+                "clickCountGraphicAdaption clickCountGraphicAdaption is",
+                clickCountGraphicAdaption
+              )}
+              {taskName === "Graphic Adaption Brief*" &&
+                clickCountGraphicAdaption}
+              {taskName === "Other Reference Documents & Assets" &&
+                clickCountReferenceDocuments}
+            </label>
             <label htmlFor="select"> Upload File</label>
             <div>
               <img
@@ -237,9 +256,24 @@ const AddNewDesignContent = ({
               marginTop: 10,
             }}
           >
-            <label>Graphic Adaption Brief 1</label>
+            <label
+              contentEditable={graphicAdaptionBriefName ? true : false}
+              style={{ marginRight: "10px" }}
+            >
+              Graphic Adaption Brief 1
+            </label>
+            <img
+              src={editName}
+              alt="edit logo"
+              // onClick={() => setAddNewDesign()}
+              // onClick={() => displayBriefDocument(mydata, taskName)}
+              onClick={() => setGraphicAdaptionBriefName(true)}
+              className="header-icons"
+              style={{ paddingRight: "4px" }}
+              // disabled={!checkReadWriteAccess}
+            />
           </div>
-          {BriefDocument(taskName)}
+          {BriefDocument(taskName, (z = 1))}
           <div className="design-intent-header">
             {DesignHeader(di_name, taskName2)}
           </div>
