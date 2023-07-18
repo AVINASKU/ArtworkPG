@@ -305,7 +305,7 @@ function UBD() {
         headerName={headerName}
         label="Upload Graphic Adaption Brief Document"
         checkReadWriteAccess={checkReadWriteAccess}
-        taskName="Production Ready Art"
+        taskName="Graphic Adaption Brief*"
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
