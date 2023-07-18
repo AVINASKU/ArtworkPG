@@ -54,7 +54,8 @@ const UPRA = () => {
       );
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
       const data =
-        TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails[0]?.FileMetaDataList[0] || [];
+        TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails[0]
+          ?.FileMetaDataList[0] || [];
       if (data) {
         data.Version !== "" && setVersion(data.Version);
         data.Timestamp !== "" &&
@@ -67,7 +68,7 @@ const UPRA = () => {
     }
   }, [TaskDetailsData]);
 
-  const filePath = "cloudflow://PP_FILE_STORE/aacdata/" + fileName;
+  const filePath = "/" + fileName;
 
   const onSaveAsDraft = async () => {
     const fileSize = Math.round(formattedValue / 1000000);
@@ -98,18 +99,21 @@ const UPRA = () => {
       caseTypeID: "PG-AAS-Work-UploadProductionReadyArt",
       content: {
         AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
-        AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID
+        AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
       },
-      pageInstructions: [{
-        instruction: "APPEND",
-        target: "PRAUploadList",
-        content: {
-          Action: "add",
-          Filename: fileName,
-          Size: fileSize === 0 ? "1" : fileSize,
-          Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
-        }
-      }],
+      pageInstructions: [
+        {
+          instruction: "APPEND",
+          target: "PRAUploadList",
+          content: {
+            Action: "add",
+            Filename: fileName,
+            Size: fileSize === 0 ? "1" : fileSize,
+            Version:
+              version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
+          },
+        },
+      ],
     };
     await dispatch(UploadFileToServer(azureFile, filePath));
     console.log("formData", formData, "id", id);
@@ -130,7 +134,10 @@ const UPRA = () => {
         {<AddNewDesign {...data} />}
         {loading ? (
           <div className="align-item-center">
-            <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
+            <i
+              className="pi pi-spin pi-spinner"
+              style={{ fontSize: "2rem" }}
+            ></i>
           </div>
         ) : (
           designIntent && (
@@ -151,7 +158,7 @@ const UPRA = () => {
           )
         )}{" "}
       </div>
-      
+
       <FooterButtons
         onSubmit={onSubmit}
         handleCancel={handleCancel}

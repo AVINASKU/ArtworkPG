@@ -19,9 +19,15 @@ export const getDropDownValues = () => {
         url: apiURL,
         method: "GET",
       });
+
+      // Sort the data in alphabetical order
+      const sortedData = DropDownValuesData?.data.sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
+
       dispatch({
         type: "GET_DROPDOWN_VALUES_SUCCESS",
-        payload: DropDownValuesData?.data,
+        payload: sortedData,
       });
     } catch (error) {
       dispatch({ type: "GET_DROPDOWN_VALUES_FAILURE", payload: error });

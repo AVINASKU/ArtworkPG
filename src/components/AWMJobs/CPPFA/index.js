@@ -6,6 +6,7 @@ import { Dialog } from "primereact/dialog";
 import { Col, Row } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
+import { downloadFileAzure } from "../../../store/actions/AzureFileDownload";
 import { submitCPPFA } from "../../../store/actions/taskDetailAction";
 import { changeDateFormat, hasAllAccess } from "../../../utils";
 import { FileUpload } from "primereact/fileupload";
@@ -123,6 +124,9 @@ const CPPFA = ({
     );
   };
 
+  const handleDownload = (filePath) => {
+    dispatch(downloadFileAzure(filePath));
+  };
   const handleSubmit = async () => {
     const headers = {
       key: "If-Match",
@@ -323,7 +327,16 @@ const CPPFA = ({
                           </span>
                         </>
                       ) : (
-                        designIntent.FileMetaDataList[0].File_Name
+                        <a
+                          onClick={() =>
+                            handleDownload(
+                              designIntent.FileMetaDataList[0].File_Name
+                            )
+                          }
+                          className="download-button"
+                        >
+                          {designIntent.FileMetaDataList[0].File_Name}
+                        </a>
                       )
                     ) : (
                       <>

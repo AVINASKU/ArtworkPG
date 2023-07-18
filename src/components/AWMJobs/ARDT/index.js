@@ -9,6 +9,7 @@ import { CheckReadOnlyAccess } from "../../../utils";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
+import { useProofScopeURL } from "../../ProofScope/ViewFiles";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
@@ -19,6 +20,7 @@ const headerName = "Approve Regional Design Template";
 const ARDT = () => {
   const [data, setData] = useState(null);
   const [taskData, setTaskData] = useState(null);
+  const viewProofScopeFile = useProofScopeURL();
   const location = useLocation();
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
@@ -45,6 +47,10 @@ const ARDT = () => {
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
     }
   }, [TaskDetailsData]);
+  const handleViewProofScopeClick = (event, fileUrl) => {
+    event.preventDefault();
+    viewProofScopeFile(`DI__Pampers__Artwork project 2_V1`);
+  };
 
   return (
     <PageLayout>

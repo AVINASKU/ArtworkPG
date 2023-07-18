@@ -18,7 +18,7 @@ const UploadDesignIntentProofscope = ({
   roleName,
   ArtworkAgilityPage,
   version,
-  date
+  date,
 }) => {
   console.log("item here here", item);
   const [totalSize, setTotalSize] = useState(0);
@@ -38,11 +38,15 @@ const UploadDesignIntentProofscope = ({
 
   const handleViewProofScopeClick = async (event, fileUrl) => {
     event.preventDefault();
-    viewProofScopeFile(`cloudflow://PP_FILE_STORE/aacdata/${fileUrl}`);
+    viewProofScopeFile(`${fileUrl}`);
   };
   let di_name;
   if (!approve) {
-    di_name = version !== "V0" && item?.DesignJobDetails[0]?.FileMetaDataList[0]?.Timestamp !== "" ? `${item?.Task_Name}_${version}_${date}` : `${item?.Task_Name}`;
+    di_name =
+      version !== "V0" &&
+      item?.DesignJobDetails[0]?.FileMetaDataList[0]?.Timestamp !== ""
+        ? `${item?.Task_Name}_${version}_${date}`
+        : `${item?.Task_Name}`;
   }
 
   const onTemplateUpload = (e) => {
@@ -63,15 +67,14 @@ const UploadDesignIntentProofscope = ({
     //   seFileData(file);
     return (
       <div className="upload-row">
-        <img
-          role="presentation"
-          src={file.objectURL}
-          width={50}
-        />
+        <img role="presentation" src={file.objectURL} width={50} />
         <a
           className="flex flex-column text-left ml-3"
           onClick={(event) =>
-            handleViewProofScopeClick(event, "pranali-test-proofscope.png")
+            handleViewProofScopeClick(
+              event,
+              "cloudflow://PP_FILE_STORE/CIC_20169540_POA-00454657_Bounty_NA_Paper_Towel_Essentials_Select-a-Size_Double_Roll_2CT_White_SHIPPER.pdf"
+            )
           }
         >
           {file.name}
@@ -162,16 +165,16 @@ const UploadDesignIntentProofscope = ({
             : ``
           : fileName === ""
           ? di_name && (
-            <a
-              className="flex flex-column text-left ml-3"
-              onClick={(event) => handleViewProofScopeClick(event, updatedImg)}
-            >
-              {di_name}
-            </a>
-          )
+              <a
+                className="flex flex-column text-left ml-3"
+                onClick={(event) =>
+                  handleViewProofScopeClick(event, updatedImg)
+                }
+              >
+                {di_name}
+              </a>
+            )
           : ""}
-
-        
 
         {approve && (
           <div

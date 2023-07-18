@@ -41,7 +41,7 @@ const UploadFile = ({
 
   const handleViewProofScopeClick = async (event, fileUrl) => {
     event.preventDefault();
-    viewProofScopeFile(`cloudflow://PP_FILE_STORE/aacdata/${fileUrl}`);
+    viewProofScopeFile(`/${fileUrl}`);
   };
 
   let di_name;

@@ -52,7 +52,8 @@ const UADI = () => {
       );
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
       const data =
-        TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails[0]?.FileMetaDataList[0] || [];
+        TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails[0]
+          ?.FileMetaDataList[0] || [];
       if (data) {
         data.Version !== "" && setVersion(data.Version);
         data.Timestamp !== "" &&
@@ -120,33 +121,35 @@ const UADI = () => {
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
-          {loading || loader || designIntent === null ? (
-            <div className="align-item-center">
-              <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
-            </div>
-          ) : (
-            designIntent && (
-              <ApproveDesignIntentContent
-                {...designIntent}
-                designIntent={designIntent}
-                upload={true}
-                setformattedValue={setformattedValue}
-                setAzureFile={setAzureFile}
-                setFileName={setFileName}
-                fileName={fileName}
-                setMappedFiles={setMappedFiles}
-                item={data}
-                roleName={roleName}
-                ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
-                version={version}
-                date={date}
-                checkReadWriteAccess={checkReadWriteAccess}
-              />
-            )
-          )}
+        {loading || loader || designIntent === null ? (
+          <div className="align-item-center">
+            <i
+              className="pi pi-spin pi-spinner"
+              style={{ fontSize: "2rem" }}
+            ></i>
+          </div>
+        ) : (
+          designIntent && (
+            <ApproveDesignIntentContent
+              {...designIntent}
+              designIntent={designIntent}
+              upload={true}
+              setformattedValue={setformattedValue}
+              setAzureFile={setAzureFile}
+              setFileName={setFileName}
+              fileName={fileName}
+              setMappedFiles={setMappedFiles}
+              item={data}
+              roleName={roleName}
+              ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
+              version={version}
+              date={date}
+              checkReadWriteAccess={checkReadWriteAccess}
+            />
+          )
+        )}
       </div>
 
-      
       <FooterButtons
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}

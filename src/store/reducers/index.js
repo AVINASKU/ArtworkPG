@@ -13,7 +13,7 @@ import accessMatrixReducer from "./RoleBasedReducer";
 import ssoReducer from "./SSOReducer";
 import DSBPDropdownReducer from "./DSBPReducer";
 import ArtWorkTabValuesReducer from "./ArtWorkTabValuesReducer";
-
+import azureDownloadFileReducer from "./AzureDownlodReducer";
 export default combineReducers({
   myProject: ProjectReducer,
   ProjectPlanReducer,
@@ -26,7 +26,8 @@ export default combineReducers({
   helpNeededReducer,
   DropDownValuesReducer,
   accessMatrixReducer,
-   ssoReducer,
-   DSBPDropdownReducer,
-   ArtWorkTabValuesReducer
+  ssoReducer,
+  DSBPDropdownReducer,
+  ArtWorkTabValuesReducer,
+  azureDownloadFileReducer,
 });

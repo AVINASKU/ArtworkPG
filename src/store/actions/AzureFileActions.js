@@ -8,10 +8,10 @@ const sasToken =
 const storageAccountName = "artworkagilityadlsdev";
 
 // Create a BlobServiceClient instance using the configuration variables
-const uploadUrl = `https://artworkagilityadlsdev.blob.core.windows.net/pgsource?${sasToken}`;
+const uploadUrl = `https://${storageAccountName}.blob.core.windows.net/pgsource?${sasToken}`;
 const blobService = new BlobServiceClient(uploadUrl);
 const containerClient = blobService.getContainerClient(containerName);
-//"https://artworkagilityadlsdev.blob.core.windows.net/pgsource/ArtworkFolder/Artwork876.pdf?sp=racwdeop&st=2023-03-02T04:30:10Z&se=2023-03-03T12:30:10Z&spr=https&sv=2021-06-08&sr=d&sig=DwwtNfpHYrfBTK4UshoeaMaJHaS9HW1efob2ZfvufDQ%3D&sdd=1"
+
 // Define your Redux action types
 export const UPLOAD_FILE_REQUEST = "UPLOAD_FILE_REQUEST";
 export const UPLOAD_FILE_SUCCESS = "UPLOAD_FILE_SUCCESS";
@@ -22,9 +22,9 @@ export const uploadFileRequest = () => ({
   type: UPLOAD_FILE_REQUEST,
 });
 
-export const uploadFileSuccess = (url) => ({
+export const uploadFileSuccess = (urls) => ({
   type: UPLOAD_FILE_SUCCESS,
-  payload: url,
+  payload: urls,
 });
 
 export const uploadFileFailure = (error) => ({
@@ -33,29 +33,27 @@ export const uploadFileFailure = (error) => ({
 });
 
 // Define your Redux async action creator
-export const uploadFileAzure = (file) => {
-  console.log(file);
+export const uploadFileAzure = (folder, file, jobName) => {
   return async (dispatch) => {
     try {
       dispatch(uploadFileRequest());
 
       // Create a BlobClient for the file and set the content type
-      const blobClient = containerClient.getBlockBlobClient(file.name);
+      const blobClient = containerClient.getBlockBlobClient(
+        `${folder}/${jobName}/${file.name}`
+      );
       const options = {
         blobHTTPHeaders: { blobContentType: file.type },
       };
       const uploadUrl = blobClient.url;
-      const formattedDate = new Date().toUTCString();
       const contentLength = file.size.toString();
-      const response = await axios.put(
+
+      await axios.put(
         uploadUrl,
         file,
         {
           headers: {
             "x-ms-blob-type": "BlockBlob",
-            // "x-ms-date": formattedDate,
-            // "x-ms-version": "2021-06-08",
-            // "Content-Type": "x-ms-blob-content-type",
             "Content-Length": contentLength,
           },
         },
@@ -63,10 +61,11 @@ export const uploadFileAzure = (file) => {
       );
 
       // Construct the public URL for the uploaded file
-      const publicUrl = `https://${storageAccountName}.blob.core.windows.net/pgsource/${containerName}/${file.name}`;
+
+      const publicUrl = `https://${storageAccountName}.blob.core.windows.net/pgsource/${containerName}/${folder}/${jobName}/${file.name}`;
 
       // Dispatch the success action with the public URL
-      dispatch(uploadFileSuccess(publicUrl));
+      dispatch(uploadFileSuccess([publicUrl]));
     } catch (error) {
       // Dispatch the failure action with the error message
       dispatch(uploadFileFailure(error.message));

@@ -4,7 +4,7 @@ import Notificaitons from "../../assets/images/notification.svg";
 import user from "../../assets/images/user.svg";
 import moment from "moment-timezone";
 import { useSelector } from "react-redux";
-
+import { useProofScopeURL } from "../ProofScope/ViewFiles";
 const sessionData = sessionStorage?.getItem("session");
 
 const sessionObj = JSON.parse(sessionData);
@@ -46,12 +46,28 @@ const Header = () => {
   const Role = User?.userProfile;
   const roles = Role?.role || [];
   const rolesString = roles.join(", ");
+  const viewProofScopeFile = useProofScopeURL();
+  const handleViewProofScopeClick = async (event, fileUrl) => {
+    event.preventDefault();
+    viewProofScopeFile(`${fileUrl}`);
+  };
   return (
     <div className="header">
       <div>
         <h1>
           Welcome Back, {userInformation.username} ({rolesString})!
         </h1>
+        <a
+          className="flex flex-column text-left ml-3"
+          onClick={(event) =>
+            handleViewProofScopeClick(
+              event,
+              "cloudflow://PP_FILE_STORE/CIC_20169540_POA-00454657_Bounty_NA_Paper_Towel_Essentials_Select-a-Size_Double_Roll_2CT_White_SHIPPER.pdf"
+            )
+          }
+        >
+          Proofscope test
+        </a>
         {/* <div className="user-date-time">
           <p>{formattedDate(userInformation.loginTime)}</p>
           <p>{formattedTime(userInformation.loginTime)}</p>

@@ -3,7 +3,8 @@ import { FileUpload } from "primereact/fileupload";
 import { Image } from "primereact/image";
 import { Tag } from "primereact/tag";
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
-
+import { downloadFileAzure } from "../../../store/actions/AzureFileDownload";
+import { useDispatch } from "react-redux";
 const ApproveDesignIntentContent = ({
   designIntent,
   Design_Intent_Name,
@@ -24,10 +25,14 @@ const ApproveDesignIntentContent = ({
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
   const viewProofScopeFile = useProofScopeURL();
-
+  const dispatch = useDispatch();
   const handleViewProofScopeClick = (event, fileUrl) => {
     event.preventDefault();
-    viewProofScopeFile(`cloudflow://PP_FILE_STORE/aacdata/${fileUrl}`);
+    viewProofScopeFile(`/${fileUrl}`);
+  };
+
+  const handleDownload = (filePath) => {
+    dispatch(downloadFileAzure(filePath));
   };
 
   let di_name = "";
@@ -131,13 +136,22 @@ const ApproveDesignIntentContent = ({
               itemTemplate={itemTemplate}
             />
             <div>
-              {designIntent[0]?.FileMetaDataList[0]?.File_Name === ""
-                ? fileName === ""
-                  ? `No files uploaded yet please upload file!`
-                  : ``
-                : fileName === ""
-                ? di_name
-                : ""}
+              {designIntent[0]?.FileMetaDataList[0]?.File_Name === "" ? (
+                fileName === "" ? (
+                  `No files uploaded yet please upload file!`
+                ) : (
+                  ``
+                )
+              ) : fileName === "" ? (
+                <a
+                  onClick={() => handleDownload(di_name)}
+                  className="download-button"
+                >
+                  {di_name}
+                </a>
+              ) : (
+                ""
+              )}
             </div>
           </div>
         )}

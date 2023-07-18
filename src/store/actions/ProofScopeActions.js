@@ -5,8 +5,7 @@ export const UploadFileToServer =
   (proofsopeFile, strFileName) => async (dispatch) => {
     try {
       const sessionCreate = await CreateSession(
-        "http://azw-aac-hybrid1.np-cloud-pg.com:9090/",
-        // "https://proofscopenp.pg.com/",
+        "https://azw-aac-hyb1.xnp-cloud-pg.com",
         "admin",
         "admin"
       );
@@ -42,7 +41,7 @@ export const UploadFileToServer =
       // "http://azw-aac-hybrid1.np-cloud-pg.com:9090/portal.cgi";
       // "http://azw-aac-hybrid1.np-cloud-pg.com:9090/portal.cgi";
       const strProofScopeURL =
-        "http://azw-aac-hybrid1.np-cloud-pg.com:9090/portal.cgi";
+        "https://azw-aac-hyb1.xnp-cloud-pg.com/portal.cgi";
       // const strProofScopeURL = "https://proofscopenp.pg.com/portal.cgi";
       const strProofScopeUploadURL = `${strProofScopeURL}?hub=upload_file&whitepaper_name=api_starter_kit&input_name=receive_file_auth&session=${strSession}`;
 
@@ -118,7 +117,7 @@ const moveFileToFolder = async (
   // // let sbPath = "cloudflow://PP_FILE_STORE/Incoming";
   // let sbPath = "cloudflow://PP_FILE_STORE/Enovia/local/";
   // const url = new URL("https://proofscopenp.pg.com/portal.cgi");
-  const url = new URL("http://azw-aac-hybrid1.np-cloud-pg.com:9090/portal.cgi");
+  const url = new URL("https://azw-aac-hyb1.xnp-cloud-pg.com/portal.cgi");
   try {
     // let json = {
     //   method: "hub.process_from_whitepaper_with_files_and_variables",
@@ -157,7 +156,7 @@ const moveFileToFolder = async (
         input_name: "move_file",
         files: [jsonArray],
         variables: {
-          to_file_or_folder: "cloudflow://PP_FILE_STORE/aacdata/",
+          to_file_or_folder: "cloudflow://PP_FILE_STORE/",
           options: {
             overwrite: true,
             create_folders: true,

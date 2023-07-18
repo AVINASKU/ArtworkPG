@@ -54,9 +54,7 @@ const APRA = () => {
 
   const handleViewProofScopeClick = (event, fileUrl) => {
     event.preventDefault();
-    viewProofScopeFile(
-      `cloudflow://PP_FILE_STORE/aacdata/DI__Pampers__Artwork project 2_V1`
-    );
+    viewProofScopeFile(`DI__Pampers__Artwork project 2_V1`);
   };
 
   const handleCancel = () => {

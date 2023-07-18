@@ -43,8 +43,10 @@ function ProjectSetup(props) {
   const reject = () => {
     console.log("reject");
   };
- 
-  const [tabName, setTabName] = useState(url[2] !== undefined ? url[2] : url[1]);
+
+  const [tabName, setTabName] = useState(
+    url[2] !== undefined ? url[2] : url[1]
+  );
   const [tabNameForPP, setTabNameForPP] = useState("Design");
 
   let items = "";
@@ -60,7 +62,6 @@ function ProjectSetup(props) {
     items = "ReadinessPerPMP";
   }
 
- 
   const [isSearch, isSearchSet] = useState(false);
   const onSearchClick = () => {
     isSearchSet(!isSearch);
@@ -121,11 +122,12 @@ function ProjectSetup(props) {
     {
       name: "projectSetup",
       tabNameForDisplay: "Project Setup",
-      component: !isNoAccess ? (
-        <div className="unauthorized-user">
-          You are not authorized to access this page.
-        </div>
-      ) : (
+      component: (
+        //   !isNoAccess ? (
+        //   <div className="unauthorized-user">
+        //     You are not authorized to access this page.
+        //   </div>
+        // ) : (
         <div className="projectSetupParent project-setup-wrapper">
           <div className="actions">
             <div className="breadCrumbParent">{breadcrumb}</div>
@@ -133,6 +135,7 @@ function ProjectSetup(props) {
           <AddProject {...props} />
         </div>
       ),
+      // ),
     },
     {
       name: "projectPlan",
@@ -197,7 +200,9 @@ function ProjectSetup(props) {
             <div>
               <Accordion className="projectPlanAccordian" defaultActiveKey="2">
                 <Accordion.Item eventKey="2">
-                  <Accordion.Header onClick={() => setTabNameForPP("Design")}>Design</Accordion.Header>
+                  <Accordion.Header onClick={() => setTabNameForPP("Design")}>
+                    Design
+                  </Accordion.Header>
                   <Accordion.Body>
                     <ProjectPlanCompo
                       isSearch={isSearch}
@@ -211,17 +216,19 @@ function ProjectSetup(props) {
                   </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="3">
-                  <Accordion.Header onClick={() => setTabNameForPP("Input")}>Input</Accordion.Header>
+                  <Accordion.Header onClick={() => setTabNameForPP("Input")}>
+                    Input
+                  </Accordion.Header>
                   <Accordion.Body>
                     <ProjectPlanCompo
-                    isSearch={isSearch}
-                    setColWidth={setColWidth}
-                    childFunc={childFunc}
-                    test={test}
-                    tabNameForPP={tabNameForPP}
-                    view={toggleButtons}
-                    setTabName={setTabName}
-                  />
+                      isSearch={isSearch}
+                      setColWidth={setColWidth}
+                      childFunc={childFunc}
+                      test={test}
+                      tabNameForPP={tabNameForPP}
+                      view={toggleButtons}
+                      setTabName={setTabName}
+                    />
                   </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="4">

@@ -9,7 +9,7 @@ export const useProofScopeURL = () => {
   const viewProofScopeFile = async (fileUrl) => {
     const sessionCreate = await CreateSession(
       // "http://azw-aac-hybrid1.np-cloud-pg.com:9090/portal.cgi",
-      "http://azw-aac-hybrid1.np-cloud-pg.com:9090/portal.cgi",
+      "https://azw-aac-hyb1.xnp-cloud-pg.com/portal.cgi",
       "admin",
       "admin"
     );
@@ -18,27 +18,25 @@ export const useProofScopeURL = () => {
     // file_urls: fileUrl,
     const json = {
       method: "hub.process_from_whitepaper_with_options",
-      whitepaper_name: "api_starter_kit",
-      input_name: "get_proofscope_url",
+      whitepaper_name: "awm_approval",
+      input_name: "begin_approval",
       variables: {
-        can_delete_notes: true,
-        can_view_only: false,
-        email: "test@test.com",
-        username: "test_user01",
-        file_urls: fileUrl,
-        expiry_in_minutes: "20",
+        cf_art_path: fileUrl,
+        approver: "cr.ac@pg.com",
+        params: { customer_name: "Asha" },
       },
       session: strSession,
     };
 
     try {
       const response = await axios.post(
-        "http://azw-aac-hybrid1.np-cloud-pg.com:9090/portal.cgi",
+        "https://azw-aac-hyb1.xnp-cloud-pg.com/portal.cgi",
         json,
         {
           headers: {
             "Content-Type": "application/json",
             "Content-Language": "en-US",
+            "Access-Control-Allow-Origin": "*",
           },
         }
       );
@@ -51,23 +49,14 @@ export const useProofScopeURL = () => {
         }
         setIsError(true);
         setMessage(lastError);
-      } else if (data.proofscope_url_session) {
-        // const viewerURLOutput = data.proofscope_url_session;
-        // const viewerURLOutput = data.proofscope_url_session.replace(
-        //   /http:\/\/127\.0\.0\.1:9090/g,
-        //   "https://proofscopenp.pg.com/portal.cgi"
-        // );
-        const viewerURLOutput = data.proofscope_url_session.replace(
-          /http:\/\/127\.0\.0\.1:9090/g,
-          "http://azw-aac-hybrid1.np-cloud-pg.com:9090/"
+      } else if (data.approval_url) {
+        const viewerURLOutput = data.approval_url.replace(
+          /http:\/\/localhost:9090/g,
+          "https://azw-aac-hyb1.xnp-cloud-pg.com"
         );
         const decodedURL = decodeURIComponent(viewerURLOutput);
         console.log(viewerURLOutput);
         const uri = new URL(decodedURL);
-        // const strQuery = uri.search
-        //   .replace(/\%/g, "%25")
-        //   .replace(/\//g, "%2f")
-        //   .replace(/\:/g, "%3a");
         setIsError(false);
         setMessage("");
         window.open(viewerURLOutput, "_blank");

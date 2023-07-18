@@ -11,6 +11,7 @@ import { postSaveDesignIntent } from "../../../apis/uploadSaveAsDraft";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { CheckReadOnlyAccess, Loading } from "../../../utils";
+import UploadDesignIntentProofscope from "../DesignJobs/UploadDesignIntentProofscope";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/tasks" },
@@ -51,7 +52,8 @@ const URDT = () => {
       );
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
       const data =
-        TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails[0]?.FileMetaDataList[0] || [];
+        TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails[0]
+          ?.FileMetaDataList[0] || [];
       if (data) {
         data.Version !== "" && setVersion(data.Version);
         data.Timestamp !== "" &&
@@ -117,30 +119,30 @@ const URDT = () => {
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
-          {loading || loader || designIntent === null ? (
-             <Loading />
-          ) : (
-            designIntent && (
-              <ApproveDesignIntentContent
-                {...designIntent}
-                designIntent={designIntent}
-                upload={true}
-                setformattedValue={setformattedValue}
-                setAzureFile={setAzureFile}
-                setFileName={setFileName}
-                setMappedFiles={setMappedFiles}
-                item={data}
-                roleName={roleName}
-                ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
-                version={version}
-                date={date}
-                checkReadWriteAccess={checkReadWriteAccess}
-                fileName={fileName}
-              />
-            )
-          )}
+        {loading || loader || designIntent === null ? (
+          <Loading />
+        ) : (
+          designIntent && (
+            <UploadDesignIntentProofscope
+              {...designIntent}
+              designIntent={designIntent}
+              upload={true}
+              setformattedValue={setformattedValue}
+              setAzureFile={setAzureFile}
+              setFileName={setFileName}
+              setMappedFiles={setMappedFiles}
+              item={data}
+              roleName={roleName}
+              ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
+              version={version}
+              date={date}
+              checkReadWriteAccess={checkReadWriteAccess}
+              fileName={fileName}
+            />
+          )
+        )}
       </div>
-      
+
       <FooterButtons
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
