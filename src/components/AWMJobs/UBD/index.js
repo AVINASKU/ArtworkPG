@@ -37,7 +37,9 @@ function UBD() {
   const [projectData, setProjectData] = useState([]);
   const [loader, setLoader] = useState(false);
   let { TaskID, ProjectID } = useParams();
-  const [clickCount, setClickCount] = useState(1);
+  const [clickCountGraphicAdaption, setClickCountGraphicAdaption] = useState(1);
+  const [clickCountReferenceDocuments, setClickCountReferenceDocuments] =
+    useState(1);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { TaskDetailsData, loading } = useSelector(
@@ -109,19 +111,28 @@ function UBD() {
   };
 
   const displayBriefDocument = (val, taskName) => {
-    taskName === "Graphic Adaption Brief*" &&
+    if (taskName === "Graphic Adaption Brief*") {
       setDisplayBriefDocumentDataGraphicAdaption([
         ...displayBriefDocumentDataGraphicAdaption,
         val,
       ]);
-    taskName === "Other Reference Documents & Assets" &&
+      console.log("clickCountGraphicAdaption is", clickCountGraphicAdaption);
+      setClickCountGraphicAdaption(clickCountGraphicAdaption + 1);
+    }
+    if (taskName === "Other Reference Documents & Assets") {
       setDisplayBriefDocumentDataReferenceDocuments([
         ...displayBriefDocumentDataReferenceDocuments,
         val,
       ]);
+      setClickCountReferenceDocuments(clickCountReferenceDocuments + 1);
+    }
+    // setDisplayBriefDocumentDataReferenceDocuments([
+    //   ...displayBriefDocumentDataReferenceDocuments,
+    //   val,
+    // ]);
+    // setClickCount(clickCount + 1);
 
     //   setDisplayBriefDocumentDataGraphicAdaption([...displayBriefDocumentDataGraphicAdaption, val]);
-    setClickCount(clickCount + 1);
     console.log("taskName taskName is", taskName);
 
     // displayBriefDocumentDataGraphicAdaption.push(val);
@@ -294,7 +305,7 @@ function UBD() {
         headerName={headerName}
         label="Upload Graphic Adaption Brief Document"
         checkReadWriteAccess={checkReadWriteAccess}
-        taskName="Production Ready Art"
+        taskName="Graphic Adaption Brief*"
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
@@ -328,7 +339,8 @@ function UBD() {
                   }
                   taskName="Graphic Adaption Brief*"
                   taskName2="Other Reference Documents & Assets"
-                  clickCount={clickCount}
+                  clickCountGraphicAdaption={clickCountGraphicAdaption}
+                  clickCountReferenceDocuments={clickCountReferenceDocuments}
                 />
               );
             }

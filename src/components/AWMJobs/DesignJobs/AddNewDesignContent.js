@@ -8,8 +8,9 @@ import { AutoComplete } from "primereact/autocomplete";
 import plusCollapseImg from "../../../assets/images/plusCollapse.svg";
 import upVersion from "../../../assets/images/upVersion.svg";
 import upload from "../../../assets/images/upload.svg";
-import DsbpCommonPopup from "../../DSBP/DsbpCommonPopup";
+import editName from "../../../assets/images/editName.svg";
 import { FileUpload } from "primereact/fileupload";
+import DsbpCommonPopup from "../../DSBP/DsbpCommonPopup";
 
 const AddNewDesignContent = ({
   index,
@@ -27,7 +28,8 @@ const AddNewDesignContent = ({
   taskName2,
   setAddNewDesign,
   displayBriefDocument,
-  clickCount,
+  clickCountGraphicAdaption,
+  clickCountReferenceDocuments,
   displayBriefDocumentDataGraphicAdaption,
   displayBriefDocumentDataReferenceDocuments,
 }) => {
@@ -39,6 +41,8 @@ const AddNewDesignContent = ({
   const [additionalInformation, setAdditionalInfo] = useState(Additional_Info);
   const [tier, setTier] = useState("");
   const [items, setItems] = useState([]);
+  const [graphicAdaptionBriefName, setGraphicAdaptionBriefName] =
+    useState(false);
 
   useEffect(() => {
     if (item) {
@@ -114,12 +118,10 @@ const AddNewDesignContent = ({
     </OverlayTrigger>
   );
 
-  const DesignHeader = (di_name) => {
+  const DesignHeader = (di_name, taskName) => {
     return (
       <>
-        <div
-          className="font-color"
-        >
+        <div className="font-color">
           {taskName === "Graphic Adaption Brief*" ||
           taskName2 === "Other Reference Documents & Assets"
             ? !di_name
@@ -128,6 +130,7 @@ const AddNewDesignContent = ({
             : !di_name
             ? `${taskName} ${index + 1}`
             : di_name}
+          {/* {tooltip} */}
           {/* {!di_name ? `${taskName} ${index + 1}` : di_name} */}
         </div>
         <div>
@@ -164,12 +167,11 @@ const AddNewDesignContent = ({
 
   const [azureFile, setAzureFile] = useState("");
   const [fileName, setFileName] = useState("");
-console.log("selectDialog:",selectDialog);
-  const handledelete = (data, data1) => {
-  };
+  console.log("selectDialog:", selectDialog);
+  const handledelete = (data, data1) => {};
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
-  
+
   const onTemplateUpload = (e) => {
     let _totalSize = 0;
 
@@ -226,7 +228,10 @@ console.log("selectDialog:",selectDialog);
         >
           <Col sm={2} style={{ display: "flex" }}>
             <div style={{display: "flex", width: "max-content"}}>
-            <div style={{ paddingRight: "8px" }}><label>{clickCount}.</label></div>
+            <div style={{ paddingRight: "8px" }}><label>{
+            taskName === "Graphic Adaption Brief*"
+            ? clickCountGraphicAdaption
+            : clickCountReferenceDocuments}.</label></div>
             </div>
             <div className="upload-wrap">
             <div  style={{ display: "flex" }}>
@@ -287,18 +292,6 @@ console.log("selectDialog:",selectDialog);
             </div>
             
           </Col>
-          {/* <Col sm={4} style={{marginLeft: 44}}>
-            <label>Up Version</label>
-            <div>
-              <img
-                src={upVersion}
-                alt="filter logo"
-                // onClick={() => checkReadWriteAccess && handleDelete(index)}
-                className="header-icons"
-                disabled={!checkReadWriteAccess}
-              ></img>
-            </div>
-          </Col> */}
           <Col sm={2}>
             <div className="upload-wrap-delete">
               <label htmlFor="select" style={{ paddingBottom: "15px" }}> Delete </label>
@@ -328,27 +321,6 @@ console.log("selectDialog:",selectDialog);
             </div>
             
           </Col>
-          {/* <Col sm={1}>
-            <label>Delete</label>
-            <div>
-              <img
-                src={deleteIcon}
-                alt="filter logo"
-                onClick={() => {
-                  setSelectDialog(true);
-                  setData(taskName);
-                  // if (checkReadWriteAccess) {
-                  displayBriefDocumentDataGraphicAdaption.map((index) => {
-                    handleDelete(index);
-                    console.log("let us see this", index);
-                  });
-                  console.log("handle click clicked", index);
-                }}
-                // }
-                className="header-icons"
-              ></img>
-            </div>
-          </Col> */}
         </Row>
       </>
     );
@@ -397,12 +369,12 @@ console.log("selectDialog:",selectDialog);
           onSubmit={() => handledelete()}
           okButtonShow={false}
         >
-          <>
-            {data}
-          </>
+          <>{data}</>
         </DsbpCommonPopup>
       )}
-      <div className="design-intent-header">{DesignHeader(di_name)}</div>
+      <div className="design-intent-header">
+        {DesignHeader(di_name, taskName)}
+      </div>
       {taskName === "Graphic Adaption Brief*" ? (
         <>
           <div
@@ -413,7 +385,22 @@ console.log("selectDialog:",selectDialog);
               marginTop: 10,
             }}
           >
-            <label>Graphic Adaption Brief 1</label>
+            <label
+              contentEditable={graphicAdaptionBriefName ? true : false}
+              style={{ marginRight: "10px" }}
+            >
+              Graphic Adaption Brief 1
+            </label>
+            <img
+              src={editName}
+              alt="edit logo"
+              // onClick={() => setAddNewDesign()}
+              // onClick={() => displayBriefDocument(mydata, taskName)}
+              onClick={() => setGraphicAdaptionBriefName(true)}
+              className="header-icons"
+              style={{ paddingRight: "4px" }}
+              // disabled={!checkReadWriteAccess}
+            />
           </div>
           {BriefDocument(taskName)}
           <div className="design-intent-header">
