@@ -196,9 +196,9 @@ const DragAndDrop = (props) => {
     <>
       <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
         <div style={{ display: "flex" }}>
-          {entities.columnOrder.map((columnId) => (
+          {entities?.columnOrder.map((columnId) => (
             <Column
-              column={entities.columns[columnId]}
+              column={entities?.columns[columnId]}
               tasks={getTasks(entities, columnId)}
               selectedTaskIds={selected}
               key={columnId}

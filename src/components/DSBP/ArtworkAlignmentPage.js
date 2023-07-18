@@ -5,6 +5,7 @@ import SelectDsbpId from "./SelectDsbpId";
 import ProjectNameHeader from "./ProjectNameHeader";
 import AgilityList from "./AgilityList";
 import { getDSBPDropdownData } from "../../store/actions/DSBPActions";
+import { getDropDownValues } from "../../store/actions/dropDownValuesAction";
 import {
   addDsbpToProject,
   deleteDsbpFromProject,
@@ -54,7 +55,7 @@ const ArtworkAlignment = () => {
     { label: "Approve Regional Design Template" },
   ];
 
-  const userHasAccess = hasAllAccess();
+  const userHasAccess = !hasAllAccess();
 
   const dispatch = useDispatch();
   const headerName = "Artwork Alignment";
@@ -64,7 +65,11 @@ const ArtworkAlignment = () => {
 
   useEffect(() => {
     findAndSortBuWiseColumnNames();
-    // dispatch(getDropDownValues());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if(allBUAttributes === null)
+    dispatch(getDropDownValues());
   }, [dispatch]);
 
   const findAndSortBuWiseColumnNames = () => {
