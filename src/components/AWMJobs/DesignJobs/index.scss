@@ -15,11 +15,13 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 20px 8px 0;
+  height: 32px;
+  color: #003da5;
+  padding: 0 8px 0 24px;
 }
 
 .font-color {
-  color: #003da5;
+  // color: #003da5;
 }
 
 .approve-design-intent {
@@ -161,7 +163,8 @@ sup {
 
 // AddNewDesignContent Styles Start
 .infoIcon {
-  margin-left: 2px;
+  // margin-left: 2px;
+  margin-right: 6.75px;
 }
 
 .tooltip1 {
@@ -173,12 +176,14 @@ sup {
 
   .tooltip-inner {
     background-color: rgba(254, 254, 254, 1) !important;
-    width: 281px;
-    height: 193px;
+    max-width: 281px;
+    height: 194px;
     border-radius: 2px;
     border: solid 1px rgba(172, 172, 172, 1);
     margin-left: 13px;
     overflow-y: auto;
+    padding: 11px 16px 11px 14px;
+    box-shadow: 0px 6px 16px 0px rgba(89, 89, 89, 0.24);
   }
 }
 
@@ -187,8 +192,16 @@ sup {
   font-family: "Montserrat";
   font-style: normal;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 7px;
+  text-align: left;
   background: transparent;
+  line-height: 8.53px;
+  // margin-top: 6px;
+
+  ul {
+    padding-left: 13px;
+    margin-bottom: 0px;
+  }
 }
 
 .tooltip1>.tooltip-arrow {
@@ -205,7 +218,8 @@ sup {
   transform: rotate(45deg);
   right: -9px;
   background-color: #fff;
-  top: 50%;
+  top: -19px;
+  // top: 50%;
 }
 
 // AddNewDesignContent Styles End

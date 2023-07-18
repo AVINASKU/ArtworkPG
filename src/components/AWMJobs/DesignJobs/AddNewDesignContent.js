@@ -66,13 +66,44 @@ const AddNewDesignContent = ({
       placement="right"
       // show
       overlay={
-        <Tooltip className="tooltip1" style={{ margin: "0 0 0 -7px" }}>
+        <Tooltip className="tooltip1" style={{ margin: "23px 0 0 -1.5px" }}>
           <div className="toolname1">
-            TExtTExtTExtTExt TExt dddd TExtTExtTExtTExt TExt dd333
-            TExtTExtTExtTExt TExt dddd TExtTExtTExtTExt TExt dd333
-            TExtTExtTExtTExt TExt dddd TExtTExtTExtTExt TExt dd333
-            TExtTExtTExtTExt TExt dddd TExtTExtTExtTExt TExt dd333
-            TExtTExtTExtTExt TExt dddd TExtTExtTExtTExt TExt dd333
+            Please check the file name before uploading. Remove not allowed
+            special characters.
+            <br />
+            Please follow these standard guidelines for file name:
+            <ul>
+              <li>
+                Create file names that are logical, meaningful to users, simple
+                to read and relevant.
+              </li>
+              <li>Do not include spaces.</li>
+              <li>
+                File name should not exceed 31 characters. Total length of file
+                paths should be limited to a maximum of 255 characters.
+                Characters are restricted to letters, numbers and _ (underscore)
+                only.
+              </li>
+              <li>
+                Do not use the following characters: ...{" "}
+                {`(  ) {  }  [  ] \  / < > @ $ % &`} # ? : , * ” ˜ # â € œ =( in
+                mock up this list is incomplete . use this from this email)
+              </li>
+              <li>
+                Always ensure that file extensions are used and in lower case
+                when saving files using Macintosh.
+              </li>
+              <li>Periods(.) are only to be used for the file extension.</li>
+              <li>
+                When numbering similar types of files or sequences try to
+                anticipate maximum numbers.
+              </li>
+              <li>
+                Format dates in a simple manner. For example the date
+                June23,2023 can be represented as 23June2024 or 230624
+              </li>
+              <li>Use underscores instead of periods or spaces.</li>
+            </ul>
           </div>
         </Tooltip>
       }
@@ -87,11 +118,6 @@ const AddNewDesignContent = ({
     return (
       <>
         <div
-          style={{
-            marginLeft: 20,
-            padding: 5,
-            display: "flex",
-          }}
           className="font-color"
         >
           {taskName === "Graphic Adaption Brief*" ||
@@ -102,7 +128,6 @@ const AddNewDesignContent = ({
             : !di_name
             ? `${taskName} ${index + 1}`
             : di_name}
-          {tooltip}
           {/* {!di_name ? `${taskName} ${index + 1}` : di_name} */}
         </div>
         <div>
@@ -134,10 +159,9 @@ const AddNewDesignContent = ({
     );
   };
 
-     
   const [selectDialog, setSelectDialog] = useState(false);
   const [data, setData] = useState({});
-  
+
   const [azureFile, setAzureFile] = useState("");
   const [fileName, setFileName] = useState("");
 console.log("selectDialog:",selectDialog);
@@ -199,19 +223,22 @@ console.log("selectDialog:",selectDialog);
           }}
         >
           <Col sm={1}>
-            <label style={{ paddingRight: "3px" }}>{clickCount}</label>
-            <label htmlFor="select"> Upload File</label>
+            <div style={{display: "flex", width: "max-content"}}>
+            <div style={{ paddingRight: "8px" }}><label>{clickCount}.</label></div>
+            <div style={{ paddingRight: "6px" }}><label htmlFor="select"> Upload File </label></div>
+              {tooltip}
+            </div>
             <div>
-            <FileUpload
-              ref={fileUploadRef}
-              name="demo[]"
-              url="/api/upload"
-              accept="image/*"
-              customUpload
-              onUpload={onTemplateUpload}
-              onSelect={onTemplateSelect}
-              itemTemplate={itemTemplate}
-            />
+              <FileUpload
+                ref={fileUploadRef}
+                name="demo[]"
+                url="/api/upload"
+                accept="image/*"
+                customUpload
+                onUpload={onTemplateUpload}
+                onSelect={onTemplateSelect}
+                itemTemplate={itemTemplate}
+              />
               {/* <img
                 src={upload}
                 alt="filter logo"
@@ -221,7 +248,7 @@ console.log("selectDialog:",selectDialog);
               ></img> */}
             </div>
           </Col>
-          <Col sm={4}>
+          <Col sm={4} style={{marginLeft: 44}}>
             <label>Up Version</label>
             <div>
               <img
