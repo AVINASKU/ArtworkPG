@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, lazy, Suspense } from "react";
 import AddProject from "../Projects/CreateProject";
-import { DropdownButton, Dropdown } from "react-bootstrap";
+import { DropdownButton, Dropdown, Accordion } from "react-bootstrap";
 import "primeicons/primeicons.css";
 import "./index.scss";
 import { useSelector } from "react-redux";
@@ -13,6 +13,10 @@ import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import ProjectListHeader from "../Projects/MyProjects/ProjectListHeader";
 import { ProjectService } from "../../service/PegaService";
 import ArtworkAlignment from "../DSBP/ArtworkAlignmentPage";
+// import DependencyMapping from "../DSBP/DependencyMappingPage";
+
+const DependencyMapping = lazy(() => import('../DSBP/DependencyMappingPage'));
+
 function ProjectSetup(props) {
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
@@ -195,7 +199,41 @@ function ProjectSetup(props) {
 
           {toggleButtons === "Tabular" && (
             <div>
-              <nav className="subNav">
+              <Accordion className="projectPlanAccordian" defaultActiveKey="2">
+                <Accordion.Item eventKey="2">
+                  <Accordion.Header onClick={() => setTabNameForPP("Design")}>Design</Accordion.Header>
+                  <Accordion.Body>
+                    <ProjectPlanCompo
+                      isSearch={isSearch}
+                      setColWidth={setColWidth}
+                      childFunc={childFunc}
+                      test={test}
+                      tabNameForPP={tabNameForPP}
+                      view={toggleButtons}
+                      setTabName={setTabName}
+                    />
+                  </Accordion.Body>
+                </Accordion.Item>
+                <Accordion.Item eventKey="3">
+                  <Accordion.Header onClick={() => setTabNameForPP("Input")}>Input</Accordion.Header>
+                  <Accordion.Body>
+                    <ProjectPlanCompo
+                    isSearch={isSearch}
+                    setColWidth={setColWidth}
+                    childFunc={childFunc}
+                    test={test}
+                    tabNameForPP={tabNameForPP}
+                    view={toggleButtons}
+                    setTabName={setTabName}
+                  />
+                  </Accordion.Body>
+                </Accordion.Item>
+                <Accordion.Item eventKey="4">
+                  <Accordion.Header>FA Assembly</Accordion.Header>
+                  <Accordion.Body>FA Assembly</Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
+              {/* <nav className="subNav">
                 <div className="nav nav-tabs" id="nav-tab" role="tablist">
                   <button
                     className={`nav-link ${
@@ -243,10 +281,10 @@ function ProjectSetup(props) {
                     FA Assembly
                   </button>
                 </div>
-              </nav>
+              </nav> */}
             </div>
           )}
-          <div className="tab-content" id="nav-tabContent">
+          {/* <div className="tab-content" id="nav-tabContent">
             <div
               className={`tab-pane fade ${
                 tabNameForPP === "Design" ? "show active" : ""
@@ -293,7 +331,7 @@ function ProjectSetup(props) {
             >
               FA Assembly Data
             </div>
-          </div>
+          </div> */}
         </div>
       ),
     },
@@ -305,7 +343,9 @@ function ProjectSetup(props) {
     {
       name: "mapping",
       tabNameForDisplay: "Mapping",
-      component: <>Mapping Data</>,
+      component: <Suspense fallback={<div>Loading Component</div>}>
+         <DependencyMapping/>
+      </Suspense>,
     },
     {
       name: "readinessPerPMP",

@@ -61,10 +61,11 @@ const SelectDsbpId = ({
               "disable-icons"
             }`}
             onClick={(e) => {
-              onChangeSelect(option, "add");
+             !userHasAccess && onChangeSelect(option, "add");
             }}
             alt=""
             style={{ height: 12 }}
+            disabled={userHasAccess}
           />
         </div>
         <div>
@@ -72,7 +73,7 @@ const SelectDsbpId = ({
             src={deleteIcon}
             onClick={(e) => {
               e.stopPropagation();
-              onChangeSelect(option, "delete");
+            !userHasAccess &&  onChangeSelect(option, "delete");
             }}
             alt="filter logo"
             className={`header-icons ${
@@ -82,6 +83,7 @@ const SelectDsbpId = ({
               "disable-icons"
             }`}
             style={{ height: 12 }}
+            disabled={userHasAccess}
           />
         </div>
       </div>
@@ -131,9 +133,9 @@ const SelectDsbpId = ({
   }
 
   return (
-    <div style={{ textAlign: "initial" }}>
-      <div className="margin-left">Select DSBP ID</div>
-      <div className="actions margin-left dsbp-select">
+    <div className="margin-left">
+      <div>Select DSBP ID</div>
+      <div className="actions dsbp-select p-0">
         <MultiSelect
           value={selectedCities}
           // onChange={(e) => multiSelectOnChange(e)}
@@ -147,7 +149,7 @@ const SelectDsbpId = ({
           maxSelectedLabels={3}
           panelClassName="dsbp-multiselect-dropdown"
           style={{ maxWidth: 370, width: "300%" }}
-          disabled={userHasAccess}
+          
         />
 
         <div className="action-buttons margin-right">

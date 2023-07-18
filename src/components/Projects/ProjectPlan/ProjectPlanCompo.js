@@ -22,6 +22,7 @@ import {
   hasAllAccess,
 } from "../../../utils";
 import { getMyProject } from "../../../store/actions/ProjectActions";
+import { isArray } from "lodash";
 
 function ProjectPlanCompo(props) {
   const toast = useRef(null);
@@ -32,7 +33,7 @@ function ProjectPlanCompo(props) {
   const [activeSave, setActiveSave] = useState(true);
   // const [activeFlag, setActiveFlag] = useState(false);
   // Check if access is empty for the user's role and page
-  const isAccessEmpty = !hasAllAccess();
+  const isAccessEmpty = hasAllAccess();
   console.log("is access empty", isAccessEmpty);
   const [activeFlag, setActiveFlag] = useState(!isAccessEmpty);
   const [loader, setLoader] = useState(false);
@@ -66,7 +67,7 @@ function ProjectPlanCompo(props) {
 
   useEffect(() => {
     setActiveFlag(false);
-    let projectData = myProject.find(
+    let projectData = isArray(myProject) && myProject.find(
       (project) => project.Project_ID === ProjectID
     );
     const firstTime = projectPlanDesign.some(

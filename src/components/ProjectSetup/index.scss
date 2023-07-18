@@ -50,7 +50,9 @@ $width: 100%;
     .accordion-header {
       background-color: #edf4fa;
     }
-
+    .accordion-body {
+      padding: 0;
+    }
     // .accordion-body {
     //   height: 50vh;
     //   overflow: auto;
@@ -156,7 +158,7 @@ $width: 100%;
   width: 98.4px;
   border-radius: 20px !important;
   padding: 10px 18px 10px 18px;
-  margin-right: 9px;
+  margin-right: 11px;
   background-color: #ffffff !important;
   color: #003da5;
   line-height: 12px;
@@ -193,19 +195,20 @@ $width: 100%;
       padding: 0;
     }
   }
-  .form-buttons {
+  .form-buttons{
+    padding: 1rem 11px;
     position: absolute;
     background: white;
     text-align: right;
     width: 100%;
     left: 0;
-    bottom: 0;
+    bottom: 55px;
   }
 }
 
 .breadCrumbParent {
   padding-top: 8px;
-  padding-left: 8px;
+  padding-left: 16px;
   // border-radius: 24px
   // width: $width;
   nav {
@@ -250,7 +253,7 @@ $width: 100%;
 }
 
 .content-layout .actions {
-  padding: 0 15px 0;
+  padding: 0 16px 0;
   .p-breadcrumb {
     // padding: 0 1rem !important;
     padding: 0 1rem 0 0 !important;
@@ -374,6 +377,9 @@ span.right {
     a {
       cursor: pointer;
     }
+  }
+  .actionButtonsForTabComponent {
+    margin-right: 10px;
   }
 }
 // TabsComponent Styles End
