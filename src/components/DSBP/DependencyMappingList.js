@@ -415,7 +415,7 @@ const DependencyMappingList = ({
               // className={field.freeze ? "font-bold" : ""}
               // bodyClassName={"change-bg-color"}
               headerClassName={
-                col.group === 2 ? "header-pink-bg-color" : "blue-bg-color"
+                col.group === 2 ? "pink-bg-color" : "blue-bg-color"
               }
               body={renderMappingBody}
               key={col.field}
@@ -424,8 +424,7 @@ const DependencyMappingList = ({
               alignFrozen="left"
               filterField={col.field}
               style={{
-                // width: col.width,
-                width: 200,
+                width: col.width,
                 height: 30,
               }}
             />
