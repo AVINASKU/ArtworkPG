@@ -167,7 +167,7 @@ const ArtworkHeader = ({
         <div>{breadcrumb}</div>
         <div className="header-buttons">
           <div style={{ top: 30 }}>
-            {isFilterActivated.length && !userHasAccess ? (
+            {isFilterActivated.length ? (
               <img
                 src={BlueFilterIcon}
                 alt="filter logo"
@@ -248,7 +248,7 @@ const ArtworkHeader = ({
             type="button"
             className="btn btn-secondary"
             disabled={userHasAccess}
-            onClick={() => !userHasAccess && setShowApproveDialogCPPFA(true)}
+            onClick={() => setShowApproveDialogCPPFA(true)}
           >
             Customize View
           </button>
@@ -257,7 +257,7 @@ const ArtworkHeader = ({
             align="end"
             variant="secondary"
             onSelect={handleAction}
-            disabled={selected.length === 0 || userHasAccess}
+            disabled={selected?.length === 0 || userHasAccess}
           >
             {actionNameObject?.map((item) => {
               return (
