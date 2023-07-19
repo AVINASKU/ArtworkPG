@@ -61,7 +61,8 @@ const SelectDsbpId = ({
               "disable-icons"
             }`}
             onClick={(e) => {
-             !userHasAccess && onChangeSelect(option, "add");
+            //  !userHasAccess && onChangeSelect(option, "add");
+            onChangeSelect(option, "add");
             }}
             alt=""
             style={{ height: 12 }}
@@ -73,7 +74,8 @@ const SelectDsbpId = ({
             src={deleteIcon}
             onClick={(e) => {
               e.stopPropagation();
-            !userHasAccess &&  onChangeSelect(option, "delete");
+            // !userHasAccess &&  onChangeSelect(option, "delete");
+            onChangeSelect(option, "delete");
             }}
             alt="filter logo"
             className={`header-icons ${
