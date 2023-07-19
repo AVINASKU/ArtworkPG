@@ -282,7 +282,10 @@ const ProjectPlanList = ({
     let currentUrlBasePage = currentUrl?.split("/")[1];
     const key = options?.key;
     const keyCode = key?.split("_");
-    const url = `MyTasks/${keyCode[0]}/${key}/${currentUrlLastSeg}`;
+    const locaiton = window.location.pathname;
+    const url = `${locaiton.split("/")[1]}/${locaiton.split("/")[2]}/${
+      keyCode[0]
+    }/${key}/${currentUrlLastSeg}`;
 
     return (
       <>
