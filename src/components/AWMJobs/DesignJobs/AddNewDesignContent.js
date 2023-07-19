@@ -282,7 +282,7 @@ const AddNewDesignContent = ({
             <div style={{ display: "flex", width: "max-content" }}>
               <div style={{ paddingRight: "8px" }}>
                 <label>
-                  {taskName !== "Graphic Adaption Brief*"
+                  {taskName === "Graphic Adaption Brief*"
                     ? clickCountGraphicAdaption
                     : clickCountReferenceDocuments}
                 </label>
@@ -544,10 +544,12 @@ const AddNewDesignContent = ({
           </div>
           {/* {BriefDocument(taskName)}
            */}
+          {mydata}
           {BriefDocument1}
           <div className="design-intent-header">
             {DesignHeader(di_name, taskName2)}
           </div>
+          {mydata}
           {BriefDocument2}
           {/* {BriefDocument(taskName2)} */}
           {/* {  displayBriefDocumentDataGraphicAdaption} */}
