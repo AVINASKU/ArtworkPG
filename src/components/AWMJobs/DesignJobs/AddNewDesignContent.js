@@ -9,6 +9,8 @@ import plusCollapseImg from "../../../assets/images/plusCollapse.svg";
 import upVersion from "../../../assets/images/upVersion.svg";
 import upload from "../../../assets/images/upload.svg";
 import editName from "../../../assets/images/editName.svg";
+import TickUBD from "../../../assets/images/TickUBD.svg";
+import CrossUBD from "../../../assets/images/CrossUBD.svg";
 import { FileUpload } from "primereact/fileupload";
 import DsbpCommonPopup from "../../DSBP/DsbpCommonPopup";
 
@@ -43,6 +45,8 @@ const AddNewDesignContent = ({
   const [items, setItems] = useState([]);
   const [graphicAdaptionBriefName, setGraphicAdaptionBriefName] =
     useState(false);
+  const [fileUploadWarning, setFileUploadWarning] = useState(false);
+  const [editNameImg, setEditNameImg] = useState(true);
 
   useEffect(() => {
     if (item) {
@@ -192,12 +196,51 @@ const AddNewDesignContent = ({
     );
   };
   const onTemplateSelect = (e) => {
+    const MAX_FILENAME_LENGTH = 31;
+    const MAX_PATH_LENGTH = 255;
+    const regex = /^[a-zA-Z0-9_]+$/;
+    const restrictedCharsRegex = /[...(){}\[\]\\\/<>@$%&#?:,*"˜#â€œ]+/;
+
+    console.log("e  here is objectURL", e.files[0].objectURL);
+    console.log("e  here is files", e.files);
+    console.log("e  here is lastModified", e.files[0].lastModified);
+    console.log("e  here is lastModifiedDate", e.files[0].lastModifiedDate);
+    console.log("e  here is size", e.files[0].size);
+    console.log("e  here is type", e.files[0].type);
+    console.log("e  here is length", e.files[0].length);
+    console.log("e  here is webkitRelativePath", e.files[0].webkitRelativePath);
+    console.log("e  here is di_name", di_name);
+    console.log("e  here is name", e.files[0].name);
+    console.log("e  here is name.length", e.files[0].name.length);
+    const fileLength = e.files[0].name.length;
+    const uploadFileName = e.files[0].name;
+    const filePathLength = e.files[0].webkitRelativePath.length;
+
+    if (restrictedCharsRegex.test(uploadFileName)) {
+      console.log(
+        "restrictedCharsRegex arised",
+        restrictedCharsRegex.test(uploadFileName)
+      );
+    }
+
+    if (
+      fileLength > MAX_FILENAME_LENGTH ||
+      filePathLength > MAX_PATH_LENGTH ||
+      regex.test(uploadFileName) ||
+      restrictedCharsRegex.test(uploadFileName)
+    ) {
+      setFileUploadWarning(true);
+      // fileUploadWarning = true;
+      console.log("setFileUploadWarning is", fileUploadWarning, fileLength);
+    }
+
     const renamedFile = {
       objectURL: e.files[0].objectURL,
       lastModified: e.files[0].lastModified,
       lastModifiedDate: e.files[0].lastModifiedDate,
       name: di_name,
       size: e.files[0].size,
+      length: e.files[0].length,
       type: e.files[0].type,
       webkitRelativePath: e.files[0].webkitRelativePath,
     };
@@ -208,12 +251,21 @@ const AddNewDesignContent = ({
       _totalSize += files[key].size || 0;
     });
 
+    console.log("e  here is webkitRelativePath", azureFile.webkitRelativePath);
     setTotalSize(_totalSize);
     setAzureFile(renamedFile);
     setFileName(di_name);
+    console.log("e  here is azureFile.name", azureFile.name);
   };
 
-  const cancelOptions = { icon: 'pi pi-fw pi-times', iconOnly: true, className: 'custom-cancel-btn p-button-danger p-button-rounded p-button-outlined' };
+  const cancelOptions = {
+    icon: "pi pi-fw pi-times",
+    iconOnly: true,
+    className:
+      "custom-cancel-btn p-button-danger p-button-rounded p-button-outlined",
+  };
+
+  const customUploader = () => {};
 
   const BriefDocument = (taskName) => {
     mydata = (
@@ -227,74 +279,87 @@ const AddNewDesignContent = ({
           }}
         >
           <Col sm={2} style={{ display: "flex" }}>
-            <div style={{display: "flex", width: "max-content"}}>
-            <div style={{ paddingRight: "8px" }}><label>{
-            taskName === "Graphic Adaption Brief*"
-            ? clickCountGraphicAdaption
-            : clickCountReferenceDocuments}.</label></div>
+            <div style={{ display: "flex", width: "max-content" }}>
+              <div style={{ paddingRight: "8px" }}>
+                <label>
+                  {taskName !== "Graphic Adaption Brief*"
+                    ? clickCountGraphicAdaption
+                    : clickCountReferenceDocuments}
+                </label>
+              </div>
             </div>
             <div className="upload-wrap">
-            <div  style={{ display: "flex" }}>
-              <label htmlFor="select" style={{ paddingRight: "6px" }}> Upload File </label>
-              {tooltip}
+              <div style={{ display: "flex" }}>
+                <label htmlFor="select" style={{ paddingRight: "6px" }}>
+                  {" "}
+                  Upload File{" "}
+                </label>
+                {tooltip}
               </div>
-              
+
               <div>
-              <FileUpload
-                ref={fileUploadRef}
-                name="demo[]"
-                url="/api/upload"
-                accept="image/*"
-                customUpload
-                onUpload={onTemplateUpload}
-                onSelect={onTemplateSelect}
-                itemTemplate={itemTemplate}
-              />
-              {/* <img
+                <FileUpload
+                  ref={fileUploadRef}
+                  name="demo[]"
+                  url="/api/upload"
+                  accept="*"
+                  customUpload
+                  uploadHandler={customUploader}
+                  onUpload={onTemplateUpload}
+                  onSelect={onTemplateSelect}
+                  itemTemplate={itemTemplate}
+                />
+                {/* <img
                 src={upload}
                 alt="filter logo"
                 // onClick={() => checkReadWriteAccess && handleDelete(index)}
                 className="header-icons"
                 disabled={!checkReadWriteAccess}
               ></img> */}
+              </div>
+              <div>
+                {fileUploadWarning && <label>Wrong file uploaded</label>}
+              </div>
             </div>
-            </div>
-            
           </Col>
           <Col sm={2} style={{ display: "flex" }}>
-            <div style={{display: "flex", width: "max-content"}}>
-            </div>
+            <div style={{ display: "flex", width: "max-content" }}></div>
             <div className="upload-wrap">
-            <div  style={{ display: "flex" }}>
-              <label htmlFor="select" style={{ paddingRight: "6px" }}> Up Version </label>
+              <div style={{ display: "flex" }}>
+                <label htmlFor="select" style={{ paddingRight: "6px" }}>
+                  {" "}
+                  Up Version{" "}
+                </label>
               </div>
-              
+
               <div>
-              <FileUpload
-                ref={fileUploadRef}
-                name="demo[]"
-                url="/api/upload"
-                accept="image/*"
-                customUpload
-                onUpload={onTemplateUpload}
-                onSelect={onTemplateSelect}
-                itemTemplate={itemTemplate}
-                // cancelOptions={cancelOptions}
-              />
-              {/* <img
+                <FileUpload
+                  ref={fileUploadRef}
+                  name="demo[]"
+                  url="/api/upload"
+                  accept="image/*"
+                  customUpload
+                  onUpload={onTemplateUpload}
+                  onSelect={onTemplateSelect}
+                  itemTemplate={itemTemplate}
+                  // cancelOptions={cancelOptions}
+                />
+                {/* <img
                 src={upload}
                 alt="filter logo"
                 // onClick={() => checkReadWriteAccess && handleDelete(index)}
                 className="header-icons"
                 disabled={!checkReadWriteAccess}
               ></img> */}
+              </div>
             </div>
-            </div>
-            
           </Col>
           <Col sm={2}>
             <div className="upload-wrap-delete">
-              <label htmlFor="select" style={{ paddingBottom: "15px" }}> Delete </label>
+              <label htmlFor="select" style={{ paddingBottom: "15px" }}>
+                {" "}
+                Delete{" "}
+              </label>
               <img
                 src={deleteIcon}
                 alt="filter logo"
@@ -319,7 +384,6 @@ const AddNewDesignContent = ({
                 disabled={!checkReadWriteAccess}
               ></img> */}
             </div>
-            
           </Col>
         </Row>
       </>
@@ -335,6 +399,9 @@ const AddNewDesignContent = ({
   };
 
   let mydata;
+  let BriefDocument1 = BriefDocument(taskName);
+  let BriefDocument2 = BriefDocument(taskName2);
+
   let di_name;
   let clubBrandName =
     Brand?.length && Brand.map((item) => item.Brand_Name).join(", ");
@@ -388,27 +455,101 @@ const AddNewDesignContent = ({
             }}
           >
             <label
+              // className={!editNameImg ? "my-condition-class" : ""}
               contentEditable={graphicAdaptionBriefName ? true : false}
-              style={{ marginRight: "10px" }}
+              style={
+                !editNameImg
+                  ? {
+                      borderBottom: "1.5px solid #003DA5",
+                      paddingRight: "10px",
+                    }
+                  : { marginRight: "10px" }
+              }
             >
               Graphic Adaption Brief 1
             </label>
-            <img
-              src={editName}
+            {/* <img
+              // src={editName}
+              src={editNameImg && editName}
+              src={!editNameImg && TickUBD}
+              src={!editNameImg && CrossUBD}
               alt="edit logo"
-              // onClick={() => setAddNewDesign()}
-              // onClick={() => displayBriefDocument(mydata, taskName)}
-              onClick={() => setGraphicAdaptionBriefName(true)}
+              onClick={() => {
+                setGraphicAdaptionBriefName(true);
+                setEditNameImg(false);
+              }}
               className="header-icons"
               style={{ paddingRight: "4px" }}
               // disabled={!checkReadWriteAccess}
-            />
+            /> */}
+            {editNameImg ? (
+              <img
+                src={editName}
+                alt="edit logo"
+                onClick={() => {
+                  setGraphicAdaptionBriefName(true);
+                  setEditNameImg(false);
+                }}
+                className="header-icons"
+                style={
+                  !editNameImg
+                    ? {
+                        borderBottom: "1.5px solid #003DA5",
+                        paddingRight: "4px",
+                        paddingBottom: "1px",
+                      }
+                    : { paddingRight: "4px" }
+                }
+              />
+            ) : (
+              <>
+                <img
+                  src={TickUBD}
+                  alt="TickUBD logo"
+                  onClick={() => {
+                    setGraphicAdaptionBriefName(true);
+                    setEditNameImg(false);
+                  }}
+                  className="header-icons"
+                  style={
+                    !editNameImg
+                      ? {
+                          borderBottom: "1.5px solid #003DA5",
+                          paddingRight: "4px",
+                          marginBottom: "-2px",
+                        }
+                      : { paddingRight: "4px" }
+                  }
+                />
+                <img
+                  src={CrossUBD}
+                  alt="CrossUBD logo"
+                  onClick={() => {
+                    setGraphicAdaptionBriefName(true);
+                    setEditNameImg(true);
+                  }}
+                  className="header-icons"
+                  style={
+                    !editNameImg
+                      ? {
+                          borderBottom: "1.5px solid blue",
+                          marginRight: "6px",
+                          marginBottom: "-2px",
+                        }
+                      : { marginRight: "6px" }
+                  }
+                />
+              </>
+            )}
           </div>
-          {BriefDocument(taskName)}
+          {/* {BriefDocument(taskName)}
+           */}
+          {BriefDocument1}
           <div className="design-intent-header">
             {DesignHeader(di_name, taskName2)}
           </div>
-          {BriefDocument(taskName2)}
+          {BriefDocument2}
+          {/* {BriefDocument(taskName2)} */}
           {/* {  displayBriefDocumentDataGraphicAdaption} */}
         </>
       ) : (
