@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import { InputText } from "primereact/inputtext";
 import { Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { InputText } from "primereact/inputtext";
 import { Checkbox } from "primereact/checkbox";
+import { AutoComplete } from "primereact/autocomplete";
+import { FileUpload } from "primereact/fileupload";
 import deleteIcon from "../../../assets/images/deleteIcon.svg";
 import infoIcon from "../../../assets/images/infoIcon.svg";
-import { AutoComplete } from "primereact/autocomplete";
 import plusCollapseImg from "../../../assets/images/plusCollapse.svg";
 import upVersion from "../../../assets/images/upVersion.svg";
 import upload from "../../../assets/images/upload.svg";
 import editName from "../../../assets/images/editName.svg";
-import { FileUpload } from "primereact/fileupload";
 import DsbpCommonPopup from "../../DSBP/DsbpCommonPopup";
 
 const AddNewDesignContent = ({
@@ -90,8 +90,7 @@ const AddNewDesignContent = ({
               </li>
               <li>
                 Do not use the following characters: ...{" "}
-                {`(  ) {  }  [  ] \  / < > @ $ % &`} # ? : , * ” ˜ # â € œ =( in
-                mock up this list is incomplete . use this from this email)
+                {`(  ) {  }  [  ] \  / < > @ $ % &`} # ? : , * ” ˜ # â € œ =
               </li>
               <li>
                 Always ensure that file extensions are used and in lower case
@@ -269,7 +268,7 @@ const AddNewDesignContent = ({
               <label htmlFor="select" style={{ paddingRight: "6px" }}> Up Version </label>
               </div>
               
-              <div>
+              <div id="UpVersionImage">
               <FileUpload
                 ref={fileUploadRef}
                 name="demo[]"
