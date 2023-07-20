@@ -2,13 +2,13 @@ import axios from "axios";
 import { BlobServiceClient } from "@azure/storage-blob";
 
 // Define your Azure Blob Storage configuration variables here
-const containerName = "ArtworkFolder";
+const containerName = "awm";
 const sasToken =
-  "sp=racwdlmeop&st=2023-07-12T07:02:49Z&se=2027-12-31T15:02:49Z&spr=https&sv=2022-11-02&sr=c&sig=aXX8yIkC7CdAuw65IeG8IcT7wb37BDtXu5CkcZyYc10%3D";
-const storageAccountName = "artworkagilityadlsdev";
+  "sp=racwdli&st=2023-07-19T12:51:53Z&se=2030-02-28T20:51:53Z&spr=https&sv=2022-11-02&sr=c&sig=HWEkjoX4LLNWJy1YDtVdXT2brVZarQiAeu41v77E6yw%3D";
+const storageAccountName = "aacstrdev";
 
 // Create a BlobServiceClient instance using the configuration variables
-const uploadUrl = `https://${storageAccountName}.blob.core.windows.net/pgsource?${sasToken}`;
+const uploadUrl = `https://${storageAccountName}.blob.core.windows.net?${sasToken}`;
 const blobService = new BlobServiceClient(uploadUrl);
 const containerClient = blobService.getContainerClient(containerName);
 
@@ -37,10 +37,35 @@ export const uploadFileAzure = (folder, file, jobName) => {
   return async (dispatch) => {
     try {
       dispatch(uploadFileRequest());
+      const url = window.location.href;
+      const domainRegex = /https?:\/\/([^/]+)\//; // Regular expression to match the domain part of the URL
+
+      const match = url.match(domainRegex);
+      let domain = "";
+
+      if (match && match.length > 1) {
+        domain = match[1]; // Extract the matched part
+      }
+
+      let env;
+
+      switch (domain) {
+        case "awflowdev.pg.com":
+          env = "DEV/";
+          break;
+        case "awflowqa.pg.com":
+          env = "QA/";
+          break;
+        case "awflowsit.pg.com":
+          env = "SIT/";
+          break;
+        default:
+          env = "";
+      }
 
       // Create a BlobClient for the file and set the content type
       const blobClient = containerClient.getBlockBlobClient(
-        `${folder}/${jobName}/${file.name}`
+        `${env}${folder}/${jobName}/${file.name}`
       );
       const options = {
         blobHTTPHeaders: { blobContentType: file.type },
@@ -62,7 +87,7 @@ export const uploadFileAzure = (folder, file, jobName) => {
 
       // Construct the public URL for the uploaded file
 
-      const publicUrl = `https://${storageAccountName}.blob.core.windows.net/pgsource/${containerName}/${folder}/${jobName}/${file.name}`;
+      const publicUrl = `https://${storageAccountName}.blob.core.windows.net/${containerName}/${env}/${folder}/${jobName}/${file.name}`;
 
       // Dispatch the success action with the public URL
       dispatch(uploadFileSuccess([publicUrl]));

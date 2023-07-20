@@ -12,7 +12,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { CheckReadOnlyAccess, Loading } from "../../../utils";
 import UploadDesignIntentProofscope from "../DesignJobs/UploadDesignIntentProofscope";
-
+import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
 const breadcrumb = [
   { label: "My Tasks", url: "/tasks" },
   { label: "Upload Regional Design Template" },
@@ -30,6 +30,8 @@ const URDT = () => {
   const [azureFile, setAzureFile] = useState("");
   const [loader, setLoader] = useState(false);
   let { TaskID, ProjectID } = useParams();
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
   const { TaskDetailsData, loading } = useSelector(
     (state) => state.TaskDetailsReducer
   );
@@ -102,10 +104,14 @@ const URDT = () => {
         Filename: fileName,
       },
     };
+    await dispatch(
+      uploadFileAzure(selectedProjectDetails?.BU, azureFile, "RDT")
+    );
+
     // console.log('formData', formData, "id", id);
-    await submitUploadRegionalDesignIntent(formData, id, headers);
+    // await submitUploadRegionalDesignIntent(formData, id, headers);
     setLoader(false);
-    navigate(`/${currentUrl?.split("/")[1]}`);
+    // navigate(`/${currentUrl?.split("/")[1]}`);
   };
   return (
     <PageLayout>

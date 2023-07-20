@@ -87,6 +87,7 @@ const UploadDesignIntentProofscope = ({
     const renamedFile = {
       ...uploadedFile,
       name: di_name,
+      // name: `${di_name}.${uploadedFile.type}`,
       size: uploadedFile.size,
       type: uploadedFile.type,
       lastModified: uploadedFile.lastModified,
@@ -101,8 +102,8 @@ const UploadDesignIntentProofscope = ({
     });
 
     setTotalSize(_totalSize);
-    // setAzureFile(renamedFile);
-    // setFileName(di_name);
+    setAzureFile(renamedFile);
+    setFileName(di_name);
   };
 
   const DesignHeader = (di_name) => {

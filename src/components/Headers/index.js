@@ -51,6 +51,31 @@ const Header = () => {
     event.preventDefault();
     viewProofScopeFile(`${fileUrl}`);
   };
+  const url = window.location.href;
+  const domainRegex = /https?:\/\/([^/]+)\//; // Regular expression to match the domain part of the URL
+
+  const match = url.match(domainRegex);
+  let domain = "";
+
+  if (match && match.length > 1) {
+    domain = match[1]; // Extract the matched part
+  }
+
+  let env;
+
+  switch (domain) {
+    case "awflowdev.pg.com":
+      env = "DEV/";
+      break;
+    case "awflowqa.pg.com":
+      env = "QA/";
+      break;
+    case "awflowsit.pg.com":
+      env = "SIT/";
+      break;
+    default:
+      env = "";
+  }
   return (
     <div className="header">
       <div>
@@ -62,11 +87,12 @@ const Header = () => {
           onClick={(event) =>
             handleViewProofScopeClick(
               event,
-              "cloudflow://PP_FILE_STORE/CIC_20169540_POA-00454657_Bounty_NA_Paper_Towel_Essentials_Select-a-Size_Double_Roll_2CT_White_SHIPPER.pdf"
+              `cloudflow://PP_FILE_STORE/awm/${env}RDT/Baby Care/RDT/activefile (1).svg`
+              // cloudflow://PP_FILE_STORE/CIC_20169540_POA-00454657_Bounty_NA_Paper_Towel_Essentials_Select-a-Size_Double_Roll_2CT_White_SHIPPER.pdf"
             )
           }
         >
-          Proofscope test
+          activefile(1).svg
         </a>
         {/* <div className="user-date-time">
           <p>{formattedDate(userInformation.loginTime)}</p>
