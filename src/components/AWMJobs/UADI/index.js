@@ -105,7 +105,7 @@ const UADI = () => {
     };
     await dispatch(uploadFileAzure(azureFile));
     // console.log('formData', formData, "id", id);
-    await submitUploadApproveDesignIntent(formData, id, headers);
+    // await submitUploadApproveDesignIntent(formData, id, headers);
     setLoader(false);
     navigate(`/${currentUrl?.split("/")[1]}`);
   };

@@ -74,6 +74,7 @@ const ApproveDesignIntentContent = ({
     };
     setAzureFile(renamedFile);
     let _totalSize = totalSize;
+
     let files = e.files;
     Object.keys(files).forEach((key) => {
       _totalSize += files[key].size || 0;

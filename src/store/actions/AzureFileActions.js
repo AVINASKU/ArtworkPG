@@ -33,7 +33,7 @@ export const uploadFileFailure = (error) => ({
 });
 
 // Define your Redux async action creator
-export const uploadFileAzure = (folder, file, jobName) => {
+export const uploadFileAzure = (file) => {
   return async (dispatch) => {
     try {
       dispatch(uploadFileRequest());
@@ -64,9 +64,7 @@ export const uploadFileAzure = (folder, file, jobName) => {
       }
 
       // Create a BlobClient for the file and set the content type
-      const blobClient = containerClient.getBlockBlobClient(
-        `${env}${folder}/${jobName}/${file.name}`
-      );
+      const blobClient = containerClient.getBlockBlobClient(`${file.name}`);
       const options = {
         blobHTTPHeaders: { blobContentType: file.type },
       };
@@ -87,7 +85,7 @@ export const uploadFileAzure = (folder, file, jobName) => {
 
       // Construct the public URL for the uploaded file
 
-      const publicUrl = `https://${storageAccountName}.blob.core.windows.net/${containerName}/${env}/${folder}/${jobName}/${file.name}`;
+      const publicUrl = `https://${storageAccountName}.blob.core.windows.net/${containerName}/${file.name}`;
 
       // Dispatch the success action with the public URL
       dispatch(uploadFileSuccess([publicUrl]));

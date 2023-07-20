@@ -87,8 +87,8 @@ const Header = () => {
           onClick={(event) =>
             handleViewProofScopeClick(
               event,
-              `cloudflow://PP_FILE_STORE/awm/${env}RDT/Baby Care/RDT/activefile (1).svg`
-              // cloudflow://PP_FILE_STORE/CIC_20169540_POA-00454657_Bounty_NA_Paper_Towel_Essentials_Select-a-Size_Double_Roll_2CT_White_SHIPPER.pdf"
+              // `cloudflow://PP_FILE_STORE/awm/${env}RDT/Baby Care/RDT/activefile (1).svg`
+              "cloudflow://PP_FILE_STORE/CIC_20169540_POA-00454657_Bounty_NA_Paper_Towel_Essentials_Select-a-Size_Double_Roll_2CT_White_SHIPPER.pdf"
             )
           }
         >

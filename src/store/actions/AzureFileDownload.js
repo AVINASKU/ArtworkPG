@@ -29,7 +29,7 @@ export const downloadFileFailure = (error) => ({
 // Define your Redux async action creator
 export const downloadFileAzure = (filePath) => {
   alert(filePath);
-  const filenew = filePath + ".svg";
+  const filenew = "121.jpg";
   return async (dispatch) => {
     try {
       dispatch(downloadFileRequest());
@@ -49,15 +49,21 @@ export const downloadFileAzure = (filePath) => {
             .trim()
         : filenew.split("/").pop();
 
+      // Create the object URL for the file
       const url = window.URL.createObjectURL(new Blob([response.data]));
+
+      // Create a temporary link element to enable downloading
       const link = document.createElement("a");
       link.href = url;
       link.setAttribute("download", filename);
 
-      document.body.appendChild(link);
+      // Trigger the click event on the link to initiate the download
       link.click();
-      document.body.removeChild(link);
 
+      // Remove the temporary link element
+      link.remove();
+
+      // Revoke the object URL after the download is completed
       window.URL.revokeObjectURL(url);
 
       dispatch(downloadFileSuccess());
