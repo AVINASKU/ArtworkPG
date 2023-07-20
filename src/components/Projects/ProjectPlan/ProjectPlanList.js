@@ -61,6 +61,7 @@ const ProjectPlanList = ({
   const dispatch = useDispatch();
   const [flag, setFlag] = useState("");
   const [loader, setLoader] = useState(false);
+  const [updatedData, setUpdatedData] = useState([]);
   //projectPlanDesign
   const navigate = useNavigate();
   let { ProjectID } = useParams();
@@ -519,6 +520,22 @@ const ProjectPlanList = ({
     pegadata && updateProjectPlanDesign();
   }, [pegadata]);
 
+  useEffect(() => {
+    const startArtworkAlignmentData = pegadata?.filter(item => item.data.Task === "Start Artwork Alignment");
+    const otherTasksData = pegadata?.filter(item => item.data.Task !== "Start Artwork Alignment");
+
+    const filteredData = {
+      startArtworkAlignment: startArtworkAlignmentData,
+      otherTasks: otherTasksData
+    };
+    console.log("filteredData", filteredData);
+    if(tabNameForPP === "Input"){
+      setUpdatedData(filteredData.startArtworkAlignment)
+    } else{
+      setUpdatedData(filteredData.otherTasks)
+    }
+  }, [tabNameForPP]);
+
   const onDropdownChange = (rowData, { value }, ele) => {
     // Update the data with the new value
     rowData.data[ele] = value.Name;
@@ -714,7 +731,7 @@ const ProjectPlanList = ({
               reorderableColumns
               // scrollable
               onColReorder={storeReorderedColumns}
-              value={filters.length ? filters : pegadata}
+              value={filters.length ? filters : updatedData}
               loading={loader}
               className="textAlignTreeTable"
               // tableStyle={{ minWidth: "119rem", tableLayout: "auto" }}
