@@ -140,40 +140,19 @@ const RoutesNav = () => {
         />
         {/* projectPlan */}
         {/* projectSetup */}
-          <Route
-            path="/projectSetup"
-            element={<ProjectCreation key="projectSetup" />}
-          />
-          <Route
-            path="/myProjects/projectSetup/:ProjectID"
-            element={<ProjectCreation key={`projectSetup-${params.ProjectID}`} />}
-          />
-          <Route
-            path="/allProjects/projectSetup/:ProjectID"
-            element={<ProjectCreation key={`projectSetup-${params.ProjectID}`} />}
-          />
-         {/* projectSetup */}
-          {/* artworkAlignment */}
-          <Route
-            path="/artworkAlignment"
-            element={<ProjectCreation key="artworkAlignment" />}
-          />
-          <Route
-            path="/myProjects/artworkAlignment/:ProjectID"
-            element={<ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />}
-          />
-          <Route
-            path="/allProjects/artworkAlignment/:ProjectID"
-            element={<ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />}
-          />
-          <Route
-            path="/myTasks/artworkAlignment/:ProjectID"
-            element={<ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />}
-          />
-          <Route
-            path="/allTasks/artworkAlignment/:ProjectID"
-            element={<ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />}
-          />
+        <Route
+          path="/projectSetup"
+          element={<ProjectCreation key="projectSetup" />}
+        />
+        <Route
+          path="/myProjects/projectSetup/:ProjectID"
+          element={<ProjectCreation key={`projectSetup-${params.ProjectID}`} />}
+        />
+        <Route
+          path="/allProjects/projectSetup/:ProjectID"
+          element={<ProjectCreation key={`projectSetup-${params.ProjectID}`} />}
+        />
+        {/* projectSetup */}
         {/* artworkAlignment */}
         <Route
           path="/artworkAlignment"
@@ -220,6 +199,18 @@ const RoutesNav = () => {
             <ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />
           }
         />
+        <Route
+          path="/myTasks/artworkAlignment/:ProjectID"
+          element={
+            <ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />
+          }
+        />
+        <Route
+          path="/allTasks/artworkAlignment/:ProjectID"
+          element={
+            <ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />
+          }
+        />
         {/* artworkAlignment */}
 
         {/* mapping */}
@@ -254,45 +245,92 @@ const RoutesNav = () => {
         <Route path="/:page1/:page2/DDI/:TaskID/:ProjectID" element={<DDI />} />
         <Route path="/:pageType/DDI/:TaskID/:ProjectID" element={<DDI />} />
         <Route
-          path="/:page1/:page2/DDI/:TaskID/:ProjectID"
+          path="/:page1/:page2/UADI/:TaskID/:ProjectID"
           element={<UADI />}
         />
-        <Route path="/:pageType/DDI/:TaskID/:ProjectID" element={<UADI />} />
-        <Route path="/:page1/:page2/DDI/:TaskID/:ProjectID" element={<DDT />} />
-        <Route path="/:pageType/DDI/:TaskID/:ProjectID" element={<DDT />} />
+        <Route path="/:pageType/UADI/:TaskID/:ProjectID" element={<UADI />} />
+        <Route path="/:page1/:page2/DDT/:TaskID/:ProjectID" element={<DDT />} />
+        <Route path="/:pageType/DDT/:TaskID/:ProjectID" element={<DDT />} />
 
-        {/* <Route path="/myTasks/DDI/:TaskID/:ProjectID" element={<DDI />} /> */}
-        {/* <Route path="/allTasks/DDI/:TaskID/:ProjectID" element={<DDI />} /> */}
-        <Route path="/myTasks/UADI/:TaskID/:ProjectID" element={<UADI />} />
-        <Route path="/allTasks/UADI/:TaskID/:ProjectID" element={<UADI />} />
-        <Route path="/myTasks/DDT/:TaskID/:ProjectID" element={<DDT />} />
-        <Route path="/allTasks/DDT/:TaskID/:ProjectID" element={<DDT />} />
-        <Route path="/myTasks/ARDT/:TaskID/:ProjectID" element={<ARDT />} />
-        <Route path="/allTasks/ARDT/:TaskID/:ProjectID" element={<ARDT />} />
-        <Route path="/myTasks/DPRA/:TaskID/:ProjectID" element={<DPRA />} />
-        <Route path="/allTasks/DPRA/:TaskID/:ProjectID" element={<DPRA />} />
-        <Route path="/myTasks/APRA/:TaskID/:ProjectID" element={<APRA />} />
-        <Route path="/allTasks/APRA/:TaskID/:ProjectID" element={<APRA />} />
-        <Route path="/myTasks/URDT/:TaskID/:ProjectID" element={<URDT />} />
-        <Route path="/allTasks/URDT/:TaskID/:ProjectID" element={<URDT />} />
-        <Route path="/myTasks/UPRA/:TaskID/:ProjectID" element={<UPRA />} />
-        <Route path="/allTasks/UPRA/:TaskID/:ProjectID" element={<UPRA />} />
-        <Route path="/myTasks/CCD/:TaskID/:ProjectID" element={<CCD />} />
-        <Route path="/allTasks/CCD/:TaskID/:ProjectID" element={<CCD />} />
-        <Route path="/myTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
-        <Route path="/allTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
-        <Route path="/myTasks/CNIQ/:TaskID/:ProjectID" element={<CNIQ />} />
-        <Route path="/allTasks/CNIQ/:TaskID/:ProjectID" element={<CNIQ />} />
+        <Route
+          path="/:page1/:page2/ARDT/:TaskID/:ProjectID"
+          element={<ARDT />}
+        />
+        <Route path="/:pageType/ARDT/:TaskID/:ProjectID" element={<ARDT />} />
+
+        <Route
+          path="/:page1/:page2/DPRA/:TaskID/:ProjectID"
+          element={<DPRA />}
+        />
+        <Route path="/:pageType/DPRA/:TaskID/:ProjectID" element={<DPRA />} />
+
+        <Route
+          path="/:page1/:page2/APRA/:TaskID/:ProjectID"
+          element={<APRA />}
+        />
+        <Route path="/:pageType/APRA/:TaskID/:ProjectID" element={<APRA />} />
+
+        <Route
+          path="/:page1/:page2/URDT/:TaskID/:ProjectID"
+          element={<URDT />}
+        />
+        <Route path="/:pageType/URDT/:TaskID/:ProjectID" element={<URDT />} />
+
+        <Route
+          path="/:page1/:page2/UPRA/:TaskID/:ProjectID"
+          element={<UPRA />}
+        />
+        <Route path="/:pageType/UPRA/:TaskID/:ProjectID" element={<UPRA />} />
+
+        {/* <Route path="/myTasks/CCD/:TaskID/:ProjectID" element={<CCD />} />
+        <Route path="/allTasks/CCD/:TaskID/:ProjectID" element={<CCD />} /> */}
+
+        <Route path="/:page1/:page2/CCD/:TaskID/:ProjectID" element={<CCD />} />
+        <Route path="/:pageType/CCD/:TaskID/:ProjectID" element={<CCD />} />
+
+        {/* <Route path="/myTasks/CNIQ/:TaskID/:ProjectID" element={<CNIQ />} />
+        <Route path="/allTasks/CNIQ/:TaskID/:ProjectID" element={<CNIQ />} /> */}
+
+        <Route
+          path="/:page1/:page2/CNIQ/:TaskID/:ProjectID"
+          element={<CNIQ />}
+        />
+        <Route path="/:pageType/CNIQ/:TaskID/:ProjectID" element={<CNIQ />} />
+
+        <Route
+          path="/:page1/:page2/DNIQ/:TaskID/:ProjectID"
+          element={<DNIQ />}
+        />
+        <Route path="/:pageType/DNIQ/:TaskID/:ProjectID" element={<DNIQ />} />
+        {/* 
         <Route path="/myTasks/DNIQ/:TaskID/:ProjectID" element={<DNIQ />} />
-        <Route path="/allTasks/DNIQ/:TaskID/:ProjectID" element={<DNIQ />} />
+        <Route path="/allTasks/DNIQ/:TaskID/:ProjectID" element={<DNIQ />} /> */}
+
         <Route path="/allTasks/CPPFA/:TaskID/:ProjectID" element={<CPPFA />} />
+
+        <Route path="/:page1/:page2/CPT/:TaskID/:ProjectID" element={<CPT />} />
+        <Route path="/:pageType/CPT/:TaskID/:ProjectID" element={<CPT />} />
+        {/* 
         <Route path="/myTasks/CPT/:TaskID/:ProjectID" element={<CPT />} />
-        <Route path="/allTasks/CPT/:TaskID/:ProjectID" element={<CPT />} />
-        <Route path="/myTasks/DNPF/:TaskID/:ProjectID" element={<DNPF />} />
-        <Route path="/allTasks/DNPF/:TaskID/:ProjectID" element={<DNPF />} />
-        <Route path="/myTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
-        <Route path="/allTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
+        <Route path="/allTasks/CPT/:TaskID/:ProjectID" element={<CPT />} /> */}
+
+        {/* <Route path="/myTasks/DNPF/:TaskID/:ProjectID" element={<DNPF />} />
+        <Route path="/allTasks/DNPF/:TaskID/:ProjectID" element={<DNPF />} /> */}
+
+        <Route
+          path="/:page1/:page2/DNPF/:TaskID/:ProjectID"
+          element={<DNPF />}
+        />
+        <Route path="/:pageType/DNPF/:TaskID/:ProjectID" element={<DNPF />} />
+
+        <Route path="/:page1/:page2/DCD/:TaskID/:ProjectID" element={<DCD />} />
+        <Route path="/:pageType/DCD/:TaskID/:ProjectID" element={<DCD />} />
+
+        {/* <Route path="/myTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
+        <Route path="/allTasks/DCD/:TaskID/:ProjectID" element={<DCD />} /> */}
+
         <Route path="/DSBP/:ProjectID" element={<DsbpPage />} />
+
         <Route path="/DSBP/tab" element={<DsbpTabPage />} />
         {/* <Route path="/reports" element={<Reports />} /> */}
       </Route>
