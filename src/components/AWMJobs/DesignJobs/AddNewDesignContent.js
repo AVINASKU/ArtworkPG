@@ -425,6 +425,8 @@ const AddNewDesignContent = ({
       (additionalInformation && additionalInformation);
   }
 
+  console.log("addNewEmptyDesign");
+
   return (
     <div>
       {selectDialog && (
