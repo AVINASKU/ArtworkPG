@@ -3,18 +3,19 @@ import Column from "./Column";
 import entities1 from "./Data";
 import { mutliDragAwareReorder, multiSelectTo as multiSelect } from "./Utils";
 import { DragDropContext } from "react-beautiful-dnd";
-import { Button } from "primereact/button";
+import { Button } from "react-bootstrap";
 
 const getTasks = (entities, columnId) => entities?.columns[columnId]?.fieldsData.map((taskId) => entities.tasks[taskId]);
 
 const DragAndDrop = (props) => {
-  const [entities, setEntities] = useState(props.availableFields && entities1(props.availableFields));
+  console.log("props", props.customizeViewFields);
+  const [entities, setEntities] = useState(props?.availableFields && entities1(props?.availableFields));
   const [selectedTaskIds, setSelectedTaskIds] = useState([]);
   const [draggingTaskId, setDraggingTaskId] = useState(null);
   const [localDestination, setLocalDestination] = useState(null);
 
   useEffect(() => {
-    if(props.customizeViewFields !== "[]"){
+    if(props.customizeViewFields !== "[]" && props.customizeViewFields !== null){
       const updatedData = {
         ...entities,
         columns: JSON.parse(props.customizeViewFields)
@@ -22,7 +23,7 @@ const DragAndDrop = (props) => {
       if(updatedData !== undefined)
         setEntities(updatedData)
     } else {
-      setEntities(props.availableFields && entities1(props.availableFields))      
+      setEntities(props?.availableFields && entities1(props?.availableFields))      
     }
   }, [props.customizeViewFields])
 
@@ -214,7 +215,7 @@ const DragAndDrop = (props) => {
       </DragDropContext>
       <div className="form-buttons dsbp-form-buttons">
         <Button
-          className="btn button-layout firstAndSecond"
+          className="button-layout"
           variant="secondary"
           onClick={() => props.hideDialog()}
         >
@@ -222,7 +223,7 @@ const DragAndDrop = (props) => {
         </Button>
 
         <Button
-          className="btn button-layout firstAndSecond"
+          className="button-layout"
           variant="secondary"
           onClick={resetToPGDefault}
         >
@@ -230,7 +231,7 @@ const DragAndDrop = (props) => {
         </Button>
 
         <Button
-          className="btn button-layout updateButton"
+          className="button-layout"
           variant="primary"
           onClick={handleSubmit}
         >
