@@ -98,6 +98,7 @@ const DependencyMapping = () => {
         <DependencyMappingList
           dependencyMappingData={dependencyMappingData}
           dependencyColumnNames={dependencyColumnNames}
+          userHasAccess={userHasAccess}
         />
         <FooterButtons
           handleCancel={handleCancel}

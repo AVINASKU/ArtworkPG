@@ -41,3 +41,7 @@ export const GET_ALL_DSBP_DATA_ERROR = "GET_ALL_DSBP_DATA_ERROR";
 // ArtWorkTabValues
 export const UPDATE_ARTWORK_TAB_VALUES = "UPDATE_ARTWORK_TAB_VALUES";
 
+//DependencyMappingTabValues
+export const UPDATE_DM_TAB_VALUES = "UPDATE_DM_TAB_VALUES";
+
+
