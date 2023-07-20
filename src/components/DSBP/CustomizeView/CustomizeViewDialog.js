@@ -18,7 +18,7 @@ const CustomizeViewDialog = ({ showTaskDialog, onClose, availableFields, setCust
   return (
     <Dialog
       visible={visible}
-      className="ppfaDialogForDSBP"
+      className="customize-view-dialog"
       onHide={hideDialog}
       header={<div className="p-dialog-header1">Customize View</div>}
     >

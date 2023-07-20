@@ -21,7 +21,7 @@
   font-weight: 900;
 }
 
-.ppfaDialogForDSBP {
+.customize-view-dialog {
   width: 1080px;
   height: 569px;
   border-radius: 20px;
@@ -73,31 +73,7 @@
   }
 
   .dsbp-form-buttons {
-    padding-top: 22px;
-  }
-
-  .dsbp-form-buttons .firstAndSecond {
-    border-radius: 20px;
-    padding: 10px 24px 10px 24px;
-  }
-
-  .dsbp-form-buttons .firstAndSecond {
-    border: 1px solid rgba(0, 61, 165, 1);
-    color: rgba(0, 61, 165, 1);
-    background-color: #ffffff;
-  }
-
-  .dsbp-form-buttons .firstAndSecond:hover {
-    background-color: #DCEFFF;
-  }
-
-  .dsbp-form-buttons .updateButton {
-    background-color: #003DA5;
-    border-color: #003DA5;
-  }
-
-  .dsbp-form-buttons .updateButton:hover {
-    background-color: #002C7A;
+    padding: 20px;
   }
 }
 
