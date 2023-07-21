@@ -248,17 +248,25 @@ a.tabView {
       background-color: #ffffff !important;
     }
 
-  th:after,
-  td:after {
-    content: "";
-    display: block;
-    height: 22px;
-    width: 0.8px;
-    background-color: #acacac;
-    position: absolute;
-    top: 25%;
-    right: 0;
-  }
+    .blue-bg-color {
+      background: #edf4fa !important;
+    }
+
+    .header-pink-bg-color{
+    background: #FFEFD8 !important;
+    }
+
+    th:after,
+    td:after {
+      content: "";
+      display: block;
+      height: 22px;
+      width: 0.8px;
+      background-color: #acacac;
+      position: absolute;
+      top: 25%;
+      right: 0;
+    }
 
   td,
   table .p-datatable .p-datatable-tbody>tr>td,
