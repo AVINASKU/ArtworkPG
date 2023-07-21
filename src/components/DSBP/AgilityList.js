@@ -155,8 +155,9 @@ const AgilityList = ({
     const uniqueArray = Array.from(
       new Set(newArray.map((obj) => JSON.stringify(obj)))
     ).map(JSON.parse);
+    console.log("uniqueArray AA: ",uniqueArray)
     dispatch(ArtWorkTabValuesAction(uniqueArray));
-    navigate("/DSBP/tab", { replace: true });
+    navigate("/DSBP/AATab", { replace: true });
   };
 
   const onChangeSelectField = (option, e, field) => {
