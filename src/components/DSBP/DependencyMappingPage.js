@@ -56,6 +56,7 @@ const DependencyMapping = () => {
           DSBP_InitiativeID: item.DSBP_InitiativeID,
           DSBP_PMP_PIMaterialDescription: item.DSBP_PMP_PIMaterialDescription,
           DSBP_PMP_PIMaterialID: item.DSBP_PMP_PIMaterialID,
+          DSBP_PMP_PIMaterialNumber:item.DSBP_PMP_PIMaterialNumber,
         };
         if (isRDTData && isRDTData.length) {
           transformedItem.AWM_RDT_Page = item.Preselected_AWM_RDT_Page || [];
