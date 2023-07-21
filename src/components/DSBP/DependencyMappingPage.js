@@ -156,6 +156,7 @@ const DependencyMapping = () => {
           IQData={IQData}
           RDTData={RDTData}
           updateDropDownData={updateDropDownData}
+          userHasAccess={userHasAccess}
         />
         <FooterButtons
           handleCancel={handleCancel}

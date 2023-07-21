@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import filter from "../../assets/images/filter.svg";
 import { Form } from "react-bootstrap";
 import { MultiSelect } from "primereact/multiselect";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { DMTabValuesAction } from "../../store/actions/DMTabValuesActions";
 
 const DependencyMappingList = ({
   dependencyMappingData,
@@ -11,17 +15,55 @@ const DependencyMappingList = ({
   CDPTPageData,
   IQData,
   RDTData,
-  updateDropDownData
+  updateDropDownData,
+  userHasAccess,
 }) => {
+  // console.log("CDPTPageData", CDPTPageData);
 
-// console.log("CDPTPageData", CDPTPageData);
+  // CDPTPageData, IQData, RDTData
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { dmTabValuesData } = useSelector((state) => state.DMTabValuesReducer);
+  const [tabsList, setTabsList] = useState([
+    { tabHeader: "Header 1", decription: "Header 1 data" },
+  ]);
 
-// CDPTPageData, IQData, RDTData
   const cicNeededOptionList = [
     { name: "Yes", code: "Yes" },
     { name: "No", code: "No" },
     { name: "N/A", code: "N/A" },
   ];
+
+  const onHandlePmpTabView = (options, field) => {
+    console.log("column names: ", dependencyColumnNames, dependencyMappingData);
+    const selectedTab = {
+      tabHeader: options[field],
+      description: options,
+    };
+
+    let updatedTabsList = [];
+    if (
+      tabsList.some(
+        (tab) => JSON.stringify(tab) === JSON.stringify(selectedTab)
+      )
+    ) {
+      // selectedTab is already present
+    } else {
+      updatedTabsList = [...tabsList, selectedTab];
+    }
+
+    const newArray = Array.isArray(dmTabValuesData)
+      ? [...dmTabValuesData, ...updatedTabsList]
+      : updatedTabsList;
+
+    const uniqueArray = Array.from(
+      new Set(newArray.map((obj) => JSON.stringify(obj)))
+    ).map(JSON.parse);
+
+    console.log("uniqueArray DM: ", uniqueArray);
+    dispatch(DMTabValuesAction(uniqueArray));
+    navigate("/DSBP/DMTab", { replace: true });
+  };
 
   const renderHeader = (field) => {
     // console.log("field", field);
@@ -60,6 +102,8 @@ const DependencyMappingList = ({
   const renderMappingBody = (options, rowData) => {
     let field = rowData.field;
     // console.log("field in body", options, rowData);
+    // console.log("options: ", options);
+    // console.log("field: ", field);
     return (
       <span>
         {field === "field_0" && ( // Add this condition to render a checkbox
@@ -147,6 +191,15 @@ const DependencyMappingList = ({
               ))}
             </Form.Select>
           </Form.Group>
+        )}
+        {field === "DSBP_PMP_PIMaterialNumber" && (
+          <a
+          className="tabView"
+          disabled={userHasAccess}
+          onClick={() => !userHasAccess && onHandlePmpTabView(options, field)}
+        >
+          {options[field]}
+        </a>
         )}
         {field !== "AWM_CDPT_Page" &&
           field !== "AWM_CIC_Needed" &&
