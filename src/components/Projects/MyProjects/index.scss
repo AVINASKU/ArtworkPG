@@ -308,6 +308,15 @@ div.p-selectbutton.p-buttonset.p-component {
     outline: none;
   }
 }
+.artwork-dsbp{
+  .dropdown-item{
+    @extend .dropdown-item;
+    &.active, &:hover {
+      background: #edf4fa !important;
+      color: #003da5;
+    }
+  }  
+}
 
 .dropdown-menu {
   padding: 0;
