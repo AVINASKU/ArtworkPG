@@ -66,6 +66,7 @@ const DependencyMappingList = ({
   };
 
   const renderHeader = (field) => {
+    // console.log("field", field);
     if (field === "checkbox") {
       // Render checkbox in header
       return (
@@ -209,45 +210,6 @@ const DependencyMappingList = ({
     );
   };
 
-  // const renderMappingBody = (options, rowData) => {
-  //   let field = rowData.field;
-  //   return (
-  //     <span>
-  //       {field === "field_0" && ( // Add this condition to render a checkbox
-  //         <div className="flex align-items-center gap-2">
-  //           <input
-  //             type="checkbox"
-  //             className="p-checkbox-box p-highlight"
-  //             // checked={selected?.includes(options)}
-  //             // onChange={() => handleSelect(options)}
-  //           />
-  //         </div>
-  //       )}
-  //       {field === "CIC_Needed" && (
-  //         <Form.Group
-  //           controlId="groupName.ControlInput1"
-  //           style={{ textAlign: "-webkit-center" }}
-  //         >
-  //           <Form.Select
-  //             placeholder="Select"
-  //             value={options[field]}
-  //             onChange={(e) => console.log("e", e)}
-  //             style={{ width: "80%", fontSize: 12 }}
-  //           >
-  //             <option value="">Select</option>
-  //             {cicNeededOptionList?.map((data) => (
-  //               <option key={data.code} value={data.name}>
-  //                 {data.name}
-  //               </option>
-  //             ))}
-  //           </Form.Select>
-  //         </Form.Group>
-  //       )}
-  //       {options[field]}
-  //     </span>
-  //   );
-  // };
-
   const dynamicColumns = () => {
     if (dependencyColumnNames && dependencyColumnNames.length) {
       return [
@@ -259,11 +221,12 @@ const DependencyMappingList = ({
           header={() => renderHeader("checkbox")}
           style={{ width: "40px" }}
         />,
-        ...dependencyColumnNames.map((field, index) => {
+        ...dependencyColumnNames.map((col, index) => {
+          // console.log("field col-----", col);
           return (
             <Column
-              field={field}
-              header={renderHeader(field)}
+              field={col.field}
+              header={renderHeader(col.field)}
               // frozen={field.freeze}
               // className={field.freeze ? "font-bold" : ""}
               // bodyClassName={"change-bg-color"}
@@ -271,13 +234,13 @@ const DependencyMappingList = ({
                 col.group === 2 ? "header-pink-bg-color" : "blue-bg-color"
               }
               body={renderMappingBody}
-              key={field}
-              columnKey={field}
+              key={col.field}
+              columnKey={col.field}
               showFilterMenu={false}
               alignFrozen="left"
-              filterField={field}
+              filterField={col.field}
               style={{
-                width: 250,
+                width: col.width,
                 height: 30,
               }}
             />
@@ -302,7 +265,7 @@ const DependencyMappingList = ({
     <DataTable
       // dataKey="DSBP_PMP_PIMaterialID"
       value={dependencyMappingData}
-      // rowClassName={rowClassName}
+      rowClassName={rowClassName}
       className="mt-3"
       responsiveLayout="scroll"
       columnResizeMode="expand"
