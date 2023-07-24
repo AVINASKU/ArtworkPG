@@ -15,6 +15,7 @@ const DependencyMappingList = ({
   CDPTPageData,
   IQData,
   RDTData,
+  GABriefData,
   updateDropDownData,
   userHasAccess,
 }) => {
@@ -35,7 +36,6 @@ const DependencyMappingList = ({
   ];
 
   const onHandlePmpTabView = (options, field) => {
-    console.log("column names: ", dependencyColumnNames, dependencyMappingData);
     const selectedTab = {
       tabHeader: options[field],
       description: options,
@@ -60,7 +60,7 @@ const DependencyMappingList = ({
       new Set(newArray.map((obj) => JSON.stringify(obj)))
     ).map(JSON.parse);
 
-    console.log("uniqueArray DM: ", uniqueArray);
+    // console.log("uniqueArray DM: ", uniqueArray);
     dispatch(DMTabValuesAction(uniqueArray));
     navigate("/DSBP/DMTab", { replace: true });
   };
@@ -101,9 +101,7 @@ const DependencyMappingList = ({
 
   const renderMappingBody = (options, rowData) => {
     let field = rowData.field;
-    // console.log("field in body", options, rowData);
-    // console.log("options: ", options);
-    // console.log("field: ", field);
+
     return (
       <span>
         {field === "field_0" && ( // Add this condition to render a checkbox
@@ -116,62 +114,88 @@ const DependencyMappingList = ({
             />
           </div>
         )}
-        {field === "AWM_CDPT_Page" && <div>
-          <MultiSelect
-            value={options[field]}
-            // onChange={(e) => onGlobalFilterChange(e, selectedColumnName)}
-            options={
+        {field === "AWM_GA_Brief" && (
+          <div>
+            <MultiSelect
+              value={options[field]}
+              // onChange={(e) => onGlobalFilterChange(e, selectedColumnName)}
+              options={
+                GABriefData
+                  ? GABriefData.map((obj) => ({
+                      label: obj.File_Name,
+                      value: obj.File_Name,
+                    }))
+                  : []
+              }
+              filter
+              placeholder={`Select filename`}
+              maxSelectedLabels={3}
+              className="p-column-filter"
+            />
+          </div>
+        )}
+
+        {field === "AWM_CDPT_Page" && (
+          <div>
+            <MultiSelect
+              value={options[field]}
+              // onChange={(e) => onGlobalFilterChange(e, selectedColumnName)}
+              options={
                 CDPTPageData
                   ? CDPTPageData.map((obj) => ({
                       label: obj.AWM_Design_Job_Name,
-                      value: obj. AWM_Design_Job_ID,
+                      value: obj.AWM_Design_Job_ID,
                     }))
                   : []
               }
-            filter
-            placeholder={`Select AWM CDPT Page`}
-            maxSelectedLabels={3}
-            className="p-column-filter"
-          />        
-        </div>}
-        {field === "AWM_RDT_Page" && <div>
-        <MultiSelect
-            value={options[field]}
-            // onChange={(e) => onGlobalFilterChange(e, selectedColumnName)}
-            options={
+              filter
+              placeholder={`Select AWM CDPT Page`}
+              maxSelectedLabels={3}
+              className="p-column-filter"
+            />
+          </div>
+        )}
+
+        {field === "AWM_RDT_Page" && (
+          <div>
+            <MultiSelect
+              value={options[field]}
+              // onChange={(e) => onGlobalFilterChange(e, selectedColumnName)}
+              options={
                 RDTData
                   ? RDTData.map((obj) => ({
                       label: obj.AWM_Design_Job_Name,
-                      value: obj. AWM_Design_Job_ID,
+                      value: obj.AWM_Design_Job_ID,
                     }))
                   : []
               }
-            filter
-            placeholder={`Select AWM RDT Page`}
-            maxSelectedLabels={3}
-            className="p-column-filter"
-          />  
-        </div>}
-        {field === "AWM_IQ_Page" && <div>
-        
-        <MultiSelect
-            value={options[field]}
-            // onChange={(e) => onGlobalFilterChange(e, selectedColumnName)}
-            options={
+              filter
+              placeholder={`Select AWM RDT Page`}
+              maxSelectedLabels={3}
+              className="p-column-filter"
+            />
+          </div>
+        )}
+        {field === "AWM_IQ_Page" && (
+          <div>
+            <MultiSelect
+              value={options[field]}
+              // onChange={(e) => onGlobalFilterChange(e, selectedColumnName)}
+              options={
                 IQData
                   ? IQData.map((obj) => ({
                       label: obj.AWM_Design_Job_Name,
-                      value: obj. AWM_Design_Job_ID,
+                      value: obj.AWM_Design_Job_ID,
                     }))
                   : []
               }
-            filter
-            placeholder={`Select AWM IQ Page`}
-            maxSelectedLabels={3}
-            className="p-column-filter"
-          />  
-        
-        </div>}
+              filter
+              placeholder={`Select AWM IQ Page`}
+              maxSelectedLabels={3}
+              className="p-column-filter"
+            />
+          </div>
+        )}
         {field === "AWM_CIC_Needed" && (
           <Form.Group
             controlId="groupName.ControlInput1"
@@ -180,7 +204,13 @@ const DependencyMappingList = ({
             <Form.Select
               placeholder="Select"
               value={options[field]}
-              onChange={(e) => updateDropDownData(e.target.value , "AWM_CIC_Needed", options.DSBP_PMP_PIMaterialID)}
+              onChange={(e) =>
+                updateDropDownData(
+                  e.target.value,
+                  "AWM_CIC_Needed",
+                  options.DSBP_PMP_PIMaterialID
+                )
+              }
               style={{ width: "80%", fontSize: 12 }}
             >
               <option value="">Select</option>
@@ -192,19 +222,81 @@ const DependencyMappingList = ({
             </Form.Select>
           </Form.Group>
         )}
+        {field === "AWM_Other_Reference" && (
+        options.AWM_CIC_Needed === "" || !options.AWM_CIC_Needed ? " ":
+          <Form.Group
+            controlId="groupName.ControlInput1"
+            style={{ textAlign: "-webkit-center" }}
+          >
+            <Form.Control
+              type="number"
+              maxLength={8}
+              value={options[field]}
+              disabled={
+                options.AWM_CIC_Needed === "Yes" ||
+                options.AWM_CIC_Needed === "No"
+              }
+              // onChange={(e) => updateDropDownData(e.target.value , "AWM_CIC_Needed", options.DSBP_PMP_PIMaterialID)}
+              style={{ width: "80%", fontSize: 12 }}
+            ></Form.Control>
+          </Form.Group>
+        )}
+
+        {field === "AWM_Supporting_PMP_Design" && (
+        options.AWM_CIC_Needed === "" || !options.AWM_CIC_Needed ? " ":
+          <Form.Group
+            controlId="groupName.ControlInput1"
+            style={{ textAlign: "-webkit-center" }}
+          >
+            <Form.Select
+              placeholder="Select"
+              value={options[field]}
+              disabled={options.AWM_CIC_Needed === "Yes" || options.AWM_CIC_Needed === "N/A"}
+              style={{ width: "80%", fontSize: 12 }}
+            >
+              <option value="">Select</option>
+              <option value="">Select</option>
+              <option value="123">123</option>
+              <option value="456">456</option>
+              <option value="789">789</option>
+            </Form.Select>
+          </Form.Group>
+        )}
+
+        {field === "AWM_Supporting_PMP_Layout" && (
+        options.AWM_CIC_Needed === "" || !options.AWM_CIC_Needed ? " ":
+          <Form.Group
+            controlId="groupName.ControlInput1"
+            style={{ textAlign: "-webkit-center" }}
+          >
+            <Form.Select
+              placeholder="Select"
+              value={options[field]}
+              disabled={options.AWM_CIC_Needed === "Yes"|| options.AWM_CIC_Needed === "N/A"}
+              style={{ width: "80%", fontSize: 12 }}
+            >
+              <option value="">Select</option>
+              <option value="123">123</option>
+              <option value="456">456</option>
+              <option value="789">789</option>
+            </Form.Select>
+          </Form.Group>
+        )}
+
         {field === "DSBP_PMP_PIMaterialNumber" && (
           <a
-          className="tabView"
-          disabled={userHasAccess}
-          onClick={() => !userHasAccess && onHandlePmpTabView(options, field)}
-        >
-          {options[field]}
-        </a>
+            className="tabView"
+            disabled={userHasAccess}
+            onClick={() => !userHasAccess && onHandlePmpTabView(options, field)}
+          >
+            {options[field]}
+          </a>
         )}
         {field !== "AWM_CDPT_Page" &&
           field !== "AWM_CIC_Needed" &&
           field !== "AWM_RDT_Page" &&
           field !== "AWM_IQ_Page" &&
+          field !== "AWM_Other_Reference" &&
           options[field]}
       </span>
     );
@@ -252,10 +344,7 @@ const DependencyMappingList = ({
 
   const rowClassName = (rowData) => {
     let field = rowData.field;
-    console.log("field and options", rowData.DSBP_PMP_PIMaterialNumber);
-    if (
-      rowData.AWM_CIC_Needed === "Yes"
-    ) {
+    if (rowData.AWM_CIC_Needed === "Yes") {
       return "white-bg-color"; // class name for highlighted rows
     }
     return "pink-bg-color"; // default class name for other rows

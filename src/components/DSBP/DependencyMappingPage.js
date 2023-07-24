@@ -4,7 +4,10 @@ import { useNavigate } from "react-router-dom";
 import ArtworkHeader from "./ArtworkHeader";
 import FooterButtons from "../AWMJobs/DesignJobs/FooterButtons";
 import { useSelector } from "react-redux";
-import { getDependencyMappingDetails } from "../../apis/dsbpApi";
+import {
+  getDependencyMappingDetails,
+  onSubmitDependencyMappingAction,
+} from "../../apis/dsbpApi";
 import DependencyMappingList from "./DependencyMappingList";
 import "./index.scss";
 
@@ -15,7 +18,8 @@ const DependencyMapping = () => {
   const [CDPTPageData, setCDPTPageData] = useState([]);
   const [IQData, setIQData] = useState([]);
   const [RDTData, setRDTData] = useState([]);
-  const [dataUpdated , setDataUpdated] = useState(false);
+  const [GABriefData, setGABriefData] = useState([]);
+  const [dataUpdated, setDataUpdated] = useState(false);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const ProjectID = selectedProjectDetails?.Project_ID;
@@ -30,12 +34,14 @@ const DependencyMapping = () => {
 
   const updateDropDownData = (value, columnName, id) => {
     console.log("value", value, columnName);
-    dependencyMappingData.map((data)=>{
-    if(data.DSBP_PMP_PIMaterialID === id){
-    if(!data[columnName]) data["AWM_CIC_Needed"] = value;
-    else data[columnName] = value;
-    } 
-    return data;
+    // let dependencyFilterData = dependencyMappingData.filter((item)=>{
+    // })
+    dependencyMappingData.map((data) => {
+      if (data.DSBP_PMP_PIMaterialID === id) {
+        if (!data[columnName] && columnName==="AWM_CIC_Needed") data["AWM_CIC_Needed"] = value;
+        else data[columnName] = value;
+      }
+      return data;
     });
     console.log("dependencyMappingData", dependencyMappingData);
     setDependencyMappingData(dependencyMappingData);
@@ -47,8 +53,13 @@ const DependencyMapping = () => {
   }, [ProjectID]);
 
   async function fetchData() {
-    const { dependencyTableData, isRDTData, isIQData, isCDPTData } =
-      await getDependencyMappingDetails("A-2002");
+    const {
+      dependencyTableData,
+      isRDTData,
+      isIQData,
+      isCDPTData,
+      isGABrifData,
+    } = await getDependencyMappingDetails("A-2002");
 
     if (dependencyTableData && dependencyTableData.length) {
       const transformedData = dependencyTableData.map((item) => {
@@ -56,7 +67,7 @@ const DependencyMapping = () => {
           DSBP_InitiativeID: item.DSBP_InitiativeID,
           DSBP_PMP_PIMaterialDescription: item.DSBP_PMP_PIMaterialDescription,
           DSBP_PMP_PIMaterialID: item.DSBP_PMP_PIMaterialID,
-          DSBP_PMP_PIMaterialNumber:item.DSBP_PMP_PIMaterialNumber,
+          DSBP_PMP_PIMaterialNumber: item.DSBP_PMP_PIMaterialNumber,
         };
         if (isRDTData && isRDTData.length) {
           transformedItem.AWM_RDT_Page = item.Preselected_AWM_RDT_Page || [];
@@ -72,6 +83,14 @@ const DependencyMapping = () => {
         transformedItem = {
           ...transformedItem,
           ...item?.AWM_CIC_Page?.[0],
+        };
+
+        if (isGABrifData && isGABrifData.length) {
+          transformedItem.AWM_GA_Brief = item.Preselected_DSBP_GA_Brief || [];
+        }
+
+        transformedItem = {
+          ...transformedItem,
           DSM_PICountry_Countries: item.DSM_PICountry_Countries,
           DSM_PILanguage_Languages: item.DSM_PILanguage_Languages,
           DSM_PMP_PMPPackagingComponentType:
@@ -118,13 +137,25 @@ const DependencyMapping = () => {
       setCDPTPageData(isCDPTData);
       setIQData(isIQData);
       setRDTData(isRDTData);
+      setGABriefData(isGABrifData);
       setDependencyColumnNames(groupedColumnNames);
       setDependencyMappingData(transformedData);
     }
   }
 
   const onSubmit = async () => {
+    let formData = {
+      DSBPValues: [
+        {
+          DSBP_InitiativeID: "100299",
+          DSBP_PMP_PIMaterialID: "388975467",
+          DSBP_PMP_PIMaterialNumber: "90492437",
+          AWM_CICNeeded: "No",
+        },
+      ],
+    };
     //add your logic here
+    let resp = await onSubmitDependencyMappingAction();
   };
 
   return (
@@ -156,6 +187,7 @@ const DependencyMapping = () => {
           CDPTPageData={CDPTPageData}
           IQData={IQData}
           RDTData={RDTData}
+          GABriefData={GABriefData}
           updateDropDownData={updateDropDownData}
           userHasAccess={userHasAccess}
         />
