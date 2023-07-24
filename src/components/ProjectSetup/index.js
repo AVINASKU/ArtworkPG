@@ -64,12 +64,15 @@ function ProjectSetup(props) {
   const [tabName, setTabName] = useState(url[2] !== undefined ? url[2] : url[1]);
   const [tabNameForPP, setTabNameForPP] = useState("Design");
   const [projectPlanDesignData, setProjectPlanDesignData] = useState([]);
+  const [pegadata, setPegaData] = useState(null);
   const [updatedProjectPlanDesignData, setUpdatedProjectPlanDesignData] =
     useState([]);
     const [loader, setLoader] = useState(false);
     const [activeFlag, setActiveFlag] = useState(isAccessEmpty);
   
-  
+  const firstTime = projectPlanDesign.some(
+    (item) => item.Assignee !== "" || item.Role !== ""
+  );
   const getData = (option) => {
     setVisible(true);
     setOption(option);
@@ -85,9 +88,7 @@ function ProjectSetup(props) {
     let projectData = isArray(myProject) && myProject.find(
       (project) => project.Project_ID === ProjectID
     );
-    const firstTime = projectPlanDesign.some(
-      (item) => item.Assignee !== "" || item.Role !== ""
-    );
+    
     if (
       (!firstTime && projectData?.Project_State === "Draft") ||
       projectData?.Project_State === "Active" ||
@@ -228,7 +229,7 @@ function ProjectSetup(props) {
           dataObj["Role"] = task.data[0]?.Role;
           dataObj["RoleOptions"] = task.data[0]?.RoleOptions;
           dataObj["Assignee"] = task.data[0]?.Assignee;
-          dataObj["OwnerOptions"] = task.data[0]?.OwnerOptions;
+          dataObj["Owner"] = task.data[0]?.Owner;
           dataObj["State"] = task.data[0]?.State;
           dataObj["Duration"] = task.data[0]?.Duration;
           dataObj["StartDate"] = task.data[0]?.Start_Date;
@@ -256,7 +257,7 @@ function ProjectSetup(props) {
           dataObj["Role"] = "";
           dataObj["RoleOptions"] = "";
           dataObj["Assignee"] = "";
-          dataObj["OwnerOptions"] = "";
+          dataObj["Owner"] = "";
           dataObj["State"] = "";
           dataObj["Duration"] = "";
 
@@ -294,7 +295,7 @@ function ProjectSetup(props) {
             dataObj["Role"] = dt.Role;
             dataObj["RoleOptions"] = dt.RoleOptions;
             dataObj["Assignee"] = dt.Assignee;
-            dataObj["OwnerOptions"] = dt.OwnerOptions;
+            dataObj["Owner"] = dt.Owner;
             dataObj["State"] = dt.State;
             dataObj["Duration"] = dt.Duration;
             dataObj["StartDate"] = dt.Start_Date;
@@ -397,36 +398,45 @@ function ProjectSetup(props) {
     setIsFilterEnabled(e);
   };
 
+  const saveData = (updatedData, activate) => {
+    projectPlanDesignData.filter(({ AWM_Project_ID, AWM_Task_ID, Assignee, Role, Duration }) =>
+      projectPlanDesign.some((object2) => {
+        if (
+          AWM_Task_ID === object2.AWM_Task_ID &&
+          ((Role !== undefined && Role !== "" && Role !== object2.Role) ||
+            (Assignee !== undefined && Assignee !== "" && Assignee !== object2.Assignee) ||
+            (Duration !== undefined && Duration !== "" && Duration !== object2.Duration))
+        ) {
+          if (!activate) {
+            updatedData.AWM_Project_ID = AWM_Project_ID;
+          }
+          updatedData.push({
+            AWM_Task_ID: AWM_Task_ID,
+            Assignee: Assignee,
+            Role: Role,
+            Duration: Duration,
+          });
+          return true;
+        }
+        return false;
+      })
+    );
+    console.log("updatedData function", updatedData);
+    return updatedData;
+  };
+  
+
   const onSave = async () => {
     let updatedData = [];
-    projectPlanDesignData.filter(
-      ({ AWM_Project_ID, AWM_Task_ID, Assignee, Role, Duration }) =>
-        projectPlanDesign.some((object2) => {
-          if (
-            AWM_Task_ID === object2.AWM_Task_ID &&
-            ((Role !== undefined && Role !== "" && Role !== object2.Role) ||
-              (Assignee !== undefined &&
-                Assignee !== "" &&
-                Assignee !== object2.Assignee) ||
-              (Duration !== undefined &&
-                Duration !== "" &&
-                Duration !== object2.Duration))
-          ) {
-            updatedData.push({
-              AWM_Project_ID: AWM_Project_ID,
-              AWM_Task_ID: AWM_Task_ID,
-              Assignee: Assignee,
-              Role: Role,
-              Duration: Duration,
-            });
-            return console.log("updatedData", updatedData);
-          }
-        })
-    );
+    console.log("projectPlanDesignData", projectPlanDesignData);
+    console.log("projectPlanDesign", projectPlanDesign);
+    const updatedSaveData = saveData(updatedData);
+    console.log("updatedData ouy", updatedSaveData);
     if (updatedData.length !== 0) {
       const formData = {
-        ArtworkAgilityProjects: updatedData,
+        ArtworkAgilityProjects: updatedSaveData,
       };
+      console.log("formData onSave", formData);
       dispatch(updateProjectPlanDesignAction(updatedProjectPlanDesignData));
       await saveProjectPlanAction(formData, selectedProjectDetails.Project_ID);
       setActiveSave(true);
@@ -435,23 +445,34 @@ function ProjectSetup(props) {
 
   const activate = async () => {
     setLoader(true);
-    await activateProjectPlan(selectedProjectDetails.Project_ID);
-    await dispatch(getMyProject(userInformation));
-    getProjectPlanApi();
-    setLoader(false);
-    await toast.current.show({
-      severity: "success",
-      summary: "Success",
-      detail: "Project activated successfully!",
-      life: 5000,
-    });
+    let updatedData = [];
+    const updatedSaveData = saveData(updatedData, true);
+    console.log("updatedData activate", updatedSaveData);
+    
+    if (updatedData.length !== 0) {
+      const formData = {
+        ArtworkAgilityProjects: updatedSaveData,
+      };
+      console.log("formData activate", formData);
+      await activateProjectPlan(formData, selectedProjectDetails.Project_ID);
+      await dispatch(getMyProject(userInformation));
+      getProjectPlanApi();
+      await toast.current.show({
+        severity: "success",
+        summary: "Success",
+        detail: "Project activated successfully!",
+        life: 5000,
+      });
+      setLoader(false);
+      setActiveSave(true);
+    }
   };
   
   const itemsData = [
     {
       name: "projectSetup",
       tabNameForDisplay: "Project Setup",
-      component: !isNoAccess ? (
+      component: isNoAccess ? (
         <div className="unauthorized-user">
           You are not authorized to access this page.
         </div>
@@ -540,9 +561,13 @@ function ProjectSetup(props) {
                       updatedProjectPlanDesignData={updatedProjectPlanDesignData}
                       setUpdatedProjectPlanDesignData={setUpdatedProjectPlanDesignData}
                       activeSave={activeSave}
+                      setActiveFlag={setActiveFlag}
                       setActiveSave={setActiveSave}
                       getProjectPlanApi={getProjectPlanApi}
                       loader={loader}
+                      pegadata={pegadata} 
+                      setPegaData={setPegaData}
+                      firstTime={firstTime}
                     />
                   </Accordion.Body>
                 </Accordion.Item>
@@ -560,9 +585,13 @@ function ProjectSetup(props) {
                     updatedProjectPlanDesignData={updatedProjectPlanDesignData}
                     setUpdatedProjectPlanDesignData={setUpdatedProjectPlanDesignData}
                     activeSave={activeSave}
+                    setActiveFlag={setActiveFlag}
                     setActiveSave={setActiveSave}
                     getProjectPlanApi={getProjectPlanApi}
                     loader={loader}
+                    pegadata={pegadata} 
+                    setPegaData={setPegaData}
+                    firstTime={firstTime}
                   />
                   </Accordion.Body>
                 </Accordion.Item>

@@ -10,9 +10,8 @@ import {
 } from "../../../utils";
 
 function ProjectPlanCompo(props) {
-  const { view, setTabName, setUpdatedProjectPlanDesignData, setActiveSave, getProjectPlanApi, loader, tabNameForPP } = props;
+  const { view, setTabName, setUpdatedProjectPlanDesignData,setActiveFlag, setActiveSave, getProjectPlanApi, loader, tabNameForPP, pegadata, setPegaData, firstTime } = props;
   const toast = useRef(null);
-  const [pegadata, setPegaData] = useState(null);
   // Check if access is empty for the user's role and page
   const isAccessEmpty = hasAllAccess();
   const { myProject, ...myProjectData } = useSelector(
@@ -42,11 +41,13 @@ function ProjectPlanCompo(props) {
               pegadata={pegadata}
               setUpdatedProjectPlanDesignData={setUpdatedProjectPlanDesignData}
               setActiveSave={setActiveSave}
+              setActiveFlag={setActiveFlag}
               getProjectPlanApi={getProjectPlanApi}
               isAccessEmpty={isAccessEmpty}
               view={view}
               setTabName={setTabName}
               tabNameForPP={tabNameForPP}
+              firstTime={firstTime}
             />
           </>
         )}
