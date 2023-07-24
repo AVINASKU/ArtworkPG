@@ -13,6 +13,7 @@ import accessMatrixReducer from "./RoleBasedReducer";
 import ssoReducer from "./SSOReducer";
 import DSBPDropdownReducer from "./DSBPReducer";
 import ArtWorkTabValuesReducer from "./ArtWorkTabValuesReducer";
+import DMTabValuesReducer from "./DMTabValuesReducer";
 import UploadBrefingDocsDetailsReducer from "./UploadBrefingDocsDetailsReducer";
 
 export default combineReducers({
@@ -30,5 +31,6 @@ export default combineReducers({
    ssoReducer,
    DSBPDropdownReducer,
    ArtWorkTabValuesReducer,
+   DMTabValuesReducer,
    UploadBrefingDocsDetailsReducer
 });

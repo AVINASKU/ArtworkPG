@@ -65,6 +65,7 @@ const ProjectPlanList = ({
   const dispatch = useDispatch();
   const [flag, setFlag] = useState("");
   const [loader, setLoader] = useState(false);
+  const [updatedData, setUpdatedData] = useState([]);
   //projectPlanDesign
   const navigate = useNavigate();
   let { ProjectID } = useParams();

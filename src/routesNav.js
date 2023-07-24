@@ -114,6 +114,7 @@ import UBD from "./components/AWMJobs/UBD/index.js";
 
 import DsbpPage from "./DsbpPage";
 import DsbpTabPage from "./DsbpTabPage";
+import DMDsbpTabPage from "./DMDsbpTabPage";
 
 import Role from "./role";
 
@@ -292,10 +293,26 @@ const RoutesNav = () => {
         <Route path="/allTasks/CPPFA/:TaskID/:ProjectID" element={<CPPFA />} />
         <Route path="/myTasks/CPT/:TaskID/:ProjectID" element={<CPT />} />
         <Route path="/allTasks/CPT/:TaskID/:ProjectID" element={<CPT />} />
-        <Route path="/myTasks/DNPF/:TaskID/:ProjectID" element={<DNPF />} />
-        <Route path="/allTasks/DNPF/:TaskID/:ProjectID" element={<DNPF />} />
-        <Route path="/myTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
-        <Route path="/allTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
+
+        {/* <Route path="/myTasks/DNPF/:TaskID/:ProjectID" element={<DNPF />} />
+        <Route path="/allTasks/DNPF/:TaskID/:ProjectID" element={<DNPF />} /> */}
+
+        <Route
+          path="/:page1/:page2/DNPF/:TaskID/:ProjectID"
+          element={<DNPF />}
+        />
+        <Route path="/:pageType/DNPF/:TaskID/:ProjectID" element={<DNPF />} />
+
+        <Route path="/:page1/:page2/DCD/:TaskID/:ProjectID" element={<DCD />} />
+        <Route path="/:pageType/DCD/:TaskID/:ProjectID" element={<DCD />} />
+
+        {/* <Route path="/myTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
+        <Route path="/allTasks/DCD/:TaskID/:ProjectID" element={<DCD />} /> */}
+
+        <Route path="/DSBP/:ProjectID" element={<DsbpPage />} />
+        <Route path="/DSBP/AATab" element={<DsbpTabPage />} />
+        <Route path="/DSBP/DMTab" element={<DMDsbpTabPage />} />
+
         {/* <Route path="/UBD/:ProjectID" element={<DsbpPage />} />
         <Route path="/UBD/tab" element={<DsbpTabPage />} /> */}
         <Route path="/:page1/:page2/UBD/:TaskID/:ProjectID" element={<DsbpTabPage />} />
