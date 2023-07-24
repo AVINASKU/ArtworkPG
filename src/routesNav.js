@@ -296,8 +296,10 @@ const RoutesNav = () => {
         <Route path="/allTasks/DNPF/:TaskID/:ProjectID" element={<DNPF />} />
         <Route path="/myTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
         <Route path="/allTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
-        <Route path="/DSBP/:ProjectID" element={<DsbpPage />} />
-        <Route path="/DSBP/tab" element={<DsbpTabPage />} />
+        {/* <Route path="/UBD/:ProjectID" element={<DsbpPage />} />
+        <Route path="/UBD/tab" element={<DsbpTabPage />} /> */}
+        <Route path="/:page1/:page2/UBD/:TaskID/:ProjectID" element={<DsbpTabPage />} />
+        <Route path="/:pageType/UBD/:TaskID/:ProjectID" element={<DsbpTabPage />} />
         {/* <Route path="/reports" element={<Reports />} /> */}
       </Route>
     </Routes>

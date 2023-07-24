@@ -23,7 +23,7 @@ const roleName = "PRA_";
 
 function UBD() {
   const [data, setData] = useState(null);
-  const [designIntent, setDesignIntent] = useState([]);
+  const [designIntent, setDesignIntent] = useState([{}]);
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
   const [
@@ -37,7 +37,7 @@ function UBD() {
   const [enableSubmit, setEnableSubmit] = useState(true);
   const [projectData, setProjectData] = useState([]);
   const [loader, setLoader] = useState(false);
-  // let { TaskID, ProjectID } = useParams();
+  let { TaskID, ProjectID } = useParams();
   const [clickCountGraphicAdaption, setClickCountGraphicAdaption] = useState(1);
   const [clickCountReferenceDocuments, setClickCountReferenceDocuments] =
     useState(1);
@@ -49,7 +49,6 @@ function UBD() {
   const { UploadBrefingDocsDetailsData, loading } = useSelector(
     (state) => state.UploadBrefingDocsDetailsReducer
   );
-  console.log("UploadBrefingDocsDetailsData is", UploadBrefingDocsDetailsData);
   const { allProjects } = useSelector((state) => state.myProject);
   const id = `${UploadBrefingDocsDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
 
@@ -66,14 +65,14 @@ function UBD() {
   const location = useLocation();
   const currentUrl = location.pathname;
 
-  // useEffect(() => {
-  //   dispatch(getTaskDetails(TaskID, ProjectID));
-  // }, [dispatch, TaskID, ProjectID]);
-
-  const TaskID = "UBD_Task-97", ProjectID = "A-2830"
+  // const TaskID = "UBD_Task-97", ProjectID = "A-2830"
   useEffect(() => {
-    dispatch(getUploadBrefingDocsDetails(TaskID, ProjectID));
+    dispatch(getTaskDetails(TaskID, ProjectID));
   }, [dispatch, TaskID, ProjectID]);
+
+  // useEffect(() => {
+  //   dispatch(getUploadBrefingDocsDetails(TaskID, ProjectID));
+  // }, [dispatch, TaskID, ProjectID]);
 
   useEffect(() => {
     if (UploadBrefingDocsDetailsData) {
@@ -142,13 +141,11 @@ function UBD() {
     // setClickCount(clickCount + 1);
 
     //   setDisplayBriefDocumentDataGraphicAdaption([...displayBriefDocumentDataGraphicAdaption, val]);
-    console.log("taskName taskName is", taskName);
-
+  
     // displayBriefDocumentDataGraphicAdaption.push(val);
   };
 
   const addNewEmptyDesign = () => {
-    console.log("designIntent is", designIntent);
     designIntent.push({
       Design_Job_ID: designIntent.length + 1,
       isNew: true,
@@ -305,7 +302,6 @@ function UBD() {
     Category = UploadBrefingDocsDetailsData.ArtworkAgilityPage.Artwork_SMO;
   }
 
-  console.log("data121:", designIntent);
   return (
     <PageLayout>
       <DesignHeader

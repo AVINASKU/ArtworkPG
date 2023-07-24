@@ -170,7 +170,6 @@ const AddNewDesignContent = ({
 
   const [azureFile, setAzureFile] = useState("");
   const [fileName, setFileName] = useState("");
-  console.log("selectDialog:", selectDialog);
   const handledelete = (data, data1) => {};
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
@@ -190,7 +189,7 @@ const AddNewDesignContent = ({
     return (
       <div className="upload-row">
         <img role="presentation" src={file.objectURL} width={50} />
-        <div className="flex flex-column text-left ml-3">{di_name}</div>
+        <div className="flex flex-column text-left fileName">{file.name}</div>
       </div>
     );
   };
@@ -214,7 +213,7 @@ const AddNewDesignContent = ({
     const fileLength = e.files[0].name.length;
     const uploadFileName = e.files[0].name;
     const filePathLength = e.files[0].webkitRelativePath.length;
-
+    setFileName(e.files[0].name);
     if (restrictedCharsRegex.test(uploadFileName)) {
       console.log(
         "restrictedCharsRegex arised",
@@ -253,7 +252,7 @@ const AddNewDesignContent = ({
     console.log("e  here is webkitRelativePath", azureFile.webkitRelativePath);
     setTotalSize(_totalSize);
     setAzureFile(renamedFile);
-    setFileName(di_name);
+    // setFileName(di_name);
     console.log("e  here is azureFile.name", azureFile.name);
   };
 
@@ -266,6 +265,11 @@ const AddNewDesignContent = ({
 
   const customUploader = () => {};
 
+  const onImageClose = () => {
+    setFileUploadWarning(false);
+    setFileName("");
+  };
+
   const BriefDocument = (taskName) => {
     mydata = (
       <>
@@ -277,7 +281,7 @@ const AddNewDesignContent = ({
             marginTop: 5,
           }}
         >
-          <Col sm={2} style={{ display: "flex" }}>
+          <Col sm={3} style={{ display: "flex" }}>
             <div style={{ display: "flex", width: "max-content" }}>
               <div style={{ paddingRight: "8px" }}>
                 <label>
@@ -290,13 +294,18 @@ const AddNewDesignContent = ({
             <div className="upload-wrap">
               <div style={{ display: "flex" }}>
                 <label htmlFor="select" style={{ paddingRight: "6px" }}>
-                  {" "}
-                  Upload File{" "}
+                  Upload File
                 </label>
                 {tooltip}
               </div>
 
-              <div>
+              <div
+                id={`${
+                  fileName !== ""
+                    ? "uploadImageAndupVersionImage"
+                    : "uploadImageAndupVersionImage1"
+                }`}
+              >
                 <FileUpload
                   ref={fileUploadRef}
                   name="demo[]"
@@ -307,6 +316,7 @@ const AddNewDesignContent = ({
                   onUpload={onTemplateUpload}
                   onSelect={onTemplateSelect}
                   itemTemplate={itemTemplate}
+                  onClear={onImageClose}
                 />
                 {/* <img
                 src={upload}
@@ -315,49 +325,56 @@ const AddNewDesignContent = ({
                 className="header-icons"
                 disabled={!checkReadWriteAccess}
               ></img> */}
+                {/* <div className="fileName">{fileName}</div> */}
               </div>
-              <div>
+              <div style={{ color: "red" }}>
                 {fileUploadWarning && <label>Wrong file uploaded</label>}
               </div>
             </div>
           </Col>
-          <Col sm={2} style={{ display: "flex" }}>
+          <Col sm={3} style={{ display: "flex" }}>
             <div style={{ display: "flex", width: "max-content" }}></div>
             <div className="upload-wrap">
               <div style={{ display: "flex" }}>
                 <label htmlFor="select" style={{ paddingRight: "6px" }}>
-                  {" "}
-                  Up Version{" "}
+                  Up Version
                 </label>
               </div>
-              
-              <div id="UpVersionImage">
-              <FileUpload
-                ref={fileUploadRef}
-                name="demo[]"
-                url="/api/upload"
-                accept="image/*"
-                customUpload
-                onUpload={onTemplateUpload}
-                onSelect={onTemplateSelect}
-                itemTemplate={itemTemplate}
-                // cancelOptions={cancelOptions}
-              />
-              {/* <img
+
+              <div
+                id={`${
+                  fileName !== ""
+                    ? "uploadImageAndupVersionImage"
+                    : "uploadImageAndupVersionImage1"
+                }`}
+              >
+                <FileUpload
+                  ref={fileUploadRef}
+                  name="demo[]"
+                  url="/api/upload"
+                  accept="image/*"
+                  customUpload
+                  onUpload={onTemplateUpload}
+                  onSelect={onTemplateSelect}
+                  itemTemplate={itemTemplate}
+                  onClear={onImageClose}
+                  // cancelOptions={cancelOptions}
+                />
+                {/* <img
                 src={upload}
                 alt="filter logo"
                 // onClick={() => checkReadWriteAccess && handleDelete(index)}
                 className="header-icons"
                 disabled={!checkReadWriteAccess}
               ></img> */}
+                {/* <div className="fileName">{fileName}</div> */}
               </div>
             </div>
           </Col>
-          <Col sm={2}>
+          <Col sm={3}>
             <div className="upload-wrap-delete">
               <label htmlFor="select" style={{ paddingBottom: "15px" }}>
-                {" "}
-                Delete{" "}
+                Delete
               </label>
               <img
                 src={deleteIcon}
@@ -613,7 +630,7 @@ const AddNewDesignContent = ({
             </div>
             {(clusters === "" || clusters === undefined) && (
               <span className="error-text-di">Field Remaining</span>
-            )}{" "}
+            )}
           </Col>
           {checkBU && (
             <Col sm={2} className="set-autocomplete-height">
