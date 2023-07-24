@@ -60,7 +60,6 @@ const ProjectPlanList = ({
   const [selectedTaskApproveDialog, setSelectedTaskApproveDialog] = useState(
     []
   );
-  const [updatedData, setUpdatedData] = useState([]);
 
   const dispatch = useDispatch();
   const [flag, setFlag] = useState("");
