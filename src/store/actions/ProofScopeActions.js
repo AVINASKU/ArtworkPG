@@ -152,7 +152,7 @@ const moveFileToFolder = async (
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         method: "hub.process_from_whitepaper_with_files_and_variables",
-        whitepaper_name: "api_starter_kit",
+        whitepaper_name: "awm_approval",
         input_name: "move_file",
         files: [jsonArray],
         variables: {

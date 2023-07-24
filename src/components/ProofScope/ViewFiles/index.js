@@ -8,8 +8,7 @@ export const useProofScopeURL = () => {
 
   const viewProofScopeFile = async (fileUrl) => {
     const sessionCreate = await CreateSession(
-      // "http://azw-aac-hybrid1.np-cloud-pg.com:9090/portal.cgi",
-      "https://azw-aac-hyb1.xnp-cloud-pg.com/portal.cgi",
+      "https://awflowdev.pg.com/optaplanner/optimize/createProofscopeSession",
       "admin",
       "admin"
     );
@@ -23,14 +22,14 @@ export const useProofScopeURL = () => {
       variables: {
         cf_art_path: fileUrl,
         approver: "cr.ac@pg.com",
-        params: { customer_name: "Asha" },
+        params: { customer_name: "Asha", task_id: "UADI_Task-1678" },
       },
       session: strSession,
     };
 
     try {
       const response = await axios.post(
-        "https://azw-aac-hyb1.xnp-cloud-pg.com/portal.cgi",
+        "https://awflowdev.pg.com/optaplanner/optimize/viewProofscopeFile",
         json,
         {
           headers: {
