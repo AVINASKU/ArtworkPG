@@ -18,13 +18,18 @@ const UploadDesignIntentProofscope = ({
   roleName,
   ArtworkAgilityPage,
   version,
-  date
+  date,
+  buName,
+  taskFolder,
+  TaskID,
 }) => {
   console.log("item here here", item);
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
   const [updatedImg, setUpdatedImg] = useState("");
+  const [extention, setExtention] = useState("");
   const viewProofScopeFile = useProofScopeURL();
+  const [fileExtension, setFileExtension] = useState("");
 
   useEffect(() => {
     console.log("item ----", item);
@@ -35,52 +40,84 @@ const UploadDesignIntentProofscope = ({
       setUpdatedImg(uploadedFileName);
     }
   });
+  const url = window.location.href;
+  const domainRegex = /https?:\/\/([^/]+)\//; // Regular expression to match the domain part of the URL
 
+  const match = url.match(domainRegex);
+  let domain = "";
+
+  if (match && match.length > 1) {
+    domain = match[1]; // Extract the matched part
+  }
+
+  let env;
+
+  switch (domain) {
+    case "awflowdev.pg.com":
+      env = "DEV/";
+      break;
+    case "awflowqa.pg.com":
+      env = "QA/";
+      break;
+    case "awflowsit.pg.com":
+      env = "SIT/";
+      break;
+    default:
+      env = "";
+  }
   const handleViewProofScopeClick = async (event, fileUrl) => {
     event.preventDefault();
-    viewProofScopeFile(`cloudflow://PP_FILE_STORE/aacdata/${fileUrl}`);
+    viewProofScopeFile(
+      TaskID,
+      `cloudflow://PP_FILE_STORE/${env}${buName}/${taskFolder}/${fileUrl}`
+    );
   };
   let di_name;
   if (!approve) {
-    di_name = version !== "V0" && item?.DesignJobDetails[0]?.FileMetaDataList[0]?.Timestamp !== "" ? `${item?.Task_Name}_${version}_${date}` : `${item?.Task_Name}`;
+    di_name =
+      version !== "V0" &&
+      item?.DesignJobDetails[0]?.FileMetaDataList[0]?.Timestamp !== ""
+        ? `${item?.Task_Name}_${version}_${date}.${fileExtension}`
+        : `${item?.Task_Name}`;
   }
 
   const onTemplateUpload = (e) => {
-    let _totalSize = 0;
-
+    let _totalSize = 0; // Array to store extensions
+    alert(_totalSize);
     e.files.forEach((file) => {
       _totalSize += file.size || 0;
     });
 
     setTotalSize(_totalSize);
+    // Join extensions with comma and set as a string
   };
 
   const itemTemplate = (file, props) => {
     console.log("file here 1", file);
+    const fileNameParts = file.name.split(".");
+    const fileExtension = fileNameParts.pop().toLowerCase();
+
+    // Update the state with the extracted file extension
+    setFileExtension(fileExtension);
     setformattedValue(file.size);
     setFileName(di_name);
-    setAzureFile(file);
+    setAzureFile(di_name);
     //   seFileData(file);
     return (
       <div className="upload-row">
-        <img
-          role="presentation"
-          src={file.objectURL}
-          width={50}
-        />
+        <img role="presentation" src={file.objectURL} width={50} />
         <a
           className="flex flex-column text-left ml-3"
-          onClick={(event) =>
-            handleViewProofScopeClick(event, "pranali-test-proofscope.png")
-          }
+          onClick={(event) => handleViewProofScopeClick(event, `${di_name}`)}
         >
-          {file.name}
+          {di_name}
         </a>
       </div>
     );
   };
   const onTemplateSelect = (e) => {
     const uploadedFile = e.files[0];
+
     const renamedFile = {
       ...uploadedFile,
       name: di_name,
@@ -98,8 +135,8 @@ const UploadDesignIntentProofscope = ({
     });
 
     setTotalSize(_totalSize);
-    // setAzureFile(renamedFile);
-    // setFileName(di_name);
+    setAzureFile(renamedFile);
+    setFileName(di_name);
   };
 
   const DesignHeader = (di_name) => {
@@ -162,16 +199,16 @@ const UploadDesignIntentProofscope = ({
             : ``
           : fileName === ""
           ? di_name && (
-            <a
-              className="flex flex-column text-left ml-3"
-              onClick={(event) => handleViewProofScopeClick(event, updatedImg)}
-            >
-              {di_name}
-            </a>
-          )
+              <a
+                className="flex flex-column text-left ml-3"
+                onClick={(event) =>
+                  handleViewProofScopeClick(event, updatedImg)
+                }
+              >
+                {di_name}
+              </a>
+            )
           : ""}
-
-        
 
         {approve && (
           <div
