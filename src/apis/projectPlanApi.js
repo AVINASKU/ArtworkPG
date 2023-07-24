@@ -28,13 +28,14 @@ export const getProjectPlan = async (
   return projectPlanData?.ArtworkAgilityProjects;
 };
 
-export const activateProjectPlan = async (projectId, headers = {}) => {
+export const activateProjectPlan = async (formData, projectId, headers = {}) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
   let apiURL = `${DEVURL}/activateProject/${projectId}`;
   const activateResponse = await axiosInstance({
     url: apiURL,
     method: "POST",
+    data: formData,
   });
   return activateResponse;
 };
