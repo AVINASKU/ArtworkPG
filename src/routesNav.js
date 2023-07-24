@@ -255,7 +255,7 @@ const RoutesNav = () => {
         />
         {/* readinessPerPMP */}
         <Route path="/:page1/:page2/DDI/:TaskID/:ProjectID" element={<DDI />} />
-        <Route path="/UBD/:ProjectID" element={<UBD />} />
+        {/* <Route path="/UBD/:ProjectID" element={<UBD />} /> */}
         <Route path="/:pageType/DDI/:TaskID/:ProjectID" element={<DDI />} />
         <Route
           path="/:page1/:page2/DDI/:TaskID/:ProjectID"
@@ -315,8 +315,10 @@ const RoutesNav = () => {
 
         {/* <Route path="/UBD/:ProjectID" element={<DsbpPage />} />
         <Route path="/UBD/tab" element={<DsbpTabPage />} /> */}
-        <Route path="/:page1/:page2/UBD/:TaskID/:ProjectID" element={<DsbpTabPage />} />
-        <Route path="/:pageType/UBD/:TaskID/:ProjectID" element={<DsbpTabPage />} />
+        
+        {/* http://localhost:3000/myProjects/projectPlan/UBD/UBD_Task-97/A-2114 */}
+        <Route path="/:page1/:page2/UBD/:TaskID/:ProjectID" element={<UBD />} />
+        <Route path="/:pageType/UBD/:TaskID/:ProjectID" element={<UBD />} />
         {/* <Route path="/reports" element={<Reports />} /> */}
       </Route>
     </Routes>

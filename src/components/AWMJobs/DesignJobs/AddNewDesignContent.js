@@ -317,6 +317,7 @@ const AddNewDesignContent = ({
                   onSelect={onTemplateSelect}
                   itemTemplate={itemTemplate}
                   onClear={onImageClose}
+                  // disabled={fileName !== ""}
                 />
                 {/* <img
                 src={upload}
@@ -345,7 +346,7 @@ const AddNewDesignContent = ({
                 id={`${
                   fileName !== ""
                     ? "uploadImageAndupVersionImage"
-                    : "uploadImageAndupVersionImage1"
+                    : "uploadImageAndupVersionImage2"
                 }`}
               >
                 <FileUpload
@@ -358,6 +359,7 @@ const AddNewDesignContent = ({
                   onSelect={onTemplateSelect}
                   itemTemplate={itemTemplate}
                   onClear={onImageClose}
+                  disabled={fileName === ""}
                   // cancelOptions={cancelOptions}
                 />
                 {/* <img
