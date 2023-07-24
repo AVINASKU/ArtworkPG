@@ -427,7 +427,6 @@ function ProjectSetup(props) {
   
 
   const onSave = async () => {
-    setLoader(true);
     let updatedData = [];
     console.log("projectPlanDesignData", projectPlanDesignData);
     console.log("projectPlanDesign", projectPlanDesign);
@@ -441,7 +440,6 @@ function ProjectSetup(props) {
       dispatch(updateProjectPlanDesignAction(updatedProjectPlanDesignData));
       await saveProjectPlanAction(formData, selectedProjectDetails.Project_ID);
       setActiveSave(true);
-      setLoader(false);
     }
   };
 
