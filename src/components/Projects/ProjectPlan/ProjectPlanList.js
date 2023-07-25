@@ -37,6 +37,8 @@ const ProjectPlanList = ({
   setPegaData,
   setUpdatedProjectPlanDesignData,
   setActiveSave,
+  setActiveFlag,
+  firstTime,
   isAccessEmpty,
   activeSave,
   getProjectPlanApi,
@@ -65,6 +67,8 @@ const ProjectPlanList = ({
   const [flag, setFlag] = useState("");
   const [loader, setLoader] = useState(false);
   const [updatedData, setUpdatedData] = useState([]);
+  const [roleOptionsData, setRoleOptionsData] = useState([]);
+  const [ownerData, setOwnerData] = useState([]);
   //projectPlanDesign
   const navigate = useNavigate();
   let { ProjectID } = useParams();
@@ -516,31 +520,56 @@ const ProjectPlanList = ({
   }, [pegadata]);
 
   useEffect(() => {
-    const startArtworkAlignmentData = pegadata?.filter(item => item.data.Task === "Start Artwork Alignment");
-    const otherTasksData = pegadata?.filter(item => item.data.Task !== "Start Artwork Alignment");
+    if(pegadata !== undefined && pegadata !== null){
+      const startArtworkAlignmentData = pegadata?.filter(item => item.data.Task === "Start Artwork Alignment");
+      const otherTasksData = pegadata?.filter(item => item.data.Task !== "Start Artwork Alignment");
 
-    const filteredData = {
-      startArtworkAlignment: startArtworkAlignmentData,
-      otherTasks: otherTasksData
-    };
-    console.log("filteredData", filteredData);
-    if(tabNameForPP === "Input"){
-      setUpdatedData(filteredData.startArtworkAlignment)
-    } else{
-      setUpdatedData(filteredData.otherTasks)
+      const filteredData = {
+        startArtworkAlignment: startArtworkAlignmentData,
+        otherTasks: otherTasksData
+      };
+      console.log("filteredData", filteredData?.startArtworkAlignment);
+      console.log("tabNameForPP", tabNameForPP);
+      if(tabNameForPP !== "Design"){
+        setUpdatedData(filteredData?.startArtworkAlignment)
+      } else{
+        setUpdatedData(filteredData?.otherTasks)
+      }
     }
-  }, [tabNameForPP]);
+    
+  }, [pegadata, tabNameForPP]);
 
   const onDropdownChange = (rowData, { value }, ele) => {
-    // Update the data with the new value
+    if (ele === "Role") {
+      console.log("value", value.Name);
+      if(rowData.data["Role"] !== value?.Name){
+        rowData.data["Assignee"] = ""
+      }      
+    }
     rowData.data[ele] = value.Name;
     console.log("Pegadata: ", pegadata);
-    setPegaData([...pegadata]);
+    // Create a new array with the updated data
+    const updatedPegadata = pegadata.map((data) => {
+      if (data.key === rowData.key) {
+        return {
+          ...data,
+          data: {
+            ...data.data,
+            [ele]: value.Name,
+          },
+        };
+      }
+      return data;
+    });
+   // Set the state with the updated array
+    setPegaData(updatedPegadata);
 
     if (!isAccessEmpty) {
       setActiveSave(true);
+      !firstTime && setActiveFlag(true);
     } else {
       setActiveSave(false);
+      !firstTime && setActiveFlag(false)
     }
     //updateProjectPlanDesign();
   };
@@ -678,6 +707,7 @@ const ProjectPlanList = ({
   }, []);
 
   return (
+    console.log("updatedData", updatedData),
     <div className="myProjectAnddAllProjectList">
       {showApproveDialog && (
         <ApproveDesignDialog

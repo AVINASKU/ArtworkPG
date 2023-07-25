@@ -11,6 +11,8 @@ import { postSaveDesignIntent } from "../../../apis/uploadSaveAsDraft";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { CheckReadOnlyAccess, Loading } from "../../../utils";
+import UploadDesignIntentProofscope from "../DesignJobs/UploadDesignIntentProofscope";
+import { uploadProofscopeFileAzure } from "../../../store/actions/AzureFileProofscopeAction";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/tasks" },
@@ -29,6 +31,8 @@ const URDT = () => {
   const [azureFile, setAzureFile] = useState("");
   const [loader, setLoader] = useState(false);
   let { TaskID, ProjectID } = useParams();
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
   const { TaskDetailsData, loading } = useSelector(
     (state) => state.TaskDetailsReducer
   );
@@ -51,7 +55,8 @@ const URDT = () => {
       );
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
       const data =
-        TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails[0]?.FileMetaDataList[0] || [];
+        TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails[0]
+          ?.FileMetaDataList[0] || [];
       if (data) {
         data.Version !== "" && setVersion(data.Version);
         data.Timestamp !== "" &&
@@ -100,6 +105,9 @@ const URDT = () => {
         Filename: fileName,
       },
     };
+    await dispatch(
+      uploadProofscopeFileAzure(selectedProjectDetails?.BU, azureFile, "RDT")
+    );
     // console.log('formData', formData, "id", id);
     await submitUploadRegionalDesignIntent(formData, id, headers);
     setLoader(false);
@@ -117,30 +125,33 @@ const URDT = () => {
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
-          {loading || loader || designIntent === null ? (
-             <Loading />
-          ) : (
-            designIntent && (
-              <ApproveDesignIntentContent
-                {...designIntent}
-                designIntent={designIntent}
-                upload={true}
-                setformattedValue={setformattedValue}
-                setAzureFile={setAzureFile}
-                setFileName={setFileName}
-                setMappedFiles={setMappedFiles}
-                item={data}
-                roleName={roleName}
-                ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
-                version={version}
-                date={date}
-                checkReadWriteAccess={checkReadWriteAccess}
-                fileName={fileName}
-              />
-            )
-          )}
+        {loading || loader || designIntent === null ? (
+          <Loading />
+        ) : (
+          designIntent && (
+            <UploadDesignIntentProofscope
+              {...designIntent}
+              designIntent={designIntent}
+              upload={true}
+              setformattedValue={setformattedValue}
+              setAzureFile={setAzureFile}
+              setFileName={setFileName}
+              setMappedFiles={setMappedFiles}
+              item={data}
+              roleName={roleName}
+              ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
+              version={version}
+              date={date}
+              checkReadWriteAccess={checkReadWriteAccess}
+              fileName={fileName}
+              buName={selectedProjectDetails?.BU}
+              taskFolder="RDT"
+              TaskID={TaskID}
+            />
+          )
+        )}
       </div>
-      
+
       <FooterButtons
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
