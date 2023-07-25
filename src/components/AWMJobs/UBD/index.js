@@ -16,7 +16,6 @@ import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { CheckReadOnlyAccess } from "../../../utils";
 import { useLocation } from "react-router-dom";
 import "../DesignJobs/index.scss";
-import { getUploadBrefingDocsDetails } from "../../../store/actions/UploadBrefingDocsAction";
 
 const headerName = "Upload Graphic Adaption Brief Document";
 const roleName = "PRA_";
@@ -46,11 +45,11 @@ function UBD() {
   // const { TaskDetailsData, loading } = useSelector(
   //   (state) => state.TaskDetailsReducer
   // );
-  const { UploadBrefingDocsDetailsData, loading } = useSelector(
-    (state) => state.UploadBrefingDocsDetailsReducer
+  const { TaskDetailsData, loading } = useSelector(
+    (state) => state.TaskDetailsReducer
   );
   const { allProjects } = useSelector((state) => state.myProject);
-  const id = `${UploadBrefingDocsDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
+  const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
 
   let breadcrumb = AddNavigation(headerName);
 
@@ -70,18 +69,14 @@ function UBD() {
     dispatch(getTaskDetails(TaskID, ProjectID));
   }, [dispatch, TaskID, ProjectID]);
 
-  // useEffect(() => {
-  //   dispatch(getUploadBrefingDocsDetails(TaskID, ProjectID));
-  // }, [dispatch, TaskID, ProjectID]);
-
   useEffect(() => {
-    if (UploadBrefingDocsDetailsData) {
+    if (TaskDetailsData) {
       setDesignIntent(
-        UploadBrefingDocsDetailsData?.ArtworkAgilityTasks || []
+        TaskDetailsData?.ArtworkAgilityTasks || []
       );
-      setData(UploadBrefingDocsDetailsData?.ArtworkAgilityTasks[0] || []);
+      setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
     }
-  }, [UploadBrefingDocsDetailsData]);
+  }, [TaskDetailsData]);
 
   useEffect(() => {
     let projectData = allProjects.find(
@@ -205,7 +200,7 @@ function UBD() {
     let updatedDataList = [];
     const headers = {
       key: "If-Match",
-      value: UploadBrefingDocsDetailsData?.ArtworkAgilityPage?.Etag,
+      value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
 
     let submitOnlySelectedData = designIntent.filter(
@@ -243,9 +238,9 @@ function UBD() {
     let formData = {
       caseTypeID: "PG-AAS-Work-DefineProductionReadyArt",
       content: {
-        AWMTaskID: UploadBrefingDocsDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
-        AWMProjectID: UploadBrefingDocsDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
-        Project_Name: UploadBrefingDocsDetailsData?.ArtworkAgilityTasks[0]?.Project_Name,
+        AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
+        AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
+        Project_Name: TaskDetailsData?.ArtworkAgilityTasks[0]?.Project_Name,
       },
       pageInstructions: updatedDataList,
     };
@@ -283,9 +278,9 @@ function UBD() {
     });
 
     let formData = {
-      AWM_Project_ID: UploadBrefingDocsDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
-      AWM_Task_ID: UploadBrefingDocsDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
-      Project_Name: UploadBrefingDocsDetailsData?.ArtworkAgilityTasks[0]?.Project_Name,
+      AWM_Project_ID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
+      AWM_Task_ID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
+      Project_Name: TaskDetailsData?.ArtworkAgilityTasks[0]?.Project_Name,
       BU: projectData?.BU,
       Region: projectData?.Project_region,
       ProductionReadyArtList: updatedData,
@@ -297,9 +292,9 @@ function UBD() {
   let Brand = [];
   let Category = [];
 
-  if (UploadBrefingDocsDetailsData?.ArtworkAgilityPage) {
-    Brand = UploadBrefingDocsDetailsData.ArtworkAgilityPage.Artwork_Brand;
-    Category = UploadBrefingDocsDetailsData.ArtworkAgilityPage.Artwork_SMO;
+  if (TaskDetailsData?.ArtworkAgilityPage) {
+    Brand = TaskDetailsData.ArtworkAgilityPage.Artwork_Brand;
+    Category = TaskDetailsData.ArtworkAgilityPage.Artwork_SMO;
   }
 
   return (

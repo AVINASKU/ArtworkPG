@@ -14,7 +14,6 @@ import ssoReducer from "./SSOReducer";
 import DSBPDropdownReducer from "./DSBPReducer";
 import ArtWorkTabValuesReducer from "./ArtWorkTabValuesReducer";
 import DMTabValuesReducer from "./DMTabValuesReducer";
-import UploadBrefingDocsDetailsReducer from "./UploadBrefingDocsDetailsReducer";
 
 export default combineReducers({
   myProject: ProjectReducer,
@@ -31,6 +30,5 @@ export default combineReducers({
    ssoReducer,
    DSBPDropdownReducer,
    ArtWorkTabValuesReducer,
-   DMTabValuesReducer,
-   UploadBrefingDocsDetailsReducer
+   DMTabValuesReducer
 });

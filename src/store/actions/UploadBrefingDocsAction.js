@@ -2,33 +2,6 @@ import Api from "../../apis";
 import { DEVURL, SITURL, PRODURL } from "../../apis/envUrl";
 //pass the taskID and projectId from the my tasks
 
-export const getUploadBrefingDocsDetails = (taskID, projectId) => {
-  return async (dispatch) => {
-    dispatch({ type: "GET_UPLOAD_BREFING_DOCS_DETAILS_REQUEST" });
-    try {
-      const api = new Api();
-      const axiosInstance = await api.init({
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
-        },
-      });
-      let apiURL = `${DEVURL}/taskDetails/${taskID}/${projectId}`;
-      const UploadBrefingDocsDetailsData = await axiosInstance({
-        url: apiURL,
-        method: "GET",
-      });
-      dispatch({
-        type: "GET_UPLOAD_BREFING_DOCS_DETAILS_SUCCESS",
-        payload: UploadBrefingDocsDetailsData?.data,
-      });
-    } catch (error) {
-      dispatch({ type: "GET_UPLOAD_BREFING_DOCS_DETAILS_FAILURE", payload: error });
-    }
-  };
-};
-
 // export const submitUploadApproveDesignIntent = async (
 //   formData,
 //   id,
