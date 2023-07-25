@@ -102,6 +102,10 @@ const DependencyMappingList = ({
   const renderMappingBody = (options, rowData) => {
     let field = rowData.field;
 
+    if(field === "AWM_RDT_Page"){
+    console.log("options[field]", options[field]);
+    }
+
     return (
       <span>
         {field === "field_0" && ( // Add this condition to render a checkbox
@@ -118,7 +122,11 @@ const DependencyMappingList = ({
           <div>
             <MultiSelect
               value={options[field]}
-              // onChange={(e) => onGlobalFilterChange(e, selectedColumnName)}
+               onChange={(e) =>  updateDropDownData(
+                  e.value,
+                  "AWM_GA_Brief",
+                  options.DSBP_PMP_PIMaterialID
+                )}
               options={
                 GABriefData
                   ? GABriefData.map((obj) => ({
@@ -139,7 +147,11 @@ const DependencyMappingList = ({
           <div>
             <MultiSelect
               value={options[field]}
-              // onChange={(e) => onGlobalFilterChange(e, selectedColumnName)}
+              onChange={(e) =>  updateDropDownData(
+                  e.value,
+                  "AWM_RDT_Page",
+                  options.DSBP_PMP_PIMaterialID
+                )}
               options={
                 CDPTPageData
                   ? CDPTPageData.map((obj) => ({
@@ -160,7 +172,11 @@ const DependencyMappingList = ({
           <div>
             <MultiSelect
               value={options[field]}
-              // onChange={(e) => onGlobalFilterChange(e, selectedColumnName)}
+              onChange={(e) =>  updateDropDownData(
+                  e.value,
+                  "AWM_RDT_Page",
+                  options.DSBP_PMP_PIMaterialID
+                )}
               options={
                 RDTData
                   ? RDTData.map((obj) => ({
@@ -180,7 +196,11 @@ const DependencyMappingList = ({
           <div>
             <MultiSelect
               value={options[field]}
-              // onChange={(e) => onGlobalFilterChange(e, selectedColumnName)}
+               onChange={(e) =>  updateDropDownData(
+                  e.value,
+                  "AWM_IQ_Page",
+                  options.DSBP_PMP_PIMaterialID
+                )}
               options={
                 IQData
                   ? IQData.map((obj) => ({
@@ -232,11 +252,17 @@ const DependencyMappingList = ({
               type="number"
               maxLength={8}
               value={options[field]}
+              onChange={(e) =>
+                updateDropDownData(
+                  e.target.value,
+                  "AWM_Other_Reference",
+                  options.DSBP_PMP_PIMaterialID
+                )
+              }
               disabled={
                 options.AWM_CIC_Needed === "Yes" ||
                 options.AWM_CIC_Needed === "No"
               }
-              // onChange={(e) => updateDropDownData(e.target.value , "AWM_CIC_Needed", options.DSBP_PMP_PIMaterialID)}
               style={{ width: "80%", fontSize: 12 }}
             ></Form.Control>
           </Form.Group>
@@ -251,6 +277,13 @@ const DependencyMappingList = ({
             <Form.Select
               placeholder="Select"
               value={options[field]}
+              onChange={(e) =>
+                updateDropDownData(
+                  e.target.value,
+                  "AWM_Supporting_PMP_Design",
+                  options.DSBP_PMP_PIMaterialID
+                )
+              }
               disabled={options.AWM_CIC_Needed === "Yes" || options.AWM_CIC_Needed === "N/A"}
               style={{ width: "80%", fontSize: 12 }}
             >
@@ -272,13 +305,20 @@ const DependencyMappingList = ({
             <Form.Select
               placeholder="Select"
               value={options[field]}
+              onChange={(e) =>
+                updateDropDownData(
+                  e.target.value,
+                  "AWM_Supporting_PMP_Layout",
+                  options.DSBP_PMP_PIMaterialID
+                )
+              }
               disabled={options.AWM_CIC_Needed === "Yes"|| options.AWM_CIC_Needed === "N/A"}
               style={{ width: "80%", fontSize: 12 }}
             >
               <option value="">Select</option>
-              <option value="123">123</option>
-              <option value="456">456</option>
-              <option value="789">789</option>
+              <option value="8888">8888</option>
+              <option value="999">9999</option>
+              <option value="55555">55555</option>
             </Form.Select>
           </Form.Group>
         )}
@@ -297,6 +337,9 @@ const DependencyMappingList = ({
           field !== "AWM_RDT_Page" &&
           field !== "AWM_IQ_Page" &&
           field !== "AWM_Other_Reference" &&
+          field !== "AWM_Supporting_PMP_Layout" &&
+          field !== "AWM_Supporting_PMP_Design" &&
+          field !== "DSBP_PMP_PIMaterialNumber" &&
           options[field]}
       </span>
     );
@@ -332,7 +375,8 @@ const DependencyMappingList = ({
               alignFrozen="left"
               filterField={col.field}
               style={{
-                width: col.width,
+                // width: col.width,
+                width:200,
                 height: 30,
               }}
             />

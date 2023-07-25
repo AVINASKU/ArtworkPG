@@ -15,6 +15,7 @@ const headerName = "Dependency Mapping";
 const DependencyMapping = () => {
   const [dependencyMappingData, setDependencyMappingData] = useState([]);
   const [dependencyColumnNames, setDependencyColumnNames] = useState([]);
+  const [updatedDataToSubmit, setUpdatedDataToSubmit] = useState([]);
   const [CDPTPageData, setCDPTPageData] = useState([]);
   const [IQData, setIQData] = useState([]);
   const [RDTData, setRDTData] = useState([]);
@@ -34,19 +35,38 @@ const DependencyMapping = () => {
 
   const updateDropDownData = (value, columnName, id) => {
     console.log("value", value, columnName);
-    // let dependencyFilterData = dependencyMappingData.filter((item)=>{
-    // })
+
     dependencyMappingData.map((data) => {
       if (data.DSBP_PMP_PIMaterialID === id) {
-        if (!data[columnName] && columnName==="AWM_CIC_Needed") data["AWM_CIC_Needed"] = value;
+        if (!data[columnName] && columnName === "AWM_CIC_Needed")
+          data["AWM_CIC_Needed"] = value;
+        if (!data[columnName] && columnName === "AWM_Supporting_PMP_Design")
+          data["AWM_Supporting_PMP_Design"] = value;
+        if (!data[columnName] && columnName === "AWM_Supporting_PMP_Layout")
+          data["AWM_Supporting_PMP_Layout"] = value;
+        if (!data[columnName] && columnName === "AWM_Other_Reference")
+          data["AWM_Other_Reference"] = value;
+        if (!data[columnName] && columnName === "AWM_RDT_Page")
+          data["AWM_RDT_Page"] = value;
         else data[columnName] = value;
+        data["updated"] = true;
       }
+
       return data;
     });
-    console.log("dependencyMappingData", dependencyMappingData);
+    let filteredDataToSubmit = dependencyMappingData.filter(
+      (item) => item.updated === true
+    );
+    console.log(
+      "filteredDataToSubmit",
+      filteredDataToSubmit,
+      dependencyMappingData
+    );
     setDependencyMappingData(dependencyMappingData);
     setDataUpdated(!dataUpdated);
   };
+
+  console.log("dependencyMappingData", dependencyMappingData);
 
   useEffect(() => {
     fetchData();
