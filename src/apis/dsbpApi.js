@@ -87,10 +87,29 @@ export const getDependencyMappingDetails = async (projectId, headers = {}) => {
   });
   let response = addResponse?.data?.DSBPDetails;
   console.log("response dependency mapping ----->", response, addResponse);
-  const dependencyTableData = response?.DSBP_InitiativeIDPage?.[0]?.DSBP_PMP_PIMaterialIDPage;
+  const dependencyTableData =
+    response?.DSBP_InitiativeIDPage?.[0]?.DSBP_PMP_PIMaterialIDPage;
 
   const isRDTData = response?.AWM_RDT_Page;
   const isIQData = response?.AWM_IQ_Page;
   const isCDPTData = response?.AWM_CDPT_Page;
-  return {dependencyTableData, isRDTData, isIQData, isCDPTData};
+  const isGABrifData= response?.DSBP_GABrief_Page;
+  return { dependencyTableData, isRDTData, isIQData, isCDPTData, isGABrifData };
+};
+
+export const onSubmitDependencyMappingAction = async (
+  formData,
+  headers = {}
+) => {
+  const api = new Api();
+  let projectId = "A-2002";
+  const axiosInstance = await api.init({ headers });
+  let apiURL = `${DEVURL}/storeDependencyMappingDetails/${projectId}`;
+  const addResponse = await axiosInstance({
+    url: apiURL,
+    method: "POST",
+    data: formData,
+  });
+  console.log("Add response ----->", addResponse);
+  return addResponse;
 };
