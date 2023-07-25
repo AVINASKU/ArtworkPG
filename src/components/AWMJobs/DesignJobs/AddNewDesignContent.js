@@ -34,6 +34,11 @@ const AddNewDesignContent = ({
   clickCountReferenceDocuments,
   displayBriefDocumentDataGraphicAdaption,
   displayBriefDocumentDataReferenceDocuments,
+  setformattedValue,
+  setAzureFile,
+  setFileName1,
+  selectDialog,
+  setSelectDialog
 }) => {
   const { Agency_Reference, Additional_Info, event, Select, Cluster } = item;
 
@@ -165,12 +170,10 @@ const AddNewDesignContent = ({
     );
   };
 
-  const [selectDialog, setSelectDialog] = useState(false);
   const [data, setData] = useState({});
 
-  const [azureFile, setAzureFile] = useState("");
+  // const [azureFile, setAzureFile] = useState("");
   const [fileName, setFileName] = useState("");
-  const handledelete = (data, data1) => {};
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
 
@@ -185,7 +188,7 @@ const AddNewDesignContent = ({
   };
 
   const itemTemplate = (file) => {
-    // setformattedValue(file.size);
+    setformattedValue(file.size);
     return (
       <div className="upload-row">
         <img role="presentation" src={file.objectURL} width={50} />
@@ -214,6 +217,7 @@ const AddNewDesignContent = ({
     const uploadFileName = e.files[0].name;
     const filePathLength = e.files[0].webkitRelativePath.length;
     setFileName(e.files[0].name);
+    setFileName1(e.files[0].name);
     if (restrictedCharsRegex.test(uploadFileName)) {
       console.log(
         "restrictedCharsRegex arised",
@@ -249,11 +253,9 @@ const AddNewDesignContent = ({
       _totalSize += files[key].size || 0;
     });
 
-    console.log("e  here is webkitRelativePath", azureFile.webkitRelativePath);
     setTotalSize(_totalSize);
     setAzureFile(renamedFile);
     // setFileName(di_name);
-    console.log("e  here is azureFile.name", azureFile.name);
   };
 
   const cancelOptions = {
@@ -268,6 +270,7 @@ const AddNewDesignContent = ({
   const onImageClose = () => {
     setFileUploadWarning(false);
     setFileName("");
+    setFileName1("");
   };
 
   const BriefDocument = (taskName) => {
@@ -385,10 +388,10 @@ const AddNewDesignContent = ({
                   setSelectDialog(true);
                   setData(taskName);
                   // if (checkReadWriteAccess) {
-                  displayBriefDocumentDataGraphicAdaption.map((index) => {
-                    handleDelete(index);
-                    console.log("let us see this", index);
-                  });
+                  // displayBriefDocumentDataGraphicAdaption.map((index) => {
+                  //   handleDelete(index);
+                  //   console.log("let us see this", index);
+                  // });
                   console.log("handle click clicked", index);
                 }}
                 // }
@@ -454,7 +457,7 @@ const AddNewDesignContent = ({
           dasbpDialog={selectDialog}
           setDasbpDialog={setSelectDialog}
           rejectFormData={[{}]}
-          onSubmit={() => handledelete()}
+          onSubmit={handleDelete}
           okButtonShow={false}
           deleteButtonShow={true}
         >

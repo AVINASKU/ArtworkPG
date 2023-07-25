@@ -8,6 +8,11 @@ import {
   saveDefineProductionReadyArt,
   submitDefineProductionReadyArt,
 } from "../../../apis/defineProductionReadyArt";
+import {
+  deleteUploadBrefingDocs,
+  saveAsDraftUploadBrefingDocs,
+  submitUploadBrefingDocs,
+} from "../../../store/actions/UploadBrefingDocsAction";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toLower } from "lodash";
@@ -16,6 +21,7 @@ import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { CheckReadOnlyAccess } from "../../../utils";
 import { useLocation } from "react-router-dom";
 import "../DesignJobs/index.scss";
+import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
 
 const headerName = "Upload Graphic Adaption Brief Document";
 const roleName = "PRA_";
@@ -33,13 +39,19 @@ function UBD() {
     displayBriefDocumentDataReferenceDocuments,
     setDisplayBriefDocumentDataReferenceDocuments,
   ] = useState([]);
-  const [enableSubmit, setEnableSubmit] = useState(true);
+  const [enableSubmit, setEnableSubmit] = useState(false);
   const [projectData, setProjectData] = useState([]);
   const [loader, setLoader] = useState(false);
   let { TaskID, ProjectID } = useParams();
   const [clickCountGraphicAdaption, setClickCountGraphicAdaption] = useState(1);
   const [clickCountReferenceDocuments, setClickCountReferenceDocuments] =
     useState(1);
+
+  const [formattedValue, setformattedValue] = useState(0);
+  const [azureFile, setAzureFile] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [version, setVersion] = useState("V0");
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   // const { TaskDetailsData, loading } = useSelector(
@@ -71,13 +83,14 @@ function UBD() {
 
   useEffect(() => {
     if (TaskDetailsData) {
-      setDesignIntent(
-        TaskDetailsData?.ArtworkAgilityTasks || []
-      );
-      setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
+      setDesignIntent(TaskDetailsData?.ArtworkAgilityTasks || []);
+      setData(TaskDetailsData?.ArtworkAgilityTasks[0] || {});
+    }
+    const data = TaskDetailsData?.ArtworkAgilityTasks[0] || {};
+    if (data) {
+      data.Version !== "" && data.Version && setVersion(data.Version);
     }
   }, [TaskDetailsData]);
-
   useEffect(() => {
     let projectData = allProjects.find(
       (project) => project.Project_ID === ProjectID
@@ -99,19 +112,6 @@ function UBD() {
   //   });
   //   setDesignIntent(sub);
   // };
-
-  const handleDelete = (index) => {
-    console.log("lindex lindex is", index);
-    const sub = displayBriefDocumentDataGraphicAdaption.map((item, i) => {
-      // if (i === index) {
-      //   item.Action = "delete";
-      // }
-      // return item;
-      console.log("nitem is", item);
-      console.log("ni is", i);
-    });
-    // setDesignIntent(sub);
-  };
 
   const displayBriefDocument = (val, taskName) => {
     if (taskName === "Graphic Adaption Brief*") {
@@ -136,7 +136,7 @@ function UBD() {
     // setClickCount(clickCount + 1);
 
     //   setDisplayBriefDocumentDataGraphicAdaption([...displayBriefDocumentDataGraphicAdaption, val]);
-  
+
     // displayBriefDocumentDataGraphicAdaption.push(val);
   };
 
@@ -194,100 +194,104 @@ function UBD() {
     setUpdated(!updated);
   };
 
+  const [selectDialog, setSelectDialog] = useState(false);
+
   const onSubmit = async () => {
     setLoader(true);
-    let updatedData = {};
-    let updatedDataList = [];
     const headers = {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
+      const updatedData = [
+        {
+            instruction: "APPEND",
+            target: "GABriefList",
+            content: {
+                GroupName: "GA Brief Adaptation 1",
+                Sequence: "1",
+                Action: "",
+                Filename: "Upload GA Brief Document V 80",
+                Size: "5",
+                Version: "v1"
+            }
+        },
+        {
+            instruction: "APPEND",
+            target: "OtherReferenceDoc",
+            content: {
+                Sequence: "1",
+                Action: "",
+                Filename: "Upload GA Brief Document V 90",
+                Size: "5",
+                Version: "v2"
+            }
+        }
+      ];
 
-    let submitOnlySelectedData = designIntent.filter(
-      (task) => task?.Select === true
-    );
-    submitOnlySelectedData.map((task) => {
-      updatedData = {};
-      if (task?.isNew) {
-        task.Design_Job_ID = "";
-      }
-      if (task?.Action === "delete") {
-        task.Action = "delete";
-      } else if (task?.Action !== "delete" && task?.Design_Job_ID) {
-        task.Action = "update";
-      } else if (task?.Action !== "delete" && task?.isNew === true)
-        task.Action = "add";
-
-      updatedData.DesignJobName = task.Design_Job_Name;
-      updatedData.DesignJobID = task.Design_Job_ID;
-      updatedData.AgencyReference = task.Agency_Reference;
-      updatedData.Cluster = task.Cluster;
-      updatedData.AdditionalInfo = task.Additional_Info;
-      updatedData.Select = task.Select ? task.Select : false;
-      updatedData.Tier = task.Tier;
-      updatedData.Action = task.Action;
-
-      updatedDataList.push({
-        instruction: "APPEND",
-        target: "PRAList",
-        content: updatedData,
-      });
-      return console.log("updatedDataList", updatedDataList);
-    });
 
     let formData = {
-      caseTypeID: "PG-AAS-Work-DefineProductionReadyArt",
+      caseTypeID: "PG-AAS-Work-UploadBriefingDocuments",
       content: {
         AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
         AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
         Project_Name: TaskDetailsData?.ArtworkAgilityTasks[0]?.Project_Name,
       },
-      pageInstructions: updatedDataList,
+      pageInstructions: updatedData,
     };
-    console.log("formData formData is", formData);
-    await submitDefineProductionReadyArt(formData, id, headers);
+    await submitUploadBrefingDocs(formData, id, headers);
     setLoader(false);
-    navigate(`/${currentUrl?.split("/")[1]}`);
+    // navigate(`/${currentUrl?.split("/")[1]}`);
   };
 
   const onSaveAsDraft = async () => {
     setLoader(true);
-    let updatedData = [];
-    designIntent.filter((task) => {
-      if (task?.isNew) {
-        task.Design_Job_ID = "";
-      }
-      if (task?.Action === "delete") {
-        task.Action = "delete";
-      } else if (task?.Action !== "delete" && task?.Design_Job_ID) {
-        task.Action = "update";
-      } else if (task?.Action !== "delete" && task?.isNew === true)
-        task.Action = "add";
-
-      updatedData.push({
-        Design_Job_Name: task.Design_Job_Name,
-        Design_Job_ID: task.Design_Job_ID,
-        Agency_Reference: task.Agency_Reference,
-        Cluster: task.Cluster,
-        Additional_Info: task.Additional_Info,
-        Select: task.Select ? task.Select : false,
-        Tier: task.Tier,
-        Action: task.Action,
-      });
-      return console.log("updatedData", updatedData);
-    });
-
-    let formData = {
+    const fileSize = Math.round(formattedValue / 1000000);
+    const formData = {
       AWM_Project_ID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
       AWM_Task_ID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
-      Project_Name: TaskDetailsData?.ArtworkAgilityTasks[0]?.Project_Name,
-      BU: projectData?.BU,
-      Region: projectData?.Project_region,
-      ProductionReadyArtList: updatedData,
+      GABriefList: [
+        {
+          File_Name: fileName,
+          Version:
+            version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
+          Size: fileSize === 0 ? "1" : `${fileSize}`,
+          Sequence: "1",
+          GroupName: "GA Brief Adaptation 1",
+          Action: "add",
+        },
+      ],
+      OtherReferenceDoc: [
+        {
+          File_Name: "Upload Reference Document V 200",
+          Version: "V1",
+          Size: "5",
+          Sequence: "1",
+          Action: "add",
+        },
+      ],
     };
-    console.log("full draft data --->", formData);
-    await saveDefineProductionReadyArt(formData);
+    // await dispatch(uploadFileAzure(azureFile));
+    await saveAsDraftUploadBrefingDocs(formData);
     setLoader(false);
+    // navigate(`/${currentUrl?.split("/")[1]}`);
+  };
+  const handleDelete = () => {
+    // For Ga Brief 
+    const formData = {
+      AWM_Project_ID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
+      AWM_Task_ID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
+      Sequence: "1",
+      GroupName: "GA Brief Adaptation 1",
+    };
+    // For Other reference
+    // const formData = {
+    //   AWM_Project_ID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
+    //   AWM_Task_ID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
+    //   GroupName: "",
+    //   Sequence: "1",
+    // };
+    deleteUploadBrefingDocs(formData);
+    setSelectDialog(false);
   };
   let Brand = [];
   let Category = [];
@@ -342,6 +346,11 @@ function UBD() {
                   taskName2="Other Reference Documents & Assets"
                   clickCountGraphicAdaption={clickCountGraphicAdaption}
                   clickCountReferenceDocuments={clickCountReferenceDocuments}
+                  setformattedValue={setformattedValue}
+                  setAzureFile={setAzureFile}
+                  setFileName1={setFileName}
+                  selectDialog={selectDialog}
+                  setSelectDialog={setSelectDialog}
                 />
               );
             }

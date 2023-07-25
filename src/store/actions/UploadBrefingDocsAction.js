@@ -2,54 +2,77 @@ import Api from "../../apis";
 import { DEVURL, SITURL, PRODURL } from "../../apis/envUrl";
 //pass the taskID and projectId from the my tasks
 
-// export const submitUploadApproveDesignIntent = async (
-//   formData,
-//   id,
-//   headers = {}
-// ) => {
-//   const api = new Api();
-//   const axiosInstance = await api.init({ headers });
-//   let apiURL;
-//   //https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v2/assignments/ASSIGN-WORKLIST PG-AAS-WORK U-5708!UPLOADAPPROVEDESIGNINTENT_FLOW/actions/UploadApproveDesignIntent
+export const saveAsDraftUploadBrefingDocs = async (
+  formData,
+  headers = {    
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+  }
+) => {
+  console.log("formData SaveAsDraft:", formData);
+  const api = new Api();
+  const axiosInstance = await api.init({ headers });
+  let apiURL;
+  //https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/UpdateGABreifdocument
 
-//   apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!UPLOADAPPROVEDESIGNINTENT_FLOW/actions/UploadApproveDesignIntent`;
+  // apiURL = `${DEVURL}/v1/UpdateGABreifdocument`;
+  apiURL = `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/UpdateGABreifdocument`;
 
-//   const submitUploadApproveDesignIntentData = await axiosInstance({
-//     url: apiURL,
-//     method: "PATCH",
-//     data: formData,
-//   });
-//   // if (submitUploadApproveDesignIntentData?.data?.ID) {
-//   //   App.dispatchToStore(editProjectAction(formData));
-//   // }
-//   return submitUploadApproveDesignIntentData;
-// };
+  const saveAsDraftUploadBrefingDocsData = await axiosInstance({
+    url: apiURL,
+    method: "POST",
+    data: formData,
+  });
+  return saveAsDraftUploadBrefingDocsData;
+};
 
-// export const submitCPPFA = async (formData, id, headers = {}) => {
-//   const api = new Api();
-//   const axiosInstance = await api.init({ headers });
-//   // let apiURL = `${DEVURL}/preliminaryPrintFeasibilityAssessment/${id}`;
-//   let apiURL = `${DEVURL}/preliminaryPrintFeasibilityAssessment/${id}`;
+export const deleteUploadBrefingDocs = async (
+  formData,
+  headers = {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+  }
+) => {
+  console.log("formData Delete:", formData);
+  const api = new Api();
+  const axiosInstance = await api.init({ headers });
+  let apiURL;
+  //https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/DeleteGABriefdocument
 
-//   const submitCPPFAData = await axiosInstance({
-//     url: apiURL,
-//     method: "PATCH",
-//     data: formData,
-//   });
-//   return submitCPPFAData;
-// };
+  // apiURL = `${DEVURL}/v1/DeleteGABriefdocument`;
+  apiURL = `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/DeleteGABriefdocument`;
 
-// export const saveDesignIntent = async (formData, headers = {}) => {
-//   const api = new Api();
-//   const axiosInstance = await api.init({ headers });
-//   let apiURL = `${DEVURL}/v1/TaskDetails/UpdateDesignIntentJob`;
-//   const designIntent = await axiosInstance({
-//     url: apiURL,
-//     method: "POST",
-//     data: formData,
-//   });
+  const deleteUploadBrefingDocsData = await axiosInstance({
+    url: apiURL,
+    method: "POST",
+    data: formData,
+  });
+  return deleteUploadBrefingDocsData;
+};
 
-//   console.log("response", designIntent, formData);
+export const submitUploadBrefingDocs = async (
+  formData,
+  id,
+  headers = {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+  }
+) => {
+  console.log("formData Submit:", formData);
+  const api = new Api();
+  const axiosInstance = await api.init({ headers });
+  let apiURL;
+  //https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v2/assignments/ASSIGN-WORKLIST PG-AAS-WORK U-6659!UPLOADBRIEFINGDOCUMENTS_FLOW/actions/UploadBriefingDocuments
 
-//   return true;
-// };
+  apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!UPLOADBRIEFINGDOCUMENTS_FLOW/actions/UploadBriefingDocuments`;
+
+  const submitUploadBrefingDocsData = await axiosInstance({
+    url: apiURL,
+    method: "PATCH",
+    data: formData,
+  });
+  return submitUploadBrefingDocsData;
+};
