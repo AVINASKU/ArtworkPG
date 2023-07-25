@@ -43,6 +43,7 @@ const ProjectList = (props) => {
   const [isReorderedColumn, setReorderedColumn] = useState(false);
   const [loader, setLoader] = useState(false);
   const [isColWidthSet, setColWidth] = useState(null);
+  const [tableRender, setTableRender] = useState(false);
   const [customViewIsAddedMyProject, isCustomViewIsAddedMyProject] =
     useState(null);
   const [filterCleared, setFilterCleared] = useState(false);
@@ -616,6 +617,7 @@ const ProjectList = (props) => {
     }
     localStorage.setItem("allColumnNames", JSON.stringify(projectColumnName));
     setProjectColumnNames(projectColumnName);
+    setTableRender(!tableRender);
   };
 
   const clearFilter = () => {
@@ -626,6 +628,7 @@ const ProjectList = (props) => {
     setSortData([]);
     setFilters([]);
     setFrozenColumn([]);
+    isSearchSet(false);
   };
 
   const clearColumnWiseFilter = () => {
@@ -663,7 +666,7 @@ const ProjectList = (props) => {
   };
 
   const isFilterEnabled =
-    frozenCoulmns?.length || filters?.length || sortData?.length;
+    frozenCoulmns?.length || filters?.length || sortData?.length || isSearch;
   let columnWidth = localStorage.getItem("columnWidthMyProject");
   const jsonColumnWidth = JSON.parse(columnWidth);
 
@@ -732,8 +735,8 @@ const ProjectList = (props) => {
           <DataTable
             resizableColumns
             dataKey="Project_ID"
+            key={tableRender ? `"Project_ID" + timestamp` : ""}
             reorderableColumns
-            key={generateUniqueKey("sss")}
             onColReorder={storeReorderedColumns}
             onResize={(e) => console.log("resize", e)}
             onResizeCapture={(e) => console.log("e", e)}

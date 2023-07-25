@@ -34,6 +34,7 @@ const AllProjectList = (props) => {
   const [isReorderedColumn, setReorderedColumn] = useState(false);
   const [loader, setLoader] = useState(false);
   const [isColWidthSet, setColWidth] = useState(null);
+  const [tableRender, setTableRender] = useState(false);
   const allProjectList = useSelector((state) => state.myProject);
   const { loading } = allProjectList;
   const location = useLocation();
@@ -609,6 +610,7 @@ const AllProjectList = (props) => {
     );
     setProjectColumnNames(projectColumnName);
     setReorderedColumn(true);
+    setTableRender(!tableRender);
   };
 
   const clearFilter = () => {
@@ -619,6 +621,7 @@ const AllProjectList = (props) => {
     setSortData([]);
     setFilters([]);
     setFrozenColumn([]);
+    isSearchSet(false);
   };
 
   const clearColumnWiseFilter = () => {
@@ -659,7 +662,7 @@ const AllProjectList = (props) => {
   };
 
   const isFilterEnabled =
-    frozenCoulmns?.length || filters?.length || sortData?.length;
+    frozenCoulmns?.length || filters?.length || sortData?.length || isSearch;
 
    const isResetEnabled = isReorderedColumn || isFilterEnabled || isColWidthSet;
 
@@ -722,10 +725,10 @@ const AllProjectList = (props) => {
           <DataTable
             resizableColumns
             dataKey="Project_ID"
+            key={tableRender ? `"Project_ID" + timestamp` : ""}
             reorderableColumns
             onColReorder={storeReorderedColumns}
             onResize={(e) => console.log("resize", e)}
-            key={generateUniqueKey("ppp")}
             onResizeCapture={(e) => console.log("e", e)}
             value={filters.length ? filters : pegadata}
             scrollable
