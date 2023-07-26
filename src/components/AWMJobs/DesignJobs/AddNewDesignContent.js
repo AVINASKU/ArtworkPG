@@ -39,6 +39,8 @@ const AddNewDesignContent = ({
   setFileName1,
   selectDialog,
   setSelectDialog,
+  getDataSaveAsDraft,
+  setDeleteObject,
 }) => {
   const { Agency_Reference, Additional_Info, event, Select, Cluster } = item;
 
@@ -188,6 +190,7 @@ const AddNewDesignContent = ({
 
   const itemTemplate = (file) => {
     setformattedValue(file.size);
+
     return (
       <div className="upload-row">
         <img role="presentation" src={file.objectURL} width={50} />
@@ -195,7 +198,8 @@ const AddNewDesignContent = ({
       </div>
     );
   };
-  const onTemplateSelect = (e) => {
+
+  const onTemplateSelect = (e, uploadType) => {
     const MAX_FILENAME_LENGTH = 31;
     const MAX_PATH_LENGTH = 255;
     const regex = /^[a-zA-Z0-9_]+$/;
@@ -255,6 +259,7 @@ const AddNewDesignContent = ({
     setTotalSize(_totalSize);
     setAzureFile(renamedFile);
     // setFileName(di_name);
+    getDataSaveAsDraft(e.files[0].size, e.files[0].name, uploadType);
   };
 
   const cancelOptions = {
@@ -316,7 +321,9 @@ const AddNewDesignContent = ({
                   customUpload
                   uploadHandler={customUploader}
                   onUpload={onTemplateUpload}
-                  onSelect={onTemplateSelect}
+                  onSelect={(e) =>
+                    onTemplateSelect(e, "Graphic Adaption Brief*")
+                  }
                   itemTemplate={itemTemplate}
                   onClear={onImageClose}
                   // disabled={fileName !== ""}
@@ -358,7 +365,9 @@ const AddNewDesignContent = ({
                   accept="image/*"
                   customUpload
                   onUpload={onTemplateUpload}
-                  onSelect={onTemplateSelect}
+                  onSelect={(e) =>
+                    onTemplateSelect(e, "Graphic Adaption Brief*")
+                  }
                   itemTemplate={itemTemplate}
                   onClear={onImageClose}
                   disabled={fileName === ""}
@@ -386,12 +395,16 @@ const AddNewDesignContent = ({
                 onClick={() => {
                   setSelectDialog(true);
                   setData(taskName);
-                  // if (checkReadWriteAccess) {
-                  // displayBriefDocumentDataGraphicAdaption.map((index) => {
-                  //   handleDelete(index);
-                  //   console.log("let us see this", index);
+                  // Graphic Adaption Brief*
+                  setDeleteObject({
+                    Sequence: "1",
+                    GroupName: "GA Brief Adaptation 1",
+                  });
+                  // Other Reference Documents & Assets
+                  // setDeleteObject({
+                  //   Sequence: "1",
+                  //   GroupName: "",
                   // });
-                  console.log("handle click clicked", index);
                 }}
                 // }
                 className="header-icons"

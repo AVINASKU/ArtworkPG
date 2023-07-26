@@ -181,13 +181,35 @@ function UBD() {
 
   const [selectDialog, setSelectDialog] = useState(false);
 
+  const [saveAsDraftGABriefList, setSaveAsDraftGABriefList] = useState([]);
+  const [saveAsDraftOtherReferenceDoc, setSaveAsDraftOtherReferenceDoc] =
+    useState([]);
+
+  const getDataSaveAsDraft = (size, name, uploadType) => {
+    const fileSize = Math.round(size / 1000000);
+    const obj = {
+      File_Name: name,
+      Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
+      Size: fileSize === 0 ? "1" : `${fileSize}`,
+      Sequence: "1",
+      Action: "add",
+    };
+    if (uploadType === "Graphic Adaption Brief*") {
+      obj.GroupName = "GA Brief Adaptation 1";
+      setSaveAsDraftGABriefList([...saveAsDraftGABriefList, obj]);
+    }
+    if (uploadType === "Other Reference Documents & Assets") {
+      setSaveAsDraftOtherReferenceDoc([...saveAsDraftOtherReferenceDoc, obj]);
+    }
+  };
+
   const onSubmit = async () => {
     setLoader(true);
     const headers = {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-    const updatedData = [
+    const pageInstructionsData = [
       {
         instruction: "APPEND",
         target: "GABriefList",
@@ -219,7 +241,7 @@ function UBD() {
         AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
         Project_Name: TaskDetailsData?.ArtworkAgilityTasks[0]?.Project_Name,
       },
-      pageInstructions: updatedData,
+      pageInstructions: pageInstructionsData,
     };
     await submitUploadBrefingDocs(formData, id, headers);
     setLoader(false);
@@ -228,30 +250,11 @@ function UBD() {
 
   const onSaveAsDraft = async () => {
     setLoader(true);
-    const fileSize = Math.round(formattedValue / 1000000);
     const formData = {
       AWM_Project_ID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
       AWM_Task_ID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
-      GABriefList: [
-        {
-          File_Name: fileName,
-          Version:
-            version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
-          Size: fileSize === 0 ? "1" : `${fileSize}`,
-          Sequence: "1",
-          GroupName: "GA Brief Adaptation 1",
-          Action: "add",
-        },
-      ],
-      OtherReferenceDoc: [
-        {
-          File_Name: "Upload Reference Document V 200",
-          Version: "V1",
-          Size: "5",
-          Sequence: "1",
-          Action: "add",
-        },
-      ],
+      GABriefList: saveAsDraftGABriefList,
+      OtherReferenceDoc: saveAsDraftOtherReferenceDoc,
     };
     // await dispatch(uploadFileAzure(azureFile));
     await saveAsDraftUploadBrefingDocs(formData);
@@ -259,20 +262,21 @@ function UBD() {
     // navigate(`/${currentUrl?.split("/")[1]}`);
   };
 
+  const [deleteObject, setDeleteObject] = useState({});
   const handleDelete = () => {
     // For Ga Brief
     const formData = {
       AWM_Project_ID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
       AWM_Task_ID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
-      Sequence: "1",
-      GroupName: "GA Brief Adaptation 1",
+      Sequence: deleteObject.Sequence,
+      GroupName: deleteObject.GroupName,
     };
     // For Other reference
     // const formData = {
     //   AWM_Project_ID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
     //   AWM_Task_ID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
-    //   GroupName: "",
-    //   Sequence: "1",
+    //   Sequence: deleteObject.Sequence,
+    //   GroupName: deleteObject.GroupName, //Empty
     // };
     deleteUploadBrefingDocs(formData);
     setSelectDialog(false);
@@ -336,6 +340,8 @@ function UBD() {
                   setFileName1={setFileName}
                   selectDialog={selectDialog}
                   setSelectDialog={setSelectDialog}
+                  getDataSaveAsDraft={getDataSaveAsDraft}
+                  setDeleteObject={setDeleteObject}
                 />
               );
             }
