@@ -5,10 +5,6 @@ import AddNewDesign from "../DesignJobs/TaskHeader";
 import AddNewDesignContent from "../DesignJobs/AddNewDesignContent";
 import FooterButtons from "../DesignJobs/FooterButtons";
 import {
-  saveDefineProductionReadyArt,
-  submitDefineProductionReadyArt,
-} from "../../../apis/defineProductionReadyArt";
-import {
   deleteUploadBrefingDocs,
   saveAsDraftUploadBrefingDocs,
   submitUploadBrefingDocs,
@@ -102,17 +98,6 @@ function UBD() {
     return navigate(`/${currentUrl?.split("/")[1]}`);
   };
 
-  // const handleDelete = (index) => {
-  //   console.log("lindex lindex is", index);
-  //   const sub = designIntent.map((item, i) => {
-  //     if (i === index) {
-  //       item.Action = "delete";
-  //     }
-  //     return item;
-  //   });
-  //   setDesignIntent(sub);
-  // };
-
   const displayBriefDocument = (val, taskName) => {
     if (taskName === "Graphic Adaption Brief*") {
       setDisplayBriefDocumentDataGraphicAdaption([
@@ -202,33 +187,31 @@ function UBD() {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-      const updatedData = [
-        {
-            instruction: "APPEND",
-            target: "GABriefList",
-            content: {
-                GroupName: "GA Brief Adaptation 1",
-                Sequence: "1",
-                Action: "",
-                Filename: "Upload GA Brief Document V 80",
-                Size: "5",
-                Version: "v1"
-            }
+    const updatedData = [
+      {
+        instruction: "APPEND",
+        target: "GABriefList",
+        content: {
+          GroupName: "GA Brief Adaptation 1",
+          Sequence: "1",
+          Action: "",
+          Filename: "Upload GA Brief Document V 80",
+          Size: "5",
+          Version: "v1",
         },
-        {
-            instruction: "APPEND",
-            target: "OtherReferenceDoc",
-            content: {
-                Sequence: "1",
-                Action: "",
-                Filename: "Upload GA Brief Document V 90",
-                Size: "5",
-                Version: "v2"
-            }
-        }
-      ];
-
-
+      },
+      {
+        instruction: "APPEND",
+        target: "OtherReferenceDoc",
+        content: {
+          Sequence: "1",
+          Action: "",
+          Filename: "Upload GA Brief Document V 90",
+          Size: "5",
+          Version: "v2",
+        },
+      },
+    ];
     let formData = {
       caseTypeID: "PG-AAS-Work-UploadBriefingDocuments",
       content: {
@@ -275,8 +258,9 @@ function UBD() {
     setLoader(false);
     // navigate(`/${currentUrl?.split("/")[1]}`);
   };
+
   const handleDelete = () => {
-    // For Ga Brief 
+    // For Ga Brief
     const formData = {
       AWM_Project_ID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
       AWM_Task_ID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
@@ -293,6 +277,7 @@ function UBD() {
     deleteUploadBrefingDocs(formData);
     setSelectDialog(false);
   };
+
   let Brand = [];
   let Category = [];
 

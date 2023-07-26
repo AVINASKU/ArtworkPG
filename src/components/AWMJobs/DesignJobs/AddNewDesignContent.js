@@ -38,7 +38,7 @@ const AddNewDesignContent = ({
   setAzureFile,
   setFileName1,
   selectDialog,
-  setSelectDialog
+  setSelectDialog,
 }) => {
   const { Agency_Reference, Additional_Info, event, Select, Cluster } = item;
 
@@ -172,7 +172,6 @@ const AddNewDesignContent = ({
 
   const [data, setData] = useState({});
 
-  // const [azureFile, setAzureFile] = useState("");
   const [fileName, setFileName] = useState("");
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
