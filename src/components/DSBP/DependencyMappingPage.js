@@ -21,6 +21,7 @@ const DependencyMapping = () => {
   const [RDTData, setRDTData] = useState([]);
   const [GABriefData, setGABriefData] = useState([]);
   const [dataUpdated, setDataUpdated] = useState(false);
+  const [submittedData, setSubmittedData] = useState([]);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const ProjectID = selectedProjectDetails?.Project_ID;
@@ -63,6 +64,7 @@ const DependencyMapping = () => {
       dependencyMappingData
     );
     setDependencyMappingData(dependencyMappingData);
+    setSubmittedData(filteredDataToSubmit);
     setDataUpdated(!dataUpdated);
   };
 
@@ -162,20 +164,66 @@ const DependencyMapping = () => {
       setDependencyMappingData(transformedData);
     }
   }
+  const isSubmitEnable = submittedData.length ? true : false;
 
   const onSubmit = async () => {
-    let formData = {
-      DSBPValues: [
-        {
-          DSBP_InitiativeID: "100299",
-          DSBP_PMP_PIMaterialID: "388975467",
-          DSBP_PMP_PIMaterialNumber: "90492437",
-          AWM_CICNeeded: "No",
-        },
-      ],
-    };
     //add your logic here
-    let resp = await onSubmitDependencyMappingAction();
+    let submittedJson = [];
+    if (isSubmitEnable) {
+      submittedData.map((ele) => {
+        let submittedObject = {};
+
+        // cdpt
+        let DSBP_CDPT_Page = [];
+        if (ele.AWM_CDPT_Page) {
+          DSBP_CDPT_Page = CDPTPageData.filter(
+            (cdptData) =>
+              ele.AWM_CDPT_Page.includes(cdptData.AWM_Design_Job_ID) && cdptData
+          );
+        }
+        submittedObject.DSBP_CDPT_Page = DSBP_CDPT_Page;
+        //rdt
+        let DSBP_RDT_Page = [];
+        if (ele.AWM_RDT_Page) {
+          DSBP_RDT_Page = RDTData.filter(
+            (rdtData) =>
+              ele.AWM_RDT_Page.includes(rdtData.AWM_Design_Job_ID) && rdtData
+          );
+        }
+        submittedObject.DSBP_RDT_Page = DSBP_RDT_Page;
+
+        //IQ
+        let DSBP_IQ_Page = [];
+        if (ele.AWM_IQ_Page) {
+          DSBP_IQ_Page = IQData.filter(
+            (iqData) =>
+              ele.AWM_IQ_Page.includes(iqData.AWM_Design_Job_ID) && iqData
+          );
+        }
+        submittedObject.DSBP_IQ_Page = DSBP_IQ_Page;
+
+        submittedObject.DSBP_InitiativeID = ele.DSBP_InitiativeID;
+        submittedObject.DSBP_PMP_PIMaterialID = ele.DSBP_PMP_PIMaterialID;
+        submittedObject.DSBP_PMP_PIMaterialNumber =
+          ele.DSBP_PMP_PIMaterialNumber;
+        submittedObject["AWM_CICNeeded"] = ele.AWM_CIC_Needed;
+        submittedObject["AWM_SupportingPMPLayout"] =
+          ele.AWM_Supporting_PMP_Layout ? ele.AWM_Supporting_PMP_Layout : "";
+        submittedObject["AWM_SupportingPMPDesign"] =
+          ele.AWM_Supporting_PMP_Design ? ele.AWM_Supporting_PMP_Design : "";
+        submittedObject["AWM_OtherReference"] = ele.AWM_Other_Reference
+          ? ele.AWM_Other_Reference
+          : "";
+        submittedObject["AWM_GABrief"] = ele.AWM_GA_Brief
+          ? ele.AWM_GA_Brief
+          : "";
+
+        console.log("ele", ele);
+        submittedJson.push(submittedObject);
+      });
+    }
+    console.log("submitted json", submittedJson);
+    // let resp = await onSubmitDependencyMappingAction();
   };
 
   return (
@@ -215,7 +263,7 @@ const DependencyMapping = () => {
           handleCancel={handleCancel}
           hideSaveButton={true}
           onSubmit={onSubmit}
-          formValid={!true}
+          formValid={!isSubmitEnable}
           checkReadWriteAccess={!false}
         />
       </>

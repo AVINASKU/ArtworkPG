@@ -102,10 +102,6 @@ const DependencyMappingList = ({
   const renderMappingBody = (options, rowData) => {
     let field = rowData.field;
 
-    if(field === "AWM_RDT_Page"){
-    console.log("options[field]", options[field]);
-    }
-
     return (
       <span>
         {field === "field_0" && ( // Add this condition to render a checkbox
@@ -120,26 +116,29 @@ const DependencyMappingList = ({
         )}
         {field === "AWM_GA_Brief" && (
           <div>
-            <MultiSelect
+                    <Form.Group
+            controlId="groupName.ControlInput1"
+            style={{ textAlign: "-webkit-center" }}
+          >
+            <Form.Select
+              placeholder="Select"
               value={options[field]}
-               onChange={(e) =>  updateDropDownData(
+              onChange={(e) =>  updateDropDownData(
                   e.value,
                   "AWM_GA_Brief",
                   options.DSBP_PMP_PIMaterialID
                 )}
-              options={
-                GABriefData
-                  ? GABriefData.map((obj) => ({
-                      label: obj.File_Name,
-                      value: obj.File_Name,
-                    }))
-                  : []
-              }
-              filter
-              placeholder={`Select filename`}
-              maxSelectedLabels={3}
-              className="p-column-filter"
-            />
+              style={{ width: "80%", fontSize: 12 }}
+            >
+              <option value="">Select</option>
+
+              {GABriefData?.map((data) => (
+                <option key={data.File_Name} value={data.File_Name}>
+                  {data.File_Name}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
           </div>
         )}
 
@@ -149,7 +148,7 @@ const DependencyMappingList = ({
               value={options[field]}
               onChange={(e) =>  updateDropDownData(
                   e.value,
-                  "AWM_RDT_Page",
+                  "AWM_CDPT_Page",
                   options.DSBP_PMP_PIMaterialID
                 )}
               options={
@@ -243,7 +242,8 @@ const DependencyMappingList = ({
           </Form.Group>
         )}
         {field === "AWM_Other_Reference" && (
-        options.AWM_CIC_Needed === "" || !options.AWM_CIC_Needed ? " ":
+        options.AWM_CIC_Needed === "" || !options.AWM_CIC_Needed ||options.AWM_CIC_Needed === "Yes" ||
+                options.AWM_CIC_Needed === "No" ? " ":
           <Form.Group
             controlId="groupName.ControlInput1"
             style={{ textAlign: "-webkit-center" }}
@@ -259,17 +259,17 @@ const DependencyMappingList = ({
                   options.DSBP_PMP_PIMaterialID
                 )
               }
-              disabled={
-                options.AWM_CIC_Needed === "Yes" ||
-                options.AWM_CIC_Needed === "No"
-              }
+              // disabled={
+              //   options.AWM_CIC_Needed === "Yes" ||
+              //   options.AWM_CIC_Needed === "No"
+              // }
               style={{ width: "80%", fontSize: 12 }}
             ></Form.Control>
           </Form.Group>
         )}
 
         {field === "AWM_Supporting_PMP_Design" && (
-        options.AWM_CIC_Needed === "" || !options.AWM_CIC_Needed ? " ":
+        options.AWM_CIC_Needed === "" || !options.AWM_CIC_Needed ||options.AWM_CIC_Needed === "Yes" || options.AWM_CIC_Needed === "N/A" ? " ":
           <Form.Group
             controlId="groupName.ControlInput1"
             style={{ textAlign: "-webkit-center" }}
@@ -284,7 +284,7 @@ const DependencyMappingList = ({
                   options.DSBP_PMP_PIMaterialID
                 )
               }
-              disabled={options.AWM_CIC_Needed === "Yes" || options.AWM_CIC_Needed === "N/A"}
+              // disabled={options.AWM_CIC_Needed === "Yes" || options.AWM_CIC_Needed === "N/A"}
               style={{ width: "80%", fontSize: 12 }}
             >
               <option value="">Select</option>
@@ -297,7 +297,7 @@ const DependencyMappingList = ({
         )}
 
         {field === "AWM_Supporting_PMP_Layout" && (
-        options.AWM_CIC_Needed === "" || !options.AWM_CIC_Needed ? " ":
+        options.AWM_CIC_Needed === "" || !options.AWM_CIC_Needed || options.AWM_CIC_Needed === "Yes" || options.AWM_CIC_Needed === "N/A" ? " ":
           <Form.Group
             controlId="groupName.ControlInput1"
             style={{ textAlign: "-webkit-center" }}
@@ -312,7 +312,7 @@ const DependencyMappingList = ({
                   options.DSBP_PMP_PIMaterialID
                 )
               }
-              disabled={options.AWM_CIC_Needed === "Yes"|| options.AWM_CIC_Needed === "N/A"}
+              // disabled={options.AWM_CIC_Needed === "Yes"|| options.AWM_CIC_Needed === "N/A"}
               style={{ width: "80%", fontSize: 12 }}
             >
               <option value="">Select</option>
@@ -388,7 +388,7 @@ const DependencyMappingList = ({
 
   const rowClassName = (rowData) => {
     let field = rowData.field;
-    if (rowData.AWM_CIC_Needed === "Yes") {
+    if (rowData.AWM_CIC_Needed === "No" || rowData.AWM_CIC_Needed === "N/A") {
       return "white-bg-color"; // class name for highlighted rows
     }
     return "pink-bg-color"; // default class name for other rows
