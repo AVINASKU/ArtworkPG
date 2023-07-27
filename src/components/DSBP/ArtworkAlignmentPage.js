@@ -416,7 +416,7 @@ const ArtworkAlignment = () => {
             totalNoOfPMPLocked={totalNoOfPMPLocked}
             listOfInitiativeId={listOfInitiativeId}
             mappedPOAS={mappedPOAS}
-            userHasAccess={userHasAccess}
+            userHasAccess={!userHasAccess}
           />
           {tableLoader ? (
             <Loading />
