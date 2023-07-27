@@ -174,7 +174,7 @@ $width: 100%;
   background: rgb(255, 255, 255);
   border-radius: 24px;
   margin-left: 2px;
-  padding-bottom: 20px;
+  padding-bottom: 5px;
   position: relative;
   &.project-setup-wrapper {
     // height: 100%;
@@ -189,6 +189,10 @@ $width: 100%;
     }
   }
   &.project-plan-wrapper {
+    padding-bottom: 25px;
+    .form-buttons{
+      bottom: 22px;
+    }
     .tab-content {
       // height: auto;
       overflow: initial;
@@ -196,13 +200,13 @@ $width: 100%;
     }
   }
   .form-buttons{
-    padding: 0 16px;
+    padding: 0 10px;
     position: absolute;
     background: white;
     text-align: right;
     width: 100%;
     left: 0;
-    bottom: 0;
+    bottom: 10px;
   }
 }
 
@@ -271,7 +275,7 @@ $width: 100%;
 
 // TabsComponent Styles Start
 .tab-content {
-  height: calc(100% - 40px);
+  height: 100%;
   overflow: hidden;
   position: relative;
   padding-bottom: 20px;

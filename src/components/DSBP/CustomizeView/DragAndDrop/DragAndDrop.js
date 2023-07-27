@@ -194,6 +194,7 @@ const DragAndDrop = (props) => {
   const selected = selectedTaskIds;
 
   return (
+    console.log("drag entities",entities),
     <>
       <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
         <div style={{ display: "flex" }}>

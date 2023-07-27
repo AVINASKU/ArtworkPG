@@ -280,7 +280,7 @@ const DMPMPSpecificTabView = () => {
         const filteredItems = convertedInObject?.filter(
           (item) => item && item[value] !== undefined
         );
-
+          console.log("filteredItems", filteredItems);
         return filteredItems.map((item) => (
           <tr key={item[value]}>
             <td className="columnWidth">{field.Field_Name}</td>

@@ -94,3 +94,15 @@ export const getDependencyMappingDetails = async (projectId, headers = {}) => {
   const isCDPTData = response?.AWM_CDPT_Page;
   return {dependencyTableData, isRDTData, isIQData, isCDPTData};
 };
+
+export const handleConfirmFullScopeIn = async (projectId, headers = {}) => {
+  const api = new Api();
+  const axiosInstance = await api.init({ headers });
+  let apiURL = `${DEVURL}/confirmFullScopeIn/${projectId}`;
+  const addResponse = await axiosInstance({
+    url: apiURL,
+    method: "POST"
+  });
+  console.log("Hello hello ----->", addResponse);
+  return addResponse;
+};

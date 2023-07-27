@@ -68,7 +68,7 @@ function ProjectSetup(props) {
   const [updatedProjectPlanDesignData, setUpdatedProjectPlanDesignData] =
     useState([]);
     const [loader, setLoader] = useState(false);
-    const [activeFlag, setActiveFlag] = useState(isAccessEmpty);
+    const [activeFlag, setActiveFlag] = useState(true);
   
   const firstTime = projectPlanDesign.some(
     (item) => item.Assignee !== "" || item.Role !== ""
@@ -84,7 +84,7 @@ function ProjectSetup(props) {
   }, [isAccessEmpty]);
 
   useEffect(() => {
-    setActiveFlag(false);
+    // setActiveFlag(false);
     let projectData = isArray(myProject) && myProject.find(
       (project) => project.Project_ID === ProjectID
     );
@@ -440,6 +440,7 @@ function ProjectSetup(props) {
       dispatch(updateProjectPlanDesignAction(updatedProjectPlanDesignData));
       await saveProjectPlanAction(formData, selectedProjectDetails.Project_ID);
       setActiveSave(true);
+      setActiveFlag(true)
     }
   };
 
@@ -465,6 +466,7 @@ function ProjectSetup(props) {
       });
       setLoader(false);
       setActiveSave(true);
+      setActiveFlag(true)
     }
   };
   
@@ -472,11 +474,7 @@ function ProjectSetup(props) {
     {
       name: "projectSetup",
       tabNameForDisplay: "Project Setup",
-      component: isNoAccess ? (
-        <div className="unauthorized-user">
-          You are not authorized to access this page.
-        </div>
-      ) : ( tabName === "projectSetup" &&
+      component: ( tabName === "projectSetup" &&
         <div className="projectSetupParent project-setup-wrapper">
           <div className="actions">
             <div className="breadCrumbParent">{breadcrumb}</div>
@@ -567,7 +565,8 @@ function ProjectSetup(props) {
                       loader={loader}
                       pegadata={pegadata} 
                       setPegaData={setPegaData}
-                      firstTime={firstTime}
+                      activeFlag={activeFlag}
+                      isAccessEmpty={isAccessEmpty}
                     />
                   </Accordion.Body>
                 </Accordion.Item>
@@ -591,7 +590,8 @@ function ProjectSetup(props) {
                     loader={loader}
                     pegadata={pegadata} 
                     setPegaData={setPegaData}
-                    firstTime={firstTime}
+                    activeFlag={activeFlag}
+                    isAccessEmpty={isAccessEmpty}
                   />
                   </Accordion.Body>
                 </Accordion.Item>
