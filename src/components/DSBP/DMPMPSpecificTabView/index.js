@@ -499,6 +499,7 @@ const DMPMPSpecificTabView = () => {
         return groupedColumnNames;
       });
 
+
       // setCDPTPageData(isCDPTData);
       // setIQData(isIQData);
       // setRDTData(isRDTData);

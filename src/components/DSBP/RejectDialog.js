@@ -17,7 +17,7 @@ const RejectDialog = ({
       console.log("data", e.target.value)
       setRejectFormData({
           ...rejectFormData,
-          RTA_RTARejectionReason: e.target.value,
+          ReasonforRejection: e.target.value,
         });
     };
 

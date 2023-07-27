@@ -155,7 +155,7 @@ const AgilityList = ({
     const uniqueArray = Array.from(
       new Set(newArray.map((obj) => JSON.stringify(obj)))
     ).map(JSON.parse);
-    console.log("uniqueArray AA: ", uniqueArray);
+
     dispatch(ArtWorkTabValuesAction(uniqueArray));
     navigate("/DSBP/tab/artworkAlignment", { replace: true });
   };
@@ -195,6 +195,7 @@ const AgilityList = ({
 
   const addBody = (options, rowData) => {
     let field = rowData.field;
+    const fieldEditable = options["AWM_AddedToProject"] === "Yes";
     let FPCStagingFormula =
       options?.FPCStagingPage?.[0]?.FormulaCardStagingPage;
     let concatenatedFPCStagingFormulaData = {};
@@ -278,7 +279,7 @@ const AgilityList = ({
             <Form.Select
               placeholder="Select"
               value={options[field]}
-              disabled={userHasAccess}
+              disabled={!fieldEditable || userHasAccess}
               // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               onChange={(e) => onChangeSelectField(options, e, field)}
               style={{ width: "80%", fontSize: 12 }}
@@ -300,7 +301,7 @@ const AgilityList = ({
             <Form.Select
               placeholder="Select"
               value={options[field]}
-              disabled={userHasAccess}
+              disabled={!fieldEditable || userHasAccess}
               // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               onChange={(e) => onChangeSelectField(options, e, field)}
               style={{ width: "80%", fontSize: 12 }}
@@ -315,6 +316,22 @@ const AgilityList = ({
           </Form.Group>
         )}
 
+        {field === "AWM_GroupPMP" && (
+          <Form.Group
+            controlId="groupName.ControlInput1"
+            style={{ textAlign: "-webkit-center" }}
+          >
+            <Form.Control
+              type="text"
+              value={options[field]}
+              disabled={!fieldEditable || userHasAccess}
+              // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
+              onChange={(e) => onChangeSelectField(options, e, field)}
+              placeholder="Enter Group Name"
+            />
+          </Form.Group>
+        )}
+
         {field === "AWM_Sellable" && (
           <Form.Group
             controlId="groupName.ControlInput1"
@@ -323,7 +340,7 @@ const AgilityList = ({
             <Form.Control
               type="text"
               value={options[field]}
-              disabled={userHasAccess}
+              disabled={!fieldEditable || userHasAccess}
               // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               onChange={(e) => onChangeSelectField(options, e, field)}
               placeholder="Enter Sellable"
@@ -339,7 +356,7 @@ const AgilityList = ({
             <Form.Control
               type="text"
               value={options[field]}
-              disabled={userHasAccess}
+              disabled={!fieldEditable || userHasAccess}
               // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               onChange={(e) => onChangeSelectField(options, e, field)}
               placeholder="Enter Biocide"
@@ -352,6 +369,7 @@ const AgilityList = ({
           field !== "AWM_AISE" &&
           field !== "AWM_AssemblyMechanism" &&
           field !== "AWM_Biocide" &&
+          field !== "AWM_GroupPMP" &&
           field !== "AWM_Sellable" &&
           field !== "field_0" &&
           options[field]}
@@ -368,7 +386,8 @@ const AgilityList = ({
             type="checkbox"
             className="p-checkbox-box p-highlight"
             checked={selectAllChecked}
-            disabled={userHasAccess}
+            disabled = {dsbpPmpData === null || userHasAccess}
+
             onChange={handleSelectAll}
           />
         </div>
@@ -564,6 +583,7 @@ const AgilityList = ({
   const timestamp = new Date().getTime();
 
   return (
+    console.log("dsbpPmpData", dsbpPmpData),
     <>
       <DataTable
         dataKey="DSBP_PMP_PIMaterialID"

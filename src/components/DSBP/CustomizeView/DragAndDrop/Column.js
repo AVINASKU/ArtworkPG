@@ -36,13 +36,13 @@ const Column = ({
             // isDraggingOver={snapshot.isDraggingOver}
             {...provided.droppableProps}
           >
-            {tasks.map((task, index) => {
+            {tasks.length !== 0 && tasks?.map((task, index) => {
               const isSelected =
-                getSelectedMap(selectedTaskIds)[task.Field_Name];
+                getSelectedMap(selectedTaskIds)[task?.Field_Name];
               const isGhosting =
                 isSelected &&
                 Boolean(draggingTaskId) &&
-                draggingTaskId !== task.Field_Name;
+                draggingTaskId !== task?.Field_Name;
               return (
                 <Task
                   task={task}
