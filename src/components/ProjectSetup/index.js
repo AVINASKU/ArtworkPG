@@ -33,7 +33,7 @@ const DependencyMapping = lazy(() => import("../DSBP/DependencyMappingPage"));
 
 function ProjectSetup(props) {
   const toast = useRef(null);
-  const isAccessEmpty = hasAllAccess();
+  const isAccessEmpty = true;
 
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
