@@ -404,7 +404,7 @@ const ArtworkAlignment = () => {
             selectedProjectDetails={selectedProjectDetails}
             customizeViewFields={customizeViewFields}
             setCustomizeViewFields={setCustomizeViewFields}
-            userHasAccess={userHasAccess}
+            userHasAccess={!userHasAccess}
           />
           <SelectDsbpId
             dropdownlist={dropdownlist}
