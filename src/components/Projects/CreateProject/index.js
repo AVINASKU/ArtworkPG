@@ -55,6 +55,7 @@ function AddProject(props) {
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const { myProject } = useSelector((state) => state.myProject);
+  // const [projectData, setProjectData] = useState([]);
   const mode = projectSetup.mode;
   // const id = `PG-AAS-WORK ${selectedProjectDetails.Project_ID}`;
   let awmProjectId = selectedProjectDetails.Project_ID;
@@ -124,10 +125,20 @@ function AddProject(props) {
   const { DropDownValuesData, loading } = useSelector(
     (state) => state.DropDownValuesReducer
   );
+  let projectData =
+    isArray(myProject) &&
+    myProject.find(
+      (project) => project.Project_ID === selectedProjectDetails.Project_ID
+    );
 
-  let projectData = isArray(myProject) && myProject.find(
-    (project) => project.Project_ID === selectedProjectDetails.Project_ID
-  );
+  // useEffect(() => {
+  //   let data =
+  //     isArray(myProject) &&
+  //     myProject.find(
+  //       (project) => project.Project_ID === selectedProjectDetails.Project_ID
+  //     );
+  //   setProjectData(data);
+  // }, [myProject]);
 
   useEffect(() => {
     RoleUser.users.map((role) => {
@@ -1047,7 +1058,7 @@ function AddProject(props) {
       // }
     } else if (
       (mode === "edit" || mode === "design") &&
-      !JSON.parse(sessionStorage.getItem("ProjectSubmitted"))
+      selectedProjectDetails.Action !== "Active"
     ) {
       const formData = collectFormData("Active", mode);
       console.log("formData collectFormData: ", mode, formData);
@@ -1065,7 +1076,7 @@ function AddProject(props) {
       // }
     } else if (
       (mode === "edit" || mode === "design") &&
-      JSON.parse(sessionStorage.getItem("ProjectSubmitted"))
+      selectedProjectDetails.Action === "Active"
     ) {
       const formData = collectForm2Data("", mode);
       console.log("formData collectForm2Data: ", mode, formData);
@@ -1818,7 +1829,7 @@ function AddProject(props) {
               <Button
                 className={
                   mode !== "create" &&
-                  JSON.parse(sessionStorage.getItem("ProjectSubmitted"))
+                  selectedProjectDetails.Action === "Active"
                     ? "button-layout btn btn-disabled"
                     : "button-layout"
                 }
@@ -1826,7 +1837,7 @@ function AddProject(props) {
                 onClick={onSaveAsDraft}
                 disabled={
                   mode !== "create" &&
-                  JSON.parse(sessionStorage.getItem("ProjectSubmitted"))
+                  selectedProjectDetails.Action === "Active"
                 }
               >
                 Save as draft

@@ -108,7 +108,7 @@ const DependencyMapping = () => {
         };
 
         if (isGABrifData && isGABrifData.length) {
-          transformedItem.AWM_GA_Brief = item.Preselected_DSBP_GA_Brief || [];
+          transformedItem.AWM_GA_Brief = item.Preselected_DSBP_GA_Brief || "";
         }
 
         transformedItem = {
