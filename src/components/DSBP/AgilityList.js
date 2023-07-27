@@ -155,8 +155,9 @@ const AgilityList = ({
     const uniqueArray = Array.from(
       new Set(newArray.map((obj) => JSON.stringify(obj)))
     ).map(JSON.parse);
+
     dispatch(ArtWorkTabValuesAction(uniqueArray));
-    navigate("/DSBP/AATab", { replace: true });
+    navigate("/DSBP/tab/artworkAlignment", { replace: true });
   };
 
   const onChangeSelectField = (option, e, field) => {
@@ -362,8 +363,7 @@ const AgilityList = ({
           </Form.Group>
         )}
 
-        {
-          field !== "AWM_AddedToProject" &&
+        {field !== "AWM_AddedToProject" &&
           field !== "DSBP_PMP_PIMaterialNumber" &&
           field !== "AWM_AISE" &&
           field !== "AWM_AssemblyMechanism" &&
@@ -377,7 +377,8 @@ const AgilityList = ({
   };
 
   const renderHeader = (field, isFilterActivated = false) => {
-    if (field === "checkbox") { // Render checkbox in header
+    if (field === "checkbox") {
+      // Render checkbox in header
       return (
         <div className="flex align-items-center gap-2">
           <input
@@ -416,28 +417,30 @@ const AgilityList = ({
       ? localStorage.getItem("columnWidthDSBPArtworkHomeCare")
       : localStorage.getItem("columnWidthDSBPArtworkBabyCare");
     let allColumns = JSON.parse(jsonColumnWidth);
-  
+
     // customize fields
-    let jsonValue = customizeViewFields ? JSON.parse(customizeViewFields) : null;
+    let jsonValue = customizeViewFields
+      ? JSON.parse(customizeViewFields)
+      : null;
     if (jsonValue && Object.keys(jsonValue).length !== 0) {
       let selectedData = jsonValue?.selectedFields?.fieldsData || [];
       let freezedData = jsonValue?.freezedColumns?.fieldsData || [];
-        const filteredColumns = [];
-        // Add freezedData columns in the specified order
-        freezedData?.forEach(fieldName => {
-          const column = allColumns.find(col => col.Field_Name === fieldName);
-          if (column) {
-              column.freeze = true;
-              filteredColumns.push(column);
-          }
-        });
-        // Add selectedData columns in the specified order
-        selectedData?.forEach(fieldName => {
-          const column = allColumns.find(col => col.Field_Name === fieldName);
-          if (column) {
-              filteredColumns.push(column);
-          }
-        });
+      const filteredColumns = [];
+      // Add freezedData columns in the specified order
+      freezedData?.forEach((fieldName) => {
+        const column = allColumns.find((col) => col.Field_Name === fieldName);
+        if (column) {
+          column.freeze = true;
+          filteredColumns.push(column);
+        }
+      });
+      // Add selectedData columns in the specified order
+      selectedData?.forEach((fieldName) => {
+        const column = allColumns.find((col) => col.Field_Name === fieldName);
+        if (column) {
+          filteredColumns.push(column);
+        }
+      });
       if (filteredColumns && filteredColumns.length) {
         return [
           // Checkbox column
@@ -451,24 +454,25 @@ const AgilityList = ({
           />,
           // Rest of the columns
           ...filteredColumns.map((field, index) => {
-          return (
-            <Column
-              field={field.Field_Name}
-              header={() => renderHeader(field.Field_Name)}
-              frozen={field.freeze}
-              className={field.freeze ? "font-bold" : ""}
-              body={addBody}
-              key={field.Field_Name}
-              columnKey={field.Field_Name}
-              showFilterMenu={false}
-              alignFrozen="left"
-              filterField={field.Field_Name}
-              style={{
-                width: field.width,
-              }}
-            />
-          );
-        })];
+            return (
+              <Column
+                field={field.Field_Name}
+                header={() => renderHeader(field.Field_Name)}
+                frozen={field.freeze}
+                className={field.freeze ? "font-bold" : ""}
+                body={addBody}
+                key={field.Field_Name}
+                columnKey={field.Field_Name}
+                showFilterMenu={false}
+                alignFrozen="left"
+                filterField={field.Field_Name}
+                style={{
+                  width: field.width,
+                }}
+              />
+            );
+          }),
+        ];
       }
     } else {
       if (allColumns && allColumns.length) {
@@ -484,28 +488,28 @@ const AgilityList = ({
           />,
           // Rest of the columns
           ...allColumns.map((field, index) => {
-          return (
-            <Column
-              field={field.Field_Name}
-              header={() => renderHeader(field.Field_Name)}
-              frozen={field.freeze}
-              className={field.freeze ? "font-bold" : ""}
-              body={addBody}
-              key={field.Field_Name}
-              columnKey={field.Field_Name}
-              showFilterMenu={false}
-              alignFrozen="left"
-              filterField={field.Field_Name}
-              style={{
-                width: field.width,
-              }}
-            />
-          );
-        })];
+            return (
+              <Column
+                field={field.Field_Name}
+                header={() => renderHeader(field.Field_Name)}
+                frozen={field.freeze}
+                className={field.freeze ? "font-bold" : ""}
+                body={addBody}
+                key={field.Field_Name}
+                columnKey={field.Field_Name}
+                showFilterMenu={false}
+                alignFrozen="left"
+                filterField={field.Field_Name}
+                style={{
+                  width: field.width,
+                }}
+              />
+            );
+          }),
+        ];
       }
     }
   };
-  
 
   const onColumnResizeEnd = (event) => {
     let columnWidth = [];

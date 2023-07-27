@@ -19,11 +19,13 @@ export const getProjectPlan = async (
     url: apiURL,
     method: "GET",
   });
-  if (projectPlanData?.ArtworkAgilityProjects) {
-    sessionStorage.setItem("ProjectSubmitted", true);
-  } else {
-    sessionStorage.setItem("ProjectSubmitted", false);
-  }
+  // if (projectPlanData?.ArtworkAgilityProjects) {
+  //   alert(true);
+  //   sessionStorage.setItem("ProjectSubmitted", true);
+  // } else {
+  //   alert(false);
+  //   sessionStorage.setItem("ProjectSubmitted", false);
+  // }
 
   return projectPlanData?.ArtworkAgilityProjects;
 };
