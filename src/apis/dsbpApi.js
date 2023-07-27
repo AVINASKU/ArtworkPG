@@ -113,3 +113,15 @@ export const onSubmitDependencyMappingAction = async (
   console.log("Add response ----->", addResponse);
   return addResponse;
 };
+
+export const handleConfirmFullScopeIn = async (projectId, headers = {}) => {
+  const api = new Api();
+  const axiosInstance = await api.init({ headers });
+  let apiURL = `${DEVURL}/confirmFullScopeIn/${projectId}`;
+  const addResponse = await axiosInstance({
+    url: apiURL,
+    method: "POST"
+  });
+  console.log("Hello hello ----->", addResponse);
+  return addResponse;
+};
