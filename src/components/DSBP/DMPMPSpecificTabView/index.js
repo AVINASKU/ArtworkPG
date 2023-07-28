@@ -386,7 +386,10 @@ const DMPMPSpecificTabView = () => {
     const updatedPmpDetails = { DSBPValues: [formData] };
     console.log("updatedPmpDetails", updatedPmpDetails);
 
-    await onSubmitDependencyMappingAction(updatedPmpDetails);
+    await onSubmitDependencyMappingAction(
+      updatedPmpDetails,
+      selectedProject?.Project_ID
+    );
 
     const {
       dependencyTableData,
@@ -394,7 +397,7 @@ const DMPMPSpecificTabView = () => {
       isIQData,
       isCDPTData,
       isGABrifData,
-    } = await getDependencyMappingDetails("A-2002");
+    } = await getDependencyMappingDetails(selectedProject?.Project_ID);
     const tableData = fetchData(
       dependencyTableData,
       isRDTData,
@@ -498,7 +501,6 @@ const DMPMPSpecificTabView = () => {
         groupedColumnNames.push(groupedObject);
         return groupedColumnNames;
       });
-
 
       // setCDPTPageData(isCDPTData);
       // setIQData(isIQData);
