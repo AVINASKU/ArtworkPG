@@ -240,6 +240,9 @@ const PMPSpecificTabView = () => {
         selectedTab?.description.DSBP_PMP_PIMaterialNumber,
       FK_AWMProjectID: selectedProject?.Project_ID,
     };
+    if(rejectFormData){
+      updatedData.AWM_AddedToProject = "Reject";
+    }
     if (selectionFormData === "AddToProject") {
       updatedData.AWM_AddedToProject = "Yes";
       setHandleYesAddToPRoject(false);
@@ -253,18 +256,25 @@ const PMPSpecificTabView = () => {
     await onSubmitDsbpAction(updatedPmpDetails);
     const resp = await getDsbpPMPDetails(selectedProject.Project_ID);
 
-    let updatedNewData =
-      resp &&
-      resp[0].DSBP_PMP_PIMaterialIDPage?.filter(
-        (data) =>
-          data.DSBP_PMP_PIMaterialID ===
-          selectedTab.description.DSBP_PMP_PIMaterialID
+    if (resp && resp?.length) {
+      const updatedNewData = resp?.flatMap((item) =>
+        item.DSBP_PMP_PIMaterialIDPage?.map((person) => ({
+          DSBP_InitiativeID: item.DSBP_InitiativeID,
+          ...person,
+        }))
       );
-    updatedNewData = updatedNewData.map((data) => ({
-      DSBP_InitiativeID: resp && resp[0].DSBP_InitiativeID,
-      ...data,
-    }));
-    updateArtWorkTabValuesData(updatedNewData);
+
+      const filteredIds = Array.from(
+        new Set(
+          updatedNewData
+            .filter((item) => item.DSBP_PMP_PIMaterialNumber === selectedTab.description.DSBP_PMP_PIMaterialNumber)
+            .map((item) => item)
+        )
+      );
+
+      console.log("updatedNewData filteredIds", filteredIds)
+      updateArtWorkTabValuesData(filteredIds);
+    }
     setFormData({});
     setLoader(false);
   };
@@ -276,17 +286,19 @@ const PMPSpecificTabView = () => {
       : localStorage.getItem("columnWidthDSBPArtworkBabyCare");
 
     let allColumns = JSON.parse(jsonColumnWidth);
-
+    
     const convertedInObject = [tabData];
     if (allColumns && allColumns.length) {
       return allColumns.map((field, index) => {
         const value = field?.Field_Name;
-        const filteredItems = convertedInObject?.filter(
-          (item) => item && item[value] !== undefined
-        );
-
-        return filteredItems.map((item) => (
-          <tr key={item[value]}>
+        // const filteredItems = convertedInObject?.filter(
+        //   (item) => item && item[value] !== undefined
+        // );
+        return convertedInObject.map((item) => {
+          const fieldEditable = item && item["AWM_AddedToProject"] === "Yes";
+          console.log("tab fieldEditable", fieldEditable);
+          return(
+            <tr key={item[value]}>
             <td className="columnWidth">{field.Field_Name}</td>
             <td>
               {field.Field_Name === "AWM_AddedToProject" && (
@@ -334,6 +346,7 @@ const PMPSpecificTabView = () => {
                     value={aiseName}
                     placeholder="Select AISE"
                     onChange={handleAiseChange}
+                    disabled={!fieldEditable}
                   >
                     <option value="">Select AISE</option>
                     {aiseList.map((aise) => (
@@ -354,6 +367,7 @@ const PMPSpecificTabView = () => {
                       value={assemblyMechanismChange}
                       placeholder="Select Assembly Mechanism"
                       onChange={handleAssemblyMechanismChange}
+                      disabled={!fieldEditable}
                     >
                       <option value="">Select Assembly Mechanism</option>
                       {assemblyMechanismList.map((aise) => (
@@ -384,6 +398,7 @@ const PMPSpecificTabView = () => {
                         placeholder="Enter Bioside"
                         onChange={handleBiosideChange}
                         value={bioside}
+                        disabled={!fieldEditable}
                       />
                     </Form.Group>
                   </div>
@@ -400,6 +415,7 @@ const PMPSpecificTabView = () => {
                     placeholder="Enter Group Name"
                     onChange={handleGroupName}
                     value={groupName}
+                    disabled={!fieldEditable}
                   />
                 </Form.Group>
               )}
@@ -414,6 +430,7 @@ const PMPSpecificTabView = () => {
                     placeholder="Enter Sellable"
                     onChange={handleSellableChange}
                     value={sellable}
+                    disabled={!fieldEditable}
                   />
                 </Form.Group>
               )}
@@ -426,7 +443,9 @@ const PMPSpecificTabView = () => {
                 item[value]}
             </td>
           </tr>
-        ));
+          )
+          
+      });
       });
     }
     return null; // return null if there are no columns or tabData is empty

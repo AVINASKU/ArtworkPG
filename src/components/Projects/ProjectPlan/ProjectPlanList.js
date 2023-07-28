@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import { TreeTable } from "primereact/treetable";
 import { Column } from "primereact/column";
+import { isArray } from "lodash";
 import { ProjectService } from "../../../service/PegaService";
 import ConfirmationPopUp from "../ConfirmationPopUp";
 import filter from "../../../assets/images/filter.svg";
@@ -13,18 +14,17 @@ import available from "../../../assets/images/available.svg";
 import Awaiting from "../../../assets/images/Awaiting.svg";
 import override from "../../../assets/images/override.svg";
 import { Dropdown } from "primereact/dropdown";
-import { useNavigate } from "react-router-dom";
 import { InputNumber } from "primereact/inputnumber";
 import "./index.scss";
 import TaskDialog from "../../TaskDialog";
 import ApproveDesignDialog from "./ApproveDesignDialog";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { ArtWorkTabValuesAction } from "../../../store/actions/ArtWorkTabValuesActions";
 import CPPFA from "./../../AWMJobs/CPPFA";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
-import GanttChart from "./GanttChart";
+// import GanttChart from "./GanttChart";
 
 const ProjectPlanList = ({
   view,
@@ -35,6 +35,7 @@ const ProjectPlanList = ({
   setPegaData,
   setUpdatedProjectPlanDesignData,
   setActiveSave,
+  setActiveFlag,
   isAccessEmpty,
   activeSave,
   getProjectPlanApi,
@@ -44,6 +45,7 @@ const ProjectPlanList = ({
   test,
   tabNameForPP,
   setTabName,
+  activeFlag
 }) => {
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
@@ -62,9 +64,18 @@ const ProjectPlanList = ({
   const [flag, setFlag] = useState("");
   const [loader, setLoader] = useState(false);
   const [updatedData, setUpdatedData] = useState([]);
+  const [roleOptionsData, setRoleOptionsData] = useState([]);
+  const [ownerData, setOwnerData] = useState([]);
+  let { ProjectID } = useParams();
+  const { myProject } = useSelector(
+    (state) => state.myProject
+  );
+  let projectData = isArray(myProject) && myProject.find(
+    (project) => project.Project_ID === ProjectID
+  );
   //projectPlanDesign
   const navigate = useNavigate();
-  let { ProjectID } = useParams();
+  
 
   const op = useRef(null);
 
@@ -357,7 +368,7 @@ const ProjectPlanList = ({
                     field === "Role"
                       ? optionsData["RoleOptions"]
                       : field === "Owner"
-                      ? optionsData["OwnerOptions"]
+                      ? optionsData["RoleOptions"]?.find((obj) => optionsData["Role"] === obj.Name)?.OwnerOptionsNew
                       : []
                   }
                   optionLabel="Name"
@@ -521,31 +532,55 @@ const ProjectPlanList = ({
   }, [pegadata]);
 
   useEffect(() => {
-    const startArtworkAlignmentData = pegadata?.filter(item => item.data.Task === "Start Artwork Alignment");
-    const otherTasksData = pegadata?.filter(item => item.data.Task !== "Start Artwork Alignment");
+    if(pegadata !== undefined && pegadata !== null){
+      const startArtworkAlignmentData = pegadata?.filter(item => item.data.Task === "Start Artwork Alignment");
+      const otherTasksData = pegadata?.filter(item => item.data.Task !== "Start Artwork Alignment");
 
-    const filteredData = {
-      startArtworkAlignment: startArtworkAlignmentData,
-      otherTasks: otherTasksData
-    };
-    console.log("filteredData", filteredData);
-    if(tabNameForPP === "Input"){
-      setUpdatedData(filteredData.startArtworkAlignment)
-    } else{
-      setUpdatedData(filteredData.otherTasks)
+      const filteredData = {
+        startArtworkAlignment: startArtworkAlignmentData,
+        otherTasks: otherTasksData
+      };
+      
+      if(tabNameForPP !== "Design"){
+        setUpdatedData(filteredData?.startArtworkAlignment)
+      } else{
+        setUpdatedData(filteredData?.otherTasks)
+      }
     }
-  }, [tabNameForPP]);
+    
+  }, [pegadata, tabNameForPP]);
 
   const onDropdownChange = (rowData, { value }, ele) => {
-    // Update the data with the new value
+    if (ele === "Role") {
+      console.log("value", value.Name);
+      if(rowData.data["Role"] !== value?.Name){
+        rowData.data["Assignee"] = ""
+      }      
+    }
     rowData.data[ele] = value.Name;
     console.log("Pegadata: ", pegadata);
-    setPegaData([...pegadata]);
+    // Create a new array with the updated data
+    const updatedPegadata = pegadata.map((data) => {
+      if (data.key === rowData.key) {
+        return {
+          ...data,
+          data: {
+            ...data.data,
+            [ele]: value.Name,
+          },
+        };
+      }
+      return data;
+    });
+   // Set the state with the updated array
+    setPegaData(updatedPegadata);
 
     if (!isAccessEmpty) {
       setActiveSave(true);
+      projectData?.Project_State === "Draft" && setActiveFlag(true);
     } else {
       setActiveSave(false);
+      projectData?.Project_State === "Draft" && setActiveFlag(false);
     }
     //updateProjectPlanDesign();
   };
@@ -752,7 +787,7 @@ const ProjectPlanList = ({
             )}
           </div>
         )}
-        {view === "GanttChart" && <GanttChart />}
+        {/* {view === "GanttChart" && <GanttChart />} */}
       </Suspense>
     </div>
   );

@@ -19,22 +19,25 @@ export const getProjectPlan = async (
     url: apiURL,
     method: "GET",
   });
-  if (projectPlanData?.ArtworkAgilityProjects) {
-    sessionStorage.setItem("ProjectSubmitted", true);
-  } else {
-    sessionStorage.setItem("ProjectSubmitted", false);
-  }
+  // if (projectPlanData?.ArtworkAgilityProjects) {
+  //   alert(true);
+  //   sessionStorage.setItem("ProjectSubmitted", true);
+  // } else {
+  //   alert(false);
+  //   sessionStorage.setItem("ProjectSubmitted", false);
+  // }
 
   return projectPlanData?.ArtworkAgilityProjects;
 };
 
-export const activateProjectPlan = async (projectId, headers = {}) => {
+export const activateProjectPlan = async (formData, projectId, headers = {}) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
   let apiURL = `${DEVURL}/activateProject/${projectId}`;
   const activateResponse = await axiosInstance({
     url: apiURL,
     method: "POST",
+    data: formData,
   });
   return activateResponse;
 };

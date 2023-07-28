@@ -29,19 +29,21 @@ import { ProjectService } from "../../service/PegaService";
 import ArtworkAlignment from "../DSBP/ArtworkAlignmentPage";
 // import DependencyMapping from "../DSBP/DependencyMappingPage";
 
-const DependencyMapping = lazy(() => import('../DSBP/DependencyMappingPage'));
+const DependencyMapping = lazy(() => import("../DSBP/DependencyMappingPage"));
 
 function ProjectSetup(props) {
   const toast = useRef(null);
-  const isAccessEmpty = hasAllAccess();
-  
+  const isAccessEmpty = true;
+
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const { mode } = projectSetup;
   const User = useSelector((state) => state.UserReducer);
   const userInformation = User.userInformation;
   const { accessMatrix } = useSelector((state) => state?.accessMatrixReducer);
-  const { projectPlan, projectPlanDesign, loading } = useSelector((state) => state.ProjectPlanReducer);
+  const { projectPlan, projectPlanDesign, loading } = useSelector(
+    (state) => state.ProjectPlanReducer
+  );
   const { myProject, ...myProjectData } = useSelector(
     (state) => state.myProject
   );
@@ -61,15 +63,20 @@ function ProjectSetup(props) {
   const [option, setOption] = useState("");
   const [visible, setVisible] = useState(false);
   const [activeSave, setActiveSave] = useState(true);
-  const [tabName, setTabName] = useState(url[2] !== undefined ? url[2] : url[1]);
+  const [tabName, setTabName] = useState(
+    url[2] !== undefined ? url[2] : url[1]
+  );
   const [tabNameForPP, setTabNameForPP] = useState("Design");
   const [projectPlanDesignData, setProjectPlanDesignData] = useState([]);
+  const [pegadata, setPegaData] = useState(null);
   const [updatedProjectPlanDesignData, setUpdatedProjectPlanDesignData] =
     useState([]);
     const [loader, setLoader] = useState(false);
-    const [activeFlag, setActiveFlag] = useState(isAccessEmpty);
+    const [activeFlag, setActiveFlag] = useState(true);
   
-  
+  const firstTime = projectPlanDesign.some(
+    (item) => item.Assignee !== "" || item.Role !== ""
+  );
   const getData = (option) => {
     setVisible(true);
     setOption(option);
@@ -81,13 +88,11 @@ function ProjectSetup(props) {
   }, [isAccessEmpty]);
 
   useEffect(() => {
-    setActiveFlag(false);
+    // setActiveFlag(false);
     let projectData = isArray(myProject) && myProject.find(
       (project) => project.Project_ID === ProjectID
     );
-    const firstTime = projectPlanDesign.some(
-      (item) => item.Assignee !== "" || item.Role !== ""
-    );
+    
     if (
       (!firstTime && projectData?.Project_State === "Draft") ||
       projectData?.Project_State === "Active" ||
@@ -105,16 +110,17 @@ function ProjectSetup(props) {
   }, [updatedProjectPlanDesignData]);
 
   useEffect(() => {
-    if(tabName === "projectPlan" || url[2] === "projectPlan"){
+    if (tabName === "projectPlan" || url[2] === "projectPlan") {
       getProjectPlanApi();
-    }    
+    }
   }, [mode]);
 
   const getProjectPlanApi = async () => {
     setLoader(true);
     let restructuredData = [];
     const apiData =
-      (mode === "edit" || mode === "design") && selectedProjectDetails.Project_ID
+      (mode === "edit" || mode === "design") &&
+      selectedProjectDetails.Project_ID
         ? await getProjectPlan(selectedProjectDetails.Project_ID)
         : [];
     apiData && dispatch(updateProjectPlanDesignAction(apiData));
@@ -126,84 +132,84 @@ function ProjectSetup(props) {
   const getRestructuredData = (apiData) => {
     let mainTempArr = [];
     let tasks = [];
-      tasks = [
-        {
-          name: "Define Design Intent",
-          code: "DDI",
-          data: apiData.filter((data) => data.AWM_Task_ID.includes("DDI_")),
-        },
-        {
-          name: "Upload Approved Design Intent",
-          code: "UADI",
-          data: apiData.filter((data) => data.AWM_Task_ID.includes("UADI_")),
-        },
-        {
-          name: "Define Design Template",
-          code: "DDT",
-          data: apiData.filter((data) => data.AWM_Task_ID.includes("DDT_")),
-        },
-        {
-          name: "Upload Regional Design Template",
-          code: "URDT",
-          data: apiData.filter((data) => data.AWM_Task_ID.includes("URDT_")),
-        },
-        {
-          name: "Approve Regional Design Template",
-          code: "ARDT",
-          data: apiData.filter((data) => data.AWM_Task_ID.includes("ARDT_")),
-        },
-        {
-          name: "Define Production Ready Art",
-          code: "DPRA",
-          data: apiData.filter((data) => data.AWM_Task_ID.includes("DPRA_")),
-        },
-        {
-          name: "Upload Production Ready Art",
-          code: "UPRA",
-          data: apiData.filter((data) => data.AWM_Task_ID.includes("UPRA_")),
-        },
-        {
-          name: "Approve Production Ready Art",
-          code: "APRA",
-          data: apiData.filter((data) => data.AWM_Task_ID.includes("APRA_")),
-        },
+    tasks = [
+      {
+        name: "Define Design Intent",
+        code: "DDI",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("DDI_")),
+      },
+      {
+        name: "Upload Approved Design Intent",
+        code: "UADI",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("UADI_")),
+      },
+      {
+        name: "Define Design Template",
+        code: "DDT",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("DDT_")),
+      },
+      {
+        name: "Upload Regional Design Template",
+        code: "URDT",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("URDT_")),
+      },
+      {
+        name: "Approve Regional Design Template",
+        code: "ARDT",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("ARDT_")),
+      },
+      {
+        name: "Define Production Ready Art",
+        code: "DPRA",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("DPRA_")),
+      },
+      {
+        name: "Upload Production Ready Art",
+        code: "UPRA",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("UPRA_")),
+      },
+      {
+        name: "Approve Production Ready Art",
+        code: "APRA",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("APRA_")),
+      },
 
-        {
-          name: "Confirm Preliminary print feasibility Assessment",
-          code: "CPPFA",
-          data: apiData.filter((data) => data.AWM_Task_ID.includes("CPPFA_")),
-        },
-        {
-          name: "Define New Print Feasibility Scope",
-          code: "DNPF",
-          data: apiData.filter((data) => data.AWM_Task_ID.includes("DNPF_")),
-        },
-        {
-          name: "Confirm Color Development",
-          code: "CCD",
-          data: apiData.filter((data) => data.AWM_Task_ID.includes("CCD_")),
-        },
-        {
-          name: "Confirm Print Trial",
-          code: "CPT",
-          data: apiData.filter((data) => data.AWM_Task_ID.includes("CPT_")),
-        },
-        {
-          name: "Define New Ink Qualification scope",
-          code: "DNIQ",
-          data: apiData.filter((data) => data.AWM_Task_ID.includes("DNIQ_")),
-        },
-        {
-          name: "Confirm New Ink Qualification",
-          code: "CNIQ",
-          data: apiData.filter((data) => data.AWM_Task_ID.includes("CNIQ_")),
-        },
-        {
-          name: "Start Artwork Alignment",
-          code: "SAA",
-          data: apiData.filter((data) => data.AWM_Task_ID.includes("SAA_")),
-        }
-      ];
+      {
+        name: "Confirm Preliminary print feasibility Assessment",
+        code: "CPPFA",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("CPPFA_")),
+      },
+      {
+        name: "Define New Print Feasibility Scope",
+        code: "DNPF",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("DNPF_")),
+      },
+      {
+        name: "Confirm Color Development",
+        code: "CCD",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("CCD_")),
+      },
+      {
+        name: "Confirm Print Trial",
+        code: "CPT",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("CPT_")),
+      },
+      {
+        name: "Define New Ink Qualification scope",
+        code: "DNIQ",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("DNIQ_")),
+      },
+      {
+        name: "Confirm New Ink Qualification",
+        code: "CNIQ",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("CNIQ_")),
+      },
+      {
+        name: "Start Artwork Alignment",
+        code: "SAA",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("SAA_")),
+      },
+    ];
     // }
 
     tasks.forEach((task) => {
@@ -228,7 +234,7 @@ function ProjectSetup(props) {
           dataObj["Role"] = task.data[0]?.Role;
           dataObj["RoleOptions"] = task.data[0]?.RoleOptions;
           dataObj["Assignee"] = task.data[0]?.Assignee;
-          dataObj["OwnerOptions"] = task.data[0]?.OwnerOptions;
+          dataObj["Owner"] = task.data[0]?.Owner;
           dataObj["State"] = task.data[0]?.State;
           dataObj["Duration"] = task.data[0]?.Duration;
           dataObj["StartDate"] = task.data[0]?.Start_Date;
@@ -256,7 +262,7 @@ function ProjectSetup(props) {
           dataObj["Role"] = "";
           dataObj["RoleOptions"] = "";
           dataObj["Assignee"] = "";
-          dataObj["OwnerOptions"] = "";
+          dataObj["Owner"] = "";
           dataObj["State"] = "";
           dataObj["Duration"] = "";
 
@@ -294,7 +300,7 @@ function ProjectSetup(props) {
             dataObj["Role"] = dt.Role;
             dataObj["RoleOptions"] = dt.RoleOptions;
             dataObj["Assignee"] = dt.Assignee;
-            dataObj["OwnerOptions"] = dt.OwnerOptions;
+            dataObj["Owner"] = dt.Owner;
             dataObj["State"] = dt.State;
             dataObj["Duration"] = dt.Duration;
             dataObj["StartDate"] = dt.Start_Date;
@@ -341,7 +347,6 @@ function ProjectSetup(props) {
     items = "ReadinessPerPMP";
   }
 
- 
   const [isSearch, isSearchSet] = useState(false);
   const onSearchClick = () => {
     isSearchSet(!isSearch);
@@ -389,16 +394,13 @@ function ProjectSetup(props) {
     // isReorderedColumn || isFilterEnabled ||
     isColWidthSet;
 
-  
-
   const childFunc = useRef(null);
 
   const test = (e) => {
     setIsFilterEnabled(e);
   };
 
-  const onSave = async () => {
-    let updatedData = [];
+  const saveData = (updatedData, activate) => {
     projectPlanDesignData.filter(
       ({ AWM_Project_ID, AWM_Task_ID, Assignee, Role, Duration }) =>
         projectPlanDesign.some((object2) => {
@@ -412,62 +414,91 @@ function ProjectSetup(props) {
                 Duration !== "" &&
                 Duration !== object2.Duration))
           ) {
+            if (!activate) {
+              updatedData.AWM_Project_ID = AWM_Project_ID;
+            }
             updatedData.push({
-              AWM_Project_ID: AWM_Project_ID,
               AWM_Task_ID: AWM_Task_ID,
               Assignee: Assignee,
               Role: Role,
               Duration: Duration,
             });
-            return console.log("updatedData", updatedData);
+            return true;
           }
+          return false;
         })
     );
+    console.log("updatedData function", updatedData);
+    return updatedData;
+  };
+
+  const onSave = async () => {
+    let updatedData = [];
+    console.log("projectPlanDesignData", projectPlanDesignData);
+    console.log("projectPlanDesign", projectPlanDesign);
+    const updatedSaveData = saveData(updatedData);
+    console.log("updatedData ouy", updatedSaveData);
     if (updatedData.length !== 0) {
       const formData = {
-        ArtworkAgilityProjects: updatedData,
+        ArtworkAgilityProjects: updatedSaveData,
       };
+      console.log("formData onSave", formData);
       dispatch(updateProjectPlanDesignAction(updatedProjectPlanDesignData));
       await saveProjectPlanAction(formData, selectedProjectDetails.Project_ID);
       setActiveSave(true);
+      setActiveFlag(true)
     }
   };
 
   const activate = async () => {
     setLoader(true);
-    await activateProjectPlan(selectedProjectDetails.Project_ID);
-    await dispatch(getMyProject(userInformation));
-    getProjectPlanApi();
-    setLoader(false);
-    await toast.current.show({
-      severity: "success",
-      summary: "Success",
-      detail: "Project activated successfully!",
-      life: 5000,
-    });
+    let updatedData = [];
+    const updatedSaveData = saveData(updatedData, true);
+    console.log("updatedData activate", updatedSaveData);
+
+    if (updatedData.length !== 0) {
+      const formData = {
+        ArtworkAgilityProjects: updatedSaveData,
+      };
+      console.log("formData activate", formData);
+      await activateProjectPlan(formData, selectedProjectDetails.Project_ID);
+      await dispatch(getMyProject(userInformation));
+      getProjectPlanApi();
+      await toast.current.show({
+        severity: "success",
+        summary: "Success",
+        detail: "Project activated successfully!",
+        life: 5000,
+      });
+      setLoader(false);
+      setActiveSave(true);
+      setActiveFlag(true)
+    }
   };
-  
+
   const itemsData = [
     {
       name: "projectSetup",
       tabNameForDisplay: "Project Setup",
-      component: !isNoAccess ? (
-        <div className="unauthorized-user">
-          You are not authorized to access this page.
-        </div>
-      ) : ( tabName === "projectSetup" &&
-        <div className="projectSetupParent project-setup-wrapper">
-          <div className="actions">
-            <div className="breadCrumbParent">{breadcrumb}</div>
+      component:
+        //   isNoAccess ? (
+        //   <div className="unauthorized-user">
+        //     You are not authorized to access this page.
+        //   </div>
+        // ) :
+        tabName === "projectSetup" && (
+          <div className="projectSetupParent project-setup-wrapper">
+            <div className="actions">
+              <div className="breadCrumbParent">{breadcrumb}</div>
+            </div>
+            <AddProject {...props} />
           </div>
-          <AddProject {...props} />
-        </div>
-      ),
+        ),
     },
     {
       name: "projectPlan",
       tabNameForDisplay: "Project Plan",
-      component: (tabName === "projectPlan" && 
+      component: tabName === "projectPlan" && (
         <div className="projectSetupParent project-plan-wrapper">
           <div className="breadCrumbParent">
             <div className="row">
@@ -527,7 +558,9 @@ function ProjectSetup(props) {
             <div>
               <Accordion className="projectPlanAccordian" defaultActiveKey="2">
                 <Accordion.Item eventKey="2">
-                  <Accordion.Header onClick={() => setTabNameForPP("Design")}>Design</Accordion.Header>
+                  <Accordion.Header onClick={() => setTabNameForPP("Design")}>
+                    Design
+                  </Accordion.Header>
                   <Accordion.Body>
                     <ProjectPlanCompo
                       isSearch={isSearch}
@@ -537,17 +570,28 @@ function ProjectSetup(props) {
                       tabNameForPP={tabNameForPP}
                       view={toggleButtons}
                       setTabName={setTabName}
-                      updatedProjectPlanDesignData={updatedProjectPlanDesignData}
-                      setUpdatedProjectPlanDesignData={setUpdatedProjectPlanDesignData}
+                      updatedProjectPlanDesignData={
+                        updatedProjectPlanDesignData
+                      }
+                      setUpdatedProjectPlanDesignData={
+                        setUpdatedProjectPlanDesignData
+                      }
                       activeSave={activeSave}
+                      setActiveFlag={setActiveFlag}
                       setActiveSave={setActiveSave}
                       getProjectPlanApi={getProjectPlanApi}
                       loader={loader}
+                      pegadata={pegadata}
+                      setPegaData={setPegaData}
+                      activeFlag={activeFlag}
+                      isAccessEmpty={isAccessEmpty}
                     />
                   </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="3">
-                  <Accordion.Header onClick={() => setTabNameForPP("Input")}>Input</Accordion.Header>
+                  <Accordion.Header onClick={() => setTabNameForPP("Input")}>
+                    Input
+                  </Accordion.Header>
                   <Accordion.Body>
                     <ProjectPlanCompo
                     isSearch={isSearch}
@@ -560,9 +604,14 @@ function ProjectSetup(props) {
                     updatedProjectPlanDesignData={updatedProjectPlanDesignData}
                     setUpdatedProjectPlanDesignData={setUpdatedProjectPlanDesignData}
                     activeSave={activeSave}
+                    setActiveFlag={setActiveFlag}
                     setActiveSave={setActiveSave}
                     getProjectPlanApi={getProjectPlanApi}
                     loader={loader}
+                    pegadata={pegadata} 
+                    setPegaData={setPegaData}
+                    activeFlag={activeFlag}
+                    isAccessEmpty={isAccessEmpty}
                   />
                   </Accordion.Body>
                 </Accordion.Item>
@@ -571,7 +620,7 @@ function ProjectSetup(props) {
                   <Accordion.Body>FA Assembly</Accordion.Body>
                 </Accordion.Item>
               </Accordion>
-              {(
+              {
                 <div className="form-buttons" style={{ background: "#FAFAFA" }}>
                   <Button
                     className={
@@ -585,7 +634,9 @@ function ProjectSetup(props) {
                   </Button>
 
                   <Button
-                    className={activeSave ? "btn btn-disabled" : "button-layout"}
+                    className={
+                      activeSave ? "btn btn-disabled" : "button-layout"
+                    }
                     variant="secondary"
                     onClick={onSave}
                     disabled={activeSave}
@@ -602,7 +653,7 @@ function ProjectSetup(props) {
                     Activate
                   </Button>
                 </div>
-              )}
+              }
             </div>
           )}
         </div>
@@ -616,9 +667,11 @@ function ProjectSetup(props) {
     {
       name: "mapping",
       tabNameForDisplay: "Mapping",
-      component: tabName === "mapping" && <Suspense fallback={<div>Loading Component</div>}>
-         <DependencyMapping/>
-      </Suspense>,
+      component: tabName === "mapping" && (
+        <Suspense fallback={<div>Loading Component</div>}>
+          <DependencyMapping />
+        </Suspense>
+      ),
     },
     {
       name: "readinessPerPMP",
@@ -655,7 +708,6 @@ function ProjectSetup(props) {
       </Dropdown.Item>
     </DropdownButton>
   );
-
 
   return (
     <div className="content-layout">

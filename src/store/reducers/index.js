@@ -13,6 +13,8 @@ import accessMatrixReducer from "./RoleBasedReducer";
 import ssoReducer from "./SSOReducer";
 import DSBPDropdownReducer from "./DSBPReducer";
 import ArtWorkTabValuesReducer from "./ArtWorkTabValuesReducer";
+import DMTabValuesReducer from "./DMTabValuesReducer";
+import azureProofscopeFileUpload from "./AzureProofscopeFileReducer";
 
 export default combineReducers({
   myProject: ProjectReducer,
@@ -26,7 +28,9 @@ export default combineReducers({
   helpNeededReducer,
   DropDownValuesReducer,
   accessMatrixReducer,
-   ssoReducer,
-   DSBPDropdownReducer,
-   ArtWorkTabValuesReducer
+  ssoReducer,
+  DSBPDropdownReducer,
+  ArtWorkTabValuesReducer,
+  DMTabValuesReducer,
+  proofscope: azureProofscopeFileUpload,
 });

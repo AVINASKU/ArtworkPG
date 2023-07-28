@@ -108,8 +108,10 @@ const AgilityList = ({
     setOnChangeData(rowData);
     if (e.target.value === "Reject") setRejectDialog(true);
     setRejectFormData({});
-    if (e.target.value === "Yes" || e.target.value !== "Reject")
+    if (e.target.value === "Yes")
       setHandleYesAddToPRoject(true);
+    if(e.target.value === "No")
+      onChangeSelectField(rowData, e, ele);
   };
 
   const projectNameOnClick = (e, options) => {
@@ -155,8 +157,9 @@ const AgilityList = ({
     const uniqueArray = Array.from(
       new Set(newArray.map((obj) => JSON.stringify(obj)))
     ).map(JSON.parse);
+
     dispatch(ArtWorkTabValuesAction(uniqueArray));
-    navigate("/DSBP/tab", { replace: true });
+    navigate("/DSBP/tab/artworkAlignment", { replace: true });
   };
 
   const onChangeSelectField = (option, e, field) => {
@@ -194,6 +197,7 @@ const AgilityList = ({
 
   const addBody = (options, rowData) => {
     let field = rowData.field;
+    const fieldEditable = options["AWM_AddedToProject"] === "Yes";
     let FPCStagingFormula =
       options?.FPCStagingPage?.[0]?.FormulaCardStagingPage;
     let concatenatedFPCStagingFormulaData = {};
@@ -212,7 +216,7 @@ const AgilityList = ({
             checked={selected?.includes(options)}
             // onChange={() => !userHasAccess && handleSelect(options)}
             onChange={() => handleSelect(options)}
-            disabled={userHasAccess}
+            // disabled={userHasAccess}
           />
         </div>
       )}
@@ -221,7 +225,7 @@ const AgilityList = ({
         {field === "DSBP_PMP_PIMaterialNumber" && (
           <a
             className="tabView"
-            disabled={userHasAccess}
+            // disabled={userHasAccess}
             // onClick={() => !userHasAccess && onHandlePmpTabView(options, field)}
             onClick={() => onHandlePmpTabView(options, field)}
           >
@@ -236,7 +240,6 @@ const AgilityList = ({
             <Form.Select
               placeholder="Select"
               value={options[field]}
-              disabled={userHasAccess}
               // onChange={(e) => !userHasAccess && onchangeAddToProject(options, e, field)}
               onChange={(e) => onchangeAddToProject(options, e, field)}
               style={{ width: "80%", fontSize: 12 }}
@@ -277,7 +280,7 @@ const AgilityList = ({
             <Form.Select
               placeholder="Select"
               value={options[field]}
-              disabled={userHasAccess}
+              disabled={!fieldEditable}
               // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               onChange={(e) => onChangeSelectField(options, e, field)}
               style={{ width: "80%", fontSize: 12 }}
@@ -299,7 +302,7 @@ const AgilityList = ({
             <Form.Select
               placeholder="Select"
               value={options[field]}
-              disabled={userHasAccess}
+              disabled={!fieldEditable}
               // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               onChange={(e) => onChangeSelectField(options, e, field)}
               style={{ width: "80%", fontSize: 12 }}
@@ -314,6 +317,22 @@ const AgilityList = ({
           </Form.Group>
         )}
 
+        {field === "AWM_GroupPMP" && (
+          <Form.Group
+            controlId="groupName.ControlInput1"
+            style={{ textAlign: "-webkit-center" }}
+          >
+            <Form.Control
+              type="text"
+              value={options[field]}
+              disabled={!fieldEditable}
+              // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
+              onChange={(e) => onChangeSelectField(options, e, field)}
+              placeholder="Enter Group Name"
+            />
+          </Form.Group>
+        )}
+
         {field === "AWM_Sellable" && (
           <Form.Group
             controlId="groupName.ControlInput1"
@@ -322,7 +341,7 @@ const AgilityList = ({
             <Form.Control
               type="text"
               value={options[field]}
-              disabled={userHasAccess}
+              disabled={!fieldEditable}
               // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               onChange={(e) => onChangeSelectField(options, e, field)}
               placeholder="Enter Sellable"
@@ -338,7 +357,7 @@ const AgilityList = ({
             <Form.Control
               type="text"
               value={options[field]}
-              disabled={userHasAccess}
+              disabled={!fieldEditable}
               // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               onChange={(e) => onChangeSelectField(options, e, field)}
               placeholder="Enter Biocide"
@@ -346,12 +365,12 @@ const AgilityList = ({
           </Form.Group>
         )}
 
-        {
-          field !== "AWM_AddedToProject" &&
+        {field !== "AWM_AddedToProject" &&
           field !== "DSBP_PMP_PIMaterialNumber" &&
           field !== "AWM_AISE" &&
           field !== "AWM_AssemblyMechanism" &&
           field !== "AWM_Biocide" &&
+          field !== "AWM_GroupPMP" &&
           field !== "AWM_Sellable" &&
           field !== "field_0" &&
           options[field]}
@@ -360,14 +379,15 @@ const AgilityList = ({
   };
 
   const renderHeader = (field, isFilterActivated = false) => {
-    if (field === "checkbox") { // Render checkbox in header
+    if (field === "checkbox") {
+      // Render checkbox in header
       return (
         <div className="flex align-items-center gap-2">
           <input
             type="checkbox"
             className="p-checkbox-box p-highlight"
             checked={selectAllChecked}
-            disabled = {userHasAccess}
+            disabled = {dsbpPmpData === null}
             onChange={handleSelectAll}
           />
         </div>
@@ -380,7 +400,7 @@ const AgilityList = ({
           src={filter}
           key={field}
           alt="Column Filter"
-          disabled={userHasAccess}
+          // disabled={userHasAccess}
           // onClick={(e) => !userHasAccess && projectNameOnClick(e, field)}
           onClick={(e) => projectNameOnClick(e, field)}
           className={
@@ -399,28 +419,30 @@ const AgilityList = ({
       ? localStorage.getItem("columnWidthDSBPArtworkHomeCare")
       : localStorage.getItem("columnWidthDSBPArtworkBabyCare");
     let allColumns = JSON.parse(jsonColumnWidth);
-  
+
     // customize fields
-    let jsonValue = customizeViewFields ? JSON.parse(customizeViewFields) : null;
+    let jsonValue = customizeViewFields
+      ? JSON.parse(customizeViewFields)
+      : null;
     if (jsonValue && Object.keys(jsonValue).length !== 0) {
       let selectedData = jsonValue?.selectedFields?.fieldsData || [];
       let freezedData = jsonValue?.freezedColumns?.fieldsData || [];
-        const filteredColumns = [];
-        // Add freezedData columns in the specified order
-        freezedData?.forEach(fieldName => {
-          const column = allColumns.find(col => col.Field_Name === fieldName);
-          if (column) {
-              column.freeze = true;
-              filteredColumns.push(column);
-          }
-        });
-        // Add selectedData columns in the specified order
-        selectedData?.forEach(fieldName => {
-          const column = allColumns.find(col => col.Field_Name === fieldName);
-          if (column) {
-              filteredColumns.push(column);
-          }
-        });
+      const filteredColumns = [];
+      // Add freezedData columns in the specified order
+      freezedData?.forEach((fieldName) => {
+        const column = allColumns.find((col) => col.Field_Name === fieldName);
+        if (column) {
+          column.freeze = true;
+          filteredColumns.push(column);
+        }
+      });
+      // Add selectedData columns in the specified order
+      selectedData?.forEach((fieldName) => {
+        const column = allColumns.find((col) => col.Field_Name === fieldName);
+        if (column) {
+          filteredColumns.push(column);
+        }
+      });
       if (filteredColumns && filteredColumns.length) {
         return [
           // Checkbox column
@@ -434,24 +456,25 @@ const AgilityList = ({
           />,
           // Rest of the columns
           ...filteredColumns.map((field, index) => {
-          return (
-            <Column
-              field={field.Field_Name}
-              header={() => renderHeader(field.Field_Name)}
-              frozen={field.freeze}
-              className={field.freeze ? "font-bold" : ""}
-              body={addBody}
-              key={field.Field_Name}
-              columnKey={field.Field_Name}
-              showFilterMenu={false}
-              alignFrozen="left"
-              filterField={field.Field_Name}
-              style={{
-                width: field.width,
-              }}
-            />
-          );
-        })];
+            return (
+              <Column
+                field={field.Field_Name}
+                header={() => renderHeader(field.Field_Name)}
+                frozen={field.freeze}
+                className={field.freeze ? "font-bold" : ""}
+                body={addBody}
+                key={field.Field_Name}
+                columnKey={field.Field_Name}
+                showFilterMenu={false}
+                alignFrozen="left"
+                filterField={field.Field_Name}
+                style={{
+                  width: field.width,
+                }}
+              />
+            );
+          }),
+        ];
       }
     } else {
       if (allColumns && allColumns.length) {
@@ -467,28 +490,28 @@ const AgilityList = ({
           />,
           // Rest of the columns
           ...allColumns.map((field, index) => {
-          return (
-            <Column
-              field={field.Field_Name}
-              header={() => renderHeader(field.Field_Name)}
-              frozen={field.freeze}
-              className={field.freeze ? "font-bold" : ""}
-              body={addBody}
-              key={field.Field_Name}
-              columnKey={field.Field_Name}
-              showFilterMenu={false}
-              alignFrozen="left"
-              filterField={field.Field_Name}
-              style={{
-                width: field.width,
-              }}
-            />
-          );
-        })];
+            return (
+              <Column
+                field={field.Field_Name}
+                header={() => renderHeader(field.Field_Name)}
+                frozen={field.freeze}
+                className={field.freeze ? "font-bold" : ""}
+                body={addBody}
+                key={field.Field_Name}
+                columnKey={field.Field_Name}
+                showFilterMenu={false}
+                alignFrozen="left"
+                filterField={field.Field_Name}
+                style={{
+                  width: field.width,
+                }}
+              />
+            );
+          }),
+        ];
       }
     }
   };
-  
 
   const onColumnResizeEnd = (event) => {
     let columnWidth = [];
@@ -560,6 +583,7 @@ const AgilityList = ({
   const timestamp = new Date().getTime();
 
   return (
+    console.log("dsbpPmpData", dsbpPmpData),
     <>
       <DataTable
         dataKey="DSBP_PMP_PIMaterialID"

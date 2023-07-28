@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { NavLink, useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import DsbpActionDialog from "./DsbpActionDialog";
 import CustomizeView from "./CustomizeView";
 import filter from "../../assets/images/filter.svg";
 import BlueFilterIcon from "../../assets/images/BlueFilterIcon.svg";
+import {
+  handleConfirmFullScopeIn
+} from "../../apis/dsbpApi";
+import { getMyProject } from "../../store/actions/ProjectActions";
 import "primeicons/primeicons.css";
+import { isArray } from "lodash";
 
 const ArtworkHeader = ({
   label,
@@ -32,6 +36,8 @@ const ArtworkHeader = ({
   isDependencyMapping,
 }) => {
   const navigate = useNavigate();
+  let { ProjectID } = useParams();
+  const dispatch = useDispatch();
   const [checked, setChecked] = useState(false);
   const [toggleButtons, setToggleButtons] = useState("Tabular");
   const [actionHeader, setActionHeader] = useState("");
@@ -42,6 +48,8 @@ const ArtworkHeader = ({
   const { DropDownValuesData, loading } = useSelector(
     (state) => state.DropDownValuesReducer
   );
+  const { userInformation } = useSelector((state) => state.UserReducer);
+  const { myProject} = useSelector((state) => state.myProject);
   const BU = selectedProjectDetails?.BU;
   // check whether project is from home care or baby care
   let isBUHomeCare = false;
@@ -83,6 +91,7 @@ const ArtworkHeader = ({
   const [actionDropDownValues, setActionDropDownValues] = useState([]);
   const [aiseList, setAISEList] = useState([]);
   const [assemblyMechanismList, setAssemblyMechanismList] = useState([]);
+  const [confirmFullScopeEnable, setConfirmFullScopeEnable] = useState(false);
   // let jsonColumnWidth = localStorage.getItem("columnWidthDSBPArtwork");
 
   let jsonColumnWidth = isBUHomeCare
@@ -137,6 +146,15 @@ const ArtworkHeader = ({
   );
 
   useEffect(() => {
+    if (myProject) {
+      let projectData = isArray(myProject) && myProject.find(
+        (project) => project.Project_ID === ProjectID
+      );
+      setConfirmFullScopeEnable(projectData?.Estimated_No_Of_POAs > 1)
+    }
+  }, [myProject]);
+
+  useEffect(() => {
     if (DropDownValuesData) {
       setActionDropDownValues(
         DropDownValuesData?.ArtworkAgilityTasksPage.Artwork_Alignment || []
@@ -153,6 +171,13 @@ const ArtworkHeader = ({
       setAssemblyMechanismList(actionDropDownValues.Assembly_Mechanism);
     }
   }, [actionDropDownValues]);
+
+  const onConfirmFullScopeIn = async () => {
+    await handleConfirmFullScopeIn(ProjectID);
+    await dispatch(getMyProject(userInformation));
+    //my project get api https://awflowdev.pg.com/optaplanner/optimize/myprojects/Nora
+  };
+
   return (
     <div>
       {showApproveDialogCPPFA && (
@@ -238,8 +263,9 @@ const ArtworkHeader = ({
           ) : (
             <button
               type="button"
-              disabled={userHasAccess}
+              disabled={confirmFullScopeEnable || userHasAccess}
               className="btn btn-secondary"
+              onClick={onConfirmFullScopeIn}
             >
               Confirm Full Scope in
             </button>

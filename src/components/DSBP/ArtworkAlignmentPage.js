@@ -76,14 +76,12 @@ const ArtworkAlignment = () => {
     if (BU === "Baby Care") {
       let buWiseAttributeList =
         allBUAttributes?.ArtWorkProjectSetupPage?.Artwork_BU;
-      // console.log("all buWiseAttributeList", allBUAttributes);
       let attributeList = [];
       if (buWiseAttributeList) {
         attributeList =
           buWiseAttributeList.find((item) => item.BU_Name === BU)
             ?.Attribute_List || [];
       }
-      console.log("attribute list", attributeList);
       let sortedData = [];
       if (attributeList && attributeList.length) {
         sortedData = [...attributeList].sort((a, b) => {
@@ -125,14 +123,12 @@ const ArtworkAlignment = () => {
     if (BU === "Home Care") {
       let buWiseAttributeList =
         allBUAttributes?.ArtWorkProjectSetupPage?.Artwork_BU;
-      // console.log("all buWiseAttributeList", allBUAttributes);
       let attributeList = [];
       if (buWiseAttributeList) {
         attributeList =
           buWiseAttributeList.find((item) => item.BU_Name === BU)
             ?.Attribute_List || [];
       }
-      console.log("attribute list", attributeList);
       let sortedData = [];
       if (attributeList && attributeList.length) {
         sortedData = [...attributeList].sort((a, b) => {
@@ -292,11 +288,13 @@ const ArtworkAlignment = () => {
   };
 
   const onSubmit = async () => {
+    setLoader(true);
     if (addSavedData && addSavedData.length) {
       const updatedPmpDetails = { ArtworkAgilityPMPs: addSavedData };
       await onSubmitDsbpAction(updatedPmpDetails);
     }
     setSavedData([]);
+    setLoader(false);
   };
 
   const onActionSubmit = async (formData, data) => {
@@ -328,8 +326,9 @@ const ArtworkAlignment = () => {
       if (formData?.AWM_GroupPMP !== undefined) {
         updatedData.AWM_GroupPMP = formData?.AWM_GroupPMP;
       }
-      if (formData?.RTA_RTARejectionReason !== undefined) {
-        updatedData.RTA_RTARejectionReason = formData?.RTA_RTARejectionReason;
+      if (formData?.ReasonforRejection !== undefined) {
+        updatedData.AWM_AddedToProject = "Reject";
+        updatedData.ReasonforRejection = formData?.ReasonforRejection;
       }
       if (formData?.RejectionComment !== undefined) {
         updatedData.RejectionComment = formData?.RejectionComment;
@@ -343,6 +342,8 @@ const ArtworkAlignment = () => {
     const updatedPmpDetails = { ArtworkAgilityPMPs: updatedDataList };
     await onSubmitDsbpAction(updatedPmpDetails);
     setActionDialog(false);
+    dispatch(getDSBPDropdownData(BU, Region, ProjectID));
+    await fetchData()
     setSelected([]);
     setLoader(false);
   };
@@ -403,7 +404,7 @@ const ArtworkAlignment = () => {
             selectedProjectDetails={selectedProjectDetails}
             customizeViewFields={customizeViewFields}
             setCustomizeViewFields={setCustomizeViewFields}
-            userHasAccess={userHasAccess}
+            userHasAccess={!userHasAccess}
           />
           <SelectDsbpId
             dropdownlist={dropdownlist}
@@ -415,7 +416,7 @@ const ArtworkAlignment = () => {
             totalNoOfPMPLocked={totalNoOfPMPLocked}
             listOfInitiativeId={listOfInitiativeId}
             mappedPOAS={mappedPOAS}
-            userHasAccess={userHasAccess}
+            userHasAccess={!userHasAccess}
           />
           {tableLoader ? (
             <Loading />

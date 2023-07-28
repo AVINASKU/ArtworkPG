@@ -195,6 +195,7 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
     setSortData([]);
     setFilters([]);
     setFrozenColumn([]);
+    isSearchSet(false);
   };
 
   const onSearchClick = () => {
@@ -490,7 +491,7 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
     }
   };
   const isFilterEnabled =
-    frozenCoulmns?.length || filters?.length || sortData?.length;
+    frozenCoulmns?.length || filters?.length || sortData?.length || isSearch;
 
   //search each columns
   const searchHeader = projectColumnName.reduce(

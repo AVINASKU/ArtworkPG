@@ -1,0 +1,83 @@
+.tabsCompoMainDM {
+  // background-color: #eaecea;
+  border-radius: 8px 8px 0 0;
+  overflow-y: auto;
+  height: 100%;
+  table td:after {
+    width: 0;
+  }
+
+  .columnWidth {
+    width: 320px;
+    // background-color: #EDF4FA;
+  }
+
+  // .accordion .accordion-item .accordion-header:first-child {
+  //   border-radius: 4px 4px 0 0;
+  // }
+  .accordion {
+    margin: 0;
+    height: 100%;
+    .accordion-item{
+      // height: 100%;
+      overflow: hidden;
+      .accordion-header:has(.collapsed) {
+        background-color: rgba(255, 239, 216, 1);
+      }
+      .accordion-header {
+        background-color: rgba(214, 236, 255, 1);
+        border-radius: 4px 4px 0 0 !important;
+      }
+    }
+    &.accordion-flush .accordion-collapse{
+      height: 100%;
+      overflow: auto;
+      padding-bottom: 20px;
+    }
+    .accordion-body {
+      padding: 0px;
+    }
+    .accordion-button {
+      box-shadow: none;
+      outline: none;
+      padding-left: 30px;
+      font-size: 14px;
+      color: #003da5;
+      // background-color: red !important;
+      width: fit-content;
+      margin-right: 2px;
+      width: 100%;
+      padding: 8px;
+      &::after {
+        right: 20px;
+        position: absolute;
+      }
+      &:not(.collapsed) {
+        background: rgba(214, 236, 255, 1);
+        color: #003da5;
+      }
+    }
+    .pmp-details .accordion-button {
+        background-color: #D6ECFF !important;    
+    }
+
+    .pmp-details .columnWidth {
+      background-color: #F3F3F3 !important;
+    }
+    .mapping .accordion-button {
+      background-color: #FFEFD8 !important;
+    }
+    .mapping .columnWidth {
+      background-color: #FFF8EE !important;
+    }
+    .dsm-fields .accordion-button {
+      background-color: #D3E4FF !important;
+    }
+    .dsm-fields .columnWidth {
+      background-color: #E9F1FF !important;
+    }
+    .collapsed {
+      background-color: rgba(255, 239, 216, 1);
+    }
+  }  
+}

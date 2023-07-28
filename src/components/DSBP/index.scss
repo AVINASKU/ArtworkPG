@@ -1,6 +1,6 @@
-.content-layout .tabular-view .myProjectAnddAllProjectList{
-  &.artwork-dsbp {
-    height: calc(100% + 19px);
+.content-layout .tabular-view {
+  .artwork-dsbp {
+    height: 100%;
     padding-top: 8px;
     position: relative;
     .multiselect-padding {
@@ -13,7 +13,7 @@
       margin-right: 20px;
     }
     .p-datatable {
-      height: calc(100% - 152px);
+      height: calc(100% - 160px);
       .p-datatable-wrapper {
         height: 100%;
       }
@@ -34,13 +34,13 @@
       flex-direction: row;
     }
     .form-buttons{
-      padding: 1rem;
+      padding: 0 10px;
       position: absolute;
       background: white;
       text-align: right;
       width: 100%;
       left: 0;
-      bottom: 0;
+      bottom: 30px;
     }
   }
 }
@@ -248,17 +248,25 @@ a.tabView {
       background-color: #ffffff !important;
     }
 
-  th:after,
-  td:after {
-    content: "";
-    display: block;
-    height: 22px;
-    width: 0.8px;
-    background-color: #acacac;
-    position: absolute;
-    top: 25%;
-    right: 0;
-  }
+    .blue-bg-color {
+      background: #edf4fa !important;
+    }
+
+    .header-pink-bg-color{
+    background: #FFEFD8 !important;
+    }
+
+    th:after,
+    td:after {
+      content: "";
+      display: block;
+      height: 22px;
+      width: 0.8px;
+      background-color: #acacac;
+      position: absolute;
+      top: 25%;
+      right: 0;
+    }
 
   td,
   table .p-datatable .p-datatable-tbody>tr>td,

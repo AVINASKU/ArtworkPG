@@ -5,16 +5,14 @@ import "primeicons/primeicons.css";
 import "./index.scss";
 import { useSelector } from "react-redux";
 import {
-  Loading,
-  hasAllAccess,
+  Loading
 } from "../../../utils";
 
 function ProjectPlanCompo(props) {
-  const { view, setTabName, setUpdatedProjectPlanDesignData, setActiveSave, getProjectPlanApi, loader, tabNameForPP } = props;
+  const { view, setTabName, setUpdatedProjectPlanDesignData,setActiveFlag, setActiveSave, getProjectPlanApi, loader, tabNameForPP, pegadata, setPegaData, activeFlag, isAccessEmpty } = props;
   const toast = useRef(null);
-  const [pegadata, setPegaData] = useState(null);
   // Check if access is empty for the user's role and page
-  const isAccessEmpty = hasAllAccess();
+  
   const { myProject, ...myProjectData } = useSelector(
     (state) => state.myProject
   );
@@ -42,11 +40,13 @@ function ProjectPlanCompo(props) {
               pegadata={pegadata}
               setUpdatedProjectPlanDesignData={setUpdatedProjectPlanDesignData}
               setActiveSave={setActiveSave}
+              setActiveFlag={setActiveFlag}
               getProjectPlanApi={getProjectPlanApi}
               isAccessEmpty={isAccessEmpty}
               view={view}
               setTabName={setTabName}
               tabNameForPP={tabNameForPP}
+              activeFlag={activeFlag}
             />
           </>
         )}
