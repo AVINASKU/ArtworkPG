@@ -102,14 +102,17 @@ const AgilityList = ({
     setCustomizeViewFields(customizeViewFields);
   }, [customizeViewFields]);
 
-  const onchangeAddToProject = (rowData, e, ele) => {
-    rowData[ele] = e.target.value;
-    setDsbpPmpData([...dsbpPmpData]);
+  const onchangeAddToProject = (rowData, e, ele) => {    
     setOnChangeData(rowData);
     if (e.target.value === "Reject") setRejectDialog(true);
     setRejectFormData({});
-    if (e.target.value === "Yes" || e.target.value !== "Reject")
+    if (e.target.value === "Yes")
       setHandleYesAddToPRoject(true);
+    if(e.target.value === "No"){
+      rowData[ele] = e.target.value;
+      setDsbpPmpData([...dsbpPmpData]);
+      onChangeSelectField(rowData, e, ele);
+    }
   };
 
   const projectNameOnClick = (e, options) => {
@@ -207,23 +210,23 @@ const AgilityList = ({
     return (
       <>
         {field === "field_0" && ( // Add this condition to render a checkbox
-          <div className="flex align-items-center gap-2">
-            <input
-              type="checkbox"
-              className="p-checkbox-box p-highlight"
-              checked={selected?.includes(options)}
-              // onChange={() => !userHasAccess && handleSelect(options)}
-              onChange={() => handleSelect(options)}
-              disabled={userHasAccess}
-            />
-          </div>
-        )}
+        <div className="flex align-items-center gap-2">
+          <input
+            type="checkbox"
+            className="p-checkbox-box p-highlight"
+            checked={selected?.includes(options)}
+            // onChange={() => !userHasAccess && handleSelect(options)}
+            onChange={() => handleSelect(options)}
+            // disabled={userHasAccess}
+          />
+        </div>
+      )}
         {options?.FPCStagingPage?.[0][field]}
         {concatenatedFPCStagingFormulaData?.[field]}
         {field === "DSBP_PMP_PIMaterialNumber" && (
           <a
             className="tabView"
-            disabled={userHasAccess}
+            // disabled={userHasAccess}
             // onClick={() => !userHasAccess && onHandlePmpTabView(options, field)}
             onClick={() => onHandlePmpTabView(options, field)}
           >
@@ -238,7 +241,6 @@ const AgilityList = ({
             <Form.Select
               placeholder="Select"
               value={options[field]}
-              disabled={userHasAccess}
               // onChange={(e) => !userHasAccess && onchangeAddToProject(options, e, field)}
               onChange={(e) => onchangeAddToProject(options, e, field)}
               style={{ width: "80%", fontSize: 12 }}
@@ -279,7 +281,7 @@ const AgilityList = ({
             <Form.Select
               placeholder="Select"
               value={options[field]}
-              disabled={!fieldEditable || userHasAccess}
+              disabled={!fieldEditable}
               // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               onChange={(e) => onChangeSelectField(options, e, field)}
               style={{ width: "80%", fontSize: 12 }}
@@ -301,7 +303,7 @@ const AgilityList = ({
             <Form.Select
               placeholder="Select"
               value={options[field]}
-              disabled={!fieldEditable || userHasAccess}
+              disabled={!fieldEditable}
               // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               onChange={(e) => onChangeSelectField(options, e, field)}
               style={{ width: "80%", fontSize: 12 }}
@@ -324,7 +326,7 @@ const AgilityList = ({
             <Form.Control
               type="text"
               value={options[field]}
-              disabled={!fieldEditable || userHasAccess}
+              disabled={!fieldEditable}
               // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               onChange={(e) => onChangeSelectField(options, e, field)}
               placeholder="Enter Group Name"
@@ -340,7 +342,7 @@ const AgilityList = ({
             <Form.Control
               type="text"
               value={options[field]}
-              disabled={!fieldEditable || userHasAccess}
+              disabled={!fieldEditable}
               // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               onChange={(e) => onChangeSelectField(options, e, field)}
               placeholder="Enter Sellable"
@@ -356,7 +358,7 @@ const AgilityList = ({
             <Form.Control
               type="text"
               value={options[field]}
-              disabled={!fieldEditable || userHasAccess}
+              disabled={!fieldEditable}
               // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               onChange={(e) => onChangeSelectField(options, e, field)}
               placeholder="Enter Biocide"
@@ -386,8 +388,7 @@ const AgilityList = ({
             type="checkbox"
             className="p-checkbox-box p-highlight"
             checked={selectAllChecked}
-            disabled = {dsbpPmpData === null || userHasAccess}
-
+            disabled = {dsbpPmpData === null}
             onChange={handleSelectAll}
           />
         </div>
@@ -400,7 +401,7 @@ const AgilityList = ({
           src={filter}
           key={field}
           alt="Column Filter"
-          disabled={userHasAccess}
+          // disabled={userHasAccess}
           // onClick={(e) => !userHasAccess && projectNameOnClick(e, field)}
           onClick={(e) => projectNameOnClick(e, field)}
           className={

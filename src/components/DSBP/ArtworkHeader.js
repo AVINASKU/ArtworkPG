@@ -34,6 +34,7 @@ const ArtworkHeader = ({
   setCustomizeViewFields,
   userHasAccess,
   isDependencyMapping,
+  setLoader
 }) => {
   const navigate = useNavigate();
   let { ProjectID } = useParams();
@@ -173,9 +174,10 @@ const ArtworkHeader = ({
   }, [actionDropDownValues]);
 
   const onConfirmFullScopeIn = async () => {
+    setLoader(true)
     await handleConfirmFullScopeIn(ProjectID);
     await dispatch(getMyProject(userInformation));
-    //my project get api https://awflowdev.pg.com/optaplanner/optimize/myprojects/Nora
+    setLoader(false)
   };
 
   return (
