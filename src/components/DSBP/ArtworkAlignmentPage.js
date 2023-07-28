@@ -455,7 +455,7 @@ const ArtworkAlignment = () => {
             hideSaveButton={true}
             onSubmit={onSubmit}
             formValid={!checkLength}
-            checkReadWriteAccess={!userHasAccess}
+            checkReadWriteAccess={userHasAccess}
           />
         </>
       )}
