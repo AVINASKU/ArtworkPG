@@ -32,7 +32,7 @@ const URDT = () => {
   const [loader, setLoader] = useState(false);
   let { TaskID, ProjectID } = useParams();
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
-  const selectedProjectDetails = projectSetup.selectedProject;
+  const selectedProjectDetails = projectSetup?.selectedProject;
   const { TaskDetailsData, loading } = useSelector(
     (state) => state.TaskDetailsReducer
   );
@@ -100,18 +100,33 @@ const URDT = () => {
       content: {
         AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
         AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
-        Size: fileSize === 0 ? "1" : fileSize,
-        Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
-        Filename: fileName,
       },
+      pageInstructions: [
+        {
+          instruction: "APPEND",
+
+          target: "UploadRDTList",
+
+          content: {
+            Action: "add",
+
+            Filename: fileName,
+
+            Size: fileSize === 0 ? "1" : fileSize,
+
+            Version:
+              version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
+          },
+        },
+      ],
     };
-    await dispatch(
+    dispatch(
       uploadProofscopeFileAzure(selectedProjectDetails?.BU, azureFile, "RDT")
     );
     // console.log('formData', formData, "id", id);
-    await submitUploadRegionalDesignIntent(formData, id, headers);
+    // await submitUploadRegionalDesignIntent(formData, id, headers);
     setLoader(false);
-    navigate(`/${currentUrl?.split("/")[1]}`);
+    // navigate(`/${currentUrl?.split("/")[1]}`);
   };
   return (
     <PageLayout>
