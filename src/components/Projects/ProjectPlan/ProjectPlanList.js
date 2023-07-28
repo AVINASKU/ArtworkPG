@@ -323,11 +323,18 @@ const ProjectPlanList = ({
               } else if (field && field.length && keyCode[0] === "CPPFA") {
                 handleApproveDialogCPPFA(options);
               } else {
-                dispatch(ArtWorkTabValuesAction([]));
-                setTabName("artworkAlignment");
-                navigate(
-                  `/${currentUrlBasePage}/artworkAlignment/${selectedProject?.Project_ID}`
-                );
+                if(optionsData[field] !== "Dependency Mapping"){
+                  dispatch(ArtWorkTabValuesAction([]));
+                  setTabName("artworkAlignment");
+                  navigate(
+                    `/${currentUrlBasePage}/artworkAlignment/${selectedProject?.Project_ID}`
+                  );
+                } else{
+                  setTabName("mapping");
+                  navigate(
+                    `/${currentUrlBasePage}/mapping/${selectedProject?.Project_ID}`
+                  );
+                }
               }
             }}
           >
