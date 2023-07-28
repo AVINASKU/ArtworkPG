@@ -81,7 +81,7 @@ const DependencyMapping = () => {
       isIQData,
       isCDPTData,
       isGABrifData,
-    } = await getDependencyMappingDetails("A-2002");
+    } = await getDependencyMappingDetails(ProjectID);
 
     if (dependencyTableData && dependencyTableData.length) {
       const transformedData = dependencyTableData.map((item) => {
@@ -130,7 +130,7 @@ const DependencyMapping = () => {
         return transformedItem;
       });
       // console.log("AWM_CIC_Page", isRDTData, isIQData, isCDPTData);
-      let columnNames = Object.keys(transformedData[2]);
+      let columnNames = Object.keys(transformedData[0]);
       const filteredColumnNames = columnNames.filter(
         (property) => property !== "FPCStagingPage"
       );
