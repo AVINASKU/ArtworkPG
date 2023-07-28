@@ -209,6 +209,16 @@ function ProjectSetup(props) {
         code: "SAA",
         data: apiData.filter((data) => data.AWM_Task_ID.includes("SAA_")),
       },
+      {
+        name: "Dependency Mapping",
+        code: "DM",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("DM_")),
+      },
+      {
+        name: "Upload Briefing documents",
+        code: "UBD",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("UBD_")),
+      },
     ];
     // }
 
@@ -221,7 +231,9 @@ function ProjectSetup(props) {
           task.data[0]?.AWM_Task_ID.includes("CPPFA_") ||
           task.data[0]?.AWM_Task_ID.includes("DNPF_") ||
           task.data[0]?.AWM_Task_ID.includes("DNIQ_") ||
-          task.data[0]?.AWM_Task_ID.includes("SAA_")
+          task.data[0]?.AWM_Task_ID.includes("SAA_") ||
+          task.data[0]?.AWM_Task_ID.includes("UBD_") ||
+          task.data[0]?.AWM_Task_ID.includes("DM_")
         ) {
           let tempObj = {};
           tempObj["key"] = task.data[0]?.AWM_Task_ID;

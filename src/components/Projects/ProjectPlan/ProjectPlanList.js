@@ -533,16 +533,25 @@ const ProjectPlanList = ({
 
   useEffect(() => {
     if(pegadata !== undefined && pegadata !== null){
-      const startArtworkAlignmentData = pegadata?.filter(item => item.data.Task === "Start Artwork Alignment");
-      const otherTasksData = pegadata?.filter(item => item.data.Task !== "Start Artwork Alignment");
-
+      const tasksToFilter = ["Start Artwork Alignment", "Dependency Mapping", "Upload Briefing documents"];
+      
+      const filteredTasks = [];
+      const remainingTasks = [];
+      // Iterate through the original data to filter the tasks
+      pegadata.forEach((task) => {
+        if (tasksToFilter.includes(task.data.Task)) {
+          filteredTasks.push(task);
+        } else {
+          remainingTasks.push(task);
+        }
+      });
       const filteredData = {
-        startArtworkAlignment: startArtworkAlignmentData,
-        otherTasks: otherTasksData
+        filteredTasks: filteredTasks,
+        otherTasks: remainingTasks
       };
       
       if(tabNameForPP !== "Design"){
-        setUpdatedData(filteredData?.startArtworkAlignment)
+        setUpdatedData(filteredData?.filteredTasks)
       } else{
         setUpdatedData(filteredData?.otherTasks)
       }
