@@ -533,7 +533,7 @@ const ProjectPlanList = ({
 
   useEffect(() => {
     if(pegadata !== undefined && pegadata !== null){
-      const tasksToFilter = ["Start Artwork Alignment", "Dependency Mapping", "Upload Briefing documents"];
+      const tasksToFilter = ["Start Artwork Alignment", "Dependency Mapping", "Upload Briefing documents", "Approve CIC", "Upload CIC"];
       
       const filteredTasks = [];
       const remainingTasks = [];
