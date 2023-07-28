@@ -108,8 +108,10 @@ const AgilityList = ({
     setOnChangeData(rowData);
     if (e.target.value === "Reject") setRejectDialog(true);
     setRejectFormData({});
-    if (e.target.value === "Yes" || e.target.value !== "Reject")
+    if (e.target.value === "Yes")
       setHandleYesAddToPRoject(true);
+    if(e.target.value === "No")
+      onChangeSelectField(rowData, e, ele);
   };
 
   const projectNameOnClick = (e, options) => {
