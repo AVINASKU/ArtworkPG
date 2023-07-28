@@ -102,16 +102,17 @@ const AgilityList = ({
     setCustomizeViewFields(customizeViewFields);
   }, [customizeViewFields]);
 
-  const onchangeAddToProject = (rowData, e, ele) => {
-    rowData[ele] = e.target.value;
-    setDsbpPmpData([...dsbpPmpData]);
+  const onchangeAddToProject = (rowData, e, ele) => {    
     setOnChangeData(rowData);
     if (e.target.value === "Reject") setRejectDialog(true);
     setRejectFormData({});
     if (e.target.value === "Yes")
       setHandleYesAddToPRoject(true);
-    if(e.target.value === "No")
+    if(e.target.value === "No"){
+      rowData[ele] = e.target.value;
+      setDsbpPmpData([...dsbpPmpData]);
       onChangeSelectField(rowData, e, ele);
+    }
   };
 
   const projectNameOnClick = (e, options) => {

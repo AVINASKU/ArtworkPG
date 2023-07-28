@@ -405,6 +405,7 @@ const ArtworkAlignment = () => {
             customizeViewFields={customizeViewFields}
             setCustomizeViewFields={setCustomizeViewFields}
             userHasAccess={!userHasAccess}
+            setLoader={setLoader}
           />
           <SelectDsbpId
             dropdownlist={dropdownlist}
