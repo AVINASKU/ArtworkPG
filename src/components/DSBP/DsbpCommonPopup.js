@@ -20,7 +20,7 @@ const DsbpCommonPopup = ({
       ) : (
         <>
           <Button variant="secondary" onClick={() => setDasbpDialog(false)}>
-            Cancel
+            No
           </Button>
           <Button
             disabled={
@@ -28,7 +28,7 @@ const DsbpCommonPopup = ({
             }
             onClick={onSubmit}
           >
-            Submit
+            Yes
           </Button>
         </>
       )}
