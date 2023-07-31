@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import { TreeTable } from "primereact/treetable";
 import { Column } from "primereact/column";
+import { isArray } from "lodash";
 import { ProjectService } from "../../../service/PegaService";
 import ConfirmationPopUp from "../ConfirmationPopUp";
 import filter from "../../../assets/images/filter.svg";
@@ -13,18 +14,17 @@ import available from "../../../assets/images/available.svg";
 import Awaiting from "../../../assets/images/Awaiting.svg";
 import override from "../../../assets/images/override.svg";
 import { Dropdown } from "primereact/dropdown";
-import { useNavigate } from "react-router-dom";
 import { InputNumber } from "primereact/inputnumber";
 import "./index.scss";
 import TaskDialog from "../../TaskDialog";
 import ApproveDesignDialog from "./ApproveDesignDialog";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { ArtWorkTabValuesAction } from "../../../store/actions/ArtWorkTabValuesActions";
 import CPPFA from "./../../AWMJobs/CPPFA";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
-import GanttChart from "./GanttChart";
+// import GanttChart from "./GanttChart";
 
 const ProjectPlanList = ({
   view,
@@ -36,7 +36,6 @@ const ProjectPlanList = ({
   setUpdatedProjectPlanDesignData,
   setActiveSave,
   setActiveFlag,
-  firstTime,
   isAccessEmpty,
   activeSave,
   getProjectPlanApi,
@@ -46,6 +45,7 @@ const ProjectPlanList = ({
   test,
   tabNameForPP,
   setTabName,
+  activeFlag
 }) => {
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
@@ -66,9 +66,16 @@ const ProjectPlanList = ({
   const [updatedData, setUpdatedData] = useState([]);
   const [roleOptionsData, setRoleOptionsData] = useState([]);
   const [ownerData, setOwnerData] = useState([]);
+  let { ProjectID } = useParams();
+  const { myProject } = useSelector(
+    (state) => state.myProject
+  );
+  let projectData = isArray(myProject) && myProject.find(
+    (project) => project.Project_ID === ProjectID
+  );
   //projectPlanDesign
   const navigate = useNavigate();
-  let { ProjectID } = useParams();
+  
 
   const op = useRef(null);
 
@@ -316,11 +323,18 @@ const ProjectPlanList = ({
               } else if (field && field.length && keyCode[0] === "CPPFA") {
                 handleApproveDialogCPPFA(options);
               } else {
-                dispatch(ArtWorkTabValuesAction([]));
-                setTabName("artworkAlignment");
-                navigate(
-                  `/${currentUrlBasePage}/artworkAlignment/${selectedProject?.Project_ID}`
-                );
+                if(optionsData[field] !== "Dependency Mapping"){
+                  dispatch(ArtWorkTabValuesAction([]));
+                  setTabName("artworkAlignment");
+                  navigate(
+                    `/${currentUrlBasePage}/artworkAlignment/${selectedProject?.Project_ID}`
+                  );
+                } else{
+                  setTabName("mapping");
+                  navigate(
+                    `/${currentUrlBasePage}/mapping/${selectedProject?.Project_ID}`
+                  );
+                }
               }
             }}
           >
@@ -526,17 +540,25 @@ const ProjectPlanList = ({
 
   useEffect(() => {
     if(pegadata !== undefined && pegadata !== null){
-      const startArtworkAlignmentData = pegadata?.filter(item => item.data.Task === "Start Artwork Alignment");
-      const otherTasksData = pegadata?.filter(item => item.data.Task !== "Start Artwork Alignment");
-
+      const tasksToFilter = ["Start Artwork Alignment", "Dependency Mapping", "Upload Briefing documents", "Approve CIC", "Upload CIC"];
+      
+      const filteredTasks = [];
+      const remainingTasks = [];
+      // Iterate through the original data to filter the tasks
+      pegadata.forEach((task) => {
+        if (tasksToFilter.includes(task.data.Task)) {
+          filteredTasks.push(task);
+        } else {
+          remainingTasks.push(task);
+        }
+      });
       const filteredData = {
-        startArtworkAlignment: startArtworkAlignmentData,
-        otherTasks: otherTasksData
+        filteredTasks: filteredTasks,
+        otherTasks: remainingTasks
       };
-      console.log("filteredData", filteredData?.startArtworkAlignment);
-      console.log("tabNameForPP", tabNameForPP);
+      
       if(tabNameForPP !== "Design"){
-        setUpdatedData(filteredData?.startArtworkAlignment)
+        setUpdatedData(filteredData?.filteredTasks)
       } else{
         setUpdatedData(filteredData?.otherTasks)
       }
@@ -571,10 +593,10 @@ const ProjectPlanList = ({
 
     if (!isAccessEmpty) {
       setActiveSave(true);
-      !firstTime && setActiveFlag(true);
+      projectData?.Project_State === "Draft" && setActiveFlag(true);
     } else {
       setActiveSave(false);
-      !firstTime && setActiveFlag(false)
+      projectData?.Project_State === "Draft" && setActiveFlag(false);
     }
     //updateProjectPlanDesign();
   };
@@ -714,7 +736,6 @@ const ProjectPlanList = ({
   }, []);
 
   return (
-    console.log("updatedData", updatedData),
     <div className="myProjectAnddAllProjectList">
       {showApproveDialog && (
         <ApproveDesignDialog
@@ -782,7 +803,7 @@ const ProjectPlanList = ({
             )}
           </div>
         )}
-        {view === "GanttChart" && <GanttChart />}
+        {/* {view === "GanttChart" && <GanttChart />} */}
       </Suspense>
     </div>
   );

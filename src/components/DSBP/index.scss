@@ -1,6 +1,6 @@
-.content-layout .tabular-view .myProjectAnddAllProjectList{
-  &.artwork-dsbp {
-    height: calc(100% + 19px);
+.content-layout .tabular-view {
+  .artwork-dsbp {
+    height: 100%;
     padding-top: 8px;
     position: relative;
     .multiselect-padding {
@@ -13,7 +13,7 @@
       margin-right: 20px;
     }
     .p-datatable {
-      height: calc(100% - 152px);
+      height: calc(100% - 160px);
       .p-datatable-wrapper {
         height: 100%;
       }
@@ -34,13 +34,13 @@
       flex-direction: row;
     }
     .form-buttons{
-      padding: 1rem;
+      padding: 0 10px;
       position: absolute;
       background: white;
       text-align: right;
       width: 100%;
       left: 0;
-      bottom: 0;
+      bottom: 30px;
     }
   }
 }
