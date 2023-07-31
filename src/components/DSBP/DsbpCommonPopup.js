@@ -1,8 +1,6 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import { Dialog } from "primereact/dialog";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
 
 const DsbpCommonPopup = ({
   children,
