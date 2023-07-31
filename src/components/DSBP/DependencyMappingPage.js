@@ -22,6 +22,8 @@ const DependencyMapping = () => {
   const [GABriefData, setGABriefData] = useState([]);
   const [dataUpdated, setDataUpdated] = useState(false);
   const [submittedData, setSubmittedData] = useState([]);
+  const [dropdownDataForLayoutAndDesign, setDropdownDataForLayoutAndDesign] =
+    useState([]);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const ProjectID = selectedProjectDetails?.Project_ID;
@@ -49,6 +51,10 @@ const DependencyMapping = () => {
           data["AWM_Other_Reference"] = value;
         if (!data[columnName] && columnName === "AWM_RDT_Page")
           data["AWM_RDT_Page"] = value;
+        if (!data[columnName] && columnName === "AWM_GA_Brief")
+          data["AWM_GA_Brief"] = value;
+        if (!data[columnName] && columnName === "AWM_CIC_Matrix")
+          data["AWM_CIC_Matrix"] = value;
         else data[columnName] = value;
         data["updated"] = true;
       }
@@ -58,17 +64,22 @@ const DependencyMapping = () => {
     let filteredDataToSubmit = dependencyMappingData.filter(
       (item) => item.updated === true
     );
-    console.log(
-      "filteredDataToSubmit",
-      filteredDataToSubmit,
-      dependencyMappingData
+    let data = dependencyMappingData.filter(
+      (data) => data?.AWM_CIC_Needed === "Yes" && data
     );
+    let dropdownDataForLayoutAndDesign1 = data.map(
+      (item) => item.DSBP_PMP_PIMaterialID
+    );
+    // console.log(
+    //   "filteredDataToSubmit",
+    //   filteredDataToSubmit,
+    //   dependencyMappingData
+    // );
+    setDropdownDataForLayoutAndDesign(dropdownDataForLayoutAndDesign1);
     setDependencyMappingData(dependencyMappingData);
     setSubmittedData(filteredDataToSubmit);
     setDataUpdated(!dataUpdated);
   };
-
-  console.log("dependencyMappingData", dependencyMappingData);
 
   useEffect(() => {
     fetchData();
@@ -81,7 +92,19 @@ const DependencyMapping = () => {
       isIQData,
       isCDPTData,
       isGABrifData,
-    } = await getDependencyMappingDetails("A-2002");
+    } = await getDependencyMappingDetails(ProjectID);
+
+    if (dependencyTableData && dependencyTableData.length) {
+      let data = dependencyTableData.filter(
+        (data) =>
+          data?.AWM_CIC_Page?.[0]?.AWM_CIC_Needed === "Yes" &&
+          data.DSBP_PMP_PIMaterialID
+      );
+      let dropdownDataForLayoutAndDesign1 = data.map(
+        (item) => item.DSBP_PMP_PIMaterialID
+      );
+      setDropdownDataForLayoutAndDesign(dropdownDataForLayoutAndDesign1);
+    }
 
     if (dependencyTableData && dependencyTableData.length) {
       const transformedData = dependencyTableData.map((item) => {
@@ -91,15 +114,25 @@ const DependencyMapping = () => {
           DSBP_PMP_PIMaterialID: item.DSBP_PMP_PIMaterialID,
           DSBP_PMP_PIMaterialNumber: item.DSBP_PMP_PIMaterialNumber,
         };
-        if (isRDTData && isRDTData.length) {
-          transformedItem.AWM_RDT_Page = item.Preselected_AWM_RDT_Page || [];
+
+        if (isRDTData && isRDTData.length > 1) {
+          transformedItem.AWM_RDT_Page =
+            item?.Preselected_AWM_RDT_Page?.map(
+              (item) => item.AWM_Design_Job_ID
+            ) || [];
         }
 
-        if (isCDPTData && isCDPTData.length) {
-          transformedItem.AWM_CDPT_Page = item.Preselected_AWM_CDPT_Page || [];
+        if (isCDPTData && isCDPTData.length > 1) {
+          transformedItem.AWM_CDPT_Page =
+            item?.Preselected_AWM_CDPT_Page?.map(
+              (item) => item.AWM_Design_Job_ID
+            ) || [];
         }
-        if (isIQData && isIQData.length) {
-          transformedItem.AWM_IQ_Page = item.Preselected_AWM_IQ_Page || [];
+        if (isIQData && isIQData.length > 1) {
+          transformedItem.AWM_IQ_Page =
+            item?.Preselected_AWM_IQ_Page?.map(
+              (item) => item.AWM_Design_Job_ID
+            ) || [];
         }
 
         transformedItem = {
@@ -129,8 +162,7 @@ const DependencyMapping = () => {
         };
         return transformedItem;
       });
-      // console.log("AWM_CIC_Page", isRDTData, isIQData, isCDPTData);
-      let columnNames = Object.keys(transformedData[2]);
+      let columnNames = Object.keys(transformedData[0]);
       const filteredColumnNames = columnNames.filter(
         (property) => property !== "FPCStagingPage"
       );
@@ -175,32 +207,48 @@ const DependencyMapping = () => {
 
         // cdpt
         let DSBP_CDPT_Page = [];
+        let DSBP_CDPT_Page_data = [];
         if (ele.AWM_CDPT_Page) {
           DSBP_CDPT_Page = CDPTPageData.filter(
             (cdptData) =>
               ele.AWM_CDPT_Page.includes(cdptData.AWM_Design_Job_ID) && cdptData
           );
+          DSBP_CDPT_Page_data = DSBP_CDPT_Page.map((item) => ({
+            Design_Job_Name: item.AWM_Design_Job_Name,
+            Design_Job_ID: item.AWM_Design_Job_ID,
+          }));
         }
-        submittedObject.DSBP_CDPT_Page = DSBP_CDPT_Page;
+        submittedObject.DSBP_CDPT_Page = DSBP_CDPT_Page_data;
         //rdt
         let DSBP_RDT_Page = [];
+        let DSBP_RDT_Page_data = [];
         if (ele.AWM_RDT_Page) {
-          DSBP_RDT_Page = RDTData.filter(
-            (rdtData) =>
-              ele.AWM_RDT_Page.includes(rdtData.AWM_Design_Job_ID) && rdtData
-          );
+          DSBP_RDT_Page = RDTData.filter((rdtData) => {
+            if (ele.AWM_RDT_Page.includes(rdtData.AWM_Design_Job_ID))
+              return rdtData;
+          });
+          DSBP_RDT_Page_data = DSBP_RDT_Page.map((item) => ({
+            Design_Job_Name: item.AWM_Design_Job_Name,
+            Design_Job_ID: item.AWM_Design_Job_ID,
+          }));
         }
-        submittedObject.DSBP_RDT_Page = DSBP_RDT_Page;
+        console.log("pranali on submit", DSBP_RDT_Page, DSBP_RDT_Page_data);
+        submittedObject.DSBP_RDT_Page = DSBP_RDT_Page_data;
 
         //IQ
         let DSBP_IQ_Page = [];
+        let DSBP_IQ_Page_data = [];
         if (ele.AWM_IQ_Page) {
-          DSBP_IQ_Page = IQData.filter(
-            (iqData) =>
-              ele.AWM_IQ_Page.includes(iqData.AWM_Design_Job_ID) && iqData
-          );
+          DSBP_IQ_Page = IQData.filter((iqData) => {
+            if (ele.AWM_IQ_Page.includes(iqData.AWM_Design_Job_ID))
+            return iqData;
+          });
+          DSBP_IQ_Page_data = DSBP_IQ_Page.map((item) => ({
+            Design_Job_Name: item.AWM_Design_Job_Name,
+            Design_Job_ID: item.AWM_Design_Job_ID,
+          }));
         }
-        submittedObject.DSBP_IQ_Page = DSBP_IQ_Page;
+        submittedObject.DSBP_IQ_Page = DSBP_IQ_Page_data;
 
         submittedObject.DSBP_InitiativeID = ele.DSBP_InitiativeID;
         submittedObject.DSBP_PMP_PIMaterialID = ele.DSBP_PMP_PIMaterialID;
@@ -214,16 +262,18 @@ const DependencyMapping = () => {
         submittedObject["AWM_OtherReference"] = ele.AWM_Other_Reference
           ? ele.AWM_Other_Reference
           : "";
-        submittedObject["AWM_GABrief"] = ele.AWM_GA_Brief
+        submittedObject["AWM_GABrief"] = ele?.AWM_GA_Brief?.length
           ? ele.AWM_GA_Brief
           : "";
 
-        console.log("ele", ele);
         submittedJson.push(submittedObject);
       });
     }
     console.log("submitted json", submittedJson);
-    // let resp = await onSubmitDependencyMappingAction();
+    let formData = {
+      DSBPValues: submittedJson,
+    };
+    let resp = await onSubmitDependencyMappingAction(ProjectID, formData);
   };
 
   return (
@@ -256,6 +306,7 @@ const DependencyMapping = () => {
           IQData={IQData}
           RDTData={RDTData}
           GABriefData={GABriefData}
+          dropdownDataForLayoutAndDesign={dropdownDataForLayoutAndDesign}
           updateDropDownData={updateDropDownData}
           userHasAccess={userHasAccess}
         />

@@ -2,6 +2,7 @@ import * as types from "../types/types";
 
 const initialState = {
   dmTabValuesData: null,
+  dmTabAttributesData: null,
   loading: false,
   error: null,
 };
@@ -13,6 +14,11 @@ const DMTabValuesReducer = (state = initialState, action) => {
       return {
         ...state,
         dmTabValuesData: action.payload,
+      };
+    case types.UPDATE_DM_TAB_ATTRIBUTES:
+      return {
+        ...state,
+        dmTabAttributesData: action.payload,
       };
     default:
       return state;
