@@ -141,7 +141,7 @@ const DependencyMapping = () => {
         };
 
         if (isGABrifData && isGABrifData.length) {
-          transformedItem.AWM_GA_Brief = item.Preselected_DSBP_GA_Brief || "";
+          transformedItem.AWM_GA_Brief = item.Preselected_DSBP_GA_Brief || [];
         }
 
         transformedItem = {
@@ -273,7 +273,7 @@ const DependencyMapping = () => {
     let formData = {
       DSBPValues: submittedJson,
     };
-    let resp = await onSubmitDependencyMappingAction(formData, ProjectID);
+    let resp = await onSubmitDependencyMappingAction(ProjectID, formData);
   };
 
   return (
