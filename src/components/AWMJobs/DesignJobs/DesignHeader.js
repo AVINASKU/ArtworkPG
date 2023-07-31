@@ -15,6 +15,8 @@ const DesignHeader = ({
   checkReadWriteAccess,
   taskName,
   checkTaskISComplete,
+  closeFlag,
+  actionButtonsFlag
 }) => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
@@ -26,6 +28,7 @@ const DesignHeader = ({
   return (
     <div className="content-layout task-layout">
       <i
+        hidden={closeFlag}
         className="pi pi-times"
         onClick={() => {
           navigate(`/${locationPath?.split("/")[1]}`);
@@ -75,7 +78,7 @@ const DesignHeader = ({
           <div className="project-title">{headerName}</div>
         </div>
 
-        <div className="action-buttons">
+        <div className="action-buttons" hidden={actionButtonsFlag}>
           <div className="icon-items">
             <Checkbox
               onChange={(e) => {
