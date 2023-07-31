@@ -201,7 +201,7 @@ a.tabView {
     // width: 100%;
     thead {
       th {
-        background-color: #edf4fa !important;
+        // background-color: #edf4fa !important;
         height: 30px;
         // border: 0 !important;
         text-align: center !important;
@@ -268,14 +268,26 @@ a.tabView {
       right: 0;
     }
 
-  td,
-  table .p-datatable .p-datatable-tbody>tr>td,
-  th,
-  tr {
-    position: relative;
-    border: 0 !important;
-    // height: 40px;
-  }
+    th:after,
+    td:after {
+      content: "";
+      display: block;
+      height: 22px;
+      width: 0.8px;
+      background-color: #acacac;
+      position: absolute;
+      top: 25%;
+      right: 0;
+    }
+
+    td,
+    table .p-datatable .p-datatable-tbody > tr > td,
+    th,
+    tr {
+      position: relative;
+      border: 0 !important;
+      // height: 40px;
+    }
 
     td,
     .p-datatable .p-datatable-tbody > tr > td {
