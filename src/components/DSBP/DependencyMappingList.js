@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import filter from "../../assets/images/filter.svg";
@@ -10,11 +10,10 @@ import { useDispatch } from "react-redux";
 import { DMTabValuesAction, DMTabAttributesAction } from "../../store/actions/DMTabValuesActions";
 import toggleOff from "../../assets/images/toggleOff.svg";
 import toggleOn from "../../assets/images/toggleOn.svg";
-import DSBPFilter from "./DSBPFilter";
+import DependencyFilter from "./DependencyFilter";
 
 const DependencyMappingList = ({
   dependencyMappingData,
-  dependencyColumnNames,
   CDPTPageData,
   IQData,
   RDTData,
@@ -22,14 +21,17 @@ const DependencyMappingList = ({
   updateDropDownData,
   dropdownDataForLayoutAndDesign,
   userHasAccess,
+  onSort,
+  onGlobalFilterChange,
+  setDataUpdated,
+  dataUpdated,
 }) => {
-  // console.log("CDPTPageData", CDPTPageData);
-  // console.log("dropdownDataForLayoutAndDesign", dropdownDataForLayoutAndDesign);
-
-  // CDPTPageData, IQData, RDTData
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const op = useRef(null);
   const { dmTabValuesData } = useSelector((state) => state.DMTabValuesReducer);
+  const [selectedColumnName, setSelectedColumnName] = useState(null);
+   const [frozenUpdated, setFrozenUpdated] = useState(false);
   const [tabsList, setTabsList] = useState([
     { tabHeader: "Header 1", decription: "Header 1 data" },
   ]);
@@ -51,8 +53,14 @@ const DependencyMappingList = ({
     { name: "5555", code: "5555" },
   ];
 
+    const projectNameOnClick = (e, options) => {
+    op.current.toggle(e);
+    setSelectedColumnName(options);
+  };
+
   const onHandlePmpTabView = (options, field) => {
-    console.log("column names: ", dependencyColumnNames, dependencyMappingData);
+    // console.log("column names: ", dependencyColumnNames, dependencyMappingData);
+    let dependencyColumnNames = JSON.parse(localStorage.getItem("setDependencyMappingColumnNames"));
     const attributesData = {
       DMColumnNames: dependencyColumnNames,
       DMMappingData: dependencyMappingData,
@@ -116,7 +124,7 @@ const DependencyMappingList = ({
           key={field}
           alt="Column Filter"
           style={{ height: 14, paddingLeft: 5, paddingRight: 5 }}
-          // onClick={(e) => projectNameOnClick(e, field)}
+          onClick={(e) => projectNameOnClick(e, field)}
           // className={
           //   isFilterActivated
           //     ? "columnFilterIcon filter-color-change"
@@ -441,6 +449,8 @@ const DependencyMappingList = ({
   };
 
   const dynamicColumns = () => {
+  let dependencyColumnNames = JSON.parse(localStorage.getItem("setDependencyMappingColumnNames"));
+  console.log("dependencyColumnNames", dependencyColumnNames);
     if (dependencyColumnNames && dependencyColumnNames.length) {
       return [
         <Column
@@ -457,8 +467,8 @@ const DependencyMappingList = ({
             <Column
               field={col.field}
               header={renderHeader(col.field)}
-              // frozen={field.freeze}
-              // className={field.freeze ? "font-bold" : ""}
+              frozen={col.freeze}
+              className={col.freeze ? "font-bold" : ""}
               // bodyClassName={"change-bg-color"}
               headerClassName={
                 col.group === 2 ? "pink-bg-color" : "blue-bg-color"
@@ -491,18 +501,17 @@ const DependencyMappingList = ({
 
   return (
     <>
-      {/* <DSBPFilter
+      <DependencyFilter
         op={op}
         onSort={onSort}
         selectedColumnName={selectedColumnName}
-        dsbpPmpData={dsbpPmpData}
-        selectedFields={selectedFields}
+        dsbpPmpData={dependencyMappingData}
         onGlobalFilterChange={onGlobalFilterChange}
         setFrozenUpdated={setFrozenUpdated}
         frozenUpdated={frozenUpdated}
-        setFieldUpdated={setFieldUpdated}
-        fieldUpdated={fieldUpdated}
-      /> */}
+        setFieldUpdated={setDataUpdated}
+        fieldUpdated={dataUpdated}
+      />
       <DataTable
         // dataKey="DSBP_PMP_PIMaterialID"
         value={dependencyMappingData}

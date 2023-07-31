@@ -14,7 +14,7 @@ import "./index.scss";
 const headerName = "Dependency Mapping";
 const DependencyMapping = () => {
   const [dependencyMappingData, setDependencyMappingData] = useState([]);
-  const [dependencyColumnNames, setDependencyColumnNames] = useState([]);
+  // const [dependencyColumnNames, setDependencyColumnNames] = useState([]);
   const [updatedDataToSubmit, setUpdatedDataToSubmit] = useState([]);
   const [CDPTPageData, setCDPTPageData] = useState([]);
   const [IQData, setIQData] = useState([]);
@@ -22,6 +22,7 @@ const DependencyMapping = () => {
   const [GABriefData, setGABriefData] = useState([]);
   const [dataUpdated, setDataUpdated] = useState(false);
   const [submittedData, setSubmittedData] = useState([]);
+  const [selectedFields, setSelectedFields] = useState(null);
   const [dropdownDataForLayoutAndDesign, setDropdownDataForLayoutAndDesign] =
     useState([]);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
@@ -84,6 +85,11 @@ const DependencyMapping = () => {
   useEffect(() => {
     fetchData();
   }, [ProjectID]);
+
+  const onSort = (column, direction) => {
+    const sortedData = onSortData(column, direction, dependencyMappingData);
+    setDependencyMappingData(sortedData);
+  };
 
   async function fetchData() {
     const {
@@ -192,7 +198,8 @@ const DependencyMapping = () => {
       setIQData(isIQData);
       setRDTData(isRDTData);
       setGABriefData(isGABrifData);
-      setDependencyColumnNames(groupedColumnNames);
+      localStorage.setItem("setDependencyMappingColumnNames", JSON.stringify(groupedColumnNames));
+      // setDependencyColumnNames(groupedColumnNames);
       setDependencyMappingData(transformedData);
     }
   }
@@ -276,6 +283,28 @@ const DependencyMapping = () => {
     let resp = await onSubmitDependencyMappingAction(ProjectID, formData);
   };
 
+    const onGlobalFilterChange = (e, colName) => {
+    const value = e.value;
+    setSelectedFields(value);
+    const artworkValues = value;
+
+    if (artworkValues.length) {
+      let filteredDsbpData = dependencyMappingData.filter((item) => {
+        if (item && item[colName]) {
+          const hasWords = artworkValues.some((word) =>
+            Number.isInteger(word)
+              ? item[colName] === word
+              : item[colName]?.includes(word)
+          );
+          if (hasWords) {
+            return item;
+          }
+        }
+      });
+      setDependencyMappingData(filteredDsbpData);
+    } else setDependencyMappingData([]);
+  };
+
   return (
     <div className="artwork-dsbp dependency-mapping">
       <>
@@ -301,7 +330,7 @@ const DependencyMapping = () => {
         />
         <DependencyMappingList
           dependencyMappingData={dependencyMappingData}
-          dependencyColumnNames={dependencyColumnNames}
+          // dependencyColumnNames={dependencyColumnNames}
           CDPTPageData={CDPTPageData}
           IQData={IQData}
           RDTData={RDTData}
@@ -309,6 +338,10 @@ const DependencyMapping = () => {
           dropdownDataForLayoutAndDesign={dropdownDataForLayoutAndDesign}
           updateDropDownData={updateDropDownData}
           userHasAccess={userHasAccess}
+          onSort={onSort}
+          onGlobalFilterChange={onGlobalFilterChange}
+          setDataUpdated={setDataUpdated}
+          dataUpdated={dataUpdated}
         />
         <FooterButtons
           handleCancel={handleCancel}
