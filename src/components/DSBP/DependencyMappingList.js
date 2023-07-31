@@ -7,10 +7,10 @@ import { MultiSelect } from "primereact/multiselect";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
-import {
-  DMTabAttributesAction,
-  DMTabValuesAction,
-} from "../../store/actions/DMTabValuesActions";
+import { DMTabValuesAction, DMTabAttributesAction } from "../../store/actions/DMTabValuesActions";
+import toggleOff from "../../assets/images/toggleOff.svg";
+import toggleOn from "../../assets/images/toggleOn.svg";
+import DSBPFilter from "./DSBPFilter";
 
 const DependencyMappingList = ({
   dependencyMappingData,
@@ -490,23 +490,37 @@ const DependencyMappingList = ({
   };
 
   return (
-    <DataTable
-      // dataKey="DSBP_PMP_PIMaterialID"
-      value={dependencyMappingData}
-      rowClassName={rowClassName}
-      className="mt-3"
-      responsiveLayout="scroll"
-      columnResizeMode="expand"
-      scrollable
-      resizableColumns
-      reorderableColumns
-      tableStyle={{
-        width: "max-content",
-        minWidth: "100%",
-      }}
-    >
-      {dynamicColumns()}
-    </DataTable>
+    <>
+      {/* <DSBPFilter
+        op={op}
+        onSort={onSort}
+        selectedColumnName={selectedColumnName}
+        dsbpPmpData={dsbpPmpData}
+        selectedFields={selectedFields}
+        onGlobalFilterChange={onGlobalFilterChange}
+        setFrozenUpdated={setFrozenUpdated}
+        frozenUpdated={frozenUpdated}
+        setFieldUpdated={setFieldUpdated}
+        fieldUpdated={fieldUpdated}
+      /> */}
+      <DataTable
+        // dataKey="DSBP_PMP_PIMaterialID"
+        value={dependencyMappingData}
+        rowClassName={rowClassName}
+        className="mt-3"
+        responsiveLayout="scroll"
+        columnResizeMode="expand"
+        scrollable
+        resizableColumns
+        reorderableColumns
+        tableStyle={{
+          width: "max-content",
+          minWidth: "100%",
+        }}
+      >
+        {dynamicColumns()}
+      </DataTable>
+    </>
   );
 };
 

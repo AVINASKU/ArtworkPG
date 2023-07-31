@@ -273,7 +273,7 @@ const DependencyMapping = () => {
     let formData = {
       DSBPValues: submittedJson,
     };
-    let resp = await onSubmitDependencyMappingAction(ProjectID, formData);
+    let resp = await onSubmitDependencyMappingAction(formData, ProjectID);
   };
 
   return (
