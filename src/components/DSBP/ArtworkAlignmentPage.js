@@ -405,6 +405,7 @@ const ArtworkAlignment = () => {
             customizeViewFields={customizeViewFields}
             setCustomizeViewFields={setCustomizeViewFields}
             userHasAccess={!userHasAccess}
+            setLoader={setLoader}
           />
           <SelectDsbpId
             dropdownlist={dropdownlist}
@@ -455,7 +456,7 @@ const ArtworkAlignment = () => {
             hideSaveButton={true}
             onSubmit={onSubmit}
             formValid={!checkLength}
-            checkReadWriteAccess={!userHasAccess}
+            checkReadWriteAccess={userHasAccess}
           />
         </>
       )}
