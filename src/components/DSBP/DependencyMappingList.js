@@ -7,10 +7,10 @@ import { MultiSelect } from "primereact/multiselect";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
-import {
-  DMTabAttributesAction,
-  DMTabValuesAction,
-} from "../../store/actions/DMTabValuesActions";
+import { DMTabValuesAction, DMTabAttributesAction } from "../../store/actions/DMTabValuesActions";
+import toggleOff from "../../assets/images/toggleOff.svg";
+import toggleOn from "../../assets/images/toggleOn.svg";
+import DSBPFilter from "./DSBPFilter";
 
 const DependencyMappingList = ({
   dependencyMappingData,
@@ -20,9 +20,11 @@ const DependencyMappingList = ({
   RDTData,
   GABriefData,
   updateDropDownData,
+  dropdownDataForLayoutAndDesign,
   userHasAccess,
 }) => {
   // console.log("CDPTPageData", CDPTPageData);
+  // console.log("dropdownDataForLayoutAndDesign", dropdownDataForLayoutAndDesign);
 
   // CDPTPageData, IQData, RDTData
   const navigate = useNavigate();
@@ -133,12 +135,7 @@ const DependencyMappingList = ({
       <span>
         {field === "field_0" && ( // Add this condition to render a checkbox
           <div className="flex align-items-center gap-2">
-            <input
-              type="checkbox"
-              className="p-checkbox-box p-highlight"
-              // checked={selected?.includes(options)}
-              // onChange={() => handleSelect(options)}
-            />
+            <input type="checkbox" className="p-checkbox-box p-highlight" />
           </div>
         )}
         {field === "AWM_GA_Brief" && (
@@ -152,7 +149,7 @@ const DependencyMappingList = ({
                 value={options[field]}
                 onChange={(e) =>
                   updateDropDownData(
-                    e.value,
+                    e.target.value,
                     "AWM_GA_Brief",
                     options.DSBP_PMP_PIMaterialID
                   )
@@ -224,6 +221,47 @@ const DependencyMappingList = ({
             />
           </div>
         )}
+        {field === "AWM_CIC_Matrix" &&
+          (options.AWM_CIC_Needed === "" ||
+          !options.AWM_CIC_Needed ||
+          options.AWM_CIC_Needed === "No" ||
+          options.AWM_CIC_Needed === "N/A" ? (
+            " "
+          ) : (
+            <div>
+              <span
+                className={
+                  options[field] === true
+                    ? "cic-matrix-text-on"
+                    : "cic-matrix-text-off"
+                }
+              >
+                CIC Matrix Only
+              </span>
+              <img
+                src={options[field] === true ? toggleOn : toggleOff}
+                className="add-new-design-intent-icon"
+                alt="Add role button"
+                onClick={(e) =>
+                  updateDropDownData(
+                    options[field] ? !options[field] : true,
+                    "AWM_CIC_Matrix",
+                    options.DSBP_PMP_PIMaterialID
+                  )
+                }
+              />
+              <span
+                className={
+                  options[field] === false
+                    ? "cic-matrix-text-on"
+                    : "cic-matrix-text-off"
+                }
+              >
+                CIC Matrix & CIC's
+              </span>
+            </div>
+          ))}
+
         {field === "AWM_IQ_Page" && (
           <div>
             <MultiSelect
@@ -332,10 +370,13 @@ const DependencyMappingList = ({
                 style={{ width: "80%", fontSize: 12 }}
               >
                 <option value="">Select</option>
-                <option value="">Select</option>
-                <option value="123">123</option>
-                <option value="456">456</option>
-                <option value="789">789</option>
+                {dropdownDataForLayoutAndDesign?.map((ele) => {
+                  return (
+                    <option key={ele} value={ele}>
+                      {ele}
+                    </option>
+                  );
+                })}
               </Form.Select>
             </Form.Group>
           ))}
@@ -365,9 +406,13 @@ const DependencyMappingList = ({
                 style={{ width: "80%", fontSize: 12 }}
               >
                 <option value="">Select</option>
-                <option value="8888">8888</option>
-                <option value="999">9999</option>
-                <option value="55555">55555</option>
+                {dropdownDataForLayoutAndDesign?.map((ele) => {
+                  return (
+                    <option key={ele} value={ele}>
+                      {ele}
+                    </option>
+                  );
+                })}
               </Form.Select>
             </Form.Group>
           ))}
@@ -389,6 +434,7 @@ const DependencyMappingList = ({
           field !== "AWM_Supporting_PMP_Layout" &&
           field !== "AWM_Supporting_PMP_Design" &&
           field !== "DSBP_PMP_PIMaterialNumber" &&
+          field !== "AWM_GA_Brief" &&
           options[field]}
       </span>
     );
@@ -424,7 +470,8 @@ const DependencyMappingList = ({
               alignFrozen="left"
               filterField={col.field}
               style={{
-                width: col.width,
+                // width: col.width,
+                width: 200,
                 height: 30,
               }}
             />
@@ -443,23 +490,37 @@ const DependencyMappingList = ({
   };
 
   return (
-    <DataTable
-      // dataKey="DSBP_PMP_PIMaterialID"
-      value={dependencyMappingData}
-      rowClassName={rowClassName}
-      className="mt-3"
-      responsiveLayout="scroll"
-      columnResizeMode="expand"
-      scrollable
-      resizableColumns
-      reorderableColumns
-      tableStyle={{
-        width: "max-content",
-        minWidth: "100%",
-      }}
-    >
-      {dynamicColumns()}
-    </DataTable>
+    <>
+      {/* <DSBPFilter
+        op={op}
+        onSort={onSort}
+        selectedColumnName={selectedColumnName}
+        dsbpPmpData={dsbpPmpData}
+        selectedFields={selectedFields}
+        onGlobalFilterChange={onGlobalFilterChange}
+        setFrozenUpdated={setFrozenUpdated}
+        frozenUpdated={frozenUpdated}
+        setFieldUpdated={setFieldUpdated}
+        fieldUpdated={fieldUpdated}
+      /> */}
+      <DataTable
+        // dataKey="DSBP_PMP_PIMaterialID"
+        value={dependencyMappingData}
+        rowClassName={rowClassName}
+        className="mt-3"
+        responsiveLayout="scroll"
+        columnResizeMode="expand"
+        scrollable
+        resizableColumns
+        reorderableColumns
+        tableStyle={{
+          width: "max-content",
+          minWidth: "100%",
+        }}
+      >
+        {dynamicColumns()}
+      </DataTable>
+    </>
   );
 };
 
