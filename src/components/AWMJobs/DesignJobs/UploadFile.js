@@ -4,6 +4,7 @@ import { Image } from "primereact/image";
 import { Tag } from "primereact/tag";
 import { Row, Col } from "react-bootstrap";
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
+import './UploadFile.scss';
 
 const UploadFile = ({
   Design_Intent_Name,
@@ -102,7 +103,7 @@ const UploadFile = ({
   };
 
   return (
-    <Col sm={2}>
+    <Col sm={2} className="IQCD">
       <label htmlFor="upload"> Upload File</label>
       <FileUpload
         ref={fileUploadRef}
