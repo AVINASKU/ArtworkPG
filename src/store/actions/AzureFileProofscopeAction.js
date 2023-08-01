@@ -4,7 +4,7 @@ import { BlobServiceClient } from "@azure/storage-blob";
 // Define your Azure Blob Storage configuration variables here
 const containerName = "awm";
 const sasToken =
-  "sp=racwdli&st=2023-07-19T12:51:53Z&se=2030-02-28T20:51:53Z&spr=https&sv=2022-11-02&sr=c&sig=HWEkjoX4LLNWJy1YDtVdXT2brVZarQiAeu41v77E6yw%3D";
+  "sp=racwdl&st=2023-07-25T13:01:05Z&se=2030-05-10T21:01:05Z&spr=https&sv=2022-11-02&sr=c&sig=%2BwjkJ%2Blc5a5xof7yezFyBnd6SPiB%2Bw9aXwhHl7Qwi18%3D";
 const storageAccountName = "aacstrdev";
 
 // Create a BlobServiceClient instance using the configuration variables
@@ -65,13 +65,13 @@ export const uploadProofscopeFileAzure = (folder, file, jobName) => {
 
       // Create a BlobClient for the file and set the content type
       const blobClient = containerClient.getBlockBlobClient(
-        `${env}${folder}/${jobName}/${file.name}`
+        `${folder}/${jobName}/${file}`
       );
       const options = {
         blobHTTPHeaders: { blobContentType: file.type },
       };
       const uploadUrl = blobClient.url;
-      const contentLength = file.size.toString();
+      //   const contentLength = file.size.toString();
 
       await axios.put(
         uploadUrl,
@@ -79,7 +79,7 @@ export const uploadProofscopeFileAzure = (folder, file, jobName) => {
         {
           headers: {
             "x-ms-blob-type": "BlockBlob",
-            "Content-Length": contentLength,
+            //  "Content-Length": contentLength,
           },
         },
         options
@@ -87,9 +87,13 @@ export const uploadProofscopeFileAzure = (folder, file, jobName) => {
       // Construct the public URL for the uploaded file
       const publicUrl = `https://${storageAccountName}.blob.core.windows.net/${containerName}/${env}/${folder}/${jobName}/${file.name}`;
       // Dispatch the success action with the public URL
+      console.log("Folder:", folder);
+      console.log("File:", file);
+      console.log("Job Name:", jobName);
       dispatch(uploadFileSuccess([publicUrl]));
     } catch (error) {
       // Dispatch the failure action with the error message
+      console.log("Error:", error);
       dispatch(uploadFileFailure(error.message));
     }
   };

@@ -167,8 +167,7 @@ const ProjectPlanList = ({
         frozenCoulmns.includes(options)) ||
       (sortData && sortData.length && sortData[0] === options);
 
-    const optionsCode = options?.split("_").join(" ");
-
+    const optionsCode = options === "Duration" ? `${options} (Days)` : options?.split("_").join(" ");
     return (
       <div>
         {isFilterActivated ? (
@@ -196,7 +195,7 @@ const ProjectPlanList = ({
               }}
               className="columnFilterIcon"
             />
-            <span className="columnHeader">{optionsCode}</span>
+            <span className="columnHeader">{optionsCode === "Duration" ? "Duration (Days)" : optionsCode}</span>
           </>
         )}
       </div>
@@ -608,6 +607,10 @@ const ProjectPlanList = ({
 
     if (!isAccessEmpty) {
       setActiveSave(true);
+      projectData?.Project_State === "Draft" && setActiveFlag(true);
+    } else {
+      setActiveSave(false);
+      projectData?.Project_State === "Draft" && setActiveFlag(false);
     }
   };
 

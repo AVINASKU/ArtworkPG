@@ -120,8 +120,8 @@ function ProjectSetup(props) {
     let restructuredData = [];
     const apiData =
       (mode === "edit" || mode === "design") &&
-      selectedProjectDetails.Project_ID
-        ? await getProjectPlan(selectedProjectDetails.Project_ID)
+      selectedProjectDetails?.Project_ID
+        ? await getProjectPlan(selectedProjectDetails?.Project_ID)
         : [];
     apiData && dispatch(updateProjectPlanDesignAction(apiData));
     restructuredData = apiData?.length > 0 ? getRestructuredData(apiData) : [];
@@ -458,15 +458,11 @@ function ProjectSetup(props) {
 
   const onSave = async () => {
     let updatedData = [];
-    console.log("projectPlanDesignData", projectPlanDesignData);
-    console.log("projectPlanDesign", projectPlanDesign);
     const updatedSaveData = saveData(updatedData);
-    console.log("updatedData ouy", updatedSaveData);
     if (updatedData.length !== 0) {
       const formData = {
         ArtworkAgilityProjects: updatedSaveData,
       };
-      console.log("formData onSave", formData);
       dispatch(updateProjectPlanDesignAction(updatedProjectPlanDesignData));
       await saveProjectPlanAction(formData, selectedProjectDetails.Project_ID);
       setActiveSave(true);
@@ -478,13 +474,11 @@ function ProjectSetup(props) {
     setLoader(true);
     let updatedData = [];
     const updatedSaveData = saveData(updatedData, true);
-    console.log("updatedData activate", updatedSaveData);
 
     if (updatedData.length !== 0) {
       const formData = {
         ArtworkAgilityProjects: updatedSaveData,
       };
-      console.log("formData activate", formData);
       await activateProjectPlan(formData, selectedProjectDetails.Project_ID);
       await dispatch(getMyProject(userInformation));
       getProjectPlanApi();
@@ -494,7 +488,7 @@ function ProjectSetup(props) {
         detail: "Project activated successfully!",
         life: 5000,
       });
-      setLoader(false);
+      // setLoader(false);
       setActiveSave(true);
       setActiveFlag(true)
     }

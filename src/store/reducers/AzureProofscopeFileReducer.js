@@ -10,7 +10,7 @@ const azureProofscopeFileUpload = (state = initialState, action) => {
     case "UPLOAD_FILE_PROOFSCOPE_REQUEST":
       return { ...state, uploading: true, error: null };
     case "UPLOAD_FILE_PROOFSCOPE_SUCCESS":
-      return { ...state, uploading: false, uploadedUrl: action.payload };
+      return { ...state, uploading: false, proofscope: action.payload };
     case "UPLOAD_FILE_PROOFSCOPE_FAILURE":
       return { ...state, uploading: false, error: action.payload };
     default:

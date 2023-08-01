@@ -27,7 +27,9 @@ const ARDT = () => {
     (state) => state.TaskDetailsReducer
   );
   const currentUrl = location.pathname;
-  const checkReadWriteAccess = CheckReadOnlyAccess();
+  // const checkReadWriteAccess = CheckReadOnlyAccess();
+  const checkReadWriteAccess = true;
+
 
   const handleCancel = () => {
     navigate(`/${currentUrl?.split("/")[1]}`);
