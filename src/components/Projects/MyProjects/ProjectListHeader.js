@@ -31,10 +31,10 @@ const ProjectListHeader = ({
   filterFLag,
   CustomizeViewFlag,
   ResetToDefaultFlag,
-  isTreeTableFlag
+  isTreeTableFlag,
 }) => {
   let modifiedAllData = allData;
-  if(isTreeTableFlag){
+  if (isTreeTableFlag) {
     modifiedAllData = allData?.map((obj) => obj.data);
   }
   const location = useLocation();
@@ -121,7 +121,7 @@ const ProjectListHeader = ({
   // console.log("new obj", newObj);
 
   return (
-    <div className="actions" style={{ marginLeft: 25}}>
+    <div className="actions" style={{ marginLeft: 25, paddingRight: 42 }}>
       <div className="project-title">{header}</div>
 
       <div className="action-buttons">
@@ -151,12 +151,11 @@ const ProjectListHeader = ({
 
         {!shouldShowResetButton && (
           <>
-
-              <ExportSelectedRows
-                allData={modifiedAllData}
-                selectedRows={selected}
-                headers={headers}
-              />
+            <ExportSelectedRows
+              allData={modifiedAllData}
+              selectedRows={selected}
+              headers={headers}
+            />
             <Button
               className="button-layout"
               variant="secondary"
@@ -184,34 +183,32 @@ const ProjectListHeader = ({
           </>
         )}
 
-          <>
-            {shouldShowResetButton && (
-              <>
-                <ExportSelectedRows
-                  selectedRows={selected}
-                  allData={modifiedAllData}
-                  headers={headers}
-                />
+        <>
+          {shouldShowResetButton && (
+            <>
+              <ExportSelectedRows
+                selectedRows={selected}
+                allData={modifiedAllData}
+                headers={headers}
+              />
 
-                <DropdownButton
-                  title="Action"
-                  disabled={actionFlag || !isReadOnly}
-                  id={actionFlag ? "tasksInActive" : "tasksActive"}
-                  className="dropdown-button-custom"
-                >
-                  <Dropdown.Item onClick={handleDelegate}>
-                    Delegate
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={handleHelpNeeded}>
-                    Help Needed
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={handleHelpProvided}>
-                    Help Provided
-                  </Dropdown.Item>
-                </DropdownButton>
-              </>
-            )}
-          </>
+              <DropdownButton
+                title="Action"
+                disabled={actionFlag || !isReadOnly}
+                id={actionFlag ? "tasksInActive" : "tasksActive"}
+                className="dropdown-button-custom"
+              >
+                <Dropdown.Item onClick={handleDelegate}>Delegate</Dropdown.Item>
+                <Dropdown.Item onClick={handleHelpNeeded}>
+                  Help Needed
+                </Dropdown.Item>
+                <Dropdown.Item onClick={handleHelpProvided}>
+                  Help Provided
+                </Dropdown.Item>
+              </DropdownButton>
+            </>
+          )}
+        </>
       </div>
     </div>
   );
