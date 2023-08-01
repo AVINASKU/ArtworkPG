@@ -8,8 +8,7 @@ import { Button } from "react-bootstrap";
 const getTasks = (entities, columnId) => entities?.columns[columnId]?.fieldsData.map((taskId) => entities.tasks[taskId]);
 
 const DragAndDrop = (props) => {
-  console.log("props", props.customizeViewFields);
-  const [entities, setEntities] = useState(props?.availableFields && entities1(props?.availableFields));
+  const [entities, setEntities] = useState(props?.availableFields && entities1(props?.availableFields, props?.headerName));
   const [selectedTaskIds, setSelectedTaskIds] = useState([]);
   const [draggingTaskId, setDraggingTaskId] = useState(null);
   const [localDestination, setLocalDestination] = useState(null);
@@ -23,7 +22,7 @@ const DragAndDrop = (props) => {
       if(updatedData !== undefined)
         setEntities(updatedData)
     } else {
-      setEntities(props?.availableFields && entities1(props?.availableFields))      
+      setEntities(props?.availableFields && props?.headerName && entities1(props?.availableFields, props?.headerName))      
     }
   }, [props.customizeViewFields])
 
@@ -182,19 +181,25 @@ const DragAndDrop = (props) => {
   };
 
   const handleSubmit = async () => {
-    console.log("handleSubmit entities.columns", entities.columns)
     props.setCustomizeViewFields(JSON.stringify([]));
-    localStorage.setItem(
-      "customizeViewFields",
-      JSON.stringify(entities.columns)
-    );
+    if(props?.headerName === "Dependency Mapping"){
+      localStorage.setItem(
+        "customizeViewDependancyFields",
+        JSON.stringify(entities.columns)
+      );
+    } else {
+      localStorage.setItem(
+        "customizeViewFields",
+        JSON.stringify(entities.columns)
+      );
+    }
+    
     props.setCustomizeViewFields(JSON.stringify(entities.columns));
     props.hideDialog();
   };
   const selected = selectedTaskIds;
 
   return (
-    console.log("drag entities",entities),
     <>
       <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
         <div style={{ display: "flex" }}>

@@ -23,6 +23,7 @@ const DependencyMapping = () => {
   const [dataUpdated, setDataUpdated] = useState(false);
   const [submittedData, setSubmittedData] = useState([]);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const [customizeViewFields, setCustomizeViewFields] = useState(localStorage.getItem("customizeViewDependancyFields"));
   const selectedProjectDetails = projectSetup.selectedProject;
   const ProjectID = selectedProjectDetails?.Project_ID;
   const navigate = useNavigate();
@@ -245,6 +246,9 @@ const DependencyMapping = () => {
           // dsbpPmpData={dsbpPmpData}
           // setTableRender={setTableRender}
           // tableRender={tableRender}
+          customizeViewFields={customizeViewFields}
+          setCustomizeViewFields={setCustomizeViewFields}
+          dependencyMappingData={dependencyMappingData}
           selectedProjectDetails={selectedProjectDetails}
           userHasAccess={userHasAccess}
           isDependencyMapping={true}
