@@ -224,9 +224,10 @@ function UBD() {
           Action: "",
           Filename: fileInfo.files[0].name,
           Size: fileSize === 0 ? "1" : `${fileSize}`,
-          Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
+          Version:
+            version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
         },
-      }
+      };
     }
     if (
       uploadType === otherReferenceDocs + fileUploadType.uploadFile ||
@@ -241,9 +242,10 @@ function UBD() {
           Action: "",
           Filename: fileInfo.files[0].name,
           Size: fileSize === 0 ? "1" : `${fileSize}`,
-          Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
+          Version:
+            version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
         },
-      }
+      };
     }
     setPageInstructionsData([...pageInstructionsData, data]);
   };

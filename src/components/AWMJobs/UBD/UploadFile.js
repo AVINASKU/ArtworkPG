@@ -15,6 +15,7 @@ const UploadFile = ({
   uploadFile,
   sequence,
   getDataSaveAsDraft,
+  setUploadedWrongFilename,
 }) => {
   const [fileName, setFileName] = useState("");
   const [totalSize, setTotalSize] = useState(0);
@@ -68,25 +69,22 @@ const UploadFile = ({
     const MAX_PATH_LENGTH = 255;
     const regex = /^[a-zA-Z0-9_]+$/;
     const restrictedCharsRegex = /[...(){}\[\]\\\/<>@$%&#?:,*"˜#â€œ]+/;
-
+    var re = /(?:\.([^.]+))?$/;
     const fileLength = e.files[0].name.length;
     const uploadFileName = e.files[0].name;
     const filePathLength = e.files[0].webkitRelativePath.length;
     setFileName(e.files[0].name);
-    if (restrictedCharsRegex.test(uploadFileName)) {
-      console.log(
-        "restrictedCharsRegex arised",
-        restrictedCharsRegex.test(uploadFileName)
-      );
-    }
 
     if (
       fileLength > MAX_FILENAME_LENGTH ||
       filePathLength > MAX_PATH_LENGTH ||
       regex.test(uploadFileName) ||
-      restrictedCharsRegex.test(uploadFileName)
+      restrictedCharsRegex.test(
+        uploadFileName.split(re.exec(uploadFileName)[0])[0]
+      )
     ) {
       setFileUploadWarning(true);
+      setUploadedWrongFilename(true);
     }
 
     const renamedFile = {
@@ -116,6 +114,7 @@ const UploadFile = ({
 
   const onImageClose = () => {
     setFileUploadWarning(false);
+    setUploadedWrongFilename(false);
     setFileName("");
   };
 
@@ -148,9 +147,15 @@ const UploadFile = ({
           // disabled={fileName !== ""}
         />
       </div>
-      <div className="wrongMsg">
-        {fileUploadWarning && <label>Wrong file uploaded</label>}
-      </div>
+      {/* <span>
+        {fileUploadWarning && (
+          <>
+            <p className="wrongMsg">
+              Filename Invalid. Click on <>&#9432;</> icon to learn more.
+            </p>
+          </>
+        )}
+      </span> */}
     </>
   );
 };

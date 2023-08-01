@@ -14,10 +14,12 @@ const UploadBriefingDocuments = ({
   fileUploadSection,
   fileUploadType,
   getDataSaveAsDraft,
+  fileUploadWarning,
 }) => {
   console.log("item121:", index);
   const [azureFile, setAzureFile] = useState("");
   const [selectDialog, setSelectDialog] = useState(false);
+  const [uploadedWrongFilename, setUploadedWrongFilename] = useState(false);
 
   return (
     <div>
@@ -55,6 +57,7 @@ const UploadBriefingDocuments = ({
             uploadFile={fileUploadType.uploadFile}
             sequence={index + 1}
             getDataSaveAsDraft={getDataSaveAsDraft}
+            setUploadedWrongFilename={setUploadedWrongFilename}
             // disabled={!checkReadWriteAccess || data.Task_Status === "Complete"}
             // ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
             // version={version}
@@ -73,6 +76,7 @@ const UploadBriefingDocuments = ({
             upVersion={fileUploadType.upVersion}
             sequence={index + 1}
             getDataSaveAsDraft={getDataSaveAsDraft}
+            setUploadedWrongFilename={setUploadedWrongFilename}
             // disabled={!checkReadWriteAccess || data.Task_Status === "Complete"}
             // ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
             // version={version}
@@ -91,6 +95,13 @@ const UploadBriefingDocuments = ({
               />
             </div>
           </div>
+        </Col>
+        <Col sm={4}>
+          {uploadedWrongFilename && (
+            <p className="wrongMsg">
+              Filename Invalid. Click on <>&#9432;</> icon to learn more.
+            </p>
+          )}
         </Col>
       </Row>
     </div>
