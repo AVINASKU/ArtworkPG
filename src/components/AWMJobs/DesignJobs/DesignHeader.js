@@ -84,7 +84,7 @@ const DesignHeader = ({
               }}
               checked={checked}
               className="margin-right"
-              disabled={(!onSelectAll && true) || !checkReadWriteAccess}
+              disabled={((!onSelectAll && true) || !checkReadWriteAccess) || checkTaskISComplete }
             ></Checkbox>
             <div className="icon-label">
               <label

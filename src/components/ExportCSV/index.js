@@ -4,19 +4,24 @@ import export2excel from "../../assets/images/export2excel.svg";
 import { changeDateFormat, onSortData } from "../../utils";
 
 export const ExportSelectedRows = ({ allData, selectedRows, headers }) => {
-  var headers = headers.map(function (str) {
-    {
-      str === "Estimated_SOP" && changeDateFormat(allData[str]);
-    }
-    {
-      str === "Estimated_SOS" && changeDateFormat(allData[str]);
-    }
-    {
-      str === "Estimated_AW_Printer" && changeDateFormat(allData[str]);
-    }
-    {
-      str === "Estimated_AW_Readiness" && changeDateFormat(allData[str]);
-    }
+  // Format date fields in allData and selectedRows
+  const formattedAllData = allData?.map((data) => ({
+    ...data,
+    Estimated_SOP: changeDateFormat(data["Estimated_SOP"]),
+    Estimated_SOS: changeDateFormat(data["Estimated_SOS"]),
+    Estimated_AW_Printer: changeDateFormat(data["Estimated_AW_Printer"]),
+    Estimated_AW_Readiness: changeDateFormat(data["Estimated_AW_Readiness"]),
+  }));
+
+  const formattedSelectedRows = selectedRows?.map((data) => ({
+    ...data,
+    Estimated_SOP: changeDateFormat(data["Estimated_SOP"]),
+    Estimated_SOS: changeDateFormat(data["Estimated_SOS"]),
+    Estimated_AW_Printer: changeDateFormat(data["Estimated_AW_Printer"]),
+    Estimated_AW_Readiness: changeDateFormat(data["Estimated_AW_Readiness"]),
+  }));
+
+  const modifiedHeaders = headers?.map((str) => {
     if (
       str.startsWith("Artwork_") ||
       str.startsWith("Project_region") ||
@@ -27,10 +32,11 @@ export const ExportSelectedRows = ({ allData, selectedRows, headers }) => {
       return str; // Keep the original string
     }
   });
+
   if (!selectedRows || selectedRows.length === 0) {
     const csvReport = {
-      data: allData,
-      headers: headers,
+      data: formattedAllData,
+      headers: modifiedHeaders,
       filename: "Project_Records.csv",
     };
     return (
@@ -38,8 +44,8 @@ export const ExportSelectedRows = ({ allData, selectedRows, headers }) => {
     );
   } else if (selectedRows.length > 0) {
     const csvReport = {
-      data: selectedRows,
-      headers: headers,
+      data: formattedSelectedRows,
+      headers: modifiedHeaders,
       filename: "Selected_Rows.csv",
     };
     return <>{csvTag(csvReport)}</>;
