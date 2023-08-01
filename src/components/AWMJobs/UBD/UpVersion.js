@@ -47,7 +47,18 @@ const UpVersion = ({
   const itemTemplate = (file) => (
       <div className="upload-row">
         <img role="presentation" src={file.objectURL} width={50} />
+        {file.name.length > 22 ? (
+        <div
+          className="flex flex-column text-left fileName"
+          data-toggle="tooltip"
+          data-placement="top"
+          title={file.name}
+        >
+          {file.name}
+        </div>
+      ) : (
         <div className="flex flex-column text-left fileName">{file.name}</div>
+      )}
       </div>
     );
 

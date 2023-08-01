@@ -14,10 +14,8 @@ export const saveAsDraftUploadBrefingDocs = async (
   const api = new Api();
   const axiosInstance = await api.init({ headers });
   let apiURL;
-  //https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/UpdateGABreifdocument
-
-  // apiURL = `${DEVURL}/v1/UpdateGABreifdocument`;
-  apiURL = `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/UpdateGABreifdocument`;
+  apiURL = `${DEVURL}/updateGABriefDocument`;
+  // apiURL = `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/UpdateGABreifdocument`;
 
   const saveAsDraftUploadBrefingDocsData = await axiosInstance({
     url: apiURL,
@@ -39,10 +37,8 @@ export const deleteUploadBrefingDocs = async (
   const api = new Api();
   const axiosInstance = await api.init({ headers });
   let apiURL;
-  //https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/DeleteGABriefdocument
-
-  // apiURL = `${DEVURL}/v1/DeleteGABriefdocument`;
-  apiURL = `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/DeleteGABriefdocument`;
+  apiURL = `${DEVURL}/deleteGABriefdocument`;
+  // apiURL = `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/DeleteGABriefdocument`;
 
   const deleteUploadBrefingDocsData = await axiosInstance({
     url: apiURL,
@@ -67,7 +63,7 @@ export const submitUploadBrefingDocs = async (
   let apiURL;
   //https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v2/assignments/ASSIGN-WORKLIST PG-AAS-WORK U-6659!UPLOADBRIEFINGDOCUMENTS_FLOW/actions/UploadBriefingDocuments
 
-  apiURL = `${DEVURL}/v2/assignments/ASSIGN-WORKLIST ${id}!UPLOADBRIEFINGDOCUMENTS_FLOW/actions/UploadBriefingDocuments`;
+  apiURL = `${DEVURL}/uploadBriefingDocuments/${id}`;
 
   const submitUploadBrefingDocsData = await axiosInstance({
     url: apiURL,
