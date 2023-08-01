@@ -233,7 +233,7 @@ const CloneJobs = ({
       <>
         <div
           style={{
-            marginLeft: 20,
+            marginLeft: 25,
           }}
           className="font-color"
         >
