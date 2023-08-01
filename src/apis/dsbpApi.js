@@ -90,7 +90,8 @@ export const getDependencyMappingDetails = async (projectId, headers = {}) => {
   const dependencyTableData =
     response?.DSBP_InitiativeIDPage?.[0]?.DSBP_PMP_PIMaterialIDPage;
 
-  const isRDTData = response?.AWM_RDT_Page;
+  // const isRDTData = response?.AWM_RDT_Page;
+const isRDTData=[];
   const isIQData = response?.AWM_IQ_Page;
   const isCDPTData = response?.AWM_CDPT_Page;
   const isGABrifData = response?.DSBP_GABrief_Page;
