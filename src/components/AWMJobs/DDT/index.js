@@ -47,7 +47,8 @@ function DDT() {
   // if bu is baby care show tire field else not
   let checkBU = toLower(bu) === toLower("Home Care") ? true : false;
 
-  const checkReadWriteAccess = CheckReadOnlyAccess();
+  // const checkReadWriteAccess = CheckReadOnlyAccess();
+  const checkReadWriteAccess = true;
 
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));

@@ -45,7 +45,8 @@ function DPRA() {
   let bu = userInformation?.bu;
   // if bu is home care show tire field else not
   let checkBU = toLower(bu) === toLower("Home Care") ? true : false;
-  const checkReadWriteAccess = CheckReadOnlyAccess();
+  // const checkReadWriteAccess = CheckReadOnlyAccess();
+  const checkReadWriteAccess = true;
 
   const location = useLocation();
   const currentUrl = location.pathname;

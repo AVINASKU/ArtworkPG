@@ -43,7 +43,8 @@ function DDI() {
     TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Status === "Complete";
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
 
-  const checkReadWriteAccess = hasAllAccess();
+  // const checkReadWriteAccess = hasAllAccess();
+  const checkReadWriteAccess = true;
 
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
