@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "react-bootstrap";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 const IQCDFooterButtons = ({
   onSaveAsDraft,
@@ -13,10 +13,12 @@ const IQCDFooterButtons = ({
   cptFormValid,
   data,
 }) => {
-  const location = useLocation();
-  const locationPath = location?.pathname;
-  const url = locationPath?.split("/");
-  const pathName = url[2];
+  // const location = useLocation();
+  // const locationPath = location?.pathname;
+  // const url = locationPath?.split("/");
+  // const pathName = url[2];
+  let {TaskID} = useParams();
+  const pathName = TaskID.split("_")[0];
   console.log("checkReadWriteAccess in footer", checkReadWriteAccess);
   console.log("data", data);
   return (
