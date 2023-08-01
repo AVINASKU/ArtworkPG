@@ -1,8 +1,6 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import { Dialog } from "primereact/dialog";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
 
 const DsbpCommonPopup = ({
   children,
@@ -20,7 +18,7 @@ const DsbpCommonPopup = ({
       ) : (
         <>
           <Button variant="secondary" onClick={() => setDasbpDialog(false)}>
-            Cancel
+            No
           </Button>
           <Button
             disabled={
@@ -28,7 +26,7 @@ const DsbpCommonPopup = ({
             }
             onClick={onSubmit}
           >
-            Submit
+            Yes
           </Button>
         </>
       )}
