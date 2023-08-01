@@ -66,7 +66,9 @@ function DDI() {
   }, [TaskDetailsData]);
 
   const handleCancel = () => {
-    return navigate(`/${currentUrl?.split("/")[1]}`);
+    return navigate(
+      `/${currentUrl?.split("/")[1]}/${currentUrl?.split("/")[2]}/${ProjectID}`
+    );
   };
 
   const handleDelete = (index) => {
@@ -186,10 +188,12 @@ function DDI() {
       },
       pageInstructions: updatedDataList,
     };
-    console.log("formData", formData);
+    
     await submitDesignIntent(formData, id, headers);
-    setLoader(false);
-    navigate(`/${currentUrl?.split("/")[1]}`);
+    setLoader(false);    
+    navigate(
+      `/${currentUrl?.split("/")[1]}/${currentUrl?.split("/")[2]}/${ProjectID}`
+    );
   };
 
   const onSaveAsDraft = async () => {
@@ -227,7 +231,6 @@ function DDI() {
       Region: projectData?.Project_region,
       DesignIntentList: updatedData,
     };
-    console.log("full draft data --->", formData);
     await saveDesignIntent(formData);
     setLoader(false);
   };
