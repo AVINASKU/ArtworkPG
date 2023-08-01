@@ -31,7 +31,7 @@ const CPPFA = ({
   const [designIntent, setDesignIntent] = useState({});
   const [version, setVersion] = useState("V0");
   let allAccess = hasAllAccess();
-  let isAccessEmpty = allAccess;
+  let isAccessEmpty = false;
 
   // if (url[1] === "AllTasks") {
   //   isAccessEmpty = true;

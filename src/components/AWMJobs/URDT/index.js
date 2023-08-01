@@ -124,9 +124,9 @@ const URDT = () => {
       uploadProofscopeFileAzure(selectedProjectDetails?.BU, azureFile, "RDT")
     );
     // console.log('formData', formData, "id", id);
-    // await submitUploadRegionalDesignIntent(formData, id, headers);
+    await submitUploadRegionalDesignIntent(formData, id, headers);
     setLoader(false);
-    // navigate(`/${currentUrl?.split("/")[1]}`);
+    navigate(`/${currentUrl?.split("/")[1]}`);
   };
   return (
     <PageLayout>

@@ -64,7 +64,7 @@ function DPRA() {
   }, [TaskDetailsData]);
 
   useEffect(() => {
-    let projectData = allProjects.find(
+    let projectData = allProjects?.find(
       (project) => project.Project_ID === ProjectID
     );
     setProjectData(projectData);
