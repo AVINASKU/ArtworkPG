@@ -33,7 +33,7 @@ const DependencyMapping = lazy(() => import("../DSBP/DependencyMappingPage"));
 
 function ProjectSetup(props) {
   const toast = useRef(null);
-  const isAccessEmpty = hasAllAccess();
+  const isAccessEmpty = true;
 
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
@@ -71,9 +71,9 @@ function ProjectSetup(props) {
   const [pegadata, setPegaData] = useState(null);
   const [updatedProjectPlanDesignData, setUpdatedProjectPlanDesignData] =
     useState([]);
-  const [loader, setLoader] = useState(false);
-  const [activeFlag, setActiveFlag] = useState(isAccessEmpty);
-
+    const [loader, setLoader] = useState(false);
+    const [activeFlag, setActiveFlag] = useState(true);
+  
   const firstTime = projectPlanDesign.some(
     (item) => item.Assignee !== "" || item.Role !== ""
   );
@@ -88,11 +88,11 @@ function ProjectSetup(props) {
   }, [isAccessEmpty]);
 
   useEffect(() => {
-    setActiveFlag(false);
-    let projectData =
-      isArray(myProject) &&
-      myProject.find((project) => project.Project_ID === ProjectID);
-
+    // setActiveFlag(false);
+    let projectData = isArray(myProject) && myProject.find(
+      (project) => project.Project_ID === ProjectID
+    );
+    
     if (
       (!firstTime && projectData?.Project_State === "Draft") ||
       projectData?.Project_State === "Active" ||
@@ -209,6 +209,26 @@ function ProjectSetup(props) {
         code: "SAA",
         data: apiData.filter((data) => data.AWM_Task_ID.includes("SAA_")),
       },
+      {
+        name: "Dependency Mapping",
+        code: "DM",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("DM_")),
+      },
+      {
+        name: "Upload Briefing documents",
+        code: "UBD",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("UBD_")),
+      },
+      {
+        name: "Approve CIC",
+        code: "ACIC",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("ACIC_")),
+      },
+      {
+        name: "Upload CIC",
+        code: "UCIC",
+        data: apiData.filter((data) => data.AWM_Task_ID.includes("UCIC_")),
+      },
     ];
     // }
 
@@ -221,7 +241,11 @@ function ProjectSetup(props) {
           task.data[0]?.AWM_Task_ID.includes("CPPFA_") ||
           task.data[0]?.AWM_Task_ID.includes("DNPF_") ||
           task.data[0]?.AWM_Task_ID.includes("DNIQ_") ||
-          task.data[0]?.AWM_Task_ID.includes("SAA_")
+          task.data[0]?.AWM_Task_ID.includes("SAA_") ||
+          task.data[0]?.AWM_Task_ID.includes("UBD_") ||
+          task.data[0]?.AWM_Task_ID.includes("DM_") ||
+          task.data[0]?.AWM_Task_ID.includes("ACIC_") ||
+          task.data[0]?.AWM_Task_ID.includes("UCIC_")
         ) {
           let tempObj = {};
           tempObj["key"] = task.data[0]?.AWM_Task_ID;
@@ -446,6 +470,7 @@ function ProjectSetup(props) {
       dispatch(updateProjectPlanDesignAction(updatedProjectPlanDesignData));
       await saveProjectPlanAction(formData, selectedProjectDetails.Project_ID);
       setActiveSave(true);
+      setActiveFlag(true)
     }
   };
 
@@ -471,6 +496,7 @@ function ProjectSetup(props) {
       });
       setLoader(false);
       setActiveSave(true);
+      setActiveFlag(true)
     }
   };
 
@@ -581,7 +607,8 @@ function ProjectSetup(props) {
                       loader={loader}
                       pegadata={pegadata}
                       setPegaData={setPegaData}
-                      firstTime={firstTime}
+                      activeFlag={activeFlag}
+                      isAccessEmpty={isAccessEmpty}
                     />
                   </Accordion.Body>
                 </Accordion.Item>
@@ -591,28 +618,25 @@ function ProjectSetup(props) {
                   </Accordion.Header>
                   <Accordion.Body>
                     <ProjectPlanCompo
-                      isSearch={isSearch}
-                      setColWidth={setColWidth}
-                      childFunc={childFunc}
-                      test={test}
-                      tabNameForPP={tabNameForPP}
-                      view={toggleButtons}
-                      setTabName={setTabName}
-                      updatedProjectPlanDesignData={
-                        updatedProjectPlanDesignData
-                      }
-                      setUpdatedProjectPlanDesignData={
-                        setUpdatedProjectPlanDesignData
-                      }
-                      activeSave={activeSave}
-                      setActiveFlag={setActiveFlag}
-                      setActiveSave={setActiveSave}
-                      getProjectPlanApi={getProjectPlanApi}
-                      loader={loader}
-                      pegadata={pegadata}
-                      setPegaData={setPegaData}
-                      firstTime={firstTime}
-                    />
+                    isSearch={isSearch}
+                    setColWidth={setColWidth}
+                    childFunc={childFunc}
+                    test={test}
+                    tabNameForPP={tabNameForPP}
+                    view={toggleButtons}
+                    setTabName={setTabName}
+                    updatedProjectPlanDesignData={updatedProjectPlanDesignData}
+                    setUpdatedProjectPlanDesignData={setUpdatedProjectPlanDesignData}
+                    activeSave={activeSave}
+                    setActiveFlag={setActiveFlag}
+                    setActiveSave={setActiveSave}
+                    getProjectPlanApi={getProjectPlanApi}
+                    loader={loader}
+                    pegadata={pegadata} 
+                    setPegaData={setPegaData}
+                    activeFlag={activeFlag}
+                    isAccessEmpty={isAccessEmpty}
+                  />
                   </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="4">

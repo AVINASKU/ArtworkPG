@@ -90,19 +90,21 @@ export const getDependencyMappingDetails = async (projectId, headers = {}) => {
   const dependencyTableData =
     response?.DSBP_InitiativeIDPage?.[0]?.DSBP_PMP_PIMaterialIDPage;
 
-  const isRDTData = response?.AWM_RDT_Page;
+  // const isRDTData = response?.AWM_RDT_Page;
+const isRDTData=[];
   const isIQData = response?.AWM_IQ_Page;
   const isCDPTData = response?.AWM_CDPT_Page;
-  const isGABrifData= response?.DSBP_GABrief_Page;
+  const isGABrifData = response?.DSBP_GABrief_Page;
   return { dependencyTableData, isRDTData, isIQData, isCDPTData, isGABrifData };
 };
 
 export const onSubmitDependencyMappingAction = async (
   formData,
+  projectId,
   headers = {}
 ) => {
   const api = new Api();
-  let projectId = "A-2002";
+  // let projectId = "A-2002";
   const axiosInstance = await api.init({ headers });
   let apiURL = `${DEVURL}/storeDependencyMappingDetails/${projectId}`;
   const addResponse = await axiosInstance({
@@ -111,5 +113,17 @@ export const onSubmitDependencyMappingAction = async (
     data: formData,
   });
   console.log("Add response ----->", addResponse);
+  return addResponse;
+};
+
+export const handleConfirmFullScopeIn = async (projectId, headers = {}) => {
+  const api = new Api();
+  const axiosInstance = await api.init({ headers });
+  let apiURL = `${DEVURL}/confirmFullScopeIn/${projectId}`;
+  const addResponse = await axiosInstance({
+    url: apiURL,
+    method: "POST",
+  });
+  console.log("Hello hello ----->", addResponse);
   return addResponse;
 };

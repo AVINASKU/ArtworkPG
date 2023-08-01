@@ -83,10 +83,10 @@ const DsbpActionDialog = ({
       </Button>
     </div>
   );
-  console.log("selectedv action", selected);
+  const notAddedToProjectRows = selected.filter((item) => (item.AWM_AddedToProject !== "Yes"));
+  const addedToProjectRows = selected.filter((item) => (item.AWM_AddedToProject === "Yes"));
 
   return (
-    console.log("formData", rowData),
     (
       <div className="card flex justify-content-center dsbp-action-dialog">
         <Dialog
@@ -100,8 +100,8 @@ const DsbpActionDialog = ({
           <Row style={{ "height": "100%"}}>
           {rowData || (updatedData && updatedData[0]?.value === "Add to Project") ? (
                 <Col sm={12} style={{ "height": "100%"}}>
-                  {selected && (
-                      <DataTable value={selected} dataKey="id" className="addToProjectTable" scrollable>
+                  {notAddedToProjectRows && (
+                      <DataTable value={notAddedToProjectRows} dataKey="id" className="addToProjectTable" scrollable>
                         <Column
                           field="DSBP_PMP_PIMaterialNumber"
                           header="PMP "
@@ -113,9 +113,9 @@ const DsbpActionDialog = ({
               ) : (
                   <>
                     <Col sm={7} style={{ "height": "100%"}}>
-                      {selected && updatedData && updatedData[0]?.value !== "Add to Project" && (
+                      {addedToProjectRows && updatedData && updatedData[0]?.value !== "Add to Project" && (
                         <div className="card" style={{ "height": "100%"}}>
-                          <DataTable value={selected} dataKey="id" scrollable>
+                          <DataTable value={addedToProjectRows} dataKey="id" emptyMessage="Please add the PMP to project before you can update." scrollable>
                             <Column
                               field="DSBP_PMP_PIMaterialNumber"
                               header="PMP "
@@ -139,6 +139,7 @@ const DsbpActionDialog = ({
                                   value={assemblyMechanismChange}
                                   placeholder="Select Assembly Mechanism"
                                   onChange={handleAssemblyMechanismChange}
+                                  disabled={addedToProjectRows.length === 0}
                                 >
                                   <option value="">Select Assembly Mechanism</option>
                                   {assemblyMechanismList.map((aise) => (
@@ -165,6 +166,7 @@ const DsbpActionDialog = ({
                                     value={aiseName}
                                     placeholder="Select AISE"
                                     onChange={handleAiseChange}
+                                    disabled={addedToProjectRows.length === 0}
                                   >
                                     <option value="">Select AISE</option>
                                     {aiseList.map((aise) => (
@@ -187,6 +189,7 @@ const DsbpActionDialog = ({
                                     placeholder="Enter Bioside"
                                     onChange={handleBiosideChange}
                                     value={bioside}
+                                    disabled={addedToProjectRows.length === 0}
                                   />
                                 </Form.Group>
                               </Col>
@@ -202,6 +205,7 @@ const DsbpActionDialog = ({
                                     placeholder="Enter Sellable"
                                     onChange={handleSellableChange}
                                     value={sellable}
+                                    disabled={addedToProjectRows.length === 0}
                                   />
                                 </Form.Group>
                               </Col>

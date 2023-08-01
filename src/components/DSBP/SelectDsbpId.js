@@ -66,7 +66,7 @@ const SelectDsbpId = ({
             }}
             alt=""
             style={{ height: 12 }}
-            disabled={userHasAccess}
+            // disabled={userHasAccess}
           />
         </div>
         <div>
@@ -85,7 +85,7 @@ const SelectDsbpId = ({
               "disable-icons"
             }`}
             style={{ height: 12 }}
-            disabled={userHasAccess}
+            // disabled={userHasAccess}
           />
         </div>
       </div>

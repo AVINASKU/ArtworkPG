@@ -20,6 +20,10 @@ const reorderSingleDrag = ({
   source,
   destination,
 }) => {
+  if(source.droppableId === "availableFields" && destination.droppableId === "freezedColumns"){
+    return;
+  }
+
   if(source.droppableId === "freezedColumns" && destination.droppableId === "availableFields"){
     return;
   }

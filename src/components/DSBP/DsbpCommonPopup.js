@@ -1,8 +1,6 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import { Dialog } from "primereact/dialog";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
 
 const DsbpCommonPopup = ({
   children,
@@ -21,7 +19,7 @@ const DsbpCommonPopup = ({
       ) : (
         <>
           <Button variant="secondary" onClick={() => setDasbpDialog(false)}>
-            Cancel
+            No
           </Button>
           {deleteButtonShow ? (
             <Button
@@ -42,6 +40,14 @@ const DsbpCommonPopup = ({
               Submit
             </Button>
           )}
+          <Button
+            disabled={
+              rejectFormData && Object.keys(rejectFormData)?.length === 0
+            }
+            onClick={onSubmit}
+          >
+            Yes
+          </Button>
         </>
       )}
     </div>
