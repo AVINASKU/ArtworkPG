@@ -14,7 +14,7 @@ import "./index.scss";
 const headerName = "Dependency Mapping";
 const DependencyMapping = () => {
   const [dependencyMappingData, setDependencyMappingData] = useState([]);
-  const [dependencyColumnNames, setDependencyColumnNames] = useState([]);
+  // const [dependencyColumnNames, setDependencyColumnNames] = useState([]);
   const [updatedDataToSubmit, setUpdatedDataToSubmit] = useState([]);
   const [CDPTPageData, setCDPTPageData] = useState([]);
   const [IQData, setIQData] = useState([]);
@@ -22,9 +22,14 @@ const DependencyMapping = () => {
   const [GABriefData, setGABriefData] = useState([]);
   const [dataUpdated, setDataUpdated] = useState(false);
   const [submittedData, setSubmittedData] = useState([]);
+  const [selectedFields, setSelectedFields] = useState([]);
+  const [tableRender, setTableRender] = useState(false);
+  const [filteredDependencyMappingData, setFiltersDependencyMappingData] =
+    useState([]);
   const [dropdownDataForLayoutAndDesign, setDropdownDataForLayoutAndDesign] =
     useState([]);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const [customizeViewFields, setCustomizeViewFields] = useState(localStorage.getItem("customizeViewDependancyFields"));
   const selectedProjectDetails = projectSetup.selectedProject;
   const ProjectID = selectedProjectDetails?.Project_ID;
   const navigate = useNavigate();
@@ -84,6 +89,11 @@ const DependencyMapping = () => {
   useEffect(() => {
     fetchData();
   }, [ProjectID]);
+
+  const onSort = (column, direction) => {
+    const sortedData = onSortData(column, direction, dependencyMappingData);
+    setDependencyMappingData(sortedData);
+  };
 
   async function fetchData() {
     const {
@@ -192,7 +202,11 @@ const DependencyMapping = () => {
       setIQData(isIQData);
       setRDTData(isRDTData);
       setGABriefData(isGABrifData);
-      setDependencyColumnNames(groupedColumnNames);
+      localStorage.setItem(
+        "setDependencyMappingColumnNames",
+        JSON.stringify(groupedColumnNames)
+      );
+      // setDependencyColumnNames(groupedColumnNames);
       setDependencyMappingData(transformedData);
     }
   }
@@ -241,7 +255,7 @@ const DependencyMapping = () => {
         if (ele.AWM_IQ_Page) {
           DSBP_IQ_Page = IQData.filter((iqData) => {
             if (ele.AWM_IQ_Page.includes(iqData.AWM_Design_Job_ID))
-            return iqData;
+              return iqData;
           });
           DSBP_IQ_Page_data = DSBP_IQ_Page.map((item) => ({
             Design_Job_Name: item.AWM_Design_Job_Name,
@@ -276,32 +290,46 @@ const DependencyMapping = () => {
     let resp = await onSubmitDependencyMappingAction(ProjectID, formData);
   };
 
+  const onGlobalFilterChange = (e, colName) => {
+    const value = e.value;
+    setSelectedFields(value);
+    const artworkValues = value;
+
+    if (artworkValues.length) {
+      let filteredDsbpData = dependencyMappingData.filter((item) => {
+        if (item && item[colName]) {
+          const hasWords = artworkValues.some((word) =>
+            Number.isInteger(word)
+              ? item[colName] === word
+              : item[colName]?.includes(word)
+          );
+          if (hasWords) {
+            return item;
+          }
+        }
+      });
+      setFiltersDependencyMappingData(filteredDsbpData);
+      // setDependencyMappingData(filteredDsbpData);
+    } else setFiltersDependencyMappingData([]);
+  };
+
   return (
     <div className="artwork-dsbp dependency-mapping">
       <>
         <ArtworkHeader
-          // breadcrumb={breadcrumb}
           headerName={headerName}
           selected={[]}
-          // onActionSubmit={onActionSubmit}
           label="Dependency Mapping"
-          // actionDialog={actionDialog}
-          // setActionDialog={setActionDialog}
-          // setFieldUpdated={setFieldUpdated}
-          // fieldUpdated={fieldUpdated}
-          // buWiseSortedColumnNames={buWiseSortedColumnNames}
-          // setBuWiseSortedColumnNames={setBuWiseSortedColumnNames}
-          // setDsbpPmpData={setDsbpPmpData}
-          // dsbpPmpData={dsbpPmpData}
-          // setTableRender={setTableRender}
-          // tableRender={tableRender}
+          customizeViewFields={customizeViewFields}
+          setCustomizeViewFields={setCustomizeViewFields}
+          dependencyMappingData={dependencyMappingData}
           selectedProjectDetails={selectedProjectDetails}
           userHasAccess={userHasAccess}
           isDependencyMapping={true}
         />
         <DependencyMappingList
           dependencyMappingData={dependencyMappingData}
-          dependencyColumnNames={dependencyColumnNames}
+          // dependencyColumnNames={dependencyColumnNames}
           CDPTPageData={CDPTPageData}
           IQData={IQData}
           RDTData={RDTData}
@@ -309,6 +337,18 @@ const DependencyMapping = () => {
           dropdownDataForLayoutAndDesign={dropdownDataForLayoutAndDesign}
           updateDropDownData={updateDropDownData}
           userHasAccess={userHasAccess}
+          customizeViewFields={customizeViewFields}
+          setCustomizeViewFields={setCustomizeViewFields}
+          onSort={onSort}
+          onGlobalFilterChange={onGlobalFilterChange}
+          filteredDependencyMappingData={filteredDependencyMappingData}
+          setFiltersDependencyMappingData={setFiltersDependencyMappingData}
+          setDataUpdated={setDataUpdated}
+          dataUpdated={dataUpdated}
+          selectedFields={selectedFields}
+          setSelectedFields={setSelectedFields}
+          setTableRender={setTableRender}
+          tableRender={tableRender}
         />
         <FooterButtons
           handleCancel={handleCancel}

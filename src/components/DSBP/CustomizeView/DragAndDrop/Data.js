@@ -1,14 +1,24 @@
 // @flow
-const entities = (availableFieldsFromAPI) => {
+const entities = (availableFieldsFromAPI, headerName) => {
+  const header = headerName === "Dependency Mapping" ? true : false;
+
   const taskMap = availableFieldsFromAPI.reduce((previous, current) => {
     previous[current.Field_Name] = current;
     return previous;
   }, {});
 
+  const propertyKeysArray = availableFieldsFromAPI && Object.keys(availableFieldsFromAPI[0]);
+  const dependancyMappingFields = {};
+  propertyKeysArray.forEach((key) => {
+    dependancyMappingFields[key] = {
+      Field_Name: key
+    };
+  }); 
+
   const availableFields = {
     id: "availableFields",
     title: "Available Fields",
-    fieldsData: availableFieldsFromAPI.map((task) => task.Field_Name),
+    fieldsData: header ? propertyKeysArray : availableFieldsFromAPI.map((task) => task.Field_Name),
   };
 
   const selectedFields = {
@@ -29,7 +39,7 @@ const entities = (availableFieldsFromAPI) => {
       [selectedFields.id]: selectedFields,
       [freezedColumns.id]: freezedColumns,
     },
-    tasks: taskMap,
+    tasks: header ? dependancyMappingFields : taskMap,
   };
 };
 

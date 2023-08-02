@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import filter from "../../assets/images/filter.svg";
@@ -7,14 +7,16 @@ import { MultiSelect } from "primereact/multiselect";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
-import { DMTabValuesAction, DMTabAttributesAction } from "../../store/actions/DMTabValuesActions";
+import {
+  DMTabValuesAction,
+  DMTabAttributesAction,
+} from "../../store/actions/DMTabValuesActions";
 import toggleOff from "../../assets/images/toggleOff.svg";
 import toggleOn from "../../assets/images/toggleOn.svg";
-import DSBPFilter from "./DSBPFilter";
+import DependencyFilter from "./DependencyFilter";
 
 const DependencyMappingList = ({
   dependencyMappingData,
-  dependencyColumnNames,
   CDPTPageData,
   IQData,
   RDTData,
@@ -22,14 +24,25 @@ const DependencyMappingList = ({
   updateDropDownData,
   dropdownDataForLayoutAndDesign,
   userHasAccess,
+  customizeViewFields,
+  setCustomizeViewFields,
+  onSort,
+  onGlobalFilterChange,
+  filteredDependencyMappingData,
+  setFiltersDependencyMappingData,
+  setDataUpdated,
+  dataUpdated,
+  selectedFields,
+  setSelectedFields,
+  setTableRender,
+  tableRender
 }) => {
-  // console.log("CDPTPageData", CDPTPageData);
-  // console.log("dropdownDataForLayoutAndDesign", dropdownDataForLayoutAndDesign);
-
-  // CDPTPageData, IQData, RDTData
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const op = useRef(null);
   const { dmTabValuesData } = useSelector((state) => state.DMTabValuesReducer);
+  const [selectedColumnName, setSelectedColumnName] = useState(null);
+  const [frozenUpdated, setFrozenUpdated] = useState(false);
   const [tabsList, setTabsList] = useState([
     { tabHeader: "Header 1", decription: "Header 1 data" },
   ]);
@@ -51,8 +64,20 @@ const DependencyMappingList = ({
     { name: "5555", code: "5555" },
   ];
 
+  useEffect(() => {
+    setCustomizeViewFields(customizeViewFields);
+  }, [customizeViewFields]);
+  
+  const projectNameOnClick = (e, options) => {
+    op.current.toggle(e);
+    setSelectedColumnName(options);
+  };
+
   const onHandlePmpTabView = (options, field) => {
-    console.log("column names: ", dependencyColumnNames, dependencyMappingData);
+    // console.log("column names: ", dependencyColumnNames, dependencyMappingData);
+    let dependencyColumnNames = JSON.parse(
+      localStorage.getItem("setDependencyMappingColumnNames")
+    );
     const attributesData = {
       DMColumnNames: dependencyColumnNames,
       DMMappingData: dependencyMappingData,
@@ -94,10 +119,62 @@ const DependencyMappingList = ({
     navigate("/DSBP/tab/dependencyMapping", { replace: true });
   };
 
-  const renderHeader = (field) => {
-    // console.log("field", field);
+    const onColumnResizeEnd = (event) => {
+    let columnWidth = [];
+    let jsonColumnWidth =localStorage.getItem("setDependencyMappingColumnNames");
+    if (jsonColumnWidth) {
+      columnWidth = JSON.parse(jsonColumnWidth);
+    }
+    if (columnWidth) {
+      columnWidth.map((list) => {
+        if (event.column.props.field === list.Field_Name) {
+          list.width = event.element.offsetWidth;
+        }
+      });
+    }
+    // localStorage.setItem("columnWidthDSBPArtwork", JSON.stringify(columnWidth));
+    localStorage.setItem(
+          "setDependencyMappingColumnNames",
+          JSON.stringify(columnWidth)
+        )
+    setDataUpdated(!dataUpdated);
+    setTableRender(false);
+  };
+
+  const storeReorderedColumns = (e) => {
+    let columnNames = [];
+    // let jsonColumnNames = localStorage.getItem("columnWidthDSBPArtwork");
+    let jsonColumnNames = localStorage.getItem("setDependencyMappingColumnNames");
+    if (jsonColumnNames) {
+      columnNames = JSON.parse(jsonColumnNames);
+    }
+    const shiftedArray = [...columnNames]; // Create a copy of the array
+    // Find the index of the element to be shifted
+    if (e?.dragIndex !== -1) {
+      const [removed] = shiftedArray.splice(e?.dragIndex, 1); // Remove the element from the array
+      // shiftedArray.unshift(removed); // Place the removed element at the beginning of the array
+      shiftedArray.splice(e?.dropIndex, 0, removed);
+    }
+    shiftedArray.map((ele, index) => {
+      ele["reorder"] = true;
+    });
+
+     localStorage.setItem(
+          "setDependencyMappingColumnNames",
+          JSON.stringify(shiftedArray)
+        )
+    setDataUpdated(!dataUpdated);
+    setTableRender(false);
+  };
+
+  const renderHeader = (field, col) => {
+    let isFilterActivated =
+      col?.width !== 250 ||
+      col?.freeze === true ||
+      col?.sortAtoZ === true ||
+      col?.sortZtoA === true;
+
     if (field === "checkbox") {
-      // Render checkbox in header
       return (
         <div className="flex align-items-center gap-2">
           <input
@@ -116,12 +193,12 @@ const DependencyMappingList = ({
           key={field}
           alt="Column Filter"
           style={{ height: 14, paddingLeft: 5, paddingRight: 5 }}
-          // onClick={(e) => projectNameOnClick(e, field)}
-          // className={
-          //   isFilterActivated
-          //     ? "columnFilterIcon filter-color-change"
-          //     : "columnFilterIcon"
-          // }
+          onClick={(e) => projectNameOnClick(e, field)}
+          className={
+            isFilterActivated
+              ? "columnFilterIcon filter-color-change"
+              : "columnFilterIcon"
+          }
         />
         {field}
       </span>
@@ -402,7 +479,6 @@ const DependencyMappingList = ({
                     options.DSBP_PMP_PIMaterialID
                   )
                 }
-                // disabled={options.AWM_CIC_Needed === "Yes"|| options.AWM_CIC_Needed === "N/A"}
                 style={{ width: "80%", fontSize: 12 }}
               >
                 <option value="">Select</option>
@@ -441,7 +517,73 @@ const DependencyMappingList = ({
   };
 
   const dynamicColumns = () => {
-    if (dependencyColumnNames && dependencyColumnNames.length) {
+    let dependencyColumnNames = JSON.parse(
+      localStorage.getItem("setDependencyMappingColumnNames")
+    );
+    console.log("dependencyColumnNames", dependencyColumnNames);
+    console.log("customizeViewFields", customizeViewFields);
+    let jsonValue = customizeViewFields
+      ? JSON.parse(customizeViewFields)
+      : null;
+      if (jsonValue && Object.keys(jsonValue).length !== 0){
+        let selectedData = jsonValue?.selectedFields?.fieldsData || [];
+        let freezedData = jsonValue?.freezedColumns?.fieldsData || [];
+        const filteredColumns = [];
+        // Add freezedData columns in the specified order
+        freezedData?.forEach((fieldName) => {
+          const column = dependencyColumnNames?.find((col) => col.field === fieldName);
+          if (column) {
+            column.freeze = true;
+            filteredColumns.push(column);
+          }
+        });
+        // Add selectedData columns in the specified order
+        selectedData?.forEach((fieldName) => {
+          const column = dependencyColumnNames?.find((col) => col.field === fieldName);
+          if (column) {
+            filteredColumns.push(column);
+          }
+        });
+        console.log("filteredColumns", filteredColumns);
+        if (filteredColumns && filteredColumns.length) {
+          return [
+            <Column
+              key="checkbox"
+              body={renderMappingBody}
+              frozen={true}
+              columnKey="checkbox"
+              header={() => renderHeader("checkbox")}
+              style={{ width: "40px" }}
+            />,
+            ...filteredColumns.map((col, index) => {
+              // console.log("field col-----", col);
+              return (
+                <Column
+                  field={col.field}
+                  header={renderHeader(col.field, col)}
+                  frozen={col.freeze}
+                  className={col.freeze ? "font-bold" : ""}
+                  // bodyClassName={"change-bg-color"}
+                  headerClassName={
+                    col.group === 2 ? "pink-bg-color" : "blue-bg-color"
+                  }
+                  body={renderMappingBody}
+                  key={col.field}
+                  columnKey={col.field}
+                  showFilterMenu={false}
+                  alignFrozen="left"
+                  filterField={col.field}
+                  style={{
+                    // width: col.width,
+                    width: 200,
+                    height: 30,
+                  }}
+                />
+              );
+            }),
+          ];
+        }
+      } else {
       return [
         <Column
           key="checkbox"
@@ -456,9 +598,9 @@ const DependencyMappingList = ({
           return (
             <Column
               field={col.field}
-              header={renderHeader(col.field)}
-              // frozen={field.freeze}
-              // className={field.freeze ? "font-bold" : ""}
+              header={renderHeader(col.field, col)}
+              frozen={col.freeze}
+              className={col.freeze ? "font-bold" : ""}
               // bodyClassName={"change-bg-color"}
               headerClassName={
                 col.group === 2 ? "pink-bg-color" : "blue-bg-color"
@@ -491,21 +633,29 @@ const DependencyMappingList = ({
 
   return (
     <>
-      {/* <DSBPFilter
+      <DependencyFilter
         op={op}
         onSort={onSort}
         selectedColumnName={selectedColumnName}
-        dsbpPmpData={dsbpPmpData}
         selectedFields={selectedFields}
+        dsbpPmpData={dependencyMappingData}
         onGlobalFilterChange={onGlobalFilterChange}
         setFrozenUpdated={setFrozenUpdated}
         frozenUpdated={frozenUpdated}
-        setFieldUpdated={setFieldUpdated}
-        fieldUpdated={fieldUpdated}
-      /> */}
+        setFieldUpdated={setDataUpdated}
+        fieldUpdated={dataUpdated}
+        filteredDependencyMappingData={filteredDependencyMappingData.length}
+        setFiltersDependencyMappingData={setFiltersDependencyMappingData}
+        setSelectedFields={setSelectedFields}
+      />
       <DataTable
         // dataKey="DSBP_PMP_PIMaterialID"
-        value={dependencyMappingData}
+        value={
+          filteredDependencyMappingData.length
+            ? filteredDependencyMappingData
+            : dependencyMappingData
+        }
+        key={tableRender ? `"DSBP_PMP_PIMaterialID" + timestamp` : ""}
         rowClassName={rowClassName}
         className="mt-3"
         responsiveLayout="scroll"
