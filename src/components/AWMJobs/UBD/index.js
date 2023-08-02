@@ -132,7 +132,7 @@ function UBD() {
   };
 
   let checkTaskISComplete =
-    TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Status !== "Complete";
+    TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Status === "Complete";
 
   const GABriefHeader = (
     <>
@@ -150,7 +150,7 @@ function UBD() {
           src={plusCollapseImg}
           alt="filter logo"
           onClick={() => checkReadWriteAccess && addNewEmptyDesign()}
-          className="header-icons"
+          className="heade-plus-icon"
           disabled={!checkReadWriteAccess}
         />{" "}
         Add Files
@@ -167,6 +167,7 @@ function UBD() {
       UpVersion: "",
     });
     setOtherRefernceDocsForUI(otherRefernceDocsForUI);
+    setUpdated(!updated);
   };
 
   const ORDAssetsHeader = (
@@ -185,7 +186,7 @@ function UBD() {
           src={plusCollapseImg}
           alt="filter logo"
           onClick={() => checkReadWriteAccess && otherRDAddNewEmptyDesign()}
-          className="header-icons"
+          className="heade-plus-icon"
           disabled={!checkReadWriteAccess}
         />{" "}
         Add Files
@@ -311,7 +312,10 @@ function UBD() {
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
-        {loading || loader || gABriefAdaptationForUI === null ? (
+        {loading ||
+        loader ||
+        gABriefAdaptationForUI === null ||
+        otherRefernceDocsForUI === null ? (
           <Loading />
         ) : (
           <>
@@ -404,7 +408,7 @@ function UBD() {
                       index={index}
                       handleDelete={handleDelete}
                       checkReadWriteAccess={checkReadWriteAccess}
-                      length={gABriefAdaptationForUI.length}
+                      length={otherRefernceDocsForUI.length}
                       fileUploadSection={otherReferenceDocs}
                       fileUploadType={fileUploadType}
                       getDataSaveAsDraft={getDataSaveAsDraft}

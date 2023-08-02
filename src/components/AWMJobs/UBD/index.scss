@@ -6,6 +6,7 @@
   box-shadow: 0 2px 8px 0 rgba(89, 89, 89, 0.25);
 
   .p-fileupload {
+
     // display: flex;
     // border: 1px solid red;
     .p-button {
@@ -89,7 +90,7 @@
     // line-height: 9.75px;
     font-size: 8px !important;
     color: rgba(34, 54, 232, 1);
-     // margin: 2px 6px;
+    // margin: 2px 6px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -136,6 +137,14 @@
       height: 25.09px;
     }
   }
+}
+
+.heade-plus-icon {
+  cursor: pointer;
+  font-size: 2rem;
+  color: #003da5;
+  width: 13px;
+  height: 13px;
 }
 
 .wrongMsg {
