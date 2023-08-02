@@ -3,7 +3,7 @@ import { Dialog } from "primereact/dialog";
 import DragAndDrop from "./DragAndDrop/DragAndDrop";
 import "./index.scss";
 
-const CustomizeViewDialog = ({ showTaskDialog, onClose, availableFields, setCustomizeViewFields, customizeViewFields }) => {
+const CustomizeViewDialog = ({ showTaskDialog, onClose, availableFields, setCustomizeViewFields, customizeViewFields, headerName }) => {
   const [visible, setVisible] = useState(showTaskDialog);
 
   useEffect(() => {
@@ -16,6 +16,7 @@ const CustomizeViewDialog = ({ showTaskDialog, onClose, availableFields, setCust
   };
 
   return (
+    console.log("dependencyMappingData availableFields", availableFields),
     <Dialog
       visible={visible}
       className="customize-view-dialog"
@@ -23,7 +24,7 @@ const CustomizeViewDialog = ({ showTaskDialog, onClose, availableFields, setCust
       header={<div className="p-dialog-header1">Customize View</div>}
     >
       <div className="p-fluid popup-details">
-        <DragAndDrop availableFields={availableFields} hideDialog={hideDialog} setCustomizeViewFields={setCustomizeViewFields} customizeViewFields={customizeViewFields} />
+        <DragAndDrop availableFields={availableFields} hideDialog={hideDialog} setCustomizeViewFields={setCustomizeViewFields} customizeViewFields={customizeViewFields} headerName={headerName} />
       </div>
     </Dialog>
   );
