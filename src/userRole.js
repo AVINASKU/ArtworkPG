@@ -81,5 +81,14 @@ export const RoleUser = {
       region: "EUROPE",
       permissions: ["read", "view"],
     },
+    {
+      username: "Praveen",
+      password: "praveen123",
+      userid: "saini.ps.3",
+      role: "TaskOwner",
+      bu: "BBY",
+      region: "EUROPE",
+      permissions: ["create", "read", "update", "delete"],
+    },
   ],
 };
