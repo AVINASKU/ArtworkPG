@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import filter from "../../assets/images/filter.svg";
@@ -24,6 +24,8 @@ const DependencyMappingList = ({
   updateDropDownData,
   dropdownDataForLayoutAndDesign,
   userHasAccess,
+  customizeViewFields,
+  setCustomizeViewFields,
   onSort,
   onGlobalFilterChange,
   filteredDependencyMappingData,
@@ -62,6 +64,10 @@ const DependencyMappingList = ({
     { name: "5555", code: "5555" },
   ];
 
+  useEffect(() => {
+    setCustomizeViewFields(customizeViewFields);
+  }, [customizeViewFields]);
+  
   const projectNameOnClick = (e, options) => {
     op.current.toggle(e);
     setSelectedColumnName(options);
@@ -515,7 +521,69 @@ const DependencyMappingList = ({
       localStorage.getItem("setDependencyMappingColumnNames")
     );
     console.log("dependencyColumnNames", dependencyColumnNames);
-    if (dependencyColumnNames && dependencyColumnNames.length) {
+    console.log("customizeViewFields", customizeViewFields);
+    let jsonValue = customizeViewFields
+      ? JSON.parse(customizeViewFields)
+      : null;
+      if (jsonValue && Object.keys(jsonValue).length !== 0){
+        let selectedData = jsonValue?.selectedFields?.fieldsData || [];
+        let freezedData = jsonValue?.freezedColumns?.fieldsData || [];
+        const filteredColumns = [];
+        // Add freezedData columns in the specified order
+        freezedData?.forEach((fieldName) => {
+          const column = dependencyColumnNames?.find((col) => col.field === fieldName);
+          if (column) {
+            column.freeze = true;
+            filteredColumns.push(column);
+          }
+        });
+        // Add selectedData columns in the specified order
+        selectedData?.forEach((fieldName) => {
+          const column = dependencyColumnNames?.find((col) => col.field === fieldName);
+          if (column) {
+            filteredColumns.push(column);
+          }
+        });
+        console.log("filteredColumns", filteredColumns);
+        if (filteredColumns && filteredColumns.length) {
+          return [
+            <Column
+              key="checkbox"
+              body={renderMappingBody}
+              frozen={true}
+              columnKey="checkbox"
+              header={() => renderHeader("checkbox")}
+              style={{ width: "40px" }}
+            />,
+            ...filteredColumns.map((col, index) => {
+              // console.log("field col-----", col);
+              return (
+                <Column
+                  field={col.field}
+                  header={renderHeader(col.field, col)}
+                  frozen={col.freeze}
+                  className={col.freeze ? "font-bold" : ""}
+                  // bodyClassName={"change-bg-color"}
+                  headerClassName={
+                    col.group === 2 ? "pink-bg-color" : "blue-bg-color"
+                  }
+                  body={renderMappingBody}
+                  key={col.field}
+                  columnKey={col.field}
+                  showFilterMenu={false}
+                  alignFrozen="left"
+                  filterField={col.field}
+                  style={{
+                    // width: col.width,
+                    width: 200,
+                    height: 30,
+                  }}
+                />
+              );
+            }),
+          ];
+        }
+      } else {
       return [
         <Column
           key="checkbox"

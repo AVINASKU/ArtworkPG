@@ -34,7 +34,8 @@ const ArtworkHeader = ({
   setCustomizeViewFields,
   userHasAccess,
   isDependencyMapping,
-  setLoader
+  setLoader,
+  dependencyMappingData
 }) => {
   const navigate = useNavigate();
   let { ProjectID } = useParams();
@@ -188,6 +189,8 @@ const ArtworkHeader = ({
           showTaskDialog={showApproveDialogCPPFA}
           setCustomizeViewFields={setCustomizeViewFields}
           customizeViewFields={customizeViewFields}
+          dependencyMappingData={dependencyMappingData}
+          headerName={headerName}
         />
       )}
       <div className="actions">

@@ -29,6 +29,7 @@ const DependencyMapping = () => {
   const [dropdownDataForLayoutAndDesign, setDropdownDataForLayoutAndDesign] =
     useState([]);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const [customizeViewFields, setCustomizeViewFields] = useState(localStorage.getItem("customizeViewDependancyFields"));
   const selectedProjectDetails = projectSetup.selectedProject;
   const ProjectID = selectedProjectDetails?.Project_ID;
   const navigate = useNavigate();
@@ -316,21 +317,12 @@ const DependencyMapping = () => {
     <div className="artwork-dsbp dependency-mapping">
       <>
         <ArtworkHeader
-          // breadcrumb={breadcrumb}
           headerName={headerName}
           selected={[]}
-          // onActionSubmit={onActionSubmit}
           label="Dependency Mapping"
-          // actionDialog={actionDialog}
-          // setActionDialog={setActionDialog}
-          // setFieldUpdated={setFieldUpdated}
-          // fieldUpdated={fieldUpdated}
-          // buWiseSortedColumnNames={buWiseSortedColumnNames}
-          // setBuWiseSortedColumnNames={setBuWiseSortedColumnNames}
-          // setDsbpPmpData={setDsbpPmpData}
-          // dsbpPmpData={dsbpPmpData}
-          // setTableRender={setTableRender}
-          // tableRender={tableRender}
+          customizeViewFields={customizeViewFields}
+          setCustomizeViewFields={setCustomizeViewFields}
+          dependencyMappingData={dependencyMappingData}
           selectedProjectDetails={selectedProjectDetails}
           userHasAccess={userHasAccess}
           isDependencyMapping={true}
@@ -345,6 +337,8 @@ const DependencyMapping = () => {
           dropdownDataForLayoutAndDesign={dropdownDataForLayoutAndDesign}
           updateDropDownData={updateDropDownData}
           userHasAccess={userHasAccess}
+          customizeViewFields={customizeViewFields}
+          setCustomizeViewFields={setCustomizeViewFields}
           onSort={onSort}
           onGlobalFilterChange={onGlobalFilterChange}
           filteredDependencyMappingData={filteredDependencyMappingData}

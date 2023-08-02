@@ -5,7 +5,6 @@ import SelectDsbpId from "./SelectDsbpId";
 import ProjectNameHeader from "./ProjectNameHeader";
 import AgilityList from "./AgilityList";
 import { getDSBPDropdownData } from "../../store/actions/DSBPActions";
-import { getDropDownValues } from "../../store/actions/dropDownValuesAction";
 import {
   addDsbpToProject,
   deleteDsbpFromProject,
@@ -65,12 +64,7 @@ const ArtworkAlignment = () => {
 
   useEffect(() => {
     findAndSortBuWiseColumnNames();
-  }, [dispatch]);
-
-  useEffect(() => {
-    if(allBUAttributes === null)
-    dispatch(getDropDownValues());
-  }, [dispatch]);
+  }, []);
 
   const findAndSortBuWiseColumnNames = () => {
     if (BU === "Baby Care") {

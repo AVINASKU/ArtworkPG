@@ -1089,7 +1089,7 @@ function AddProject(props) {
 
     // alert(awmProjectId);
     const projectsList = await dispatch(getMyProject(userInformation));
-    const currentProject = projectsList.find(
+    const currentProject = projectsList?.find(
       (project) => project.Project_ID === awmProjectId
     );
     // alert(JSON.stringify(currentProject));

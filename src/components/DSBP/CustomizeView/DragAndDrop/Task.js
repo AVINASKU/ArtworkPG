@@ -110,7 +110,7 @@ const Task = ({
   };
 
   return (
-    <Draggable draggableId={task.Field_Name} index={index}>
+    <Draggable draggableId={task?.Field_Name} index={index}>
       {(provided, snapshot) => {
         const shouldShowSelection = snapshot.isDragging && selectionCount > 1;
 
@@ -147,7 +147,7 @@ const Task = ({
                   : ""
               }`}
             >
-              {task.Field_Name}
+              {task?.Field_Name}
             </div>
             {shouldShowSelection ? (
               <div style={{ color: "red", fontWeight: "900" }}>
