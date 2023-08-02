@@ -15,8 +15,9 @@ const UploadBriefingDocuments = ({
   fileUploadType,
   getDataSaveAsDraft,
   fileUploadWarning,
+  File_NameFromAPI,
 }) => {
-  console.log("item121:", index);
+  const [fileName, setFileName] = useState("");
   const [azureFile, setAzureFile] = useState("");
   const [selectDialog, setSelectDialog] = useState(false);
   const [uploadedWrongFilename, setUploadedWrongFilename] = useState(false);
@@ -32,8 +33,9 @@ const UploadBriefingDocuments = ({
           onSubmit={() => handleDelete(index, fileUploadSection)}
           okButtonShow={false}
           deleteButtonShow={true}
+          yesButtonShow={true}
         >
-          <>{item.Additional_Info}</>
+          <>{item.File_Name !== "" ? item.File_Name : fileName}</>
         </DsbpCommonPopup>
       )}
       <Row
@@ -58,6 +60,9 @@ const UploadBriefingDocuments = ({
             sequence={index + 1}
             getDataSaveAsDraft={getDataSaveAsDraft}
             setUploadedWrongFilename={setUploadedWrongFilename}
+            File_NameFromAPI={File_NameFromAPI}
+            setFileName={setFileName}
+            fileName={fileName}
             // disabled={!checkReadWriteAccess || data.Task_Status === "Complete"}
             // ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
             // version={version}
@@ -77,6 +82,9 @@ const UploadBriefingDocuments = ({
             sequence={index + 1}
             getDataSaveAsDraft={getDataSaveAsDraft}
             setUploadedWrongFilename={setUploadedWrongFilename}
+            File_NameFromAPI={File_NameFromAPI}
+            setFileName={setFileName}
+            fileName={fileName}
             // disabled={!checkReadWriteAccess || data.Task_Status === "Complete"}
             // ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
             // version={version}

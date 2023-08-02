@@ -96,6 +96,17 @@
     text-overflow: ellipsis;
     text-decoration: underline;
   }
+  .File_NameFromAPI {
+    width: 87px;
+    font-weight: 400;
+    font-size: 8px !important;
+    color: rgba(34, 54, 232, 1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: underline;
+    margin: 0 0 0px 12px;
+  }
 
   img,
   svg {
@@ -103,6 +114,12 @@
     // height: 17px;
     height: 25px;
   }
+}
+#File_NameFromAPIPaddingId .p-fileupload .p-fileupload-buttonbar {
+  padding: 0 1.25rem;
+}
+.File_NameFromAPIPadding {
+  padding-bottom: 6px;
 }
 
 .uploadImageAndupVersionImage1 {

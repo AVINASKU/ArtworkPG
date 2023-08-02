@@ -261,6 +261,13 @@ $width: 100%;
   }
 }
 
+.content-layout .actionsPaddingForUBD {
+  padding: 0;
+  .p-breadcrumb ul {
+    padding: 8px 0;
+  }
+}
+
 .projectPlanButtonsParent {
   text-align: right;
 }

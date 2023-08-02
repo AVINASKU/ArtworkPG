@@ -125,7 +125,7 @@ function UBD() {
       isNew: true,
       Additional_Info: "Test",
       Select: false,
-      UploadFile: "",
+      File_Name: "",
     });
     setGABriefAdaptationForUI(gABriefAdaptationForUI);
     setUpdated(!updated);
@@ -164,7 +164,7 @@ function UBD() {
       isNew: true,
       Additional_Info: "Test",
       Select: false,
-      UpVersion: "",
+      File_Name: "",
     });
     setOtherRefernceDocsForUI(otherRefernceDocsForUI);
     setUpdated(!updated);
@@ -200,27 +200,38 @@ function UBD() {
     useState([]);
   const [pageInstructionsData, setPageInstructionsData] = useState([]);
 
+  const [graphicData, setGraphicData] = useState("Graphic Adaption Brief 1");
+  const [isEditMode, setIsEditMode] = useState(false);
+  const graphicInputRef = useRef(null);
+
+  const updateData = () => {
+    setIsEditMode(!isEditMode);
+    setGraphicData(graphicInputRef.current.value);
+  };
+
   const getDataSaveAsDraft = (fileInfo, uploadType, sequence) => {
     const fileSize = Math.round(fileInfo.files[0].size / 1000000);
-    const obj = {
+    const saveAsDraftObj = {
       File_Name: fileInfo.files[0].name,
       Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
       Size: fileSize === 0 ? "1" : `${fileSize}`,
       Sequence: `${sequence}`,
       Action: "add",
     };
-    let data = {};
+    let submitObj = {};
     if (
       uploadType === graphicAdaptionBrief + fileUploadType.uploadFile ||
       uploadType === graphicAdaptionBrief + fileUploadType.upVersion
     ) {
-      obj.GroupName = "GA Brief Adaptation 1";
-      setSaveAsDraftGABriefList([...saveAsDraftGABriefList, obj]);
-      data = {
+      saveAsDraftObj.GroupName = "GA Brief Adaptation 1";
+      // saveAsDraftObj.GroupName = graphicData;
+      setSaveAsDraftGABriefList([...saveAsDraftGABriefList, saveAsDraftObj]);
+      submitObj = {
         instruction: "APPEND",
         target: "GABriefList",
         content: {
           GroupName: "GA Brief Adaptation 1",
+          // GroupName: graphicData,
           Sequence: `${sequence}`,
           Action: "",
           Filename: fileInfo.files[0].name,
@@ -234,8 +245,8 @@ function UBD() {
       uploadType === otherReferenceDocs + fileUploadType.uploadFile ||
       uploadType === otherReferenceDocs + fileUploadType.upVersion
     ) {
-      setSaveAsDraftOtherReferenceDoc([...saveAsDraftOtherReferenceDoc, obj]);
-      data = {
+      setSaveAsDraftOtherReferenceDoc([...saveAsDraftOtherReferenceDoc, saveAsDraftObj]);
+      submitObj = {
         instruction: "APPEND",
         target: "OtherReferenceDoc",
         content: {
@@ -248,7 +259,7 @@ function UBD() {
         },
       };
     }
-    setPageInstructionsData([...pageInstructionsData, data]);
+    setPageInstructionsData([...pageInstructionsData, submitObj]);
   };
 
   const onSaveAsDraft = async () => {
@@ -262,6 +273,7 @@ function UBD() {
     // await dispatch(uploadFileAzure(azureFile));
     await saveAsDraftUploadBrefingDocs(formData);
     setLoader(false);
+    dispatch(getTaskDetails(TaskID, ProjectID));
     // navigate(`/${currentUrl?.split("/")[1]}`);
   };
 
@@ -286,16 +298,6 @@ function UBD() {
     navigate(`/${currentUrl?.split("/")[1]}`);
   };
 
-  const [graphicData, setGraphicData] = useState("Graphic Adaption Brief 1");
-  const [isEditMode, setIsEditMode] = useState(false);
-
-  const graphicInputRef = useRef(null);
-
-  const updateData = () => {
-    setIsEditMode(!isEditMode);
-    setGraphicData(graphicInputRef.current.value);
-  };
-
   return (
     <PageLayout>
       <DesignHeader
@@ -311,7 +313,13 @@ function UBD() {
         actionButtonsFlag={true}
       />
       <div className="task-details">
-        {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
+        {
+          <AddNewDesign
+            {...data}
+            checkReadWriteAccess={checkReadWriteAccess}
+            actionButtonsFlag={true}
+          />
+        }
         {loading ||
         loader ||
         gABriefAdaptationForUI === null ||
@@ -390,6 +398,7 @@ function UBD() {
                       fileUploadSection={graphicAdaptionBrief}
                       fileUploadType={fileUploadType}
                       getDataSaveAsDraft={getDataSaveAsDraft}
+                      File_NameFromAPI={item.File_Name}
                     />
                   );
                 }
@@ -412,6 +421,7 @@ function UBD() {
                       fileUploadSection={otherReferenceDocs}
                       fileUploadType={fileUploadType}
                       getDataSaveAsDraft={getDataSaveAsDraft}
+                      File_NameFromAPI={item.File_Name}
                     />
                   );
                 }

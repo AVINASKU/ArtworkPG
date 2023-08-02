@@ -16,8 +16,10 @@ const UploadFile = ({
   sequence,
   getDataSaveAsDraft,
   setUploadedWrongFilename,
+  File_NameFromAPI,
+  setFileName,
+  fileName,
 }) => {
-  const [fileName, setFileName] = useState("");
   const [totalSize, setTotalSize] = useState(0);
   const [fileUploadWarning, setFileUploadWarning] = useState(false);
   const fileUploadRef = useRef(null);
@@ -128,10 +130,11 @@ const UploadFile = ({
       </div>
       <div
         className={`${
-          fileName !== ""
+          fileName || File_NameFromAPI !== ""
             ? "uploadImageAndupVersionImage"
             : "uploadImageAndupVersionImage1"
         }`}
+        id={`${File_NameFromAPI && fileName === "" ? "File_NameFromAPIPaddingId" : ""}`}
       >
         <FileUpload
           ref={fileUploadRef}
@@ -146,6 +149,20 @@ const UploadFile = ({
           onClear={onImageClose}
           // disabled={fileName !== ""}
         />
+        <div hidden={fileName} className="File_NameFromAPIPadding">
+          {File_NameFromAPI.length > 22 ? (
+            <div
+              className="File_NameFromAPI"
+              data-toggle="tooltip"
+              data-placement="top"
+              title={File_NameFromAPI}
+            >
+              {File_NameFromAPI}
+            </div>
+          ) : (
+            <div className="File_NameFromAPI">{File_NameFromAPI}</div>
+          )}
+        </div>
       </div>
       {/* <span>
         {fileUploadWarning && (

@@ -34,7 +34,7 @@ const DesignHeader = ({
           navigate(`/${locationPath?.split("/")[1]}`);
         }}
       ></i>
-      <div className="actions">
+      <div className={`actions ${actionButtonsFlag ? "actionsPaddingForUBD": ""}`}>
         <div>
           {/* <BreadCrumb model={breadcrumb} /> */}
           <nav className="p-breadcrumb p-component" aria-label="Breadcrumb">

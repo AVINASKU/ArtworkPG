@@ -11,6 +11,7 @@ const DsbpCommonPopup = ({
   onSubmit,
   okButtonShow,
   deleteButtonShow,
+  yesButtonShow,
 }) => {
   const footerContent = (
     <div>
@@ -45,6 +46,7 @@ const DsbpCommonPopup = ({
               rejectFormData && Object.keys(rejectFormData)?.length === 0
             }
             onClick={onSubmit}
+            hidden={yesButtonShow}
           >
             Yes
           </Button>
