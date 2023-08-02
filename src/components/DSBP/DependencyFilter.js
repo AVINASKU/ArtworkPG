@@ -16,17 +16,15 @@ const DependencyFilter = ({
   frozenUpdated,
   setFieldUpdated,
   fieldUpdated,
+  filteredDependencyMappingData,
+  setFiltersDependencyMappingData,
+  setSelectedFields
 }) => {
   const optionList1 = optionList(dsbpPmpData, selectedColumnName);
   // let jsonColumnWidth = localStorage.getItem("columnWidthDSBPArtwork");
   let jsonColumnWidth = localStorage.getItem("setDependencyMappingColumnNames");
 
   let allColumns = JSON.parse(jsonColumnWidth);
-  console.log(
-    "all column and selected column names",
-    allColumns,
-    selectedColumnName
-  );
 
   let checkSelectedColumnIsFreeze = false;
   let checkSelectedColumnIsSortAtoZ = false;
@@ -45,7 +43,7 @@ const DependencyFilter = ({
   isFilterActivated =
     checkSelectedColumnIsFreeze ||
     checkSelectedColumnIsSortAtoZ ||
-    checkSelectedColumnIsSortZtoA;
+    checkSelectedColumnIsSortZtoA ||filteredDependencyMappingData;
 
   const confirmPopData = () => {
     return (
@@ -54,7 +52,7 @@ const DependencyFilter = ({
           <div
             id="clearAllFilter"
             className="clearAllFilter"
-            // onClick={() => clearColumnWiseFilter()}
+            // onClick={() => clearColumnWiseFilter(selectedColumnName)}
           >
             Clear all filter
           </div>
@@ -77,6 +75,8 @@ const DependencyFilter = ({
                     JSON.stringify(allColumns)
                   );
                   setFrozenUpdated(!frozenUpdated);
+                  setFiltersDependencyMappingData([]);
+                  setSelectedFields([]);
                 }}
                 className="header-icons"
               />

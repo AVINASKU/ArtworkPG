@@ -22,7 +22,10 @@ const DependencyMapping = () => {
   const [GABriefData, setGABriefData] = useState([]);
   const [dataUpdated, setDataUpdated] = useState(false);
   const [submittedData, setSubmittedData] = useState([]);
-  const [selectedFields, setSelectedFields] = useState(null);
+  const [selectedFields, setSelectedFields] = useState([]);
+  const [tableRender, setTableRender] = useState(false);
+  const [filteredDependencyMappingData, setFiltersDependencyMappingData] =
+    useState([]);
   const [dropdownDataForLayoutAndDesign, setDropdownDataForLayoutAndDesign] =
     useState([]);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
@@ -198,7 +201,10 @@ const DependencyMapping = () => {
       setIQData(isIQData);
       setRDTData(isRDTData);
       setGABriefData(isGABrifData);
-      localStorage.setItem("setDependencyMappingColumnNames", JSON.stringify(groupedColumnNames));
+      localStorage.setItem(
+        "setDependencyMappingColumnNames",
+        JSON.stringify(groupedColumnNames)
+      );
       // setDependencyColumnNames(groupedColumnNames);
       setDependencyMappingData(transformedData);
     }
@@ -248,7 +254,7 @@ const DependencyMapping = () => {
         if (ele.AWM_IQ_Page) {
           DSBP_IQ_Page = IQData.filter((iqData) => {
             if (ele.AWM_IQ_Page.includes(iqData.AWM_Design_Job_ID))
-            return iqData;
+              return iqData;
           });
           DSBP_IQ_Page_data = DSBP_IQ_Page.map((item) => ({
             Design_Job_Name: item.AWM_Design_Job_Name,
@@ -283,7 +289,7 @@ const DependencyMapping = () => {
     let resp = await onSubmitDependencyMappingAction(ProjectID, formData);
   };
 
-    const onGlobalFilterChange = (e, colName) => {
+  const onGlobalFilterChange = (e, colName) => {
     const value = e.value;
     setSelectedFields(value);
     const artworkValues = value;
@@ -301,8 +307,9 @@ const DependencyMapping = () => {
           }
         }
       });
-      setDependencyMappingData(filteredDsbpData);
-    } else setDependencyMappingData([]);
+      setFiltersDependencyMappingData(filteredDsbpData);
+      // setDependencyMappingData(filteredDsbpData);
+    } else setFiltersDependencyMappingData([]);
   };
 
   return (
@@ -340,8 +347,14 @@ const DependencyMapping = () => {
           userHasAccess={userHasAccess}
           onSort={onSort}
           onGlobalFilterChange={onGlobalFilterChange}
+          filteredDependencyMappingData={filteredDependencyMappingData}
+          setFiltersDependencyMappingData={setFiltersDependencyMappingData}
           setDataUpdated={setDataUpdated}
           dataUpdated={dataUpdated}
+          selectedFields={selectedFields}
+          setSelectedFields={setSelectedFields}
+          setTableRender={setTableRender}
+          tableRender={tableRender}
         />
         <FooterButtons
           handleCancel={handleCancel}
