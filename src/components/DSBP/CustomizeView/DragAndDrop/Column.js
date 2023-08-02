@@ -47,14 +47,14 @@ const Column = ({
                 <Task
                   task={task}
                   index={index}
-                  key={task.Field_Name + index}
+                  key={task?.Field_Name + index}
                   isSelected={isSelected}
                   isGhosting={isGhosting}
                   selectionCount={selectedTaskIds.length}
                   toggleSelection={toggleSelection}
                   toggleSelectionInGroup={toggleSelectionInGroup}
                   multiSelectTo={multiSelectTo}
-                  singleDragFlag={draggingTaskId !== task.Field_Name}
+                  singleDragFlag={draggingTaskId !== task?.Field_Name}
                   entities={entities}
                   droppableId={droppableId}
                   selectedTaskIds={selectedTaskIds}
