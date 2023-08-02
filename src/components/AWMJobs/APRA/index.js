@@ -37,7 +37,8 @@ const APRA = () => {
   const location = useLocation();
   const currentUrl = location.pathname;
 
-  const checkReadWriteAccess = CheckReadOnlyAccess();
+  // const checkReadWriteAccess = CheckReadOnlyAccess();
+  const checkReadWriteAccess = true;
 
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));

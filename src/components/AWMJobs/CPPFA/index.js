@@ -30,7 +30,8 @@ const CPPFA = ({
   const [visible, setVisible] = useState(showTaskDialog);
   const [designIntent, setDesignIntent] = useState({});
   const [version, setVersion] = useState("V0");
-  let allAccess = hasAllAccess();
+  // let allAccess = hasAllAccess();
+  const allAccess = true;
   let isAccessEmpty = allAccess;
 
   // if (url[1] === "AllTasks") {
