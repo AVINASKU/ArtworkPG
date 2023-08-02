@@ -281,21 +281,9 @@ const DependencyMapping = () => {
     <div className="artwork-dsbp dependency-mapping">
       <>
         <ArtworkHeader
-          // breadcrumb={breadcrumb}
           headerName={headerName}
           selected={[]}
-          // onActionSubmit={onActionSubmit}
           label="Dependency Mapping"
-          // actionDialog={actionDialog}
-          // setActionDialog={setActionDialog}
-          // setFieldUpdated={setFieldUpdated}
-          // fieldUpdated={fieldUpdated}
-          // buWiseSortedColumnNames={buWiseSortedColumnNames}
-          // setBuWiseSortedColumnNames={setBuWiseSortedColumnNames}
-          // setDsbpPmpData={setDsbpPmpData}
-          // dsbpPmpData={dsbpPmpData}
-          // setTableRender={setTableRender}
-          // tableRender={tableRender}
           customizeViewFields={customizeViewFields}
           setCustomizeViewFields={setCustomizeViewFields}
           dependencyMappingData={dependencyMappingData}
@@ -313,6 +301,8 @@ const DependencyMapping = () => {
           dropdownDataForLayoutAndDesign={dropdownDataForLayoutAndDesign}
           updateDropDownData={updateDropDownData}
           userHasAccess={userHasAccess}
+          customizeViewFields={customizeViewFields}
+          setCustomizeViewFields={setCustomizeViewFields}
         />
         <FooterButtons
           handleCancel={handleCancel}
