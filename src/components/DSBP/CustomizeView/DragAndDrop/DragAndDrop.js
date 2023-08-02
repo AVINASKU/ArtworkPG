@@ -15,10 +15,10 @@ const DragAndDrop = (props) => {
   const [localDestination, setLocalDestination] = useState(null);
 
   useEffect(() => {
-    if(props.customizeViewFields !== "[]" && props.customizeViewFields !== null){
+    if(props?.customizeViewFields && props?.customizeViewFields !== "[]" && props?.customizeViewFields !== null){
       const updatedData = {
         ...entities,
-        columns: JSON.parse(props.customizeViewFields)
+        columns: JSON.parse(props?.customizeViewFields)
       };
       if(updatedData !== undefined)
         setEntities(updatedData)

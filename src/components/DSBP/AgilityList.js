@@ -11,6 +11,7 @@ import DsbpActionDialog from "./DsbpActionDialog";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { ArtWorkTabValuesAction } from "../../../src/store/actions/ArtWorkTabValuesActions";
+import { getDropDownValues } from "../../../src/store/actions/dropDownValuesAction";
 import { generateUniqueKey } from "../../utils";
 import { onSortData } from "../../utils";
 
@@ -101,6 +102,11 @@ const AgilityList = ({
   useEffect(() => {
     setCustomizeViewFields(customizeViewFields);
   }, [customizeViewFields]);
+
+  useEffect(() => {
+    if(allBUAttributes === null)
+      dispatch(getDropDownValues());
+  }, [allBUAttributes]);
 
   const onchangeAddToProject = (rowData, e, ele) => {    
     setOnChangeData(rowData);
@@ -431,7 +437,7 @@ const AgilityList = ({
       const filteredColumns = [];
       // Add freezedData columns in the specified order
       freezedData?.forEach((fieldName) => {
-        const column = allColumns.find((col) => col.Field_Name === fieldName);
+        const column = allColumns?.find((col) => col.Field_Name === fieldName);
         if (column) {
           column.freeze = true;
           filteredColumns.push(column);
@@ -439,7 +445,7 @@ const AgilityList = ({
       });
       // Add selectedData columns in the specified order
       selectedData?.forEach((fieldName) => {
-        const column = allColumns.find((col) => col.Field_Name === fieldName);
+        const column = allColumns?.find((col) => col.Field_Name === fieldName);
         if (column) {
           filteredColumns.push(column);
         }
