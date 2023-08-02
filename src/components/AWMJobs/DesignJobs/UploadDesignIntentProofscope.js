@@ -3,6 +3,8 @@ import { FileUpload } from "primereact/fileupload";
 import { Image } from "primereact/image";
 import { Tag } from "primereact/tag";
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
+import { downloadFileAzure } from "../../../store/actions/AzureFileDownload";
+import { useDispatch, useSelector } from "react-redux";
 
 const UploadDesignIntentProofscope = ({
   Design_Intent_Name,
@@ -24,6 +26,7 @@ const UploadDesignIntentProofscope = ({
   TaskID,
 }) => {
   console.log("item here here", item);
+  const dispatch = useDispatch();
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
   const [updatedImg, setUpdatedImg] = useState("");
@@ -67,6 +70,7 @@ const UploadDesignIntentProofscope = ({
   }
   const handleViewProofScopeClick = async (event, fileUrl) => {
     event.preventDefault();
+    dispatch(downloadFileAzure(`${env}${buName}/${taskFolder}/${fileUrl}`));
     viewProofScopeFile(
       TaskID,
       `cloudflow://PP_FILE_STORE/${env}${buName}/${taskFolder}/${fileUrl}`
@@ -78,7 +82,7 @@ const UploadDesignIntentProofscope = ({
       version !== "V0" &&
       item?.DesignJobDetails[0]?.FileMetaDataList[0]?.Timestamp !== ""
         ? `${item?.Task_Name}_${version}_${date}.${fileExtension}`
-        : `${item?.Task_Name}`;
+        : `${item?.Task_Name}.${fileExtension}`;
   }
 
   const onTemplateUpload = (e) => {

@@ -195,7 +195,7 @@ const ProjectPlanList = ({
               }}
               className="columnFilterIcon"
             />
-            <span className="columnHeader">{optionsCode}</span>
+            <span className="columnHeader">{optionsCode === "Duration" ? "Duration (Days)" : optionsCode}</span>
           </>
         )}
       </div>

@@ -41,7 +41,8 @@ const UPRA = () => {
   const dispatch = useDispatch();
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
   const roleName = "DI_";
-  const checkReadWriteAccess = CheckReadOnlyAccess();
+  // const checkReadWriteAccess = CheckReadOnlyAccess();
+  const checkReadWriteAccess = true;
 
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));

@@ -1447,7 +1447,7 @@ function AddProject(props) {
                 </Row>
                 <Row>
                   <Form.Group controlId="il.SelectMultiple">
-                    <Form.Label>Scope & Estimated #s</Form.Label>
+                    <Form.Label>Scope & Estimated</Form.Label>
                     <div className="design-scope">
                       {designScope.map((option, index) => (
                         <span key={index} style={{ display: "flex" }}>

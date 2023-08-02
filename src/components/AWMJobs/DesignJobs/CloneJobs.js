@@ -12,7 +12,7 @@ import {
   PantoneList,
 } from "../../../categories";
 import { AutoComplete } from "primereact/autocomplete";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { isArray, isString } from "lodash";
 import UploadFile from "./UploadFile";
 import { useSelector } from "react-redux";
@@ -84,9 +84,12 @@ const CloneJobs = ({
   const [filteredPantoneItems, setFilteredPantoneItems] = useState(null);
   const [taskPageDropDownValues, setTaskPageDropDownValues] = useState([]);
 
-  const locationPath = location?.pathname;
-  const url = locationPath?.split("/");
-  const pathName = url[2];
+  // const locationPath = location?.pathname;
+  // const url = locationPath?.split("/");
+  // const pathName = url[2];
+  // alert(pathName)
+  let {TaskID} = useParams();
+  const pathName = TaskID.split("_")[0];
 
   let Art_Brand = [];
   Artwork_Brand?.forEach((obj) => {
