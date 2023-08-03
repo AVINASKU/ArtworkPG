@@ -8,12 +8,12 @@ import DsbpActionDialog from "./DsbpActionDialog";
 import CustomizeView from "./CustomizeView";
 import filter from "../../assets/images/filter.svg";
 import BlueFilterIcon from "../../assets/images/BlueFilterIcon.svg";
-import {
-  handleConfirmFullScopeIn
-} from "../../apis/dsbpApi";
+import searchMyProjects from "../../assets/images/searchMyProjects.svg";
+import { handleConfirmFullScopeIn } from "../../apis/dsbpApi";
 import { getMyProject } from "../../store/actions/ProjectActions";
 import "primeicons/primeicons.css";
 import { isArray } from "lodash";
+import { ExportSelectedRows } from "../ExportCSV";
 
 const ArtworkHeader = ({
   label,
@@ -35,7 +35,10 @@ const ArtworkHeader = ({
   userHasAccess,
   isDependencyMapping,
   setLoader,
-  dependencyMappingData
+  dependencyMappingData,
+  columnNames,
+  filteredDependencyMappingData,
+  onSearchClick,
 }) => {
   const navigate = useNavigate();
   let { ProjectID } = useParams();
@@ -51,7 +54,7 @@ const ArtworkHeader = ({
     (state) => state.DropDownValuesReducer
   );
   const { userInformation } = useSelector((state) => state.UserReducer);
-  const { myProject} = useSelector((state) => state.myProject);
+  const { myProject } = useSelector((state) => state.myProject);
   const BU = selectedProjectDetails?.BU;
   // check whether project is from home care or baby care
   let isBUHomeCare = false;
@@ -149,10 +152,10 @@ const ArtworkHeader = ({
 
   useEffect(() => {
     if (myProject) {
-      let projectData = isArray(myProject) && myProject.find(
-        (project) => project.Project_ID === ProjectID
-      );
-      setConfirmFullScopeEnable(projectData?.Estimated_No_Of_POAs > 1)
+      let projectData =
+        isArray(myProject) &&
+        myProject.find((project) => project.Project_ID === ProjectID);
+      setConfirmFullScopeEnable(projectData?.Estimated_No_Of_POAs > 1);
     }
   }, [myProject]);
 
@@ -175,10 +178,10 @@ const ArtworkHeader = ({
   }, [actionDropDownValues]);
 
   const onConfirmFullScopeIn = async () => {
-    setLoader(true)
+    setLoader(true);
     await handleConfirmFullScopeIn(ProjectID);
     await dispatch(getMyProject(userInformation));
-    setLoader(false)
+    setLoader(false);
   };
 
   return (
@@ -201,7 +204,7 @@ const ArtworkHeader = ({
               <img
                 src={BlueFilterIcon}
                 alt="filter logo"
-                onClick={() => {
+                onClick={() => {                
                   buWiseSortedColumnNames.map((ele) => {
                     if (ele) {
                       ele["sortZtoA"] = false;
@@ -238,33 +241,45 @@ const ArtworkHeader = ({
             )}
           </div>
           {isDependencyMapping ? (
-            <div
-                  className="btn-group btn-group-toggle"
-                  data-toggle="buttons"
-                >
-                  <div className="col projectPlanButtons">
-                    <label
-                      className={` btn border border-secondary ${
-                        toggleButtons === "Tabular"
-                          ? "ganttChartTabular active"
-                          : ""
-                      }`}
-                      onClick={() => setToggleButtons("Tabular")}
-                    >
-                      Tabular
-                    </label>
-                    <label
-                      className={` btn border border-secondary ${
-                        toggleButtons === "Visual"
-                          ? "ganttChartTabular active"
-                          : ""
-                      }`}
-                      onClick={() => setToggleButtons("Visual")}
-                    >
-                      Visual
-                    </label>
-                  </div>
+            <>
+              <img
+                src={searchMyProjects}
+                alt="search field"
+                onClick={onSearchClick}
+                className="header-icons"
+              />
+              <div>
+                <ExportSelectedRows
+                  allData={dsbpPmpData}
+                  selectedRows={filteredDependencyMappingData}
+                  headers={columnNames}
+                />
+              </div>
+              <div className="btn-group btn-group-toggle" data-toggle="buttons">
+                <div className="col projectPlanButtons">
+                  <label
+                    className={` btn border border-secondary ${
+                      toggleButtons === "Tabular"
+                        ? "ganttChartTabular active"
+                        : ""
+                    }`}
+                    onClick={() => setToggleButtons("Tabular")}
+                  >
+                    Tabular
+                  </label>
+                  <label
+                    className={` btn border border-secondary ${
+                      toggleButtons === "Visual"
+                        ? "ganttChartTabular active"
+                        : ""
+                    }`}
+                    onClick={() => setToggleButtons("Visual")}
+                  >
+                    Visual
+                  </label>
                 </div>
+              </div>
+            </>
           ) : (
             <button
               type="button"

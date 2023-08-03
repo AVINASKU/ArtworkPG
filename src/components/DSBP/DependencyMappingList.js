@@ -14,6 +14,7 @@ import {
 import toggleOff from "../../assets/images/toggleOff.svg";
 import toggleOn from "../../assets/images/toggleOn.svg";
 import DependencyFilter from "./DependencyFilter";
+import { FilterMatchMode } from "primereact/api";
 
 const DependencyMappingList = ({
   dependencyMappingData,
@@ -35,7 +36,9 @@ const DependencyMappingList = ({
   selectedFields,
   setSelectedFields,
   setTableRender,
-  tableRender
+  tableRender,
+  isSearch,
+  columnNames,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -74,7 +77,6 @@ const DependencyMappingList = ({
   };
 
   const onHandlePmpTabView = (options, field) => {
-    // console.log("column names: ", dependencyColumnNames, dependencyMappingData);
     let dependencyColumnNames = JSON.parse(
       localStorage.getItem("setDependencyMappingColumnNames")
     );
@@ -119,24 +121,26 @@ const DependencyMappingList = ({
     navigate("/DSBP/tab/dependencyMapping", { replace: true });
   };
 
-    const onColumnResizeEnd = (event) => {
+  const onColumnResizeEnd = (event) => {
     let columnWidth = [];
-    let jsonColumnWidth =localStorage.getItem("setDependencyMappingColumnNames");
+    let jsonColumnWidth = localStorage.getItem(
+      "setDependencyMappingColumnNames"
+    );
     if (jsonColumnWidth) {
       columnWidth = JSON.parse(jsonColumnWidth);
     }
     if (columnWidth) {
       columnWidth.map((list) => {
-        if (event.column.props.field === list.Field_Name) {
+        if (event.column.props.field === list.field) {
           list.width = event.element.offsetWidth;
         }
       });
     }
-    // localStorage.setItem("columnWidthDSBPArtwork", JSON.stringify(columnWidth));
+    console.log("column width", columnWidth);
     localStorage.setItem(
-          "setDependencyMappingColumnNames",
-          JSON.stringify(columnWidth)
-        )
+      "setDependencyMappingColumnNames",
+      JSON.stringify(columnWidth)
+    );
     setDataUpdated(!dataUpdated);
     setTableRender(false);
   };
@@ -144,30 +148,45 @@ const DependencyMappingList = ({
   const storeReorderedColumns = (e) => {
     let columnNames = [];
     // let jsonColumnNames = localStorage.getItem("columnWidthDSBPArtwork");
-    let jsonColumnNames = localStorage.getItem("setDependencyMappingColumnNames");
+    let jsonColumnNames = localStorage.getItem(
+      "setDependencyMappingColumnNames"
+    );
     if (jsonColumnNames) {
       columnNames = JSON.parse(jsonColumnNames);
     }
     const shiftedArray = [...columnNames]; // Create a copy of the array
     // Find the index of the element to be shifted
     if (e?.dragIndex !== -1) {
-      const [removed] = shiftedArray.splice(e?.dragIndex, 1); // Remove the element from the array
+      const [removed] = shiftedArray.splice(e?.dragIndex - 1, 1); // Remove the element from the array
       // shiftedArray.unshift(removed); // Place the removed element at the beginning of the array
-      shiftedArray.splice(e?.dropIndex, 0, removed);
+      console.log("removed", removed, e?.dropIndex);
+      shiftedArray.splice(e?.dropIndex - 1, 0, removed);
     }
     shiftedArray.map((ele, index) => {
+      ele["Sequence"] = index;
       ele["reorder"] = true;
     });
 
-     localStorage.setItem(
-          "setDependencyMappingColumnNames",
-          JSON.stringify(shiftedArray)
-        )
+    console.log("shifttedArray", shiftedArray);
+
+    localStorage.setItem(
+      "setDependencyMappingColumnNames",
+      JSON.stringify(shiftedArray)
+    );
     setDataUpdated(!dataUpdated);
     setTableRender(false);
   };
 
+  const searchHeader = columnNames?.reduce(
+    (acc, curr) => ({
+      ...acc,
+      [curr]: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    }),
+    {}
+  );
+
   const renderHeader = (field, col) => {
+    let splittedCol = field.split("_").join(" ");
     let isFilterActivated =
       col?.width !== 250 ||
       col?.freeze === true ||
@@ -200,7 +219,7 @@ const DependencyMappingList = ({
               : "columnFilterIcon"
           }
         />
-        {field}
+        {splittedCol}
       </span>
     );
   };
@@ -610,10 +629,11 @@ const DependencyMappingList = ({
               columnKey={col.field}
               showFilterMenu={false}
               alignFrozen="left"
+              filter
+              filterPlaceholder={col?.field.split("_").join(" ")}
               filterField={col.field}
               style={{
-                // width: col.width,
-                width: 200,
+                width: col.width,
                 height: 30,
               }}
             />
@@ -649,20 +669,23 @@ const DependencyMappingList = ({
         setSelectedFields={setSelectedFields}
       />
       <DataTable
-        // dataKey="DSBP_PMP_PIMaterialID"
         value={
           filteredDependencyMappingData.length
             ? filteredDependencyMappingData
             : dependencyMappingData
         }
+        resizableColumns
+        reorderableColumns
+        onColumnResizeEnd={onColumnResizeEnd}
+        onColReorder={storeReorderedColumns}
         key={tableRender ? `"DSBP_PMP_PIMaterialID" + timestamp` : ""}
         rowClassName={rowClassName}
+        filters={searchHeader}
+        filterDisplay={isSearch && "row"}
         className="mt-3"
         responsiveLayout="scroll"
         columnResizeMode="expand"
         scrollable
-        resizableColumns
-        reorderableColumns
         tableStyle={{
           width: "max-content",
           minWidth: "100%",

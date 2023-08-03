@@ -24,6 +24,7 @@ const DependencyMapping = () => {
   const [submittedData, setSubmittedData] = useState([]);
   const [selectedFields, setSelectedFields] = useState([]);
   const [tableRender, setTableRender] = useState(false);
+  const [isSearch, isSearchSet] = useState(false);
   const [filteredDependencyMappingData, setFiltersDependencyMappingData] =
     useState([]);
   const [dropdownDataForLayoutAndDesign, setDropdownDataForLayoutAndDesign] =
@@ -144,15 +145,22 @@ const DependencyMapping = () => {
               (item) => item.AWM_Design_Job_ID
             ) || [];
         }
+        console.log("transform item", )
 
         transformedItem = {
           ...transformedItem,
-          ...item?.AWM_CIC_Page?.[0],
+          AWM_CIC_Needed: item?.AWM_CIC_Page?.[0]?.AWM_CIC_Needed || "",
+          AWM_Supporting_PMP_Layout:
+            item?.AWM_CIC_Page?.[0]?.AWM_Supporting_PMP_Layout || "",
+          AWM_Supporting_PMP_Design:
+            item?.AWM_CIC_Page?.[0]?.AWM_Supporting_PMP_Design || "",
+          AWM_Other_Reference:
+            item?.AWM_CIC_Page?.[0]?.AWM_Other_Reference || "",
+          AWM_CIC_Matrix: item?.AWM_CIC_Page?.[0]?.AWM_CIC_Matrix || "",
+          AWM_GA_Brief: item?.Preselected_DSBP_GA_Brief || [],
+          AWM_CIC_Matrix_Requested:
+            item?.AWM_CIC_Page?.[0]?.AWM_CIC_Matrix_Requested || "",
         };
-
-        if (isGABrifData && isGABrifData.length) {
-          transformedItem.AWM_GA_Brief = item.Preselected_DSBP_GA_Brief || [];
-        }
 
         transformedItem = {
           ...transformedItem,
@@ -176,36 +184,42 @@ const DependencyMapping = () => {
       const filteredColumnNames = columnNames.filter(
         (property) => property !== "FPCStagingPage"
       );
+      let columnInLocal = JSON.parse(
+        localStorage.getItem("setDependencyMappingColumnNames")
+      );
+      if (!columnInLocal || !columnInLocal.length) {
+        let groupedColumnNames = [];
 
-      let groupedColumnNames = [];
-
-      filteredColumnNames.map((colName) => {
-        let groupedObject = {};
-        let splittedCol = colName.split("_");
-        groupedObject["field"] = colName;
-        groupedObject["width"] = 250;
-        groupedObject["freeze"] = false;
-        if (splittedCol[0] === "DSBP") {
-          groupedObject["group"] = 1;
-        }
-        if (splittedCol[0] === "AWM") {
-          groupedObject["group"] = 2;
-        }
-        if (splittedCol[0] === "DSM") {
-          groupedObject["group"] = 3;
-        }
-        groupedColumnNames.push(groupedObject);
-        return groupedColumnNames;
-      });
+        filteredColumnNames.map((colName, index) => {
+          let groupedObject = {};
+          let splittedCol = colName.split("_");
+          groupedObject["field"] = colName;
+          groupedObject["width"] = 250;
+          groupedObject["freeze"] = false;
+          groupedObject["Sequence"] = index;
+          if (splittedCol[0] === "DSBP") {
+            groupedObject["group"] = 1;
+          }
+          if (splittedCol[0] === "AWM") {
+            groupedObject["group"] = 2;
+          }
+          if (splittedCol[0] === "DSM") {
+            groupedObject["group"] = 3;
+          }
+          groupedColumnNames.push(groupedObject);
+          return groupedColumnNames;
+        });
+        localStorage.setItem(
+          "setDependencyMappingColumnNames",
+          JSON.stringify(groupedColumnNames)
+        );
+      }
 
       setCDPTPageData(isCDPTData);
       setIQData(isIQData);
       setRDTData(isRDTData);
       setGABriefData(isGABrifData);
-      localStorage.setItem(
-        "setDependencyMappingColumnNames",
-        JSON.stringify(groupedColumnNames)
-      );
+
       // setDependencyColumnNames(groupedColumnNames);
       setDependencyMappingData(transformedData);
     }
@@ -287,7 +301,7 @@ const DependencyMapping = () => {
     let formData = {
       DSBPValues: submittedJson,
     };
-    let resp = await onSubmitDependencyMappingAction(ProjectID, formData);
+    let resp = await onSubmitDependencyMappingAction(formData, ProjectID);
   };
 
   const onGlobalFilterChange = (e, colName) => {
@@ -313,6 +327,18 @@ const DependencyMapping = () => {
     } else setFiltersDependencyMappingData([]);
   };
 
+  let columnNamesData = JSON.parse(
+    localStorage.getItem("setDependencyMappingColumnNames")
+  );
+  let columnNames = [];
+  if (columnNames) {
+    columnNames = columnNamesData?.map((item) => item.field);
+  }
+
+  const onSearchClick = () => {
+    isSearchSet(!isSearch);
+  };
+
   return (
     <div className="artwork-dsbp dependency-mapping">
       <>
@@ -324,8 +350,11 @@ const DependencyMapping = () => {
           setCustomizeViewFields={setCustomizeViewFields}
           dependencyMappingData={dependencyMappingData}
           selectedProjectDetails={selectedProjectDetails}
+          columnNames={columnNames}
+          filteredDependencyMappingData={filteredDependencyMappingData}
           userHasAccess={userHasAccess}
           isDependencyMapping={true}
+          onSearchClick={onSearchClick}
         />
         <DependencyMappingList
           dependencyMappingData={dependencyMappingData}
@@ -349,6 +378,8 @@ const DependencyMapping = () => {
           setSelectedFields={setSelectedFields}
           setTableRender={setTableRender}
           tableRender={tableRender}
+          isSearch={isSearch}
+          columnNames={columnNames}
         />
         <FooterButtons
           handleCancel={handleCancel}
