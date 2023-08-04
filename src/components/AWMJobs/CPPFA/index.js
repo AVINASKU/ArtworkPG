@@ -29,7 +29,7 @@ const CPPFA = ({
   const [loader, setLoader] = useState(false);
 
   const [visible, setVisible] = useState(showTaskDialog);
-  const [designIntent, setDesignIntent] = useState({});
+  const [taskDetailsDataObj, setTaskDetailsDataObj] = useState(null);
   const [version, setVersion] = useState("V0");
   // let allAccess = hasAllAccess();
   const allAccess = true;
@@ -42,43 +42,24 @@ const CPPFA = ({
   // }
   const dispatch = useDispatch();
 
-  console.log("pranali check is access", isAccessEmpty, url[1]);
-
   const { TaskID, ProjectID } = selectedTaskData;
   const [cppfaDialogFlag, setCppfaDialogFlag] = useState(false);
 
-  useEffect(() => {
-    setVisible(showTaskDialog);
-  }, [showTaskDialog]);
-
   // useEffect(() => {
-  //   dispatch(getProjectPlanApi(TaskID, ProjectID));
-  // }, [dispatch, TaskID, ProjectID]);
-  const [npfFlag, setNpfFlag] = useState(false);
-  useEffect(() => {
-    if (TaskDetailsData) {
-      TaskDetailsData?.ArtworkAgilityTasks.map((obj) => {
-        console.log("1221", obj);
-        // setYesOrNo("no");
-      });
-    }
-  }, []);
-  console.log("1221 npfFlag", npfFlag);
+  //   setVisible(showTaskDialog);
+  // }, [showTaskDialog]);
 
   useEffect(() => {
     setLoader(true);
     if (TaskDetailsData) {
-      setDesignIntent(TaskDetailsData?.ArtworkAgilityTasks[0] || {});
+      setTaskDetailsDataObj(TaskDetailsData?.ArtworkAgilityTasks[0] || {});
     }
-    if (designIntent) {
-      designIntent.FileMetaDataList?.find((el) => {
+    if (taskDetailsDataObj) {
+      taskDetailsDataObj?.FileMetaDataList?.find((el) => {
         if (el.Version !== "" && el.Version !== null) {
           setVersion(el.Version);
         }
       });
-      if (designIntent.RiskLevel !== undefined) {
-        setRiskLevel(designIntent.RiskLevel?.toLowerCase());
-      }
       pegadata.find((el) => {
         if (
           (el.AWM_Project_ID === ProjectID &&
@@ -91,7 +72,6 @@ const CPPFA = ({
           setCppfaDialogFlag(true);
         }
       });
-      console.log("TaskDetailsData:", TaskDetailsData);
       setLoader(false);
     }
   }, [TaskDetailsData]);
@@ -106,9 +86,9 @@ const CPPFA = ({
 
   const setRiskLevelFunc = (level) => {
     setRiskLevel(level);
-    const data = { ...designIntent };
+    const data = { ...taskDetailsDataObj };
     data.RiskLevel = level;
-    setDesignIntent(data);
+    setTaskDetailsDataObj(data);
     if (level === "low") {
       setHighRiskYesOrNo("");
       setYesOrNo("");
@@ -131,10 +111,63 @@ const CPPFA = ({
           src={file.objectURL}
           width={50}
         />
-        <div className="flex flex-column text-left ml-3">{file.name}</div>
+        <div
+          className="flex flex-column text-left ml-3"
+          hidden={
+            file.name.includes(".pdf") ||
+            file.name.includes(".zip") ||
+            file.name.includes(".csv")
+          }
+        >
+          {file.name}
+        </div>
       </div>
     );
   };
+
+  const chooseOptions = {
+    icon: <img src={upload1} alt="upload" className="uploadIcon" />,
+    iconOnly: false,
+    className: "",
+  };
+  const myProjects = url[1];
+
+  const onValidationFail = (uploadData) => {
+    if (uploadData.size > 1000000) {
+      setFileName(null);
+    }
+  };
+
+  const [flag, setFlag] = useState(false);
+  useEffect(() => {
+    pegadata.forEach((obj) => {
+      if (
+        obj.data.Task === "Define New Print Feasibility Scope" ||
+        obj.data.Task === "Define Color Development & Print Trial"
+      ) {
+        setFlag(true);
+      }
+    });
+  }, [pegadata]);
+
+  const [hideFlag, setHideFlag] = useState(false);
+  useEffect(() => {
+    if (taskDetailsDataObj?.RiskLevel !== undefined) {
+      setRiskLevel(taskDetailsDataObj?.RiskLevel?.toLowerCase());
+    }
+    if (
+      taskDetailsDataObj?.RiskLevel === "low" ||
+      taskDetailsDataObj?.RiskLevel === ""
+    ) {
+      setHideFlag(true);
+    } else if (flag && taskDetailsDataObj?.Task_Status !== "Complete") {
+      setHideFlag(true);
+    } else if (!flag && taskDetailsDataObj?.Task_Status === "Complete") {
+      setHideFlag(false);
+    } else {
+      setHideFlag(false);
+    }
+  }, [taskDetailsDataObj, flag, showTaskDialog]);
 
   const handleSubmit = async () => {
     setLoader(true);
@@ -156,10 +189,12 @@ const CPPFA = ({
       },
     };
 
-    if (riskLevel !== "low" && !cppfaDialogFlag && yesOrNo === "") {
-      setHighRiskYesOrNo("selectYesOrNo");
+    if (!hideFlag && yesOrNo === "") {
+      if (riskLevel !== "low" && !cppfaDialogFlag) {
+        setHighRiskYesOrNo("selectYesOrNo");
+      }
     } else {
-      await dispatch(uploadFileAzure(azureFile));
+      azureFile && (await dispatch(uploadFileAzure(azureFile)));
       await submitCPPFA(
         formData,
         `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`,
@@ -174,44 +209,6 @@ const CPPFA = ({
     }
     setLoader(false);
   };
-
-  const chooseOptions = {
-    icon: <img src={upload1} alt="upload" className="uploadIcon" />,
-    iconOnly: false,
-    className: "",
-  };
-  const myProjects = url[1];
-
-  const onValidationFail = (uploadData) => {
-    if (uploadData.size > 1000000) {
-      setFileName(null);
-    }
-  };
-
-  const [flag, setFlag] = useState(false);
-  useEffect(() => {
-    pegadata.forEach((obj) => {
-      if (obj.Task === "Define New Print Feasibility Scope") {
-        setFlag(true);
-        console.log("task:", obj.Task);
-      }
-    });
-  }, [pegadata]);
-  // const colourDevelopment = pegadata.filter((obj)=> obj.data.Task === "Define New Print Feasibility Scope");
-
-  console.log("pegadata:", pegadata);
-  const [hideFlag, setHideFlag] = useState(false);
-  useEffect(() => {
-    if (designIntent.RiskLevel === "low" || designIntent.RiskLevel === "") {
-      setHideFlag(true);
-      // } else if(designIntent.RiskLevel === "high" || designIntent.RiskLevel === "medium") {
-      //   setHideFlag(false);
-    } else if (flag && designIntent.Task_Status !== "Complete") {
-      setHideFlag(true);
-    } else {
-      setHideFlag(false);
-    }
-  }, [designIntent, flag]);
 
   return (
     <Dialog
@@ -267,12 +264,16 @@ const CPPFA = ({
               </ul>
             </nav>
           </div>
-          <div className="p-dialog-header1">{designIntent.Project_Name}</div>
+          <div className="p-dialog-header1">
+            {taskDetailsDataObj?.Project_Name}
+          </div>
         </div>
       }
     >
-      {loader || designIntent === null ? (
-        <Loading />
+      {loader || taskDetailsDataObj === null ? (
+        <div className="p-fluid popup-details ppfaDialogBorder">
+          <Loading />
+        </div>
       ) : (
         <>
           <div className="p-fluid popup-details ppfaDialogBorder">
@@ -284,17 +285,16 @@ const CPPFA = ({
                 <Col>Consumed Buffer</Col>
               </Row>
               <Row>
-                <Col>{designIntent.Duration}</Col>
-                <Col>{changeDateFormat(designIntent.Start_Date)}</Col>
-                <Col>{changeDateFormat(designIntent.End_Date)}</Col>
+                <Col>{taskDetailsDataObj?.Duration}</Col>
+                <Col>{changeDateFormat(taskDetailsDataObj?.Start_Date)}</Col>
+                <Col>{changeDateFormat(taskDetailsDataObj?.End_Date)}</Col>
                 <Col className="ppfaDialogTextColor">
-                  {designIntent.Consumed_Buffer}
+                  {taskDetailsDataObj?.Consumed_Buffer}
                 </Col>
               </Row>
               <br />
               <Row>
                 <Col>Risk Level*</Col>
-                {/* <Col>Upload (optional)</Col> */}
                 <Col></Col>
                 <Col></Col>
               </Row>
@@ -309,7 +309,8 @@ const CPPFA = ({
                       checked={riskLevel === "low"}
                       onChange={(e) => setRiskLevelFunc(e.target.value)}
                       disabled={
-                        isAccessEmpty || designIntent.Task_Status === "Complete"
+                        isAccessEmpty ||
+                        taskDetailsDataObj?.Task_Status === "Complete"
                       }
                     />
                     <label className="radioLabel">Low Risk</label>
@@ -323,7 +324,8 @@ const CPPFA = ({
                       checked={riskLevel === "medium"}
                       onChange={(e) => setRiskLevelFunc(e.target.value)}
                       disabled={
-                        isAccessEmpty || designIntent.Task_Status === "Complete"
+                        isAccessEmpty ||
+                        taskDetailsDataObj?.Task_Status === "Complete"
                       }
                     />
                     <label className="radioLabel">Medium Risk</label>
@@ -337,7 +339,8 @@ const CPPFA = ({
                       checked={riskLevel === "high"}
                       onChange={(e) => setRiskLevelFunc(e.target.value)}
                       disabled={
-                        isAccessEmpty || designIntent.Task_Status === "Complete"
+                        isAccessEmpty ||
+                        taskDetailsDataObj?.Task_Status === "Complete"
                       }
                     />
                     <label className="radioLabel">High Risk</label>
@@ -354,9 +357,10 @@ const CPPFA = ({
                     itemTemplate={itemTemplate}
                     emptyTemplate={
                       <p className="m-0">
-                        {designIntent.FileMetaDataList &&
-                        designIntent.FileMetaDataList.length > 0 ? (
-                          designIntent.FileMetaDataList[0].File_Name === "" ? (
+                        {taskDetailsDataObj?.FileMetaDataList &&
+                        taskDetailsDataObj?.FileMetaDataList.length > 0 ? (
+                          taskDetailsDataObj?.FileMetaDataList[0].File_Name ===
+                          "" ? (
                             <>
                               <span>Drop or Browse file here</span> <br />
                               <span className="fileSupportedData">
@@ -364,7 +368,7 @@ const CPPFA = ({
                               </span>
                             </>
                           ) : (
-                            designIntent.FileMetaDataList[0].File_Name
+                            taskDetailsDataObj?.FileMetaDataList[0].File_Name
                           )
                         ) : (
                           <>
@@ -377,7 +381,8 @@ const CPPFA = ({
                       </p>
                     }
                     disabled={
-                      isAccessEmpty || designIntent.Task_Status === "Complete"
+                      isAccessEmpty ||
+                      taskDetailsDataObj?.Task_Status === "Complete"
                     }
                     onValidationFail={(e) => onValidationFail(e)}
                   />
@@ -412,7 +417,8 @@ const CPPFA = ({
                     <button
                       type="button"
                       className={`btn highRiskButton ${
-                        yesOrNo === "yes"
+                        yesOrNo === "yes" ||
+                        (flag && taskDetailsDataObj?.Task_Status === "Complete")
                           ? "yesOrNoButtonsColor"
                           : "btn-secondary"
                       }`}
@@ -420,7 +426,7 @@ const CPPFA = ({
                       disabled={
                         isAccessEmpty ||
                         cppfaDialogFlag ||
-                        designIntent.Task_Status === "Complete"
+                        taskDetailsDataObj?.Task_Status === "Complete"
                       }
                     >
                       Yes
@@ -428,7 +434,9 @@ const CPPFA = ({
                     <button
                       type="button"
                       className={`btn highRiskButton ${
-                        yesOrNo === "no"
+                        yesOrNo === "no" ||
+                        (!flag &&
+                          taskDetailsDataObj?.Task_Status === "Complete")
                           ? "yesOrNoButtonsColor"
                           : "btn-secondary"
                       }`}
@@ -436,7 +444,7 @@ const CPPFA = ({
                       disabled={
                         isAccessEmpty ||
                         cppfaDialogFlag ||
-                        designIntent.Task_Status === "Complete"
+                        taskDetailsDataObj?.Task_Status === "Complete"
                       }
                     >
                       No
@@ -448,12 +456,7 @@ const CPPFA = ({
                 <Col></Col>
               </Row>
               <Row
-                hidden={
-                  riskLevel === "" ||
-                  riskLevel === "low" ||
-                  yesOrNo !== "" ||
-                  highRiskYesOrNo === ""
-                }
+                hidden={hideFlag || yesOrNo !== "" || highRiskYesOrNo === ""}
               >
                 <Col className="highRiskError">
                   *Please select Yes/No in order to proceed further.
@@ -462,7 +465,7 @@ const CPPFA = ({
             </div>
           </div>
           <div className="p-dialog-footer confirmPPFA">
-            {designIntent.Task_Status === "Complete" ? (
+            {taskDetailsDataObj?.Task_Status === "Complete" ? (
               <Button label="Confirm PPFA" onClick={handleSubmit} disabled />
             ) : (
               <Button
