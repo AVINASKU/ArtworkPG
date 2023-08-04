@@ -4,7 +4,7 @@ import { BlobServiceClient } from "@azure/storage-blob";
 // Define your Azure Blob Storage configuration variables here
 const containerName = "ArtworkFolder";
 const sasToken =
-  "sp=racwdlmeop&st=2023-07-12T07:02:49Z&se=2027-12-31T15:02:49Z&spr=https&sv=2022-11-02&sr=c&sig=aXX8yIkC7CdAuw65IeG8IcT7wb37BDtXu5CkcZyYc10%3D";
+  "sp=racwlmeop&st=2023-08-04T06:26:26Z&se=2031-01-31T14:26:26Z&spr=https&sv=2022-11-02&sr=d&sig=wjVbdxf2iif8%2BKrX81RUgWHIRgy2pYjaRmEb4OTKB%2F0%3D&sdd=1";
 const storageAccountName = "artworkagilityadlsdev";
 
 // Create a BlobServiceClient instance using the configuration variables
@@ -34,13 +34,14 @@ export const uploadFileFailure = (error) => ({
 
 // Define your Redux async action creator
 export const uploadFileAzure = (file) => {
-  console.log(file);
+  console.log(file.type, "test");
   return async (dispatch) => {
     try {
       dispatch(uploadFileRequest());
 
       // Create a BlobClient for the file and set the content type
       const blobClient = containerClient.getBlockBlobClient(file.name);
+
       const options = {
         blobHTTPHeaders: { blobContentType: file.type },
       };
