@@ -302,6 +302,9 @@ const DependencyMapping = () => {
       DSBPValues: submittedJson,
     };
     let resp = await onSubmitDependencyMappingAction(formData, ProjectID);
+    if (resp.status === 200 || resp.status === 201) {
+      setSubmittedData([]);
+    }
   };
 
   const onClickClearFilter = () => {
@@ -362,9 +365,9 @@ const DependencyMapping = () => {
     isSearchSet(!isSearch);
   };
 
-  let isFilterActivatedInDependencyMapping =[];
+  let isFilterActivatedInDependencyMapping = [];
 
-   if (columnNamesData) {
+  if (columnNamesData) {
     isFilterActivatedInDependencyMapping = columnNamesData.filter((ele) => {
       if (
         ele.freeze === true ||
@@ -377,7 +380,6 @@ const DependencyMapping = () => {
       }
     });
   }
-
 
   return (
     <div className="artwork-dsbp dependency-mapping">
@@ -396,7 +398,9 @@ const DependencyMapping = () => {
           isDependencyMapping={true}
           onSearchClick={onSearchClick}
           onClickClearFilter={onClickClearFilter}
-          isFilterActivatedInDependencyMapping={isFilterActivatedInDependencyMapping}
+          isFilterActivatedInDependencyMapping={
+            isFilterActivatedInDependencyMapping
+          }
         />
         <DependencyMappingList
           dependencyMappingData={dependencyMappingData}

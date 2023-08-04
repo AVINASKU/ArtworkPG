@@ -56,17 +56,6 @@ const DependencyMappingList = ({
     { name: "N/A", code: "N/A" },
   ];
 
-  const SPMPDesignData = [
-    { name: "123", code: "123" },
-    { name: "456", code: "456" },
-    { name: "789", code: "789" },
-  ];
-  const SPMPLayoutData = [
-    { name: "8888", code: "8888" },
-    { name: "9999", code: "9999" },
-    { name: "5555", code: "5555" },
-  ];
-
   useEffect(() => {
     setCustomizeViewFields(customizeViewFields);
   }, [customizeViewFields]);
@@ -87,8 +76,8 @@ const DependencyMappingList = ({
       CDPTPageData: CDPTPageData,
       IQData: IQData,
       cicNeededOptionList: cicNeededOptionList,
-      SPMPDesignData: SPMPDesignData,
-      SPMPLayoutData: SPMPLayoutData,
+      SPMPDesignData: dropdownDataForLayoutAndDesign,
+      SPMPLayoutData: dropdownDataForLayoutAndDesign,
       GABriefData: GABriefData,
     };
     const selectedTab = {
@@ -226,7 +215,9 @@ const DependencyMappingList = ({
 
   const renderMappingBody = (options, rowData) => {
     let field = rowData.field;
-
+    if (field === "AWM_RDT_Page") {
+     
+    }
     return (
       <span>
         {field === "field_0" && ( // Add this condition to render a checkbox
@@ -280,7 +271,8 @@ const DependencyMappingList = ({
                   ? CDPTPageData.map((obj) => ({
                       label: obj.AWM_Design_Job_Name,
                       value: obj.AWM_Design_Job_ID,
-                    }))
+                      disabled: obj.AWM_Design_Job_Name === "N/A", // Add this line to disable the option
+                    })).filter((option) => !option.disabled) // Filter out disabled options
                   : []
               }
               filter
@@ -306,7 +298,7 @@ const DependencyMappingList = ({
                 RDTData
                   ? RDTData.map((obj) => ({
                       label: obj.AWM_Design_Job_Name,
-                      value: obj.AWM_Design_Job_ID,
+                      value: obj.AWM_Design_Job_ID
                     }))
                   : []
               }
