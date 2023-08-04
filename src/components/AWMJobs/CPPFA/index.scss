@@ -104,7 +104,7 @@
   line-height: 12px;
 }
 .highRiskButton.btn:disabled {
-  color: #595959 !important;
+  color: #ffffff !important;
   width: 33px;
   height: 20px;
   border: 0.5px solid #acacac !important;
@@ -112,6 +112,9 @@
   margin-right: 10px;
   font-size: 10px;
   line-height: 12px;
+}
+.yesOrNoButtonsColor.btn:disabled {
+  background-color: #003da5 !important;
 }
 
 .highRiskErrorBorderColor {
