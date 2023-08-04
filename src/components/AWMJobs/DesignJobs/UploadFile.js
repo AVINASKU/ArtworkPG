@@ -4,7 +4,9 @@ import { Image } from "primereact/image";
 import { Tag } from "primereact/tag";
 import { Row, Col } from "react-bootstrap";
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
-import './UploadFile.scss';
+import "./UploadFile.scss";
+import { AzureFileDownloadJobs } from "../../../store/actions/AzureFileDownloadJobs";
+import { useDispatch } from "react-redux";
 
 const UploadFile = ({
   Design_Intent_Name,
@@ -29,8 +31,8 @@ const UploadFile = ({
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
   const [updatedImg, setUpdatedImg] = useState("");
-  const viewProofScopeFile = useProofScopeURL();
-
+  const dispatch = useDispatch();
+  let viewFileName = designData[0]?.FileMetaDataList[0]?.File_Name;
   useEffect(() => {
     console.log("item ----", item);
     if (item?.FileMetaDataList[0]) {
@@ -39,11 +41,6 @@ const UploadFile = ({
       setUpdatedImg(uploadedFileName);
     }
   });
-
-  const handleViewProofScopeClick = async (event, fileUrl) => {
-    event.preventDefault();
-    viewProofScopeFile(`cloudflow://PP_FILE_STORE/aacdata/${fileUrl}`);
-  };
 
   let di_name;
   di_name =
@@ -81,16 +78,16 @@ const UploadFile = ({
   };
 
   const onTemplateSelect = (e) => {
-    const renamedFile = {
-      objectURL: e.files[0].objectURL,
-      lastModified: e.files[0].lastModified,
-      lastModifiedDate: e.files[0].lastModifiedDate,
-      name: di_name,
-      size: e.files[0].size,
-      type: e.files[0].type,
-      webkitRelativePath: e.files[0].webkitRelativePath,
-    };
-    setAzureFile(renamedFile);
+    // const renamedFile = {
+    //   objectURL: e.files[0].objectURL,
+    //   lastModified: e.files[0].lastModified,
+    //   lastModifiedDate: e.files[0].lastModifiedDate,
+    //   name: di_name,
+    //   size: e.files[0].size,
+    //   type: e.files[0].type,
+    //   webkitRelativePath: e.files[0].webkitRelativePath,
+    // };
+    setAzureFile(e.files[0]);
     let _totalSize = totalSize;
     let files = e.files;
     Object.keys(files).forEach((key) => {
@@ -98,8 +95,12 @@ const UploadFile = ({
     });
 
     setTotalSize(_totalSize);
-    setAzureFile(renamedFile);
-    setFileName(di_name);
+    // setFileName(di_name);
+    setFileName(e.files[0].name);
+  };
+  const downloadAzure = async (event, fileUrl) => {
+    event.preventDefault();
+    dispatch(AzureFileDownloadJobs(fileUrl));
   };
 
   return (
@@ -117,13 +118,22 @@ const UploadFile = ({
         disabled={disabled}
       />
       <div>
-        {designData[0]?.FileMetaDataList[0]?.File_Name === ""
-          ? fileName === ""
-            ? `No files uploaded yet please upload file!`
-            : ``
-          : fileName === ""
-          ? di_name
-          : ""}
+        {viewFileName === "" ? (
+          fileName === "" ? (
+            `No files uploaded yet please upload file!`
+          ) : (
+            ``
+          )
+        ) : fileName === "" ? (
+          <a
+            className="flex flex-column text-left ml-3"
+            onClick={(event) => downloadAzure(event, `${viewFileName}`)}
+          >
+            {viewFileName}
+          </a>
+        ) : (
+          ""
+        )}
       </div>
     </Col>
   );

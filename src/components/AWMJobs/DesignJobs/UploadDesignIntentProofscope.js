@@ -3,7 +3,7 @@ import { FileUpload } from "primereact/fileupload";
 import { Image } from "primereact/image";
 import { Tag } from "primereact/tag";
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
-import { downloadFileAzure } from "../../../store/actions/AzureFileDownload";
+import { downloadFileAzure } from "../../../store/actions/AzureFileDownloadProofscope";
 import { useDispatch, useSelector } from "react-redux";
 
 const UploadDesignIntentProofscope = ({
@@ -122,15 +122,15 @@ const UploadDesignIntentProofscope = ({
   const onTemplateSelect = (e) => {
     const uploadedFile = e.files[0];
 
-    const renamedFile = {
-      ...uploadedFile,
-      name: di_name,
-      size: uploadedFile.size,
-      type: uploadedFile.type,
-      lastModified: uploadedFile.lastModified,
-      lastModifiedDate: uploadedFile.lastModifiedDate,
-      webkitRelativePath: uploadedFile.webkitRelativePath,
-    };
+    // const renamedFile = {
+    //   ...uploadedFile,
+    //   name: di_name,
+    //   size: uploadedFile.size,
+    //   type: uploadedFile.type,
+    //   lastModified: uploadedFile.lastModified,
+    //   lastModifiedDate: uploadedFile.lastModifiedDate,
+    //   webkitRelativePath: uploadedFile.webkitRelativePath,
+    // };
     let _totalSize = totalSize;
     let files = e.files;
 
@@ -139,7 +139,7 @@ const UploadDesignIntentProofscope = ({
     });
 
     setTotalSize(_totalSize);
-    setAzureFile(renamedFile);
+    setAzureFile(e.files[0]);
     setFileName(di_name);
   };
 
