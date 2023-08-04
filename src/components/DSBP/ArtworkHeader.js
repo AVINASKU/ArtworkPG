@@ -39,6 +39,8 @@ const ArtworkHeader = ({
   columnNames,
   filteredDependencyMappingData,
   onSearchClick,
+  onClickClearFilter,
+  isFilterActivatedInDependencyMapping,
 }) => {
   const navigate = useNavigate();
   let { ProjectID } = useParams();
@@ -61,6 +63,11 @@ const ArtworkHeader = ({
   if (BU === "Home Care") {
     isBUHomeCare = true;
   }
+
+  console.log(
+    "isFilterActivatedInDependencyMapping",
+    isFilterActivatedInDependencyMapping
+  );
 
   const actionNameObject = [
     {
@@ -199,56 +206,53 @@ const ArtworkHeader = ({
       <div className="actions">
         <div>{breadcrumb}</div>
         <div className="header-buttons">
-          <div style={{ top: 30 }}>
-            {isFilterActivated.length ? (
-              <img
-                src={BlueFilterIcon}
-                alt="filter logo"
-                onClick={() => {                
-                  buWiseSortedColumnNames.map((ele) => {
-                    if (ele) {
-                      ele["sortZtoA"] = false;
-                      ele["sortAtoZ"] = false;
-                      ele["freeze"] = false;
-                      ele["width"] = 250;
-                      ele["reorder"] = false;
-                    }
-                  });
-                  isBUHomeCare
-                    ? localStorage.setItem(
-                        "columnWidthDSBPArtworkHomeCare",
-                        JSON.stringify(buWiseSortedColumnNames)
-                      )
-                    : localStorage.setItem(
-                        "columnWidthDSBPArtworkBabyCare",
-                        JSON.stringify(buWiseSortedColumnNames)
-                      );
-                  setFieldUpdated(!fieldUpdated);
-                  setBuWiseSortedColumnNames(buWiseSortedColumnNames);
-                  setDsbpPmpData(dsbpPmpData);
-                  setTableRender(!tableRender);
-                }}
-                className="header-icons"
-              />
-            ) : (
-              <img
-                src={filter}
-                alt="filter logo"
-                disabled={userHasAccess}
-                // onClick={() => clearColumnWiseFilter()}
-                className="header-icons"
-              />
-            )}
-          </div>
+          {!isDependencyMapping && (
+            <div style={{ top: 30 }}>
+              {isFilterActivated.length ? (
+                <img
+                  src={BlueFilterIcon}
+                  alt="filter logo"
+                  onClick={() => onClickClearFilter()}
+                  className="header-icons"
+                />
+              ) : (
+                <img
+                  src={filter}
+                  alt="filter logo"
+                  disabled={userHasAccess}
+                  // onClick={() => clearColumnWiseFilter()}
+                  className="header-icons"
+                />
+              )}
+            </div>
+          )}
           {isDependencyMapping ? (
             <>
+              {isFilterActivatedInDependencyMapping?.length ? (
+                <img
+                  src={BlueFilterIcon}
+                  alt="filter logo"
+                  onClick={() => onClickClearFilter()}
+                  className="header-icons"
+                />
+              ) : (
+                <img
+                  src={filter}
+                  alt="filter logo"
+                  disabled={userHasAccess}
+                  // onClick={() => clearColumnWiseFilter()}
+                  className="header-icons"
+                />
+              )}
+              <div style={{marginLeft:10}}>
               <img
                 src={searchMyProjects}
                 alt="search field"
                 onClick={onSearchClick}
                 className="header-icons"
               />
-              <div>
+              </div>
+              <div style={{marginLeft:10}}>
                 <ExportSelectedRows
                   allData={dsbpPmpData}
                   selectedRows={filteredDependencyMappingData}

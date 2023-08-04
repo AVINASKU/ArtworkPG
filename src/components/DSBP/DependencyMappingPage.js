@@ -145,7 +145,7 @@ const DependencyMapping = () => {
               (item) => item.AWM_Design_Job_ID
             ) || [];
         }
-        console.log("transform item", )
+        console.log("transform item");
 
         transformedItem = {
           ...transformedItem,
@@ -304,6 +304,29 @@ const DependencyMapping = () => {
     let resp = await onSubmitDependencyMappingAction(formData, ProjectID);
   };
 
+  const onClickClearFilter = () => {
+    let columnNamesData = JSON.parse(
+      localStorage.getItem("setDependencyMappingColumnNames")
+    );
+    columnNamesData?.map((ele) => {
+      if (ele) {
+        ele["sortZtoA"] = false;
+        ele["sortAtoZ"] = false;
+        ele["freeze"] = false;
+        ele["width"] = 250;
+        ele["reorder"] = false;
+      }
+    });
+    localStorage.setItem(
+      "setDependencyMappingColumnNames",
+      JSON.stringify(columnNamesData)
+    );
+    setDataUpdated(!dataUpdated);
+    setDependencyMappingData(dependencyMappingData);
+    setFiltersDependencyMappingData([]);
+    setTableRender(!tableRender);
+  };
+
   const onGlobalFilterChange = (e, colName) => {
     const value = e.value;
     setSelectedFields(value);
@@ -331,13 +354,30 @@ const DependencyMapping = () => {
     localStorage.getItem("setDependencyMappingColumnNames")
   );
   let columnNames = [];
-  if (columnNames) {
+  if (columnNamesData) {
     columnNames = columnNamesData?.map((item) => item.field);
   }
 
   const onSearchClick = () => {
     isSearchSet(!isSearch);
   };
+
+  let isFilterActivatedInDependencyMapping =[];
+
+   if (columnNamesData) {
+    isFilterActivatedInDependencyMapping = columnNamesData.filter((ele) => {
+      if (
+        ele.freeze === true ||
+        ele.sortAtoZ === true ||
+        ele.sortZtoA === true ||
+        ele.width !== 250 ||
+        ele?.reorder === true
+      ) {
+        return ele;
+      }
+    });
+  }
+
 
   return (
     <div className="artwork-dsbp dependency-mapping">
@@ -355,6 +395,8 @@ const DependencyMapping = () => {
           userHasAccess={userHasAccess}
           isDependencyMapping={true}
           onSearchClick={onSearchClick}
+          onClickClearFilter={onClickClearFilter}
+          isFilterActivatedInDependencyMapping={isFilterActivatedInDependencyMapping}
         />
         <DependencyMappingList
           dependencyMappingData={dependencyMappingData}
