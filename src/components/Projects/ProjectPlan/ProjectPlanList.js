@@ -60,6 +60,7 @@ const ProjectPlanList = ({
   const [selectedTaskApproveDialog, setSelectedTaskApproveDialog] = useState(
     []
   );
+  const [designTabPegaData, setDesignTabPegaData] = useState([]);
   const dispatch = useDispatch();
   const [flag, setFlag] = useState("");
   const [loader, setLoader] = useState(false);
@@ -551,6 +552,8 @@ const ProjectPlanList = ({
           remainingTasks.push(task);
         }
       });
+      setDesignTabPegaData(remainingTasks);
+      // console.log("filteredTasks:", filteredTasks, "remainingTasks:", remainingTasks);
       const filteredData = {
         filteredTasks: filteredTasks,
         otherTasks: remainingTasks
@@ -752,7 +755,7 @@ const ProjectPlanList = ({
           onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
           showTaskDialog={showApproveDialogCPPFA}
           selectedTaskData={selectedTaskApproveDialogCPPFA}
-          pegadata={pegadata2}
+          pegadata={designTabPegaData}
           getProjectPlanApi={getProjectPlanApi}
           TaskDetailsData={TaskDetailsData}
         />

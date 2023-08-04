@@ -54,7 +54,7 @@ const CPPFA = ({
   // useEffect(() => {
   //   dispatch(getProjectPlanApi(TaskID, ProjectID));
   // }, [dispatch, TaskID, ProjectID]);
-const [npfFlag, setNpfFlag] = useState(false);
+  const [npfFlag, setNpfFlag] = useState(false);
   useEffect(() => {
     if (TaskDetailsData) {
       TaskDetailsData?.ArtworkAgilityTasks.map((obj) => {
@@ -191,23 +191,27 @@ const [npfFlag, setNpfFlag] = useState(false);
   const [flag, setFlag] = useState(false);
   useEffect(() => {
     pegadata.forEach((obj) => {
-      if(obj.Task === "Define New Print Feasibility Scope") {
+      if (obj.Task === "Define New Print Feasibility Scope") {
         setFlag(true);
-      console.log("task:", obj.Task);
+        console.log("task:", obj.Task);
       }
-    })
+    });
   }, [pegadata]);
+  // const colourDevelopment = pegadata.filter((obj)=> obj.data.Task === "Define New Print Feasibility Scope");
 
+  console.log("pegadata:", pegadata);
   const [hideFlag, setHideFlag] = useState(false);
   useEffect(() => {
-    if(designIntent.RiskLevel === "low"){
+    if (designIntent.RiskLevel === "low" || designIntent.RiskLevel === "") {
       setHideFlag(true);
-    } else if(flag) {
+      // } else if(designIntent.RiskLevel === "high" || designIntent.RiskLevel === "medium") {
+      //   setHideFlag(false);
+    } else if (flag && designIntent.Task_Status !== "Complete") {
       setHideFlag(true);
     } else {
       setHideFlag(false);
     }
-  }, [designIntent]);
+  }, [designIntent, flag]);
 
   return (
     <Dialog
@@ -315,8 +319,8 @@ const [npfFlag, setNpfFlag] = useState(false);
                       type="radio"
                       id="html"
                       name="fav_language"
-                      value="Medium"
-                      checked={riskLevel === "Medium"}
+                      value="medium"
+                      checked={riskLevel === "medium"}
                       onChange={(e) => setRiskLevelFunc(e.target.value)}
                       disabled={
                         isAccessEmpty || designIntent.Task_Status === "Complete"
@@ -329,8 +333,8 @@ const [npfFlag, setNpfFlag] = useState(false);
                       type="radio"
                       id="html"
                       name="fav_language"
-                      value="High"
-                      checked={riskLevel === "High"}
+                      value="high"
+                      checked={riskLevel === "high"}
                       onChange={(e) => setRiskLevelFunc(e.target.value)}
                       disabled={
                         isAccessEmpty || designIntent.Task_Status === "Complete"
@@ -465,7 +469,9 @@ const [npfFlag, setNpfFlag] = useState(false);
                 label="Confirm PPFA"
                 onClick={handleSubmit}
                 disabled={
-                  isAccessEmpty || riskLevel !== "low"
+                  isAccessEmpty || (flag && riskLevel !== "")
+                    ? !flag
+                    : riskLevel !== "low"
                     ? cppfaDialogFlag
                       ? false
                       : yesOrNo === ""
