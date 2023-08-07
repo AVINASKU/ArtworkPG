@@ -43,7 +43,7 @@ const DependencyMappingList = ({
   selectAllChecked,
   isSearch,
   columnNames,
-  handleNewGaBrief
+  handleNewGaBrief,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -64,7 +64,7 @@ const DependencyMappingList = ({
   useEffect(() => {
     setCustomizeViewFields(customizeViewFields);
   }, [customizeViewFields]);
-  
+
   const projectNameOnClick = (e, options) => {
     op.current.toggle(e);
     setSelectedColumnName(options);
@@ -239,26 +239,29 @@ const DependencyMappingList = ({
               <Form.Select
                 placeholder="Select"
                 value={options[field]}
-                onChange={(e) =>
-                  updateDropDownData(
-                    e.target.value,
-                    "AWM_GA_Brief",
-                    options.DSBP_PMP_PIMaterialID
-                  )
-                }
+                onChange={(e) => {
+                  const selectedValue = e.target.value;
+                  if (selectedValue === "New") {
+                    handleNewGaBrief(selectedValue, options);
+                  } else
+                    updateDropDownData(
+                      e.target.value,
+                      "AWM_GA_Brief",
+                      options.DSBP_PMP_PIMaterialID
+                    );
+                }}
                 style={{ width: "80%", fontSize: 12 }}
               >
                 <option value="">Select</option>
 
                 {GABriefData?.map((data, index) =>
                   data.File_Name === "New" ? (
-                    <option key={`${data.File_Name}_${index}`} value={data.File_Name}>
-                      <a
-                        className="flex flex-column text-left ml-3"
-                        onClick={(event) => handleNewGaBrief(event)}
-                      >
-                        {data.File_Name} newww
-                      </a>
+                    <option
+                      key={data.File_Name}
+                      value={data.File_Name}
+                      style={{ color: "blue" }}
+                    >
+                      {data.File_Name}
                     </option>
                   ) : (
                     <option key={data.File_Name} value={data.File_Name}>
@@ -567,69 +570,76 @@ const DependencyMappingList = ({
     let dependencyColumnNames = JSON.parse(
       localStorage.getItem("setDependencyMappingColumnNames")
     );
-    if(!dependencyColumnNames) return null;
+    console.log("dependencyColumnNames", dependencyColumnNames);
+    console.log("customizeViewFields", customizeViewFields);
+    if (!dependencyColumnNames) return null;
 
     let jsonValue = customizeViewFields
       ? JSON.parse(customizeViewFields)
       : null;
-      if (jsonValue && Object.keys(jsonValue).length !== 0){
-        let selectedData = jsonValue?.selectedFields?.fieldsData || [];
-        let freezedData = jsonValue?.freezedColumns?.fieldsData || [];
-        const filteredColumns = [];
-        // Add freezedData columns in the specified order
-        freezedData?.forEach((fieldName) => {
-          const column = dependencyColumnNames?.find((col) => col.field === fieldName);
-          if (column) {
-            column.freeze = true;
-            filteredColumns.push(column);
-          }
-        });
-        // Add selectedData columns in the specified order
-        selectedData?.forEach((fieldName) => {
-          const column = dependencyColumnNames?.find((col) => col.field === fieldName);
-          if (column) {
-            filteredColumns.push(column);
-          }
-        });
-        if (filteredColumns && filteredColumns.length) {
-          return [
-            <Column
-              key="checkbox"
-              body={renderMappingBody}
-              frozen={true}
-              columnKey="checkbox"
-              header={() => renderHeader("checkbox")}
-              style={{ width: "40px" }}
-            />,
-            ...filteredColumns.map((col, index) => {
-              // console.log("field col-----", col);
-              return (
-                <Column
-                  field={col.field}
-                  header={renderHeader(col.field, col)}
-                  frozen={col.freeze}
-                  className={col.freeze ? "font-bold" : ""}
-                  // bodyClassName={"change-bg-color"}
-                  headerClassName={
-                    col.group === 2 ? "pink-bg-color" : "blue-bg-color"
-                  }
-                  body={renderMappingBody}
-                  key={col.field}
-                  columnKey={col.field}
-                  showFilterMenu={false}
-                  alignFrozen="left"
-                  filterField={col.field}
-                  style={{
-                    // width: col.width,
-                    width: 200,
-                    height: 30,
-                  }}
-                />
-              );
-            }),
-          ];
+    if (jsonValue && Object.keys(jsonValue).length !== 0) {
+      let selectedData = jsonValue?.selectedFields?.fieldsData || [];
+      let freezedData = jsonValue?.freezedColumns?.fieldsData || [];
+      const filteredColumns = [];
+      // Add freezedData columns in the specified order
+      freezedData?.forEach((fieldName) => {
+        const column = dependencyColumnNames?.find(
+          (col) => col.field === fieldName
+        );
+        if (column) {
+          column.freeze = true;
+          filteredColumns.push(column);
         }
-      } else {
+      });
+      // Add selectedData columns in the specified order
+      selectedData?.forEach((fieldName) => {
+        const column = dependencyColumnNames?.find(
+          (col) => col.field === fieldName
+        );
+        if (column) {
+          filteredColumns.push(column);
+        }
+      });
+      console.log("filteredColumns", filteredColumns);
+      if (filteredColumns && filteredColumns.length) {
+        return [
+          <Column
+            key="checkbox"
+            body={renderMappingBody}
+            frozen={true}
+            columnKey="checkbox"
+            header={() => renderHeader("checkbox")}
+            style={{ width: "40px" }}
+          />,
+          ...filteredColumns.map((col, index) => {
+            // console.log("field col-----", col);
+            return (
+              <Column
+                field={col.field}
+                header={renderHeader(col.field, col)}
+                frozen={col.freeze}
+                className={col.freeze ? "font-bold" : ""}
+                // bodyClassName={"change-bg-color"}
+                headerClassName={
+                  col.group === 2 ? "pink-bg-color" : "blue-bg-color"
+                }
+                body={renderMappingBody}
+                key={col.field}
+                columnKey={col.field}
+                showFilterMenu={false}
+                alignFrozen="left"
+                filterField={col.field}
+                style={{
+                  // width: col.width,
+                  width: 200,
+                  height: 30,
+                }}
+              />
+            );
+          }),
+        ];
+      }
+    } else {
       return [
         <Column
           key="checkbox"

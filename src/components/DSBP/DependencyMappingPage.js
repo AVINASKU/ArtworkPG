@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import {
   getDependencyMappingDetails,
   onSubmitDependencyMappingAction,
+  createNewGaBriefTask,
 } from "../../apis/dsbpApi";
 import DependencyMappingList from "./DependencyMappingList";
 import "./index.scss";
@@ -35,7 +36,9 @@ const DependencyMapping = () => {
   const [loader, setLoader] = useState(false);
   const [tableLoader, setTableLoader] = useState(false);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
-  const [customizeViewFields, setCustomizeViewFields] = useState(localStorage.getItem("customizeViewDependancyFields"));
+  const [customizeViewFields, setCustomizeViewFields] = useState(
+    localStorage.getItem("customizeViewDependancyFields")
+  );
   const selectedProjectDetails = projectSetup.selectedProject;
   const ProjectID = selectedProjectDetails?.Project_ID;
   const navigate = useNavigate();
@@ -289,7 +292,7 @@ const DependencyMapping = () => {
           });
           DSBP_RDT_Page_data = DSBP_RDT_Page.map((item) => ({
             Design_Job_Name: item.AWM_Design_Job_Name,
-            Design_Job_ID:item.AWM_Design_Job_ID ,
+            Design_Job_ID: item.AWM_Design_Job_ID,
           }));
         }
         
@@ -305,7 +308,7 @@ const DependencyMapping = () => {
           });
           DSBP_IQ_Page_data = DSBP_IQ_Page.map((item) => ({
             Design_Job_Name: item.AWM_Design_Job_Name,
-            Design_Job_ID:item.AWM_Design_Job_ID,
+            Design_Job_ID: item.AWM_Design_Job_ID,
           }));
         }
         submittedObject.DSBP_IQ_Page = DSBP_IQ_Page_data;
@@ -419,9 +422,18 @@ const DependencyMapping = () => {
     });
   }
 
-  const handleNewGaBrief = (event) =>{
-  console.log("handleNewGaBrief", event, event.value);
-  }
+  const handleNewGaBrief = async () => {
+    let formData = {
+      NewGABTask: "Yes",
+      AWM_Project_ID: ProjectID,
+      AWM_Task_ID: "",
+      Project_Name: selectedProjectDetails?.Project_Name,
+      BU: selectedProjectDetails?.BU,
+      Region: selectedProjectDetails?.Project_region,
+    };
+    let res = await createNewGaBriefTask(formData);
+    console.log("res", res);
+  };
 
   return (
     console.log("isSubmitEnable", isSubmitEnable),
