@@ -128,7 +128,7 @@ const ArtworkHeader = ({
   }
 
   const breadcrumb = (
-    <div style={{ marginLeft: 10 }}>
+    <div style={{ marginLeft: 25 }}>
       <nav
         className="p-breadcrumb p-component ProjectPlanBreadCrum"
         aria-label="Breadcrumb"
