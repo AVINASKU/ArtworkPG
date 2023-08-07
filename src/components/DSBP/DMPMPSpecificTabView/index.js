@@ -6,28 +6,20 @@ import { Accordion } from "react-bootstrap";
 import { Loading } from "../../../utils";
 import { DMTabValuesAction } from "../../../store/actions/DMTabValuesActions";
 import {
-  onSubmitDsbpAction,
-  getDsbpPMPDetails,
   onSubmitDependencyMappingAction,
   getDependencyMappingDetails,
+  createNewGaBriefTask
 } from "../../../apis/dsbpApi";
-import DsbpCommonPopup from "../DsbpCommonPopup";
-import DsbpRejectDialog from "../RejectDialog";
-import DsbpActionDialog from "../DsbpActionDialog";
 import FooterButtons from "../../AWMJobs/DesignJobs/FooterButtons";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { MultiSelect } from "primereact/multiselect";
-import { cloneDeep } from "lodash";
 
 const DMPMPSpecificTabView = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { dmTabValuesData } = useSelector((state) => state.DMTabValuesReducer);
   const { selectedProject } = useSelector((state) => state.ProjectSetupReducer);
-  const { DropDownValuesData } = useSelector(
-    (state) => state.DropDownValuesReducer
-  );
   const [storesTabList, setStoresTabDataList] = useState(dmTabValuesData);
   const [filteredDataList, setFilteredDataList] = useState(dmTabValuesData);
   const [actionDropDownValues, setActionDropDownValues] = useState([]);
@@ -51,7 +43,6 @@ const DMPMPSpecificTabView = () => {
   const [formData, setFormData] = useState({});
   const [selectedTab, setSelectedTabData] = useState({});
   const [loader, setLoader] = useState(false);
-  const [awmOtherReference, setAwmOtherReference] = useState("");
   const { dmTabAttributesData } = useSelector(
     (state) => state.DMTabValuesReducer
   );
@@ -64,75 +55,12 @@ const DMPMPSpecificTabView = () => {
     navigate(`/myProjects/mapping/${selectedProject?.Project_ID}`);
   };
 
-  const BU = selectedProject?.BU;
-  // check whether project is from home care or baby care////
-  let isBUHomeCare = false;
-  if (BU === "Home Care") {
-    isBUHomeCare = true;
-  }
-
-  const addToProjectList = [
-    { name: "Yes", code: "Yes" },
-    { name: "No", code: "No" },
-    { name: "Reject", code: "Reject" },
-  ];
-
-  const addToProjectListYes = [{ name: "Yes", code: "Yes" }];
-
-  const addToProjectListNo = [
-    { name: "Yes", code: "Yes" },
-    { name: "No", code: "No" },
-  ];
-
-  const addToProjectListReject = [
-    { name: "Yes", code: "Yes" },
-    { name: "Reject", code: "Reject" },
-  ];
-
-  const updateMappingData = (value, columnName, id) => {
-    const tempData = cloneDeep(dmTabData);
-    console.log("value", value, columnName);
-    tempData.DMMappingData.forEach((data) => {
-      if (data.DSBP_PMP_PIMaterialID === id) {
-        data[columnName] = value;
-        if (columnName === "AWM_CIC_Needed") {
-          if (value !== "No") {
-            data["AWM_Supporting_PMP_Design"] = "";
-            data["AWM_Supporting_PMP_Layout"] = "";
-          }
-        }
-      }
-    });
-    setDmTabData(tempData);
-    console.log("dmTabData.DMMappingData", dmTabData.DMMappingData);
-    console.log("tempData.DMMappingData", tempData.DMMappingData);
-  };
-
-  //   useEffect(() => {
-  //     if (DropDownValuesData) {
-  //       setActionDropDownValues(
-  //         DropDownValuesData?.ArtworkAgilityTasksPage.Artwork_Alignment || []
-  //       );
-  //     }
-  //   }, [DropDownValuesData]);
-
-  //   useEffect(() => {
-  //     if (
-  //       actionDropDownValues !== undefined &&
-  //       actionDropDownValues.length !== 0
-  //     ) {
-  //       setAISEList(actionDropDownValues.AISE);
-  //       setAssemblyMechanismList(actionDropDownValues.Assembly_Mechanism);
-  //     }
-  //   }, [actionDropDownValues]);
-
   useEffect(() => {
     setFilteredDataList(dmTabValuesData);
   }, [dmTabValuesData]);
 
   useEffect(() => {
     setTabPanelList(dmTabValuesData?.length - 1);
-    console.log("###insideDMPMPSpecificTabView: ", dmTabValuesData);
     dispatch(DMTabValuesAction(dmTabValuesData));
   }, []);
 
@@ -140,28 +68,15 @@ const DMPMPSpecificTabView = () => {
     if (tabPanelList >= storesTabList?.length) {
       setTabPanelList(storesTabList.length - 1);
     }
-    console.log("###insideDMPMPSpecificTabView: ", storesTabList);
     storesTabList !== undefined && dispatch(DMTabValuesAction(storesTabList));
     setSelectedTabData(dmTabValuesData[tabPanelList]);
     if (dmTabValuesData[tabPanelList]) {
       const selectedTabData = dmTabValuesData[tabPanelList];
-      console.log("selectedTabData1: ", selectedTabData);
       if (selectedTabData?.description !== undefined) {
-        setCDPT(
-          selectedTabData?.description?.AWM_CDPT_Page?.map(
-            (obj) => obj.AWM_Design_Job_ID
-          )
-        );
-        setRDT(
-          selectedTabData?.description?.AWM_RDT_Page?.map(
-            (obj) => obj.AWM_Design_Job_ID
-          )
-        );
-        setIQ(
-          selectedTabData?.description?.AWM_IQ_Page?.map(
-            (obj) => obj.AWM_Design_Job_ID
-          )
-        );
+        setCDPT(selectedTabData?.description?.AWM_CDPT_Page);
+
+        setRDT(selectedTabData?.description?.AWM_RDT_Page);
+        setIQ(selectedTabData?.description?.AWM_IQ_Page);
         setCICNeeded(selectedTabData?.description?.AWM_CIC_Needed);
         setPMPDesign(selectedTabData?.description?.AWM_Supporting_PMP_Design);
         setPMPLayout(selectedTabData?.description?.AWM_Supporting_PMP_Layout);
@@ -192,23 +107,10 @@ const DMPMPSpecificTabView = () => {
     setSelectedTabData(dmTabValuesData[tabPanelList]);
     if (dmTabValuesData[tabPanelList]) {
       const selectedTabData = dmTabValuesData[tabPanelList];
-      console.log("selectedTabData2: ", selectedTabData);
       if (selectedTabData?.description !== undefined) {
-        setCDPT(
-          selectedTabData?.description?.AWM_CDPT_Page?.map(
-            (obj) => obj.AWM_Design_Job_ID
-          )
-        );
-        setRDT(
-          selectedTabData?.description?.AWM_RDT_Page?.map(
-            (obj) => obj.AWM_Design_Job_ID
-          )
-        );
-        setIQ(
-          selectedTabData?.description?.AWM_IQ_Page?.map(
-            (obj) => obj.AWM_Design_Job_ID
-          )
-        );
+        setCDPT(selectedTabData?.description?.AWM_CDPT_Page);
+        setRDT(selectedTabData?.description?.AWM_RDT_Page);
+        setIQ(selectedTabData?.description?.AWM_IQ_Page);
         setCICNeeded(selectedTabData?.description?.AWM_CIC_Needed);
         setPMPDesign(selectedTabData?.description?.AWM_Supporting_PMP_Design);
         setPMPLayout(selectedTabData?.description?.AWM_Supporting_PMP_Layout);
@@ -256,7 +158,6 @@ const DMPMPSpecificTabView = () => {
         }
       });
     });
-    console.log("DSBP_CDPT_Page: ", DSBP_CDPT_Page);
     setFormData({
       ...formData,
       DSBP_CDPT_Page,
@@ -276,7 +177,6 @@ const DMPMPSpecificTabView = () => {
         }
       });
     });
-    console.log("DSBP_RDT_Page: ", DSBP_RDT_Page);
     setFormData({
       ...formData,
       DSBP_RDT_Page,
@@ -297,7 +197,6 @@ const DMPMPSpecificTabView = () => {
         }
       });
     });
-    console.log("DSBP_IQ_Page: ", DSBP_IQ_Page);
     setFormData({
       ...formData,
       DSBP_IQ_Page,
@@ -340,12 +239,25 @@ const DMPMPSpecificTabView = () => {
     });
   };
 
-  const handleGABriefChange = (e) => {
+  const handleGABriefChange = async (e) => {
     setGaBrief(e.target.value);
-    setFormData({
-      ...formData,
-      AWM_GABrief: e.target.value,
-    });
+    const selectedValue = e.target.value;
+    if (selectedValue === "New") {
+      let formData = {
+        NewGABTask: "Yes",
+        AWM_Project_ID: selectedProject?.Project_ID,
+        AWM_Task_ID: "",
+        Project_Name: selectedProject?.Project_Name,
+        BU: selectedProject?.BU,
+        Region: selectedProject?.Project_region,
+      };
+      let res = await createNewGaBriefTask(formData);
+      console.log("res", res);
+    } else
+      setFormData({
+        ...formData,
+        AWM_GABrief: e.target.value,
+      });
   };
 
   const handleCancel = () => {
@@ -560,6 +472,13 @@ const DMPMPSpecificTabView = () => {
                         ? dmTabData.CDPTPageData.map((obj) => ({
                             label: obj.AWM_Design_Job_Name,
                             value: obj.AWM_Design_Job_ID,
+                            disabled:
+                              (cdpt?.length &&
+                                cdpt?.includes("NPF_DJobN/A") &&
+                                obj.AWM_Design_Job_ID !== "NPF_DJobN/A") ||
+                              (cdpt?.length &&
+                                !cdpt?.includes("NPF_DJobN/A") &&
+                                obj.AWM_Design_Job_ID === "NPF_DJobN/A"),
                           }))
                         : []
                     }
@@ -580,6 +499,13 @@ const DMPMPSpecificTabView = () => {
                         ? dmTabData.RDTData.map((obj) => ({
                             label: obj.AWM_Design_Job_Name,
                             value: obj.AWM_Design_Job_ID,
+                            disabled:
+                              (rdt.length &&
+                                rdt.includes("DT_DJobN/A") &&
+                                obj.AWM_Design_Job_ID !== "DT_DJobN/A") ||
+                              (rdt.length &&
+                                !rdt.includes("DT_DJobN/A") &&
+                                obj.AWM_Design_Job_ID === "DT_DJobN/A"),
                           }))
                         : []
                     }
@@ -600,6 +526,13 @@ const DMPMPSpecificTabView = () => {
                         ? dmTabData.IQData.map((obj) => ({
                             label: obj.AWM_Design_Job_Name,
                             value: obj.AWM_Design_Job_ID,
+                            disabled:
+                              (iq?.length &&
+                                iq?.includes("IQ_DJobN/A") &&
+                                obj.AWM_Design_Job_ID !== "IQ_DJobN/A") ||
+                              (iq?.length &&
+                                !iq?.includes("IQ_DJobN/A") &&
+                                obj.AWM_Design_Job_ID === "IQ_DJobN/A"),
                           }))
                         : []
                     }
@@ -647,7 +580,7 @@ const DMPMPSpecificTabView = () => {
                       <option value="">Select</option>
                       {dmTabData.SPMPDesignData?.map((data) => (
                         <option key={data.code} value={data.name}>
-                          {data.name}
+                          {data}
                         </option>
                       ))}
                     </Form.Select>
@@ -670,7 +603,7 @@ const DMPMPSpecificTabView = () => {
                       <option value="">Select</option>
                       {dmTabData.SPMPLayoutData?.map((data) => (
                         <option key={data.code} value={data.name}>
-                          {data.name}
+                          {data}
                         </option>
                       ))}
                     </Form.Select>
