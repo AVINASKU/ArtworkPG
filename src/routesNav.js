@@ -85,8 +85,10 @@
 // };
 
 // export default RoutesNav;
-import React, { useEffect } from "react";
+import React, { useEffect, lazy, Suspense } from "react";
 import { Route, Routes, useParams } from "react-router-dom";
+
+
 // import Home from "./home.js";
 import { Outlet } from "react-router-dom";
 import AllProjects from "./components/Projects/AllProjects/index";
@@ -116,6 +118,9 @@ import DMDsbpTabPage from "./DMDsbpTabPage";
 
 import Role from "./role";
 
+const MyTaskComponent = lazy(() => import("./components/Tasks/MyTasks"));
+const AllProjectsComponent = lazy(()=> import("./components/Projects/AllProjects/index"));
+
 const RoutesNav = () => {
   const params = useParams();
   return (
@@ -125,8 +130,17 @@ const RoutesNav = () => {
         {/* <Route index element={<Home />} /> */}
         <Route path="/myProjects" element={<MyProjects />} />
         <Route path="/roles" element={<Role />} />
-        <Route path="/allProjects" element={<AllProjects />} />
-        <Route path="/myTasks" element={<MyTasksPage />} />
+        <Route path="/allProjects" element={
+          <Suspense fallback={<div>Loading...</div>}>
+            <AllProjectsComponent />
+          </Suspense>
+        } />
+
+        <Route path="/myTasks" element={
+          <Suspense fallback={<div>Loading...</div>}>
+            <MyTaskComponent />
+          </Suspense>
+        } />
         <Route path="/AllTasks" element={<AllTasksPage />} />
         {/* <Route path="/createProject" element={<AddProject />} /> */}
         {/* projectPlan */}
