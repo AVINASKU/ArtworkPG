@@ -28,6 +28,9 @@ const DependencyMapping = () => {
     useState([]);
   const [dropdownDataForLayoutAndDesign, setDropdownDataForLayoutAndDesign] =
     useState([]);
+  const [selected, setSelected] = useState([]);
+  const [selectAllChecked, setSelectAllChecked] = useState(false);
+  const [actionDialog, setActionDialog] = useState(false);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const [customizeViewFields, setCustomizeViewFields] = useState(localStorage.getItem("customizeViewDependancyFields"));
   const selectedProjectDetails = projectSetup.selectedProject;
@@ -95,6 +98,30 @@ const DependencyMapping = () => {
     setDependencyMappingData(sortedData);
   };
 
+  const handleSelect = (item) => {
+    if (selected?.includes(item)) {
+      setSelected(selected.filter((i) => i !== item));
+    } else {
+      if (selected.length === 0) {
+        const selectedList = [];
+        selectedList.push(item);
+        setSelected(selectedList);
+      } else {
+        setSelected([...selected, item]);
+      }
+    }
+  };
+
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectAllChecked(true);
+      setSelected(dependencyMappingData);
+    } else {
+      setSelectAllChecked(false);
+      setSelected([]);
+    }
+  };
+
   async function fetchData() {
     const {
       dependencyTableData,
@@ -110,7 +137,7 @@ const DependencyMapping = () => {
           data?.AWM_CIC_Page?.[0]?.AWM_CIC_Needed === "Yes" &&
           data.DSBP_PMP_PIMaterialID
       );
-      let dropdownDataForLayoutAndDesign1 = data.map(
+      let dropdownDataForLayoutAndDesign1 = data?.map(
         (item) => item.DSBP_PMP_PIMaterialID
       );
       setDropdownDataForLayoutAndDesign(dropdownDataForLayoutAndDesign1);
@@ -179,7 +206,7 @@ const DependencyMapping = () => {
 
       let groupedColumnNames = [];
 
-      filteredColumnNames.map((colName) => {
+      filteredColumnNames?.map((colName) => {
         let groupedObject = {};
         let splittedCol = colName.split("_");
         groupedObject["field"] = colName;
@@ -318,7 +345,7 @@ const DependencyMapping = () => {
       <>
         <ArtworkHeader
           headerName={headerName}
-          selected={[]}
+          selected={selected}
           label="Dependency Mapping"
           customizeViewFields={customizeViewFields}
           setCustomizeViewFields={setCustomizeViewFields}
@@ -326,6 +353,12 @@ const DependencyMapping = () => {
           selectedProjectDetails={selectedProjectDetails}
           userHasAccess={userHasAccess}
           isDependencyMapping={true}
+          actionDialog={actionDialog} 
+          setActionDialog={setActionDialog}
+          CDPTPageData={CDPTPageData}
+          IQData={IQData}
+          RDTData={RDTData}
+          GABriefData={GABriefData}
         />
         <DependencyMappingList
           dependencyMappingData={dependencyMappingData}
@@ -349,6 +382,10 @@ const DependencyMapping = () => {
           setSelectedFields={setSelectedFields}
           setTableRender={setTableRender}
           tableRender={tableRender}
+          handleSelect={handleSelect}
+          handleSelectAll={handleSelectAll}
+          selected={selected}
+          selectAllChecked={selectAllChecked}
         />
         <FooterButtons
           handleCancel={handleCancel}

@@ -35,7 +35,11 @@ const DependencyMappingList = ({
   selectedFields,
   setSelectedFields,
   setTableRender,
-  tableRender
+  tableRender,
+  handleSelect,
+  handleSelectAll,
+  selected,
+  selectAllChecked
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -180,8 +184,9 @@ const DependencyMappingList = ({
           <input
             type="checkbox"
             className="p-checkbox-box p-highlight"
-            // checked={selectAllChecked}
-            // onChange={handleSelectAll}
+            checked={selectAllChecked}
+            onChange={handleSelectAll}
+            disabled = {dependencyMappingData === null}
           />
         </div>
       );
@@ -212,7 +217,12 @@ const DependencyMappingList = ({
       <span>
         {field === "field_0" && ( // Add this condition to render a checkbox
           <div className="flex align-items-center gap-2">
-            <input type="checkbox" className="p-checkbox-box p-highlight" />
+            <input
+              type="checkbox"
+              className="p-checkbox-box p-highlight"
+              checked={selected?.includes(options)}
+              onChange={() => handleSelect(options)}
+            />
           </div>
         )}
         {field === "AWM_GA_Brief" && (
@@ -593,7 +603,7 @@ const DependencyMappingList = ({
           header={() => renderHeader("checkbox")}
           style={{ width: "40px" }}
         />,
-        ...dependencyColumnNames.map((col, index) => {
+        ...dependencyColumnNames?.map((col, index) => {
           // console.log("field col-----", col);
           return (
             <Column

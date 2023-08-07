@@ -35,7 +35,11 @@ const ArtworkHeader = ({
   userHasAccess,
   isDependencyMapping,
   setLoader,
-  dependencyMappingData
+  dependencyMappingData,
+  CDPTPageData,
+  IQData,
+  RDTData,
+  GABriefData
 }) => {
   const navigate = useNavigate();
   let { ProjectID } = useParams();
@@ -58,8 +62,10 @@ const ArtworkHeader = ({
   if (BU === "Home Care") {
     isBUHomeCare = true;
   }
+  let actionNameObject = []
 
-  const actionNameObject = [
+  headerName !== "Dependency Mapping" ?
+    actionNameObject = [
     {
       value: "Mass Update",
       key: "option-1",
@@ -79,6 +85,23 @@ const ArtworkHeader = ({
       value: "Add to Project",
       key: "option-4",
       header: "Are you sure you want to add these PMP to Project ?",
+    },
+  ] : 
+  actionNameObject = [
+    {
+      value: "Mass Update",
+      key: "option-1",
+      header: "Mass Update",
+    },
+    {
+      value: "CIC Matrix",
+      key: "option-2",
+      header: "Request CIC/CIC Matrix",
+    },
+    {
+      value: "Request CIC/CIC Matrix",
+      key: "option-3",
+      header: "Request CIC/CIC Matrix",
     },
   ];
 
@@ -310,6 +333,11 @@ const ArtworkHeader = ({
           onActionSubmit={onActionSubmit}
           aiseList={aiseList}
           assemblyMechanismList={assemblyMechanismList}
+          headerName={headerName}
+          CDPTPageData={CDPTPageData}
+          IQData={IQData}
+          RDTData={RDTData}
+          GABriefData={GABriefData}
         />
       )}
     </div>
