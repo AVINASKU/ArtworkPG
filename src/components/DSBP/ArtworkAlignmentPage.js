@@ -43,7 +43,9 @@ const ArtworkAlignment = () => {
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const [mappedPOAS, setMappedPOAS] = useState([]);
-  const [customizeViewFields, setCustomizeViewFields] = useState(localStorage.getItem("customizeViewFields"));
+  const [customizeViewFields, setCustomizeViewFields] = useState(
+    localStorage.getItem("customizeViewFields")
+  );
   const allBUAttributesData = useSelector(
     (state) => state.DropDownValuesReducer
   );
@@ -302,7 +304,7 @@ const ArtworkAlignment = () => {
         DSBP_InitiativeID: pmpDetails.DSBP_InitiativeID,
         DSBP_PMP_PIMaterialID: pmpDetails.DSBP_PMP_PIMaterialID,
         DSBP_PMP_PIMaterialNumber: pmpDetails.DSBP_PMP_PIMaterialNumber,
-        FK_AWMProjectID: ProjectID
+        FK_AWMProjectID: ProjectID,
       };
       if (formData === "AddToProject") {
         updatedData.AWM_AddedToProject = "Yes";
@@ -337,7 +339,7 @@ const ArtworkAlignment = () => {
     await onSubmitDsbpAction(updatedPmpDetails);
     setActionDialog(false);
     dispatch(getDSBPDropdownData(BU, Region, ProjectID));
-    await fetchData()
+    await fetchData();
     setSelected([]);
     setLoader(false);
   };
@@ -372,6 +374,35 @@ const ArtworkAlignment = () => {
     } else setFilteredDsbpData([]);
   };
 
+  const onClickClearFilter = () => {
+    let isBUHomeCare = false;
+    if (BU === "Home Care") {
+      isBUHomeCare = true;
+    }
+    buWiseSortedColumnNames.map((ele) => {
+      if (ele) {
+        ele["sortZtoA"] = false;
+        ele["sortAtoZ"] = false;
+        ele["freeze"] = false;
+        ele["width"] = 250;
+        ele["reorder"] = false;
+      }
+    });
+    isBUHomeCare
+      ? localStorage.setItem(
+          "columnWidthDSBPArtworkHomeCare",
+          JSON.stringify(buWiseSortedColumnNames)
+        )
+      : localStorage.setItem(
+          "columnWidthDSBPArtworkBabyCare",
+          JSON.stringify(buWiseSortedColumnNames)
+        );
+    setFieldUpdated(!fieldUpdated);
+    setBuWiseSortedColumnNames(buWiseSortedColumnNames);
+    setDsbpPmpData(dsbpPmpData);
+    setTableRender(!tableRender);
+  };
+
   let checkLength = addSavedData.length;
   return (
     <div className="artwork-dsbp myProjectAnddAllProjectList">
@@ -400,6 +431,7 @@ const ArtworkAlignment = () => {
             setCustomizeViewFields={setCustomizeViewFields}
             userHasAccess={!userHasAccess}
             setLoader={setLoader}
+            onClickClearFilter={onClickClearFilter}
           />
           <SelectDsbpId
             dropdownlist={dropdownlist}
