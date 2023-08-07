@@ -326,7 +326,7 @@ const DependencyMapping = () => {
           ? ele.AWM_Other_Reference
           : "";
         submittedObject["AWM_GABrief"] = ele?.AWM_GA_Brief?.length
-          ? ele.AWM_GA_Brief
+          ? ele.AWM_GA_Brief === "New" ? "" : ele.AWM_GA_Brief 
           : "";
 
         submittedJson.push(submittedObject);
@@ -336,6 +336,16 @@ const DependencyMapping = () => {
     let formData = {
       DSBPValues: submittedJson,
     };
+    // let formData1 = [{
+    //   NewGABTask: "Yes",
+    //   AWM_Project_ID: ProjectID,
+    //   AWM_Task_ID: "",
+    //   Project_Name: selectedProjectDetails?.Project_Name,
+    //   BU: selectedProjectDetails?.BU,
+    //   Region: selectedProjectDetails?.Project_region,
+    // }];
+    // let res = await createNewGaBriefTask(formData1);
+
     let resp = await onSubmitDependencyMappingAction(formData, ProjectID);
     if (resp.status === 200 || resp.status === 201) {
       setSubmittedData([]);

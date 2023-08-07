@@ -749,7 +749,6 @@ const DMPMPSpecificTabView = () => {
   };
 
   return (
-    console.log("dmTabValuesData filteredDataList", filteredDataList),
     (
       <>
         {dmTabValuesData?.length > 1 && tabPanelList !== 0 ? (
