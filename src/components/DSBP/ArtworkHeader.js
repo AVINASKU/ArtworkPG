@@ -8,12 +8,12 @@ import DsbpActionDialog from "./DsbpActionDialog";
 import CustomizeView from "./CustomizeView";
 import filter from "../../assets/images/filter.svg";
 import BlueFilterIcon from "../../assets/images/BlueFilterIcon.svg";
-import {
-  handleConfirmFullScopeIn
-} from "../../apis/dsbpApi";
+import searchMyProjects from "../../assets/images/searchMyProjects.svg";
+import { handleConfirmFullScopeIn } from "../../apis/dsbpApi";
 import { getMyProject } from "../../store/actions/ProjectActions";
 import "primeicons/primeicons.css";
 import { isArray } from "lodash";
+import { ExportSelectedRows } from "../ExportCSV";
 
 const ArtworkHeader = ({
   label,
@@ -35,7 +35,12 @@ const ArtworkHeader = ({
   userHasAccess,
   isDependencyMapping,
   setLoader,
-  dependencyMappingData
+  dependencyMappingData,
+  columnNames,
+  filteredDependencyMappingData,
+  onSearchClick,
+  onClickClearFilter,
+  isFilterActivatedInDependencyMapping,
 }) => {
   const navigate = useNavigate();
   let { ProjectID } = useParams();
@@ -51,13 +56,18 @@ const ArtworkHeader = ({
     (state) => state.DropDownValuesReducer
   );
   const { userInformation } = useSelector((state) => state.UserReducer);
-  const { myProject} = useSelector((state) => state.myProject);
+  const { myProject } = useSelector((state) => state.myProject);
   const BU = selectedProjectDetails?.BU;
   // check whether project is from home care or baby care
   let isBUHomeCare = false;
   if (BU === "Home Care") {
     isBUHomeCare = true;
   }
+
+  console.log(
+    "isFilterActivatedInDependencyMapping",
+    isFilterActivatedInDependencyMapping
+  );
 
   const actionNameObject = [
     {
@@ -149,10 +159,10 @@ const ArtworkHeader = ({
 
   useEffect(() => {
     if (myProject) {
-      let projectData = isArray(myProject) && myProject.find(
-        (project) => project.Project_ID === ProjectID
-      );
-      setConfirmFullScopeEnable(projectData?.Estimated_No_Of_POAs > 1)
+      let projectData =
+        isArray(myProject) &&
+        myProject.find((project) => project.Project_ID === ProjectID);
+      setConfirmFullScopeEnable(projectData?.Estimated_No_Of_POAs > 1);
     }
   }, [myProject]);
 
@@ -175,10 +185,10 @@ const ArtworkHeader = ({
   }, [actionDropDownValues]);
 
   const onConfirmFullScopeIn = async () => {
-    setLoader(true)
+    setLoader(true);
     await handleConfirmFullScopeIn(ProjectID);
     await dispatch(getMyProject(userInformation));
-    setLoader(false)
+    setLoader(false);
   };
 
   return (
@@ -196,75 +206,84 @@ const ArtworkHeader = ({
       <div className="actions">
         <div>{breadcrumb}</div>
         <div className="header-buttons">
-          <div style={{ top: 30 }}>
-            {isFilterActivated.length ? (
-              <img
-                src={BlueFilterIcon}
-                alt="filter logo"
-                onClick={() => {
-                  buWiseSortedColumnNames.map((ele) => {
-                    if (ele) {
-                      ele["sortZtoA"] = false;
-                      ele["sortAtoZ"] = false;
-                      ele["freeze"] = false;
-                      ele["width"] = 250;
-                      ele["reorder"] = false;
-                    }
-                  });
-                  isBUHomeCare
-                    ? localStorage.setItem(
-                        "columnWidthDSBPArtworkHomeCare",
-                        JSON.stringify(buWiseSortedColumnNames)
-                      )
-                    : localStorage.setItem(
-                        "columnWidthDSBPArtworkBabyCare",
-                        JSON.stringify(buWiseSortedColumnNames)
-                      );
-                  setFieldUpdated(!fieldUpdated);
-                  setBuWiseSortedColumnNames(buWiseSortedColumnNames);
-                  setDsbpPmpData(dsbpPmpData);
-                  setTableRender(!tableRender);
-                }}
-                className="header-icons"
-              />
-            ) : (
-              <img
-                src={filter}
-                alt="filter logo"
-                disabled={userHasAccess}
-                // onClick={() => clearColumnWiseFilter()}
-                className="header-icons"
-              />
-            )}
-          </div>
+          {!isDependencyMapping && (
+            <div style={{ top: 30 }}>
+              {isFilterActivated.length ? (
+                <img
+                  src={BlueFilterIcon}
+                  alt="filter logo"
+                  onClick={() => onClickClearFilter()}
+                  className="header-icons"
+                />
+              ) : (
+                <img
+                  src={filter}
+                  alt="filter logo"
+                  disabled={userHasAccess}
+                  // onClick={() => clearColumnWiseFilter()}
+                  className="header-icons"
+                />
+              )}
+            </div>
+          )}
           {isDependencyMapping ? (
-            <div
-                  className="btn-group btn-group-toggle"
-                  data-toggle="buttons"
-                >
-                  <div className="col projectPlanButtons">
-                    <label
-                      className={` btn border border-secondary ${
-                        toggleButtons === "Tabular"
-                          ? "ganttChartTabular active"
-                          : ""
-                      }`}
-                      onClick={() => setToggleButtons("Tabular")}
-                    >
-                      Tabular
-                    </label>
-                    <label
-                      className={` btn border border-secondary ${
-                        toggleButtons === "Visual"
-                          ? "ganttChartTabular active"
-                          : ""
-                      }`}
-                      onClick={() => setToggleButtons("Visual")}
-                    >
-                      Visual
-                    </label>
-                  </div>
+            <>
+              {isFilterActivatedInDependencyMapping?.length ? (
+                <img
+                  src={BlueFilterIcon}
+                  alt="filter logo"
+                  onClick={() => onClickClearFilter()}
+                  className="header-icons"
+                />
+              ) : (
+                <img
+                  src={filter}
+                  alt="filter logo"
+                  disabled={userHasAccess}
+                  // onClick={() => clearColumnWiseFilter()}
+                  className="header-icons"
+                />
+              )}
+              <div style={{marginLeft:10}}>
+              <img
+                src={searchMyProjects}
+                alt="search field"
+                onClick={onSearchClick}
+                className="header-icons"
+              />
+              </div>
+              <div style={{marginLeft:10}}>
+                <ExportSelectedRows
+                  allData={dsbpPmpData}
+                  selectedRows={filteredDependencyMappingData}
+                  headers={columnNames}
+                />
+              </div>
+              <div className="btn-group btn-group-toggle" data-toggle="buttons">
+                <div className="col projectPlanButtons">
+                  <label
+                    className={` btn border border-secondary ${
+                      toggleButtons === "Tabular"
+                        ? "ganttChartTabular active"
+                        : ""
+                    }`}
+                    onClick={() => setToggleButtons("Tabular")}
+                  >
+                    Tabular
+                  </label>
+                  <label
+                    className={` btn border border-secondary ${
+                      toggleButtons === "Visual"
+                        ? "ganttChartTabular active"
+                        : ""
+                    }`}
+                    onClick={() => setToggleButtons("Visual")}
+                  >
+                    Visual
+                  </label>
                 </div>
+              </div>
+            </>
           ) : (
             <button
               type="button"

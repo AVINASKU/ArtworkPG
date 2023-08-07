@@ -14,6 +14,7 @@ import {
 import toggleOff from "../../assets/images/toggleOff.svg";
 import toggleOn from "../../assets/images/toggleOn.svg";
 import DependencyFilter from "./DependencyFilter";
+import { FilterMatchMode } from "primereact/api";
 
 const DependencyMappingList = ({
   dependencyMappingData,
@@ -35,7 +36,10 @@ const DependencyMappingList = ({
   selectedFields,
   setSelectedFields,
   setTableRender,
-  tableRender
+  tableRender,
+  isSearch,
+  columnNames,
+  handleNewGaBrief
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -53,17 +57,6 @@ const DependencyMappingList = ({
     { name: "N/A", code: "N/A" },
   ];
 
-  const SPMPDesignData = [
-    { name: "123", code: "123" },
-    { name: "456", code: "456" },
-    { name: "789", code: "789" },
-  ];
-  const SPMPLayoutData = [
-    { name: "8888", code: "8888" },
-    { name: "9999", code: "9999" },
-    { name: "5555", code: "5555" },
-  ];
-
   useEffect(() => {
     setCustomizeViewFields(customizeViewFields);
   }, [customizeViewFields]);
@@ -74,7 +67,6 @@ const DependencyMappingList = ({
   };
 
   const onHandlePmpTabView = (options, field) => {
-    // console.log("column names: ", dependencyColumnNames, dependencyMappingData);
     let dependencyColumnNames = JSON.parse(
       localStorage.getItem("setDependencyMappingColumnNames")
     );
@@ -85,8 +77,8 @@ const DependencyMappingList = ({
       CDPTPageData: CDPTPageData,
       IQData: IQData,
       cicNeededOptionList: cicNeededOptionList,
-      SPMPDesignData: SPMPDesignData,
-      SPMPLayoutData: SPMPLayoutData,
+      SPMPDesignData: dropdownDataForLayoutAndDesign,
+      SPMPLayoutData: dropdownDataForLayoutAndDesign,
       GABriefData: GABriefData,
     };
     const selectedTab = {
@@ -119,24 +111,26 @@ const DependencyMappingList = ({
     navigate("/DSBP/tab/dependencyMapping", { replace: true });
   };
 
-    const onColumnResizeEnd = (event) => {
+  const onColumnResizeEnd = (event) => {
     let columnWidth = [];
-    let jsonColumnWidth =localStorage.getItem("setDependencyMappingColumnNames");
+    let jsonColumnWidth = localStorage.getItem(
+      "setDependencyMappingColumnNames"
+    );
     if (jsonColumnWidth) {
       columnWidth = JSON.parse(jsonColumnWidth);
     }
     if (columnWidth) {
       columnWidth.map((list) => {
-        if (event.column.props.field === list.Field_Name) {
+        if (event.column.props.field === list.field) {
           list.width = event.element.offsetWidth;
         }
       });
     }
-    // localStorage.setItem("columnWidthDSBPArtwork", JSON.stringify(columnWidth));
+    console.log("column width", columnWidth);
     localStorage.setItem(
-          "setDependencyMappingColumnNames",
-          JSON.stringify(columnWidth)
-        )
+      "setDependencyMappingColumnNames",
+      JSON.stringify(columnWidth)
+    );
     setDataUpdated(!dataUpdated);
     setTableRender(false);
   };
@@ -144,35 +138,47 @@ const DependencyMappingList = ({
   const storeReorderedColumns = (e) => {
     let columnNames = [];
     // let jsonColumnNames = localStorage.getItem("columnWidthDSBPArtwork");
-    let jsonColumnNames = localStorage.getItem("setDependencyMappingColumnNames");
+    let jsonColumnNames = localStorage.getItem(
+      "setDependencyMappingColumnNames"
+    );
     if (jsonColumnNames) {
       columnNames = JSON.parse(jsonColumnNames);
     }
     const shiftedArray = [...columnNames]; // Create a copy of the array
     // Find the index of the element to be shifted
     if (e?.dragIndex !== -1) {
-      const [removed] = shiftedArray.splice(e?.dragIndex, 1); // Remove the element from the array
+      const [removed] = shiftedArray.splice(e?.dragIndex - 1, 1); // Remove the element from the array
       // shiftedArray.unshift(removed); // Place the removed element at the beginning of the array
-      shiftedArray.splice(e?.dropIndex, 0, removed);
+      console.log("removed", removed, e?.dropIndex);
+      shiftedArray.splice(e?.dropIndex - 1, 0, removed);
     }
     shiftedArray.map((ele, index) => {
+      ele["Sequence"] = index;
       ele["reorder"] = true;
     });
 
-     localStorage.setItem(
-          "setDependencyMappingColumnNames",
-          JSON.stringify(shiftedArray)
-        )
+    console.log("shifttedArray", shiftedArray);
+
+    localStorage.setItem(
+      "setDependencyMappingColumnNames",
+      JSON.stringify(shiftedArray)
+    );
     setDataUpdated(!dataUpdated);
     setTableRender(false);
   };
 
+  const searchHeader = columnNames?.reduce(
+    (acc, curr) => ({
+      ...acc,
+      [curr]: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    }),
+    {}
+  );
+
   const renderHeader = (field, col) => {
+    let splittedCol = field.split("_").join(" ");
     let isFilterActivated =
-      col?.width !== 250 ||
-      col?.freeze === true ||
-      col?.sortAtoZ === true ||
-      col?.sortZtoA === true;
+      col?.freeze === true || col?.sortAtoZ === true || col?.sortZtoA === true;
 
     if (field === "checkbox") {
       return (
@@ -200,14 +206,13 @@ const DependencyMappingList = ({
               : "columnFilterIcon"
           }
         />
-        {field}
+        {splittedCol}
       </span>
     );
   };
 
   const renderMappingBody = (options, rowData) => {
     let field = rowData.field;
-
     return (
       <span>
         {field === "field_0" && ( // Add this condition to render a checkbox
@@ -235,11 +240,22 @@ const DependencyMappingList = ({
               >
                 <option value="">Select</option>
 
-                {GABriefData?.map((data) => (
-                  <option key={data.File_Name} value={data.File_Name}>
-                    {data.File_Name}
-                  </option>
-                ))}
+                {GABriefData?.map((data) =>
+                  data.File_Name === "New" ? (
+                    <option key={data.File_Name} value={data.File_Name}>
+                      <a
+                        className="flex flex-column text-left ml-3"
+                        onClick={(event) => handleNewGaBrief(event)}
+                      >
+                        {data.File_Name} newww
+                      </a>
+                    </option>
+                  ) : (
+                    <option key={data.File_Name} value={data.File_Name}>
+                      {data.File_Name}
+                    </option>
+                  )
+                )}
               </Form.Select>
             </Form.Group>
           </div>
@@ -261,6 +277,13 @@ const DependencyMappingList = ({
                   ? CDPTPageData.map((obj) => ({
                       label: obj.AWM_Design_Job_Name,
                       value: obj.AWM_Design_Job_ID,
+                      disabled:
+                        (options[field].length &&
+                          options[field].includes("NPF_DJobN/A") &&
+                          obj.AWM_Design_Job_ID !== "NPF_DJobN/A") ||
+                        (options[field].length &&
+                          !options[field].includes("NPF_DJobN/A") &&
+                          obj.AWM_Design_Job_ID === "NPF_DJobN/A"),
                     }))
                   : []
               }
@@ -288,6 +311,13 @@ const DependencyMappingList = ({
                   ? RDTData.map((obj) => ({
                       label: obj.AWM_Design_Job_Name,
                       value: obj.AWM_Design_Job_ID,
+                      disabled:
+                        (options[field].length &&
+                          options[field].includes("DT_DJobN/A") &&
+                          obj.AWM_Design_Job_ID !== "DT_DJobN/A") ||
+                        (options[field].length &&
+                          !options[field].includes("DT_DJobN/A") &&
+                          obj.AWM_Design_Job_ID === "DT_DJobN/A"),
                     }))
                   : []
               }
@@ -355,6 +385,13 @@ const DependencyMappingList = ({
                   ? IQData.map((obj) => ({
                       label: obj.AWM_Design_Job_Name,
                       value: obj.AWM_Design_Job_ID,
+                      disabled:
+                        (options[field].length &&
+                          options[field].includes("IQ_DJobN/A") &&
+                          obj.AWM_Design_Job_ID !== "IQ_DJobN/A") ||
+                        (options[field].length &&
+                          !options[field].includes("IQ_DJobN/A") &&
+                          obj.AWM_Design_Job_ID === "IQ_DJobN/A"),
                     }))
                   : []
               }
@@ -522,6 +559,8 @@ const DependencyMappingList = ({
     );
     console.log("dependencyColumnNames", dependencyColumnNames);
     console.log("customizeViewFields", customizeViewFields);
+    if(!dependencyColumnNames) return null;
+
     let jsonValue = customizeViewFields
       ? JSON.parse(customizeViewFields)
       : null;
@@ -610,10 +649,11 @@ const DependencyMappingList = ({
               columnKey={col.field}
               showFilterMenu={false}
               alignFrozen="left"
+              filter
+              filterPlaceholder={col?.field.split("_").join(" ")}
               filterField={col.field}
               style={{
-                // width: col.width,
-                width: 200,
+                width: col.width,
                 height: 30,
               }}
             />
@@ -649,20 +689,23 @@ const DependencyMappingList = ({
         setSelectedFields={setSelectedFields}
       />
       <DataTable
-        // dataKey="DSBP_PMP_PIMaterialID"
         value={
           filteredDependencyMappingData.length
             ? filteredDependencyMappingData
             : dependencyMappingData
         }
+        resizableColumns
+        reorderableColumns
+        onColumnResizeEnd={onColumnResizeEnd}
+        onColReorder={storeReorderedColumns}
         key={tableRender ? `"DSBP_PMP_PIMaterialID" + timestamp` : ""}
         rowClassName={rowClassName}
+        filters={searchHeader}
+        filterDisplay={isSearch && "row"}
         className="mt-3"
         responsiveLayout="scroll"
         columnResizeMode="expand"
         scrollable
-        resizableColumns
-        reorderableColumns
         tableStyle={{
           width: "max-content",
           minWidth: "100%",

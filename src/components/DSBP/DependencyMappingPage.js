@@ -24,6 +24,7 @@ const DependencyMapping = () => {
   const [submittedData, setSubmittedData] = useState([]);
   const [selectedFields, setSelectedFields] = useState([]);
   const [tableRender, setTableRender] = useState(false);
+  const [isSearch, isSearchSet] = useState(false);
   const [filteredDependencyMappingData, setFiltersDependencyMappingData] =
     useState([]);
   const [dropdownDataForLayoutAndDesign, setDropdownDataForLayoutAndDesign] =
@@ -144,15 +145,22 @@ const DependencyMapping = () => {
               (item) => item.AWM_Design_Job_ID
             ) || [];
         }
+        console.log("transform item");
 
         transformedItem = {
           ...transformedItem,
-          ...item?.AWM_CIC_Page?.[0],
+          AWM_CIC_Needed: item?.AWM_CIC_Page?.[0]?.AWM_CIC_Needed || "",
+          AWM_Supporting_PMP_Layout:
+            item?.AWM_CIC_Page?.[0]?.AWM_Supporting_PMP_Layout || "",
+          AWM_Supporting_PMP_Design:
+            item?.AWM_CIC_Page?.[0]?.AWM_Supporting_PMP_Design || "",
+          AWM_Other_Reference:
+            item?.AWM_CIC_Page?.[0]?.AWM_Other_Reference || "",
+          AWM_CIC_Matrix: item?.AWM_CIC_Page?.[0]?.AWM_CIC_Matrix || "",
+          AWM_GA_Brief: item?.Preselected_DSBP_GA_Brief || [],
+          AWM_CIC_Matrix_Requested:
+            item?.AWM_CIC_Page?.[0]?.AWM_CIC_Matrix_Requested || "",
         };
-
-        if (isGABrifData && isGABrifData.length) {
-          transformedItem.AWM_GA_Brief = item.Preselected_DSBP_GA_Brief || [];
-        }
 
         transformedItem = {
           ...transformedItem,
@@ -176,36 +184,42 @@ const DependencyMapping = () => {
       const filteredColumnNames = columnNames.filter(
         (property) => property !== "FPCStagingPage"
       );
+      let columnInLocal = JSON.parse(
+        localStorage.getItem("setDependencyMappingColumnNames")
+      );
+      if (!columnInLocal || !columnInLocal.length) {
+        let groupedColumnNames = [];
 
-      let groupedColumnNames = [];
-
-      filteredColumnNames.map((colName) => {
-        let groupedObject = {};
-        let splittedCol = colName.split("_");
-        groupedObject["field"] = colName;
-        groupedObject["width"] = 250;
-        groupedObject["freeze"] = false;
-        if (splittedCol[0] === "DSBP") {
-          groupedObject["group"] = 1;
-        }
-        if (splittedCol[0] === "AWM") {
-          groupedObject["group"] = 2;
-        }
-        if (splittedCol[0] === "DSM") {
-          groupedObject["group"] = 3;
-        }
-        groupedColumnNames.push(groupedObject);
-        return groupedColumnNames;
-      });
+        filteredColumnNames.map((colName, index) => {
+          let groupedObject = {};
+          let splittedCol = colName.split("_");
+          groupedObject["field"] = colName;
+          groupedObject["width"] = 250;
+          groupedObject["freeze"] = false;
+          groupedObject["Sequence"] = index;
+          if (splittedCol[0] === "DSBP") {
+            groupedObject["group"] = 1;
+          }
+          if (splittedCol[0] === "AWM") {
+            groupedObject["group"] = 2;
+          }
+          if (splittedCol[0] === "DSM") {
+            groupedObject["group"] = 3;
+          }
+          groupedColumnNames.push(groupedObject);
+          return groupedColumnNames;
+        });
+        localStorage.setItem(
+          "setDependencyMappingColumnNames",
+          JSON.stringify(groupedColumnNames)
+        );
+      }
 
       setCDPTPageData(isCDPTData);
       setIQData(isIQData);
       setRDTData(isRDTData);
       setGABriefData(isGABrifData);
-      localStorage.setItem(
-        "setDependencyMappingColumnNames",
-        JSON.stringify(groupedColumnNames)
-      );
+
       // setDependencyColumnNames(groupedColumnNames);
       setDependencyMappingData(transformedData);
     }
@@ -243,7 +257,7 @@ const DependencyMapping = () => {
           });
           DSBP_RDT_Page_data = DSBP_RDT_Page.map((item) => ({
             Design_Job_Name: item.AWM_Design_Job_Name,
-            Design_Job_ID: item.AWM_Design_Job_ID,
+            Design_Job_ID:item.AWM_Design_Job_ID ,
           }));
         }
         console.log("pranali on submit", DSBP_RDT_Page, DSBP_RDT_Page_data);
@@ -259,7 +273,7 @@ const DependencyMapping = () => {
           });
           DSBP_IQ_Page_data = DSBP_IQ_Page.map((item) => ({
             Design_Job_Name: item.AWM_Design_Job_Name,
-            Design_Job_ID: item.AWM_Design_Job_ID,
+            Design_Job_ID:item.AWM_Design_Job_ID,
           }));
         }
         submittedObject.DSBP_IQ_Page = DSBP_IQ_Page_data;
@@ -287,7 +301,33 @@ const DependencyMapping = () => {
     let formData = {
       DSBPValues: submittedJson,
     };
-    let resp = await onSubmitDependencyMappingAction(ProjectID, formData);
+    let resp = await onSubmitDependencyMappingAction(formData, ProjectID);
+    if (resp.status === 200 || resp.status === 201) {
+      setSubmittedData([]);
+    }
+  };
+
+  const onClickClearFilter = () => {
+    let columnNamesData = JSON.parse(
+      localStorage.getItem("setDependencyMappingColumnNames")
+    );
+    columnNamesData?.map((ele) => {
+      if (ele) {
+        ele["sortZtoA"] = false;
+        ele["sortAtoZ"] = false;
+        ele["freeze"] = false;
+        ele["width"] = 250;
+        ele["reorder"] = false;
+      }
+    });
+    localStorage.setItem(
+      "setDependencyMappingColumnNames",
+      JSON.stringify(columnNamesData)
+    );
+    setDataUpdated(!dataUpdated);
+    setDependencyMappingData(dependencyMappingData);
+    setFiltersDependencyMappingData([]);
+    setTableRender(!tableRender);
   };
 
   const onGlobalFilterChange = (e, colName) => {
@@ -313,6 +353,38 @@ const DependencyMapping = () => {
     } else setFiltersDependencyMappingData([]);
   };
 
+  let columnNamesData = JSON.parse(
+    localStorage.getItem("setDependencyMappingColumnNames")
+  );
+  let columnNames = [];
+  if (columnNamesData) {
+    columnNames = columnNamesData?.map((item) => item.field);
+  }
+
+  const onSearchClick = () => {
+    isSearchSet(!isSearch);
+  };
+
+  let isFilterActivatedInDependencyMapping = [];
+
+  if (columnNamesData) {
+    isFilterActivatedInDependencyMapping = columnNamesData.filter((ele) => {
+      if (
+        ele.freeze === true ||
+        ele.sortAtoZ === true ||
+        ele.sortZtoA === true ||
+        ele.width !== 250 ||
+        ele?.reorder === true
+      ) {
+        return ele;
+      }
+    });
+  }
+
+  const handleNewGaBrief = (event) =>{
+  console.log("handleNewGaBrief", event, event.value);
+  }
+
   return (
     <div className="artwork-dsbp dependency-mapping">
       <>
@@ -324,8 +396,15 @@ const DependencyMapping = () => {
           setCustomizeViewFields={setCustomizeViewFields}
           dependencyMappingData={dependencyMappingData}
           selectedProjectDetails={selectedProjectDetails}
+          columnNames={columnNames}
+          filteredDependencyMappingData={filteredDependencyMappingData}
           userHasAccess={userHasAccess}
           isDependencyMapping={true}
+          onSearchClick={onSearchClick}
+          onClickClearFilter={onClickClearFilter}
+          isFilterActivatedInDependencyMapping={
+            isFilterActivatedInDependencyMapping
+          }
         />
         <DependencyMappingList
           dependencyMappingData={dependencyMappingData}
@@ -349,6 +428,9 @@ const DependencyMapping = () => {
           setSelectedFields={setSelectedFields}
           setTableRender={setTableRender}
           tableRender={tableRender}
+          isSearch={isSearch}
+          columnNames={columnNames}
+          handleNewGaBrief={handleNewGaBrief}
         />
         <FooterButtons
           handleCancel={handleCancel}
