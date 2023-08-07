@@ -87,7 +87,7 @@ const CPPFA = ({
           (el.AWM_Project_ID === ProjectID &&
             (el.Task_Name === "Define New Print Feasibility scope" ||
               el.Task_Name ===
-                "Confirm Preliminary Print Feasibility Assessment"))
+              "Confirm Preliminary Print Feasibility Assessment"))
         ) {
           setCppfaDialogFlag(true);
         }
@@ -213,7 +213,7 @@ const CPPFA = ({
       setHideFlag(false);
     }
   }, [designIntent, flag]);
-
+  console.log("Test git push are working");
   return (
     <Dialog
       visible={visible}
@@ -231,10 +231,10 @@ const CPPFA = ({
                       {url[1] === "myProjects"
                         ? "My Projects"
                         : url[1] === "MyTasks"
-                        ? "My Tasks"
-                        : url[1] === "AllTasks"
-                        ? "All Tasks"
-                        : "All Projects"}
+                          ? "My Tasks"
+                          : url[1] === "AllTasks"
+                            ? "All Tasks"
+                            : "All Projects"}
                     </span>
                   </NavLink>
                 </li>
@@ -356,7 +356,7 @@ const CPPFA = ({
                     emptyTemplate={
                       <p className="m-0">
                         {designIntent.FileMetaDataList &&
-                        designIntent.FileMetaDataList.length > 0 ? (
+                          designIntent.FileMetaDataList.length > 0 ? (
                           designIntent.FileMetaDataList[0].File_Name === "" ? (
                             <>
                               <span>Drop or Browse file here</span> <br />
@@ -392,17 +392,16 @@ const CPPFA = ({
                 }
                 className={
                   (riskLevel !== "low" && highRiskYesOrNo === "") ||
-                  yesOrNo !== ""
+                    yesOrNo !== ""
                     ? "highRiskDataPaddingBottom"
                     : ""
                 }
               >
                 <Col
-                  className={`highRiskData ${
-                    yesOrNo === "" && highRiskYesOrNo !== ""
+                  className={`highRiskData ${yesOrNo === "" && highRiskYesOrNo !== ""
                       ? "highRiskErrorBorderColor"
                       : ""
-                  }`}
+                    }`}
                 >
                   <div className="highRiskDataColor">
                     Print Feasibility Assessment is {riskLevel} Risk whereas
@@ -412,11 +411,10 @@ const CPPFA = ({
                   <div className="highRiskButtons">
                     <button
                       type="button"
-                      className={`btn highRiskButton ${
-                        yesOrNo === "yes"
+                      className={`btn highRiskButton ${yesOrNo === "yes"
                           ? "yesOrNoButtonsColor"
                           : "btn-secondary"
-                      }`}
+                        }`}
                       onClick={() => setYesOrNo("yes")}
                       disabled={
                         isAccessEmpty ||
@@ -428,11 +426,10 @@ const CPPFA = ({
                     </button>
                     <button
                       type="button"
-                      className={`btn highRiskButton ${
-                        yesOrNo === "no"
+                      className={`btn highRiskButton ${yesOrNo === "no"
                           ? "yesOrNoButtonsColor"
                           : "btn-secondary"
-                      }`}
+                        }`}
                       onClick={() => setYesOrNo("no")}
                       disabled={
                         isAccessEmpty ||
@@ -473,10 +470,10 @@ const CPPFA = ({
                   isAccessEmpty || (flag && riskLevel !== "")
                     ? !flag
                     : riskLevel !== "low"
-                    ? cppfaDialogFlag
-                      ? false
-                      : yesOrNo === ""
-                    : false
+                      ? cppfaDialogFlag
+                        ? false
+                        : yesOrNo === ""
+                      : false
                 }
               />
             )}
