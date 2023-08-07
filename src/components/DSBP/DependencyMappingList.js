@@ -39,6 +39,7 @@ const DependencyMappingList = ({
   tableRender,
   isSearch,
   columnNames,
+  handleNewGaBrief
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -177,9 +178,7 @@ const DependencyMappingList = ({
   const renderHeader = (field, col) => {
     let splittedCol = field.split("_").join(" ");
     let isFilterActivated =
-      col?.freeze === true ||
-      col?.sortAtoZ === true ||
-      col?.sortZtoA === true;
+      col?.freeze === true || col?.sortAtoZ === true || col?.sortZtoA === true;
 
     if (field === "checkbox") {
       return (
@@ -241,11 +240,22 @@ const DependencyMappingList = ({
               >
                 <option value="">Select</option>
 
-                {GABriefData?.map((data) => (
-                  <option key={data.File_Name} value={data.File_Name}>
-                    {data.File_Name}
-                  </option>
-                ))}
+                {GABriefData?.map((data) =>
+                  data.File_Name === "New" ? (
+                    <option key={data.File_Name} value={data.File_Name}>
+                      <a
+                        className="flex flex-column text-left ml-3"
+                        onClick={(event) => handleNewGaBrief(event)}
+                      >
+                        {data.File_Name} newww
+                      </a>
+                    </option>
+                  ) : (
+                    <option key={data.File_Name} value={data.File_Name}>
+                      {data.File_Name}
+                    </option>
+                  )
+                )}
               </Form.Select>
             </Form.Group>
           </div>

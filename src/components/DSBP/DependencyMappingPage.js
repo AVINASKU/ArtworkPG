@@ -381,6 +381,10 @@ const DependencyMapping = () => {
     });
   }
 
+  const handleNewGaBrief = (event) =>{
+  console.log("handleNewGaBrief", event, event.value);
+  }
+
   return (
     <div className="artwork-dsbp dependency-mapping">
       <>
@@ -426,6 +430,7 @@ const DependencyMapping = () => {
           tableRender={tableRender}
           isSearch={isSearch}
           columnNames={columnNames}
+          handleNewGaBrief={handleNewGaBrief}
         />
         <FooterButtons
           handleCancel={handleCancel}
