@@ -23,6 +23,7 @@ const CPPFA = ({
   userInformation,
   getProjectPlanApi,
 }) => {
+  console.log(TaskDetailsData);
   const location = useLocation();
   const locationPath = location?.pathname;
   const url = locationPath?.split("/");
