@@ -183,8 +183,10 @@ const CPPFA = ({
         NPFNeeded: cppfaDialogFlag ? String(false) : String(yesOrNo === "yes"),
         AWMTaskID: selectedTaskData.TaskID,
         AWMProjectID: ProjectID,
-        Size: fileSize === 0 ? "1" : fileSize,
-        Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
+        Size: fileName ? (fileSize === 0 ? "1" : fileSize) : null,
+        Version: fileName
+          ? version.substring(0, 1) + (parseInt(version.substring(1)) + 1)
+          : null,
         Filename: fileName ? fileName.split(".").slice(0, -1).join(".") : null,
       },
     };
@@ -409,7 +411,7 @@ const CPPFA = ({
                   }`}
                 >
                   <div className="highRiskDataColor">
-                    Print Feasibility Assessment is {riskLevel} Risk whereas
+                    Print Feasibility Assessment is {riskLevel.charAt(0).toUpperCase() + riskLevel.slice(1)} Risk whereas
                     there is no Color Development in scope of this project. Do
                     you want to add Color Development to the project scope?
                   </div>
