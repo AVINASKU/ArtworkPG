@@ -559,6 +559,8 @@ const DependencyMappingList = ({
     );
     console.log("dependencyColumnNames", dependencyColumnNames);
     console.log("customizeViewFields", customizeViewFields);
+    if(!dependencyColumnNames) return null;
+
     let jsonValue = customizeViewFields
       ? JSON.parse(customizeViewFields)
       : null;
