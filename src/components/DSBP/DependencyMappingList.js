@@ -177,7 +177,6 @@ const DependencyMappingList = ({
   const renderHeader = (field, col) => {
     let splittedCol = field.split("_").join(" ");
     let isFilterActivated =
-      col?.width !== 250 ||
       col?.freeze === true ||
       col?.sortAtoZ === true ||
       col?.sortZtoA === true;
@@ -215,9 +214,6 @@ const DependencyMappingList = ({
 
   const renderMappingBody = (options, rowData) => {
     let field = rowData.field;
-    if (field === "AWM_RDT_Page") {
-     
-    }
     return (
       <span>
         {field === "field_0" && ( // Add this condition to render a checkbox
@@ -271,8 +267,14 @@ const DependencyMappingList = ({
                   ? CDPTPageData.map((obj) => ({
                       label: obj.AWM_Design_Job_Name,
                       value: obj.AWM_Design_Job_ID,
-                      disabled: obj.AWM_Design_Job_Name === "N/A", // Add this line to disable the option
-                    })).filter((option) => !option.disabled) // Filter out disabled options
+                      disabled:
+                        (options[field].length &&
+                          options[field].includes("NPF_DJobN/A") &&
+                          obj.AWM_Design_Job_ID !== "NPF_DJobN/A") ||
+                        (options[field].length &&
+                          !options[field].includes("NPF_DJobN/A") &&
+                          obj.AWM_Design_Job_ID === "NPF_DJobN/A"),
+                    }))
                   : []
               }
               filter
@@ -298,7 +300,14 @@ const DependencyMappingList = ({
                 RDTData
                   ? RDTData.map((obj) => ({
                       label: obj.AWM_Design_Job_Name,
-                      value: obj.AWM_Design_Job_ID
+                      value: obj.AWM_Design_Job_ID,
+                      disabled:
+                        (options[field].length &&
+                          options[field].includes("DT_DJobN/A") &&
+                          obj.AWM_Design_Job_ID !== "DT_DJobN/A") ||
+                        (options[field].length &&
+                          !options[field].includes("DT_DJobN/A") &&
+                          obj.AWM_Design_Job_ID === "DT_DJobN/A"),
                     }))
                   : []
               }
@@ -366,6 +375,13 @@ const DependencyMappingList = ({
                   ? IQData.map((obj) => ({
                       label: obj.AWM_Design_Job_Name,
                       value: obj.AWM_Design_Job_ID,
+                      disabled:
+                        (options[field].length &&
+                          options[field].includes("IQ_DJobN/A") &&
+                          obj.AWM_Design_Job_ID !== "IQ_DJobN/A") ||
+                        (options[field].length &&
+                          !options[field].includes("IQ_DJobN/A") &&
+                          obj.AWM_Design_Job_ID === "IQ_DJobN/A"),
                     }))
                   : []
               }

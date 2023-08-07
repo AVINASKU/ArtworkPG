@@ -257,7 +257,7 @@ const DependencyMapping = () => {
           });
           DSBP_RDT_Page_data = DSBP_RDT_Page.map((item) => ({
             Design_Job_Name: item.AWM_Design_Job_Name,
-            Design_Job_ID: item.AWM_Design_Job_ID,
+            Design_Job_ID:item.AWM_Design_Job_ID ,
           }));
         }
         console.log("pranali on submit", DSBP_RDT_Page, DSBP_RDT_Page_data);
@@ -273,7 +273,7 @@ const DependencyMapping = () => {
           });
           DSBP_IQ_Page_data = DSBP_IQ_Page.map((item) => ({
             Design_Job_Name: item.AWM_Design_Job_Name,
-            Design_Job_ID: item.AWM_Design_Job_ID,
+            Design_Job_ID:item.AWM_Design_Job_ID,
           }));
         }
         submittedObject.DSBP_IQ_Page = DSBP_IQ_Page_data;
