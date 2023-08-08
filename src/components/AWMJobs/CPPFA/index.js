@@ -43,18 +43,16 @@ const CPPFA = ({
   // }
   const dispatch = useDispatch();
 
-  const { TaskID, ProjectID } = selectedTaskData;
+  const { ProjectID } = selectedTaskData;
   const [cppfaDialogFlag, setCppfaDialogFlag] = useState(false);
-
-  // useEffect(() => {
-  //   setVisible(showTaskDialog);
-  // }, [showTaskDialog]);
 
   useEffect(() => {
     setLoader(true);
     if (TaskDetailsData) {
       setTaskDetailsDataObj(TaskDetailsData?.ArtworkAgilityTasks[0] || {});
-      setNewPrintFeasibilityFlag(TaskDetailsData?.ArtworkAgilityPage?.New_Print_Feasibility || false);
+      setNewPrintFeasibilityFlag(
+        TaskDetailsData?.ArtworkAgilityPage?.New_Print_Feasibility || false
+      );
     }
     if (taskDetailsDataObj) {
       taskDetailsDataObj?.FileMetaDataList?.find((el) => {
@@ -91,10 +89,8 @@ const CPPFA = ({
     const data = { ...taskDetailsDataObj };
     data.RiskLevel = level;
     setTaskDetailsDataObj(data);
-    if (level === "low") {
-      setHighRiskYesOrNo("");
-      setYesOrNo("");
-    }
+    setHighRiskYesOrNo("");
+    setYesOrNo("");
   };
 
   const [fileName, setFileName] = useState(null);
@@ -164,10 +160,10 @@ const CPPFA = ({
       setHideFlag(true);
     } else if (newPrintFeasibilityFlag) {
       setHideFlag(true);
-    // } else if (flag && taskDetailsDataObj?.Task_Status !== "Complete" && newPrintFeasibilityFlag) {
-    //   setHideFlag(true);
-    // } else if (!flag && taskDetailsDataObj?.Task_Status === "Complete" && !newPrintFeasibilityFlag) {
-    //   setHideFlag(false);
+      // } else if (flag && taskDetailsDataObj?.Task_Status !== "Complete" && newPrintFeasibilityFlag) {
+      //   setHideFlag(true);
+      // } else if (!flag && taskDetailsDataObj?.Task_Status === "Complete" && !newPrintFeasibilityFlag) {
+      //   setHideFlag(false);
     } else {
       setHideFlag(false);
     }
@@ -183,7 +179,7 @@ const CPPFA = ({
     const formData = {
       caseTypeID: "PG-AAS-Work-ConfirmPreliminaryPrintFeasibilityAssessment",
       content: {
-        RiskLevel: riskLevel,
+        RiskLevel: riskLevel.charAt(0).toUpperCase() + riskLevel.slice(1),
         NPFNeeded: cppfaDialogFlag ? String(false) : String(yesOrNo === "yes"),
         AWMTaskID: selectedTaskData.TaskID,
         AWMProjectID: ProjectID,
@@ -419,9 +415,11 @@ const CPPFA = ({
                   }`}
                 >
                   <div className="highRiskDataColor">
-                    Print Feasibility Assessment is {riskLevel.charAt(0).toUpperCase() + riskLevel.slice(1)} Risk whereas
-                    there is no Color Development in scope of this project. Do
-                    you want to add Color Development to the project scope?
+                    Print Feasibility Assessment is{" "}
+                    {riskLevel.charAt(0).toUpperCase() + riskLevel.slice(1)}{" "}
+                    Risk whereas there is no Color Development in scope of this
+                    project. Do you want to add Color Development to the project
+                    scope?
                   </div>
                   <div className="highRiskButtons">
                     <button
@@ -482,13 +480,16 @@ const CPPFA = ({
                 label="Confirm PPFA"
                 onClick={handleSubmit}
                 disabled={
-                  isAccessEmpty || (flag && riskLevel !== "")
-                    ? !flag
-                    : riskLevel !== "low"
-                    ? cppfaDialogFlag
-                      ? false
-                      : yesOrNo === ""
-                    : false
+                  isAccessEmpty ||
+                  riskLevel === "" ||
+                  (riskLevel === "low" ? false : yesOrNo === "" ? false : false)
+                  // isAccessEmpty || (flag && riskLevel !== "")
+                  //   ? !flag
+                  //   : riskLevel !== "low"
+                  //   ? cppfaDialogFlag
+                  //     ? false
+                  //     : yesOrNo === ""
+                  //   : false
                 }
               />
             )}
