@@ -36,11 +36,21 @@ const ArtworkHeader = ({
   isDependencyMapping,
   setLoader,
   dependencyMappingData,
+  CDPTPageData,
+  IQData,
+  RDTData,
+  GABriefData,
   columnNames,
   filteredDependencyMappingData,
   onSearchClick,
   onClickClearFilter,
   isFilterActivatedInDependencyMapping,
+  updateDropDownData,
+  onSubmit,
+  handleNewGaBrief,
+  isSubmitEnable,
+  submittedData,
+  setSubmittedData
 }) => {
   const navigate = useNavigate();
   let { ProjectID } = useParams();
@@ -63,13 +73,11 @@ const ArtworkHeader = ({
   if (BU === "Home Care") {
     isBUHomeCare = true;
   }
+  let actionNameObject = []
 
-  console.log(
-    "isFilterActivatedInDependencyMapping",
-    isFilterActivatedInDependencyMapping
-  );
 
-  const actionNameObject = [
+  headerName !== "Dependency Mapping" ?
+    actionNameObject = [
     {
       value: "Mass Update",
       key: "option-1",
@@ -89,6 +97,23 @@ const ArtworkHeader = ({
       value: "Add to Project",
       key: "option-4",
       header: "Are you sure you want to add these PMP to Project ?",
+    },
+  ] : 
+  actionNameObject = [
+    {
+      value: "Mass Update",
+      key: "option-1",
+      header: "Mass Update",
+    },
+    {
+      value: "CIC Matrix",
+      key: "option-2",
+      header: "Request CIC/CIC Matrix",
+    },
+    {
+      value: "Request CIC/CIC Matrix",
+      key: "option-3",
+      header: "Request CIC/CIC Matrix",
     },
   ];
 
@@ -128,7 +153,7 @@ const ArtworkHeader = ({
   }
 
   const breadcrumb = (
-    <div style={{ marginLeft: 10 }}>
+    <div style={{ marginLeft: 25 }}>
       <nav
         className="p-breadcrumb p-component ProjectPlanBreadCrum"
         aria-label="Breadcrumb"
@@ -326,9 +351,19 @@ const ArtworkHeader = ({
           setActionDialog={setActionDialog}
           selected={selected}
           actionNameObject={actionNameObject}
-          onActionSubmit={onActionSubmit}
+          onActionSubmit={headerName !== "Dependency Mapping" ? onActionSubmit : onSubmit}
           aiseList={aiseList}
           assemblyMechanismList={assemblyMechanismList}
+          headerName={headerName}
+          CDPTPageData={CDPTPageData}
+          IQData={IQData}
+          RDTData={RDTData}
+          GABriefData={GABriefData}
+          updateDropDownData={updateDropDownData}
+          handleNewGaBrief={handleNewGaBrief}
+          isSubmitEnable={isSubmitEnable}
+          setSubmittedData={setSubmittedData}
+          submittedData={submittedData}
         />
       )}
     </div>

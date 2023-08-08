@@ -4,6 +4,7 @@ import { Dialog } from "primereact/dialog";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { useSelector } from "react-redux";
+import { MultiSelect } from "primereact/multiselect";
 
 const DsbpActionDialog = ({
   actionHeader,
@@ -14,7 +15,17 @@ const DsbpActionDialog = ({
   onActionSubmit,
   aiseList,
   assemblyMechanismList,
-  rowData
+  rowData,
+  headerName,
+  CDPTPageData,
+  IQData,
+  RDTData,
+  GABriefData,
+  updateDropDownData,
+  handleNewGaBrief,
+  isSubmitEnable,
+  submittedData,
+  setSubmittedData
 }) => {
   const [packageName, setPackageName] = useState("");
   const [groupName, setGroupName] = useState("");
@@ -23,6 +34,10 @@ const DsbpActionDialog = ({
   const [bioside, setBioside] = useState("");
   const [sellable, setSellable] = useState("");
   const [formData, setFormData] = useState({});
+  const [CDPT, setCDPT] = useState([]);
+  const [IQ, setIQ] = useState([]);
+  const [RDT, setRDT] = useState([]);
+  const [GABrief, setGABrief] = useState([]);
   
   const { selectedProject } = useSelector((state) => state.ProjectSetupReducer);
   if(rowData){
@@ -70,13 +85,18 @@ const DsbpActionDialog = ({
     });
   };
 
+  const handleClose = (e) => {
+    setActionDialog(false);
+    setSubmittedData([])
+  };
+
   const footerContent = (
     <div>
-      <Button variant="secondary" onClick={() => setActionDialog(false)}>
+      <Button variant="secondary" onClick={handleClose}>
       {(updatedData && updatedData[0]?.value === "Add to Project") || rowData ? "No" : "Cancel"}
       </Button>
       <Button
-        disabled={(updatedData && updatedData[0]?.value === "Add to Project") || rowData ? false : Object.keys(formData).length === 0}
+        disabled={(updatedData && updatedData[0]?.value === "Add to Project") || rowData || !isSubmitEnable ? false : Object.keys(formData).length === 0}
         onClick={() => ((updatedData && updatedData[0]?.value === "Add to Project") || rowData) ? onActionSubmit("AddToProject", selected) : onActionSubmit(formData)}
       >
         {(updatedData && updatedData[0]?.value === "Mass Update") ? "Update" : (updatedData && updatedData[0]?.value === "Add to Project") || rowData ? "Yes" : "Submit"}
@@ -113,9 +133,20 @@ const DsbpActionDialog = ({
               ) : (
                   <>
                     <Col sm={7} style={{ "height": "100%"}}>
-                      {addedToProjectRows && updatedData && updatedData[0]?.value !== "Add to Project" && (
+                      { (headerName !== "Dependency Mapping") && (addedToProjectRows) && updatedData && updatedData[0]?.value !== "Add to Project" && (
                         <div className="card" style={{ "height": "100%"}}>
                           <DataTable value={addedToProjectRows} dataKey="id" emptyMessage="Please add the PMP to project before you can update." scrollable>
+                            <Column
+                              field="DSBP_PMP_PIMaterialNumber"
+                              header="PMP "
+                            ></Column>
+                            <Column field="DSBP_PMP_PIMaterialDescription" header="PMP Description"></Column>
+                          </DataTable>
+                        </div>
+                      )}
+                      { (headerName === "Dependency Mapping") && (
+                        <div className="card" style={{ "height": "100%"}}>
+                          <DataTable value={selected} dataKey="id" emptyMessage="Please add the PMP to project before you can update." scrollable>
                             <Column
                               field="DSBP_PMP_PIMaterialNumber"
                               header="PMP "
@@ -127,6 +158,7 @@ const DsbpActionDialog = ({
                     </Col>
                     <Col sm={5}>
                       {updatedData && updatedData[0]?.value === "Mass Update" && (
+                        headerName !== "Dependency Mapping" ?
                         <Row>
                           <Col sm={12}>
                             <Form.Group
@@ -212,6 +244,145 @@ const DsbpActionDialog = ({
                             </>
                           }
                           
+                        </Row> :
+                        <Row>
+                          {RDTData.length > 1 &&
+                            <Col sm={12}>
+                              <Form.Group
+                                className={`mb-2`}
+                                controlId="groupName.ControlInput1"
+                              >
+                                <Form.Label>RDT</Form.Label>
+                                <div>
+                                  <MultiSelect
+                                    value={RDT}
+                                    onChange={(e) => {
+                                      updateDropDownData(
+                                        e.value,
+                                        "AWM_RDT_Page"
+                                      );
+                                      setRDT(e.value);
+                                    }}
+                                    options={
+                                      RDTData
+                                        ? RDTData.map((obj) => ({
+                                            label: obj.AWM_Design_Job_Name,
+                                            value: obj.AWM_Design_Job_ID,
+                                          }))
+                                        : []
+                                    }
+                                    filter
+                                    placeholder={`Select`}
+                                    maxSelectedLabels={3}
+                                    className="p-column-filter"
+                                  />
+                                </div>
+                              </Form.Group>
+                            </Col>
+                          }
+                          {CDPTPageData.length > 1 &&
+                            <Col sm={12}>
+                              <Form.Group
+                                className={`mb-2`}
+                                controlId="groupName.ControlInput1"
+                              >
+                                <Form.Label>CD/PT</Form.Label>
+                                <div>
+                                  <MultiSelect
+                                    value={CDPT}
+                                    onChange={(e) => {
+                                      updateDropDownData(
+                                        e.value,
+                                        "AWM_CDPT_Page"
+                                      );
+                                      setCDPT(e.value);
+                                    }}
+                                    options={
+                                      CDPTPageData
+                                        ? CDPTPageData.map((obj) => ({
+                                            label: obj.AWM_Design_Job_Name,
+                                            value: obj.AWM_Design_Job_ID,
+                                          })).filter(option => option.label !== "") // Filter out options with empty labels
+                                        : []
+                                    }
+                                    filter
+                                    placeholder={`Select`}
+                                    maxSelectedLabels={3}
+                                    className="p-column-filter"
+                                  />
+                                </div>
+                              </Form.Group>
+                            </Col>
+                          }
+                          {IQData.length > 1 &&
+                            <Col sm={12}>
+                              <Form.Group
+                                className={`mb-2`}
+                                controlId="groupName.ControlInput1"
+                              >
+                                <Form.Label>IQ</Form.Label>
+                                <div>
+                                  <MultiSelect
+                                    value={IQ}
+                                    onChange={(e) => {
+                                      updateDropDownData(
+                                        e.value,
+                                        "AWM_IQ_Page"
+                                      );
+                                      setIQ(e.value);
+                                    }}
+                                    options={
+                                      IQData
+                                        ? IQData.map((obj) => ({
+                                            label: obj.AWM_Design_Job_Name,
+                                            value: obj.AWM_Design_Job_ID,
+                                          }))
+                                        : []
+                                    }
+                                    filter
+                                    placeholder={`Select`}
+                                    maxSelectedLabels={3}
+                                    className="p-column-filter"
+                                  />
+                                </div>
+                              </Form.Group>
+                            </Col>
+                          }
+                          { GABriefData &&
+                            <Col sm={12}>
+                              <Form.Group
+                                  className={`mb-2`}
+                                  controlId="groupName.ControlInput1"
+                                >
+                                  <Form.Label>GA Brief</Form.Label>
+                                  <div>
+                                    <Form.Select
+                                      value={GABrief}
+                                      placeholder="Select"
+                                      onChange={(e) =>
+                                        {updateDropDownData(
+                                          e.target.value,
+                                          "AWM_GA_Brief"
+                                        );
+                                        setGABrief(e.target.value);
+                                      }
+                                      }
+                                    >
+                                      <option value="">Select</option>
+    
+                                      {GABriefData?.map((data, index) =>
+                                        data.File_Name !== "New" && (
+                                          <option key={`${data.File_Name}_${index}`} value={data.File_Name}>
+                                            {data.File_Name}
+                                          </option>
+                                        )
+                                      )}
+                                    </Form.Select>
+                                  </div>
+                                </Form.Group>
+                              </Col>  
+                          }
+                                                  
                         </Row>
                       )}
                       {updatedData && updatedData[0]?.value === "Group PMPs" && (
@@ -228,6 +399,7 @@ const DsbpActionDialog = ({
                             placeholder="Enter Group Name"
                             onChange={handleGroupName}
                             value={groupName}
+                            disabled={addedToProjectRows.length === 0}
                           />
                         </Form.Group>
                       )}

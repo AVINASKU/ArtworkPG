@@ -27,12 +27,12 @@ export const downloadFileFailure = (error) => ({
 });
 
 // Define your Redux async action creator
-export const AzureFileDownloadJobs = (filePath) => {
+export const AzureFileDownloadJobs = (filePath, subFolder) => {
   return async (dispatch) => {
     try {
       dispatch(downloadFileRequest());
 
-      const downloadUrl = `${baseUrl}/${containerName}/${filePath}?${sasToken}`;
+      const downloadUrl = `${baseUrl}/${containerName}/${subFolder}/${filePath}?${sasToken}`;
 
       const response = await axios.get(downloadUrl, {
         responseType: "blob",

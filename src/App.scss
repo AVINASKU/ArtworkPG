@@ -373,7 +373,7 @@ fieldset:disabled .btn {
 }
 
 .p-breadcrumb ul {
-  padding: 8px;
+  // padding: 8px;
 }
 .content-layout {
   display: flex;
@@ -477,6 +477,9 @@ fieldset:disabled .btn {
         height: 91px;
         max-width: 100%;
       }
+    }
+    .p-multiselect{
+      max-width: 251px;
     }
     .form-select{
       max-width: 251px;

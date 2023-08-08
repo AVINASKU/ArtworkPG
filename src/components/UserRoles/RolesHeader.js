@@ -18,7 +18,7 @@ const RolesHeader = ({
   };
   return (
     <div className="roles-header">
-      <h3 className="project-title">{header}</h3>
+      <h3 className="roles-title">{header}</h3>
       <div className="icon-items">
         <span>
           Training mode

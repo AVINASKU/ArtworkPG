@@ -29,6 +29,11 @@ const DependencyMapping = () => {
     useState([]);
   const [dropdownDataForLayoutAndDesign, setDropdownDataForLayoutAndDesign] =
     useState([]);
+  const [selected, setSelected] = useState([]);
+  const [selectAllChecked, setSelectAllChecked] = useState(false);
+  const [actionDialog, setActionDialog] = useState(false);
+  const [loader, setLoader] = useState(false);
+  const [tableLoader, setTableLoader] = useState(false);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const [customizeViewFields, setCustomizeViewFields] = useState(localStorage.getItem("customizeViewDependancyFields"));
   const selectedProjectDetails = projectSetup.selectedProject;
@@ -41,48 +46,44 @@ const DependencyMapping = () => {
   const handleCancel = () => {
     return navigate(`/myProjects`);
   };
+  console.log("selected outside", selected);
 
   const updateDropDownData = (value, columnName, id) => {
-    console.log("value", value, columnName);
-
-    dependencyMappingData.map((data) => {
-      if (data.DSBP_PMP_PIMaterialID === id) {
-        if (!data[columnName] && columnName === "AWM_CIC_Needed")
-          data["AWM_CIC_Needed"] = value;
-        if (!data[columnName] && columnName === "AWM_Supporting_PMP_Design")
-          data["AWM_Supporting_PMP_Design"] = value;
-        if (!data[columnName] && columnName === "AWM_Supporting_PMP_Layout")
-          data["AWM_Supporting_PMP_Layout"] = value;
-        if (!data[columnName] && columnName === "AWM_Other_Reference")
-          data["AWM_Other_Reference"] = value;
-        if (!data[columnName] && columnName === "AWM_RDT_Page")
-          data["AWM_RDT_Page"] = value;
-        if (!data[columnName] && columnName === "AWM_GA_Brief")
-          data["AWM_GA_Brief"] = value;
-        if (!data[columnName] && columnName === "AWM_CIC_Matrix")
-          data["AWM_CIC_Matrix"] = value;
-        else data[columnName] = value;
-        data["updated"] = true;
+    const updatedData = dependencyMappingData.map((data) => {
+      const isMatchingId = selected.some(selectedData =>
+        selectedData.DSBP_PMP_PIMaterialID === data.DSBP_PMP_PIMaterialID
+      );
+  
+      if (!isMatchingId && data.DSBP_PMP_PIMaterialID !== id) {
+        return data;
       }
-
+  
+      const columnsToUpdate = [
+        "AWM_CIC_Needed",
+        "AWM_Supporting_PMP_Design",
+        "AWM_Supporting_PMP_Layout",
+        "AWM_Other_Reference",
+        "AWM_RDT_Page",
+        "AWM_GA_Brief",
+        "AWM_CIC_Matrix",
+      ];
+  
+      if (columnsToUpdate.includes(columnName)) {
+        data[columnName] = value;
+      } else {
+        data[columnName] = value;
+      }
+  
+      data["updated"] = true;
       return data;
     });
-    let filteredDataToSubmit = dependencyMappingData.filter(
-      (item) => item.updated === true
-    );
-    let data = dependencyMappingData.filter(
-      (data) => data?.AWM_CIC_Needed === "Yes" && data
-    );
-    let dropdownDataForLayoutAndDesign1 = data.map(
-      (item) => item.DSBP_PMP_PIMaterialID
-    );
-    // console.log(
-    //   "filteredDataToSubmit",
-    //   filteredDataToSubmit,
-    //   dependencyMappingData
-    // );
+  
+    const filteredDataToSubmit = updatedData.filter(item => item.updated === true);
+    const data = updatedData.filter(data => data?.AWM_CIC_Needed === "Yes" && data);
+    const dropdownDataForLayoutAndDesign1 = data.map(item => item.DSBP_PMP_PIMaterialID);
+  
     setDropdownDataForLayoutAndDesign(dropdownDataForLayoutAndDesign1);
-    setDependencyMappingData(dependencyMappingData);
+    setDependencyMappingData(updatedData);
     setSubmittedData(filteredDataToSubmit);
     setDataUpdated(!dataUpdated);
   };
@@ -91,12 +92,41 @@ const DependencyMapping = () => {
     fetchData();
   }, [ProjectID]);
 
+  useEffect(() => {
+    setSubmittedData(submittedData)
+  }, [submittedData]);
+
   const onSort = (column, direction) => {
     const sortedData = onSortData(column, direction, dependencyMappingData);
     setDependencyMappingData(sortedData);
   };
 
+  const handleSelect = (item) => {
+    if (selected?.includes(item)) {
+      setSelected(selected.filter((i) => i !== item));
+    } else {
+      if (selected.length === 0) {
+        const selectedList = [];
+        selectedList.push(item);
+        setSelected(selectedList);
+      } else {
+        setSelected([...selected, item]);
+      }
+    }
+  };
+
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectAllChecked(true);
+      setSelected(dependencyMappingData);
+    } else {
+      setSelectAllChecked(false);
+      setSelected([]);
+    }
+  };
+
   async function fetchData() {
+    setTableLoader(true)
     const {
       dependencyTableData,
       isRDTData,
@@ -111,7 +141,7 @@ const DependencyMapping = () => {
           data?.AWM_CIC_Page?.[0]?.AWM_CIC_Needed === "Yes" &&
           data.DSBP_PMP_PIMaterialID
       );
-      let dropdownDataForLayoutAndDesign1 = data.map(
+      let dropdownDataForLayoutAndDesign1 = data?.map(
         (item) => item.DSBP_PMP_PIMaterialID
       );
       setDropdownDataForLayoutAndDesign(dropdownDataForLayoutAndDesign1);
@@ -223,13 +253,15 @@ const DependencyMapping = () => {
       // setDependencyColumnNames(groupedColumnNames);
       setDependencyMappingData(transformedData);
     }
+    setTableLoader(false)
   }
-  const isSubmitEnable = submittedData.length ? true : false;
+  const isSubmitEnable = submittedData.length && !actionDialog ? true : false;
 
   const onSubmit = async () => {
     //add your logic here
+    setLoader(true);
     let submittedJson = [];
-    if (isSubmitEnable) {
+    if (isSubmitEnable || actionDialog) {
       submittedData.map((ele) => {
         let submittedObject = {};
 
@@ -260,7 +292,7 @@ const DependencyMapping = () => {
             Design_Job_ID:item.AWM_Design_Job_ID ,
           }));
         }
-        console.log("pranali on submit", DSBP_RDT_Page, DSBP_RDT_Page_data);
+        
         submittedObject.DSBP_RDT_Page = DSBP_RDT_Page_data;
 
         //IQ
@@ -305,6 +337,12 @@ const DependencyMapping = () => {
     if (resp.status === 200 || resp.status === 201) {
       setSubmittedData([]);
     }
+    if(actionDialog){
+      setActionDialog(false);
+      await fetchData();
+      setSelected([]);
+    }
+    setLoader(false);
   };
 
   const onClickClearFilter = () => {
@@ -386,60 +424,85 @@ const DependencyMapping = () => {
   }
 
   return (
+    console.log("isSubmitEnable", isSubmitEnable),
     <div className="artwork-dsbp dependency-mapping">
-      <>
-        <ArtworkHeader
-          headerName={headerName}
-          selected={[]}
-          label="Dependency Mapping"
-          customizeViewFields={customizeViewFields}
-          setCustomizeViewFields={setCustomizeViewFields}
-          dependencyMappingData={dependencyMappingData}
-          selectedProjectDetails={selectedProjectDetails}
-          columnNames={columnNames}
-          filteredDependencyMappingData={filteredDependencyMappingData}
-          userHasAccess={userHasAccess}
-          isDependencyMapping={true}
-          onSearchClick={onSearchClick}
-          onClickClearFilter={onClickClearFilter}
-          isFilterActivatedInDependencyMapping={
-            isFilterActivatedInDependencyMapping
-          }
-        />
-        <DependencyMappingList
-          dependencyMappingData={dependencyMappingData}
-          // dependencyColumnNames={dependencyColumnNames}
-          CDPTPageData={CDPTPageData}
-          IQData={IQData}
-          RDTData={RDTData}
-          GABriefData={GABriefData}
-          dropdownDataForLayoutAndDesign={dropdownDataForLayoutAndDesign}
-          updateDropDownData={updateDropDownData}
-          userHasAccess={userHasAccess}
-          customizeViewFields={customizeViewFields}
-          setCustomizeViewFields={setCustomizeViewFields}
-          onSort={onSort}
-          onGlobalFilterChange={onGlobalFilterChange}
-          filteredDependencyMappingData={filteredDependencyMappingData}
-          setFiltersDependencyMappingData={setFiltersDependencyMappingData}
-          setDataUpdated={setDataUpdated}
-          dataUpdated={dataUpdated}
-          selectedFields={selectedFields}
-          setSelectedFields={setSelectedFields}
-          setTableRender={setTableRender}
-          tableRender={tableRender}
-          isSearch={isSearch}
-          columnNames={columnNames}
-          handleNewGaBrief={handleNewGaBrief}
-        />
-        <FooterButtons
-          handleCancel={handleCancel}
-          hideSaveButton={true}
-          onSubmit={onSubmit}
-          formValid={!isSubmitEnable}
-          checkReadWriteAccess={!false}
-        />
-      </>
+      {loader ? (
+        <Loading />
+      ) : (
+        <>
+          <ArtworkHeader
+            headerName={headerName}
+            selected={selected}
+            label="Dependency Mapping"
+            customizeViewFields={customizeViewFields}
+            setCustomizeViewFields={setCustomizeViewFields}
+            dependencyMappingData={dependencyMappingData}
+            selectedProjectDetails={selectedProjectDetails}
+            columnNames={columnNames}
+            filteredDependencyMappingData={filteredDependencyMappingData}
+            userHasAccess={userHasAccess}
+            isDependencyMapping={true}
+            actionDialog={actionDialog} 
+            setActionDialog={setActionDialog}
+            CDPTPageData={CDPTPageData}
+            IQData={IQData}
+            RDTData={RDTData}
+            GABriefData={GABriefData}
+            onSearchClick={onSearchClick}
+            onClickClearFilter={onClickClearFilter}
+            isFilterActivatedInDependencyMapping={
+              isFilterActivatedInDependencyMapping
+            }
+            updateDropDownData={updateDropDownData}
+            onSubmit={onSubmit}
+            handleNewGaBrief={handleNewGaBrief}
+            isSubmitEnable={isSubmitEnable}
+            setSubmittedData={setSubmittedData}
+            submittedData={submittedData}
+          />
+          {tableLoader ? (
+            <Loading />
+          ) : (
+            <DependencyMappingList
+            dependencyMappingData={dependencyMappingData}
+            // dependencyColumnNames={dependencyColumnNames}
+            CDPTPageData={CDPTPageData}
+            IQData={IQData}
+            RDTData={RDTData}
+            GABriefData={GABriefData}
+            dropdownDataForLayoutAndDesign={dropdownDataForLayoutAndDesign}
+            updateDropDownData={updateDropDownData}
+            userHasAccess={userHasAccess}
+            customizeViewFields={customizeViewFields}
+            setCustomizeViewFields={setCustomizeViewFields}
+            onSort={onSort}
+            onGlobalFilterChange={onGlobalFilterChange}
+            filteredDependencyMappingData={filteredDependencyMappingData}
+            setFiltersDependencyMappingData={setFiltersDependencyMappingData}
+            setDataUpdated={setDataUpdated}
+            dataUpdated={dataUpdated}
+            selectedFields={selectedFields}
+            setSelectedFields={setSelectedFields}
+            setTableRender={setTableRender}
+            tableRender={tableRender}
+            handleSelect={handleSelect}
+            handleSelectAll={handleSelectAll}
+            selected={selected}
+            selectAllChecked={selectAllChecked}
+            isSearch={isSearch}
+            columnNames={columnNames}
+            handleNewGaBrief={handleNewGaBrief}
+          />
+          )}
+          <FooterButtons
+            handleCancel={handleCancel}
+            hideSaveButton={true}
+            onSubmit={onSubmit}
+            formValid={!isSubmitEnable}
+            checkReadWriteAccess={!false}
+          />
+        </>
+      )}
     </div>
   );
 };

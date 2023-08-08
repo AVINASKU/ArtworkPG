@@ -82,7 +82,8 @@ $width: 100%;
 }
 
 .tabular-add-project {
-  padding: 8px 0 0 0;
+  // padding: 8px 0 0 0;
+  padding: 8px 0 0 15px;
   overflow-y: scroll;
   height: 72vh;
 }
@@ -209,7 +210,8 @@ $width: 100%;
 
 .breadCrumbParent {
   padding-top: 8px;
-  padding-left: 16px;
+  padding-left: 23px;
+  // padding-left: 16px;
   // border-radius: 24px
   // width: $width;
   nav {
@@ -254,7 +256,8 @@ $width: 100%;
 }
 
 .content-layout .actions {
-  padding: 0 16px 0;
+  // padding: 0 16px 0;
+  padding: 0 16px 0 0;
   .p-breadcrumb {
     // padding: 0 1rem !important;
     padding: 0 1rem 0 0 !important;
