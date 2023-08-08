@@ -37,6 +37,10 @@ const DependencyMappingList = ({
   setSelectedFields,
   setTableRender,
   tableRender,
+  handleSelect,
+  handleSelectAll,
+  selected,
+  selectAllChecked,
   isSearch,
   columnNames,
   handleNewGaBrief
@@ -186,8 +190,9 @@ const DependencyMappingList = ({
           <input
             type="checkbox"
             className="p-checkbox-box p-highlight"
-            // checked={selectAllChecked}
-            // onChange={handleSelectAll}
+            checked={selectAllChecked}
+            onChange={handleSelectAll}
+            disabled = {dependencyMappingData === null}
           />
         </div>
       );
@@ -217,7 +222,12 @@ const DependencyMappingList = ({
       <span>
         {field === "field_0" && ( // Add this condition to render a checkbox
           <div className="flex align-items-center gap-2">
-            <input type="checkbox" className="p-checkbox-box p-highlight" />
+            <input
+              type="checkbox"
+              className="p-checkbox-box p-highlight"
+              checked={selected?.includes(options)}
+              onChange={() => handleSelect(options)}
+            />
           </div>
         )}
         {field === "AWM_GA_Brief" && (
@@ -240,9 +250,9 @@ const DependencyMappingList = ({
               >
                 <option value="">Select</option>
 
-                {GABriefData?.map((data) =>
+                {GABriefData?.map((data, index) =>
                   data.File_Name === "New" ? (
-                    <option key={data.File_Name} value={data.File_Name}>
+                    <option key={`${data.File_Name}_${index}`} value={data.File_Name}>
                       <a
                         className="flex flex-column text-left ml-3"
                         onClick={(event) => handleNewGaBrief(event)}
@@ -484,9 +494,9 @@ const DependencyMappingList = ({
                 style={{ width: "80%", fontSize: 12 }}
               >
                 <option value="">Select</option>
-                {dropdownDataForLayoutAndDesign?.map((ele) => {
+                {dropdownDataForLayoutAndDesign?.map((ele, index) => {
                   return (
-                    <option key={ele} value={ele}>
+                    <option key={`${ele}_${index}`} value={ele}>
                       {ele}
                     </option>
                   );
@@ -519,9 +529,9 @@ const DependencyMappingList = ({
                 style={{ width: "80%", fontSize: 12 }}
               >
                 <option value="">Select</option>
-                {dropdownDataForLayoutAndDesign?.map((ele) => {
+                {dropdownDataForLayoutAndDesign?.map((ele, index) => {
                   return (
-                    <option key={ele} value={ele}>
+                    <option key={`${ele}_${index}`} value={ele}>
                       {ele}
                     </option>
                   );
@@ -557,8 +567,6 @@ const DependencyMappingList = ({
     let dependencyColumnNames = JSON.parse(
       localStorage.getItem("setDependencyMappingColumnNames")
     );
-    console.log("dependencyColumnNames", dependencyColumnNames);
-    console.log("customizeViewFields", customizeViewFields);
     if(!dependencyColumnNames) return null;
 
     let jsonValue = customizeViewFields
@@ -583,7 +591,6 @@ const DependencyMappingList = ({
             filteredColumns.push(column);
           }
         });
-        console.log("filteredColumns", filteredColumns);
         if (filteredColumns && filteredColumns.length) {
           return [
             <Column
@@ -632,7 +639,7 @@ const DependencyMappingList = ({
           header={() => renderHeader("checkbox")}
           style={{ width: "40px" }}
         />,
-        ...dependencyColumnNames.map((col, index) => {
+        ...dependencyColumnNames?.map((col, index) => {
           // console.log("field col-----", col);
           return (
             <Column
