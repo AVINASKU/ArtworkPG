@@ -45,6 +45,12 @@ const ArtworkHeader = ({
   onSearchClick,
   onClickClearFilter,
   isFilterActivatedInDependencyMapping,
+  updateDropDownData,
+  onSubmit,
+  handleNewGaBrief,
+  isSubmitEnable,
+  submittedData,
+  setSubmittedData
 }) => {
   const navigate = useNavigate();
   let { ProjectID } = useParams();
@@ -345,7 +351,7 @@ const ArtworkHeader = ({
           setActionDialog={setActionDialog}
           selected={selected}
           actionNameObject={actionNameObject}
-          onActionSubmit={onActionSubmit}
+          onActionSubmit={headerName !== "Dependency Mapping" ? onActionSubmit : onSubmit}
           aiseList={aiseList}
           assemblyMechanismList={assemblyMechanismList}
           headerName={headerName}
@@ -353,6 +359,11 @@ const ArtworkHeader = ({
           IQData={IQData}
           RDTData={RDTData}
           GABriefData={GABriefData}
+          updateDropDownData={updateDropDownData}
+          handleNewGaBrief={handleNewGaBrief}
+          isSubmitEnable={isSubmitEnable}
+          setSubmittedData={setSubmittedData}
+          submittedData={submittedData}
         />
       )}
     </div>

@@ -176,6 +176,7 @@ const DragAndDrop = (props) => {
     };
     setEntities(updatedData);
     localStorage.setItem("customizeViewFields", JSON.stringify([]));
+    localStorage.setItem("customizeViewDependancyFields", JSON.stringify([]));
     props.setCustomizeViewFields(JSON.stringify([]));
     props.hideDialog();
   };

@@ -20,7 +20,12 @@ const DsbpActionDialog = ({
   CDPTPageData,
   IQData,
   RDTData,
-  GABriefData
+  GABriefData,
+  updateDropDownData,
+  handleNewGaBrief,
+  isSubmitEnable,
+  submittedData,
+  setSubmittedData
 }) => {
   const [packageName, setPackageName] = useState("");
   const [groupName, setGroupName] = useState("");
@@ -29,6 +34,10 @@ const DsbpActionDialog = ({
   const [bioside, setBioside] = useState("");
   const [sellable, setSellable] = useState("");
   const [formData, setFormData] = useState({});
+  const [CDPT, setCDPT] = useState([]);
+  const [IQ, setIQ] = useState([]);
+  const [RDT, setRDT] = useState([]);
+  const [GABrief, setGABrief] = useState([]);
   
   const { selectedProject } = useSelector((state) => state.ProjectSetupReducer);
   if(rowData){
@@ -76,13 +85,18 @@ const DsbpActionDialog = ({
     });
   };
 
+  const handleClose = (e) => {
+    setActionDialog(false);
+    setSubmittedData([])
+  };
+
   const footerContent = (
     <div>
-      <Button variant="secondary" onClick={() => setActionDialog(false)}>
+      <Button variant="secondary" onClick={handleClose}>
       {(updatedData && updatedData[0]?.value === "Add to Project") || rowData ? "No" : "Cancel"}
       </Button>
       <Button
-        disabled={(updatedData && updatedData[0]?.value === "Add to Project") || rowData ? false : Object.keys(formData).length === 0}
+        disabled={(updatedData && updatedData[0]?.value === "Add to Project") || rowData || !isSubmitEnable ? false : Object.keys(formData).length === 0}
         onClick={() => ((updatedData && updatedData[0]?.value === "Add to Project") || rowData) ? onActionSubmit("AddToProject", selected) : onActionSubmit(formData)}
       >
         {(updatedData && updatedData[0]?.value === "Mass Update") ? "Update" : (updatedData && updatedData[0]?.value === "Add to Project") || rowData ? "Yes" : "Submit"}
@@ -93,7 +107,6 @@ const DsbpActionDialog = ({
   const addedToProjectRows = selected.filter((item) => (item.AWM_AddedToProject === "Yes"));
 
   return (
-    console.log("IQData", selected),
     (
       <div className="card flex justify-content-center dsbp-action-dialog">
         <Dialog
@@ -242,14 +255,14 @@ const DsbpActionDialog = ({
                                 <Form.Label>RDT</Form.Label>
                                 <div>
                                   <MultiSelect
-                                    // value={options[field]}
-                                    // onChange={(e) =>
-                                    //   updateDropDownData(
-                                    //     e.value,
-                                    //     "AWM_RDT_Page",
-                                    //     options.DSBP_PMP_PIMaterialID
-                                    //   )
-                                    // }
+                                    value={RDT}
+                                    onChange={(e) => {
+                                      updateDropDownData(
+                                        e.value,
+                                        "AWM_RDT_Page"
+                                      );
+                                      setRDT(e.value);
+                                    }}
                                     options={
                                       RDTData
                                         ? RDTData.map((obj) => ({
@@ -259,7 +272,7 @@ const DsbpActionDialog = ({
                                         : []
                                     }
                                     filter
-                                    placeholder={`Select AWM RDT Page`}
+                                    placeholder={`Select`}
                                     maxSelectedLabels={3}
                                     className="p-column-filter"
                                   />
@@ -276,24 +289,24 @@ const DsbpActionDialog = ({
                                 <Form.Label>CD/PT</Form.Label>
                                 <div>
                                   <MultiSelect
-                                    // value={options[field]}
-                                    // onChange={(e) =>
-                                    //   updateDropDownData(
-                                    //     e.value,
-                                    //     "AWM_CDPT_Page",
-                                    //     options.DSBP_PMP_PIMaterialID
-                                    //   )
-                                    // }
+                                    value={CDPT}
+                                    onChange={(e) => {
+                                      updateDropDownData(
+                                        e.value,
+                                        "AWM_CDPT_Page"
+                                      );
+                                      setCDPT(e.value);
+                                    }}
                                     options={
                                       CDPTPageData
                                         ? CDPTPageData.map((obj) => ({
                                             label: obj.AWM_Design_Job_Name,
                                             value: obj.AWM_Design_Job_ID,
-                                          }))
+                                          })).filter(option => option.label !== "") // Filter out options with empty labels
                                         : []
                                     }
                                     filter
-                                    placeholder={`Select AWM CDPT Page`}
+                                    placeholder={`Select`}
                                     maxSelectedLabels={3}
                                     className="p-column-filter"
                                   />
@@ -310,14 +323,14 @@ const DsbpActionDialog = ({
                                 <Form.Label>IQ</Form.Label>
                                 <div>
                                   <MultiSelect
-                                    // value={options[field]}
-                                    // onChange={(e) =>
-                                    //   updateDropDownData(
-                                    //     e.value,
-                                    //     "AWM_IQ_Page",
-                                    //     options.DSBP_PMP_PIMaterialID
-                                    //   )
-                                    // }
+                                    value={IQ}
+                                    onChange={(e) => {
+                                      updateDropDownData(
+                                        e.value,
+                                        "AWM_IQ_Page"
+                                      );
+                                      setIQ(e.value);
+                                    }}
                                     options={
                                       IQData
                                         ? IQData.map((obj) => ({
@@ -327,7 +340,7 @@ const DsbpActionDialog = ({
                                         : []
                                     }
                                     filter
-                                    placeholder={`Select AWM IQ Page`}
+                                    placeholder={`Select`}
                                     maxSelectedLabels={3}
                                     className="p-column-filter"
                                   />
@@ -344,17 +357,26 @@ const DsbpActionDialog = ({
                                   <Form.Label>GA Brief</Form.Label>
                                   <div>
                                     <Form.Select
-                                      value={assemblyMechanismChange}
-                                      placeholder="Select Assembly Mechanism"
-                                      onChange={handleAssemblyMechanismChange}
+                                      value={GABrief}
+                                      placeholder="Select"
+                                      onChange={(e) =>
+                                        {updateDropDownData(
+                                          e.target.value,
+                                          "AWM_GA_Brief"
+                                        );
+                                        setGABrief(e.target.value);
+                                      }
+                                      }
                                     >
                                       <option value="">Select</option>
     
-                                      {GABriefData?.map((data) => (
-                                        <option key={data.File_Name} value={data.File_Name}>
-                                          {data.File_Name}
-                                        </option>
-                                      ))}
+                                      {GABriefData?.map((data, index) =>
+                                        data.File_Name !== "New" && (
+                                          <option key={`${data.File_Name}_${index}`} value={data.File_Name}>
+                                            {data.File_Name}
+                                          </option>
+                                        )
+                                      )}
                                     </Form.Select>
                                   </div>
                                 </Form.Group>

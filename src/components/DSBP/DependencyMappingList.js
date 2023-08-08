@@ -250,9 +250,9 @@ const DependencyMappingList = ({
               >
                 <option value="">Select</option>
 
-                {GABriefData?.map((data) =>
+                {GABriefData?.map((data, index) =>
                   data.File_Name === "New" ? (
-                    <option key={data.File_Name} value={data.File_Name}>
+                    <option key={`${data.File_Name}_${index}`} value={data.File_Name}>
                       <a
                         className="flex flex-column text-left ml-3"
                         onClick={(event) => handleNewGaBrief(event)}
@@ -494,9 +494,9 @@ const DependencyMappingList = ({
                 style={{ width: "80%", fontSize: 12 }}
               >
                 <option value="">Select</option>
-                {dropdownDataForLayoutAndDesign?.map((ele) => {
+                {dropdownDataForLayoutAndDesign?.map((ele, index) => {
                   return (
-                    <option key={ele} value={ele}>
+                    <option key={`${ele}_${index}`} value={ele}>
                       {ele}
                     </option>
                   );
@@ -529,9 +529,9 @@ const DependencyMappingList = ({
                 style={{ width: "80%", fontSize: 12 }}
               >
                 <option value="">Select</option>
-                {dropdownDataForLayoutAndDesign?.map((ele) => {
+                {dropdownDataForLayoutAndDesign?.map((ele, index) => {
                   return (
-                    <option key={ele} value={ele}>
+                    <option key={`${ele}_${index}`} value={ele}>
                       {ele}
                     </option>
                   );
@@ -567,8 +567,6 @@ const DependencyMappingList = ({
     let dependencyColumnNames = JSON.parse(
       localStorage.getItem("setDependencyMappingColumnNames")
     );
-    console.log("dependencyColumnNames", dependencyColumnNames);
-    console.log("customizeViewFields", customizeViewFields);
     if(!dependencyColumnNames) return null;
 
     let jsonValue = customizeViewFields
@@ -593,7 +591,6 @@ const DependencyMappingList = ({
             filteredColumns.push(column);
           }
         });
-        console.log("filteredColumns", filteredColumns);
         if (filteredColumns && filteredColumns.length) {
           return [
             <Column
