@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col } from "react-bootstrap";
 import deleteIcon from "../../../assets/images/deleteIcon.svg";
 import DsbpCommonPopup from "../../DSBP/DsbpCommonPopup";
@@ -13,14 +13,27 @@ const UploadBriefingDocuments = ({
   length,
   fileUploadSection,
   fileUploadType,
+  version,
   getDataSaveAsDraft,
   fileUploadWarning,
   File_NameFromAPI,
+  updateUbdData,
+  setWrongFileName,
+  disableDelete,
+  // setAzureFile,
 }) => {
   const [fileName, setFileName] = useState("");
-  const [azureFile, setAzureFile] = useState("");
+
+  console.log("item121:", index, item);
   const [selectDialog, setSelectDialog] = useState(false);
   const [uploadedWrongFilename, setUploadedWrongFilename] = useState(false);
+  useEffect(() => {
+    if (uploadedWrongFilename) {
+      setWrongFileName(true);
+    } else {
+      setWrongFileName(false);
+    }
+  }, [uploadedWrongFilename]);
 
   return (
     <div>
@@ -30,7 +43,9 @@ const UploadBriefingDocuments = ({
           dasbpDialog={selectDialog}
           setDasbpDialog={setSelectDialog}
           rejectFormData={[{}]}
-          onSubmit={() => handleDelete(index, fileUploadSection)}
+          onSubmit={() =>
+            handleDelete(index, fileUploadSection, version, File_NameFromAPI)
+          }
           okButtonShow={false}
           deleteButtonShow={true}
           yesButtonShow={true}
@@ -49,20 +64,21 @@ const UploadBriefingDocuments = ({
         <Col sm={2}>
           <UploadFile
             key={item.Design_Job_ID}
-            setAzureFile={setAzureFile}
+            // setAzureFile={setAzureFile}
             item={item}
             designData={[]}
             date={""}
-            version={""}
+            version={version}
             disabled={false}
             fileUploadSection={fileUploadSection}
             uploadFile={fileUploadType.uploadFile}
-            sequence={index + 1}
+            sequence={index}
             getDataSaveAsDraft={getDataSaveAsDraft}
             setUploadedWrongFilename={setUploadedWrongFilename}
             File_NameFromAPI={File_NameFromAPI}
             setFileName={setFileName}
             fileName={fileName}
+            updateUbdData={updateUbdData}
             // disabled={!checkReadWriteAccess || data.Task_Status === "Complete"}
             // ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
             // version={version}
@@ -71,20 +87,21 @@ const UploadBriefingDocuments = ({
         <Col sm={2}>
           <UpVersion
             key={item.Design_Job_ID}
-            setAzureFile={setAzureFile}
+            // setAzureFile={setAzureFile}
             item={item}
             designData={[]}
             date={""}
-            version={""}
+            version={version}
             disabled={false}
             fileUploadSection={fileUploadSection}
             upVersion={fileUploadType.upVersion}
-            sequence={index + 1}
+            sequence={index}
             getDataSaveAsDraft={getDataSaveAsDraft}
             setUploadedWrongFilename={setUploadedWrongFilename}
             File_NameFromAPI={File_NameFromAPI}
             setFileName={setFileName}
             fileName={fileName}
+            updateUbdData={updateUbdData}
             // disabled={!checkReadWriteAccess || data.Task_Status === "Complete"}
             // ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
             // version={version}
@@ -97,9 +114,13 @@ const UploadBriefingDocuments = ({
               <img
                 src={deleteIcon}
                 alt="filter logo"
-                onClick={() => checkReadWriteAccess && setSelectDialog(true)}
+                onClick={() =>
+                  checkReadWriteAccess &&
+                  !disableDelete &&
+                  setSelectDialog(true)
+                }
                 className="header-icons"
-                disabled={!checkReadWriteAccess}
+                disabled={!checkReadWriteAccess || disableDelete}
               />
             </div>
           </div>

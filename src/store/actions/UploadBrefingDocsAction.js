@@ -4,7 +4,7 @@ import { DEVURL, SITURL, PRODURL } from "../../apis/envUrl";
 
 export const saveAsDraftUploadBrefingDocs = async (
   formData,
-  headers = {    
+  headers = {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
@@ -60,10 +60,9 @@ export const submitUploadBrefingDocs = async (
   console.log("formData Submit:", formData);
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  let apiURL;
-  //https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v2/assignments/ASSIGN-WORKLIST PG-AAS-WORK U-6659!UPLOADBRIEFINGDOCUMENTS_FLOW/actions/UploadBriefingDocuments
+  // let apiURL = `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v2/assignments/ASSIGN-WORKLIST ${id}!UPLOADBRIEFINGDOCUMENTS_FLOW/actions/UploadBriefingDocuments`;
 
-  apiURL = `${DEVURL}/uploadBriefingDocuments/${id}`;
+  let apiURL = `${DEVURL}/uploadBriefingDocuments/${id}`;
 
   const submitUploadBrefingDocsData = await axiosInstance({
     url: apiURL,

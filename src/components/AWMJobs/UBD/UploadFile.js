@@ -2,9 +2,11 @@ import React, { useState, useRef } from "react";
 import { FileUpload } from "primereact/fileupload";
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
 import ToolTip from "./ToolTip";
+import { AzureFileDownloadJobs } from "../../../store/actions/AzureFileDownloadJobs";
+import { useDispatch } from "react-redux";
 
 const UploadFile = ({
-  setAzureFile,
+  // setAzureFile,
   item,
   data,
   designData,
@@ -19,11 +21,12 @@ const UploadFile = ({
   File_NameFromAPI,
   setFileName,
   fileName,
+  updateUbdData,
 }) => {
   const [totalSize, setTotalSize] = useState(0);
   const [fileUploadWarning, setFileUploadWarning] = useState(false);
   const fileUploadRef = useRef(null);
-
+  const dispatch = useDispatch();
   const viewProofScopeFile = useProofScopeURL();
   const handleViewProofScopeClick = (event, fileUrl) => {
     event.preventDefault();
@@ -76,7 +79,7 @@ const UploadFile = ({
     const uploadFileName = e.files[0].name;
     const filePathLength = e.files[0].webkitRelativePath.length;
     setFileName(e.files[0].name);
-
+    console.log("onTemplateSelect:", e.files[0]);
     if (
       fileLength > MAX_FILENAME_LENGTH ||
       filePathLength > MAX_PATH_LENGTH ||
@@ -89,17 +92,19 @@ const UploadFile = ({
       setUploadedWrongFilename(true);
     }
 
-    const renamedFile = {
-      objectURL: e.files[0].objectURL,
-      lastModified: e.files[0].lastModified,
-      lastModifiedDate: e.files[0].lastModifiedDate,
-      name: di_name,
-      size: e.files[0].size,
-      length: e.files[0].length,
-      type: e.files[0].type,
-      webkitRelativePath: e.files[0].webkitRelativePath,
-    };
-    setAzureFile(renamedFile);
+    // const renamedFile = {
+    //   objectURL: e.files[0].objectURL,
+    //   lastModified: e.files[0].lastModified,
+    //   lastModifiedDate: e.files[0].lastModifiedDate,
+    //   name: di_name,
+    //   size: e.files[0].size,
+    //   length: e.files[0].length,
+    //   type: e.files[0].type,
+    //   webkitRelativePath: e.files[0].webkitRelativePath,
+    // };
+    // setAzureFile(renamedFile);
+    // console.log("e.files[0]", e.files[0]);
+    // setAzureFile(e.files[0]);
     let _totalSize = totalSize;
     let files = e.files;
     Object.keys(files).forEach((key) => {
@@ -107,17 +112,35 @@ const UploadFile = ({
     });
 
     setTotalSize(_totalSize);
-    setAzureFile(renamedFile);
     // setFileName(di_name);
-    getDataSaveAsDraft(e, fileUploadSection + uploadFile, sequence);
+    // getDataSaveAsDraft(e, fileUploadSection + uploadFile, sequence, version);
+    updateUbdData(
+      e,
+      fileUploadSection + uploadFile,
+      sequence,
+      version,
+      item.FileID || item.Design_Job_ID
+    );
+  };
+  const downloadAzure = async (event, fileUrl) => {
+    event.preventDefault();
+    dispatch(AzureFileDownloadJobs(fileUrl));
   };
 
   const customUploader = () => {};
 
   const onImageClose = () => {
+    console.log("onImageClose:", fileUploadRef.current.getFiles());
     setFileUploadWarning(false);
     setUploadedWrongFilename(false);
     setFileName("");
+    updateUbdData(
+      { files: [{ name: "" }] },
+      fileUploadSection + uploadFile,
+      sequence,
+      version,
+      item.FileID || item.Design_Job_ID
+    );
   };
 
   return (
@@ -130,11 +153,13 @@ const UploadFile = ({
       </div>
       <div
         className={`${
-          fileName || File_NameFromAPI !== ""
+          fileName || File_NameFromAPI
             ? "uploadImageAndupVersionImage"
             : "uploadImageAndupVersionImage1"
         }`}
-        id={`${File_NameFromAPI && fileName === "" ? "File_NameFromAPIPaddingId" : ""}`}
+        id={`${
+          File_NameFromAPI && fileName === "" ? "File_NameFromAPIPaddingId" : ""
+        }`}
       >
         <FileUpload
           ref={fileUploadRef}
@@ -147,23 +172,30 @@ const UploadFile = ({
           onSelect={(e) => onTemplateSelect(e)}
           itemTemplate={itemTemplate}
           onClear={onImageClose}
-          // disabled={fileName !== ""}
+          disabled={item.isNew !== true}
         />
         <div hidden={fileName} className="File_NameFromAPIPadding">
-          {File_NameFromAPI.length > 22 ? (
+          {File_NameFromAPI?.length > 22 ? (
             <div
               className="File_NameFromAPI"
               data-toggle="tooltip"
               data-placement="top"
               title={File_NameFromAPI}
+              onClick={(event) => downloadAzure(event, `${File_NameFromAPI}`)}
             >
               {File_NameFromAPI}
             </div>
           ) : (
-            <div className="File_NameFromAPI">{File_NameFromAPI}</div>
+            <div
+              className="File_NameFromAPI"
+              onClick={(event) => downloadAzure(event, `${File_NameFromAPI}`)}
+            >
+              {File_NameFromAPI}
+            </div>
           )}
         </div>
       </div>
+      {/* <a href="#">{item.File_Name}</a> */}
       {/* <span>
         {fileUploadWarning && (
           <>

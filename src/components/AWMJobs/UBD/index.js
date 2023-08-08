@@ -3,7 +3,7 @@ import PageLayout from "../../PageLayout";
 import AddNewDesign from "../DesignJobs/TaskHeader";
 import DesignHeader from "../DesignJobs/DesignHeader";
 import UploadBriefingDocuments from "../DesignJobs/UploadBriefingDocuments";
-import FooterButtons from "../DesignJobs/FooterButtons";
+import UBDFooterButtons from "../DesignJobs/UBDFooterButtons";
 import {
   deleteUploadBrefingDocs,
   saveAsDraftUploadBrefingDocs,
@@ -22,6 +22,9 @@ import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { CheckReadOnlyAccess } from "../../../utils";
 import "../DesignJobs/index.scss";
 import "./index.scss";
+import { cloneDeep } from "lodash";
+import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
+import { deleteAzureFile } from "../../../store/actions/AzureFileDeletion.js";
 
 const headerName = "Upload Graphic Adaptation Brief Document";
 const graphicAdaptionBrief = "Graphic Adaptation Brief*";
@@ -36,7 +39,10 @@ function UBD() {
   const [updated, setUpdated] = useState(false);
   const [projectData, setProjectData] = useState([]);
   const [loader, setLoader] = useState(false);
-  let { TaskID, ProjectID } = useParams();
+  const [formValid, setFormValid] = useState(false);
+  const [wrongFileName, setWrongFileName] = useState(false);
+  // const [azureFile, setAzureFile] = useState("");
+  let { page1, page2, pageType, TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { TaskDetailsData, loading } = useSelector(
@@ -48,7 +54,8 @@ function UBD() {
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
 
   let breadcrumb = AddNavigation(headerName);
-  const checkReadWriteAccess = CheckReadOnlyAccess();
+  // const checkReadWriteAccess = CheckReadOnlyAccess();
+  const checkReadWriteAccess = true;
 
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
@@ -61,62 +68,130 @@ function UBD() {
     setProjectData(projectData);
   }, [projectData]);
 
+  const orderBySequence = (arr) => {
+    return arr.sort(function (a, b) {
+      return a.Sequence - b.Sequence;
+    });
+  };
+
   useEffect(() => {
-    const fileMetaDataListData =
-      TaskDetailsData?.ArtworkAgilityTasks[0]?.FileMetaDataList || [];
+    if (gABriefAdaptationForUI.length === 0) {
+      const temp = cloneDeep(gABriefAdaptationForUI);
+      temp.push({
+        Design_Job_ID: temp.length + 1,
+        isNew: true,
+        Additional_Info: "Test",
+        Select: false,
+        File_Name: "",
+        Sequence: temp.length + 1,
+        Version: "V0",
+      });
+      setGABriefAdaptationForUI(orderBySequence(temp));
+    }
+    if (otherRefernceDocsForUI.length === 0) {
+      const temp = cloneDeep(otherRefernceDocsForUI);
+      temp.push({
+        Design_Job_ID: temp.length + 1,
+        isNew: true,
+        Additional_Info: "Test",
+        Select: false,
+        File_Name: "",
+        Sequence: temp.length + 1,
+        Version: "V0",
+      });
+      setOtherRefernceDocsForUI(orderBySequence(temp));
+    }
+  }, [gABriefAdaptationForUI, otherRefernceDocsForUI]);
+
+  useEffect(() => {
+    const GABriefListData =
+      (TaskDetailsData?.ArtworkAgilityTasks[0]?.GABriefList &&
+        TaskDetailsData?.ArtworkAgilityTasks[0]?.GABriefList[0]) ||
+      [];
+    const OtherReferenceDocData =
+      (TaskDetailsData?.ArtworkAgilityTasks[0]?.OtherReferenceDoc &&
+        TaskDetailsData?.ArtworkAgilityTasks[0]?.OtherReferenceDoc[0]) ||
+      [];
     if (TaskDetailsData) {
       const graphicABData = [],
         otherRDData = [];
-      fileMetaDataListData.map((item) => {
-        if (item.GroupName === "GA Brief Adaptation 1") {
-          graphicABData.push(item);
-        }
-        if (item.GroupName === "Other Reference Document") {
-          otherRDData.push(item);
-        }
+      GABriefListData?.FileList?.map((item) => {
+        graphicABData.push(item);
       });
-      setGABriefAdaptationForUI(graphicABData || []);
-      setOtherRefernceDocsForUI(otherRDData || []);
+      OtherReferenceDocData?.FileList?.map((item) => {
+        otherRDData.push(item);
+      });
+      setGABriefAdaptationForUI(orderBySequence(graphicABData) || []);
+      setOtherRefernceDocsForUI(orderBySequence(otherRDData) || []);
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
     }
-    const data = fileMetaDataListData[0] || {};
-    if (data) {
-      data.Version !== "" && data.Version && setVersion(data.Version);
-    }
+    // const data = GABriefListData[0] || {};
+    // if (data) {
+    //   data.Version !== "" && data.Version && setVersion(data.Version);
+    // }
   }, [TaskDetailsData]);
 
   const handleCancel = () => {
     return navigate(`/${currentUrl?.split("/")[1]}`);
   };
 
-  const handleDelete = (index, sectionType) => {
+  const handleDelete = (index, sectionType, version, fileUrl) => {
+    const GABriefListData =
+      (TaskDetailsData?.ArtworkAgilityTasks[0]?.GABriefList &&
+        TaskDetailsData?.ArtworkAgilityTasks[0]?.GABriefList[0]) ||
+      [];
+    const OtherReferenceDocData =
+      (TaskDetailsData?.ArtworkAgilityTasks[0]?.OtherReferenceDoc &&
+        TaskDetailsData?.ArtworkAgilityTasks[0]?.OtherReferenceDoc[0]) ||
+      [];
+    console.log("gABriefAdaptationForUI", gABriefAdaptationForUI);
+    let grpName = "";
     if (sectionType === graphicAdaptionBrief) {
-      const subData = gABriefAdaptationForUI.map((item, i) => {
-        if (i === index) {
-          item.Action = "delete";
-        }
-        return item;
+      grpName = GABriefListData?.GroupName;
+
+      const subData = gABriefAdaptationForUI.filter((item, i) => {
+        return item.Sequence !== index;
+        // if (item.Sequence === index) {
+        //   item.Action = "delete";
+        //   grpName = GABriefListData?.GroupName;
+        // }
+        // return item;
       });
-      setGABriefAdaptationForUI(subData);
+      setGABriefAdaptationForUI(orderBySequence(subData));
     }
     if (sectionType === otherReferenceDocs) {
-      const subData = otherRefernceDocsForUI.map((item, i) => {
-        if (i === index) {
-          item.Action = "delete";
-        }
-        return item;
+      grpName = OtherReferenceDocData?.GroupName;
+      const subData = otherRefernceDocsForUI.filter((item, i) => {
+        return item.Sequence !== index;
+        // if (item.Sequence === index) {
+        //   item.Action = "delete";
+        //   grpName = OtherReferenceDocData?.GroupName;
+        // }
+        // return item;
       });
       setOtherRefernceDocsForUI(subData);
     }
     // For Ga Brief and Other reference
+    console.log("TaskDetailsData:", TaskDetailsData);
     const formData = {
       AWM_Project_ID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
       AWM_Task_ID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
-      Sequence: `${index + 1}`,
-      GroupName:
-        sectionType === graphicAdaptionBrief ? "GA Brief Adaptation 1" : "",
+      // Sequence: `${index + 1}`,
+      Sequence: `${index}`,
+      // Sequence: TaskDetailsData?.ArtworkAgilityTasks[0]?.FileMetaDataList,
+      // GroupName:
+      //   sectionType === graphicAdaptionBrief ? "GA Brief Adaptation 1" : "",
+      GroupName: grpName,
     };
-    deleteUploadBrefingDocs(formData);
+    // await deleteUploadBrefingDocs(formData);
+    // alert(version);
+    if (version !== "V0") {
+      deleteUploadBrefingDocs(formData);
+      dispatch(deleteAzureFile(fileUrl));
+    }
+    // if (version !== "V1" && version !== "V0") {
+    dispatch(getTaskDetails(TaskID, ProjectID));
+    // }
   };
 
   const addNewEmptyDesign = () => {
@@ -126,10 +201,126 @@ function UBD() {
       Additional_Info: "Test",
       Select: false,
       File_Name: "",
+      Sequence: gABriefAdaptationForUI.length + 1,
+      Version: "V0",
     });
-    setGABriefAdaptationForUI(gABriefAdaptationForUI);
+    setGABriefAdaptationForUI(orderBySequence(gABriefAdaptationForUI));
     setUpdated(!updated);
   };
+
+  const updateUbdData = (fileInfo, uploadType, sequence, version, id) => {
+    console.log("updateUbdData:", fileInfo, uploadType, sequence, id);
+    if (uploadType === graphicAdaptionBrief + fileUploadType.uploadFile) {
+      console.log("gABriefAdaptationForUI:", gABriefAdaptationForUI);
+      const temp = cloneDeep(gABriefAdaptationForUI);
+      temp.forEach((obj) => {
+        if (obj.Design_Job_ID === id) {
+          obj["File_Name"] = fileInfo.files[0].name;
+          if (fileInfo.files[0].name !== "") {
+            obj["Info"] = {
+              fileInfo: fileInfo,
+              uploadType: uploadType,
+              sequence: sequence,
+              version: version,
+              id: id,
+            };
+            obj["AzureFile"] = fileInfo.files[0];
+          } else {
+            obj["Info"] = "";
+            obj["AzureFile"] = "";
+          }
+        }
+        setGABriefAdaptationForUI(orderBySequence(temp));
+      });
+    } else if (uploadType === graphicAdaptionBrief + fileUploadType.upVersion) {
+      console.log("gABriefAdaptationForUI:", gABriefAdaptationForUI);
+      const temp = cloneDeep(gABriefAdaptationForUI);
+      temp.forEach((obj) => {
+        if (obj.FileID === id) {
+          obj["UV_File_Name"] = fileInfo.files[0].name;
+          if (fileInfo.files[0].name !== "") {
+            obj["Info"] = {
+              fileInfo: fileInfo,
+              uploadType: uploadType,
+              sequence: sequence,
+              version: version,
+              id: id,
+            };
+            obj["AzureFile"] = fileInfo.files[0];
+          } else {
+            obj["Info"] = "";
+            obj["AzureFile"] = "";
+          }
+        }
+        setGABriefAdaptationForUI(orderBySequence(temp));
+      });
+    } else if (uploadType === otherReferenceDocs + fileUploadType.uploadFile) {
+      console.log("otherRefernceDocsForUI:", otherRefernceDocsForUI);
+      const temp = cloneDeep(otherRefernceDocsForUI);
+      temp.forEach((obj) => {
+        if (obj.Design_Job_ID === id) {
+          obj["File_Name"] = fileInfo.files[0].name;
+          if (fileInfo.files[0].name !== "") {
+            obj["Info"] = {
+              fileInfo: fileInfo,
+              uploadType: uploadType,
+              sequence: sequence,
+              version: version,
+              id: id,
+            };
+            obj["AzureFile"] = fileInfo.files[0];
+          } else {
+            obj["Info"] = "";
+            obj["AzureFile"] = "";
+          }
+        }
+        setOtherRefernceDocsForUI(temp);
+      });
+    } else if (uploadType === otherReferenceDocs + fileUploadType.upVersion) {
+      console.log("otherRefernceDocsForUI:", otherRefernceDocsForUI);
+      const temp = cloneDeep(otherRefernceDocsForUI);
+      temp.forEach((obj) => {
+        if (obj.FileID === id) {
+          obj["UV_File_Name"] = fileInfo.files[0].name;
+          if (fileInfo.files[0].name !== "") {
+            obj["Info"] = {
+              fileInfo: fileInfo,
+              uploadType: uploadType,
+              sequence: sequence,
+              version: version,
+              id: id,
+            };
+            obj["AzureFile"] = fileInfo.files[0];
+          } else {
+            obj["Info"] = "";
+            obj["AzureFile"] = "";
+          }
+        }
+        setOtherRefernceDocsForUI(temp);
+      });
+    }
+
+    // getDataSaveAsDraft(fileInfo, uploadType, sequence, version, id);
+  };
+
+  useEffect(() => {
+    //set Flag to enable or disable submit button
+    let flag = false;
+    gABriefAdaptationForUI.forEach((obj) => {
+      if ((obj.File_Name && obj.isNew === true) || obj.UV_File_Name) {
+        if (flag === false && wrongFileName === false) flag = true;
+      }
+    });
+    otherRefernceDocsForUI.forEach((obj) => {
+      if ((obj.File_Name && obj.isNew === true) || obj.UV_File_Name) {
+        if (flag === false && wrongFileName === false) flag = true;
+      }
+    });
+    console.log("gABriefAdaptationForUI", gABriefAdaptationForUI);
+    console.log("otherRefernceDocsForUI", otherRefernceDocsForUI);
+    // alert(flag);
+    setFormValid(flag);
+  }, [gABriefAdaptationForUI, otherRefernceDocsForUI, wrongFileName]);
 
   let checkTaskISComplete =
     TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Status === "Complete";
@@ -165,6 +356,8 @@ function UBD() {
       Additional_Info: "Test",
       Select: false,
       File_Name: "",
+      Sequence: otherRefernceDocsForUI.length + 1,
+      Version: "V0",
     });
     setOtherRefernceDocsForUI(otherRefernceDocsForUI);
     setUpdated(!updated);
@@ -200,16 +393,27 @@ function UBD() {
     useState([]);
   const [pageInstructionsData, setPageInstructionsData] = useState([]);
 
-  const [graphicData, setGraphicData] = useState("Graphic Adaption Brief 1");
+  const [graphicData, setGraphicData] = useState("Graphic Adaptation Brief 1");
   const [isEditMode, setIsEditMode] = useState(false);
   const graphicInputRef = useRef(null);
 
+  useEffect(() => {
+    if (TaskDetailsData?.ArtworkAgilityTasks[0]?.GABriefList) {
+      setGraphicData(
+        TaskDetailsData?.ArtworkAgilityTasks[0]?.GABriefList[0]?.GroupName
+      );
+    }
+  }, [TaskDetailsData]);
+
   const updateData = () => {
     setIsEditMode(!isEditMode);
-    setGraphicData(graphicInputRef.current.value);
+    if (graphicInputRef.current.value) {
+      setGraphicData(graphicInputRef.current.value);
+    }
   };
 
-  const getDataSaveAsDraft = (fileInfo, uploadType, sequence) => {
+  const getDataSaveAsDraft = (fileInfo, uploadType, sequence, version) => {
+    // console.log("gABriefAdaptationForUI: ", gABriefAdaptationForUI);
     const fileSize = Math.round(fileInfo.files[0].size / 1000000);
     const saveAsDraftObj = {
       File_Name: fileInfo.files[0].name,
@@ -223,18 +427,19 @@ function UBD() {
       uploadType === graphicAdaptionBrief + fileUploadType.uploadFile ||
       uploadType === graphicAdaptionBrief + fileUploadType.upVersion
     ) {
-      saveAsDraftObj.GroupName = "GA Brief Adaptation 1";
+      // saveAsDraftObj.GroupName = "GA Brief Adaptation 1";
+      saveAsDraftObj.GroupName = graphicData;
       // saveAsDraftObj.GroupName = graphicData;
       setSaveAsDraftGABriefList([...saveAsDraftGABriefList, saveAsDraftObj]);
       submitObj = {
         instruction: "APPEND",
         target: "GABriefList",
         content: {
-          GroupName: "GA Brief Adaptation 1",
-          // GroupName: graphicData,
+          // GroupName: "GA Brief Adaptation 1",
+          GroupName: graphicData,
           Sequence: `${sequence}`,
-          Action: "",
-          Filename: fileInfo.files[0].name,
+          Action: "add",
+          File_Name: fileInfo.files[0].name,
           Size: fileSize === 0 ? "1" : `${fileSize}`,
           Version:
             version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
@@ -245,14 +450,17 @@ function UBD() {
       uploadType === otherReferenceDocs + fileUploadType.uploadFile ||
       uploadType === otherReferenceDocs + fileUploadType.upVersion
     ) {
-      setSaveAsDraftOtherReferenceDoc([...saveAsDraftOtherReferenceDoc, saveAsDraftObj]);
+      setSaveAsDraftOtherReferenceDoc([
+        ...saveAsDraftOtherReferenceDoc,
+        saveAsDraftObj,
+      ]);
       submitObj = {
         instruction: "APPEND",
         target: "OtherReferenceDoc",
         content: {
           Sequence: `${sequence}`,
-          Action: "",
-          Filename: fileInfo.files[0].name,
+          Action: "add",
+          File_Name: fileInfo.files[0].name,
           Size: fileSize === 0 ? "1" : `${fileSize}`,
           Version:
             version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
@@ -262,16 +470,78 @@ function UBD() {
     setPageInstructionsData([...pageInstructionsData, submitObj]);
   };
 
+  const getGABriefListObj = (type) => {
+    console.log("getGABriefListObj", gABriefAdaptationForUI);
+    let GABriefList = [];
+    gABriefAdaptationForUI.map((obj) => {
+      if (obj.Info) {
+        const fileSize = Math.round(obj.Info.fileInfo.files[0].size / 1000000);
+        const temp = {
+          // GroupName: "GA Brief Adaptation 1",
+          GroupName: graphicData,
+          Version:
+            obj.Info.version.substring(0, 1) +
+            (parseInt(obj.Info.version.substring(1)) + 1),
+          Size: fileSize === 0 ? "1" : `${fileSize}`,
+          Sequence: `${obj.Info.sequence}`,
+          Action: "add",
+        };
+        if (type === "save") {
+          temp["File_Name"] = obj.Info.fileInfo.files[0].name;
+        }
+        if (type === "submit") {
+          temp["Filename"] = obj.Info.fileInfo.files[0].name;
+        }
+
+        GABriefList.push(temp);
+        dispatch(uploadFileAzure(obj.AzureFile));
+      }
+    });
+    return GABriefList;
+  };
+
+  const getOtherReferenceDocObj = (type) => {
+    let OtherReferenceDoc = [];
+    otherRefernceDocsForUI.map((obj) => {
+      if (obj.Info) {
+        const fileSize = Math.round(obj.Info.fileInfo.files[0].size / 1000000);
+        const temp = {
+          Version:
+            obj.Info.version.substring(0, 1) +
+            (parseInt(obj.Info.version.substring(1)) + 1),
+          Size: fileSize === 0 ? "1" : `${fileSize}`,
+          Sequence: `${obj.Info.sequence}`,
+          Action: "add",
+        };
+        if (type === "save") {
+          temp["File_Name"] = obj.Info.fileInfo.files[0].name;
+        }
+        if (type === "submit") {
+          temp["Filename"] = obj.Info.fileInfo.files[0].name;
+        }
+        OtherReferenceDoc.push(temp);
+        dispatch(uploadFileAzure(obj.AzureFile));
+      }
+    });
+    return OtherReferenceDoc;
+  };
   const onSaveAsDraft = async () => {
     setLoader(true);
+    const saveAsDraftObjGABriefList = getGABriefListObj("save");
+    const saveAsDraftObjOtherReferenceDoc = getOtherReferenceDocObj("save");
+
     const formData = {
       AWM_Project_ID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
       AWM_Task_ID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
-      GABriefList: saveAsDraftGABriefList,
-      OtherReferenceDoc: saveAsDraftOtherReferenceDoc,
+      // GABriefList: saveAsDraftGABriefList,
+      // OtherReferenceDoc: saveAsDraftOtherReferenceDoc,
+      GABriefList: saveAsDraftObjGABriefList,
+      OtherReferenceDoc: saveAsDraftObjOtherReferenceDoc,
     };
-    // await dispatch(uploadFileAzure(azureFile));
+
     await saveAsDraftUploadBrefingDocs(formData);
+    // setSaveAsDraftGABriefList([]);
+    // setSaveAsDraftOtherReferenceDoc([]);
     setLoader(false);
     dispatch(getTaskDetails(TaskID, ProjectID));
     // navigate(`/${currentUrl?.split("/")[1]}`);
@@ -279,23 +549,52 @@ function UBD() {
 
   const onSubmit1 = async () => {
     setLoader(true);
+    const submitObjGABriefList = getGABriefListObj("submit");
+    const submitObjOtherReferenceDoc = getOtherReferenceDocObj("submit");
+    let pageInstructions = [];
+    submitObjGABriefList.forEach((obj) => {
+      pageInstructions.push({
+        instruction: "APPEND",
+        target: "GABriefList",
+        content: obj,
+      });
+    });
+    submitObjOtherReferenceDoc.forEach((obj) => {
+      pageInstructions.push({
+        instruction: "APPEND",
+        target: "OtherReferenceDoc",
+        content: obj,
+      });
+    });
+
+    console.log("TaskDetailsData:", TaskDetailsData);
+
     const headers = {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-
+    // TaskDetailsData?.ArtworkAgilityTasks[0]?.
     let formData = {
       caseTypeID: "PG-AAS-Work-UploadBriefingDocuments",
       content: {
         AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
         AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
-        Project_Name: TaskDetailsData?.ArtworkAgilityTasks[0]?.Project_Name,
+        // Project_Name: TaskDetailsData?.ArtworkAgilityTasks[0]?.Project_Name,
       },
-      pageInstructions: pageInstructionsData,
+      pageInstructions: pageInstructions,
     };
+    console.log("submitFormData: ", formData);
+    // await dispatch(uploadFileAzure(azureFile));
     await submitUploadBrefingDocs(formData, id, headers);
     setLoader(false);
-    navigate(`/${currentUrl?.split("/")[1]}`);
+    if (page2 && page2 === "projectPlan") {
+      navigate(
+        `/${page1}/${page2}/${TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID}`
+      );
+    } else if (pageType) {
+      navigate(`/${pageType}`);
+    }
+    // navigate(`/${currentUrl?.split("/")[1]}`);
   };
 
   return (
@@ -391,7 +690,8 @@ function UBD() {
                       key={item.Design_Job_ID}
                       // {...data}
                       item={item}
-                      index={index}
+                      index={item.Sequence}
+                      version={item.Version}
                       handleDelete={handleDelete}
                       checkReadWriteAccess={checkReadWriteAccess}
                       length={gABriefAdaptationForUI.length}
@@ -399,6 +699,12 @@ function UBD() {
                       fileUploadType={fileUploadType}
                       getDataSaveAsDraft={getDataSaveAsDraft}
                       File_NameFromAPI={item.File_Name}
+                      updateUbdData={updateUbdData}
+                      setWrongFileName={setWrongFileName}
+                      disableDelete={
+                        gABriefAdaptationForUI.length === 1 && !item.File_Name
+                      }
+                      // setAzureFile={setAzureFile}
                     />
                   );
                 }
@@ -414,7 +720,8 @@ function UBD() {
                       key={item.Design_Job_ID}
                       // {...data}
                       item={item}
-                      index={index}
+                      index={item.Sequence}
+                      version={item.Version}
                       handleDelete={handleDelete}
                       checkReadWriteAccess={checkReadWriteAccess}
                       length={otherRefernceDocsForUI.length}
@@ -422,6 +729,12 @@ function UBD() {
                       fileUploadType={fileUploadType}
                       getDataSaveAsDraft={getDataSaveAsDraft}
                       File_NameFromAPI={item.File_Name}
+                      updateUbdData={updateUbdData}
+                      setWrongFileName={setWrongFileName}
+                      disableDelete={
+                        otherRefernceDocsForUI.length === 1 && !item.File_Name
+                      }
+                      // setAzureFile={setAzureFile}
                     />
                   );
                 }
@@ -429,14 +742,26 @@ function UBD() {
           </>
         )}
       </div>
-      <FooterButtons
+      <UBDFooterButtons
         handleCancel={handleCancel}
         onSaveAsDraft={onSaveAsDraft}
         onSubmit={onSubmit1}
         checkReadWriteAccess={checkReadWriteAccess}
         bottomFixed={true}
-        formValid={false}
-        checkTaskISComplete={checkTaskISComplete}
+        formValid={!formValid}
+        checkTaskISComplete={false}
+        // submitAllowed={
+        //   TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Status ===
+        //     "In-Progress" &&
+        //   (TaskDetailsData?.ArtworkAgilityTasks[0]?.GABriefList ||
+        //     TaskDetailsData?.ArtworkAgilityTasks[0]?.OtherReferenceDoc ||
+        //     formValid)
+        // }
+        submitAllowed={
+          TaskDetailsData?.ArtworkAgilityTasks[0]?.GABriefList ||
+          TaskDetailsData?.ArtworkAgilityTasks[0]?.OtherReferenceDoc ||
+          formValid
+        }
       />
     </PageLayout>
   );

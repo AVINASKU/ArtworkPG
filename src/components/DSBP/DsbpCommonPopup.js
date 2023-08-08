@@ -27,7 +27,10 @@ const DsbpCommonPopup = ({
               disabled={
                 rejectFormData && Object.keys(rejectFormData)?.length === 0
               }
-              onClick={onSubmit}
+              onClick={() => {
+                onSubmit();
+                setDasbpDialog(false);
+              }}
             >
               Delete
             </Button>

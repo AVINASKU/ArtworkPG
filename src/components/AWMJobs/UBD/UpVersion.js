@@ -1,9 +1,11 @@
 import React, { useState, useRef } from "react";
 import { FileUpload } from "primereact/fileupload";
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
+import { AzureFileDownloadJobs } from "../../../store/actions/AzureFileDownloadJobs";
+import { useDispatch } from "react-redux";
 
 const UpVersion = ({
-  setAzureFile,
+  // setAzureFile,
   item,
   data,
   designData,
@@ -15,12 +17,13 @@ const UpVersion = ({
   sequence,
   getDataSaveAsDraft,
   setUploadedWrongFilename,
+  updateUbdData,
 }) => {
   const [fileName, setFileName] = useState("");
   const [totalSize, setTotalSize] = useState(0);
   const [fileUploadWarning, setFileUploadWarning] = useState(false);
   const fileUploadRef = useRef(null);
-
+  const dispatch = useDispatch();
   const viewProofScopeFile = useProofScopeURL();
   const handleViewProofScopeClick = (event, fileUrl) => {
     event.preventDefault();
@@ -86,17 +89,18 @@ const UpVersion = ({
       setUploadedWrongFilename(true);
     }
 
-    const renamedFile = {
-      objectURL: e.files[0].objectURL,
-      lastModified: e.files[0].lastModified,
-      lastModifiedDate: e.files[0].lastModifiedDate,
-      name: di_name,
-      size: e.files[0].size,
-      length: e.files[0].length,
-      type: e.files[0].type,
-      webkitRelativePath: e.files[0].webkitRelativePath,
-    };
-    setAzureFile(renamedFile);
+    // const renamedFile = {
+    //   objectURL: e.files[0].objectURL,
+    //   lastModified: e.files[0].lastModified,
+    //   lastModifiedDate: e.files[0].lastModifiedDate,
+    //   name: di_name,
+    //   size: e.files[0].size,
+    //   length: e.files[0].length,
+    //   type: e.files[0].type,
+    //   webkitRelativePath: e.files[0].webkitRelativePath,
+    // };
+    // setAzureFile(renamedFile);
+    // setAzureFile(e.files[0]);
     let _totalSize = totalSize;
     let files = e.files;
     Object.keys(files).forEach((key) => {
@@ -104,9 +108,19 @@ const UpVersion = ({
     });
 
     setTotalSize(_totalSize);
-    setAzureFile(renamedFile);
     // setFileName(di_name);
-    getDataSaveAsDraft(e, fileUploadSection + upVersion, sequence);
+    // getDataSaveAsDraft(e, fileUploadSection + upVersion, sequence, version);
+    updateUbdData(
+      e,
+      fileUploadSection + upVersion,
+      sequence,
+      version,
+      item.FileID || item.Design_Job_ID
+    );
+  };
+  const downloadAzure = async (event, fileUrl) => {
+    event.preventDefault();
+    dispatch(AzureFileDownloadJobs(fileUrl));
   };
 
   const customUploader = () => {};
@@ -115,6 +129,13 @@ const UpVersion = ({
     setFileUploadWarning(false);
     setUploadedWrongFilename(false);
     setFileName("");
+    updateUbdData(
+      { files: [{ name: "" }] },
+      fileUploadSection + upVersion,
+      sequence,
+      version,
+      item.FileID || item.Design_Job_ID
+    );
   };
 
   return (
@@ -138,10 +159,11 @@ const UpVersion = ({
           onSelect={(e) => onTemplateSelect(e)}
           itemTemplate={itemTemplate}
           onClear={onImageClose}
-          disabled
+          disabled={item.isNew === true}
           // disabled={fileName !== ""}
         />
       </div>
+      {/* <a href="#">{item.UV_File_Name}</a> */}
       {/* <span>
         {fileUploadWarning && (
           <>

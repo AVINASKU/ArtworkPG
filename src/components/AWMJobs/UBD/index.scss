@@ -1,12 +1,11 @@
 .uploadImageAndupVersionImage {
   width: 105px;
-  // height: 44px;
+  height: 75px;
   // width: 87px;
   border-radius: 2px;
   box-shadow: 0 2px 8px 0 rgba(89, 89, 89, 0.25);
 
   .p-fileupload {
-
     // display: flex;
     // border: 1px solid red;
     .p-button {
@@ -24,14 +23,14 @@
       width: 87px;
       // border: 0;
       // padding: 0;
-      // padding: 0 20px; 
+      // padding: 0 20px;
       padding: 1.25rem;
       padding-top: 0;
     }
 
     .p-fileupload-row {
       .upload-row {
-        margin-top: 10px !important;
+        margin-top: 15px !important;
       }
 
       // height: 44px;
@@ -50,7 +49,7 @@
       justify-content: left;
     }
 
-    .p-button[aria-label=Cancel] {
+    .p-button[aria-label="Cancel"] {
       // display: flex;
       // color: red;
       display: flow-root;
@@ -84,11 +83,12 @@
   }
 
   .fileName {
+    // visibility: hidden;
     // width: 93px;
     width: 87px;
     font-weight: 400;
     // line-height: 9.75px;
-    font-size: 8px !important;
+    font-size: 12px !important;
     color: rgba(34, 54, 232, 1);
     // margin: 2px 6px;
     white-space: nowrap;
@@ -99,7 +99,7 @@
   .File_NameFromAPI {
     width: 87px;
     font-weight: 400;
-    font-size: 8px !important;
+    font-size: 12px !important;
     color: rgba(34, 54, 232, 1);
     white-space: nowrap;
     overflow: hidden;
@@ -112,7 +112,7 @@
   svg {
     // width: 13.16px;
     // height: 17px;
-    height: 25px;
+    // height: 25px;
   }
 }
 #File_NameFromAPIPaddingId .p-fileupload .p-fileupload-buttonbar {
@@ -185,7 +185,7 @@
 
   .graphicInput {
     border: none;
-    border-bottom: 1.5px solid #003DA5;
+    border-bottom: 1.5px solid #003da5;
   }
 
   input[type="text"] {
@@ -231,12 +231,12 @@
   }
 }
 
-.tooltip1>.tooltip-arrow {
+.tooltip1 > .tooltip-arrow {
   left: 10px;
   top: -8px !important;
 }
 
-.tooltip1>.tooltip-arrow::before {
+.tooltip1 > .tooltip-arrow::before {
   border: 1px solid rgb(172, 172, 172);
   width: 16.86px;
   height: 16.86px;
