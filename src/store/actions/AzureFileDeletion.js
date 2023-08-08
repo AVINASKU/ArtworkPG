@@ -27,12 +27,12 @@ export const deleteFileFailure = (error) => ({
 });
 
 // Define your Redux async action creator
-export const deleteAzureFile = (filePath) => {
+export const deleteAzureFile = (filePath, subFolder) => {
   return async (dispatch) => {
     try {
       dispatch(deleteFileRequest());
 
-      const deleteUrl = `${baseUrl}/${containerName}/${filePath}?${sasToken}`;
+      const deleteUrl = `${baseUrl}/${containerName}/${subFolder}/${filePath}?${sasToken}`;
 
       const response = await axios.delete(deleteUrl);
 
