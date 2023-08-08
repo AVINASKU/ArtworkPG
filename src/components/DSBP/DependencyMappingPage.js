@@ -49,70 +49,41 @@ const DependencyMapping = () => {
   console.log("selected outside", selected);
 
   const updateDropDownData = (value, columnName, id) => {
-    console.log("value", value, columnName, id);
-    console.log("selected", selected);
-    dependencyMappingData.map((data) => {
-      // add condition selected id with data id
-      if(selected && selected.length !== 0){
-        selected.map((selectedData) => {
-          if(selectedData.DSBP_PMP_PIMaterialID === data.DSBP_PMP_PIMaterialID){
-            if (!data[columnName] && columnName === "AWM_CIC_Needed")
-              data["AWM_CIC_Needed"] = value;
-            if (!data[columnName] && columnName === "AWM_Supporting_PMP_Design")
-              data["AWM_Supporting_PMP_Design"] = value;
-            if (!data[columnName] && columnName === "AWM_Supporting_PMP_Layout")
-              data["AWM_Supporting_PMP_Layout"] = value;
-            if (!data[columnName] && columnName === "AWM_Other_Reference")
-              data["AWM_Other_Reference"] = value;
-            if (!data[columnName] && columnName === "AWM_RDT_Page")
-              data["AWM_RDT_Page"] = value;
-            if (!data[columnName] && columnName === "AWM_GA_Brief")
-              data["AWM_GA_Brief"] = value;
-            if (!data[columnName] && columnName === "AWM_CIC_Matrix")
-              data["AWM_CIC_Matrix"] = value;
-            else data[columnName] = value;
-            data["updated"] = true;
-          }
-        })
-      } else{
-        if (data.DSBP_PMP_PIMaterialID === id) {
-          if (!data[columnName] && columnName === "AWM_CIC_Needed")
-            data["AWM_CIC_Needed"] = value;
-          if (!data[columnName] && columnName === "AWM_Supporting_PMP_Design")
-            data["AWM_Supporting_PMP_Design"] = value;
-          if (!data[columnName] && columnName === "AWM_Supporting_PMP_Layout")
-            data["AWM_Supporting_PMP_Layout"] = value;
-          if (!data[columnName] && columnName === "AWM_Other_Reference")
-            data["AWM_Other_Reference"] = value;
-          if (!data[columnName] && columnName === "AWM_RDT_Page")
-            data["AWM_RDT_Page"] = value;
-          if (!data[columnName] && columnName === "AWM_GA_Brief")
-            data["AWM_GA_Brief"] = value;
-          if (!data[columnName] && columnName === "AWM_CIC_Matrix")
-            data["AWM_CIC_Matrix"] = value;
-          else data[columnName] = value;
-          data["updated"] = true;
-        }
-      }     
-
+    const updatedData = dependencyMappingData.map((data) => {
+      const isMatchingId = selected.some(selectedData =>
+        selectedData.DSBP_PMP_PIMaterialID === data.DSBP_PMP_PIMaterialID
+      );
+  
+      if (!isMatchingId && data.DSBP_PMP_PIMaterialID !== id) {
+        return data;
+      }
+  
+      const columnsToUpdate = [
+        "AWM_CIC_Needed",
+        "AWM_Supporting_PMP_Design",
+        "AWM_Supporting_PMP_Layout",
+        "AWM_Other_Reference",
+        "AWM_RDT_Page",
+        "AWM_GA_Brief",
+        "AWM_CIC_Matrix",
+      ];
+  
+      if (columnsToUpdate.includes(columnName)) {
+        data[columnName] = value;
+      } else {
+        data[columnName] = value;
+      }
+  
+      data["updated"] = true;
       return data;
     });
-    let filteredDataToSubmit = dependencyMappingData.filter(
-      (item) => item.updated === true
-    );
-    let data = dependencyMappingData.filter(
-      (data) => data?.AWM_CIC_Needed === "Yes" && data
-    );
-    let dropdownDataForLayoutAndDesign1 = data.map(
-      (item) => item.DSBP_PMP_PIMaterialID
-    );
-    // console.log(
-    //   "filteredDataToSubmit",
-    //   filteredDataToSubmit,
-    //   dependencyMappingData
-    // );
+  
+    const filteredDataToSubmit = updatedData.filter(item => item.updated === true);
+    const data = updatedData.filter(data => data?.AWM_CIC_Needed === "Yes" && data);
+    const dropdownDataForLayoutAndDesign1 = data.map(item => item.DSBP_PMP_PIMaterialID);
+  
     setDropdownDataForLayoutAndDesign(dropdownDataForLayoutAndDesign1);
-    setDependencyMappingData(dependencyMappingData);
+    setDependencyMappingData(updatedData);
     setSubmittedData(filteredDataToSubmit);
     setDataUpdated(!dataUpdated);
   };
