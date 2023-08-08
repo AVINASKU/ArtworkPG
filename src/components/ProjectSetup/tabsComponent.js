@@ -49,7 +49,9 @@ const TabsComponent = ({ items, tabName, actionButton, setTabName, basePage }) =
               obj.name === tabName ? "in active" : ""
             }`}
           >
-            {obj.component}
+  
+        {obj.component}
+            
           </div>
         ))}
       </div>
