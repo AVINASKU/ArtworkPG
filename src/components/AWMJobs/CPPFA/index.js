@@ -30,6 +30,7 @@ const CPPFA = ({
 
   const [visible, setVisible] = useState(showTaskDialog);
   const [taskDetailsDataObj, setTaskDetailsDataObj] = useState(null);
+  const [newPrintFeasibilityFlag, setNewPrintFeasibilityFlag] = useState(null);
   const [version, setVersion] = useState("V0");
   // let allAccess = hasAllAccess();
   const allAccess = true;
@@ -53,6 +54,7 @@ const CPPFA = ({
     setLoader(true);
     if (TaskDetailsData) {
       setTaskDetailsDataObj(TaskDetailsData?.ArtworkAgilityTasks[0] || {});
+      setNewPrintFeasibilityFlag(TaskDetailsData?.ArtworkAgilityPage?.New_Print_Feasibility || false);
     }
     if (taskDetailsDataObj) {
       taskDetailsDataObj?.FileMetaDataList?.find((el) => {
@@ -160,10 +162,12 @@ const CPPFA = ({
       taskDetailsDataObj?.RiskLevel === ""
     ) {
       setHideFlag(true);
-    } else if (flag && taskDetailsDataObj?.Task_Status !== "Complete") {
+    } else if (newPrintFeasibilityFlag) {
       setHideFlag(true);
-    } else if (!flag && taskDetailsDataObj?.Task_Status === "Complete") {
-      setHideFlag(false);
+    // } else if (flag && taskDetailsDataObj?.Task_Status !== "Complete" && newPrintFeasibilityFlag) {
+    //   setHideFlag(true);
+    // } else if (!flag && taskDetailsDataObj?.Task_Status === "Complete" && !newPrintFeasibilityFlag) {
+    //   setHideFlag(false);
     } else {
       setHideFlag(false);
     }
@@ -274,6 +278,10 @@ const CPPFA = ({
     >
       {loader || taskDetailsDataObj === null ? (
         <div className="p-fluid popup-details ppfaDialogBorder">
+          <br />
+          <br />
+          <br />
+          <br />
           <Loading />
         </div>
       ) : (
