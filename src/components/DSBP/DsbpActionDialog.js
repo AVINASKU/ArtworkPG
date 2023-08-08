@@ -96,7 +96,7 @@ const DsbpActionDialog = ({
       {(updatedData && updatedData[0]?.value === "Add to Project") || rowData ? "No" : "Cancel"}
       </Button>
       <Button
-        disabled={(updatedData && updatedData[0]?.value === "Add to Project") || rowData || !isSubmitEnable ? false : Object.keys(formData).length === 0}
+        disabled={(updatedData && updatedData[0]?.value === "Add to Project") || rowData || submittedData.length !== 0 ? false : Object.keys(formData).length === 0}
         onClick={() => ((updatedData && updatedData[0]?.value === "Add to Project") || rowData) ? onActionSubmit("AddToProject", selected) : onActionSubmit(formData)}
       >
         {(updatedData && updatedData[0]?.value === "Mass Update") ? "Update" : (updatedData && updatedData[0]?.value === "Add to Project") || rowData ? "Yes" : "Submit"}
@@ -107,6 +107,7 @@ const DsbpActionDialog = ({
   const addedToProjectRows = selected.filter((item) => (item.AWM_AddedToProject === "Yes"));
 
   return (
+    console.log("submittedData", submittedData),
     (
       <div className="card flex justify-content-center dsbp-action-dialog">
         <Dialog
