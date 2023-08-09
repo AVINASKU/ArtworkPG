@@ -121,7 +121,7 @@ const ProjectListHeader = ({
   // console.log("new obj", newObj);
 
   return (
-    <div className="actions" style={{ marginLeft: 25, paddingRight: 42 }}>
+    <div className="actions" style={{ paddingRight: 42 }}>
       <div className="project-title">{header}</div>
 
       <div className="action-buttons">

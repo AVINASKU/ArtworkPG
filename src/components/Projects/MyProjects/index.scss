@@ -19,7 +19,10 @@ $fontWeight400: 400;
 
 // Datepicker for ProjectSetUp component Style End
 .myProjectAnddAllProjectList {
-  .p-datatable>.p-datatable-wrapper {
+  .actions {
+    padding: 0 20px;
+  }
+  .p-datatable > .p-datatable-wrapper {
     overflow: auto;
     width: $width100;
     height: calc(100vh - 150px);
@@ -71,15 +74,15 @@ $fontWeight400: 400;
   }
 
   td,
-  table .p-datatable .p-datatable-tbody>tr>td,
+  table .p-datatable .p-datatable-tbody > tr > td,
   th,
   tr {
     position: relative;
     border: 0 !important;
     // height: 40px;
   }
-  &.dsbp-wrapper{
-    .p-datatable{
+  &.dsbp-wrapper {
+    .p-datatable {
       height: calc(100% - 220px);
     }
   }
@@ -93,7 +96,7 @@ $fontWeight400: 400;
   margin: 8px 8px 8px 8px;
 }
 
-.p-checkbox-checked+label {
+.p-checkbox-checked + label {
   color: #003da5;
 }
 
@@ -250,7 +253,8 @@ div.p-selectbutton.p-buttonset.p-component {
 }
 
 .filter-color-change {
-  filter: invert(10%) sepia(100%) saturate(1200%) hue-rotate(204deg) brightness(60%) contrast(135%);
+  filter: invert(10%) sepia(100%) saturate(1200%) hue-rotate(204deg)
+    brightness(60%) contrast(135%);
 }
 
 .checkbox-columnnames {
@@ -285,7 +289,7 @@ div.p-selectbutton.p-buttonset.p-component {
   justify-content: space-around;
   border-radius: 20px;
   border: 0;
-  &:focus-visible{
+  &:focus-visible {
     outline: none;
   }
 }
@@ -300,22 +304,24 @@ div.p-selectbutton.p-buttonset.p-component {
   &:hover:first-child {
     border-radius: 8px 8px 0 0;
   }
-  &.active, &:hover {
+  &.active,
+  &:hover {
     background: #edf4fa !important;
     color: #003da5;
   }
-  &:focus{
+  &:focus {
     outline: none;
   }
 }
-.artwork-dsbp{
-  .dropdown-item{
+.artwork-dsbp {
+  .dropdown-item {
     @extend .dropdown-item;
-    &.active, &:hover {
+    &.active,
+    &:hover {
       background: #edf4fa !important;
       color: #003da5;
     }
-  }  
+  }
 }
 
 .dropdown-menu {
