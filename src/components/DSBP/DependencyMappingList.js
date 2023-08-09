@@ -15,6 +15,7 @@ import toggleOff from "../../assets/images/toggleOff.svg";
 import toggleOn from "../../assets/images/toggleOn.svg";
 import DependencyFilter from "./DependencyFilter";
 import { FilterMatchMode } from "primereact/api";
+import { allFieldOfDependencyMapping } from "./constant";
 
 const DependencyMappingList = ({
   dependencyMappingData,
@@ -197,6 +198,7 @@ const DependencyMappingList = ({
         </div>
       );
     }
+
     return (
       <span key={field}>
         <img
@@ -274,7 +276,7 @@ const DependencyMappingList = ({
           </div>
         )}
 
-        {field === "AWM_CDPT_Page" && (
+        {field === "AWM_CDPT_Page" && CDPTPageData?.length > 1 && (
           <div>
             <MultiSelect
               value={options[field]}
@@ -291,11 +293,11 @@ const DependencyMappingList = ({
                       label: obj.AWM_Design_Job_Name,
                       value: obj.AWM_Design_Job_ID,
                       disabled:
-                        (options[field].length &&
-                          options[field].includes("NPF_DJobN/A") &&
+                        (options[field]?.length &&
+                          options[field]?.includes("NPF_DJobN/A") &&
                           obj.AWM_Design_Job_ID !== "NPF_DJobN/A") ||
-                        (options[field].length &&
-                          !options[field].includes("NPF_DJobN/A") &&
+                        (options[field]?.length &&
+                          !options[field]?.includes("NPF_DJobN/A") &&
                           obj.AWM_Design_Job_ID === "NPF_DJobN/A"),
                     }))
                   : []
@@ -325,11 +327,11 @@ const DependencyMappingList = ({
                       label: obj.AWM_Design_Job_Name,
                       value: obj.AWM_Design_Job_ID,
                       disabled:
-                        (options[field].length &&
-                          options[field].includes("DT_DJobN/A") &&
+                        (options[field]?.length &&
+                          options[field]?.includes("DT_DJobN/A") &&
                           obj.AWM_Design_Job_ID !== "DT_DJobN/A") ||
-                        (options[field].length &&
-                          !options[field].includes("DT_DJobN/A") &&
+                        (options[field]?.length &&
+                          !options[field]?.includes("DT_DJobN/A") &&
                           obj.AWM_Design_Job_ID === "DT_DJobN/A"),
                     }))
                   : []
@@ -399,11 +401,11 @@ const DependencyMappingList = ({
                       label: obj.AWM_Design_Job_Name,
                       value: obj.AWM_Design_Job_ID,
                       disabled:
-                        (options[field].length &&
-                          options[field].includes("IQ_DJobN/A") &&
+                        (options[field]?.length &&
+                          options[field]?.includes("IQ_DJobN/A") &&
                           obj.AWM_Design_Job_ID !== "IQ_DJobN/A") ||
-                        (options[field].length &&
-                          !options[field].includes("IQ_DJobN/A") &&
+                        (options[field]?.length &&
+                          !options[field]?.includes("IQ_DJobN/A") &&
                           obj.AWM_Design_Job_ID === "IQ_DJobN/A"),
                     }))
                   : []
@@ -567,11 +569,25 @@ const DependencyMappingList = ({
   };
 
   const dynamicColumns = () => {
-    let dependencyColumnNames = JSON.parse(
+    let dependencyColumnNames1 = JSON.parse(
       localStorage.getItem("setDependencyMappingColumnNames")
     );
-    console.log("dependencyColumnNames", dependencyColumnNames);
-    console.log("customizeViewFields", customizeViewFields);
+
+    const dependencyColumnNames2 =
+      CDPTPageData?.length === 1
+        ? dependencyColumnNames1.filter(
+            (item) => item.field !== "AWM_CDPT_Page"
+          )
+        : dependencyColumnNames1;
+    const dependencyColumnNames3 =
+      RDTData?.length === 1
+        ? dependencyColumnNames2.filter((item) => item.field !== "AWM_RDT_Page")
+        : dependencyColumnNames2;
+    const dependencyColumnNames =
+      IQData?.length === 1
+        ? dependencyColumnNames3.filter((item) => item.field !== "AWM_IQ_Page")
+        : dependencyColumnNames3;
+
     if (!dependencyColumnNames) return null;
 
     let jsonValue = customizeViewFields
@@ -616,7 +632,13 @@ const DependencyMappingList = ({
             return (
               <Column
                 field={col.field}
-                header={renderHeader(col.field, col)}
+                header={renderHeader(
+                  col.field,
+                  col,
+                  CDPTPageData,
+                  IQData,
+                  RDTData
+                )}
                 frozen={col.freeze}
                 className={col.freeze ? "font-bold" : ""}
                 // bodyClassName={"change-bg-color"}
@@ -630,8 +652,7 @@ const DependencyMappingList = ({
                 alignFrozen="left"
                 filterField={col.field}
                 style={{
-                  // width: col.width,
-                  width: 200,
+                  width: col.width,
                   height: 30,
                 }}
               />
@@ -654,7 +675,13 @@ const DependencyMappingList = ({
           return (
             <Column
               field={col.field}
-              header={renderHeader(col.field, col)}
+              header={renderHeader(
+                col.field,
+                col,
+                CDPTPageData,
+                IQData,
+                RDTData
+              )}
               frozen={col.freeze}
               className={col.freeze ? "font-bold" : ""}
               // bodyClassName={"change-bg-color"}

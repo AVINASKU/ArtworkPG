@@ -73,10 +73,13 @@ const DMPMPSpecificTabView = () => {
     if (dmTabValuesData[tabPanelList]) {
       const selectedTabData = dmTabValuesData[tabPanelList];
       if (selectedTabData?.description !== undefined) {
+      console.log("selected tab data", selectedTabData?.description);
         setCDPT(selectedTabData?.description?.AWM_CDPT_Page);
 
         setRDT(selectedTabData?.description?.AWM_RDT_Page);
+
         setIQ(selectedTabData?.description?.AWM_IQ_Page);
+
         setCICNeeded(selectedTabData?.description?.AWM_CIC_Needed);
         setPMPDesign(selectedTabData?.description?.AWM_Supporting_PMP_Design);
         setPMPLayout(selectedTabData?.description?.AWM_Supporting_PMP_Layout);
@@ -93,7 +96,7 @@ const DMPMPSpecificTabView = () => {
           AWM_SupportingPMPDesign:
             selectedTabData?.description?.AWM_Supporting_PMP_Design,
           AWM_OtherReference: selectedTabData?.description?.AWM_Other_Reference,
-          AWM_GABrief: selectedTabData?.description?.AWM_GA_Brief,
+          AWM_GABrief: selectedTabData?.description?.AWM_GA_Brief || " ",
           DSBP_RDT_Page: selectedTabData?.description?.AWM_RDT_Page,
           DSBP_CDPT_Page: selectedTabData?.description?.AWM_CDPT_Page,
           DSBP_IQ_Page: selectedTabData?.description?.AWM_IQ_Page,
@@ -127,7 +130,7 @@ const DMPMPSpecificTabView = () => {
           AWM_SupportingPMPDesign:
             selectedTabData?.description?.AWM_Supporting_PMP_Design,
           AWM_OtherReference: selectedTabData?.description?.AWM_Other_Reference,
-          AWM_GABrief: selectedTabData?.description?.AWM_GA_Brief,
+          AWM_GABrief: selectedTabData?.description?.AWM_GA_Brief || " ",
           DSBP_RDT_Page: selectedTabData?.description?.AWM_RDT_Page,
           DSBP_CDPT_Page: selectedTabData?.description?.AWM_CDPT_Page,
           DSBP_IQ_Page: selectedTabData?.description?.AWM_IQ_Page,
@@ -242,18 +245,18 @@ const DMPMPSpecificTabView = () => {
   const handleGABriefChange = async (e) => {
     setGaBrief(e.target.value);
     const selectedValue = e.target.value;
-    if (selectedValue === "New") {
-      let formData = {
-        NewGABTask: "Yes",
-        AWM_Project_ID: selectedProject?.Project_ID,
-        AWM_Task_ID: "",
-        Project_Name: selectedProject?.Project_Name,
-        BU: selectedProject?.BU,
-        Region: selectedProject?.Project_region,
-      };
-      let res = await createNewGaBriefTask(formData);
-      console.log("res", res);
-    } else
+    // if (selectedValue === "New") {
+    //   let formData = {
+    //     NewGABTask: "Yes",
+    //     AWM_Project_ID: selectedProject?.Project_ID,
+    //     AWM_Task_ID: "",
+    //     Project_Name: selectedProject?.Project_Name,
+    //     BU: selectedProject?.BU,
+    //     Region: selectedProject?.Project_region,
+    //   };
+    //   let res = await createNewGaBriefTask(formData);
+    //   console.log("res", res);
+    // } else
       setFormData({
         ...formData,
         AWM_GABrief: e.target.value,
@@ -265,8 +268,7 @@ const DMPMPSpecificTabView = () => {
   };
 
   const updateMappingTabValuesData = (updatedNewData) => {
-    console.log("updateMappingTabValuesData updatedNewData", updatedNewData);
-    console.log("updateMappingTabValuesData selectedTab", selectedTab);
+
     let submittionData = {};
     submittionData = {
       tabHeader: selectedTab.tabHeader,
@@ -295,6 +297,9 @@ const DMPMPSpecificTabView = () => {
 
   const onSubmit = async () => {
     setLoader(true);
+    formData.AWM_GABrief = formData?.AWM_GABrief?.length ? formData?.AWM_GABrief : "";
+    setFormData(formData);
+
     const updatedPmpDetails = { DSBPValues: [formData] };
     console.log("updatedPmpDetails", updatedPmpDetails);
 
@@ -349,25 +354,36 @@ const DMPMPSpecificTabView = () => {
           DSBP_PMP_PIMaterialID: item.DSBP_PMP_PIMaterialID,
           DSBP_PMP_PIMaterialNumber: item.DSBP_PMP_PIMaterialNumber,
         };
-        if (isRDTData && isRDTData.length) {
-          transformedItem.AWM_RDT_Page = item.Preselected_AWM_RDT_Page || [];
-        }
 
-        if (isCDPTData && isCDPTData.length) {
-          transformedItem.AWM_CDPT_Page = item.Preselected_AWM_CDPT_Page || [];
-        }
-        if (isIQData && isIQData.length) {
-          transformedItem.AWM_IQ_Page = item.Preselected_AWM_IQ_Page || [];
-        }
+        transformedItem.AWM_RDT_Page =
+            item?.Preselected_AWM_RDT_Page?.map(
+              (item) => item.AWM_Design_Job_ID
+            ) || [];
 
-        transformedItem = {
+          transformedItem.AWM_CDPT_Page =
+            item?.Preselected_AWM_CDPT_Page?.map(
+              (item) => item.AWM_Design_Job_ID
+            ) || [];
+        
+          transformedItem.AWM_IQ_Page =
+            item?.Preselected_AWM_IQ_Page?.map(
+              (item) => item.AWM_Design_Job_ID
+            ) || [];
+
+       transformedItem = {
           ...transformedItem,
-          ...item?.AWM_CIC_Page?.[0],
+          AWM_CIC_Needed: item?.AWM_CIC_Page?.[0]?.AWM_CIC_Needed || "",
+          AWM_Supporting_PMP_Layout:
+            item?.AWM_CIC_Page?.[0]?.AWM_Supporting_PMP_Layout || "",
+          AWM_Supporting_PMP_Design:
+            item?.AWM_CIC_Page?.[0]?.AWM_Supporting_PMP_Design || "",
+          AWM_Other_Reference:
+            item?.AWM_CIC_Page?.[0]?.AWM_Other_Reference || "",
+          AWM_CIC_Matrix: item?.AWM_CIC_Page?.[0]?.AWM_CIC_Matrix || "",
+          AWM_GA_Brief: item?.Preselected_DSBP_GA_Brief || [],
+          AWM_CIC_Matrix_Requested:
+            item?.AWM_CIC_Page?.[0]?.AWM_CIC_Matrix_Requested || "",
         };
-
-        if (isGABrifData && isGABrifData.length) {
-          transformedItem.AWM_GA_Brief = item.Preselected_DSBP_GA_Brief || "";
-        }
 
         transformedItem = {
           ...transformedItem,
@@ -388,7 +404,7 @@ const DMPMPSpecificTabView = () => {
         return transformedItem;
       });
       // console.log("AWM_CIC_Page", isRDTData, isIQData, isCDPTData);
-      let columnNames = Object.keys(transformedData[2]);
+      let columnNames = Object.keys(transformedData[0]);
       const filteredColumnNames = columnNames.filter(
         (property) => property !== "FPCStagingPage"
       );
