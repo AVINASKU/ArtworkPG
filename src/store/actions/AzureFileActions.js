@@ -33,14 +33,16 @@ export const uploadFileFailure = (error) => ({
 });
 
 // Define your Redux async action creator
-export const uploadFileAzure = (file) => {
+export const uploadFileAzure = (file, subFolder) => {
   console.log(file.type, "test");
   return async (dispatch) => {
     try {
       dispatch(uploadFileRequest());
 
       // Create a BlobClient for the file and set the content type
-      const blobClient = containerClient.getBlockBlobClient(file.name);
+      const blobClient = containerClient.getBlockBlobClient(
+        `${subFolder}/${file.name}`
+      );
 
       const options = {
         blobHTTPHeaders: { blobContentType: file.type },

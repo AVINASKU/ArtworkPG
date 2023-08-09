@@ -22,6 +22,7 @@ const ApproveDesignIntentContent = ({
   ArtworkAgilityPage,
   version,
   date,
+  subFolder,
 }) => {
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
@@ -94,11 +95,11 @@ const ApproveDesignIntentContent = ({
   };
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
-    dispatch(AzureFileDownloadJobs(fileUrl));
+    dispatch(AzureFileDownloadJobs(fileUrl, subFolder));
   };
   const deleteAzure = async (event, fileUrl) => {
     event.preventDefault();
-    dispatch(deleteAzureFile(fileUrl));
+    dispatch(deleteAzureFile(fileUrl, subFolder));
   };
 
   const DesignHeader = (di_name) => {
