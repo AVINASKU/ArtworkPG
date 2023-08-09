@@ -1,0 +1,252 @@
+.uploadImageAndupVersionImage {
+  width: 105px;
+  height: 75px;
+  // width: 87px;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px 0 rgba(89, 89, 89, 0.25);
+
+  .p-fileupload {
+    // display: flex;
+    // border: 1px solid red;
+    .p-button {
+      color: black;
+      margin-left: 18px !important;
+      margin-bottom: 10px !important;
+      // .p-disabled {
+      //   display: none;
+      // }
+    }
+
+    .p-fileupload-buttonbar {
+      // padding: 0;
+      // border: 1px solid;
+      width: 87px;
+      // border: 0;
+      // padding: 0;
+      // padding: 0 20px;
+      padding: 1.25rem;
+      padding-top: 0;
+    }
+
+    .p-fileupload-row {
+      .upload-row {
+        margin-top: 15px !important;
+      }
+
+      // height: 44px;
+      // width: 105px;
+      height: 59px;
+      width: 60px;
+    }
+
+    .p-fileupload-content {
+      top: 0;
+    }
+
+    .p-button,
+    .p-fileupload .p-button:hover {
+      align-items: left;
+      justify-content: left;
+    }
+
+    .p-button[aria-label="Cancel"] {
+      // display: flex;
+      // color: red;
+      display: flow-root;
+      background-image: url('data:image/svg+xml,<svg width="12" height="12" viewBox="0 0 6 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.62296 0.964586C5.78519 0.802352 5.78519 0.539319 5.62296 0.377086C5.46072 0.214852 5.19769 0.214852 5.03546 0.377086L3.00004 2.4125L0.964624 0.377086C0.80239 0.214852 0.539358 0.214852 0.377124 0.377086C0.21489 0.539319 0.21489 0.802352 0.377124 0.964586L2.41254 3L0.377124 5.03542C0.214891 5.19765 0.21489 5.46069 0.377124 5.62292C0.539358 5.78515 0.80239 5.78515 0.964624 5.62292L3.00004 3.5875L5.03546 5.62292C5.19769 5.78515 5.46072 5.78515 5.62296 5.62292C5.78519 5.46069 5.78519 5.19765 5.62296 5.03542L3.58754 3L5.62296 0.964586Z" fill="%23595959"/></svg>') !important;
+      position: absolute;
+      right: 0;
+      top: 2px;
+      padding: 6px;
+    }
+
+    .p-fileupload-content {
+      padding: 0 0 0 1rem !important;
+      width: 70px;
+      // height: 59px;
+    }
+  }
+
+  .p-button-label {
+    display: none;
+  }
+
+  .p-button .p-component .p-disabled {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    .p-icon .p-button-icon .p-c .p-button-icon-left {
+      position: absolute;
+      color: red;
+    }
+  }
+
+  .fileName {
+    // visibility: hidden;
+    // width: 93px;
+    width: 87px;
+    font-weight: 400;
+    // line-height: 9.75px;
+    font-size: 12px !important;
+    color: rgba(34, 54, 232, 1);
+    // margin: 2px 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: underline;
+  }
+  .File_NameFromAPI {
+    width: 87px;
+    font-weight: 400;
+    font-size: 12px !important;
+    color: rgba(34, 54, 232, 1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: underline;
+    margin: 0 0 0px 12px;
+  }
+
+  img,
+  svg {
+    // width: 13.16px;
+    // height: 17px;
+    // height: 25px;
+  }
+}
+#File_NameFromAPIPaddingId .p-fileupload .p-fileupload-buttonbar {
+  padding: 0 1.25rem;
+}
+.File_NameFromAPIPadding {
+  padding-bottom: 6px;
+}
+
+.uploadImageAndupVersionImage1 {
+  .p-fileupload {
+    padding-top: 14px;
+  }
+
+  .p-button-label {
+    display: none;
+  }
+}
+
+.uploadImageAndupVersionImage2 {
+  .p-button-label {
+    display: none;
+  }
+
+  .p-fileupload {
+    padding-top: 7px;
+
+    .p-fileupload-buttonbar {
+      padding: 0 17px;
+    }
+
+    .p-button,
+    .p-button:hover {
+      background-image: url('data:image/svg+xml,<svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.59369 4.27674C6.59381 4.33542 6.58308 4.39353 6.56216 4.44766C6.54123 4.50178 6.51052 4.55082 6.47184 4.5919C6.3936 4.67517 6.2883 4.72182 6.17862 4.72182C6.06894 4.72182 5.96364 4.67517 5.8854 4.5919L3.95957 2.52059L3.95957 11.5549C3.9589 11.673 3.9152 11.786 3.83798 11.8693C3.76076 11.9527 3.65628 11.9996 3.54728 11.9999C3.49292 12.001 3.4389 11.9902 3.38843 11.9683C3.33797 11.9464 3.29208 11.9137 3.25349 11.8722C3.2149 11.8307 3.18439 11.7813 3.16378 11.7268C3.14316 11.6722 3.13286 11.6138 3.13348 11.5549L3.13348 2.52114L1.20866 4.5919C1.13051 4.67513 1.0253 4.72178 0.915696 4.72178C0.806097 4.72178 0.700884 4.67513 0.622732 4.5919C0.583889 4.5509 0.553018 4.50189 0.531939 4.44777C0.51086 4.39364 0.5 4.33549 0.5 4.27674C0.5 4.218 0.51086 4.15985 0.531939 4.10572C0.553018 4.05159 0.583889 4.00259 0.622732 3.96159L3.25432 1.13184C3.29248 1.08967 3.33808 1.05624 3.38841 1.03357C3.43874 1.01089 3.49277 0.999417 3.54728 0.999835C3.65673 1.0011 3.76143 1.04844 3.83923 1.13184L6.47184 3.96214C6.51046 4.00315 6.54113 4.05211 6.56206 4.10613C6.58298 4.16015 6.59374 4.21816 6.59369 4.27674Z" fill="%23003DA5" stroke="%23003DA5" stroke-width="0.455176"/></svg>') !important;
+      background-position: center center;
+      padding: 3px 5px;
+      border: 1px solid rgb(0, 61, 165);
+      width: 22px;
+      height: 25.09px;
+    }
+  }
+}
+
+.heade-plus-icon {
+  cursor: pointer;
+  font-size: 2rem;
+  color: #003da5;
+  width: 13px;
+  height: 13px;
+}
+
+.wrongMsg {
+  color: red;
+}
+
+.displayFlex {
+  display: flex;
+}
+
+.paddingRight {
+  padding-right: 6px;
+}
+
+.graphicAdaptionBrief {
+  color: rgba(0, 61, 165, 1);
+
+  [contenteditable] {
+    outline: 0px solid transparent;
+  }
+
+  .graphicInput {
+    border: none;
+    border-bottom: 1.5px solid #003da5;
+  }
+
+  input[type="text"] {
+    outline: none;
+  }
+}
+
+// ToolTip Styles Start
+.tooltip1 {
+  color: #fff;
+  background-color: transparent;
+  border-color: #007bff;
+  margin-left: -1.5%;
+  z-index: 10000000 !important;
+
+  .tooltip-inner {
+    background-color: rgba(254, 254, 254, 1) !important;
+    max-width: 281px;
+    height: 194px;
+    border-radius: 2px;
+    border: solid 1px rgba(172, 172, 172, 1);
+    margin-left: 13px;
+    overflow-y: auto;
+    padding: 11px 16px 11px 14px;
+    box-shadow: 0px 6px 16px 0px rgba(89, 89, 89, 0.24);
+  }
+}
+
+.toolname1 {
+  color: rgba(89, 89, 89, 1);
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 7px;
+  text-align: left;
+  background: transparent;
+  line-height: 8.53px;
+  // margin-top: 6px;
+
+  ul {
+    padding-left: 13px;
+    margin-bottom: 0px;
+  }
+}
+
+.tooltip1 > .tooltip-arrow {
+  left: 10px;
+  top: -8px !important;
+}
+
+.tooltip1 > .tooltip-arrow::before {
+  border: 1px solid rgb(172, 172, 172);
+  width: 16.86px;
+  height: 16.86px;
+  border-right-color: transparent !important;
+  border-top-color: transparent !important;
+  transform: rotate(45deg);
+  right: -9px;
+  background-color: #fff;
+  top: -24px;
+  // top: 50%;
+}
+
+// ToolTip Styles End
