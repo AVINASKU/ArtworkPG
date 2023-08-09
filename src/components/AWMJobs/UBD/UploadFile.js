@@ -6,7 +6,9 @@ import { AzureFileDownloadJobs } from "../../../store/actions/AzureFileDownloadJ
 import { useDispatch } from "react-redux";
 
 const UploadFile = ({
+  azureSubFolder,
   // setAzureFile,
+  serial,
   item,
   data,
   designData,
@@ -124,7 +126,7 @@ const UploadFile = ({
   };
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
-    dispatch(AzureFileDownloadJobs(fileUrl));
+    dispatch(AzureFileDownloadJobs(fileUrl, azureSubFolder));
   };
 
   const customUploader = () => {};
@@ -145,8 +147,10 @@ const UploadFile = ({
 
   return (
     <>
-      <div className="displayFlex">
+      <div className="d-flex">
         <label htmlFor="upload" className="paddingRight">
+          {serial + 1}
+          {".  "}
           {uploadFile}
         </label>
         <ToolTip />

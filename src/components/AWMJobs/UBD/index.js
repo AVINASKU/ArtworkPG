@@ -52,6 +52,7 @@ function UBD() {
   const location = useLocation();
   const currentUrl = location.pathname;
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
+  const AzureSubFolder = "GA Briefs";
 
   let breadcrumb = AddNavigation(headerName);
   // const checkReadWriteAccess = CheckReadOnlyAccess();
@@ -187,11 +188,11 @@ function UBD() {
     // alert(version);
     if (version !== "V0") {
       deleteUploadBrefingDocs(formData);
-      dispatch(deleteAzureFile(fileUrl));
+      dispatch(deleteAzureFile(fileUrl, AzureSubFolder));
     }
-    // if (version !== "V1" && version !== "V0") {
-    dispatch(getTaskDetails(TaskID, ProjectID));
-    // }
+    if (version !== "V1" && version !== "V0") {
+      dispatch(getTaskDetails(TaskID, ProjectID));
+    }
   };
 
   const addNewEmptyDesign = () => {
@@ -332,11 +333,11 @@ function UBD() {
           marginLeft: 20,
           padding: 5,
         }}
-        className="font-color"
+        className="ubd-accordion-header"
       >
         Graphic Adaptation Brief*
       </div>
-      <div>
+      <div className="add-file-ubd">
         <img
           src={plusCollapseImg}
           alt="filter logo"
@@ -370,11 +371,11 @@ function UBD() {
           marginLeft: 20,
           padding: 5,
         }}
-        className="font-color"
+        className="ubd-accordion-header"
       >
         Other Reference Documents & Assets
       </div>
-      <div>
+      <div className="add-file-ubd">
         <img
           src={plusCollapseImg}
           alt="filter logo"
@@ -494,7 +495,7 @@ function UBD() {
         }
 
         GABriefList.push(temp);
-        dispatch(uploadFileAzure(obj.AzureFile));
+        dispatch(uploadFileAzure(obj.AzureFile, AzureSubFolder));
       }
     });
     return GABriefList;
@@ -520,7 +521,7 @@ function UBD() {
           temp["Filename"] = obj.Info.fileInfo.files[0].name;
         }
         OtherReferenceDoc.push(temp);
-        dispatch(uploadFileAzure(obj.AzureFile));
+        dispatch(uploadFileAzure(obj.AzureFile, AzureSubFolder));
       }
     });
     return OtherReferenceDoc;
@@ -687,6 +688,8 @@ function UBD() {
                 if (item && item?.Action !== "delete") {
                   return (
                     <UploadBriefingDocuments
+                      azureSubFolder={AzureSubFolder}
+                      serial={index}
                       key={item.Design_Job_ID}
                       // {...data}
                       item={item}
@@ -717,6 +720,8 @@ function UBD() {
                 if (item && item?.Action !== "delete") {
                   return (
                     <UploadBriefingDocuments
+                      azureSubFolder={AzureSubFolder}
+                      serial={index}
                       key={item.Design_Job_ID}
                       // {...data}
                       item={item}
