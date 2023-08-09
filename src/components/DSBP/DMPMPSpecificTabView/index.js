@@ -274,11 +274,9 @@ const DMPMPSpecificTabView = () => {
       tabHeader: selectedTab.tabHeader,
       description: updatedNewData && updatedNewData[0],
     };
-    console.log("updateMappingTabValuesData submittionData", submittionData);
     const indexToUpdate = dmTabValuesData.findIndex(
       (tab) => tab.tabHeader === submittionData.tabHeader
     );
-    console.log("updateMappingTabValuesData indexToUpdate", indexToUpdate);
     if (indexToUpdate !== -1) {
       // Create a copy of the dmTabValuesData array
       const updateMappingTabValuesData = [...dmTabValuesData];

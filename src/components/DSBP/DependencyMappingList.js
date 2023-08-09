@@ -15,7 +15,6 @@ import toggleOff from "../../assets/images/toggleOff.svg";
 import toggleOn from "../../assets/images/toggleOn.svg";
 import DependencyFilter from "./DependencyFilter";
 import { FilterMatchMode } from "primereact/api";
-import { allFieldOfDependencyMapping } from "./constant";
 
 const DependencyMappingList = ({
   dependencyMappingData,
