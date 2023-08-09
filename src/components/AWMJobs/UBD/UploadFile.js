@@ -24,8 +24,10 @@ const UploadFile = ({
   setFileName,
   fileName,
   updateUbdData,
+  setFileNotFound,
 }) => {
   const [totalSize, setTotalSize] = useState(0);
+  const [azureErrMsg, setAzureErrMsg] = useState("");
   const [fileUploadWarning, setFileUploadWarning] = useState(false);
   const fileUploadRef = useRef(null);
   const dispatch = useDispatch();
@@ -126,7 +128,12 @@ const UploadFile = ({
   };
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
-    dispatch(AzureFileDownloadJobs(fileUrl, azureSubFolder));
+    const response = await dispatch(
+      AzureFileDownloadJobs(fileUrl, azureSubFolder)
+    );
+    if (response?.includes("404")) {
+      setFileNotFound(true);
+    }
   };
 
   const customUploader = () => {};

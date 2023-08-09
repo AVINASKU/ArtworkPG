@@ -275,5 +275,18 @@
   font-weight: 500;
   line-height: normal;
 }
+.ubd-dialog {
+  width: 25%;
+  height: 15%;
+  border-radius: 20px;
+
+  .p-dialog-ubd {
+    color: red;
+  }
+  .p-dialog-content {
+    padding: 10px 32px 20px 32px !important;
+    border-radius: 0 0 20px 20px;
+  }
+}
 
 // ToolTip Styles End

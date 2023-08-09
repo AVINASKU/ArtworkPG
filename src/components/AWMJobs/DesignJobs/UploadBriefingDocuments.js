@@ -23,6 +23,7 @@ const UploadBriefingDocuments = ({
   updateUbdData,
   setWrongFileName,
   disableDelete,
+  setFileNotFound,
   // setAzureFile,
 }) => {
   const [fileName, setFileName] = useState("");
@@ -84,6 +85,7 @@ const UploadBriefingDocuments = ({
             setFileName={setFileName}
             fileName={fileName}
             updateUbdData={updateUbdData}
+            setFileNotFound={setFileNotFound}
             // disabled={!checkReadWriteAccess || data.Task_Status === "Complete"}
             // ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
             // version={version}
