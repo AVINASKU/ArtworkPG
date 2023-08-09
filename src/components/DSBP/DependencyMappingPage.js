@@ -457,6 +457,7 @@ const DependencyMapping = () => {
           filteredDependencyMappingData={filteredDependencyMappingData}
           userHasAccess={userHasAccess}
           isDependencyMapping={true}
+          dsbpPmpData={dependencyMappingData}
           onSearchClick={onSearchClick}
           onClickClearFilter={onClickClearFilter}
           isFilterActivatedInDependencyMapping={

@@ -440,7 +440,23 @@ const DMPMPSpecificTabView = () => {
   };
 
   const renderData = (tabData, group) => {
-    let allColumns = dmTabData.DMColumnNames;
+    let dependencyColumnNames1 = dmTabData.DMColumnNames;
+
+   const dependencyColumnNames2 =
+      dmTabData?.CDPTPageData?.length === 1
+        ? dependencyColumnNames1.filter(
+            (item) => item.field !== "AWM_CDPT_Page"
+          )
+        : dependencyColumnNames1;
+    const dependencyColumnNames3 =
+      dmTabData?.RDTData?.length === 1
+        ? dependencyColumnNames2.filter((item) => item.field !== "AWM_RDT_Page")
+        : dependencyColumnNames2;
+    const allColumns =
+      dmTabData?.IQData?.length === 1
+        ? dependencyColumnNames3.filter((item) => item.field !== "AWM_IQ_Page")
+        : dependencyColumnNames3;
+
     const groupOneCols = allColumns.filter((col) => col.group === 1);
     const groupTwoCols = allColumns.filter((col) => col.group === 2);
     const groupThreeCols = allColumns.filter((col) => col.group === 3);

@@ -4,6 +4,8 @@ import export2excel from "../../assets/images/export2excel.svg";
 import { changeDateFormat, onSortData } from "../../utils";
 
 export const ExportSelectedRows = ({ allData, selectedRows, headers }) => {
+
+console.log("alldata", allData , selectedRows);
   // Format date fields in allData and selectedRows
   const formattedAllData = allData?.map((data) => ({
     ...data,
