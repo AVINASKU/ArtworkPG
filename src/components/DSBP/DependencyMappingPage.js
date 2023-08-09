@@ -491,6 +491,7 @@ const DependencyMapping = () => {
           isSearch={isSearch}
           columnNames={columnNames}
           handleNewGaBrief={handleNewGaBrief}
+          handleSelect={handleSelect}
         />
         <FooterButtons
           handleCancel={handleCancel}

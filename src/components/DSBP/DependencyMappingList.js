@@ -74,6 +74,7 @@ const DependencyMappingList = ({
     let dependencyColumnNames = JSON.parse(
       localStorage.getItem("setDependencyMappingColumnNames")
     );
+    console.log("options111", options.AWM_RDT_Page);
     const attributesData = {
       DMColumnNames: dependencyColumnNames,
       DMMappingData: dependencyMappingData,

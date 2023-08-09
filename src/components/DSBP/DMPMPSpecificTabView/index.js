@@ -8,7 +8,7 @@ import { DMTabValuesAction } from "../../../store/actions/DMTabValuesActions";
 import {
   onSubmitDependencyMappingAction,
   getDependencyMappingDetails,
-  createNewGaBriefTask
+  createNewGaBriefTask,
 } from "../../../apis/dsbpApi";
 import FooterButtons from "../../AWMJobs/DesignJobs/FooterButtons";
 import { useSelector, useDispatch } from "react-redux";
@@ -73,7 +73,8 @@ const DMPMPSpecificTabView = () => {
     if (dmTabValuesData[tabPanelList]) {
       const selectedTabData = dmTabValuesData[tabPanelList];
       if (selectedTabData?.description !== undefined) {
-      console.log("selected tab data", selectedTabData?.description);
+        console.log("selected tab data", selectedTabData?.description);
+
         setCDPT(selectedTabData?.description?.AWM_CDPT_Page);
 
         setRDT(selectedTabData?.description?.AWM_RDT_Page);
@@ -150,59 +151,38 @@ const DMPMPSpecificTabView = () => {
     console.log("e.target.value", e.target.value);
     setCDPT(e.target.value);
 
-    const DSBP_CDPT_Page = [];
-    dmTabData.CDPTPageData.find((data) => {
-      e.target.value.forEach((val) => {
-        if (data.AWM_Design_Job_ID === val) {
-          DSBP_CDPT_Page.push({
-            Design_Job_Name: data.AWM_Design_Job_Name,
-            Design_Job_ID: data.AWM_Design_Job_ID,
-          });
-        }
-      });
-    });
     setFormData({
       ...formData,
-      DSBP_CDPT_Page,
+      DSBP_CDPT_Page: e.target.value,
     });
   };
   const handleRDTchange = (e) => {
     setRDT(e.target.value);
 
-    const DSBP_RDT_Page = [];
-    dmTabData.RDTData.forEach((data) => {
-      e.target.value.forEach((val) => {
-        if (data.AWM_Design_Job_ID === val) {
-          DSBP_RDT_Page.push({
-            Design_Job_Name: data.AWM_Design_Job_Name,
-            Design_Job_ID: data.AWM_Design_Job_ID,
-          });
-        }
-      });
-    });
+    // const DSBP_RDT_Page = [];
+    // dmTabData.RDTData.forEach((data) => {
+    //   e.target.value.forEach((val) => {
+    //     if (data.AWM_Design_Job_ID === val) {
+    //       DSBP_RDT_Page.push({
+    //         Design_Job_Name: data.AWM_Design_Job_Name,
+    //         Design_Job_ID: data.AWM_Design_Job_ID,
+    //       });
+    //     }
+    //   });
+    // });
+
     setFormData({
       ...formData,
-      DSBP_RDT_Page,
+      rdt,
     });
   };
 
   const handleIQChange = (e) => {
     setIQ(e.target.value);
 
-    const DSBP_IQ_Page = [];
-    dmTabData.IQData.forEach((data) => {
-      e.target.value.forEach((val) => {
-        if (data.AWM_Design_Job_ID === val) {
-          DSBP_IQ_Page.push({
-            Design_Job_Name: data.AWM_Design_Job_Name,
-            Design_Job_ID: data.AWM_Design_Job_ID,
-          });
-        }
-      });
-    });
     setFormData({
       ...formData,
-      DSBP_IQ_Page,
+      DSBP_IQ_Page: e.target.value,
     });
   };
 
@@ -257,10 +237,10 @@ const DMPMPSpecificTabView = () => {
     //   let res = await createNewGaBriefTask(formData);
     //   console.log("res", res);
     // } else
-      setFormData({
-        ...formData,
-        AWM_GABrief: e.target.value,
-      });
+    setFormData({
+      ...formData,
+      AWM_GABrief: e.target.value,
+    });
   };
 
   const handleCancel = () => {
@@ -268,7 +248,6 @@ const DMPMPSpecificTabView = () => {
   };
 
   const updateMappingTabValuesData = (updatedNewData) => {
-
     let submittionData = {};
     submittionData = {
       tabHeader: selectedTab.tabHeader,
@@ -295,11 +274,52 @@ const DMPMPSpecificTabView = () => {
 
   const onSubmit = async () => {
     setLoader(true);
-    formData.AWM_GABrief = formData?.AWM_GABrief?.length ? formData?.AWM_GABrief : "";
+    formData.AWM_GABrief = formData?.AWM_GABrief?.length
+      ? formData?.AWM_GABrief
+      : "";
     setFormData(formData);
 
+    const DSBP_RDT_Page = [];
+    dmTabData.RDTData.forEach((data) => {
+      rdt?.forEach((val) => {
+        if (data.AWM_Design_Job_ID === val) {
+          DSBP_RDT_Page.push({
+            Design_Job_Name: data.AWM_Design_Job_Name,
+            Design_Job_ID: data.AWM_Design_Job_ID,
+          });
+        }
+      });
+    });
+    formData["DSBP_RDT_Page"] = DSBP_RDT_Page;
+
+    const DSBP_CDPT_Page = [];
+    dmTabData.CDPTPageData.find((data) => {
+      cdpt.forEach((val) => {
+        if (data.AWM_Design_Job_ID === val) {
+          DSBP_CDPT_Page.push({
+            Design_Job_Name: data.AWM_Design_Job_Name,
+            Design_Job_ID: data.AWM_Design_Job_ID,
+          });
+        }
+      });
+    });
+    formData["DSBP_CDPT_Page"] = DSBP_CDPT_Page;
+
+    const DSBP_IQ_Page = [];
+    dmTabData.IQData.forEach((data) => {
+      iq.forEach((val) => {
+        if (data.AWM_Design_Job_ID === val) {
+          DSBP_IQ_Page.push({
+            Design_Job_Name: data.AWM_Design_Job_Name,
+            Design_Job_ID: data.AWM_Design_Job_ID,
+          });
+        }
+      });
+    });
+
+    formData["DSBP_IQ_Page"] = DSBP_IQ_Page;
     const updatedPmpDetails = { DSBPValues: [formData] };
-    console.log("updatedPmpDetails", updatedPmpDetails);
+    console.log("updatedPmpDetails", formData, rdt);
 
     await onSubmitDependencyMappingAction(
       updatedPmpDetails,
@@ -354,21 +374,21 @@ const DMPMPSpecificTabView = () => {
         };
 
         transformedItem.AWM_RDT_Page =
-            item?.Preselected_AWM_RDT_Page?.map(
-              (item) => item.AWM_Design_Job_ID
-            ) || [];
+          item?.Preselected_AWM_RDT_Page?.map(
+            (item) => item.AWM_Design_Job_ID
+          ) || [];
 
-          transformedItem.AWM_CDPT_Page =
-            item?.Preselected_AWM_CDPT_Page?.map(
-              (item) => item.AWM_Design_Job_ID
-            ) || [];
-        
-          transformedItem.AWM_IQ_Page =
-            item?.Preselected_AWM_IQ_Page?.map(
-              (item) => item.AWM_Design_Job_ID
-            ) || [];
+        transformedItem.AWM_CDPT_Page =
+          item?.Preselected_AWM_CDPT_Page?.map(
+            (item) => item.AWM_Design_Job_ID
+          ) || [];
 
-       transformedItem = {
+        transformedItem.AWM_IQ_Page =
+          item?.Preselected_AWM_IQ_Page?.map(
+            (item) => item.AWM_Design_Job_ID
+          ) || [];
+
+        transformedItem = {
           ...transformedItem,
           AWM_CIC_Needed: item?.AWM_CIC_Page?.[0]?.AWM_CIC_Needed || "",
           AWM_Supporting_PMP_Layout:
@@ -442,7 +462,7 @@ const DMPMPSpecificTabView = () => {
   const renderData = (tabData, group) => {
     let dependencyColumnNames1 = dmTabData.DMColumnNames;
 
-   const dependencyColumnNames2 =
+    const dependencyColumnNames2 =
       dmTabData?.CDPTPageData?.length === 1
         ? dependencyColumnNames1.filter(
             (item) => item.field !== "AWM_CDPT_Page"
@@ -779,28 +799,26 @@ const DMPMPSpecificTabView = () => {
   };
 
   return (
-    (
-      <>
-        {dmTabValuesData?.length > 1 && tabPanelList !== 0 ? (
-          <TabView
-            activeIndex={tabPanelList}
-            onTabChange={(e) => onTabChange(e.index)}
-          >
-            {renderTabs()}
-          </TabView>
-        ) : (
-          navigateToDSBP()
-        )}
+    <>
+      {dmTabValuesData?.length > 1 && tabPanelList !== 0 ? (
+        <TabView
+          activeIndex={tabPanelList}
+          onTabChange={(e) => onTabChange(e.index)}
+        >
+          {renderTabs()}
+        </TabView>
+      ) : (
+        navigateToDSBP()
+      )}
 
-        <FooterButtons
-          handleCancel={handleCancel}
-          hideSaveButton={true}
-          onSubmit={onSubmit}
-          formValid={Object.keys(formData).length === 0}
-          checkReadWriteAccess={!false}
-        />
-      </>
-    )
+      <FooterButtons
+        handleCancel={handleCancel}
+        hideSaveButton={true}
+        onSubmit={onSubmit}
+        formValid={Object.keys(formData).length === 0}
+        checkReadWriteAccess={!false}
+      />
+    </>
   );
 };
 
