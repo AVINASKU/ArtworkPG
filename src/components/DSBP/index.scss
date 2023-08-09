@@ -7,8 +7,9 @@
       margin-bottom: 10px;
     }
     .margin-left {
-      margin-left: 25px;
+      // margin-left: 25px;
       // margin-left: 16px;
+      padding: 10px 20px 0;
     }
     .margin-right {
       margin-right: 20px;
@@ -34,7 +35,7 @@
       display: flex;
       flex-direction: row;
     }
-    .form-buttons{
+    .form-buttons {
       padding: 0 10px;
       position: absolute;
       background: white;
@@ -253,8 +254,8 @@ a.tabView {
       background: #edf4fa !important;
     }
 
-    .header-pink-bg-color{
-    background: #FFEFD8 !important;
+    .header-pink-bg-color {
+      background: #ffefd8 !important;
     }
 
     th:after,
@@ -352,12 +353,12 @@ a.tabView {
     }
   }
 
-  .cic-matrix-text-on{
-  color:red;
+  .cic-matrix-text-on {
+    color: red;
   }
 
-   .cic-matrix-text-on{
-  color: blue;
+  .cic-matrix-text-on {
+    color: blue;
   }
 
   // th,

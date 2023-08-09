@@ -55,7 +55,7 @@ const SideBar = () => {
     //   setExpandedIndex(null);
     // }
   };
-  const sidebarWidth = isToggle ? "100px" : "25px";
+  const sidebarWidth = isToggle ? "100px" : "68px";
   function toggleSubMenu(index) {
     setIsToggle(true);
 

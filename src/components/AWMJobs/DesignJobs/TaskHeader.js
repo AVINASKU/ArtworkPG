@@ -9,6 +9,7 @@ function TaskHeader({
   Duration,
   Consumed_Buffer,
   TaskDetailsData,
+  actionButtonsFlag,
 }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -17,7 +18,7 @@ function TaskHeader({
     const url = locationPath?.split("/");
     const pathName = url[2];
     return (
-      <div className="actions">
+      <div className={`actions ${actionButtonsFlag ? "actionsPaddingForUBD": ""}`}>
         <div className="project-content">
           <label className="project-header-spacing">Project Name</label>
           <div
