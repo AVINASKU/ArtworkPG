@@ -27,11 +27,17 @@ export const downloadFileFailure = (error) => ({
 });
 
 // Define your Redux async action creator
+// ... (import statements and variable definitions)
+
+// ... (import statements and variable definitions)
+
+// ... (import statements and variable definitions)
+
+// ... (import statements and variable definitions)
+
 export const AzureFileDownloadJobs = (filePath, subFolder) => {
   return async (dispatch) => {
     try {
-      dispatch(downloadFileRequest());
-
       const downloadUrl = `${baseUrl}/${containerName}/${subFolder}/${filePath}?${sasToken}`;
 
       const response = await axios.get(downloadUrl, {
@@ -47,17 +53,42 @@ export const AzureFileDownloadJobs = (filePath, subFolder) => {
             .trim()
         : filePath.split("/").pop();
 
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", filename);
+      // Create a Blob from the response data
+      const blob = new Blob([response.data]);
 
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      // Determine the file extension
+      const fileExtension = filename.split(".").pop().toLowerCase();
 
-      window.URL.revokeObjectURL(url);
+      // Determine the MIME type based on the file extension
+      let mimeType = "application/octet-stream"; // Default MIME type
 
+      if (fileExtension === "pdf") {
+        mimeType = "application/pdf";
+      } else if (fileExtension === "jpg" || fileExtension === "jpeg") {
+        mimeType = "image/jpeg";
+      } else if (fileExtension === "svg") {
+        mimeType = "image/svg+xml";
+      } // Check if the file is a PNG image
+      else if (fileExtension === "png") {
+        mimeType = "image/png";
+      } else if (fileExtension === "docx") {
+        mimeType =
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+      }
+      // Check if the file is a DOC document
+      else if (fileExtension === "doc") {
+        mimeType = "application/msword";
+      } // Add more cases for other supported file types
+
+      // Create a Blob URL with the correct MIME type
+      const blobUrl = URL.createObjectURL(new Blob([blob], { type: mimeType }));
+
+      // Open the Blob URL in a new tab
+      window.open(blobUrl, "_blank");
+
+      // Revoke the Blob URL when done
+      URL.revokeObjectURL(blobUrl);
+      dispatch({ type: "SET_BLOB_URL", payload: blobUrl });
       dispatch(downloadFileSuccess());
     } catch (error) {
       dispatch(downloadFileFailure(error.message));
