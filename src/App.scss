@@ -146,7 +146,7 @@ fieldset:disabled .btn {
 
 .project-title {
   font-weight: 500;
-  font-size: 20px;
+  font-size: 18px;
   line-height: 24.38px;
   color: #003da5;
 }
@@ -359,8 +359,9 @@ fieldset:disabled .btn {
 }
 
 .p-breadcrumb ul li .p-menuitem-link .p-menuitem-text {
-  color: #acacac;
-  font-size: 12px;
+  // color: #acacac;
+  color: gray;
+  font-size: 13px;
 }
 
 .p-breadcrumb ul li:last-child {

@@ -25,6 +25,7 @@ import "./index.scss";
 import { cloneDeep } from "lodash";
 import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
 import { deleteAzureFile } from "../../../store/actions/AzureFileDeletion.js";
+import { Dialog } from "primereact/dialog";
 
 const headerName = "Upload Graphic Adaptation Brief Document";
 const graphicAdaptionBrief = "Graphic Adaptation Brief*";
@@ -34,6 +35,8 @@ const roleName = "UBD_";
 
 function UBD() {
   const [data, setData] = useState(null);
+  const [fileNotFound, setFileNotFound] = useState(false);
+
   const [gABriefAdaptationForUI, setGABriefAdaptationForUI] = useState([]);
   const [otherRefernceDocsForUI, setOtherRefernceDocsForUI] = useState([]);
   const [updated, setUpdated] = useState(false);
@@ -52,10 +55,15 @@ function UBD() {
   const location = useLocation();
   const currentUrl = location.pathname;
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
+  const AzureSubFolder = "GA Briefs";
 
   let breadcrumb = AddNavigation(headerName);
   // const checkReadWriteAccess = CheckReadOnlyAccess();
   const checkReadWriteAccess = true;
+
+  const hideDialog = () => {
+    setFileNotFound(false);
+  };
 
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
@@ -135,7 +143,7 @@ function UBD() {
     return navigate(`/${currentUrl?.split("/")[1]}`);
   };
 
-  const handleDelete = (index, sectionType, version, fileUrl) => {
+  const handleDelete = async (index, sectionType, version, fileUrl) => {
     const GABriefListData =
       (TaskDetailsData?.ArtworkAgilityTasks[0]?.GABriefList &&
         TaskDetailsData?.ArtworkAgilityTasks[0]?.GABriefList[0]) ||
@@ -187,11 +195,14 @@ function UBD() {
     // alert(version);
     if (version !== "V0") {
       deleteUploadBrefingDocs(formData);
-      dispatch(deleteAzureFile(fileUrl));
+      const response = await dispatch(deleteAzureFile(fileUrl, AzureSubFolder));
+      if (response?.includes("404")) {
+        setFileNotFound(true);
+      }
     }
-    // if (version !== "V1" && version !== "V0") {
-    dispatch(getTaskDetails(TaskID, ProjectID));
-    // }
+    if (version !== "V1" && version !== "V0") {
+      dispatch(getTaskDetails(TaskID, ProjectID));
+    }
   };
 
   const addNewEmptyDesign = () => {
@@ -332,11 +343,11 @@ function UBD() {
           marginLeft: 20,
           padding: 5,
         }}
-        className="font-color"
+        className="ubd-accordion-header"
       >
         Graphic Adaptation Brief*
       </div>
-      <div>
+      <div className="add-file-ubd">
         <img
           src={plusCollapseImg}
           alt="filter logo"
@@ -370,11 +381,11 @@ function UBD() {
           marginLeft: 20,
           padding: 5,
         }}
-        className="font-color"
+        className="ubd-accordion-header"
       >
         Other Reference Documents & Assets
       </div>
-      <div>
+      <div className="add-file-ubd">
         <img
           src={plusCollapseImg}
           alt="filter logo"
@@ -494,7 +505,7 @@ function UBD() {
         }
 
         GABriefList.push(temp);
-        dispatch(uploadFileAzure(obj.AzureFile));
+        dispatch(uploadFileAzure(obj.AzureFile, AzureSubFolder));
       }
     });
     return GABriefList;
@@ -520,7 +531,7 @@ function UBD() {
           temp["Filename"] = obj.Info.fileInfo.files[0].name;
         }
         OtherReferenceDoc.push(temp);
-        dispatch(uploadFileAzure(obj.AzureFile));
+        dispatch(uploadFileAzure(obj.AzureFile, AzureSubFolder));
       }
     });
     return OtherReferenceDoc;
@@ -599,6 +610,15 @@ function UBD() {
 
   return (
     <PageLayout>
+      <Dialog
+        visible={fileNotFound}
+        className="ubd-dialog"
+        onHide={hideDialog}
+        header={<div className="p-dialog-ubd">Message</div>}
+      >
+        File not found in Azure Storage.
+      </Dialog>
+
       <DesignHeader
         setAddNewDesign={() => {}}
         onSelectAll={() => {}}
@@ -687,6 +707,8 @@ function UBD() {
                 if (item && item?.Action !== "delete") {
                   return (
                     <UploadBriefingDocuments
+                      azureSubFolder={AzureSubFolder}
+                      serial={index}
                       key={item.Design_Job_ID}
                       // {...data}
                       item={item}
@@ -704,6 +726,7 @@ function UBD() {
                       disableDelete={
                         gABriefAdaptationForUI.length === 1 && !item.File_Name
                       }
+                      setFileNotFound={setFileNotFound}
                       // setAzureFile={setAzureFile}
                     />
                   );
@@ -717,6 +740,8 @@ function UBD() {
                 if (item && item?.Action !== "delete") {
                   return (
                     <UploadBriefingDocuments
+                      azureSubFolder={AzureSubFolder}
+                      serial={index}
                       key={item.Design_Job_ID}
                       // {...data}
                       item={item}
@@ -734,6 +759,7 @@ function UBD() {
                       disableDelete={
                         otherRefernceDocsForUI.length === 1 && !item.File_Name
                       }
+                      setFileNotFound={setFileNotFound}
                       // setAzureFile={setAzureFile}
                     />
                   );
