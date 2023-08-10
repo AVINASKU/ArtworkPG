@@ -92,6 +92,7 @@ export const AzureFileDownloadJobs = (filePath, subFolder) => {
       dispatch(downloadFileSuccess());
     } catch (error) {
       dispatch(downloadFileFailure(error.message));
+      return error.message;
     }
   };
 };
