@@ -215,11 +215,15 @@ const DMPMPSpecificTabView = () => {
     });
   };
   const handleOtherRefChange = (e) => {
-    setOtherRef(e.target.value);
-    setFormData({
-      ...formData,
-      AWM_OtherReference: e.target.value,
-    });
+    const inputValue = e.target.value.replace(/[^0-9]/g, "");
+    // Limit the input to 8 characters
+    if (inputValue.length <= 8) {
+      setOtherRef(inputValue);
+      setFormData({
+        ...formData,
+        AWM_OtherReference: inputValue,
+      });
+    }
   };
 
   const handleGABriefChange = async (e) => {
@@ -507,10 +511,20 @@ const DMPMPSpecificTabView = () => {
         // const filteredItems = convertedInObject?.filter(
         //   (item) => item && item[value] !== undefined
         // );
+        let field1 = field?.field;
+
+        if (
+          value === "AWM_Supporting_PMP_Design" ||
+          value === "AWM_Other_Reference"
+        ) {
+          field1 = value + "_" + "(optional)";
+        }
+
+        let splittedCol = field1.split("_").join(" ");
 
         return convertedInObject.map((item) => (
           <tr key={item[value]}>
-            <td className="columnWidth">{field.field}</td>
+            <td className="columnWidth">{splittedCol}</td>
             <td>
               {field.field === "AWM_CDPT_Page" && (
                 <div>
@@ -529,7 +543,7 @@ const DMPMPSpecificTabView = () => {
                               (cdpt?.length &&
                                 !cdpt?.includes("NPF_DJobN/A") &&
                                 obj.AWM_Design_Job_ID === "NPF_DJobN/A"),
-                          }))
+                          })).filter((option) => option.label !== "")
                         : []
                     }
                     filter
@@ -556,7 +570,7 @@ const DMPMPSpecificTabView = () => {
                               (rdt.length &&
                                 !rdt.includes("DT_DJobN/A") &&
                                 obj.AWM_Design_Job_ID === "DT_DJobN/A"),
-                          }))
+                          })).filter((option) => option.label !== "")
                         : []
                     }
                     filter
@@ -583,7 +597,7 @@ const DMPMPSpecificTabView = () => {
                               (iq?.length &&
                                 !iq?.includes("IQ_DJobN/A") &&
                                 obj.AWM_Design_Job_ID === "IQ_DJobN/A"),
-                          }))
+                          })).filter((option) => option.label !== "")
                         : []
                     }
                     filter
@@ -668,12 +682,11 @@ const DMPMPSpecificTabView = () => {
                 ) : (
                   <Form.Group controlId="groupName.ControlInput1">
                     <Form.Control
-                      placeholder="Enter Reference No."
-                      type="number"
+                      type="text"
                       maxLength={8}
                       value={otherRef}
                       onChange={handleOtherRefChange}
-                      style={{ width: "80%", fontSize: 12 }}
+                      style={{ width: "80%", fontSize: 12, height: "50%" }}
                     ></Form.Control>
                   </Form.Group>
                 ))}
@@ -798,6 +811,10 @@ const DMPMPSpecificTabView = () => {
     ));
   };
 
+  let isSubmitEnabled =
+    formData?.AWM_CICNeeded === "No" &&
+    formData?.AWM_SupportingPMPLayout === "";
+
   return (
     <>
       {dmTabValuesData?.length > 1 && tabPanelList !== 0 ? (
@@ -815,7 +832,7 @@ const DMPMPSpecificTabView = () => {
         handleCancel={handleCancel}
         hideSaveButton={true}
         onSubmit={onSubmit}
-        formValid={Object.keys(formData).length === 0}
+        formValid={isSubmitEnabled}
         checkReadWriteAccess={!false}
       />
     </>

@@ -181,7 +181,15 @@ const DependencyMappingList = ({
   );
 
   const renderHeader = (field, col) => {
-    let splittedCol = field.split("_").join(" ");
+    let field1 = field;
+    if (
+      field === "AWM_Supporting_PMP_Design" ||
+      field === "AWM_Other_Reference"
+    ) {
+      field1 = field + "_" + "(optional)";
+    }
+
+    let splittedCol = field1.split("_").join(" ");
     let isFilterActivated =
       col?.freeze === true || col?.sortAtoZ === true || col?.sortZtoA === true;
 
@@ -193,7 +201,7 @@ const DependencyMappingList = ({
             className="p-checkbox-box p-highlight"
             checked={selectAllChecked}
             onChange={handleSelectAll}
-            disabled = {dependencyMappingData === null}
+            disabled={dependencyMappingData === null}
           />
         </div>
       );
@@ -299,7 +307,7 @@ const DependencyMappingList = ({
                         (options[field]?.length &&
                           !options[field]?.includes("NPF_DJobN/A") &&
                           obj.AWM_Design_Job_ID === "NPF_DJobN/A"),
-                    }))
+                    })).filter((option) => option.label !== "")
                   : []
               }
               filter
@@ -333,7 +341,7 @@ const DependencyMappingList = ({
                         (options[field]?.length &&
                           !options[field]?.includes("DT_DJobN/A") &&
                           obj.AWM_Design_Job_ID === "DT_DJobN/A"),
-                    }))
+                    })).filter((option) => option.label !== "")
                   : []
               }
               filter
@@ -343,7 +351,7 @@ const DependencyMappingList = ({
             />
           </div>
         )}
-        {field === "AWM_CIC_Matrix" &&
+        {/* {field === "AWM_CIC_Matrix" &&
           (options.AWM_CIC_Needed === "" ||
           !options.AWM_CIC_Needed ||
           options.AWM_CIC_Needed === "No" ||
@@ -382,7 +390,7 @@ const DependencyMappingList = ({
                 CIC Matrix & CIC's
               </span>
             </div>
-          ))}
+          ))} */}
 
         {field === "AWM_IQ_Page" && (
           <div>
@@ -407,7 +415,7 @@ const DependencyMappingList = ({
                         (options[field]?.length &&
                           !options[field]?.includes("IQ_DJobN/A") &&
                           obj.AWM_Design_Job_ID === "IQ_DJobN/A"),
-                    }))
+                    })).filter((option) => option.label !== "")
                   : []
               }
               filter
@@ -455,21 +463,21 @@ const DependencyMappingList = ({
               style={{ textAlign: "-webkit-center" }}
             >
               <Form.Control
-                type="number"
+                type="text"
                 maxLength={8}
                 value={options[field]}
-                onChange={(e) =>
-                  updateDropDownData(
-                    e.target.value,
-                    "AWM_Other_Reference",
-                    options.DSBP_PMP_PIMaterialID
-                  )
-                }
-                // disabled={
-                //   options.AWM_CIC_Needed === "Yes" ||
-                //   options.AWM_CIC_Needed === "No"
-                // }
-                style={{ width: "80%", fontSize: 12 }}
+                onChange={(e) => {
+                  const inputValue = e.target.value.replace(/[^0-9]/g, "");
+                  // Limit the input to 8 characters
+                  if (inputValue.length <= 8) {
+                    updateDropDownData(
+                      inputValue,
+                      "AWM_Other_Reference",
+                      options.DSBP_PMP_PIMaterialID
+                    );
+                  }
+                }}
+                style={{ width: "80%", fontSize: 12, height: "50%" }}
               ></Form.Control>
             </Form.Group>
           ))}

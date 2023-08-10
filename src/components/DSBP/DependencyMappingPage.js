@@ -26,6 +26,7 @@ const DependencyMapping = () => {
   const [selectedFields, setSelectedFields] = useState([]);
   const [tableRender, setTableRender] = useState(false);
   const [isSearch, isSearchSet] = useState(false);
+  const [isSubmitEnabled,setIsSubmitEnabled] = useState(false);
   const [filteredDependencyMappingData, setFiltersDependencyMappingData] =
     useState([]);
   const [dropdownDataForLayoutAndDesign, setDropdownDataForLayoutAndDesign] =
@@ -82,11 +83,17 @@ const DependencyMapping = () => {
     const filteredDataToSubmit = updatedData.filter(item => item.updated === true);
     const data = updatedData.filter(data => data?.AWM_CIC_Needed === "Yes" && data);
     const dropdownDataForLayoutAndDesign1 = data.map(item => item.DSBP_PMP_PIMaterialID);
+
+   let filteredData =  filteredDataToSubmit.filter((ele)=>ele?.AWM_CIC_Needed === "No" && ele?.AWM_Supporting_PMP_Layout === "")
+    let setSubmitEnable = filteredData.length ? false : true;
+    console.log("filteredDataToSubmit", setSubmitEnable, filteredData);
+setIsSubmitEnabled(setSubmitEnable);
   
     setDropdownDataForLayoutAndDesign(dropdownDataForLayoutAndDesign1);
     setDependencyMappingData(updatedData);
     setSubmittedData(filteredDataToSubmit);
     setDataUpdated(!dataUpdated);
+    
   };
 
   useEffect(() => {
@@ -375,6 +382,7 @@ const DependencyMapping = () => {
     setDependencyMappingData(dependencyMappingData);
     setFiltersDependencyMappingData([]);
     setTableRender(!tableRender);
+    setSelectedFields([]);
   };
 
   const onGlobalFilterChange = (e, colName) => {
@@ -441,68 +449,86 @@ const DependencyMapping = () => {
   };
 
   return (
-    console.log("isSubmitEnable", isSubmitEnable),
+    console.log("isSubmitEnable", dependencyMappingData, filteredDependencyMappingData),
     <div className="artwork-dsbp dependency-mapping">
-    
-      <>
-        <ArtworkHeader
-          headerName={headerName}
-          selected={[]}
-          label="Dependency Mapping"
-          customizeViewFields={customizeViewFields}
-          setCustomizeViewFields={setCustomizeViewFields}
-          dependencyMappingData={dependencyMappingData}
-          selectedProjectDetails={selectedProjectDetails}
-          columnNames={columnNames}
-          filteredDependencyMappingData={filteredDependencyMappingData}
-          userHasAccess={userHasAccess}
-          isDependencyMapping={true}
-          dsbpPmpData={dependencyMappingData}
-          onSearchClick={onSearchClick}
-          onClickClearFilter={onClickClearFilter}
-          isFilterActivatedInDependencyMapping={
-            isFilterActivatedInDependencyMapping
-          }
-        />
-        {loader ? <Loading /> :
+      {loader ? (
+        <Loading />
+      ) : (
         <>
-        <DependencyMappingList
-          dependencyMappingData={dependencyMappingData}
-          // dependencyColumnNames={dependencyColumnNames}
-          CDPTPageData={CDPTPageData}
-          IQData={IQData}
-          RDTData={RDTData}
-          GABriefData={GABriefData}
-          dropdownDataForLayoutAndDesign={dropdownDataForLayoutAndDesign}
-          updateDropDownData={updateDropDownData}
-          userHasAccess={userHasAccess}
-          customizeViewFields={customizeViewFields}
-          setCustomizeViewFields={setCustomizeViewFields}
-          onSort={onSort}
-          onGlobalFilterChange={onGlobalFilterChange}
-          filteredDependencyMappingData={filteredDependencyMappingData}
-          setFiltersDependencyMappingData={setFiltersDependencyMappingData}
-          setDataUpdated={setDataUpdated}
-          dataUpdated={dataUpdated}
-          selectedFields={selectedFields}
-          setSelectedFields={setSelectedFields}
-          setTableRender={setTableRender}
-          tableRender={tableRender}
-          isSearch={isSearch}
-          columnNames={columnNames}
-          handleNewGaBrief={handleNewGaBrief}
-          handleSelect={handleSelect}
-        />
-        <FooterButtons
-          handleCancel={handleCancel}
-          hideSaveButton={true}
-          onSubmit={onSubmit}
-          formValid={!isSubmitEnable}
-          checkReadWriteAccess={!false}
-        />
+          <ArtworkHeader
+            headerName={headerName}
+            selected={selected}
+            label="Dependency Mapping"
+            customizeViewFields={customizeViewFields}
+            setCustomizeViewFields={setCustomizeViewFields}
+            dependencyMappingData={dependencyMappingData}
+            selectedProjectDetails={selectedProjectDetails}
+            columnNames={columnNames}
+            filteredDependencyMappingData={filteredDependencyMappingData}
+            userHasAccess={userHasAccess}
+            isDependencyMapping={true}
+            actionDialog={actionDialog} 
+            setActionDialog={setActionDialog}
+            CDPTPageData={CDPTPageData}
+            IQData={IQData}
+            RDTData={RDTData}
+            GABriefData={GABriefData}
+            onSearchClick={onSearchClick}
+            onClickClearFilter={onClickClearFilter}
+            isFilterActivatedInDependencyMapping={
+              isFilterActivatedInDependencyMapping
+            }
+            updateDropDownData={updateDropDownData}
+            onSubmit={onSubmit}
+            handleNewGaBrief={handleNewGaBrief}
+            isSubmitEnable={isSubmitEnable}
+            setSubmittedData={setSubmittedData}
+            submittedData={submittedData}
+            dsbpPmpData={dependencyMappingData}
+          />
+          {loader ? (
+            <Loading />
+          ) : (
+            <DependencyMappingList
+            dependencyMappingData={dependencyMappingData}
+            // dependencyColumnNames={dependencyColumnNames}
+            CDPTPageData={CDPTPageData}
+            IQData={IQData}
+            RDTData={RDTData}
+            GABriefData={GABriefData}
+            dropdownDataForLayoutAndDesign={dropdownDataForLayoutAndDesign}
+            updateDropDownData={updateDropDownData}
+            userHasAccess={userHasAccess}
+            customizeViewFields={customizeViewFields}
+            setCustomizeViewFields={setCustomizeViewFields}
+            onSort={onSort}
+            onGlobalFilterChange={onGlobalFilterChange}
+            filteredDependencyMappingData={filteredDependencyMappingData}
+            setFiltersDependencyMappingData={setFiltersDependencyMappingData}
+            setDataUpdated={setDataUpdated}
+            dataUpdated={dataUpdated}
+            selectedFields={selectedFields}
+            setSelectedFields={setSelectedFields}
+            setTableRender={setTableRender}
+            tableRender={tableRender}
+            handleSelect={handleSelect}
+            handleSelectAll={handleSelectAll}
+            selected={selected}
+            selectAllChecked={selectAllChecked}
+            isSearch={isSearch}
+            columnNames={columnNames}
+            handleNewGaBrief={handleNewGaBrief}
+          />
+          )}
+          <FooterButtons
+            handleCancel={handleCancel}
+            hideSaveButton={true}
+            onSubmit={onSubmit}
+            formValid={!isSubmitEnable || !isSubmitEnabled}
+            checkReadWriteAccess={!false}
+          />
         </>
-}
-      </>
+      )}
     </div>
   );
 };

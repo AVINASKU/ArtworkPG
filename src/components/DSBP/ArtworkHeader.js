@@ -257,7 +257,7 @@ const ArtworkHeader = ({
           )}
           {isDependencyMapping ? (
             <>
-              {isFilterActivatedInDependencyMapping?.length ? (
+              {isFilterActivatedInDependencyMapping?.length || filteredDependencyMappingData?.length  ? (
                 <img
                   src={BlueFilterIcon}
                   alt="filter logo"
