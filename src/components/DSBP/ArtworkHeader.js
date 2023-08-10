@@ -218,6 +218,7 @@ const ArtworkHeader = ({
 
   return (
     <div>
+      
       {showApproveDialogCPPFA && (
         <CustomizeView
           onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
@@ -322,7 +323,7 @@ const ArtworkHeader = ({
           <button
             type="button"
             className="btn btn-secondary"
-            disabled={userHasAccess}
+            disabled={!userHasAccess}
             onClick={() => setShowApproveDialogCPPFA(true)}
           >
             Customize View

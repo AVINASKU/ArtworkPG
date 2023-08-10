@@ -24,6 +24,8 @@ const Column = ({
   droppableId
 }) => {
   return (
+    <>
+    {/* {JSON.stringify(tasks)} */}
     <div className="columnMain">
       <div className="dragAndDropColumnData">{column.title}</div>
       <Droppable droppableId={column.id}>
@@ -67,6 +69,7 @@ const Column = ({
         )}
       </Droppable>
     </div>
+    </>
   );
 };
 export default Column;
