@@ -270,7 +270,7 @@ const ArtworkAlignment = () => {
           ...item,
           sequence: 1,
         }))
-        .sort((a, b) => a.InitiativeID - b.InitiativeID);
+        .sort((a, b) => a.InitiativeID - b.InitiativeID)||[];
     }
 
     unMappedListOfDSBPId = ArtworkAgilityTasks?.filter(
@@ -280,12 +280,12 @@ const ArtworkAlignment = () => {
         ...item,
         sequence: 2,
       }))
-      .sort((a, b) => a.InitiativeID - b.InitiativeID);
+      .sort((a, b) => a.InitiativeID - b.InitiativeID)||[] ;
 
     alreadyAssignedListOfDSBPId = AssignedListofDSBPIDs?.map((item) => ({
       ...item,
       sequence: 3,
-    })).sort((a, b) => a.InitiativeID - b.InitiativeID);
+    })).sort((a, b) => a.InitiativeID - b.InitiativeID) || [];
 
     let fullDropDownData = [
       ...mappedListOfDSBPId,
@@ -293,7 +293,7 @@ const ArtworkAlignment = () => {
       ...alreadyAssignedListOfDSBPId,
     ];
 
-    console.log("rahul", fullDropDownData);
+    console.log("data ---", mappedListOfDSBPId, unMappedListOfDSBPId, alreadyAssignedListOfDSBPId);
 
     setDropdownList(fullDropDownData);
     setFieldUpdated(!fieldUpdated);
