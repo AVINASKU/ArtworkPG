@@ -77,6 +77,20 @@ export const onSubmitDsbpAction = async (formData, headers = {}) => {
   return addResponse;
 };
 
+export const onSubmitCreatePOAA = async (formData, headers = {}) => {
+  const api = new Api();
+  const axiosInstance = await api.init({ headers });
+  // let apiURL = `${DEVURL}/updatePMP`;
+  let apiURL = "https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1/CreatePOA";
+  const addResponse = await axiosInstance({
+    url: apiURL,
+    method: "POST",
+    data: formData,
+  });
+  console.log("Hello hello ----->", addResponse);
+  return addResponse;
+};
+
 export const getDependencyMappingDetails = async (projectId, headers = {}) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });

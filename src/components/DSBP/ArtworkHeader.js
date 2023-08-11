@@ -32,7 +32,6 @@ const ArtworkHeader = ({
   tableRender,
   customizeViewFields,
   setCustomizeViewFields,
-  userHasAccess,
   isDependencyMapping,
   setLoader,
   dependencyMappingData,
@@ -153,7 +152,7 @@ const ArtworkHeader = ({
   }
 
   const breadcrumb = (
-    <div style={{ marginLeft: 25 }}>
+    <div>
       <nav
         className="p-breadcrumb p-component ProjectPlanBreadCrum"
         aria-label="Breadcrumb"
@@ -244,7 +243,6 @@ const ArtworkHeader = ({
                 <img
                   src={filter}
                   alt="filter logo"
-                  disabled={userHasAccess}
                   // onClick={() => clearColumnWiseFilter()}
                   className="header-icons"
                 />
@@ -264,7 +262,6 @@ const ArtworkHeader = ({
                 <img
                   src={filter}
                   alt="filter logo"
-                  disabled={userHasAccess}
                   // onClick={() => clearColumnWiseFilter()}
                   className="header-icons"
                 />
@@ -312,7 +309,7 @@ const ArtworkHeader = ({
           ) : (
             <button
               type="button"
-              disabled={confirmFullScopeEnable || userHasAccess}
+              disabled={confirmFullScopeEnable}
               className="btn btn-secondary"
               onClick={onConfirmFullScopeIn}
             >
@@ -322,7 +319,6 @@ const ArtworkHeader = ({
           <button
             type="button"
             className="btn btn-secondary"
-            disabled={userHasAccess}
             onClick={() => setShowApproveDialogCPPFA(true)}
           >
             Customize View
@@ -332,7 +328,7 @@ const ArtworkHeader = ({
             align="end"
             variant="secondary"
             onSelect={handleAction}
-            disabled={selected?.length === 0 || userHasAccess}
+            disabled={selected?.length === 0}
           >
             {actionNameObject?.map((item) => {
               return (
