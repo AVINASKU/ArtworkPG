@@ -483,7 +483,13 @@ const ArtworkAlignment = () => {
     setBuWiseSortedColumnNames(buWiseSortedColumnNames);
     setDsbpPmpData(dsbpPmpData);
     setTableRender(!tableRender);
+    clearColumnWiseFilter();
   };
+
+  const clearColumnWiseFilter = ()=>{
+  setFilteredDsbpData(null);
+  setSelectedFields([]);
+  }
 
   let checkLength = addSavedData.length;
   return (
@@ -513,6 +519,7 @@ const ArtworkAlignment = () => {
             setCustomizeViewFields={setCustomizeViewFields}
             setLoader={setLoader}
             onClickClearFilter={onClickClearFilter}
+            filteredDsbpData={filteredDsbpData?.length}
           />
           <SelectDsbpId
             dropdownlist={dropdownlist}
@@ -537,6 +544,7 @@ const ArtworkAlignment = () => {
               handleSelectAll={handleSelectAll}
               dsbpPmpData={dsbpPmpData}
               filteredDsbpData={filteredDsbpData}
+              clearColumnWiseFilter={clearColumnWiseFilter}
               onSort={onSort}
               onGlobalFilterChange={onGlobalFilterChange}
               selectedFields={selectedFields}
