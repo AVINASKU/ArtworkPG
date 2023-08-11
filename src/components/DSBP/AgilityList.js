@@ -42,8 +42,7 @@ const AgilityList = ({
   tableRender,
   setTableRender,
   customizeViewFields,
-  setCustomizeViewFields,
-  userHasAccess,
+  setCustomizeViewFields
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -73,6 +72,11 @@ const AgilityList = ({
   let assemblyMechanismList =
     allBUAttributes?.ArtworkAgilityTasksPage?.Artwork_Alignment
       ?.Assembly_Mechanism;
+  
+  const optionsList = [
+    { name: "Yes", code: "Yes" },
+    { name: "No", code: "No" }
+  ];
 
   const addToProjectList = [
     { name: "Yes", code: "Yes" },
@@ -145,7 +149,6 @@ const AgilityList = ({
       tabHeader: options[field],
       description: options,
     };
-
     let updatedTabsList = [];
     if (
       tabsList.some(
@@ -161,12 +164,21 @@ const AgilityList = ({
       ? [...artWorkTabValuesData, ...updatedTabsList]
       : updatedTabsList;
 
-    const uniqueArray = Array.from(
-      new Set(newArray.map((obj) => JSON.stringify(obj)))
-    ).map(JSON.parse);
+    // const uniqueArray = Array.from(
+    //   new Set(newArray.map((obj) => JSON.stringify(obj)))
+    // ).map(JSON.parse);
 
-    dispatch(ArtWorkTabValuesAction(uniqueArray));
-    navigate("/DSBP/tab/artworkAlignment", { replace: true });
+    const seenHeaders = new Set();
+    const uniqueData = [];
+
+    for (const item of newArray) {
+        if (!seenHeaders.has(item.tabHeader)) {
+            seenHeaders.add(item.tabHeader);
+            uniqueData.push(item);
+        }
+    }
+    dispatch(ArtWorkTabValuesAction(uniqueData));
+    navigate("/DSBP/tab/artworkAlignment", { replace: true });  
   };
 
   const onChangeSelectField = (option, e, field) => {
@@ -221,9 +233,7 @@ const AgilityList = ({
             type="checkbox"
             className="p-checkbox-box p-highlight"
             checked={selected?.includes(options)}
-            // onChange={() => !userHasAccess && handleSelect(options)}
             onChange={() => handleSelect(options)}
-            // disabled={userHasAccess}
           />
         </div>
       )}
@@ -232,8 +242,6 @@ const AgilityList = ({
         {field === "DSBP_PMP_PIMaterialNumber" && (
           <a
             className="tabView"
-            // disabled={userHasAccess}
-            // onClick={() => !userHasAccess && onHandlePmpTabView(options, field)}
             onClick={() => onHandlePmpTabView(options, field)}
           >
             {options[field]}
@@ -247,7 +255,6 @@ const AgilityList = ({
             <Form.Select
               placeholder="Select"
               value={options[field]}
-              // onChange={(e) => !userHasAccess && onchangeAddToProject(options, e, field)}
               onChange={(e) => onchangeAddToProject(options, e, field)}
               style={{ width: "80%", fontSize: 12 }}
             >
@@ -288,7 +295,6 @@ const AgilityList = ({
               placeholder="Select"
               value={options[field]}
               disabled={!fieldEditable}
-              // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               onChange={(e) => onChangeSelectField(options, e, field)}
               style={{ width: "80%", fontSize: 12 }}
             >
@@ -310,7 +316,6 @@ const AgilityList = ({
               placeholder="Select"
               value={options[field]}
               disabled={!fieldEditable}
-              // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               onChange={(e) => onChangeSelectField(options, e, field)}
               style={{ width: "80%", fontSize: 12 }}
             >
@@ -333,7 +338,6 @@ const AgilityList = ({
               type="text"
               value={options[field]}
               disabled={!fieldEditable}
-              // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               onChange={(e) => onChangeSelectField(options, e, field)}
               placeholder="Enter Group Name"
             />
@@ -342,18 +346,24 @@ const AgilityList = ({
 
         {field === "AWM_Sellable" && (
           <Form.Group
-            controlId="groupName.ControlInput1"
-            style={{ textAlign: "-webkit-center" }}
+          controlId="groupName.ControlInput1"
+          style={{ textAlign: "-webkit-center" }}
+        >
+          <Form.Select
+            placeholder="Select"
+            value={options[field]}
+            disabled={!fieldEditable}
+            onChange={(e) => onChangeSelectField(options, e, field)}
+            style={{ width: "80%", fontSize: 12 }}
           >
-            <Form.Control
-              type="text"
-              value={options[field]}
-              disabled={!fieldEditable}
-              // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
-              onChange={(e) => onChangeSelectField(options, e, field)}
-              placeholder="Enter Sellable"
-            />
-          </Form.Group>
+            <option value="">Select</option>
+            {optionsList?.map((data) => (
+              <option key={data.code} value={data.name}>
+                {data.name}
+              </option>
+            ))}
+          </Form.Select>
+        </Form.Group>
         )}
 
         {field === "AWM_Biocide" && (
@@ -361,14 +371,20 @@ const AgilityList = ({
             controlId="groupName.ControlInput1"
             style={{ textAlign: "-webkit-center" }}
           >
-            <Form.Control
-              type="text"
+            <Form.Select
+              placeholder="Select"
               value={options[field]}
               disabled={!fieldEditable}
-              // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               onChange={(e) => onChangeSelectField(options, e, field)}
-              placeholder="Enter Biocide"
-            />
+              style={{ width: "80%", fontSize: 12 }}
+            >
+              <option value="">Select</option>
+              {optionsList?.map((data) => (
+                <option key={data.code} value={data.name}>
+                  {data.name}
+                </option>
+              ))}
+            </Form.Select>
           </Form.Group>
         )}
 
@@ -407,8 +423,6 @@ const AgilityList = ({
           src={filter}
           key={field}
           alt="Column Filter"
-          // disabled={userHasAccess}
-          // onClick={(e) => !userHasAccess && projectNameOnClick(e, field)}
           onClick={(e) => projectNameOnClick(e, field)}
           className={
             isFilterActivated
