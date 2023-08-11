@@ -17,6 +17,7 @@ const TabsComponent = ({ items, tabName, actionButton, setTabName, basePage }) =
   }
   return (
     <>
+   
       <div className="tabComponent">
         <div className="tabs-wrapper">
           <ul id="scroller" className="nav nav-tabs">

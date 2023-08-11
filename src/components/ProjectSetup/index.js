@@ -748,6 +748,7 @@ function ProjectSetup(props) {
       )}
 
       <div className="tabular-view">
+        
         <TabsComponent
           tabName={tabName}
           items={itemsData}

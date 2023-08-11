@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { TabView, TabPanel } from "primereact/tabview";
-import { Form } from "react-bootstrap";
+import { Carousel, Form } from "react-bootstrap";
 import "./index.scss";
 import { Accordion } from "react-bootstrap";
 import { Loading } from "../../../utils";
@@ -12,7 +12,7 @@ import DsbpActionDialog from "../DsbpActionDialog";
 import FooterButtons from "../../AWMJobs/DesignJobs/FooterButtons";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { styled } from "styled-components";
+import { TabHeaderWrapper } from "./PMPSpecificTabView.styled";
 
 const PMPSpecificTabView = () => {
   const dispatch = useDispatch();
@@ -25,8 +25,7 @@ const PMPSpecificTabView = () => {
     (state) => state.DropDownValuesReducer
   );
   const [storesTabList, setStoresTabDataList] = useState(artWorkTabValuesData);
-  const [filteredDataList, setFilteredDataList] =
-    useState(artWorkTabValuesData);
+  const [filteredDataList, setFilteredDataList] = useState(artWorkTabValuesData);
   const [actionDropDownValues, setActionDropDownValues] = useState([]);
   const [tabPanelList, setTabPanelList] = useState(1);
   const [onChangeData, setOnChangeData] = useState(false);
@@ -50,6 +49,7 @@ const PMPSpecificTabView = () => {
   };
 
   const BU = selectedProject?.BU;
+
   // check whether project is from home care or baby care
   let isBUHomeCare = false;
   if (BU === "Home Care") {
@@ -469,18 +469,7 @@ const PMPSpecificTabView = () => {
     </div>
   );
 
-  // shivu
-  const TabHeaderWrapper = styled.div`
-    span{
-      display:inline-block;
-      padding:5px;
-      
-  
-     &.pmpDes:before {
-      content: "|  ";
-    }
-    
-  `
+
 
   const handleDelete = (index) => {
     const updatedDataList = [...storesTabList];
@@ -492,14 +481,14 @@ const PMPSpecificTabView = () => {
   };
 
   const CustomTabHeader = ({ tabHeaderDetails, index }) => {
-    // console.log("tabHeaderDetails", tabHeaderDetails)
+    console.log("tabHeaderDetails", tabHeaderDetails)
     return (
       <>
         <div className="custom-tab-header">
           <TabHeaderWrapper className="p-tabview-title">
-            <span >{index === 0 ? "Artwork Allignment" : tabHeaderDetails.tabHeader} </span>
+            <span>{index === 0 ? "Artwork Allignment" : tabHeaderDetails.tabHeader} </span>
             <span className="pmpDes">
-              {typeof (tabHeaderDetails.description) === "object" ? tabHeaderDetails.description.DSBP_PMP_PIMaterialDescription : ""}
+              {typeof (tabHeaderDetails.description) === "object" ? `| ${tabHeaderDetails.description.DSBP_PMP_PIMaterialDescription}` : ""}
             </span>
           </TabHeaderWrapper>
           {index !== 0 && (
@@ -517,21 +506,23 @@ const PMPSpecificTabView = () => {
       return navigateToDSBP();
     }
   };
+  
   const renderTabs = () => {
-    return filteredDataList.map((obj, index) => (
-      <TabPanel
-        key={index}
-        header={
-          <CustomTabHeader
-            tabHeaderDetails={obj}
-            index={index}
-          />
-        }
-        scrollable
-      >
-        <>{loader ? <Loading /> : index !== 0 && tabsCompo(obj)}</>
-      </TabPanel>
-    ));
+    return (
+      filteredDataList.map((obj, index) => (
+        <TabPanel
+          key={index}
+          header={
+              <CustomTabHeader
+                tabHeaderDetails={obj}
+                index={index}
+              />
+          }
+          scrollable
+        >
+          <>{loader ? <Loading /> : index !== 0 && tabsCompo(obj)}</>
+        </TabPanel>
+      )))
   };
 
 
@@ -542,6 +533,7 @@ const PMPSpecificTabView = () => {
         {artWorkTabValuesData?.length > 1 && tabPanelList !== 0 ? (
           <TabView
             activeIndex={tabPanelList}
+            scrollable
             onTabChange={(e) => onTabChange(e.index)}
           >
             {renderTabs()} tabHeader
