@@ -49,7 +49,8 @@ const ArtworkHeader = ({
   handleNewGaBrief,
   isSubmitEnable,
   submittedData,
-  setSubmittedData
+  setSubmittedData,
+  filteredDsbpData,
 }) => {
   const navigate = useNavigate();
   let { ProjectID } = useParams();
@@ -232,7 +233,7 @@ const ArtworkHeader = ({
         <div className="header-buttons">
           {!isDependencyMapping && (
             <div style={{ top: 30 }}>
-              {isFilterActivated.length ? (
+              {isFilterActivated.length || filteredDsbpData ? (
                 <img
                   src={BlueFilterIcon}
                   alt="filter logo"
