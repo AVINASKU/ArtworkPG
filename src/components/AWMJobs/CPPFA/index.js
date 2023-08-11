@@ -13,7 +13,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import upload1 from "../../../assets/images/upload1.svg";
 import { getTasks } from "../../../store/actions/TaskActions";
 import "./index.scss";
-
+import { AzureFileDownloadJobs } from "../../../store/actions/AzureFileDownloadJobs";
 const CPPFA = ({
   showTaskDialog,
   selectedTaskData,
@@ -68,7 +68,7 @@ const CPPFA = ({
           (el.AWM_Project_ID === ProjectID &&
             (el.Task_Name === "Define New Print Feasibility scope" ||
               el.Task_Name ===
-              "Confirm Preliminary Print Feasibility Assessment"))
+                "Confirm Preliminary Print Feasibility Assessment"))
         ) {
           setCppfaDialogFlag(true);
         }
@@ -177,6 +177,7 @@ const CPPFA = ({
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
     const fileSize = Math.round(formattedValue / 1000000);
+
     const formData = {
       caseTypeID: "PG-AAS-Work-ConfirmPreliminaryPrintFeasibilityAssessment",
       content: {
@@ -188,7 +189,7 @@ const CPPFA = ({
         Version: fileName
           ? version.substring(0, 1) + (parseInt(version.substring(1)) + 1)
           : null,
-        Filename: fileName ? fileName.split(".").slice(0, -1).join(".") : null,
+        Filename: fileName ? fileName : null,
       },
     };
 
@@ -197,7 +198,7 @@ const CPPFA = ({
         setHighRiskYesOrNo("selectYesOrNo");
       }
     } else {
-      azureFile && (await dispatch(uploadFileAzure(azureFile)));
+      azureFile && (await dispatch(uploadFileAzure(azureFile, "CPPFA")));
       await submitCPPFA(
         formData,
         `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`,
@@ -212,7 +213,10 @@ const CPPFA = ({
     }
     setLoader(false);
   };
-
+  const downloadAzure = async (event, fileUrl) => {
+    event.preventDefault();
+    dispatch(AzureFileDownloadJobs(fileUrl, "CPPFA"));
+  };
   return (
     <Dialog
       visible={visible}
@@ -230,10 +234,10 @@ const CPPFA = ({
                       {url[1] === "myProjects"
                         ? "My Projects"
                         : url[1] === "MyTasks"
-                          ? "My Tasks"
-                          : url[1] === "AllTasks"
-                            ? "All Tasks"
-                            : "All Projects"}
+                        ? "My Tasks"
+                        : url[1] === "AllTasks"
+                        ? "All Tasks"
+                        : "All Projects"}
                     </span>
                   </NavLink>
                 </li>
@@ -362,37 +366,45 @@ const CPPFA = ({
                     maxFileSize={1000000}
                     chooseOptions={chooseOptions}
                     itemTemplate={itemTemplate}
-                    emptyTemplate={
-                      <p className="m-0">
-                        {taskDetailsDataObj?.FileMetaDataList &&
-                        taskDetailsDataObj?.FileMetaDataList.length > 0 ? (
-                          taskDetailsDataObj?.FileMetaDataList[0].File_Name ===
-                          "" ? (
-                            <>
-                              <span>Drop or Browse file here</span> <br />
-                              <span className="fileSupportedData">
-                                File supported: PDF, DOCX, JPEG
-                              </span>
-                            </>
-                          ) : (
-                            taskDetailsDataObj?.FileMetaDataList[0].File_Name
-                          )
-                        ) : (
-                          <>
-                            <span>Drop or Browse file here</span> <br />
-                            <span className="fileSupportedData">
-                              File supported: PDF, DOCX, JPEG
-                            </span>
-                          </>
-                        )}
-                      </p>
-                    }
                     disabled={
                       isAccessEmpty ||
                       taskDetailsDataObj?.Task_Status === "Complete"
                     }
                     onValidationFail={(e) => onValidationFail(e)}
                   />
+                  <p className="m-0">
+                    {taskDetailsDataObj?.FileMetaDataList &&
+                    taskDetailsDataObj?.FileMetaDataList.length > 0 ? (
+                      taskDetailsDataObj?.FileMetaDataList[0].File_Name ===
+                      "" ? (
+                        <>
+                          <span>Drop or Browse file here</span> <br />
+                          <span className="fileSupportedData">
+                            File supported: PDF, DOCX, JPEG
+                          </span>
+                        </>
+                      ) : (
+                        <a
+                          className="flex flex-column text-left ml-3"
+                          onClick={(event) =>
+                            downloadAzure(
+                              event,
+                              `${taskDetailsDataObj?.FileMetaDataList[0].File_Name}`
+                            )
+                          }
+                        >
+                          {taskDetailsDataObj?.FileMetaDataList[0].File_Name}
+                        </a>
+                      )
+                    ) : (
+                      <>
+                        <span>Drop or Browse file here</span> <br />
+                        <span className="fileSupportedData">
+                          File supported: PDF, DOCX, JPEG
+                        </span>
+                      </>
+                    )}
+                  </p>
                 </Col>
                 <Col></Col>
               </Row>
@@ -403,16 +415,17 @@ const CPPFA = ({
                 }
                 className={
                   (riskLevel !== "low" && highRiskYesOrNo === "") ||
-                    yesOrNo !== ""
+                  yesOrNo !== ""
                     ? "highRiskDataPaddingBottom"
                     : ""
                 }
               >
                 <Col
-                  className={`highRiskData ${yesOrNo === "" && highRiskYesOrNo !== ""
+                  className={`highRiskData ${
+                    yesOrNo === "" && highRiskYesOrNo !== ""
                       ? "highRiskErrorBorderColor"
                       : ""
-                    }`}
+                  }`}
                 >
                   <div className="highRiskDataColor">
                     Print Feasibility Assessment is{" "}
@@ -429,7 +442,7 @@ const CPPFA = ({
                         (flag && taskDetailsDataObj?.Task_Status === "Complete")
                           ? "yesOrNoButtonsColor"
                           : "btn-secondary"
-                        }`}
+                      }`}
                       onClick={() => setYesOrNo("yes")}
                       disabled={
                         isAccessEmpty ||
@@ -447,7 +460,7 @@ const CPPFA = ({
                           taskDetailsDataObj?.Task_Status === "Complete")
                           ? "yesOrNoButtonsColor"
                           : "btn-secondary"
-                        }`}
+                      }`}
                       onClick={() => setYesOrNo("no")}
                       disabled={
                         isAccessEmpty ||
