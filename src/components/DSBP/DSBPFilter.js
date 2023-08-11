@@ -17,6 +17,8 @@ const DSBPFilter = ({
   frozenUpdated,
   setFieldUpdated,
   fieldUpdated,
+  filteredDsbpData,
+  clearColumnWiseFilter
 }) => {
   const optionList1 = optionList(dsbpPmpData, selectedColumnName);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
@@ -51,7 +53,7 @@ const DSBPFilter = ({
   isFilterActivated =
     checkSelectedColumnIsFreeze ||
     checkSelectedColumnIsSortAtoZ ||
-    checkSelectedColumnIsSortZtoA;
+    checkSelectedColumnIsSortZtoA || filteredDsbpData;
 
   const confirmPopData = () => {
     return (
@@ -87,6 +89,7 @@ const DSBPFilter = ({
                         "columnWidthDSBPArtworkBabyCare",
                         JSON.stringify(allColumns)
                       );
+                      clearColumnWiseFilter();
                   setFrozenUpdated(!frozenUpdated);
                 }}
                 className="header-icons"
