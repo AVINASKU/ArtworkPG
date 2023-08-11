@@ -55,6 +55,11 @@ const PMPSpecificTabView = () => {
     isBUHomeCare = true;
   }
 
+  const optionsList = [
+    { name: "Yes", code: "Yes" },
+    { name: "No", code: "No" }
+  ];
+
   const addToProjectList = [
     { name: "Yes", code: "Yes" },
     { name: "No", code: "No" },
@@ -392,14 +397,21 @@ const PMPSpecificTabView = () => {
                       className={`mb-2`}
                       controlId="groupName.ControlInput1"
                     >
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Enter Bioside"
-                        onChange={handleBiosideChange}
-                        value={bioside}
-                        disabled={!fieldEditable}
-                      />
+                      <div>
+                        <Form.Select
+                          value={bioside}
+                          placeholder="Select Bioside"
+                          onChange={handleBiosideChange}
+                          disabled={!fieldEditable}
+                        >
+                          <option value="">Select Bioside</option>
+                          {optionsList.map((data) => (
+                            <option key={data.code} value={data.name}>
+                            {data.name}
+                          </option>
+                          ))}
+                        </Form.Select>
+                      </div>
                     </Form.Group>
                   </div>
                 </Form.Group>
@@ -424,14 +436,21 @@ const PMPSpecificTabView = () => {
                   className={`mb-2`}
                   controlId="groupName.ControlInput1"
                 >
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter Sellable"
-                    onChange={handleSellableChange}
-                    value={sellable}
-                    disabled={!fieldEditable}
-                  />
+                  <div>
+                    <Form.Select
+                      value={sellable}
+                      placeholder="Select Sellable"
+                      onChange={handleSellableChange}
+                      disabled={!fieldEditable}
+                    >
+                      <option value="">Select Sellable</option>
+                      {optionsList.map((data) => (
+                        <option key={data.code} value={data.name}>
+                        {data.name}
+                      </option>
+                      ))}
+                    </Form.Select>
+                  </div>
                 </Form.Group>
               )}
               {field.Field_Name !== "AWM_AddedToProject" &&
@@ -513,7 +532,6 @@ const PMPSpecificTabView = () => {
   };
 
   return (
-    console.log("artWorkTabValuesData filteredDataList", filteredDataList),
     (
       <>
         {artWorkTabValuesData?.length > 1 && tabPanelList !== 0 ? (

@@ -15,8 +15,7 @@ const SelectDsbpId = ({
   totalNoOfAddedProject,
   totalNoOfPMPLocked,
   listOfInitiativeId,
-  mappedPOAS,
-  userHasAccess
+  mappedPOAS
 }) => {
   const [selectedCities, setSelectedCities] = useState([]);
   const [selectDialog, setSelectDialog] = useState(false);
@@ -61,12 +60,10 @@ const SelectDsbpId = ({
               "disable-icons"
             }`}
             onClick={(e) => {
-            //  !userHasAccess && onChangeSelect(option, "add");
             onChangeSelect(option, "add");
             }}
             alt=""
             style={{ height: 12 }}
-            // disabled={userHasAccess}
           />
         </div>
         <div>
@@ -74,7 +71,6 @@ const SelectDsbpId = ({
             src={deleteIcon}
             onClick={(e) => {
               e.stopPropagation();
-            // !userHasAccess &&  onChangeSelect(option, "delete");
             onChangeSelect(option, "delete");
             }}
             alt="filter logo"
@@ -85,7 +81,6 @@ const SelectDsbpId = ({
               "disable-icons"
             }`}
             style={{ height: 12 }}
-            // disabled={userHasAccess}
           />
         </div>
       </div>
