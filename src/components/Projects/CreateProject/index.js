@@ -804,6 +804,7 @@ function AddProject(props) {
       defaultValues,
   });
 
+
   const checkFormValidity = () => {
     // check if all fields are filled
     // // const valid = selectedCities && selectedCities.length > 0 && isValid;

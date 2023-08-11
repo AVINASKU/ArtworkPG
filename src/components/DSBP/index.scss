@@ -42,6 +42,7 @@
       left: 0;
       bottom: 30px;
     }
+
   }
 }
 $width100: 100%;
@@ -144,8 +145,12 @@ $fontWeight400: 400;
     align-items: center;
     padding-top: 7px;
     padding-bottom: 7px;
-    // width: 270px;
+    color: black;
   }
+  .dropdown-name-color{
+    color:black;
+    font-weight: bold;
+    }
 
   .city-name {
     flex: 1;
