@@ -217,6 +217,7 @@ const ArtworkHeader = ({
 
   return (
     <div>
+      
       {showApproveDialogCPPFA && (
         <CustomizeView
           onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
