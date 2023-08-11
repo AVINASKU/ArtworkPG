@@ -6,7 +6,9 @@ import { AzureFileDownloadJobs } from "../../../store/actions/AzureFileDownloadJ
 import { useDispatch } from "react-redux";
 
 const UploadFile = ({
+  azureSubFolder,
   // setAzureFile,
+  serial,
   item,
   data,
   designData,
@@ -22,8 +24,10 @@ const UploadFile = ({
   setFileName,
   fileName,
   updateUbdData,
+  setFileNotFound,
 }) => {
   const [totalSize, setTotalSize] = useState(0);
+  const [azureErrMsg, setAzureErrMsg] = useState("");
   const [fileUploadWarning, setFileUploadWarning] = useState(false);
   const fileUploadRef = useRef(null);
   const dispatch = useDispatch();
@@ -124,7 +128,12 @@ const UploadFile = ({
   };
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
-    dispatch(AzureFileDownloadJobs(fileUrl));
+    const response = await dispatch(
+      AzureFileDownloadJobs(fileUrl, azureSubFolder)
+    );
+    if (response?.includes("404")) {
+      setFileNotFound(true);
+    }
   };
 
   const customUploader = () => {};
@@ -145,8 +154,10 @@ const UploadFile = ({
 
   return (
     <>
-      <div className="displayFlex">
+      <div className="d-flex">
         <label htmlFor="upload" className="paddingRight">
+          {serial + 1}
+          {".  "}
           {uploadFile}
         </label>
         <ToolTip />

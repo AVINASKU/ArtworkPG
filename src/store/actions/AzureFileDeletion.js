@@ -43,6 +43,7 @@ export const deleteAzureFile = (filePath, subFolder) => {
       }
     } catch (error) {
       dispatch(deleteFileFailure(error.message));
+      return error.message;
     }
   };
 };
