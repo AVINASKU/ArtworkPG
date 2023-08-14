@@ -205,6 +205,7 @@ const ArtworkAlignment = () => {
         (task) => task.DSBP_InitiativeID
       );
       const uniqueIDs = [...new Set(initiativeIDs)];
+      uniqueIDs.sort((a, b) => a - b);
       setListOfInitiativeId(uniqueIDs);
 
       const count = transformedArray.reduce((acc, obj) => {
@@ -236,17 +237,67 @@ const ArtworkAlignment = () => {
     setTableLoader(false);
   }
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   useEffect(() => {
-    dispatch(getDSBPDropdownData(BU, Region, ProjectID));
+    const fetchDataAndDispatch = async () => {
+      await fetchData();
+      dispatch(getDSBPDropdownData(BU, Region, ProjectID));
+    };
+
+    fetchDataAndDispatch();
   }, [dispatch]);
 
   useEffect(() => {
-    setDropdownList(DropDownData.DSBPDropdownData);
+    updateDropdownList(listOfInitiativeId);
   }, [DropDownData]);
+
+  const updateDropdownList = (selectedID) => {
+    setListOfInitiativeId(selectedID);
+    let listOfInitiativeId = selectedID.sort((a, b) => a - b);;
+    let { ArtworkAgilityTasks, AssignedListofDSBPIDs } =
+      DropDownData?.DSBPDropdownData;
+    let mappedListOfDSBPId = [];
+    let unMappedListOfDSBPId = [];
+    let alreadyAssignedListOfDSBPId = [];
+    if (listOfInitiativeId && listOfInitiativeId?.length) {
+      mappedListOfDSBPId = ArtworkAgilityTasks?.filter((item) =>
+        listOfInitiativeId.includes(item.InitiativeID)
+      )
+        .map((item) => ({
+          ...item,
+          sequence: 1,
+        }))
+        .sort((a, b) => a.InitiativeID - b.InitiativeID)||[];
+    }
+
+    unMappedListOfDSBPId = ArtworkAgilityTasks?.filter(
+      (item) => !listOfInitiativeId?.includes(item.InitiativeID)
+    )
+      .map((item) => ({
+        ...item,
+        sequence: 2,
+      }))
+      .sort((a, b) => a.InitiativeID - b.InitiativeID)||[] ;
+
+    alreadyAssignedListOfDSBPId = AssignedListofDSBPIDs?.map((item) => ({
+      ...item,
+      sequence: 3,
+    })).sort((a, b) => a.InitiativeID - b.InitiativeID) || [];
+
+    let fullDropDownData = [
+      ...mappedListOfDSBPId,
+      ...unMappedListOfDSBPId,
+      ...alreadyAssignedListOfDSBPId,
+    ];
+
+    console.log("data ---", mappedListOfDSBPId, unMappedListOfDSBPId, alreadyAssignedListOfDSBPId);
+
+    setDropdownList(fullDropDownData);
+    setFieldUpdated(!fieldUpdated);
+  };
 
   const addDSBPIntoProject = async (InitiativeID, operation) => {
     setTableLoader(true);
@@ -432,7 +483,13 @@ const ArtworkAlignment = () => {
     setBuWiseSortedColumnNames(buWiseSortedColumnNames);
     setDsbpPmpData(dsbpPmpData);
     setTableRender(!tableRender);
+    clearColumnWiseFilter();
   };
+
+  const clearColumnWiseFilter = ()=>{
+  setFilteredDsbpData(null);
+  setSelectedFields([]);
+  }
 
   let checkLength = addSavedData.length;
   return (
@@ -462,6 +519,7 @@ const ArtworkAlignment = () => {
             setCustomizeViewFields={setCustomizeViewFields}
             setLoader={setLoader}
             onClickClearFilter={onClickClearFilter}
+            filteredDsbpData={filteredDsbpData?.length}
           />
           <SelectDsbpId
             dropdownlist={dropdownlist}
@@ -473,6 +531,7 @@ const ArtworkAlignment = () => {
             totalNoOfPMPLocked={totalNoOfPMPLocked}
             listOfInitiativeId={listOfInitiativeId}
             mappedPOAS={mappedPOAS}
+            updateDropdownList={updateDropdownList}
           />
           {tableLoader ? (
             <Loading />
@@ -485,6 +544,7 @@ const ArtworkAlignment = () => {
               handleSelectAll={handleSelectAll}
               dsbpPmpData={dsbpPmpData}
               filteredDsbpData={filteredDsbpData}
+              clearColumnWiseFilter={clearColumnWiseFilter}
               onSort={onSort}
               onGlobalFilterChange={onGlobalFilterChange}
               selectedFields={selectedFields}
