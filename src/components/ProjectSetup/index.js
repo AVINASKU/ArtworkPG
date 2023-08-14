@@ -679,7 +679,7 @@ function ProjectSetup(props) {
     },
     {
       name: "artworkAlignment",
-      tabNameForDisplay: "Artwork Alignment",
+      tabNameForDisplay: "Artwork Scope Alignment",
       component: tabName === "artworkAlignment" && <ArtworkAlignment />,
     },
     {

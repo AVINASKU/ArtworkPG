@@ -332,7 +332,7 @@ const ArtworkHeader = ({
             align="end"
             variant="secondary"
             onSelect={handleAction}
-            disabled={selected?.length === 0 || userHasAccess}
+            // disabled={selected?.length === 0 || userHasAccess}
           >
             {actionNameObject?.map((item) => {
               return (
