@@ -14,6 +14,7 @@ import upload1 from "../../../assets/images/upload1.svg";
 import { getTasks } from "../../../store/actions/TaskActions";
 import "./index.scss";
 import { AzureFileDownloadJobs } from "../../../store/actions/AzureFileDownloadJobs";
+import { Image } from "primereact/image";
 const CPPFA = ({
   showTaskDialog,
   selectedTaskData,
@@ -104,12 +105,16 @@ const CPPFA = ({
     setAzureFile(file);
     return (
       <div className="upload-row">
-        <img
-          alt={file.name}
-          role="presentation"
-          src={file.objectURL}
-          width={50}
-        />
+        <div className="card flex justify-content-center">
+          <Image
+            src={file.objectURL}
+            zoomSrc={file.objectURL}
+            alt="Image"
+            width="60"
+            height="60"
+            preview
+          />
+        </div>
         <div
           className="flex flex-column text-left ml-3"
           hidden={
