@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { TabView, TabPanel } from "primereact/tabview";
-import { Form } from "react-bootstrap";
+import { Carousel, Form } from "react-bootstrap";
 import "./index.scss";
 import { Accordion } from "react-bootstrap";
 import { Loading } from "../../../utils";
@@ -12,6 +12,7 @@ import DsbpActionDialog from "../DsbpActionDialog";
 import FooterButtons from "../../AWMJobs/DesignJobs/FooterButtons";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import CustomHeaderComponent from "./CustomHeaderComponent";
 
 const PMPSpecificTabView = () => {
   const dispatch = useDispatch();
@@ -24,8 +25,7 @@ const PMPSpecificTabView = () => {
     (state) => state.DropDownValuesReducer
   );
   const [storesTabList, setStoresTabDataList] = useState(artWorkTabValuesData);
-  const [filteredDataList, setFilteredDataList] =
-    useState(artWorkTabValuesData);
+  const [filteredDataList, setFilteredDataList] = useState(artWorkTabValuesData);
   const [actionDropDownValues, setActionDropDownValues] = useState([]);
   const [tabPanelList, setTabPanelList] = useState(1);
   const [onChangeData, setOnChangeData] = useState(false);
@@ -49,11 +49,17 @@ const PMPSpecificTabView = () => {
   };
 
   const BU = selectedProject?.BU;
+
   // check whether project is from home care or baby care
   let isBUHomeCare = false;
   if (BU === "Home Care") {
     isBUHomeCare = true;
   }
+
+  const optionsList = [
+    { name: "Yes", code: "Yes" },
+    { name: "No", code: "No" }
+  ];
 
   const addToProjectList = [
     { name: "Yes", code: "Yes" },
@@ -139,7 +145,7 @@ const PMPSpecificTabView = () => {
         setGroupName(selectedTabData?.description?.AWM_GroupPMP);
       }
     }
-    setFormData({});    
+    setFormData({});
   }, [artWorkTabValuesData]);
 
   useEffect(() => {
@@ -240,7 +246,7 @@ const PMPSpecificTabView = () => {
         selectedTab?.description.DSBP_PMP_PIMaterialNumber,
       FK_AWMProjectID: selectedProject?.Project_ID,
     };
-    if(rejectFormData){
+    if (rejectFormData) {
       updatedData.AWM_AddedToProject = "Reject";
     }
     if (selectionFormData === "AddToProject") {
@@ -286,7 +292,7 @@ const PMPSpecificTabView = () => {
       : localStorage.getItem("columnWidthDSBPArtworkBabyCare");
 
     let allColumns = JSON.parse(jsonColumnWidth);
-    
+
     const convertedInObject = [tabData];
     if (allColumns && allColumns.length) {
       return allColumns.map((field, index) => {
@@ -297,155 +303,169 @@ const PMPSpecificTabView = () => {
         return convertedInObject.map((item) => {
           const fieldEditable = item && item["AWM_AddedToProject"] === "Yes";
           console.log("tab fieldEditable", fieldEditable);
-          return(
+          return (
             <tr key={item[value]}>
-            <td className="columnWidth">{field.Field_Name}</td>
-            <td>
-              {field.Field_Name === "AWM_AddedToProject" && (
-                <Form.Group controlId="groupName.ControlInput1">
-                  <Form.Select
-                    value={addToProjectValue}
-                    placeholder="Select"
-                    onChange={(e) => onchangeAddToProject(tabData, e, field)}
-                    style={{ fontSize: 12 }}
-                  >
-                    <option value="">Select</option>
-                    {addToProjectValue === "" &&
-                      addToProjectList.map((data) => (
-                        <option key={data.code} value={data.name}>
-                          {data.name}
-                        </option>
-                      ))}
-                    {addToProjectValue === "Yes" &&
-                      addToProjectListYes.map((data) => (
-                        <option key={data.code} value={data.name}>
-                          {data.name}
-                        </option>
-                      ))}
-                    {addToProjectValue === "No" &&
-                      addToProjectListNo.map((data) => (
-                        <option key={data.code} value={data.name}>
-                          {data.name}
-                        </option>
-                      ))}
-                    {addToProjectValue === "Reject" &&
-                      addToProjectListReject.map((data) => (
-                        <option key={data.code} value={data.name}>
-                          {data.name}
-                        </option>
-                      ))}
-                  </Form.Select>
-                </Form.Group>
-              )}
-              {field.Field_Name === "AWM_AISE" && (
-                <Form.Group
-                  className={`mb-2`}
-                  controlId="groupName.ControlInput1"
-                >
-                  <Form.Select
-                    value={aiseName}
-                    placeholder="Select AISE"
-                    onChange={handleAiseChange}
-                    disabled={!fieldEditable}
-                  >
-                    <option value="">Select AISE</option>
-                    {aiseList.map((aise) => (
-                      <option key={aise.code} value={aise.AWM_AISE}>
-                        {aise.AWM_AISE}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-              )}
-              {field.Field_Name === "AWM_AssemblyMechanism" && (
-                <Form.Group
-                  className={`mb-2`}
-                  controlId="groupName.ControlInput1"
-                >
-                  <div>
+              <td className="columnWidth">{field.Field_Name}</td>
+              <td>
+                {field.Field_Name === "AWM_AddedToProject" && (
+                  <Form.Group controlId="groupName.ControlInput1">
                     <Form.Select
-                      value={assemblyMechanismChange}
-                      placeholder="Select Assembly Mechanism"
-                      onChange={handleAssemblyMechanismChange}
+                      value={addToProjectValue}
+                      placeholder="Select"
+                      onChange={(e) => onchangeAddToProject(tabData, e, field)}
+                      style={{ fontSize: 12 }}
+                    >
+                      <option value="">Select</option>
+                      {addToProjectValue === "" &&
+                        addToProjectList.map((data) => (
+                          <option key={data.code} value={data.name}>
+                            {data.name}
+                          </option>
+                        ))}
+                      {addToProjectValue === "Yes" &&
+                        addToProjectListYes.map((data) => (
+                          <option key={data.code} value={data.name}>
+                            {data.name}
+                          </option>
+                        ))}
+                      {addToProjectValue === "No" &&
+                        addToProjectListNo.map((data) => (
+                          <option key={data.code} value={data.name}>
+                            {data.name}
+                          </option>
+                        ))}
+                      {addToProjectValue === "Reject" &&
+                        addToProjectListReject.map((data) => (
+                          <option key={data.code} value={data.name}>
+                            {data.name}
+                          </option>
+                        ))}
+                    </Form.Select>
+                  </Form.Group>
+                )}
+                {field.Field_Name === "AWM_AISE" && (
+                  <Form.Group
+                    className={`mb-2`}
+                    controlId="groupName.ControlInput1"
+                  >
+                    <Form.Select
+                      value={aiseName}
+                      placeholder="Select AISE"
+                      onChange={handleAiseChange}
                       disabled={!fieldEditable}
                     >
-                      <option value="">Select Assembly Mechanism</option>
-                      {assemblyMechanismList.map((aise) => (
-                        <option
-                          key={aise.code}
-                          value={aise.AWM_AssemblyMechanism}
-                        >
-                          {aise.AWM_AssemblyMechanism}
+                      <option value="">Select AISE</option>
+                      {aiseList.map((aise) => (
+                        <option key={aise.code} value={aise.AWM_AISE}>
+                          {aise.AWM_AISE}
                         </option>
                       ))}
                     </Form.Select>
-                  </div>
-                </Form.Group>
-              )}
-              {field.Field_Name === "AWM_Biocide" && (
-                <Form.Group
-                  className={`mb-2`}
-                  controlId="groupName.ControlInput1"
-                >
-                  <div>
-                    <Form.Group
-                      className={`mb-2`}
-                      controlId="groupName.ControlInput1"
-                    >
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Enter Bioside"
-                        onChange={handleBiosideChange}
-                        value={bioside}
+                  </Form.Group>
+                )}
+                {field.Field_Name === "AWM_AssemblyMechanism" && (
+                  <Form.Group
+                    className={`mb-2`}
+                    controlId="groupName.ControlInput1"
+                  >
+                    <div>
+                      <Form.Select
+                        value={assemblyMechanismChange}
+                        placeholder="Select Assembly Mechanism"
+                        onChange={handleAssemblyMechanismChange}
                         disabled={!fieldEditable}
-                      />
-                    </Form.Group>
-                  </div>
-                </Form.Group>
-              )}
-              {field.Field_Name === "AWM_GroupPMP" && (
-                <Form.Group
-                  className={`mb-2`}
-                  controlId="groupName.ControlInput1"
-                >
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter Group Name"
-                    onChange={handleGroupName}
-                    value={groupName}
-                    disabled={!fieldEditable}
-                  />
-                </Form.Group>
-              )}
-              {field.Field_Name === "AWM_Sellable" && (
-                <Form.Group
-                  className={`mb-2`}
-                  controlId="groupName.ControlInput1"
-                >
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter Sellable"
-                    onChange={handleSellableChange}
-                    value={sellable}
-                    disabled={!fieldEditable}
-                  />
-                </Form.Group>
-              )}
-              {field.Field_Name !== "AWM_AddedToProject" &&
-                field.Field_Name !== "AWM_AISE" &&
-                field.Field_Name !== "AWM_AssemblyMechanism" &&
-                field.Field_Name !== "AWM_Biocide" &&
-                field.Field_Name !== "AWM_Sellable" &&
-                field.Field_Name !== "AWM_GroupPMP" &&
-                item[value]}
-            </td>
-          </tr>
+                      >
+                        <option value="">Select Assembly Mechanism</option>
+                        {assemblyMechanismList.map((aise) => (
+                          <option
+                            key={aise.code}
+                            value={aise.AWM_AssemblyMechanism}
+                          >
+                            {aise.AWM_AssemblyMechanism}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </div>
+                  </Form.Group>
+                )}
+                {field.Field_Name === "AWM_Biocide" && (
+                  <Form.Group
+                    className={`mb-2`}
+                    controlId="groupName.ControlInput1"
+                  >
+                    <div>
+                      <Form.Group
+                        className={`mb-2`}
+                        controlId="groupName.ControlInput1"
+                      >
+                        <div>
+                          <Form.Select
+                            value={bioside}
+                            placeholder="Select Bioside"
+                            onChange={handleBiosideChange}
+                              disabled={!fieldEditable}
+                        >
+                          <option value="">Select Bioside</option>
+                          {optionsList.map((data) => (
+                            <option key={data.code} value={data.name}>
+                            {data.name}
+                          </option>
+                          ))}
+                        </Form.Select>
+                        </div>
+                      </Form.Group>
+                    </div>
+                  </Form.Group>
+                )}
+                {field.Field_Name === "AWM_GroupPMP" && (
+                  <Form.Group
+                    className={`mb-2`}
+                    controlId="groupName.ControlInput1"
+                  >
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Enter Group Name"
+                      onChange={handleGroupName}
+                      value={groupName}
+                      disabled={!fieldEditable}
+                    />
+                  </Form.Group>
+                )}
+                {field.Field_Name === "AWM_Sellable" && (
+                  <Form.Group
+                    className={`mb-2`}
+                    controlId="groupName.ControlInput1"
+                  >
+                    <div>
+                      <Form.Select
+                        value={sellable}
+                        placeholder="Select Sellable"
+                        onChange={handleSellableChange}
+                          disabled={!fieldEditable}
+                    >
+                      <option value="">Select Sellable</option>
+                      {optionsList.map((data) => (
+                        <option key={data.code} value={data.name}>
+                        {data.name}
+                      </option>
+                      ))}
+                    </Form.Select>
+                    </div>
+                  </Form.Group>
+                )}
+                {field.Field_Name !== "AWM_AddedToProject" &&
+                  field.Field_Name !== "AWM_AISE" &&
+                  field.Field_Name !== "AWM_AssemblyMechanism" &&
+                  field.Field_Name !== "AWM_Biocide" &&
+                  field.Field_Name !== "AWM_Sellable" &&
+                  field.Field_Name !== "AWM_GroupPMP" &&
+                  item[value]}
+              </td>
+            </tr>
           )
-          
-      });
+
+        });
       });
     }
     return null; // return null if there are no columns or tabData is empty
@@ -468,60 +488,55 @@ const PMPSpecificTabView = () => {
     </div>
   );
 
+
+
   const handleDelete = (index) => {
     const updatedDataList = [...storesTabList];
     updatedDataList.splice(index, 1);
     setStoresTabDataList(updatedDataList);
     if (tabPanelList >= storesTabList.length) {
-      setTabPanelList(storesTabList.length - 1); // Select the last tab if the active tab is deleted
+      setTabPanelList(storesTabList.length - 1); 
     }
   };
 
-  const CustomTabHeader = ({ tabHeader, index }) => {
-    return (
-      <div className="custom-tab-header">
-        <span className="p-tabview-title">{tabHeader}</span>
-        {index !== 0 && (
-          <button className="close-button" onClick={() => handleDelete(index)}>
-            &#x2715;
-          </button>
-        )}
-      </div>
-    );
-  };
+  
   const onTabChange = (index) => {
     setTabPanelList(index);
     if (index === 0) {
       return navigateToDSBP();
     }
   };
+  
   const renderTabs = () => {
-    return filteredDataList.map((obj, index) => (
-      <TabPanel
-        key={index}
-        header={
-          <CustomTabHeader
-            tabHeader={index === 0 ? "Artwork Alignment" : obj.tabHeader}
-            index={index}
-          />
-        }
-        scrollable
-      >
-        <>{loader ? <Loading /> : index !== 0 && tabsCompo(obj)}</>
-      </TabPanel>
-    ));
+    return (
+      filteredDataList.map((obj, index) => (
+        <TabPanel
+          key={index}
+          header={
+              <CustomHeaderComponent
+                tabHeaderDetails={obj}
+                index={index}
+                handleDelete={handleDelete}
+              />
+          }
+          scrollable
+        >
+          <>{loader ? <Loading /> : index !== 0 && tabsCompo(obj)}</>
+        </TabPanel>
+      )))
   };
 
+
   return (
-    console.log("artWorkTabValuesData filteredDataList", filteredDataList),
     (
       <>
         {artWorkTabValuesData?.length > 1 && tabPanelList !== 0 ? (
           <TabView
             activeIndex={tabPanelList}
+            scrollable
             onTabChange={(e) => onTabChange(e.index)}
           >
-            {renderTabs()}
+            {renderTabs()} tabHeader
           </TabView>
         ) : (
           navigateToDSBP()

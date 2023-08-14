@@ -38,6 +38,10 @@ const DsbpActionDialog = ({
   const [IQ, setIQ] = useState([]);
   const [RDT, setRDT] = useState([]);
   const [GABrief, setGABrief] = useState([]);
+  const optionsList = [
+    { name: "Yes", code: "Yes" },
+    { name: "No", code: "No" }
+  ];
   
   const { selectedProject } = useSelector((state) => state.ProjectSetupReducer);
   if(rowData){
@@ -85,18 +89,25 @@ const DsbpActionDialog = ({
     });
   };
 
-  const handleClose = (e) => {
-    setActionDialog(false);
-    setSubmittedData([])
+  const handlePackageName = (e) => {
+    setPackageName(e.target.value)
+    setFormData({
+      ...formData,
+      POAPackageName: e.target.value,
+    });
   };
 
+  const handleClose = (e) => {
+    setActionDialog(false);
+    headerName === "Dependency Mapping" && setSubmittedData([])
+  };
   const footerContent = (
     <div>
       <Button variant="secondary" onClick={handleClose}>
       {(updatedData && updatedData[0]?.value === "Add to Project") || rowData ? "No" : "Cancel"}
       </Button>
       <Button
-        disabled={(updatedData && updatedData[0]?.value === "Add to Project") || rowData || !isSubmitEnable ? false : Object.keys(formData).length === 0}
+        disabled={((updatedData && updatedData[0]?.value === "Add to Project") || rowData) || (isSubmitEnable !== undefined && !isSubmitEnable) ? false : Object.keys(formData).length === 0}
         onClick={() => ((updatedData && updatedData[0]?.value === "Add to Project") || rowData) ? onActionSubmit("AddToProject", selected) : onActionSubmit(formData)}
       >
         {(updatedData && updatedData[0]?.value === "Mass Update") ? "Save" : (updatedData && updatedData[0]?.value === "Add to Project") || rowData ? "Yes" : "Save"}
@@ -215,14 +226,22 @@ const DsbpActionDialog = ({
                                   controlId="groupName.ControlInput1"
                                 >
                                   <Form.Label>Bioside</Form.Label>
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    placeholder="Enter Bioside"
-                                    onChange={handleBiosideChange}
-                                    value={bioside}
-                                    disabled={addedToProjectRows.length === 0}
-                                  />
+                                  <div>
+                                    <Form.Select
+                                      value={bioside}
+                                      placeholder="Select Bioside"
+                                      onChange={handleBiosideChange}
+                                      disabled={addedToProjectRows.length === 0}
+                                    >
+                                      <option value="">Select Bioside</option>
+                                      {optionsList.map((data) => (
+                                        <option key={data.code} value={data.name}>
+                                        {data.name}
+                                      </option>
+                                      ))}
+                                    </Form.Select>
+                                  </div>
+                                  
                                 </Form.Group>
                               </Col>
                               <Col sm={12}>
@@ -231,14 +250,21 @@ const DsbpActionDialog = ({
                                   controlId="groupName.ControlInput1"
                                 >
                                   <Form.Label>Sellable</Form.Label>
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    placeholder="Enter Sellable"
-                                    onChange={handleSellableChange}
-                                    value={sellable}
-                                    disabled={addedToProjectRows.length === 0}
-                                  />
+                                  <div>
+                                    <Form.Select
+                                      value={sellable}
+                                      placeholder="Select Sellable"
+                                      onChange={handleSellableChange}
+                                      disabled={addedToProjectRows.length === 0}
+                                    >
+                                      <option value="">Select Sellable</option>
+                                      {optionsList.map((data) => (
+                                        <option key={data.code} value={data.name}>
+                                        {data.name}
+                                      </option>
+                                      ))}
+                                    </Form.Select>
+                                  </div>
                                 </Form.Group>
                               </Col>
                             </>
@@ -268,6 +294,13 @@ const DsbpActionDialog = ({
                                         ? RDTData.map((obj) => ({
                                             label: obj.AWM_Design_Job_Name,
                                             value: obj.AWM_Design_Job_ID,
+                                            disabled:
+                                            (RDT.length &&
+                                              RDT.includes("DT_DJobN/A") &&
+                                              obj.AWM_Design_Job_ID !== "DT_DJobN/A") ||
+                                            (RDT.length &&
+                                              !RDT.includes("DT_DJobN/A") &&
+                                              obj.AWM_Design_Job_ID === "DT_DJobN/A"),
                                           }))
                                         : []
                                     }
@@ -302,6 +335,13 @@ const DsbpActionDialog = ({
                                         ? CDPTPageData.map((obj) => ({
                                             label: obj.AWM_Design_Job_Name,
                                             value: obj.AWM_Design_Job_ID,
+                                            disabled:
+                                            (CDPT.length &&
+                                              CDPT.includes("NPF_DJobN/A") &&
+                                              obj.AWM_Design_Job_ID !== "NPF_DJobN/A") ||
+                                            (CDPT.length &&
+                                              !CDPT.includes("NPF_DJobN/A") &&
+                                              obj.AWM_Design_Job_ID === "NPF_DJobN/A"),
                                           })).filter(option => option.label !== "") // Filter out options with empty labels
                                         : []
                                     }
@@ -336,6 +376,13 @@ const DsbpActionDialog = ({
                                         ? IQData.map((obj) => ({
                                             label: obj.AWM_Design_Job_Name,
                                             value: obj.AWM_Design_Job_ID,
+                                            disabled:
+                                            (IQ.length &&
+                                              IQ.includes("IQ_DJobN/A") &&
+                                              obj.AWM_Design_Job_ID !== "IQ_DJobN/A") ||
+                                            (IQ.length &&
+                                              !IQ.includes("IQ_DJobN/A") &&
+                                              obj.AWM_Design_Job_ID === "IQ_DJobN/A"),
                                           }))
                                         : []
                                     }
@@ -415,7 +462,7 @@ const DsbpActionDialog = ({
                             type="text"
                             className="form-control"
                             placeholder="Enter Package Name"
-                            onChange={(e) => setPackageName(e.target.value)}
+                            onChange={handlePackageName}
                             value={packageName}
                           />
                         </Form.Group>

@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col } from "react-bootstrap";
-import deleteIcon from "../../../assets/images/deleteIcon.svg";
+import enabledDelete from "../../../assets/images/enabled-delete.svg";
+import disabledDelete from "../../../assets/images/disabled-delete.svg";
 import DsbpCommonPopup from "../../DSBP/DsbpCommonPopup";
 import UploadFile from "../UBD/UploadFile";
 import UpVersion from "../UBD/UpVersion";
 
 const UploadBriefingDocuments = ({
+  azureSubFolder,
+  serial,
   index,
   handleDelete,
   item,
@@ -20,6 +23,7 @@ const UploadBriefingDocuments = ({
   updateUbdData,
   setWrongFileName,
   disableDelete,
+  setFileNotFound,
   // setAzureFile,
 }) => {
   const [fileName, setFileName] = useState("");
@@ -65,6 +69,8 @@ const UploadBriefingDocuments = ({
       >
         <Col sm={2}>
           <UploadFile
+            azureSubFolder={azureSubFolder}
+            serial={serial}
             key={item.Design_Job_ID}
             // setAzureFile={setAzureFile}
             item={item}
@@ -81,6 +87,7 @@ const UploadBriefingDocuments = ({
             setFileName={setFileName}
             fileName={fileName}
             updateUbdData={updateUbdData}
+            setFileNotFound={setFileNotFound}
             // disabled={!checkReadWriteAccess || data.Task_Status === "Complete"}
             // ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
             // version={version}
@@ -112,9 +119,9 @@ const UploadBriefingDocuments = ({
         <Col sm={3}>
           <div className="d-flex flex-column text-center">
             <label htmlFor="additional">Delete</label>
-            <div style={{ marginTop: 7 }}>
+            <div style={{ marginTop: 13 }}>
               <img
-                src={deleteIcon}
+                src={disableDelete ? disabledDelete : enabledDelete}
                 alt="filter logo"
                 onClick={() =>
                   checkReadWriteAccess &&

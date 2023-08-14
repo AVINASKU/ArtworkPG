@@ -43,7 +43,7 @@ const AgilityList = ({
   setTableRender,
   customizeViewFields,
   setCustomizeViewFields,
-  userHasAccess,
+  clearColumnWiseFilter,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -73,6 +73,11 @@ const AgilityList = ({
   let assemblyMechanismList =
     allBUAttributes?.ArtworkAgilityTasksPage?.Artwork_Alignment
       ?.Assembly_Mechanism;
+
+  const optionsList = [
+    { name: "Yes", code: "Yes" },
+    { name: "No", code: "No" },
+  ];
 
   const addToProjectList = [
     { name: "Yes", code: "Yes" },
@@ -104,17 +109,15 @@ const AgilityList = ({
   }, [customizeViewFields]);
 
   useEffect(() => {
-    if(allBUAttributes === null)
-      dispatch(getDropDownValues());
+    if (allBUAttributes === null) dispatch(getDropDownValues());
   }, [allBUAttributes]);
 
-  const onchangeAddToProject = (rowData, e, ele) => {    
+  const onchangeAddToProject = (rowData, e, ele) => {
     setOnChangeData(rowData);
     if (e.target.value === "Reject") setRejectDialog(true);
     setRejectFormData({});
-    if (e.target.value === "Yes")
-      setHandleYesAddToPRoject(true);
-    if(e.target.value === "No"){
+    if (e.target.value === "Yes") setHandleYesAddToPRoject(true);
+    if (e.target.value === "No") {
       rowData[ele] = e.target.value;
       setDsbpPmpData([...dsbpPmpData]);
       onChangeSelectField(rowData, e, ele);
@@ -145,7 +148,6 @@ const AgilityList = ({
       tabHeader: options[field],
       description: options,
     };
-
     let updatedTabsList = [];
     if (
       tabsList.some(
@@ -161,11 +163,20 @@ const AgilityList = ({
       ? [...artWorkTabValuesData, ...updatedTabsList]
       : updatedTabsList;
 
-    const uniqueArray = Array.from(
-      new Set(newArray.map((obj) => JSON.stringify(obj)))
-    ).map(JSON.parse);
+    // const uniqueArray = Array.from(
+    //   new Set(newArray.map((obj) => JSON.stringify(obj)))
+    // ).map(JSON.parse);
 
-    dispatch(ArtWorkTabValuesAction(uniqueArray));
+    const seenHeaders = new Set();
+    const uniqueData = [];
+
+    for (const item of newArray) {
+      if (!seenHeaders.has(item.tabHeader)) {
+        seenHeaders.add(item.tabHeader);
+        uniqueData.push(item);
+      }
+    }
+    dispatch(ArtWorkTabValuesAction(uniqueData));
     navigate("/DSBP/tab/artworkAlignment", { replace: true });
   };
 
@@ -216,24 +227,20 @@ const AgilityList = ({
     return (
       <>
         {field === "field_0" && ( // Add this condition to render a checkbox
-        <div className="flex align-items-center gap-2">
-          <input
-            type="checkbox"
-            className="p-checkbox-box p-highlight"
-            checked={selected?.includes(options)}
-            // onChange={() => !userHasAccess && handleSelect(options)}
-            onChange={() => handleSelect(options)}
-            // disabled={userHasAccess}
-          />
-        </div>
-      )}
+          <div className="flex align-items-center gap-2">
+            <input
+              type="checkbox"
+              className="p-checkbox-box p-highlight"
+              checked={selected?.includes(options)}
+              onChange={() => handleSelect(options)}
+            />
+          </div>
+        )}
         {options?.FPCStagingPage?.[0][field]}
         {concatenatedFPCStagingFormulaData?.[field]}
         {field === "DSBP_PMP_PIMaterialNumber" && (
           <a
             className="tabView"
-            // disabled={userHasAccess}
-            // onClick={() => !userHasAccess && onHandlePmpTabView(options, field)}
             onClick={() => onHandlePmpTabView(options, field)}
           >
             {options[field]}
@@ -247,7 +254,6 @@ const AgilityList = ({
             <Form.Select
               placeholder="Select"
               value={options[field]}
-              // onChange={(e) => !userHasAccess && onchangeAddToProject(options, e, field)}
               onChange={(e) => onchangeAddToProject(options, e, field)}
               style={{ width: "80%", fontSize: 12 }}
             >
@@ -288,7 +294,6 @@ const AgilityList = ({
               placeholder="Select"
               value={options[field]}
               disabled={!fieldEditable}
-              // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               onChange={(e) => onChangeSelectField(options, e, field)}
               style={{ width: "80%", fontSize: 12 }}
             >
@@ -310,7 +315,6 @@ const AgilityList = ({
               placeholder="Select"
               value={options[field]}
               disabled={!fieldEditable}
-              // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               onChange={(e) => onChangeSelectField(options, e, field)}
               style={{ width: "80%", fontSize: 12 }}
             >
@@ -333,7 +337,6 @@ const AgilityList = ({
               type="text"
               value={options[field]}
               disabled={!fieldEditable}
-              // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               onChange={(e) => onChangeSelectField(options, e, field)}
               placeholder="Enter Group Name"
             />
@@ -345,14 +348,20 @@ const AgilityList = ({
             controlId="groupName.ControlInput1"
             style={{ textAlign: "-webkit-center" }}
           >
-            <Form.Control
-              type="text"
+            <Form.Select
+              placeholder="Select"
               value={options[field]}
               disabled={!fieldEditable}
-              // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               onChange={(e) => onChangeSelectField(options, e, field)}
-              placeholder="Enter Sellable"
-            />
+              style={{ width: "80%", fontSize: 12 }}
+            >
+              <option value="">Select</option>
+              {optionsList?.map((data) => (
+                <option key={data.code} value={data.name}>
+                  {data.name}
+                </option>
+              ))}
+            </Form.Select>
           </Form.Group>
         )}
 
@@ -361,14 +370,20 @@ const AgilityList = ({
             controlId="groupName.ControlInput1"
             style={{ textAlign: "-webkit-center" }}
           >
-            <Form.Control
-              type="text"
+            <Form.Select
+              placeholder="Select"
               value={options[field]}
               disabled={!fieldEditable}
-              // onChange={(e) => !userHasAccess && onChangeSelectField(options, e, field)}
               onChange={(e) => onChangeSelectField(options, e, field)}
-              placeholder="Enter Biocide"
-            />
+              style={{ width: "80%", fontSize: 12 }}
+            >
+              <option value="">Select</option>
+              {optionsList?.map((data) => (
+                <option key={data.code} value={data.name}>
+                  {data.name}
+                </option>
+              ))}
+            </Form.Select>
           </Form.Group>
         )}
 
@@ -385,7 +400,9 @@ const AgilityList = ({
     );
   };
 
-  const renderHeader = (field, isFilterActivated = false) => {
+  const renderHeader = (field, col) => {
+    let isFilterActivated =
+      col?.freeze === true || col?.sortAtoZ === true || col?.sortZtoA === true;
     if (field === "checkbox") {
       // Render checkbox in header
       return (
@@ -394,7 +411,7 @@ const AgilityList = ({
             type="checkbox"
             className="p-checkbox-box p-highlight"
             checked={selectAllChecked}
-            disabled = {dsbpPmpData === null}
+            disabled={dsbpPmpData === null}
             onChange={handleSelectAll}
           />
         </div>
@@ -407,8 +424,6 @@ const AgilityList = ({
           src={filter}
           key={field}
           alt="Column Filter"
-          // disabled={userHasAccess}
-          // onClick={(e) => !userHasAccess && projectNameOnClick(e, field)}
           onClick={(e) => projectNameOnClick(e, field)}
           className={
             isFilterActivated
@@ -466,7 +481,7 @@ const AgilityList = ({
             return (
               <Column
                 field={field.Field_Name}
-                header={() => renderHeader(field.Field_Name)}
+                header={() => renderHeader(field.Field_Name, field)}
                 frozen={field.freeze}
                 className={field.freeze ? "font-bold" : ""}
                 body={addBody}
@@ -500,7 +515,7 @@ const AgilityList = ({
             return (
               <Column
                 field={field.Field_Name}
-                header={() => renderHeader(field.Field_Name)}
+                header={() => renderHeader(field.Field_Name, field)}
                 frozen={field.freeze}
                 className={field.freeze ? "font-bold" : ""}
                 body={addBody}
@@ -591,74 +606,77 @@ const AgilityList = ({
 
   return (
     console.log("dsbpPmpData", dsbpPmpData),
-    <>
-      <DataTable
-        dataKey="DSBP_PMP_PIMaterialID"
-        key={tableRender ? `"DSBP_PMP_PIMaterialID" + timestamp` : ""}
-        scrollable
-        resizableColumns
-        // key={generateUniqueKey("artwork")}
-        reorderableColumns
-        onColumnResizeEnd={onColumnResizeEnd}
-        onColReorder={storeReorderedColumns}
-        responsiveLayout="scroll"
-        columnResizeMode="expand"
-        value={
-          filteredDsbpData && filteredDsbpData.length
-            ? filteredDsbpData
-            : dsbpPmpData
-        }
-        className="mt-3"
-        tableStyle={{ width: "max-content", minWidth: "100%" }}
-        selection={selected}
-        onSelectionChange={(e) => setSelected(e.value)}
-      >
-        {renderColumns()}
-      </DataTable>
-      <DSBPFilter
-        op={op}
-        onSort={onSort}
-        selectedColumnName={selectedColumnName}
-        dsbpPmpData={dsbpPmpData}
-        selectedFields={selectedFields}
-        onGlobalFilterChange={onGlobalFilterChange}
-        setFrozenUpdated={setFrozenUpdated}
-        frozenUpdated={frozenUpdated}
-        setFieldUpdated={setFieldUpdated}
-        fieldUpdated={fieldUpdated}
-      />
-      {rejectDialog && (
-        <DsbpCommonPopup
-          actionHeader="Are you sure you want to reject this PMP?"
-          dasbpDialog={rejectDialog}
-          setDasbpDialog={setRejectDialog}
-          rejectFormData={rejectFormData}
-          onSubmit={() => onActionSubmit(rejectFormData, [onChangeData])}
-
-          okButtonShow={false}          
-          deleteButtonShow={false}
-          submitButtonShow={true}
-          yesButtonShow={true}
-          disconnectButtonShow={true}
+    (
+      <>
+        <DataTable
+          dataKey="DSBP_PMP_PIMaterialID"
+          key={tableRender ? `"DSBP_PMP_PIMaterialID" + timestamp` : ""}
+          scrollable
+          resizableColumns
+          // key={generateUniqueKey("artwork")}
+          reorderableColumns
+          onColumnResizeEnd={onColumnResizeEnd}
+          onColReorder={storeReorderedColumns}
+          responsiveLayout="scroll"
+          columnResizeMode="expand"
+          value={
+            filteredDsbpData && filteredDsbpData.length
+              ? filteredDsbpData
+              : dsbpPmpData
+          }
+          className="mt-3"
+          tableStyle={{ width: "max-content", minWidth: "100%" }}
+          selection={selected}
+          onSelectionChange={(e) => setSelected(e.value)}
         >
-          <DsbpRejectDialog
-            onChangeData={onChangeData}
-            rejectFormData={rejectFormData}
-            setRejectFormData={setRejectFormData}
-          />
-        </DsbpCommonPopup>
-      )}
-      {handleYesAddToPRoject && (
-        <DsbpActionDialog
-          actionHeader="Are you sure you want to add these PMP to Project ?"
-          actionDialog={handleYesAddToPRoject}
-          setActionDialog={setHandleYesAddToPRoject}
-          onChangeData={onChangeData}
-          rowData={onChangeData}
-          onActionSubmit={onActionSubmit}
+          {renderColumns()}
+        </DataTable>
+        <DSBPFilter
+          op={op}
+          onSort={onSort}
+          selectedColumnName={selectedColumnName}
+          dsbpPmpData={dsbpPmpData}
+          selectedFields={selectedFields}
+          onGlobalFilterChange={onGlobalFilterChange}
+          setFrozenUpdated={setFrozenUpdated}
+          frozenUpdated={frozenUpdated}
+          setFieldUpdated={setFieldUpdated}
+          fieldUpdated={fieldUpdated}
+          clearColumnWiseFilter={clearColumnWiseFilter}
+          filteredDsbpData={filteredDsbpData?.length}
         />
-      )}
-    </>
+        {rejectDialog && (
+          <DsbpCommonPopup
+            actionHeader="Are you sure you want to reject this PMP?"
+            dasbpDialog={rejectDialog}
+            setDasbpDialog={setRejectDialog}
+            rejectFormData={rejectFormData}
+            onSubmit={() => onActionSubmit(rejectFormData, [onChangeData])}
+            okButtonShow={false}          
+            deleteButtonShow={false}
+            submitButtonShow={true}
+            yesButtonShow={true}
+            disconnectButtonShow={true}
+          >
+            <DsbpRejectDialog
+              onChangeData={onChangeData}
+              rejectFormData={rejectFormData}
+              setRejectFormData={setRejectFormData}
+            />
+          </DsbpCommonPopup>
+        )}
+        {handleYesAddToPRoject && (
+          <DsbpActionDialog
+            actionHeader="Are you sure you want to add these PMP to Project ?"
+            actionDialog={handleYesAddToPRoject}
+            setActionDialog={setHandleYesAddToPRoject}
+            onChangeData={onChangeData}
+            rowData={onChangeData}
+            onActionSubmit={onActionSubmit}
+          />
+        )}
+      </>
+    )
   );
 };
 

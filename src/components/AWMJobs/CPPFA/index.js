@@ -23,6 +23,7 @@ const CPPFA = ({
   userInformation,
   getProjectPlanApi,
 }) => {
+  console.log(TaskDetailsData);
   const location = useLocation();
   const locationPath = location?.pathname;
   const url = locationPath?.split("/");
@@ -67,7 +68,7 @@ const CPPFA = ({
           (el.AWM_Project_ID === ProjectID &&
             (el.Task_Name === "Define New Print Feasibility scope" ||
               el.Task_Name ===
-                "Confirm Preliminary Print Feasibility Assessment"))
+              "Confirm Preliminary Print Feasibility Assessment"))
         ) {
           setCppfaDialogFlag(true);
         }
@@ -229,10 +230,10 @@ const CPPFA = ({
                       {url[1] === "myProjects"
                         ? "My Projects"
                         : url[1] === "MyTasks"
-                        ? "My Tasks"
-                        : url[1] === "AllTasks"
-                        ? "All Tasks"
-                        : "All Projects"}
+                          ? "My Tasks"
+                          : url[1] === "AllTasks"
+                            ? "All Tasks"
+                            : "All Projects"}
                     </span>
                   </NavLink>
                 </li>
@@ -402,17 +403,16 @@ const CPPFA = ({
                 }
                 className={
                   (riskLevel !== "low" && highRiskYesOrNo === "") ||
-                  yesOrNo !== ""
+                    yesOrNo !== ""
                     ? "highRiskDataPaddingBottom"
                     : ""
                 }
               >
                 <Col
-                  className={`highRiskData ${
-                    yesOrNo === "" && highRiskYesOrNo !== ""
+                  className={`highRiskData ${yesOrNo === "" && highRiskYesOrNo !== ""
                       ? "highRiskErrorBorderColor"
                       : ""
-                  }`}
+                    }`}
                 >
                   <div className="highRiskDataColor">
                     Print Feasibility Assessment is{" "}
@@ -429,7 +429,7 @@ const CPPFA = ({
                         (flag && taskDetailsDataObj?.Task_Status === "Complete")
                           ? "yesOrNoButtonsColor"
                           : "btn-secondary"
-                      }`}
+                        }`}
                       onClick={() => setYesOrNo("yes")}
                       disabled={
                         isAccessEmpty ||
@@ -447,7 +447,7 @@ const CPPFA = ({
                           taskDetailsDataObj?.Task_Status === "Complete")
                           ? "yesOrNoButtonsColor"
                           : "btn-secondary"
-                      }`}
+                        }`}
                       onClick={() => setYesOrNo("no")}
                       disabled={
                         isAccessEmpty ||

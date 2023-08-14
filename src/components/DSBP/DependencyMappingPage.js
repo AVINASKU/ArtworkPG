@@ -425,7 +425,7 @@ const DependencyMapping = () => {
 
   return (
     console.log("isSubmitEnable", isSubmitEnable),
-    <div className="artwork-dsbp dependency-mapping">
+    <div className="artwork-dsbp myProjectAnddAllProjectList dependency-mapping">
       {loader ? (
         <Loading />
       ) : (
