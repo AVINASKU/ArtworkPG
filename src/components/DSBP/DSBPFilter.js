@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { OverlayPanel } from "primereact/overlaypanel";
 import filter from "../../assets/images/filter.svg";
 import BlueFilterIcon from "../../assets/images/BlueFilterIcon.svg";
@@ -24,6 +24,14 @@ const DSBPFilter = ({
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const BU = selectedProjectDetails?.BU;
+  const [columnWiseSelectedFields, setColumnWiseSelectedFields] = useState([]);
+
+  useEffect(()=>{
+    if(selectedFields && selectedColumnName){
+      setColumnWiseSelectedFields(selectedFields[selectedColumnName]);
+    }
+  },[selectedFields, selectedColumnName]) 
+  
   // check whether project is from home care or baby care
   let isBUHomeCare = false;
   if (BU === "Home Care") {
@@ -202,7 +210,7 @@ const DSBPFilter = ({
         </div>
         <div className="multiSelect">
           <MultiSelect
-            value={selectedFields}
+            value={columnWiseSelectedFields}
             onChange={(e) => onGlobalFilterChange(e, selectedColumnName)}
             options={optionList1}
             filter
