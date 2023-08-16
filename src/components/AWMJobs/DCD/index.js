@@ -6,6 +6,7 @@ import AddNewDesign from "../DesignJobs/TaskHeader";
 import AddNewDesignContent from "../DesignJobs/AddNewDesignContent";
 import FooterButtons from "../DesignJobs/FooterButtons";
 import { ProjectService } from "../../../service/PegaService";
+import { useSelector } from "react-redux";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
@@ -20,6 +21,9 @@ function DCD() {
   const [updated, setUpdated] = useState(false);
   const [submittedDI, setSubmittedDI] = useState([]);
   const [validation, setValidation] = useState(false);
+  const { TaskDetailsData, loading } = useSelector(
+    (state) => state.TaskDetailsReducer
+  );
 
   useEffect(() => {
     const data1 = ProjectService.getDIData();
@@ -107,7 +111,7 @@ function DCD() {
           height: "400px",
         }}
       >
-        {<AddNewDesign {...data} />}
+        {<AddNewDesign {...data} TaskDetailsData={TaskDetailsData}/>}
 
         {designIntent &&
           designIntent.length &&

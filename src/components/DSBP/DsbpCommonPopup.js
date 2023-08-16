@@ -16,6 +16,7 @@ const DsbpCommonPopup = ({
   submitButtonShow,
   disconnectButtonShow,
   cancelButtonShow,
+  showCancel
 }) => {
   const footerContent = (
     <div>
@@ -35,7 +36,7 @@ const DsbpCommonPopup = ({
             onClick={() => setDasbpDialog(false)}
             hidden={cancelButtonShow === false}
           >
-            No
+            {showCancel ? "Cancel" : "No"}
           </Button>
           {deleteButtonShow ? (
             <Button

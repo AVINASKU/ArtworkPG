@@ -176,7 +176,7 @@
 }
 
 .heade-plus-icon {
-  cursor: pointer;
+  // cursor: pointer;
   font-size: 2rem;
   color: #003da5;
   width: 13px;
@@ -275,10 +275,20 @@
   font-weight: 500;
   line-height: normal;
 }
+
+.add-file-ubd {
+  cursor: pointer;
+  font-weight: bold;
+}
+
 .ubd-dialog {
   width: 25%;
   height: 15%;
   border-radius: 20px;
+  .p-dialog .p-dialog-header {
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+  }
 
   .p-dialog-ubd {
     color: red;
