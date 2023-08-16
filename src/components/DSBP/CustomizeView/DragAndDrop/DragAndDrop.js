@@ -264,7 +264,7 @@ const DragAndDrop = (props) => {
           variant="primary"
           onClick={handleSubmit}
         >
-          Update
+          Save
         </Button>
       </div>
     </>
