@@ -144,7 +144,7 @@ const SelectDsbpId = ({
 
   return (
     <div className="margin-left">
-      <div>Select DSBP ID</div>
+      <div className="margin-Bottom">Select DSBP ID</div>
       <div className="actions dsbp-select p-0">
         <MultiSelect
           value={selectedCities}

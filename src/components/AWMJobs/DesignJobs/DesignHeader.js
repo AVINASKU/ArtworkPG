@@ -46,9 +46,7 @@ const DesignHeader = ({
                   {" "}
                   <li className="">
                     <NavLink to={`/${mytasks}`} className="p-menuitem-link">
-                      <span className="p-menuitem-text">
-                        {mytasks === "myProjects" ? "My Projects" : mytasks}
-                      </span>
+                      <span className="p-menuitem-text">{mytasks}</span>
                     </NavLink>{" "}
                   </li>{" "}
                   <li className="p-breadcrumb-chevron pi pi-chevron-right"></li>
@@ -57,18 +55,14 @@ const DesignHeader = ({
                       to={`/${mytasks}/${url[2]}/${url[5]}`}
                       className="p-menuitem-link"
                     >
-                      <span className="p-menuitem-text">
-                        {url[2] === "projectPlan" ? "Project Plan" : url[2]}
-                      </span>
+                      <span className="p-menuitem-text">{url[2]}</span>
                     </NavLink>{" "}
                   </li>
                 </>
               ) : (
                 <li className="">
                   <NavLink to={`/${mytasks}`} className="p-menuitem-link">
-                    <span className="p-menuitem-text">
-                      {mytasks === "allTasks" ? "All Tasks" : mytasks}
-                    </span>
+                    <span className="p-menuitem-text">{mytasks}</span>
                   </NavLink>{" "}
                 </li>
               )}
