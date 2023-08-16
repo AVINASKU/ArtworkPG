@@ -161,7 +161,7 @@ const AgilityList = ({
     }
 
     const newArray = Array.isArray(artWorkTabValuesData)
-      ? [...artWorkTabValuesData, ...updatedTabsList]
+      ? [...updatedTabsList, ...artWorkTabValuesData]
       : updatedTabsList;
 
     // const uniqueArray = Array.from(
@@ -177,6 +177,16 @@ const AgilityList = ({
             uniqueData.push(item);
         }
     }
+    console.log("uniqueData", uniqueData);
+    const headerIndex = uniqueData.findIndex(item => item.tabHeader === "Header 1");
+    const headerObject = uniqueData[headerIndex];
+    // Remove the object with "tabHeader": "Header 1" from the original array
+    uniqueData.splice(headerIndex, 1);
+    // Reverse the remaining data
+    uniqueData.reverse();
+    // Add the header object back to the beginning
+    uniqueData.unshift(headerObject);
+    console.log("uniqueData", uniqueData);
     dispatch(ArtWorkTabValuesAction(uniqueData));
     navigate("/DSBP/tab/artworkAlignment", { replace: true });  
   };
@@ -217,6 +227,7 @@ const AgilityList = ({
   const addBody = (options, rowData) => {
     let field = rowData.field;
     const fieldEditable = options["AWM_AddedToProject"] === "Yes";
+    const addToProjectEditable = options["DSBP_PMP_AWReadinessGateStatus"] === "LOCKED" && (options["AWM_POARequested"] === undefined || options["AWM_POARequested"] === "" || options["AWM_POARequested"] === "No");
     let FPCStagingFormula =
       options?.FPCStagingPage?.[0]?.FormulaCardStagingPage;
     let concatenatedFPCStagingFormulaData = {};
@@ -224,7 +235,7 @@ const AgilityList = ({
       concatenatedFPCStagingFormulaData =
         concatenatedFPCStagingFormula(FPCStagingFormula);
     }
-
+    console.log("yes", options["AWM_POARequested"] === "Yes");
     return (
       <>
         {field === "field_0" && ( // Add this condition to render a checkbox
@@ -257,32 +268,36 @@ const AgilityList = ({
               value={options[field]}
               onChange={(e) => onchangeAddToProject(options, e, field)}
               style={{ width: "80%", fontSize: 12 }}
+              disabled={!addToProjectEditable}
             >
               <option value="">Select</option>
-              {options[field] === "Yes" &&
-                addToProjectListYes?.map((data) => (
+              {options["AWM_POARequested"] === "Yes" ?
+                (
+                  (options[field] === "Yes" &&
+                  addToProjectListYes?.map((data) => (
+                    <option key={data.code} value={data.name}>
+                      {data.name}
+                    </option>
+                  )))
+                  (options[field] === "No" &&
+                  addToProjectListNo?.map((data) => (
+                    <option key={data.code} value={data.name}>
+                      {data.name}
+                    </option>
+                  )))
+                  (options[field] === "Reject" &&
+                  addToProjectListReject?.map((data) => (
+                    <option key={data.code} value={data.name}>
+                      {data.name}
+                    </option>
+                  )))
+                ):
+                (addToProjectList?.map((data) => (
                   <option key={data.code} value={data.name}>
                     {data.name}
                   </option>
-                ))}
-              {options[field] === "No" &&
-                addToProjectListNo?.map((data) => (
-                  <option key={data.code} value={data.name}>
-                    {data.name}
-                  </option>
-                ))}
-              {options[field] === "Reject" &&
-                addToProjectListReject?.map((data) => (
-                  <option key={data.code} value={data.name}>
-                    {data.name}
-                  </option>
-                ))}
-              {options[field] === "" &&
-                addToProjectList?.map((data) => (
-                  <option key={data.code} value={data.name}>
-                    {data.name}
-                  </option>
-                ))}
+                )))
+              }
             </Form.Select>
           </Form.Group>
         )}
@@ -604,7 +619,6 @@ const AgilityList = ({
   const timestamp = new Date().getTime();
 
   return (
-    console.log("dsbpPmpData", dsbpPmpData),
     <>
       <DataTable
         dataKey="DSBP_PMP_PIMaterialID"
