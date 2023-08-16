@@ -12,7 +12,7 @@ import DsbpActionDialog from "../DsbpActionDialog";
 import FooterButtons from "../../AWMJobs/DesignJobs/FooterButtons";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { TabHeaderWrapper } from "./PMPSpecificTabView.styled";
+import CustomHeaderComponent from "./CustomHeaderComponent";
 
 const PMPSpecificTabView = () => {
   const dispatch = useDispatch();
@@ -495,30 +495,11 @@ const PMPSpecificTabView = () => {
     updatedDataList.splice(index, 1);
     setStoresTabDataList(updatedDataList);
     if (tabPanelList >= storesTabList.length) {
-      setTabPanelList(storesTabList.length - 1); // Select the last tab if the active tab is deleted
+      setTabPanelList(storesTabList.length - 1); 
     }
   };
 
-  const CustomTabHeader = ({ tabHeaderDetails, index }) => {
-    console.log("tabHeaderDetails", tabHeaderDetails)
-    return (
-      <>
-        <div className="custom-tab-header">
-          <TabHeaderWrapper className="p-tabview-title">
-            <span>{index === 0 ? "Artwork Allignment" : tabHeaderDetails.tabHeader} </span>
-            <span className="pmpDes">
-              {typeof (tabHeaderDetails.description) === "object" ? `| ${tabHeaderDetails.description.DSBP_PMP_PIMaterialDescription}` : ""}
-            </span>
-          </TabHeaderWrapper>
-          {index !== 0 && (
-            <button className="close-button" onClick={() => handleDelete(index)}>
-              &#x2715;
-            </button>
-          )}
-        </div>
-      </>
-    );
-  };
+  
   const onTabChange = (index) => {
     setTabPanelList(index);
     if (index === 0) {
@@ -532,9 +513,10 @@ const PMPSpecificTabView = () => {
         <TabPanel
           key={index}
           header={
-              <CustomTabHeader
+              <CustomHeaderComponent
                 tabHeaderDetails={obj}
                 index={index}
+                handleDelete={handleDelete}
               />
           }
           scrollable
@@ -566,6 +548,12 @@ const PMPSpecificTabView = () => {
             setDasbpDialog={setRejectDialog}
             rejectFormData={rejectFormData}
             onSubmit={() => onSubmit(rejectFormData)}
+
+            okButtonShow={false}          
+            deleteButtonShow={false}
+            submitButtonShow={true}
+            yesButtonShow={true}
+            disconnectButtonShow={true}
           >
             <DsbpRejectDialog
               onChangeData={onChangeData}
@@ -590,6 +578,7 @@ const PMPSpecificTabView = () => {
           onSubmit={onSubmit}
           formValid={Object.keys(formData).length === 0}
           checkReadWriteAccess={!false}
+          submitAndSave="Save"
         />
       </>
     )

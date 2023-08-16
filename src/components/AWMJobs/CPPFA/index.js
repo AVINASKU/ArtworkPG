@@ -160,7 +160,7 @@ const CPPFA = ({
       setRiskLevel(taskDetailsDataObj?.RiskLevel?.toLowerCase());
     }
     if (
-      taskDetailsDataObj?.RiskLevel === "low" ||
+      taskDetailsDataObj?.RiskLevel?.toLowerCase() === "low" ||
       taskDetailsDataObj?.RiskLevel === ""
     ) {
       setHideFlag(true);

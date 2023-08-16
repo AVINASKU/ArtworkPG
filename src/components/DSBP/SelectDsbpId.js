@@ -129,13 +129,13 @@ const SelectDsbpId = ({
 
   switch (operation) {
     case "delete":
-      title = "Are you sure you want to delete this DSBP ID ?";
+      title = "Are you sure you want to disconnect this DSBP ID ?";
       break;
     case "add":
       title = "Do you want to select this DSBP ID ?";
       break;
     case "poaCreated":
-      title = "This DSBP can't be deleted as POAs already created.";
+      title = "This DSBP can’t be disconnected as POA is already created.";
       break;
     default:
       title = "Unknown operation";
@@ -209,7 +209,13 @@ const SelectDsbpId = ({
           dasbpDialog={selectDialog}
           setDasbpDialog={setSelectDialog}
           onSubmit={() => handleOptionSelection(selectedDsbpData, operation)}
-          okButtonShow={operation === "poaCreated" ? true : false}
+          okButtonShow={operation === "poaCreated" ? true : false}          
+          deleteButtonShow={false}
+          submitButtonShow={true}
+          // yesButtonShow={false}
+          yesButtonShow={operation === "add" ? false : true} 
+          disconnectButtonShow={operation === "delete" ? false : true} 
+          cancelButtonShow={operation === "delete" ? false : true}
         >
           <>
             {selectedInitiativeName}
