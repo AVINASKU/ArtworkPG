@@ -133,8 +133,15 @@
     display: flex;
     &:before {
     content: url("../../../assets/images/infoIconRed.svg");
-    padding: 4px 6px 0 0;
+    padding: 6px 12px 0 0;
     vertical-align: middle;
     }
+  }
+  &.p-dialog.actionDialog .p-dialog-content{
+    padding-left: 64px !important;
+    padding-top: 6px;
+  }
+  .p-dialog-footer{
+    text-align: center;
   }
 }
