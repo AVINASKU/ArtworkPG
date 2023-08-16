@@ -12,7 +12,8 @@ const FooterButtons = ({
   bottomFixed,
   cptFormValid,
   checkTaskISComplete,
-  hideSaveButton
+  hideSaveButton,
+  submitAndSave,
 }) => {
   const location = useLocation();
   const locationPath = location?.pathname;
@@ -52,7 +53,7 @@ const FooterButtons = ({
             onClick={() => onSubmit()}
             disabled={checkReadWriteAccess !== undefined ? (formValid || !checkReadWriteAccess) : formValid}
           >
-            Submit
+            Save
           </Button>
         </>
       )}

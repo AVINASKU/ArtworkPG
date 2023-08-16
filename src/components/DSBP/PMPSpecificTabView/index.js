@@ -548,6 +548,12 @@ const PMPSpecificTabView = () => {
             setDasbpDialog={setRejectDialog}
             rejectFormData={rejectFormData}
             onSubmit={() => onSubmit(rejectFormData)}
+
+            okButtonShow={false}          
+            deleteButtonShow={false}
+            submitButtonShow={true}
+            yesButtonShow={true}
+            disconnectButtonShow={true}
           >
             <DsbpRejectDialog
               onChangeData={onChangeData}
@@ -572,6 +578,7 @@ const PMPSpecificTabView = () => {
           onSubmit={onSubmit}
           formValid={Object.keys(formData).length === 0}
           checkReadWriteAccess={!false}
+          submitAndSave="Save"
         />
       </>
     )

@@ -110,7 +110,7 @@ const DsbpActionDialog = ({
         disabled={((updatedData && updatedData[0]?.value === "Add to Project") || rowData) || (isSubmitEnable !== undefined && !isSubmitEnable) ? false : Object.keys(formData).length === 0}
         onClick={() => ((updatedData && updatedData[0]?.value === "Add to Project") || rowData) ? onActionSubmit("AddToProject", selected) : onActionSubmit(formData)}
       >
-        {(updatedData && updatedData[0]?.value === "Mass Update") ? "Update" : (updatedData && updatedData[0]?.value === "Add to Project") || rowData ? "Yes" : "Submit"}
+        {(updatedData && updatedData[0]?.value === "Mass Update") ? "Save" : (updatedData && updatedData[0]?.value === "Add to Project") || rowData ? "Yes" : "Save"}
       </Button>
     </div>
   );

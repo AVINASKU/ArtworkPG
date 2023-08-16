@@ -67,8 +67,7 @@ const ArtworkAlignment = () => {
   ];
 
   const dispatch = useDispatch();
-  const headerName = "Artwork Alignment";
-  
+  const headerName = "Artwork Scope Alignment";
   const BU = selectedProjectDetails?.BU;
   const Region = selectedProjectDetails?.Project_region;
   const ProjectID = selectedProjectDetails?.Project_ID;
@@ -512,7 +511,7 @@ const ArtworkAlignment = () => {
             headerName={headerName}
             selected={selected}
             onActionSubmit={onActionSubmit}
-            label="Artwork Alignment"
+            label="Artwork Scope Alignment"
             actionDialog={actionDialog}
             setActionDialog={setActionDialog}
             setFieldUpdated={setFieldUpdated}

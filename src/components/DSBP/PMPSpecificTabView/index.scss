@@ -128,3 +128,13 @@
     display: none;
   }
 }
+.headerIcon {
+  .p-dialog-title {
+    display: flex;
+    &:before {
+    content: url("../../../assets/images/infoIconRed.svg");
+    padding: 4px 6px 0 0;
+    vertical-align: middle;
+    }
+  }
+}
