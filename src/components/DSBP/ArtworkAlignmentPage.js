@@ -579,6 +579,7 @@ const ArtworkAlignment = () => {
             onSubmit={onSubmit}
             formValid={!checkLength}
             checkReadWriteAccess={true}
+            submitAndSave="Save"
           />
         </>
       )}
