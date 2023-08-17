@@ -38,7 +38,35 @@ export const downloadFileFailure = (error) => ({
 export const AzureFileDownloadJobs = (filePath, ProjectID, BU, subFolder) => {
   return async (dispatch) => {
     try {
-      const downloadUrl = `${baseUrl}/${containerName}/${ProjectID}/${BU}/${subFolder}/${filePath}?${sasToken}`;
+      const url = window.location.href;
+      const domainRegex = /https?:\/\/([^/]+)\//; // Regular expression to match the domain part of the URL
+
+      const match = url.match(domainRegex);
+      let domain = "";
+
+      if (match && match.length > 1) {
+        domain = match[1]; // Extract the matched part
+      }
+
+      let env;
+
+      switch (domain) {
+        case "awflowdev.pg.com":
+          env = "DEV";
+          break;
+        case "awflowqa.pg.com":
+          env = "QA";
+          break;
+        case "awflowsit.pg.com":
+          env = "SIT";
+          break;
+        case "awflow.pg.com":
+          env = "";
+          break;
+        default:
+          env = "localEnv";
+      }
+      const downloadUrl = `${baseUrl}/${containerName}/${domain}/${ProjectID}/${BU}/${subFolder}/${filePath}?${sasToken}`;
 
       const response = await axios.get(downloadUrl, {
         responseType: "blob",
