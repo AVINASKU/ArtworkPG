@@ -402,6 +402,7 @@ const ArtworkAlignment = () => {
           updatedData.AWM_Sellable = formData?.AWM_Sellable;
         }
         setRejectDialog(false);
+        setSelectAllChecked(false);
         return updatedData;
       });
     }
