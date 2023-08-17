@@ -115,6 +115,8 @@ import DsbpPage from "./DsbpPage";
 import DsbpTabPage from "./DsbpTabPage";
 import DMDsbpTabPage from "./DMDsbpTabPage";
 
+import ProtectedRoute from "./ProtectedRoute";
+
 import Role from "./role";
 
 const RoutesNav = () => {
@@ -126,7 +128,15 @@ const RoutesNav = () => {
         {/* <Route index element={<Home />} /> */}
         <Route path="/myProjects" element={<MyProjects />} />
         <Route path="/roles" element={<Role />} />
-        <Route path="/allProjects" element={<AllProjects />} />
+
+        {/* Protected route implemented  */}
+        <Route path="/allProjects" element={
+          <ProtectedRoute auth={true}>
+            <AllProjects />
+          </ProtectedRoute>
+        } />
+
+
         <Route path="/myTasks" element={<MyTasksPage />} />
         <Route path="/AllTasks" element={<AllTasksPage />} />
         {/* <Route path="/createProject" element={<AddProject />} /> */}
