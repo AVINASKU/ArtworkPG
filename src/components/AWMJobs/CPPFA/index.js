@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Col, Row } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
 import { submitCPPFA } from "../../../store/actions/taskDetailAction";
 import { changeDateFormat, hasAllAccess, Loading } from "../../../utils";
@@ -27,8 +27,11 @@ const CPPFA = ({
   console.log(TaskDetailsData);
   const location = useLocation();
   const locationPath = location?.pathname;
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
   const url = locationPath?.split("/");
   const [loader, setLoader] = useState(false);
+  const BU = selectedProjectDetails?.BU;
 
   const [visible, setVisible] = useState(showTaskDialog);
   const [taskDetailsDataObj, setTaskDetailsDataObj] = useState(null);
@@ -203,7 +206,8 @@ const CPPFA = ({
         setHighRiskYesOrNo("selectYesOrNo");
       }
     } else {
-      azureFile && (await dispatch(uploadFileAzure(azureFile, "CPPFA")));
+      azureFile &&
+        (await dispatch(uploadFileAzure(azureFile, ProjectID, BU, "CPPFA")));
       await submitCPPFA(
         formData,
         `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`,
@@ -220,7 +224,7 @@ const CPPFA = ({
   };
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
-    dispatch(AzureFileDownloadJobs(fileUrl, "CPPFA"));
+    dispatch(AzureFileDownloadJobs(fileUrl, ProjectID, BU, "CPPFA"));
   };
   return (
     <Dialog
