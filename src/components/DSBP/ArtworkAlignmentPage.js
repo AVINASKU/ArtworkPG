@@ -180,7 +180,7 @@ const ArtworkAlignment = () => {
     if (!resp) {
       setDsbpPmpData(null);
     }
-    if (resp && resp?.length) {
+    if (resp && resp?.length !== 0) {
       const transformedArray = resp?.flatMap((item) =>
         item.DSBP_PMP_PIMaterialIDPage?.map((person) => ({
           DSBP_InitiativeID: item.DSBP_InitiativeID,
@@ -231,6 +231,8 @@ const ArtworkAlignment = () => {
       }, 0);
 
       setTotalNoOfPMPLocked(notOfPMPLocked);
+    } else {
+      setDsbpPmpData([])
     }
     setTotalNoOfDsbpId(resp?.length || 0);
     setTableLoader(false);
