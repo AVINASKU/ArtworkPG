@@ -251,9 +251,6 @@ const DependencyMappingList = ({
                 value={options[field]}
                 onChange={(e) => {
                   const selectedValue = e.target.value;
-                  if (selectedValue === "New") {
-                    handleNewGaBrief(selectedValue, options);
-                  } else
                     updateDropDownData(
                       e.target.value,
                       "AWM_GA_Brief",

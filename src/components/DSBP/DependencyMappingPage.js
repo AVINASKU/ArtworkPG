@@ -335,19 +335,17 @@ setIsSubmitEnabled(setSubmitEnable);
         submittedJson.push(submittedObject);
       });
     }
-    console.log("submitted json", submittedJson);
+    const newAWMGAItemsCount = submittedData.filter(item => item.AWM_GA_Brief === "New").length;
+    console.log("submitted json", submittedJson, submittedData, newAWMGAItemsCount);
+    
     let formData = {
       DSBPValues: submittedJson,
     };
-    // let formData1 = [{
-    //   NewGABTask: "Yes",
-    //   AWM_Project_ID: ProjectID,
-    //   AWM_Task_ID: "",
-    //   Project_Name: selectedProjectDetails?.Project_Name,
-    //   BU: selectedProjectDetails?.BU,
-    //   Region: selectedProjectDetails?.Project_region,
-    // }];
-    // let res = await createNewGaBriefTask(formData1);
+
+    // Call the API based on the count
+    for (let i = 0; i < newAWMGAItemsCount; i++) {
+      handleNewGaBrief(); // Replace this with your API call function
+    }
 
     let resp = await onSubmitDependencyMappingAction(formData, ProjectID);
     if (resp.status === 200 || resp.status === 201) {
