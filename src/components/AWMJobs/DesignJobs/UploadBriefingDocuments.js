@@ -55,6 +55,7 @@ const UploadBriefingDocuments = ({
           yesButtonShow={true}
           submitButtonShow={true}
           disconnectButtonShow={true}
+          showCancel={true}
         >
           <>{item.File_Name !== "" ? item.File_Name : fileName}</>
         </DsbpCommonPopup>
