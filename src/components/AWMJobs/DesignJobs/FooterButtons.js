@@ -53,7 +53,7 @@ const FooterButtons = ({
             onClick={() => onSubmit()}
             disabled={checkReadWriteAccess !== undefined ? (formValid || !checkReadWriteAccess) : formValid}
           >
-            Save
+            {submitAndSave === "Save" ? "Save": "Submit"}
           </Button>
         </>
       )}
