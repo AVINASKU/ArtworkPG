@@ -28,6 +28,7 @@ import ProjectListHeader from "../Projects/MyProjects/ProjectListHeader";
 import { ProjectService } from "../../service/PegaService";
 import ArtworkAlignment from "../DSBP/ArtworkAlignmentPage";
 // import DependencyMapping from "../DSBP/DependencyMappingPage";
+import GanttChart from "../Projects/ProjectPlan/GanttChartProjectPlan";
 
 const DependencyMapping = lazy(() => import("../DSBP/DependencyMappingPage"));
 
@@ -674,6 +675,7 @@ function ProjectSetup(props) {
               }
             </div>
           )}
+          {toggleButtons === "GanttChart" && <GanttChart />}
         </div>
       ),
     },

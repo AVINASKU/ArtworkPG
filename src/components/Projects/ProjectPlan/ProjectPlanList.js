@@ -24,7 +24,6 @@ import CPPFA from "./../../AWMJobs/CPPFA";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
-// import GanttChart from "./GanttChart";
 
 const ProjectPlanList = ({
   view,
@@ -823,8 +822,8 @@ const ProjectPlanList = ({
             )}
           </div>
         )}
-        {/* {view === "GanttChart" && <GanttChart />} */}
       </Suspense>
+      
     </div>
   );
 };
