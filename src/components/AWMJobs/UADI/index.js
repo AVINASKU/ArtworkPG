@@ -9,6 +9,7 @@ import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { postSaveDesignIntent } from "../../../apis/uploadSaveAsDraft";
 import { submitUploadApproveDesignIntent } from "../../../apis/uploadSubmitAPIs";
 import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
+import { uploadFileToAzureShare } from "../../../store/actions/AzureFileShareAction";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { CheckReadOnlyAccess } from "../../../utils";
@@ -81,9 +82,10 @@ const UADI = () => {
       Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
       Filename: fileName,
     };
-    await dispatch(uploadFileAzure(azureFile));
+    await dispatch(uploadFileAzure(azureFile, "Design Intents"));
+    // await dispatch(uploadFileToAzureShare(azureFile));
     await postSaveDesignIntent(formData);
-    setLoader(false);
+    // setLoader(false);
   };
 
   const onSubmit = async () => {
@@ -121,7 +123,7 @@ const UADI = () => {
         taskName="Design Intent"
       />
       <div className="task-details">
-        {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
+        {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} TaskDetailsData={TaskDetailsData}/>}
         {loading || loader || designIntent === null ? (
           <div className="align-item-center">
             <i
@@ -146,6 +148,7 @@ const UADI = () => {
               version={version}
               date={date}
               checkReadWriteAccess={checkReadWriteAccess}
+              subFolder="Design Intents"
             />
           )
         )}

@@ -82,7 +82,8 @@ $width: 100%;
 }
 
 .tabular-add-project {
-  padding: 8px 0 0 0;
+  // padding: 8px 0 0 0;
+  padding: 8px 0 0 15px;
   overflow-y: scroll;
   height: 72vh;
 }
@@ -196,7 +197,7 @@ $width: 100%;
       padding: 0;
     }
   }
-  .form-buttons{
+  .form-buttons {
     padding: 0 10px;
     position: absolute;
     background: white;
@@ -209,7 +210,8 @@ $width: 100%;
 
 .breadCrumbParent {
   padding-top: 8px;
-  padding-left: 16px;
+  padding-left: 23px;
+  // padding-left: 16px;
   // border-radius: 24px
   // width: $width;
   nav {
@@ -253,11 +255,10 @@ $width: 100%;
   color: #003da5;
 }
 
-.content-layout .actions {
-  padding: 0 16px 0;
-  .p-breadcrumb {
-    // padding: 0 1rem !important;
-    padding: 0 1rem 0 0 !important;
+.content-layout .actionsPaddingForUBD {
+  padding: 0;
+  .p-breadcrumb ul {
+    padding: 8px 0;
   }
 }
 
@@ -371,6 +372,12 @@ span.right {
   margin-left: 9.5px;
   margin-right: 9.81px;
 }
+
+.pi-chevron-right {
+  margin-left: 9.5px;
+  margin-right: 9.81px;
+}
+
 .tabComponent {
   display: flex;
   align-items: center;

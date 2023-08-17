@@ -679,7 +679,7 @@ function ProjectSetup(props) {
     },
     {
       name: "artworkAlignment",
-      tabNameForDisplay: "Artwork Alignment",
+      tabNameForDisplay: "Artwork Scope Alignment",
       component: tabName === "artworkAlignment" && <ArtworkAlignment />,
     },
     {
@@ -748,6 +748,7 @@ function ProjectSetup(props) {
       )}
 
       <div className="tabular-view">
+        
         <TabsComponent
           tabName={tabName}
           items={itemsData}

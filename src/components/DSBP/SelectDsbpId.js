@@ -16,7 +16,7 @@ const SelectDsbpId = ({
   totalNoOfPMPLocked,
   listOfInitiativeId,
   mappedPOAS,
-  userHasAccess
+  updateDropdownList,
 }) => {
   const [selectedCities, setSelectedCities] = useState([]);
   const [selectDialog, setSelectDialog] = useState(false);
@@ -27,14 +27,14 @@ const SelectDsbpId = ({
     setSelectedCities(listOfInitiativeId);
   }, [listOfInitiativeId]);
 
-      let selectedInitiativeName =
-      selectedDsbpData?.InitiativeID +
-      "_" +
-      selectedDsbpData?.InitiativeName +
-      "_" +
-      selectedDsbpData?.IL +
-      "_" +
-      selectedDsbpData?.Scope;
+  let selectedInitiativeName =
+    selectedDsbpData?.InitiativeID +
+    "_" +
+    selectedDsbpData?.InitiativeName +
+    "_" +
+    selectedDsbpData?.IL +
+    "_" +
+    selectedDsbpData?.Scope;
 
   const cityOptionTemplate = (option) => {
     let initiativeName =
@@ -45,11 +45,21 @@ const SelectDsbpId = ({
       option.IL +
       "_" +
       option.Scope;
-    // console.log("here here", initiativeName, option);
+    console.log("here here", option.sequence);
     return (
-      <div className="city-option">
-        <div className="city-name" onClick={(e) => e.stopPropagation()}>
-          {addEllipsis(initiativeName, 75)}
+      <div
+        className="city-option"
+        style={{ opacity: option.sequence === 3 ? 0.4 : 1 }}
+      >
+        <div
+          className={
+            option.sequence === 1
+              ? "city-name dropdown-name-color"
+              : "city-name"
+          }
+          onClick={(e) => e.stopPropagation()}
+        >
+          {addEllipsis(initiativeName, 90)}
         </div>
         <div>
           <img
@@ -61,12 +71,12 @@ const SelectDsbpId = ({
               "disable-icons"
             }`}
             onClick={(e) => {
-            //  !userHasAccess && onChangeSelect(option, "add");
-            onChangeSelect(option, "add");
+              if (option.sequence !== 3) {
+                onChangeSelect(option, "add");
+              }
             }}
             alt=""
             style={{ height: 12 }}
-            // disabled={userHasAccess}
           />
         </div>
         <div>
@@ -74,8 +84,9 @@ const SelectDsbpId = ({
             src={deleteIcon}
             onClick={(e) => {
               e.stopPropagation();
-            // !userHasAccess &&  onChangeSelect(option, "delete");
-            onChangeSelect(option, "delete");
+              if (option.sequence !== 3) {
+                onChangeSelect(option, "delete");
+              }
             }}
             alt="filter logo"
             className={`header-icons ${
@@ -85,7 +96,6 @@ const SelectDsbpId = ({
               "disable-icons"
             }`}
             style={{ height: 12 }}
-            // disabled={userHasAccess}
           />
         </div>
       </div>
@@ -93,8 +103,6 @@ const SelectDsbpId = ({
   };
 
   const onChangeSelect = (option, operation) => {
-    console.log("option", option, mappedPOAS);
-
     if (operation === "delete" && mappedPOAS.includes(option.InitiativeID)) {
       setOperation("poaCreated");
     } else {
@@ -104,7 +112,6 @@ const SelectDsbpId = ({
     setSelectedDsbpData(option);
   };
   const handleOptionSelection = (option, operation) => {
-    console.log("operation", operation);
     const updatedSelectedCities = [...selectedCities];
     const index = updatedSelectedCities.indexOf(option.InitiativeID);
     if (index > -1) {
@@ -113,6 +120,7 @@ const SelectDsbpId = ({
       updatedSelectedCities.push(option.InitiativeID); // Select the option
     }
     setSelectedCities(updatedSelectedCities); // Update selectedCities state
+    updateDropdownList(updatedSelectedCities);
     addDSBPIntoProject(option.InitiativeID, operation);
     setSelectDialog(false);
   };
@@ -121,13 +129,13 @@ const SelectDsbpId = ({
 
   switch (operation) {
     case "delete":
-      title = "Are you sure you want to delete this DSBP ID ?";
+      title = "Are you sure you want to disconnect this DSBP ID ?";
       break;
     case "add":
       title = "Do you want to select this DSBP ID ?";
       break;
     case "poaCreated":
-      title = "This DSBP can't be deleted as POAs already created.";
+      title = "This DSBP can’t be disconnected as POA is already created.";
       break;
     default:
       title = "Unknown operation";
@@ -142,7 +150,9 @@ const SelectDsbpId = ({
           value={selectedCities}
           // onChange={(e) => multiSelectOnChange(e)}
           options={dropdownlist}
-          optionLabel="InitiativeName"
+          optionLabel={(option) =>
+            `${option.InitiativeID}_${option.InitiativeName}_${option.IL}_${option.Scope}`
+          }
           optionValue="InitiativeID" // Set optionValue to "name" to remove checkboxes
           placeholder="Select"
           filter
@@ -151,7 +161,6 @@ const SelectDsbpId = ({
           maxSelectedLabels={3}
           panelClassName="dsbp-multiselect-dropdown"
           style={{ maxWidth: 370, width: "300%" }}
-          
         />
 
         <div className="action-buttons margin-right">
@@ -200,7 +209,13 @@ const SelectDsbpId = ({
           dasbpDialog={selectDialog}
           setDasbpDialog={setSelectDialog}
           onSubmit={() => handleOptionSelection(selectedDsbpData, operation)}
-          okButtonShow={operation === "poaCreated" ? true : false}
+          okButtonShow={operation === "poaCreated" ? true : false}          
+          deleteButtonShow={false}
+          submitButtonShow={true}
+          // yesButtonShow={false}
+          yesButtonShow={operation === "add" ? false : true} 
+          disconnectButtonShow={operation === "delete" ? false : true} 
+          cancelButtonShow={operation === "delete" ? false : true}
         >
           <>
             {selectedInitiativeName}

@@ -27,12 +27,46 @@ export const downloadFileFailure = (error) => ({
 });
 
 // Define your Redux async action creator
-export const AzureFileDownloadJobs = (filePath) => {
+// ... (import statements and variable definitions)
+
+// ... (import statements and variable definitions)
+
+// ... (import statements and variable definitions)
+
+// ... (import statements and variable definitions)
+
+export const AzureFileDownloadJobs = (filePath, ProjectID, BU, subFolder) => {
   return async (dispatch) => {
     try {
-      dispatch(downloadFileRequest());
+      const url = window.location.href;
+      const domainRegex = /https?:\/\/([^/]+)\//; // Regular expression to match the domain part of the URL
 
-      const downloadUrl = `${baseUrl}/${containerName}/${filePath}?${sasToken}`;
+      const match = url.match(domainRegex);
+      let domain = "";
+
+      if (match && match.length > 1) {
+        domain = match[1]; // Extract the matched part
+      }
+
+      let env;
+
+      switch (domain) {
+        case "awflowdev.pg.com":
+          env = "DEV";
+          break;
+        case "awflowqa.pg.com":
+          env = "QA";
+          break;
+        case "awflowsit.pg.com":
+          env = "SIT";
+          break;
+        case "awflow.pg.com":
+          env = "";
+          break;
+        default:
+          env = "localEnv";
+      }
+      const downloadUrl = `${baseUrl}/${containerName}/${domain}/${ProjectID}/${BU}/${subFolder}/${filePath}?${sasToken}`;
 
       const response = await axios.get(downloadUrl, {
         responseType: "blob",
@@ -47,20 +81,46 @@ export const AzureFileDownloadJobs = (filePath) => {
             .trim()
         : filePath.split("/").pop();
 
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", filename);
+      // Create a Blob from the response data
+      const blob = new Blob([response.data]);
 
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      // Determine the file extension
+      const fileExtension = filename.split(".").pop().toLowerCase();
 
-      window.URL.revokeObjectURL(url);
+      // Determine the MIME type based on the file extension
+      let mimeType = "application/octet-stream"; // Default MIME type
 
+      if (fileExtension === "pdf") {
+        mimeType = "application/pdf";
+      } else if (fileExtension === "jpg" || fileExtension === "jpeg") {
+        mimeType = "image/jpeg";
+      } else if (fileExtension === "svg") {
+        mimeType = "image/svg+xml";
+      } // Check if the file is a PNG image
+      else if (fileExtension === "png") {
+        mimeType = "image/png";
+      } else if (fileExtension === "docx") {
+        mimeType =
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+      }
+      // Check if the file is a DOC document
+      else if (fileExtension === "doc") {
+        mimeType = "application/msword";
+      } // Add more cases for other supported file types
+
+      // Create a Blob URL with the correct MIME type
+      const blobUrl = URL.createObjectURL(new Blob([blob], { type: mimeType }));
+
+      // Open the Blob URL in a new tab
+      window.open(blobUrl, "_blank");
+
+      // Revoke the Blob URL when done
+      URL.revokeObjectURL(blobUrl);
+      dispatch({ type: "SET_BLOB_URL", payload: blobUrl });
       dispatch(downloadFileSuccess());
     } catch (error) {
       dispatch(downloadFileFailure(error.message));
+      return error.message;
     }
   };
 };

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { cloneDeep, isArray } from "lodash";
 import ArtworkHeader from "./ArtworkHeader";
 import SelectDsbpId from "./SelectDsbpId";
 import ProjectNameHeader from "./ProjectNameHeader";
@@ -10,11 +11,12 @@ import {
   deleteDsbpFromProject,
   getDsbpPMPDetails,
   onSubmitDsbpAction,
+  onSubmitCreatePOAA
 } from "../../apis/dsbpApi";
 import { useDispatch, useSelector } from "react-redux";
 import FooterButtons from "../AWMJobs/DesignJobs/FooterButtons";
 import "./index.scss";
-import { onSortData, Loading, hasAllAccess } from "../../utils";
+import { onSortData, Loading } from "../../utils";
 
 const ArtworkAlignment = () => {
   const navigate = useNavigate();
@@ -23,7 +25,7 @@ const ArtworkAlignment = () => {
   const [selected, setSelected] = useState([]);
   const DropDownData = useSelector((state) => state.DSBPDropdownReducer);
   const [dsbpPmpData, setDsbpPmpData] = useState(null);
-  const [selectedFields, setSelectedFields] = useState(null);
+  const [selectedFields, setSelectedFields] = useState({});
   const [filteredDsbpData, setFilteredDsbpData] = useState(null);
   const [totalNoOfDsbpId, setTotalNoOfDsbpId] = useState(0);
   const [totalNoOfPMP, setTotalNoOfPMP] = useState(0);
@@ -51,15 +53,21 @@ const ArtworkAlignment = () => {
   );
   const allBUAttributes = allBUAttributesData.DropDownValuesData;
 
+  const { projectPlan } = useSelector(
+    (state) => state.ProjectPlanReducer
+  );
+  const Task = "Start Artwork Alignment"
+  let taskData = isArray(projectPlan) && projectPlan.find(
+    (task) => task.data.Task === Task
+  );
+
   const breadcrumb = [
     { label: "My Tasks", url: "/myTasks" },
     { label: "Approve Regional Design Template" },
   ];
 
-  const userHasAccess = !hasAllAccess();
-
   const dispatch = useDispatch();
-  const headerName = "Artwork Alignment";
+  const headerName = "Artwork Scope Alignment";
   const BU = selectedProjectDetails?.BU;
   const Region = selectedProjectDetails?.Project_region;
   const ProjectID = selectedProjectDetails?.Project_ID;
@@ -172,7 +180,7 @@ const ArtworkAlignment = () => {
     if (!resp) {
       setDsbpPmpData(null);
     }
-    if (resp && resp?.length) {
+    if (resp && resp?.length !== 0) {
       const transformedArray = resp?.flatMap((item) =>
         item.DSBP_PMP_PIMaterialIDPage?.map((person) => ({
           DSBP_InitiativeID: item.DSBP_InitiativeID,
@@ -196,6 +204,7 @@ const ArtworkAlignment = () => {
         (task) => task.DSBP_InitiativeID
       );
       const uniqueIDs = [...new Set(initiativeIDs)];
+      uniqueIDs.sort((a, b) => a - b);
       setListOfInitiativeId(uniqueIDs);
 
       const count = transformedArray.reduce((acc, obj) => {
@@ -222,22 +231,74 @@ const ArtworkAlignment = () => {
       }, 0);
 
       setTotalNoOfPMPLocked(notOfPMPLocked);
+    } else {
+      setDsbpPmpData([])
     }
     setTotalNoOfDsbpId(resp?.length || 0);
     setTableLoader(false);
   }
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   useEffect(() => {
-    dispatch(getDSBPDropdownData(BU, Region, ProjectID));
+    const fetchDataAndDispatch = async () => {
+      await fetchData();
+      dispatch(getDSBPDropdownData(BU, Region, ProjectID));
+    };
+
+    fetchDataAndDispatch();
   }, [dispatch]);
 
   useEffect(() => {
-    setDropdownList(DropDownData.DSBPDropdownData);
+    updateDropdownList(listOfInitiativeId);
   }, [DropDownData]);
+
+  const updateDropdownList = (selectedID) => {
+    setListOfInitiativeId(selectedID);
+    let listOfInitiativeId = selectedID.sort((a, b) => a - b);;
+    let { ArtworkAgilityTasks, AssignedListofDSBPIDs } =
+      DropDownData?.DSBPDropdownData;
+    let mappedListOfDSBPId = [];
+    let unMappedListOfDSBPId = [];
+    let alreadyAssignedListOfDSBPId = [];
+    if (listOfInitiativeId && listOfInitiativeId?.length) {
+      mappedListOfDSBPId = ArtworkAgilityTasks?.filter((item) =>
+        listOfInitiativeId.includes(item.InitiativeID)
+      )
+        .map((item) => ({
+          ...item,
+          sequence: 1,
+        }))
+        .sort((a, b) => a.InitiativeID - b.InitiativeID)||[];
+    }
+
+    unMappedListOfDSBPId = ArtworkAgilityTasks?.filter(
+      (item) => !listOfInitiativeId?.includes(item.InitiativeID)
+    )
+      .map((item) => ({
+        ...item,
+        sequence: 2,
+      }))
+      .sort((a, b) => a.InitiativeID - b.InitiativeID)||[] ;
+
+    alreadyAssignedListOfDSBPId = AssignedListofDSBPIDs?.map((item) => ({
+      ...item,
+      sequence: 3,
+    })).sort((a, b) => a.InitiativeID - b.InitiativeID) || [];
+
+    let fullDropDownData = [
+      ...mappedListOfDSBPId,
+      ...unMappedListOfDSBPId,
+      ...alreadyAssignedListOfDSBPId,
+    ];
+
+    console.log("data ---", mappedListOfDSBPId, unMappedListOfDSBPId, alreadyAssignedListOfDSBPId);
+
+    setDropdownList(fullDropDownData);
+    setFieldUpdated(!fieldUpdated);
+  };
 
   const addDSBPIntoProject = async (InitiativeID, operation) => {
     setTableLoader(true);
@@ -298,45 +359,67 @@ const ArtworkAlignment = () => {
     let updatedData = {};
     let updatedDataList = [];
     const selectionData = data ? data : selected;
-
-    updatedDataList = selectionData?.map((pmpDetails) => {
-      updatedData = {
-        DSBP_InitiativeID: pmpDetails.DSBP_InitiativeID,
-        DSBP_PMP_PIMaterialID: pmpDetails.DSBP_PMP_PIMaterialID,
-        DSBP_PMP_PIMaterialNumber: pmpDetails.DSBP_PMP_PIMaterialNumber,
-        FK_AWMProjectID: ProjectID,
+    if(formData?.POAPackageName !== undefined){
+      updatedDataList = selectionData?.map((pmpDetails) => {
+        updatedData = {
+          DSBP_InitiativeID: pmpDetails.DSBP_InitiativeID,
+          DSBP_PMP_PIMaterialID: pmpDetails.DSBP_PMP_PIMaterialID
+        };
+        return updatedData;
+      });
+    } else{
+      updatedDataList = selectionData?.map((pmpDetails) => {
+        updatedData = {
+          DSBP_InitiativeID: pmpDetails.DSBP_InitiativeID,
+          DSBP_PMP_PIMaterialID: pmpDetails.DSBP_PMP_PIMaterialID,
+          DSBP_PMP_PIMaterialNumber: pmpDetails.DSBP_PMP_PIMaterialNumber,
+          FK_AWMProjectID: ProjectID,
+        };
+        if (formData === "AddToProject") {
+          updatedData.AWM_AddedToProject = "Yes";
+          setHandleYesAddToPRoject(false);
+        }
+        if (formData.AWM_AISE !== undefined) {
+          updatedData.AWM_AISE = formData?.AWM_AISE;
+        }
+        if (formData?.AWM_AssemblyMechanism !== undefined) {
+          updatedData.AWM_AssemblyMechanism = formData?.AWM_AssemblyMechanism;
+        }
+        if (formData?.AWM_Biocide !== undefined) {
+          updatedData.AWM_Biocide = formData?.AWM_Biocide;
+        }
+        if (formData?.AWM_GroupPMP !== undefined) {
+          updatedData.AWM_GroupPMP = formData?.AWM_GroupPMP;
+        }
+        if (formData?.ReasonforRejection !== undefined) {
+          updatedData.AWM_AddedToProject = "Reject";
+          updatedData.ReasonforRejection = formData?.ReasonforRejection;
+        }
+        if (formData?.RejectionComment !== undefined) {
+          updatedData.RejectionComment = formData?.RejectionComment;
+        }
+        if (formData?.AWM_Sellable !== undefined) {
+          updatedData.AWM_Sellable = formData?.AWM_Sellable;
+        }
+        setRejectDialog(false);
+        return updatedData;
+      });
+    }
+    let updatedPmpDetails = {};
+    if(formData?.POAPackageName !== undefined){
+      updatedPmpDetails = {
+        ArtworkAgilityPage: {
+          AWM_Project_ID: ProjectID,
+          Assignee: taskData?.data?.Assignee,
+          POAPackageName: formData?.POAPackageName,
+        },
+        ArtworkAgilityPMPs: updatedDataList,
       };
-      if (formData === "AddToProject") {
-        updatedData.AWM_AddedToProject = "Yes";
-        setHandleYesAddToPRoject(false);
-      }
-      if (formData.AWM_AISE !== undefined) {
-        updatedData.AWM_AISE = formData?.AWM_AISE;
-      }
-      if (formData?.AWM_AssemblyMechanism !== undefined) {
-        updatedData.AWM_AssemblyMechanism = formData?.AWM_AssemblyMechanism;
-      }
-      if (formData?.AWM_Biocide !== undefined) {
-        updatedData.AWM_Biocide = formData?.AWM_Biocide;
-      }
-      if (formData?.AWM_GroupPMP !== undefined) {
-        updatedData.AWM_GroupPMP = formData?.AWM_GroupPMP;
-      }
-      if (formData?.ReasonforRejection !== undefined) {
-        updatedData.AWM_AddedToProject = "Reject";
-        updatedData.ReasonforRejection = formData?.ReasonforRejection;
-      }
-      if (formData?.RejectionComment !== undefined) {
-        updatedData.RejectionComment = formData?.RejectionComment;
-      }
-      if (formData?.AWM_Sellable !== undefined) {
-        updatedData.AWM_Sellable = formData?.AWM_Sellable;
-      }
-      setRejectDialog(false);
-      return updatedData;
-    });
-    const updatedPmpDetails = { ArtworkAgilityPMPs: updatedDataList };
-    await onSubmitDsbpAction(updatedPmpDetails);
+      await onSubmitCreatePOAA(updatedPmpDetails);
+    } else{
+      updatedPmpDetails = { ArtworkAgilityPMPs: updatedDataList };
+      await onSubmitDsbpAction(updatedPmpDetails);
+    }    
     setActionDialog(false);
     dispatch(getDSBPDropdownData(BU, Region, ProjectID));
     await fetchData();
@@ -354,9 +437,18 @@ const ArtworkAlignment = () => {
 
   const onGlobalFilterChange = (e, colName) => {
     const value = e.value;
-    setSelectedFields(value);
-    const artworkValues = value;
+    let temp = cloneDeep(selectedFields);
+    temp[colName] = value;
+    setSelectedFields(temp);
+    // setSelectedFields(value);
 
+    let allValues=[];
+    let keys = Object.keys(temp);
+    keys.forEach((key)=>{
+      allValues = [...allValues, ...temp[key]]
+    })
+
+    const artworkValues = allValues;
     if (artworkValues.length) {
       let filteredDsbpData = dsbpPmpData.filter((item) => {
         if (item && item[colName]) {
@@ -401,7 +493,13 @@ const ArtworkAlignment = () => {
     setBuWiseSortedColumnNames(buWiseSortedColumnNames);
     setDsbpPmpData(dsbpPmpData);
     setTableRender(!tableRender);
+    clearColumnWiseFilter();
   };
+
+  const clearColumnWiseFilter = ()=>{
+  setFilteredDsbpData(null);
+  setSelectedFields([]);
+  }
 
   let checkLength = addSavedData.length;
   return (
@@ -415,7 +513,7 @@ const ArtworkAlignment = () => {
             headerName={headerName}
             selected={selected}
             onActionSubmit={onActionSubmit}
-            label="Artwork Alignment"
+            label="Artwork Scope Alignment"
             actionDialog={actionDialog}
             setActionDialog={setActionDialog}
             setFieldUpdated={setFieldUpdated}
@@ -429,9 +527,9 @@ const ArtworkAlignment = () => {
             selectedProjectDetails={selectedProjectDetails}
             customizeViewFields={customizeViewFields}
             setCustomizeViewFields={setCustomizeViewFields}
-            userHasAccess={!userHasAccess}
             setLoader={setLoader}
             onClickClearFilter={onClickClearFilter}
+            filteredDsbpData={filteredDsbpData?.length}
           />
           <SelectDsbpId
             dropdownlist={dropdownlist}
@@ -443,7 +541,7 @@ const ArtworkAlignment = () => {
             totalNoOfPMPLocked={totalNoOfPMPLocked}
             listOfInitiativeId={listOfInitiativeId}
             mappedPOAS={mappedPOAS}
-            userHasAccess={!userHasAccess}
+            updateDropdownList={updateDropdownList}
           />
           {tableLoader ? (
             <Loading />
@@ -456,6 +554,7 @@ const ArtworkAlignment = () => {
               handleSelectAll={handleSelectAll}
               dsbpPmpData={dsbpPmpData}
               filteredDsbpData={filteredDsbpData}
+              clearColumnWiseFilter={clearColumnWiseFilter}
               onSort={onSort}
               onGlobalFilterChange={onGlobalFilterChange}
               selectedFields={selectedFields}
@@ -474,7 +573,6 @@ const ArtworkAlignment = () => {
               setTableRender={setTableRender}
               customizeViewFields={customizeViewFields}
               setCustomizeViewFields={setCustomizeViewFields}
-              userHasAccess={userHasAccess}
             />
           )}
           <FooterButtons
@@ -482,7 +580,8 @@ const ArtworkAlignment = () => {
             hideSaveButton={true}
             onSubmit={onSubmit}
             formValid={!checkLength}
-            checkReadWriteAccess={userHasAccess}
+            checkReadWriteAccess={true}
+            submitAndSave="Save"
           />
         </>
       )}

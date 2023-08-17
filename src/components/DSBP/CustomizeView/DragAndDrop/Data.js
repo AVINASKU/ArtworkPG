@@ -1,4 +1,7 @@
 // @flow
+
+import { alphabeticalSort } from "./Utils";
+
 const entities = (availableFieldsFromAPI, headerName) => {
   const header = headerName === "Dependency Mapping" ? true : false;
 
@@ -18,7 +21,16 @@ const entities = (availableFieldsFromAPI, headerName) => {
   const availableFields = {
     id: "availableFields",
     title: "Available Fields",
-    fieldsData: header ? propertyKeysArray : availableFieldsFromAPI.map((task) => task.Field_Name),
+    fieldsData: header ? propertyKeysArray : 
+    alphabeticalSort(availableFieldsFromAPI)
+    .map((task) => task.Field_Name).sort((a,b)=>{
+      if(a.Field_Name < b.Field_Name){
+        return -1
+      }if(a.Field_Name > b.Field_Name){
+        return 1
+      }
+      return 0
+    }),
   };
 
   const selectedFields = {
