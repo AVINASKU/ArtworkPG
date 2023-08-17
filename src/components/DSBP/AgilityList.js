@@ -664,7 +664,8 @@ const AgilityList = ({
             onSubmit={() => onActionSubmit(rejectFormData, [onChangeData])}
             okButtonShow={false}          
             deleteButtonShow={false}
-            submitButtonShow={true}
+            showCancel={true}
+            submitButtonShow={false}
             yesButtonShow={true}
             disconnectButtonShow={true}
           >
