@@ -115,6 +115,7 @@ import DsbpTabPage from "./DsbpTabPage";
 import DMDsbpTabPage from "./DMDsbpTabPage";
 
 import Role from "./role";
+import GoJsComponent from "./gojs";
 
 const RoutesNav = () => {
   const params = useParams();
@@ -335,6 +336,7 @@ const RoutesNav = () => {
         <Route path="/DSBP/tab/dependencyMapping" element={<DMDsbpTabPage />} />
         {/* <Route path="/reports" element={<Reports />} /> */}
       </Route>
+      <Route path="/goJs" element={<GoJsComponent />} />
     </Routes>
   );
 };

@@ -4,6 +4,7 @@ import * as go from 'gojs';
 import { ReactDiagram } from 'gojs-react';
 import './GoJs.scss';
 
+
 // ...
 
 /**
@@ -26,6 +27,7 @@ function initDiagram() {
             {
               linkKeyProperty: 'key'  // IMPORTANT! must be defined for merges and data sync when using GraphLinksModel
             })
+            
         });
   
     // define a simple Node template
@@ -41,6 +43,8 @@ function initDiagram() {
           new go.Binding('text').makeTwoWay()
         )
       );
+
+      diagram.layout =$(go.TreeLayout,{angle:0})
   
     return diagram;
   }
@@ -50,7 +54,7 @@ function initDiagram() {
    * It is here that you would make any updates to your React state, which is discussed below.
    */
   function handleModelChange(changes) {
-    alert('GoJS model changed!');
+    // alert(JSON.stringify(changes));
   }
   
   // render function...
@@ -62,16 +66,36 @@ function initDiagram() {
           divClassName='diagram-component'
           nodeDataArray={[
             { key: 0, text: 'Alpha', color: 'lightblue', loc: '0 0' },
-            { key: 1, text: 'Beta', color: 'orange', loc: '150 0' },
+            { key: 1, text: 'Beta 3', color: 'orange', loc: '150 0' },
             { key: 2, text: 'Gamma', color: 'lightgreen', loc: '0 150' },
-            { key: 3, text: 'Delta', color: 'pink', loc: '150 150' }
+            { key: 3, text: 'Delta', color: 'pink', loc: '150 150' },
+            { key: 1, text: "Alpha", icon: "home", color: "darkred" },
+            { key: 2, text: "Beta", icon: "spade", color: "blue" },
+            { key: 3, text: "Gamma", icon: "heart", color: "green" },
+            { key: 4, text: "Delta", icon: "diamond", color: "lightblue" },
+            { key: 5, text: "Epsilon", icon: "club", color: "orange" },
+            { key: 12, text: "Beta 2", icon: "spade", color: "blue" },
+            { key: 13, text: "Gamma 2", icon: "heart", color: "green" },
+            { key: 14, text: "Delta 2", icon: "diamond", color: "lightblue" },
+            { key: 15, text: "Epsilon 2", icon: "club", color: "orange" }
           ]}
           linkDataArray={[
             { key: -1, from: 0, to: 1 },
             { key: -2, from: 0, to: 2 },
-            { key: -3, from: 1, to: 1 },
+            { key: -7, from: 1, to: 1 },
             { key: -4, from: 2, to: 3 },
-            { key: -5, from: 3, to: 0 }
+            { key: -5, from: 3, to: 0 },
+            { key: -15,from: 1, to: 2 },
+            { key: -1,from: 1, to: 3 },
+            { key: -2,from: 1, to: 4 },
+            { key: -8,from: 1, to: 5 },
+            { key: -10,from: 2, to: 12 },
+            { key: -14,from: 3, to: 13 },
+            { key: -3,from: 4, to: 14 },
+            { key: -13,from: 5, to: 15 },
+            { key: -12,from: 3, to: 15 },
+            { key: -11,from: 5, to: 12 },
+            { key: -10,from: 13, to: 14 }
           ]}
           onModelChange={handleModelChange}
         />
