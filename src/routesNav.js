@@ -216,14 +216,14 @@ const RoutesNav = () => {
         {/* artworkAlignment */}
 
         {/* mapping */}
-        <Route path="/mapping" element={<ProjectCreation key="mapping" />} />
+        <Route path="/dependencyMapping" element={<ProjectCreation key="mapping" />} />
         <Route
-          path="/myProjects/mapping/:ProjectID"
-          element={<ProjectCreation key={`mapping-${params.ProjectID}`} />}
+          path="/myProjects/dependencyMapping/:ProjectID"
+          element={<ProjectCreation key={`dependencyMapping-${params.ProjectID}`} />}
         />
         <Route
-          path="/allProjects/mapping/:ProjectID"
-          element={<ProjectCreation key={`mapping-${params.ProjectID}`} />}
+          path="/allProjects/dependencyMapping/:ProjectID"
+          element={<ProjectCreation key={`dependencyMapping-${params.ProjectID}`} />}
         />
         {/* mapping */}
         {/* readinessPerPMP */}
