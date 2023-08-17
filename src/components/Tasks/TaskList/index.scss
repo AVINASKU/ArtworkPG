@@ -428,7 +428,7 @@ div.flex.align-items-center.gap-2 {
 .dropdown-menu,
 .p-autocomplete-panel,
 .p-overlaypanel,
-.p-multiselect-panel {
+.p-multiselect-panel, .p-dialog-mask {
   z-index: 100000 !important;
 }
 .dropdown-menu {
