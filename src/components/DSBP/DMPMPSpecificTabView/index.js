@@ -22,14 +22,7 @@ const DMPMPSpecificTabView = () => {
   const { selectedProject } = useSelector((state) => state.ProjectSetupReducer);
   const [storesTabList, setStoresTabDataList] = useState(dmTabValuesData);
   const [filteredDataList, setFilteredDataList] = useState(dmTabValuesData);
-  const [actionDropDownValues, setActionDropDownValues] = useState([]);
   const [tabPanelList, setTabPanelList] = useState(1);
-  const [onChangeData, setOnChangeData] = useState(false);
-  const [rejectDialog, setRejectDialog] = useState(false);
-  const [rejectFormData, setRejectFormData] = useState({});
-  const [handleYesAddToPRoject, setHandleYesAddToPRoject] = useState(false);
-  const [aiseList, setAISEList] = useState([]);
-  const [assemblyMechanismList, setAssemblyMechanismList] = useState([]);
   const [cdpt, setCDPT] = useState("");
   const [rdt, setRDT] = useState("");
   const [iq, setIQ] = useState("");
@@ -38,8 +31,6 @@ const DMPMPSpecificTabView = () => {
   const [pmpLayout, setPMPLayout] = useState("");
   const [otherRef, setOtherRef] = useState("");
   const [gaBrief, setGaBrief] = useState("");
-
-  const [sellable, setSellable] = useState("");
   const [formData, setFormData] = useState({});
   const [selectedTab, setSelectedTabData] = useState({});
   const [loader, setLoader] = useState(false);
@@ -47,7 +38,6 @@ const DMPMPSpecificTabView = () => {
     (state) => state.DMTabValuesReducer
   );
 
-  // const dmTabData = cloneDeep(dmTabAttributesData);
   const [dmTabData, setDmTabData] = useState(dmTabAttributesData);
   console.log("dmTabData", dmTabData);
 
@@ -74,13 +64,9 @@ const DMPMPSpecificTabView = () => {
       const selectedTabData = dmTabValuesData[tabPanelList];
       if (selectedTabData?.description !== undefined) {
         console.log("selected tab data", selectedTabData?.description);
-
         setCDPT(selectedTabData?.description?.AWM_CDPT_Page);
-
         setRDT(selectedTabData?.description?.AWM_RDT_Page);
-
         setIQ(selectedTabData?.description?.AWM_IQ_Page);
-
         setCICNeeded(selectedTabData?.description?.AWM_CIC_Needed);
         setPMPDesign(selectedTabData?.description?.AWM_Supporting_PMP_Design);
         setPMPLayout(selectedTabData?.description?.AWM_Supporting_PMP_Layout);
@@ -229,19 +215,7 @@ const DMPMPSpecificTabView = () => {
 
   const handleGABriefChange = async (e) => {
     setGaBrief(e.target.value);
-    const selectedValue = e.target.value;
-    // if (selectedValue === "New") {
-    //   let formData = {
-    //     NewGABTask: "Yes",
-    //     AWM_Project_ID: selectedProject?.Project_ID,
-    //     AWM_Task_ID: "",
-    //     Project_Name: selectedProject?.Project_Name,
-    //     BU: selectedProject?.BU,
-    //     Region: selectedProject?.Project_region,
-    //   };
-    //   let res = await createNewGaBriefTask(formData);
-    //   console.log("res", res);
-    // } else
+
     setFormData({
       ...formData,
       AWM_GABrief: e.target.value,
@@ -430,37 +404,7 @@ const DMPMPSpecificTabView = () => {
       });
       // console.log("AWM_CIC_Page", isRDTData, isIQData, isCDPTData);
       let columnNames = Object.keys(transformedData[0]);
-      const filteredColumnNames = columnNames.filter(
-        (property) => property !== "FPCStagingPage"
-      );
 
-      let groupedColumnNames = [];
-
-      filteredColumnNames.map((colName) => {
-        let groupedObject = {};
-        let splittedCol = colName.split("_");
-        groupedObject["field"] = colName;
-        groupedObject["width"] = 250;
-        groupedObject["freeze"] = false;
-        if (splittedCol[0] === "DSBP") {
-          groupedObject["group"] = 1;
-        }
-        if (splittedCol[0] === "AWM") {
-          groupedObject["group"] = 2;
-        }
-        if (splittedCol[0] === "DSM") {
-          groupedObject["group"] = 3;
-        }
-        groupedColumnNames.push(groupedObject);
-        return groupedColumnNames;
-      });
-
-      // setCDPTPageData(isCDPTData);
-      // setIQData(isIQData);
-      // setRDTData(isRDTData);
-      // setGABriefData(isGABrifData);
-      // setDependencyColumnNames(groupedColumnNames);
-      // setDependencyMappingData(transformedData);
       console.log("transformedData:", transformedData);
       return transformedData;
     }
