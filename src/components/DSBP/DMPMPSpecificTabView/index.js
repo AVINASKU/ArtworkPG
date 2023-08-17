@@ -52,7 +52,7 @@ const DMPMPSpecificTabView = () => {
   console.log("dmTabData", dmTabData);
 
   const navigateToDSBP = () => {
-    navigate(`/myProjects/mapping/${selectedProject?.Project_ID}`);
+    navigate(`/myProjects/dependencyMapping/${selectedProject?.Project_ID}`);
   };
 
   useEffect(() => {
@@ -147,6 +147,19 @@ const DMPMPSpecificTabView = () => {
     }
   }, [dmTabValuesData]);
 
+    const handleNewGaBrief = async () => {
+    let formData = {
+      NewGABTask: "Yes",
+      AWM_Project_ID: selectedProject?.Project_ID,
+      AWM_Task_ID: "",
+      Project_Name: selectedProject?.Project_Name,
+      BU: selectedProject?.BU,
+      Region: selectedProject?.Project_region,
+    };
+    let res = await createNewGaBriefTask(formData);
+    console.log("res", res);
+  };
+
   const handleCDPTChange = (e) => {
     console.log("e.target.value", e.target.value);
     setCDPT(e.target.value);
@@ -158,18 +171,6 @@ const DMPMPSpecificTabView = () => {
   };
   const handleRDTchange = (e) => {
     setRDT(e.target.value);
-
-    // const DSBP_RDT_Page = [];
-    // dmTabData.RDTData.forEach((data) => {
-    //   e.target.value.forEach((val) => {
-    //     if (data.AWM_Design_Job_ID === val) {
-    //       DSBP_RDT_Page.push({
-    //         Design_Job_Name: data.AWM_Design_Job_Name,
-    //         Design_Job_ID: data.AWM_Design_Job_ID,
-    //       });
-    //     }
-    //   });
-    // });
 
     setFormData({
       ...formData,
@@ -323,13 +324,20 @@ const DMPMPSpecificTabView = () => {
 
     formData["DSBP_IQ_Page"] = DSBP_IQ_Page;
     const updatedPmpDetails = { DSBPValues: [formData] };
-    console.log("updatedPmpDetails", formData, rdt);
+    console.log("updatedPmpDetails", formData);
 
+    // Call POST API of create new GA Brief
+    if(formData?.AWM_GABrief === "New"){
+     handleNewGaBrief();
+    }
+
+    // Call POST API to save tab data
     await onSubmitDependencyMappingAction(
       updatedPmpDetails,
       selectedProject?.Project_ID
     );
 
+    // Call GET API of dependency mapping
     const {
       dependencyTableData,
       isRDTData,
@@ -337,6 +345,7 @@ const DMPMPSpecificTabView = () => {
       isCDPTData,
       isGABrifData,
     } = await getDependencyMappingDetails(selectedProject?.Project_ID);
+
     const tableData = fetchData(
       dependencyTableData,
       isRDTData,
@@ -344,19 +353,13 @@ const DMPMPSpecificTabView = () => {
       isCDPTData,
       isGABrifData
     );
-    console.log("tableData: ", tableData);
-    // const resp = await getDsbpPMPDetails(selectedProject.Project_ID);
 
     let updatedNewTabData = tableData?.filter(
       (data) =>
         data.DSBP_PMP_PIMaterialID ===
         selectedTab.description.DSBP_PMP_PIMaterialID
     );
-    // updatedNewTabData = updatedNewTabData.map((data) => ({
-    //   DSBP_InitiativeID: resp && resp[0].DSBP_InitiativeID,
-    //   ...data,
-    // }));
-    console.log("updatedNewTabData: ", updatedNewTabData);
+        
     updateMappingTabValuesData(updatedNewTabData);
     // setFormData({});
     setLoader(false);
