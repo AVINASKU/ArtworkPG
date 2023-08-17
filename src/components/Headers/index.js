@@ -32,17 +32,17 @@ const userid = sessionObj?.userid;
 //for time
 
 // const formattedTime = (loginTime) => {
-//   // console.log("loginTime: ", loginTime);
+//   // //console.log("loginTime: ", loginTime);
 //   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 //   const time = moment.tz(loginTime, timezone);
 //   const zone = moment.tz(loginTime, timezone).zoneAbbr();
-//   // console.log("zone: ", zone);
+//   // //console.log("zone: ", zone);
 //   return time.clone().tz(zone).format("h:mm a ([GMT]Z)");
 // };
 
 const Header = () => {
   const User = useSelector((state) => state.UserReducer);
-  const userInformation = User.userInformation;
+  const  userInformation = User.userInformation;
   const Role = User?.userProfile;
   const roles = Role?.role || [];
   const rolesString = roles.join(", ");

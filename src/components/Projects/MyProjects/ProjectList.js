@@ -82,7 +82,7 @@ const ProjectList = (props) => {
   useEffect(() => {
     // if (!myProjectList.myProject.length) {
     const updatedUsers = dispatch(getMyProject(userInformation));
-    console.log("my projects", updatedUsers);
+    //console.log("my projects", updatedUsers);
     // }
   }, [dispatch, userInformation]);
 
@@ -478,7 +478,7 @@ const ProjectList = (props) => {
   const onGlobalFilterChange = (e, colName) => {
     const value = e.value;
 
-    console.log("value and e.value", value, e.value);
+    //console.log("value and e.value", value, e.value);
 
     setSelectedFields(value);
 
@@ -487,7 +487,7 @@ const ProjectList = (props) => {
     //   ...new Set(e?.value.map((item) => item[selectedColumnName])),
     // ];
 
-    console.log("artwork", artworkCategories);
+    //console.log("artwork", artworkCategories);
 
     if (artworkCategories.length) {
       let filterProjectState = pegadata.filter((item) => {
@@ -511,8 +511,8 @@ const ProjectList = (props) => {
     }
   };
   const onColumnResizeEnd = (event) => {
-    // console.log("updated column name", event.column, event?.element?.clientWidth);
-    // console.log("width", event.element.offsetWidth, event.column);
+    // //console.log("updated column name", event.column, event?.element?.clientWidth);
+    // //console.log("width", event.element.offsetWidth, event.column);
 
     let columnWidthMyProject = {};
     let jsonColumnWidthMyProject = localStorage.getItem("columnWidthMyProject");

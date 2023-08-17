@@ -5,8 +5,8 @@ export const getSSOUser = (operatorId) => {
     dispatch({ type: "FETCH_USER_DETAILS_REQUEST" });
     try {
       const response = await axios.get(
-        `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/GetUserDetails/chatterjee.pc.2`
-        //   `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/GetUserDetails/${operatorId}`
+        //`https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/GetUserDetails/chatterjee.pc.2`
+        `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/GetUserDetails/${operatorId}`
       );
       const userDetails = response.data?.ArtworkAgilityPage;
 

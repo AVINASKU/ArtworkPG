@@ -31,7 +31,7 @@
 
 // // export const updateUser = async (username) => {
 // //   const userInformation = GetUserInformation();
-// //   console.log(userInformation,"asha")
+// //   //console.log(userInformation,"asha")
 // //   if (userInformation) {
 // //     store.dispatch(userUpdateAction(userInformation));
 // //   }
@@ -90,7 +90,7 @@ export const updateUser = async (username, password) => {
 export const updateUserProfile = async (roles, BusinessUnit, Regions) => {
   const userInformation = getUserProfile(roles, BusinessUnit, Regions);
   if (userInformation && Object.keys(userInformation).length > 0) {
-    console.log(userInformation, "user");
+    //console.log(userInformation, "user");
     store.dispatch(userProfileAction(userInformation));
   }
   return true;

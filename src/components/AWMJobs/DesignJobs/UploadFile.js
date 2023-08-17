@@ -24,17 +24,17 @@ const UploadFile = ({
   version,
   disabled,
 }) => {
-  console.log("data", data);
-  console.log("item here here", item);
+  //console.log("data", data);
+  //console.log("item here here", item);
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
   const [updatedImg, setUpdatedImg] = useState("");
   const viewProofScopeFile = useProofScopeURL();
 
   useEffect(() => {
-    console.log("item ----", item);
+    //console.log("item ----", item);
     if (item?.FileMetaDataList[0]) {
-      console.log("here here", item?.FileMetaDataList[0]);
+      //console.log("here here", item?.FileMetaDataList[0]);
       let uploadedFileName = item?.FileMetaDataList[0]?.File_Name;
       setUpdatedImg(uploadedFileName);
     }

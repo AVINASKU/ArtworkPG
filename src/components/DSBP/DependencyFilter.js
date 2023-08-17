@@ -67,7 +67,7 @@ const DependencyFilter = ({
                       ele["sortZtoA"] = false;
                       ele["sortAtoZ"] = false;
                       ele["freeze"] = false;
-                      console.log("ele", ele, ele.field);
+                      //console.log("ele", ele, ele.field);
                     }
                   });
                   localStorage.setItem(
@@ -98,7 +98,7 @@ const DependencyFilter = ({
               if (ele.field === selectedColumnName) {
                 ele["sortZtoA"] = !ele.sortZtoA;
                 ele["sortAtoZ"] = false;
-                console.log("ele", ele, ele.field);
+                //console.log("ele", ele, ele.field);
               } else {
                 ele["sortZtoA"] = false;
                 ele["sortAtoZ"] = false;
@@ -128,7 +128,7 @@ const DependencyFilter = ({
               if (ele.field === selectedColumnName) {
                 ele["sortAtoZ"] = !ele.sortAtoZ;
                 ele["sortZtoA"] = false;
-                console.log("ele", ele, ele.field);
+                //console.log("ele", ele, ele.field);
               } else {
                 ele["sortZtoA"] = false;
                 ele["sortAtoZ"] = false;
@@ -154,7 +154,7 @@ const DependencyFilter = ({
           onClick={() => {
             allColumns.map((ele) => {
               if (ele.field === selectedColumnName) {
-                console.log("match found");
+                //console.log("match found");
                 ele["freeze"] = !ele.freeze;
               }
             });

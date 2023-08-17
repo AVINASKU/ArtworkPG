@@ -23,7 +23,7 @@ const ApproveDesignDialog = (props) => {
         ?.map((task) => task.TaskName)
         .join(", "),
     };
-    console.log(helpNeededData, delegateData);
+    //console.log(helpNeededData, delegateData);
   };
 
   const hideDialog = () => {

@@ -87,13 +87,13 @@ export const uploadProofscopeFileAzure = (folder, file, jobName) => {
       // Construct the public URL for the uploaded file
       const publicUrl = `https://${storageAccountName}.blob.core.windows.net/${containerName}/${env}/${folder}/${jobName}/${file.name}`;
       // Dispatch the success action with the public URL
-      console.log("Folder:", folder);
-      console.log("File:", file);
-      console.log("Job Name:", jobName);
+      //console.log("Folder:", folder);
+      //console.log("File:", file);
+      //console.log("Job Name:", jobName);
       dispatch(uploadFileSuccess([publicUrl]));
     } catch (error) {
       // Dispatch the failure action with the error message
-      console.log("Error:", error);
+      //console.log("Error:", error);
       dispatch(uploadFileFailure(error.message));
     }
   };

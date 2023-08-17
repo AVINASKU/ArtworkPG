@@ -7,7 +7,7 @@ const initialState = {
 };
 
 const ArtWorkTabValuesReducer = (state = initialState, action) => {
-  // console.log("projectPlanReducer.action.payload: ", action);
+  // //console.log("projectPlanReducer.action.payload: ", action);
   switch (action.type) {
     case types.UPDATE_ARTWORK_TAB_VALUES:
       return {

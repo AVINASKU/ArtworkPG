@@ -13,7 +13,7 @@ export const addDsbpToProject = async (
     url: apiURL,
     method: "POST",
   });
-  console.log("Hello hello ----->", addResponse);
+  //console.log("Hello hello ----->", addResponse);
   return addResponse;
 };
 
@@ -31,7 +31,7 @@ export const deleteDsbpFromProject = async (
     url: apiURL,
     method: "POST",
   });
-  console.log("Hello hello ----->", addResponse);
+  //console.log("Hello hello ----->", addResponse);
   return addResponse;
 };
 
@@ -53,12 +53,12 @@ export const getDsbpPMPDetails = async (projectId, headers = {}) => {
       (ele) => ele.DSBP_InitiativeID && ele.DSBP_PMP_PIMaterialIDPage
     );
   }
-  console.log(
-    "response get dsbp pmp ----->",
-    addResponse?.data?.DSBPDetails?.DSBP_InitiativeIDPage,
-    "filter----",
-    filteredResp
-  );
+  // console.log(
+  //   "response get dsbp pmp ----->",
+  //   addResponse?.data?.DSBPDetails?.DSBP_InitiativeIDPage,
+  //   "filter----",
+  //   filteredResp
+  // );
 
   return filteredResp;
 };
@@ -73,7 +73,7 @@ export const onSubmitDsbpAction = async (formData, headers = {}) => {
     method: "POST",
     data: formData,
   });
-  console.log("Hello hello ----->", addResponse);
+  //console.log("Hello hello ----->", addResponse);
   return addResponse;
 };
 
@@ -86,7 +86,7 @@ export const getDependencyMappingDetails = async (projectId, headers = {}) => {
     method: "GET",
   });
   let response = addResponse?.data?.DSBPDetails;
-  console.log("response dependency mapping ----->", response, addResponse);
+  //console.log("response dependency mapping ----->", response, addResponse);
   const dependencyTableData =
     response?.DSBP_InitiativeIDPage?.[0]?.DSBP_PMP_PIMaterialIDPage;
 
@@ -112,7 +112,7 @@ export const onSubmitDependencyMappingAction = async (
     method: "POST",
     data: formData,
   });
-  console.log("Add response ----->", addResponse);
+  //console.log("Add response ----->", addResponse);
   return addResponse;
 };
 
@@ -124,6 +124,6 @@ export const handleConfirmFullScopeIn = async (projectId, headers = {}) => {
     url: apiURL,
     method: "POST",
   });
-  console.log("Hello hello ----->", addResponse);
+  //console.log("Hello hello ----->", addResponse);
   return addResponse;
 };

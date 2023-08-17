@@ -13,14 +13,14 @@ export const saveInkQualification = async (formData) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
   let apiURL = `${DEVURL}/updateIQJob`;
-  console.log("api url", apiURL);
+  //console.log("api url", apiURL);
   const inkQualification = await axiosInstance({
     url: apiURL,
     method: "POST",
     data: formData,
   });
 
-  console.log("IQSaveAsDraftresponse", inkQualification, formData);
+  //console.log("IQSaveAsDraftresponse", inkQualification, formData);
 
   return true;
 };
@@ -29,14 +29,14 @@ export const submitInkQualification = async (formData, id, headers = {}) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
   let apiURL = `${DEVURL}/defineInkQualification/${id}`;
-  console.log("api url", apiURL);
+  //console.log("api url", apiURL);
   const inkQualification = await axiosInstance({
     url: apiURL,
     method: "PATCH",
     data: formData,
   });
 
-  console.log("IQSubmitresponse", inkQualification, formData);
+  //console.log("IQSubmitresponse", inkQualification, formData);
 
   return true;
 };
@@ -49,14 +49,14 @@ export const submitConfirmInkQualification = async (
   const api = new Api();
   const axiosInstance = await api.init({ headers });
   let apiURL = `${DEVURL}/confirmInkQualification/${id}`;
-  console.log("api url", apiURL);
+  //console.log("api url", apiURL);
   const inkQualification = await axiosInstance({
     url: apiURL,
     method: "PATCH",
     data: formData,
   });
 
-  console.log("IQSubmitresponse", inkQualification, formData);
+  //console.log("IQSubmitresponse", inkQualification, formData);
 
   return true;
 };

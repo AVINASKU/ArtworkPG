@@ -65,7 +65,7 @@
 //     cookies.remove("userName");
 //     cookies.remove("userInfo");
 
-//     console.log("Token number cookie cleared.");
+//     //console.log("Token number cookie cleared.");
 //   };
 
 //   const queryToObject = (query) => {
@@ -212,14 +212,14 @@
 //       body: data.toString(),
 //     });
 //     if (!response.ok) {
-//       console.log("Failed to exchange code for token");
+//       //console.log("Failed to exchange code for token");
 //     } else {
 //       const payload = await response.json();
-//       console.log("payload : " + payload);
+//       //console.log("payload : " + payload);
 //       cookies.set("tokenNumber", payload.access_token);
 //       const token = payload.access_token;
 //       const decodedToken = JWTDecoder({ token });
-//       console.log("decodedToken : " + decodedToken);
+//       //console.log("decodedToken : " + decodedToken);
 //       cookies.set("userInfo", decodedToken);
 //       setUserInitialsAndName(
 //         decodedToken.FirstName,
@@ -254,20 +254,20 @@
 //       (url.indexOf("code=") === -1 && url.indexOf("error=") === -1) ||
 //       !cookiesAreSet()
 //     ) {
-//       console.log("inside if");
+//       //console.log("inside if");
 //       return null;
 //     } else if (
 //       url.indexOf("code=") === -1 &&
 //       url.indexOf("error=") === -1 &&
 //       getCookieCount() === 0
 //     ) {
-//       console.log("inside else if 1");
+//       //console.log("inside else if 1");
 //       return <NotAuthorizedPage />;
 //     } else if (url.indexOf("error=") !== -1 && !cookiesAreSet()) {
-//       console.log("inside else if 2");
+//       //console.log("inside else if 2");
 //       // return <ErrorPage />;
 //     } else {
-//       console.log("inside else ");
+//       //console.log("inside else ");
 //       return setHomepageContent();
 //     }
 //   }
@@ -356,12 +356,12 @@ export default App;
 
 //   // useEffect(() => {
 //   //   if (aadUserInfo && pingIdUserInfo) {
-//   //     console.log(
+//   //     //console.log(
 //   //       "Both AAD and PingID authentication were successful. Performing SSO logic..."
 //   //     );
 //   //     // Perform the SSO logic, for example by storing the user information in local storage or making an API call to your backend to exchange the user information between the two systems.
-//   //     // console.log("Hello", aadUserInfo.displayName);
-//   //     // console.log("Your access token is", accessToken);
+//   //     // //console.log("Hello", aadUserInfo.displayName);
+//   //     // //console.log("Your access token is", accessToken);
 //   //   }
 //   // }, [aadUserInfo, pingIdUserInfo]);
 
@@ -416,7 +416,7 @@ export default App;
 //         window.location.href = res.data;
 //       })
 //       .catch((err) => {
-//         console.log(err);
+//         //console.log(err);
 //       });
 //   }
 
@@ -428,7 +428,7 @@ export default App;
 //       })
 
 //       .then((res) => {
-//         console.log(res);
+//         //console.log(res);
 //         cookies.set("tokenNumber", res.data);
 //         setUserInitialsAndName(
 //           res.data.FirstName,
@@ -437,7 +437,7 @@ export default App;
 //         );
 //       })
 //       .catch((err) => {
-//         console.log(err);
+//         //console.log(err);
 //       });
 //   }
 
@@ -460,8 +460,8 @@ export default App;
 //   function cookiesAreSet() {
 //     const initials = cookies.get("initials");
 //     const userName = cookies.get("userName");
-//     console.log("initials : " + initials);
-//     console.log("userName : " + userName);
+//     //console.log("initials : " + initials);
+//     //console.log("userName : " + userName);
 //     if (
 //       !initials ||
 //       initials === "undefined" ||
@@ -485,20 +485,20 @@ export default App;
 //       (url.indexOf("code=") === -1 && url.indexOf("error=") === -1) ||
 //       !cookiesAreSet()
 //     ) {
-//       console.log("inside if");
+//       //console.log("inside if");
 //       return null;
 //     } else if (
 //       url.indexOf("code=") === -1 &&
 //       url.indexOf("error=") === -1 &&
 //       getCookieCount() === 0
 //     ) {
-//       console.log("inside else if 1");
+//       //console.log("inside else if 1");
 //       return <NotAuthorizedPage />;
 //     } else if (url.indexOf("error=") !== -1 && !cookiesAreSet()) {
-//       console.log("inside else if 2");
+//       //console.log("inside else if 2");
 //       // return <ErrorPage />;
 //     } else {
-//       console.log("inside else ");
+//       //console.log("inside else ");
 //       return setHomepageContent();
 //     }
 //   }

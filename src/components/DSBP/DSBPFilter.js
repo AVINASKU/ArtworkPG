@@ -75,7 +75,7 @@ const DSBPFilter = ({
                       ele["sortZtoA"] = false;
                       ele["sortAtoZ"] = false;
                       ele["freeze"] = false;
-                      console.log("ele", ele, ele.Field_Name);
+                      //console.log("ele", ele, ele.Field_Name);
                     }
                   });
                   isBUHomeCare
@@ -109,7 +109,7 @@ const DSBPFilter = ({
               if (ele.Field_Name === selectedColumnName) {
                 ele["sortZtoA"] = !ele.sortZtoA;
                 ele["sortAtoZ"] = false;
-                console.log("ele", ele, ele.Field_Name);
+                //console.log("ele", ele, ele.Field_Name);
               } else {
                 ele["sortZtoA"] = false;
                 ele["sortAtoZ"] = false;
@@ -144,7 +144,7 @@ const DSBPFilter = ({
               if (ele.Field_Name === selectedColumnName) {
                 ele["sortAtoZ"] = !ele.sortAtoZ;
                 ele["sortZtoA"] = false;
-                console.log("ele", ele, ele.Field_Name);
+                //console.log("ele", ele, ele.Field_Name);
               } else {
                 ele["sortZtoA"] = false;
                 ele["sortAtoZ"] = false;

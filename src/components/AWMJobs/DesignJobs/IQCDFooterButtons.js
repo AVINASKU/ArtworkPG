@@ -19,8 +19,8 @@ const IQCDFooterButtons = ({
   // const pathName = url[2];
   let {TaskID} = useParams();
   const pathName = TaskID.split("_")[0];
-  console.log("checkReadWriteAccess in footer", checkReadWriteAccess);
-  console.log("data", data);
+  //console.log("checkReadWriteAccess in footer", checkReadWriteAccess);
+  //console.log("data", data);
   return (
     <div
       className={bottomFixed ? "form-buttons bottom-fixed" : "form-buttons"}

@@ -63,7 +63,7 @@ function CNIQ() {
 
   useEffect(() => {
     if (TaskDetailsData) {
-      console.log("TaskDetailsData: ", TaskDetailsData);
+      //console.log("TaskDetailsData: ", TaskDetailsData);
       setIQ(TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
       const data =
@@ -91,7 +91,7 @@ function CNIQ() {
       }
       return item;
     });
-    // console.log("index here", sub1);
+    // //console.log("index here", sub1);
     // const sub = subProject.splice(index,1);
 
     setIQ(sub);
@@ -126,7 +126,7 @@ function CNIQ() {
     dt[fieldName] = value;
     submittedDI.push(dt);
     setSubmittedDI(submittedDI);
-    console.log("data: ", data);
+    //console.log("data: ", data);
     checkFormValidity();
   };
 
@@ -177,7 +177,7 @@ function CNIQ() {
         Timestamp: Timestamp,
       },
     };
-    console.log("full submit data --->", formData);
+    //console.log("full submit data --->", formData);
     let id = data.Task_Key;
     const headers = {
       key: "If-Match",
@@ -222,7 +222,7 @@ function CNIQ() {
       Region: selectedProjectDetails.Project_region,
       IQList: submitOnlySelectedData,
     };
-    console.log("full draft data --->", formData);
+    //console.log("full draft data --->", formData);
     await dispatch(uploadFileAzure(azureFile));
     await saveInkQualification(formData);
     setLoader(false);

@@ -22,7 +22,7 @@ const CustomizeView = ({ showTaskDialog, onClose, setCustomizeViewFields, custom
 
   let availableFields = [];
   if(dependencyMappingData){
-    console.log("dependencyMappingData", dependencyMappingData);
+    //console.log("dependencyMappingData", dependencyMappingData);
     availableFields = dependencyMappingData;
   } else if (attributeList && attributeList.length) {
     availableFields = [...attributeList].sort((a, b) => {
@@ -31,8 +31,8 @@ const CustomizeView = ({ showTaskDialog, onClose, setCustomizeViewFields, custom
   }
 
   return (
-    console.log("dependencyMappingData availableFields index", availableFields),
-    console.log("dependencyMappingData dependencyMappingData", dependencyMappingData),
+    //console.log("dependencyMappingData availableFields index", availableFields),
+    //console.log("dependencyMappingData dependencyMappingData", dependencyMappingData),
     <>
       <CustomizeViewDialog
         onClose={onClose}

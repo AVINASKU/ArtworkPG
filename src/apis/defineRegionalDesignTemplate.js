@@ -18,7 +18,7 @@ export const saveDefineRegionalDesignTemplate = async (
     data: formData,
   });
 
-  console.log("response", defineRegionalDesignTemplate);
+  //console.log("response", defineRegionalDesignTemplate);
 
   return true;
 };

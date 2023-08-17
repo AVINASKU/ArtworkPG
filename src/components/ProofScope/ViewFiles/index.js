@@ -57,7 +57,7 @@ export const useProofScopeURL = () => {
           "https://azw-aac-hyb1.xnp-cloud-pg.com"
         );
         const decodedURL = decodeURIComponent(viewerURLOutput);
-        console.log(viewerURLOutput);
+        //console.log(viewerURLOutput);
         const uri = new URL(decodedURL);
         setIsError(false);
         setMessage("");

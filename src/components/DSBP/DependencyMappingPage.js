@@ -42,7 +42,7 @@ const DependencyMapping = () => {
   };
 
   const updateDropDownData = (value, columnName, id) => {
-    console.log("value", value, columnName);
+    //console.log("value", value, columnName);
 
     dependencyMappingData.map((data) => {
       if (data.DSBP_PMP_PIMaterialID === id) {
@@ -75,7 +75,7 @@ const DependencyMapping = () => {
     let dropdownDataForLayoutAndDesign1 = data.map(
       (item) => item.DSBP_PMP_PIMaterialID
     );
-    // console.log(
+    // //console.log(
     //   "filteredDataToSubmit",
     //   filteredDataToSubmit,
     //   dependencyMappingData
@@ -246,7 +246,7 @@ const DependencyMapping = () => {
             Design_Job_ID: item.AWM_Design_Job_ID,
           }));
         }
-        console.log("pranali on submit", DSBP_RDT_Page, DSBP_RDT_Page_data);
+        //console.log("pranali on submit", DSBP_RDT_Page, DSBP_RDT_Page_data);
         submittedObject.DSBP_RDT_Page = DSBP_RDT_Page_data;
 
         //IQ
@@ -283,7 +283,7 @@ const DependencyMapping = () => {
         submittedJson.push(submittedObject);
       });
     }
-    console.log("submitted json", submittedJson);
+    //console.log("submitted json", submittedJson);
     let formData = {
       DSBPValues: submittedJson,
     };

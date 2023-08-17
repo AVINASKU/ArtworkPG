@@ -153,7 +153,7 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
   const onGlobalFilterChange = (e, colName) => {
       const value = e.value;
 
-      console.log("value and e.value", value,e.value, selectedColumnName);
+      //console.log("value and e.value", value,e.value, selectedColumnName);
 
         setselectedFields(value);
 
@@ -162,7 +162,7 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
     //   ...new Set(e?.value.map((item) => item[selectedColumnName])),
     // ];
 
-    console.log("artwork", artworkCategories);
+    //console.log("artwork", artworkCategories);
 
     if (artworkCategories.length) {
       let filterProjectState = selectedProdSrchList.filter((item) => {
@@ -225,8 +225,8 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
   };
   const handleSelect = (item) => {
     if (selected?.includes(item)) {
-      console.log("item", item);
-      console.log("selected.filter((i) => i !== item)", selected.filter((i) => i !== item));
+      //console.log("item", item);
+      //console.log("selected.filter((i) => i !== item)", selected.filter((i) => i !== item));
       setSelected(selected.filter((i) => i !== item));
       setSelectedTask(selectedTask.filter((i) => i !== item));
     } else {
@@ -334,7 +334,7 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
     const taskId = rowData?.AWM_Task_ID;
     const projectID = rowData?.AWM_Project_ID;
     const TaskCode = taskId?.split("_");
-    console.log("TaskCode TaskCode", TaskCode);
+    //console.log("TaskCode TaskCode", TaskCode);
     
     const url = `${TaskCode[0]}/${taskId}/${projectID}`;
     const artworkAlignmentUrl = `artworkAlignment/${projectID}`
@@ -515,7 +515,7 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
   };
   
   const { TaskDetailsData } = useSelector((state) => state.TaskDetailsReducer);
-  console.log("selected", selected);
+  //console.log("selected", selected);
   return (
       <>
       {loading || loader  ? (

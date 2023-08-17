@@ -47,7 +47,7 @@ const ProjectListFilter = ({
     );
   };
 
-  console.log("selectedFields", selectedFields);
+  //console.log("selectedFields", selectedFields);
 
   const confirmPopData = () => {
     return (

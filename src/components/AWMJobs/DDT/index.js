@@ -108,12 +108,12 @@ function DDT() {
       if (item.Select) {
         values = item.Agency_Reference !== "" && item.Cluster !== "";
       } else {
-        console.log("designIntent else", designIntent);
+        //console.log("designIntent else", designIntent);
         let data = designIntent.filter(
           (item) =>
             item.Select && item.Agency_Reference !== "" && item.Cluster !== ""
         );
-        console.log("value else", data);
+        //console.log("value else", data);
         if (data.length !== 0) {
           values = true;
         } else {
@@ -175,7 +175,7 @@ function DDT() {
         target: "DesignTemplateList",
         content: updatedData,
       });
-      return console.log("updatedDataList", updatedDataList);
+      return //console.log("updatedDataList", updatedDataList);
     });
 
     let formData = {
@@ -215,7 +215,7 @@ function DDT() {
         Select: task.Select ? task.Select : false,
         Action: task.Action,
       });
-      return console.log("updatedData", updatedData);
+      return //console.log("updatedData", updatedData);
     });
 
     let formData = {
@@ -226,7 +226,7 @@ function DDT() {
       Region: projectData?.Project_region,
       DesignTemplateList: updatedData,
     };
-    // console.log("full draft data --->", formData);
+    // //console.log("full draft data --->", formData);
     await saveDefineRegionalDesignTemplate(formData);
     setLoader(false);
   };

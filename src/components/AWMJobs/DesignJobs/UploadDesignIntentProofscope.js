@@ -25,7 +25,7 @@ const UploadDesignIntentProofscope = ({
   taskFolder,
   TaskID,
 }) => {
-  console.log("item here here", item);
+  //console.log("item here here", item);
   const dispatch = useDispatch();
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
@@ -35,9 +35,9 @@ const UploadDesignIntentProofscope = ({
   const [fileExtension, setFileExtension] = useState("");
 
   useEffect(() => {
-    console.log("item ----", item);
+    //console.log("item ----", item);
     if (item?.DesignJobDetails[0]?.FileMetaDataList[0]) {
-      console.log("here here", item?.DesignJobDetails[0]?.FileMetaDataList[0]);
+      //console.log("here here", item?.DesignJobDetails[0]?.FileMetaDataList[0]);
       let uploadedFileName =
         item?.DesignJobDetails[0]?.FileMetaDataList[0]?.File_Name;
       setUpdatedImg(uploadedFileName);
@@ -97,7 +97,7 @@ const UploadDesignIntentProofscope = ({
   };
 
   const itemTemplate = (file, props) => {
-    console.log("file here 1", file);
+    //console.log("file here 1", file);
     const fileNameParts = file.name.split(".");
     const fileExtension = fileNameParts.pop().toLowerCase();
 

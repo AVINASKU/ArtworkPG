@@ -79,7 +79,7 @@ const UPRA = () => {
       Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
       Filename: fileName,
     };
-    console.log("azure file details", azureFile, fileName, filePath);
+    //console.log("azure file details", azureFile, fileName, filePath);
     await dispatch(UploadFileToServer(azureFile, filePath));
     await postSaveDesignIntent(formData);
   };
@@ -94,7 +94,7 @@ const UPRA = () => {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-    console.log("azureFile", azureFile);
+    //console.log("azureFile", azureFile);
     const formData = {
       caseTypeID: "PG-AAS-Work-UploadProductionReadyArt",
       content: {
@@ -113,7 +113,7 @@ const UPRA = () => {
       }],
     };
     await dispatch(UploadFileToServer(azureFile, filePath));
-    console.log("formData", formData, "id", id);
+    //console.log("formData", formData, "id", id);
     await submitUploadProductionReadyArt(formData, id, headers);
   };
 

@@ -18,7 +18,7 @@ export const UploadFileToServer =
       const fileType = file.type;
       const fileName = file.name;
       const boundary = uuidv4();
-      console.log(boundary);
+      //console.log(boundary);
       // const body = new Blob([
       //   `--${boundary}\r\nContent-Disposition: form-data; name="file"; filename="${fileName}"\r\nContent-Type: ${fileType}\r\n\r\n`,
       //   fileContent,
@@ -52,9 +52,9 @@ export const UploadFileToServer =
           const files = result.files;
           const path = files[0];
           // const formattedPath = `"${path}"`;
-          // console.log(formattedPath);
+          // //console.log(formattedPath);
           // const pathArray = JSON.parse(`[${formattedPath}]`);
-          // console.log(pathArray);
+          // //console.log(pathArray);
           const responseMsg = moveFileToFolder(
             path,
             strSession,
@@ -173,10 +173,10 @@ const moveFileToFolder = async (
       const result = await response.json();
       const files = result.files;
       const path = files[0];
-      console.log(path);
+      //console.log(path);
       return path;
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
       return null;
     }
     // const response = await axios.post(
@@ -188,10 +188,10 @@ const moveFileToFolder = async (
     //   const jsonResp = response.data;
     //   let jsonObjArray = jsonResp.files;
     //   strReturnPath = jsonObjArray[0];
-    //   console.log("strReturnPath>>>" + strReturnPath);
+    //   //console.log("strReturnPath>>>" + strReturnPath);
     // }
   } catch (exception) {
-    console.log(exception.message);
+    //console.log(exception.message);
   }
   // return strReturnPath;
 };

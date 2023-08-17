@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 function Error() {
     const { classes, errorContact, cookies } = this.props;
-    console.log(cookies);
+    ////console.log(cookies);
     const tokenNumber = cookies === undefined ? "" : cookies.get('tokenNumber');
 
     return (

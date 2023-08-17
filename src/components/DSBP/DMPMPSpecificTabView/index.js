@@ -58,7 +58,7 @@ const DMPMPSpecificTabView = () => {
 
   // const dmTabData = cloneDeep(dmTabAttributesData);
   const [dmTabData, setDmTabData] = useState(dmTabAttributesData);
-  console.log("dmTabData", dmTabData);
+  //console.log("dmTabData", dmTabData);
 
   const navigateToDSBP = () => {
     navigate(`/myProjects/mapping/${selectedProject?.Project_ID}`);
@@ -91,7 +91,7 @@ const DMPMPSpecificTabView = () => {
 
   const updateMappingData = (value, columnName, id) => {
     const tempData = cloneDeep(dmTabData);
-    console.log("value", value, columnName);
+    //console.log("value", value, columnName);
     tempData.DMMappingData.forEach((data) => {
       if (data.DSBP_PMP_PIMaterialID === id) {
         data[columnName] = value;
@@ -104,8 +104,8 @@ const DMPMPSpecificTabView = () => {
       }
     });
     setDmTabData(tempData);
-    console.log("dmTabData.DMMappingData", dmTabData.DMMappingData);
-    console.log("tempData.DMMappingData", tempData.DMMappingData);
+    //console.log("dmTabData.DMMappingData", dmTabData.DMMappingData);
+    //console.log("tempData.DMMappingData", tempData.DMMappingData);
   };
 
   //   useEffect(() => {
@@ -132,7 +132,7 @@ const DMPMPSpecificTabView = () => {
 
   useEffect(() => {
     setTabPanelList(dmTabValuesData?.length - 1);
-    console.log("###insideDMPMPSpecificTabView: ", dmTabValuesData);
+    //console.log("###insideDMPMPSpecificTabView: ", dmTabValuesData);
     dispatch(DMTabValuesAction(dmTabValuesData));
   }, []);
 
@@ -140,12 +140,12 @@ const DMPMPSpecificTabView = () => {
     if (tabPanelList >= storesTabList?.length) {
       setTabPanelList(storesTabList.length - 1);
     }
-    console.log("###insideDMPMPSpecificTabView: ", storesTabList);
+    //console.log("###insideDMPMPSpecificTabView: ", storesTabList);
     storesTabList !== undefined && dispatch(DMTabValuesAction(storesTabList));
     setSelectedTabData(dmTabValuesData[tabPanelList]);
     if (dmTabValuesData[tabPanelList]) {
       const selectedTabData = dmTabValuesData[tabPanelList];
-      console.log("selectedTabData1: ", selectedTabData);
+      //console.log("selectedTabData1: ", selectedTabData);
       if (selectedTabData?.description !== undefined) {
         setCDPT(
           selectedTabData?.description?.AWM_CDPT_Page?.map(
@@ -192,7 +192,7 @@ const DMPMPSpecificTabView = () => {
     setSelectedTabData(dmTabValuesData[tabPanelList]);
     if (dmTabValuesData[tabPanelList]) {
       const selectedTabData = dmTabValuesData[tabPanelList];
-      console.log("selectedTabData2: ", selectedTabData);
+      //console.log("selectedTabData2: ", selectedTabData);
       if (selectedTabData?.description !== undefined) {
         setCDPT(
           selectedTabData?.description?.AWM_CDPT_Page?.map(
@@ -242,7 +242,7 @@ const DMPMPSpecificTabView = () => {
   }, [dmTabValuesData]);
 
   const handleCDPTChange = (e) => {
-    console.log("e.target.value", e.target.value);
+    //console.log("e.target.value", e.target.value);
     setCDPT(e.target.value);
 
     const DSBP_CDPT_Page = [];
@@ -256,7 +256,7 @@ const DMPMPSpecificTabView = () => {
         }
       });
     });
-    console.log("DSBP_CDPT_Page: ", DSBP_CDPT_Page);
+    //console.log("DSBP_CDPT_Page: ", DSBP_CDPT_Page);
     setFormData({
       ...formData,
       DSBP_CDPT_Page,
@@ -276,7 +276,7 @@ const DMPMPSpecificTabView = () => {
         }
       });
     });
-    console.log("DSBP_RDT_Page: ", DSBP_RDT_Page);
+    //console.log("DSBP_RDT_Page: ", DSBP_RDT_Page);
     setFormData({
       ...formData,
       DSBP_RDT_Page,
@@ -297,7 +297,7 @@ const DMPMPSpecificTabView = () => {
         }
       });
     });
-    console.log("DSBP_IQ_Page: ", DSBP_IQ_Page);
+    //console.log("DSBP_IQ_Page: ", DSBP_IQ_Page);
     setFormData({
       ...formData,
       DSBP_IQ_Page,
@@ -353,18 +353,18 @@ const DMPMPSpecificTabView = () => {
   };
 
   const updateMappingTabValuesData = (updatedNewData) => {
-    console.log("updateMappingTabValuesData updatedNewData", updatedNewData);
-    console.log("updateMappingTabValuesData selectedTab", selectedTab);
+    //console.log("updateMappingTabValuesData updatedNewData", updatedNewData);
+    //console.log("updateMappingTabValuesData selectedTab", selectedTab);
     let submittionData = {};
     submittionData = {
       tabHeader: selectedTab.tabHeader,
       description: updatedNewData && updatedNewData[0],
     };
-    console.log("updateMappingTabValuesData submittionData", submittionData);
+    //console.log("updateMappingTabValuesData submittionData", submittionData);
     const indexToUpdate = dmTabValuesData.findIndex(
       (tab) => tab.tabHeader === submittionData.tabHeader
     );
-    console.log("updateMappingTabValuesData indexToUpdate", indexToUpdate);
+    //console.log("updateMappingTabValuesData indexToUpdate", indexToUpdate);
     if (indexToUpdate !== -1) {
       // Create a copy of the dmTabValuesData array
       const updateMappingTabValuesData = [...dmTabValuesData];
@@ -384,7 +384,7 @@ const DMPMPSpecificTabView = () => {
   const onSubmit = async () => {
     setLoader(true);
     const updatedPmpDetails = { DSBPValues: [formData] };
-    console.log("updatedPmpDetails", updatedPmpDetails);
+    //console.log("updatedPmpDetails", updatedPmpDetails);
 
     await onSubmitDependencyMappingAction(
       updatedPmpDetails,
@@ -405,7 +405,7 @@ const DMPMPSpecificTabView = () => {
       isCDPTData,
       isGABrifData
     );
-    console.log("tableData: ", tableData);
+    //console.log("tableData: ", tableData);
     // const resp = await getDsbpPMPDetails(selectedProject.Project_ID);
 
     let updatedNewTabData = tableData?.filter(
@@ -417,7 +417,7 @@ const DMPMPSpecificTabView = () => {
     //   DSBP_InitiativeID: resp && resp[0].DSBP_InitiativeID,
     //   ...data,
     // }));
-    console.log("updatedNewTabData: ", updatedNewTabData);
+    //console.log("updatedNewTabData: ", updatedNewTabData);
     updateMappingTabValuesData(updatedNewTabData);
     // setFormData({});
     setLoader(false);
@@ -475,7 +475,7 @@ const DMPMPSpecificTabView = () => {
         };
         return transformedItem;
       });
-      // console.log("AWM_CIC_Page", isRDTData, isIQData, isCDPTData);
+      // //console.log("AWM_CIC_Page", isRDTData, isIQData, isCDPTData);
       let columnNames = Object.keys(transformedData[2]);
       const filteredColumnNames = columnNames.filter(
         (property) => property !== "FPCStagingPage"
@@ -508,7 +508,7 @@ const DMPMPSpecificTabView = () => {
       // setGABriefData(isGABrifData);
       // setDependencyColumnNames(groupedColumnNames);
       // setDependencyMappingData(transformedData);
-      console.log("transformedData:", transformedData);
+      //console.log("transformedData:", transformedData);
       return transformedData;
     }
   };
@@ -816,7 +816,7 @@ const DMPMPSpecificTabView = () => {
   };
 
   return (
-    console.log("dmTabValuesData filteredDataList", filteredDataList),
+    //console.log("dmTabValuesData filteredDataList", filteredDataList),
     (
       <>
         {dmTabValuesData?.length > 1 && tabPanelList !== 0 ? (

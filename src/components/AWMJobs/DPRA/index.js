@@ -76,7 +76,7 @@ function DPRA() {
   };
 
   const handleDelete = (index) => {
-    console.log("index", index);
+    //console.log("index", index);
     const sub = designIntent.map((item, i) => {
       if (i === index) {
         item.Action = "delete";
@@ -113,9 +113,9 @@ function DPRA() {
           values = item.Agency_Reference !== "" && item.Cluster !== "";
       } 
         else{
-          console.log("designIntent else", designIntent);
+          //console.log("designIntent else", designIntent);
           let data = designIntent.filter(item => item.Select && item.Agency_Reference !== "" && item.Cluster !== "");
-          console.log("value else", data);
+          //console.log("value else", data);
           if (data.length !== 0) {
             values = true;
           } else {
@@ -178,7 +178,7 @@ function DPRA() {
         target: "PRAList",
         content: updatedData,
       });
-      return console.log("updatedDataList", updatedDataList);
+      return //console.log("updatedDataList", updatedDataList);
     });
 
     let formData = {
@@ -190,7 +190,7 @@ function DPRA() {
       },
       pageInstructions: updatedDataList,
     };
-    console.log("formData", formData);
+    //console.log("formData", formData);
     await submitDefineProductionReadyArt(formData, id, headers);
     setLoader(false);
     navigate(`/${currentUrl?.split("/")[1]}`);
@@ -220,7 +220,7 @@ function DPRA() {
         Tier: task.Tier,
         Action: task.Action,
       });
-      return console.log("updatedData", updatedData);
+      return //console.log("updatedData", updatedData);
     });
 
     let formData = {
@@ -231,7 +231,7 @@ function DPRA() {
       Region: projectData?.Project_region,
       ProductionReadyArtList: updatedData,
     };
-    console.log("full draft data --->", formData);
+    //console.log("full draft data --->", formData);
     await saveDefineProductionReadyArt(formData);
     setLoader(false);
   };
