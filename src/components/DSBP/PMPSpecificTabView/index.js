@@ -69,16 +69,6 @@ const PMPSpecificTabView = () => {
 
   const addToProjectListYes = [{ name: "Yes", code: "Yes" }];
 
-  const addToProjectListNo = [
-    { name: "Yes", code: "Yes" },
-    { name: "No", code: "No" },
-  ];
-
-  const addToProjectListReject = [
-    { name: "Yes", code: "Yes" },
-    { name: "Reject", code: "Reject" },
-  ];
-
   useEffect(() => {
     if (DropDownValuesData) {
       setActionDropDownValues(
@@ -297,11 +287,10 @@ const PMPSpecificTabView = () => {
     if (allColumns && allColumns.length) {
       return allColumns.map((field, index) => {
         const value = field?.Field_Name;
-        // const filteredItems = convertedInObject?.filter(
-        //   (item) => item && item[value] !== undefined
-        // );
+       
         return convertedInObject.map((item) => {
           const fieldEditable = item && item["AWM_AddedToProject"] === "Yes";
+          const addToProjectEditable = item && item["DSBP_PMP_AWReadinessGateStatus"] === "LOCKED";
           console.log("tab fieldEditable", fieldEditable);
           return (
             <tr key={item[value]}>
@@ -314,32 +303,21 @@ const PMPSpecificTabView = () => {
                       placeholder="Select"
                       onChange={(e) => onchangeAddToProject(tabData, e, field)}
                       style={{ fontSize: 12 }}
+                      disabled={!addToProjectEditable}
                     >
                       <option value="">Select</option>
-                      {addToProjectValue === "" &&
-                        addToProjectList.map((data) => (
+                      {item["AWM_POARequested"] === "Yes" ?
+                          addToProjectListYes?.map((data) => (
+                            <option key={data.code} value={data.name}>
+                              {data.name}
+                            </option>
+                          )) :
+                        addToProjectList?.map((data) => (
                           <option key={data.code} value={data.name}>
                             {data.name}
                           </option>
-                        ))}
-                      {addToProjectValue === "Yes" &&
-                        addToProjectListYes.map((data) => (
-                          <option key={data.code} value={data.name}>
-                            {data.name}
-                          </option>
-                        ))}
-                      {addToProjectValue === "No" &&
-                        addToProjectListNo.map((data) => (
-                          <option key={data.code} value={data.name}>
-                            {data.name}
-                          </option>
-                        ))}
-                      {addToProjectValue === "Reject" &&
-                        addToProjectListReject.map((data) => (
-                          <option key={data.code} value={data.name}>
-                            {data.name}
-                          </option>
-                        ))}
+                        ))
+                      }
                     </Form.Select>
                   </Form.Group>
                 )}
@@ -548,6 +526,12 @@ const PMPSpecificTabView = () => {
             setDasbpDialog={setRejectDialog}
             rejectFormData={rejectFormData}
             onSubmit={() => onSubmit(rejectFormData)}
+
+            okButtonShow={false}          
+            deleteButtonShow={false}
+            submitButtonShow={true}
+            yesButtonShow={true}
+            disconnectButtonShow={true}
           >
             <DsbpRejectDialog
               onChangeData={onChangeData}
@@ -572,6 +556,7 @@ const PMPSpecificTabView = () => {
           onSubmit={onSubmit}
           formValid={Object.keys(formData).length === 0}
           checkReadWriteAccess={!false}
+          submitAndSave="Save"
         />
       </>
     )

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { isArray } from "lodash";
+import { cloneDeep, isArray } from "lodash";
 import ArtworkHeader from "./ArtworkHeader";
 import SelectDsbpId from "./SelectDsbpId";
 import ProjectNameHeader from "./ProjectNameHeader";
@@ -25,7 +25,7 @@ const ArtworkAlignment = () => {
   const [selected, setSelected] = useState([]);
   const DropDownData = useSelector((state) => state.DSBPDropdownReducer);
   const [dsbpPmpData, setDsbpPmpData] = useState(null);
-  const [selectedFields, setSelectedFields] = useState(null);
+  const [selectedFields, setSelectedFields] = useState({});
   const [filteredDsbpData, setFilteredDsbpData] = useState(null);
   const [totalNoOfDsbpId, setTotalNoOfDsbpId] = useState(0);
   const [totalNoOfPMP, setTotalNoOfPMP] = useState(0);
@@ -67,8 +67,7 @@ const ArtworkAlignment = () => {
   ];
 
   const dispatch = useDispatch();
-  const headerName = "Artwork Alignment";
-  
+  const headerName = "Artwork Scope Alignment";
   const BU = selectedProjectDetails?.BU;
   const Region = selectedProjectDetails?.Project_region;
   const ProjectID = selectedProjectDetails?.Project_ID;
@@ -181,7 +180,7 @@ const ArtworkAlignment = () => {
     if (!resp) {
       setDsbpPmpData(null);
     }
-    if (resp && resp?.length) {
+    if (resp && resp?.length !== 0) {
       const transformedArray = resp?.flatMap((item) =>
         item.DSBP_PMP_PIMaterialIDPage?.map((person) => ({
           DSBP_InitiativeID: item.DSBP_InitiativeID,
@@ -232,6 +231,8 @@ const ArtworkAlignment = () => {
       }, 0);
 
       setTotalNoOfPMPLocked(notOfPMPLocked);
+    } else {
+      setDsbpPmpData([])
     }
     setTotalNoOfDsbpId(resp?.length || 0);
     setTableLoader(false);
@@ -401,6 +402,7 @@ const ArtworkAlignment = () => {
           updatedData.AWM_Sellable = formData?.AWM_Sellable;
         }
         setRejectDialog(false);
+        setSelectAllChecked(false);
         return updatedData;
       });
     }
@@ -436,9 +438,18 @@ const ArtworkAlignment = () => {
 
   const onGlobalFilterChange = (e, colName) => {
     const value = e.value;
-    setSelectedFields(value);
-    const artworkValues = value;
+    let temp = cloneDeep(selectedFields);
+    temp[colName] = value;
+    setSelectedFields(temp);
+    // setSelectedFields(value);
 
+    let allValues=[];
+    let keys = Object.keys(temp);
+    keys.forEach((key)=>{
+      allValues = [...allValues, ...temp[key]]
+    })
+
+    const artworkValues = allValues;
     if (artworkValues.length) {
       let filteredDsbpData = dsbpPmpData.filter((item) => {
         if (item && item[colName]) {
@@ -503,7 +514,7 @@ const ArtworkAlignment = () => {
             headerName={headerName}
             selected={selected}
             onActionSubmit={onActionSubmit}
-            label="Artwork Alignment"
+            label="Artwork Scope Alignment"
             actionDialog={actionDialog}
             setActionDialog={setActionDialog}
             setFieldUpdated={setFieldUpdated}
@@ -571,6 +582,7 @@ const ArtworkAlignment = () => {
             onSubmit={onSubmit}
             formValid={!checkLength}
             checkReadWriteAccess={true}
+            submitAndSave="Save"
           />
         </>
       )}

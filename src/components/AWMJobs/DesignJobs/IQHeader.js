@@ -5,6 +5,7 @@ import filter from "../../../assets/images/filter.svg";
 import { NavLink, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "primeicons/primeicons.css";
+import _ from "lodash";
 
 const IQHeader = ({
   setAddNewDesign,
@@ -43,7 +44,7 @@ const IQHeader = ({
                   {" "}
                   <li className="">
                     <NavLink to={`/${mytasks}`} className="p-menuitem-link">
-                      <span className="p-menuitem-text">{mytasks}</span>
+                      <span className="p-menuitem-text">{_.startCase(mytasks)}</span>
                     </NavLink>{" "}
                   </li>{" "}
                   <li className="p-breadcrumb-chevron pi pi-chevron-right"></li>
@@ -52,14 +53,14 @@ const IQHeader = ({
                       to={`/${mytasks}/${url[2]}/${url[5]}`}
                       className="p-menuitem-link"
                     >
-                      <span className="p-menuitem-text">{url[2]}</span>
+                      <span className="p-menuitem-text">{_.startCase(url[2])}</span>
                     </NavLink>{" "}
                   </li>
                 </>
               ) : (
                 <li className="">
                   <NavLink to={`/${mytasks}`} className="p-menuitem-link">
-                    <span className="p-menuitem-text">{mytasks}</span>
+                    <span className="p-menuitem-text">{_.startCase(mytasks)}</span>
                   </NavLink>{" "}
                 </li>
               )}

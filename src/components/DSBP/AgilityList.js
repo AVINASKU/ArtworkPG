@@ -87,16 +87,6 @@ const AgilityList = ({
 
   const addToProjectListYes = [{ name: "Yes", code: "Yes" }];
 
-  const addToProjectListNo = [
-    { name: "Yes", code: "Yes" },
-    { name: "No", code: "No" },
-  ];
-
-  const addToProjectListReject = [
-    { name: "Yes", code: "Yes" },
-    { name: "Reject", code: "Reject" },
-  ];
-
   const BU = selectedProjectDetails?.BU;
   // check whether project is from home care or baby care
   let isBUHomeCare = false;
@@ -160,7 +150,7 @@ const AgilityList = ({
     }
 
     const newArray = Array.isArray(artWorkTabValuesData)
-      ? [...artWorkTabValuesData, ...updatedTabsList]
+      ? [...updatedTabsList, ...artWorkTabValuesData]
       : updatedTabsList;
 
     // const uniqueArray = Array.from(
@@ -176,6 +166,16 @@ const AgilityList = ({
         uniqueData.push(item);
       }
     }
+    console.log("uniqueData", uniqueData);
+    const headerIndex = uniqueData.findIndex(item => item.tabHeader === "Header 1");
+    const headerObject = uniqueData[headerIndex];
+    // Remove the object with "tabHeader": "Header 1" from the original array
+    uniqueData.splice(headerIndex, 1);
+    // Reverse the remaining data
+    uniqueData.reverse();
+    // Add the header object back to the beginning
+    uniqueData.unshift(headerObject);
+    console.log("uniqueData", uniqueData);
     dispatch(ArtWorkTabValuesAction(uniqueData));
     navigate("/DSBP/tab/artworkAlignment", { replace: true });
   };
@@ -216,6 +216,7 @@ const AgilityList = ({
   const addBody = (options, rowData) => {
     let field = rowData.field;
     const fieldEditable = options["AWM_AddedToProject"] === "Yes";
+    const addToProjectEditable = options["DSBP_PMP_AWReadinessGateStatus"] === "LOCKED";
     let FPCStagingFormula =
       options?.FPCStagingPage?.[0]?.FormulaCardStagingPage;
     let concatenatedFPCStagingFormulaData = {};
@@ -256,32 +257,21 @@ const AgilityList = ({
               value={options[field]}
               onChange={(e) => onchangeAddToProject(options, e, field)}
               style={{ width: "80%", fontSize: 12 }}
+              disabled={!addToProjectEditable}
             >
               <option value="">Select</option>
-              {options[field] === "Yes" &&
-                addToProjectListYes?.map((data) => (
-                  <option key={data.code} value={data.name}>
-                    {data.name}
-                  </option>
-                ))}
-              {options[field] === "No" &&
-                addToProjectListNo?.map((data) => (
-                  <option key={data.code} value={data.name}>
-                    {data.name}
-                  </option>
-                ))}
-              {options[field] === "Reject" &&
-                addToProjectListReject?.map((data) => (
-                  <option key={data.code} value={data.name}>
-                    {data.name}
-                  </option>
-                ))}
-              {options[field] === "" &&
+              {options["AWM_POARequested"] === "Yes" ?
+                  addToProjectListYes?.map((data) => (
+                    <option key={data.code} value={data.name}>
+                      {data.name}
+                    </option>
+                  )) :
                 addToProjectList?.map((data) => (
                   <option key={data.code} value={data.name}>
                     {data.name}
                   </option>
-                ))}
+                ))
+              }
             </Form.Select>
           </Form.Group>
         )}
@@ -605,7 +595,6 @@ const AgilityList = ({
   const timestamp = new Date().getTime();
 
   return (
-    console.log("dsbpPmpData", dsbpPmpData),
     (
       <>
         <DataTable
@@ -652,6 +641,12 @@ const AgilityList = ({
             setDasbpDialog={setRejectDialog}
             rejectFormData={rejectFormData}
             onSubmit={() => onActionSubmit(rejectFormData, [onChangeData])}
+            okButtonShow={false}          
+            deleteButtonShow={false}
+            showCancel={true}
+            submitButtonShow={false}
+            yesButtonShow={true}
+            disconnectButtonShow={true}
           >
             <DsbpRejectDialog
               onChangeData={onChangeData}

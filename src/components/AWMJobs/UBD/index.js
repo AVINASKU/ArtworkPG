@@ -56,7 +56,7 @@ function UBD() {
   const currentUrl = location.pathname;
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
   const AzureSubFolder = "GA Briefs";
-
+  console.log("TaskDetailsData:",TaskDetailsData);
   let breadcrumb = AddNavigation(headerName);
   // const checkReadWriteAccess = CheckReadOnlyAccess();
   const checkReadWriteAccess = true;
@@ -140,7 +140,14 @@ function UBD() {
   }, [TaskDetailsData]);
 
   const handleCancel = () => {
-    return navigate(`/${currentUrl?.split("/")[1]}`);
+    // return navigate(`/${currentUrl?.split("/")[1]}`);
+    if (page2 && page2 === "projectPlan") {
+      return navigate(
+        `/${page1}/${page2}/${TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID}`
+      );
+    } else if (pageType) {
+      return navigate(`/${pageType}`);
+    }
   };
 
   const handleDelete = async (index, sectionType, version, fileUrl) => {
@@ -322,11 +329,11 @@ function UBD() {
         if (flag === false && wrongFileName === false) flag = true;
       }
     });
-    otherRefernceDocsForUI.forEach((obj) => {
-      if ((obj.File_Name && obj.isNew === true) || obj.UV_File_Name) {
-        if (flag === false && wrongFileName === false) flag = true;
-      }
-    });
+    // otherRefernceDocsForUI.forEach((obj) => {
+    //   if ((obj.File_Name && obj.isNew === true) || obj.UV_File_Name) {
+    //     if (flag === false && wrongFileName === false) flag = true;
+    //   }
+    // });
     console.log("gABriefAdaptationForUI", gABriefAdaptationForUI);
     console.log("otherRefernceDocsForUI", otherRefernceDocsForUI);
     // alert(flag);
@@ -347,11 +354,14 @@ function UBD() {
       >
         Graphic Adaptation Brief*
       </div>
-      <div className="add-file-ubd">
+      <div 
+        className="add-file-ubd"
+        onClick={() => checkReadWriteAccess && addNewEmptyDesign()}
+      >
         <img
           src={plusCollapseImg}
           alt="filter logo"
-          onClick={() => checkReadWriteAccess && addNewEmptyDesign()}
+          // onClick={() => checkReadWriteAccess && addNewEmptyDesign()}
           className="heade-plus-icon"
           disabled={!checkReadWriteAccess}
         />{" "}
@@ -637,6 +647,7 @@ function UBD() {
             {...data}
             checkReadWriteAccess={checkReadWriteAccess}
             actionButtonsFlag={true}
+            TaskDetailsData={TaskDetailsData}
           />
         }
         {loading ||
@@ -785,7 +796,7 @@ function UBD() {
         // }
         submitAllowed={
           TaskDetailsData?.ArtworkAgilityTasks[0]?.GABriefList ||
-          TaskDetailsData?.ArtworkAgilityTasks[0]?.OtherReferenceDoc ||
+          // TaskDetailsData?.ArtworkAgilityTasks[0]?.OtherReferenceDoc ||
           formValid
         }
       />
