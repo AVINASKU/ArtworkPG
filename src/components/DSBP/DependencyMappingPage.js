@@ -11,6 +11,7 @@ import {
 } from "../../apis/dsbpApi";
 import DependencyMappingList from "./DependencyMappingList";
 import "./index.scss";
+import { cloneDeep } from "lodash";
 
 const headerName = "Dependency Mapping";
 const DependencyMapping = () => {
@@ -384,8 +385,19 @@ setIsSubmitEnabled(setSubmitEnable);
   };
 
   const onGlobalFilterChange = (e, colName) => {
-    const value = e.value;
-    setSelectedFields(value);
+
+const value = e.value;
+    let temp = cloneDeep(selectedFields);
+    temp[colName] = value;
+    setSelectedFields(temp);
+    // setSelectedFields(value);
+
+    let allValues=[];
+    let keys = Object.keys(temp);
+    keys.forEach((key)=>{
+      allValues = [...allValues, ...temp[key]]
+    })
+
     const artworkValues = value;
 
     if (artworkValues.length) {
@@ -447,8 +459,7 @@ setIsSubmitEnabled(setSubmitEnable);
   };
 
   return (
-    console.log("isSubmitEnable", dependencyMappingData, filteredDependencyMappingData),
-    <div className="artwork-dsbp dependency-mapping">
+    <div className="artwork-dsbp myProjectAnddAllProjectList dependency-mapping">
       {loader ? (
         <Loading />
       ) : (
