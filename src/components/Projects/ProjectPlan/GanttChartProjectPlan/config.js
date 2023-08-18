@@ -1,6 +1,7 @@
 import Task from "./lib/Task";
 // Application imports
 import "./lib/StatusColumn";
+import "./lib/StateColumn";
 import "./lib/GanttToolbar";
 import "./lib/TaskColumn";
 
@@ -27,42 +28,43 @@ export const ganttConfig = {
   //   },
   // },
 
-  startDate: "2019-01-12",
-  endDate: "2019-03-24",
+  startDate: "2023-08-12",
+  endDate: "2023-12-24",
   resourceImageFolderPath: "users/",
   columns: [
-    { type: "wbs" },
-    { type: "name", width: 250, text: "Task Name" },
+    { type: "wbs", editor: false },
+    { type: "name", width: 250, text: "Task", editor: false },
+    {
+      type: "predecessor",
+      width: 112,
+      text: "Dependency",
+    },
     {
       type: "resourceassignment",
       width: 120,
-      showAvatars: true,
       text: "Owner",
     },
-    { type: "startdate", text: "Start Date" },
+    { type: "statecolumn" },
     { type: "duration", text: "Duration" },
-    { type: "statuscolumn", text: "State" },
-
-    { type: "percentdone", showCircle: true, width: 70 },
-    // {
-    //   type: "predecessor",
-    //   width: 112,
-    // },
+    { type: "startdate", text: "Start Date" },
+    { type: "enddate", text: "End Date" },
+    { type: "constrainttype" },
+    // { type: "constraintdate" },
+    // { type: "taskcolumn" },
     // {
     //   type: "successor",
     //   width: 112,
     // },
-    { type: "schedulingmodecolumn" },
-    // { type: "calendar" },
-    // { type: "constrainttype" },
-    // { type: "constraintdate" },
-    { type: "taskcolumn" },
 
     // {
     //   type: "date",
     //   text: "Deadline",
     //   field: "deadline",
     // },
+    // { type: "percentdone", showCircle: true, width: 70 },
+
+    // { type: "schedulingmodecolumn" },
+    // { type: "calendar" },
     // { type: "addnew" },
   ],
 
@@ -85,7 +87,7 @@ export const ganttConfig = {
   },
   progressLineFeature: {
     disabled: true,
-    statusDate: new Date(2019, 0, 25),
+    statusDate: new Date(2023, 7, 25),
   },
   filterFeature: true,
   dependencyEditFeature: true,

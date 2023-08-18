@@ -1,1324 +1,473 @@
 export const projectData = {
-    success: true,
-  
-    project: {
-      calendar: "general",
-      startDate: "2019-01-14",
-      hoursPerDay: 24,
-      daysPerWeek: 5,
-      daysPerMonth: 20,
-    },
-  
-    calendars: {
-      rows: [
-        {
-          id: "general",
-          name: "General",
-          intervals: [
-            {
-              recurrentStartDate: "on Sat at 0:00",
-              recurrentEndDate: "on Mon at 0:00",
-              isWorking: false,
-            },
-          ],
-          expanded: true,
-          children: [
-            {
-              id: "business",
-              name: "Business",
-              intervals: [
-                {
-                  recurrentStartDate: "every weekday at 12:00",
-                  recurrentEndDate: "every weekday at 13:00",
-                  isWorking: false,
-                },
-                {
-                  recurrentStartDate: "every weekday at 17:00",
-                  recurrentEndDate: "every weekday at 08:00",
-                  isWorking: false,
-                },
-              ],
-            },
-            {
-              id: "night",
-              name: "Night shift",
-              intervals: [
-                {
-                  recurrentStartDate: "every weekday at 6:00",
-                  recurrentEndDate: "every weekday at 22:00",
-                  isWorking: false,
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  
-    tasks: {
-      rows: [
-        {
-          id: 1000,
-          name: "Design",
-          percentDone: 50,
-          startDate: "2019-01-14",
-          expanded: true,
-          task: "123",
-          children: [
-            {
-              id: "DDI_Task-974",
-              name: "Define Design Intent",
-              startDate: "2019-01-14",
-              duration: 0,
-              state: "Complete",
-              consumedBuffer: 0,
-  
-              rollup: true,
-              endDate: "2019-01-23",
-              expanded: true,
-              children: [
-                {
-                  id: 11,
-                  name: "Install Apache",
-                  percentDone: 50,
-                  startDate: "2019-01-14",
-                  rollup: true,
-                  duration: 3,
-                  color: "teal",
-                  endDate: "2019-01-17",
-                  task: "345",
-                  cost: 200,
-                  baselines: [
-                    {
-                      startDate: "2019-01-13T23:00:00",
-                      endDate: "2019-01-16T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-13T23:00:00",
-                      endDate: "2019-01-16T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-13T23:00:00",
-                      endDate: "2019-01-16T23:00:00",
-                    },
-                  ],
-                },
-                {
-                  id: 12,
-                  name: "Configure firewall",
-                  percentDone: 50,
-                  startDate: "2019-01-14",
-                  rollup: true,
-                  duration: 3,
-                  endDate: "2019-01-17",
-                  showInTimeline: true,
-                  cost: 1000,
-                  baselines: [
-                    {
-                      startDate: "2019-01-13T23:00:00",
-                      endDate: "2019-01-16T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-13T23:00:00",
-                      endDate: "2019-01-16T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-13T23:00:00",
-                      endDate: "2019-01-16T23:00:00",
-                    },
-                  ],
-                },
-                {
-                  id: 13,
-                  name: "Setup load balancer",
-                  percentDone: 50,
-                  startDate: "2019-01-14",
-                  rollup: true,
-                  duration: 3,
-                  endDate: "2019-01-17",
-                  cost: 1200,
-                  baselines: [
-                    {
-                      startDate: "2019-01-13T23:00:00",
-                      endDate: "2019-01-16T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-13T23:00:00",
-                      endDate: "2019-01-16T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-13T23:00:00",
-                      endDate: "2019-01-16T23:00:00",
-                    },
-                  ],
-                },
-                {
-                  id: 14,
-                  name: "Configure ports",
-                  percentDone: 50,
-                  startDate: "2019-01-14",
-                  rollup: true,
-                  duration: 2,
-                  endDate: "2019-01-16",
-                  cost: 750,
-                  baselines: [
-                    {
-                      startDate: "2019-01-13T23:00:00",
-                      endDate: "2019-01-15T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-13T23:00:00",
-                      endDate: "2019-01-15T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-13T23:00:00",
-                      endDate: "2019-01-15T23:00:00",
-                    },
-                  ],
-                },
-                {
-                  id: 15,
-                  name: "Run tests",
-                  percentDone: 0,
-                  startDate: "2019-01-21",
-                  rollup: true,
-                  duration: 2,
-                  endDate: "2019-01-23",
-                  cost: 5000,
-                  baselines: [
-                    {
-                      startDate: "2019-01-20T23:00:00",
-                      endDate: "2019-01-22T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-20T23:00:00",
-                      endDate: "2019-01-22T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-20T23:00:00",
-                      endDate: "2019-01-22T23:00:00",
-                    },
-                  ],
-                },
-              ],
-              baselines: [
-                {
-                  startDate: "2019-01-13T23:00:00",
-                  endDate: "2019-01-22T23:00:00",
-                },
-                {
-                  startDate: "2019-01-13T23:00:00",
-                  endDate: "2019-01-22T23:00:00",
-                },
-                {
-                  startDate: "2019-01-13T23:00:00",
-                  endDate: "2019-01-22T23:00:00",
-                },
-              ],
-            },
-            {
-              id: 2,
-              name: "Website Design",
-              percentDone: 60,
-              startDate: "2019-01-23",
-              rollup: true,
-              endDate: "2019-02-13",
-              expanded: true,
-              children: [
-                {
-                  id: 21,
-                  name: "Contact designers",
-                  percentDone: 70,
-                  startDate: "2019-01-23",
-                  rollup: true,
-                  duration: 5,
-                  endDate: "2019-01-30",
-                  cost: 500,
-                  baselines: [
-                    {
-                      startDate: "2019-01-22T23:00:00",
-                      endDate: "2019-01-25T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-22T23:00:00",
-                      endDate: "2019-01-28T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-22T23:00:00",
-                      endDate: "2019-01-29T23:00:00",
-                    },
-                  ],
-                },
-                {
-                  id: 22,
-                  name: "Create shortlist of three designers",
-                  percentDone: 60,
-                  startDate: "2019-01-30",
-                  rollup: true,
-                  duration: 1,
-                  endDate: "2019-01-31",
-                  cost: 1000,
-                  baselines: [
-                    {
-                      startDate: "2019-01-27T23:00:00",
-                      endDate: "2019-01-28T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-28T23:00:00",
-                      endDate: "2019-01-29T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-29T23:00:00",
-                      endDate: "2019-01-30T23:00:00",
-                    },
-                  ],
-                },
-                {
-                  id: 23,
-                  name: "Select & review final design",
-                  percentDone: 50,
-                  startDate: "2019-01-31",
-                  rollup: true,
-                  duration: 2,
-                  showInTimeline: true,
-                  endDate: "2019-02-02",
-                  cost: 1000,
-                  baselines: [
-                    {
-                      startDate: "2019-01-28T23:00:00",
-                      endDate: "2019-01-30T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-29T23:00:00",
-                      endDate: "2019-01-31T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-30T23:00:00",
-                      endDate: "2019-02-01T23:00:00",
-                    },
-                  ],
-                },
-                {
-                  id: 24,
-                  name: "Inform management about decision",
-                  percentDone: 100,
-                  startDate: "2019-02-04",
-                  rollup: true,
-                  duration: 0,
-                  cost: 500,
-                  baselines: [
-                    {
-                      startDate: "2019-01-30T23:00:00",
-                      endDate: "2019-01-30T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-31T23:00:00",
-                      endDate: "2019-01-31T23:00:00",
-                    },
-                    {
-                      startDate: "2019-02-01T23:00:00",
-                      endDate: "2019-02-01T23:00:00",
-                    },
-                  ],
-                },
-                {
-                  id: 25,
-                  name: "Apply design to web site",
-                  percentDone: 0,
-                  startDate: "2019-02-04",
-                  rollup: true,
-                  duration: 7,
-                  endDate: "2019-02-13",
-                  cost: 11000,
-                  baselines: [
-                    {
-                      startDate: "2019-01-30T23:00:00",
-                      endDate: "2019-02-08T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-31T23:00:00",
-                      endDate: "2019-02-11T23:00:00",
-                    },
-                    {
-                      startDate: "2019-02-03T23:00:00",
-                      endDate: "2019-02-12T23:00:00",
-                    },
-                  ],
-                },
-              ],
-              baselines: [
-                {
-                  startDate: "2019-01-22T23:00:00",
-                  endDate: "2019-02-08T23:00:00",
-                },
-                {
-                  startDate: "2019-01-22T23:00:00",
-                  endDate: "2019-02-11T23:00:00",
-                },
-                {
-                  startDate: "2019-01-22T23:00:00",
-                  endDate: "2019-02-12T23:00:00",
-                },
-              ],
-            },
-            {
-              id: 3,
-              name: "Setup Test Strategy",
-              percentDone: 20,
-              startDate: "2019-01-14",
-              expanded: true,
-              children: [
-                {
-                  id: 31,
-                  name: "Hire QA staff",
-                  percentDone: 40,
-                  startDate: "2019-01-14",
-                  duration: 5,
-                  endDate: "2019-01-19",
-                  cost: 6000,
-                  baselines: [
-                    {
-                      startDate: "2019-01-13T23:00:00",
-                      endDate: "2019-01-18T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-13T23:00:00",
-                      endDate: "2019-01-18T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-13T23:00:00",
-                      endDate: "2019-01-18T23:00:00",
-                    },
-                  ],
-                },
-                {
-                  id: 33,
-                  name: "Write test specs",
-                  percentDone: 9,
-                  duration: 5,
-                  startDate: "2019-01-21",
-                  expanded: true,
-                  children: [
-                    {
-                      id: 331,
-                      name: "Unit tests",
-                      percentDone: 20,
-                      startDate: "2019-01-21",
-                      duration: 10,
-                      endDate: "2019-02-02",
-                      showInTimeline: true,
-                      cost: 7000,
-                      baselines: [
-                        {
-                          startDate: "2019-01-20T23:00:00",
-                          endDate: "2019-02-01T23:00:00",
-                        },
-                        {
-                          startDate: "2019-01-20T23:00:00",
-                          endDate: "2019-02-01T23:00:00",
-                        },
-                        {
-                          startDate: "2019-01-20T23:00:00",
-                          endDate: "2019-02-01T23:00:00",
-                        },
-                      ],
-                    },
-                    {
-                      id: 332,
-                      name: "UI unit tests / individual screens",
-                      percentDone: 10,
-                      startDate: "2019-01-21",
-                      duration: 5,
-                      endDate: "2019-01-26",
-                      showInTimeline: true,
-                      cost: 5000,
-                      baselines: [
-                        {
-                          startDate: "2019-01-20T23:00:00",
-                          endDate: "2019-01-25T23:00:00",
-                        },
-                        {
-                          startDate: "2019-01-20T23:00:00",
-                          endDate: "2019-01-25T23:00:00",
-                        },
-                        {
-                          startDate: "2019-01-20T23:00:00",
-                          endDate: "2019-01-25T23:00:00",
-                        },
-                      ],
-                    },
-                    {
-                      id: 333,
-                      name: "Application tests",
-                      percentDone: 0,
-                      startDate: "2019-01-21",
-                      duration: 10,
-                      endDate: "2019-02-02",
-                      cost: 2500,
-                      baselines: [
-                        {
-                          startDate: "2019-01-20T23:00:00",
-                          endDate: "2019-02-01T23:00:00",
-                        },
-                        {
-                          startDate: "2019-01-20T23:00:00",
-                          endDate: "2019-02-01T23:00:00",
-                        },
-                        {
-                          startDate: "2019-01-20T23:00:00",
-                          endDate: "2019-02-01T23:00:00",
-                        },
-                      ],
-                    },
-                    {
-                      id: 334,
-                      name: "Monkey tests",
-                      percentDone: 0,
-                      startDate: "2019-01-21",
-                      duration: 1,
-                      endDate: "2019-01-22",
-                      cost: 250,
-                      baselines: [
-                        {
-                          startDate: "2019-01-20T23:00:00",
-                          endDate: "2019-01-21T23:00:00",
-                        },
-                        {
-                          startDate: "2019-01-20T23:00:00",
-                          endDate: "2019-01-21T23:00:00",
-                        },
-                        {
-                          startDate: "2019-01-20T23:00:00",
-                          endDate: "2019-01-21T23:00:00",
-                        },
-                      ],
-                    },
-                  ],
-                  endDate: "2019-02-02",
-                  baselines: [
-                    {
-                      startDate: "2019-01-20T23:00:00",
-                      endDate: "2019-02-01T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-20T23:00:00",
-                      endDate: "2019-02-01T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-20T23:00:00",
-                      endDate: "2019-02-01T23:00:00",
-                    },
-                  ],
-                },
-              ],
-              endDate: "2019-02-02",
-              baselines: [
-                {
-                  startDate: "2019-01-13T23:00:00",
-                  endDate: "2019-02-01T23:00:00",
-                },
-                {
-                  startDate: "2019-01-13T23:00:00",
-                  endDate: "2019-02-01T23:00:00",
-                },
-                {
-                  startDate: "2019-01-13T23:00:00",
-                  endDate: "2019-02-01T23:00:00",
-                },
-              ],
-            },
-            {
-              id: 4,
-              name: "Application Implementation",
-              percentDone: 60,
-              startDate: "2019-02-04",
-              expanded: true,
-              children: [
-                {
-                  id: 400,
-                  name: "Phase #1",
-                  expanded: true,
-                  children: [
-                    {
-                      id: 41,
-                      name: "Authentication module",
-                      percentDone: 100,
-                      duration: 5,
-                      startDate: "2019-02-04",
-                      endDate: "2019-02-09",
-                      cost: 8000,
-                      baselines: [
-                        {
-                          startDate: "2019-02-03T23:00:00",
-                          endDate: "2019-02-08T23:00:00",
-                        },
-                        {
-                          startDate: "2019-02-03T23:00:00",
-                          endDate: "2019-02-08T23:00:00",
-                        },
-                        {
-                          startDate: "2019-02-03T23:00:00",
-                          endDate: "2019-02-08T23:00:00",
-                        },
-                      ],
-                    },
-                    {
-                      id: 42,
-                      name: "Single sign on",
-                      percentDone: 100,
-                      duration: 3,
-                      startDate: "2019-02-04",
-                      endDate: "2019-02-07",
-                      cost: 4700,
-                      baselines: [
-                        {
-                          startDate: "2019-02-03T23:00:00",
-                          endDate: "2019-02-06T23:00:00",
-                        },
-                        {
-                          startDate: "2019-02-03T23:00:00",
-                          endDate: "2019-02-06T23:00:00",
-                        },
-                        {
-                          startDate: "2019-02-03T23:00:00",
-                          endDate: "2019-02-06T23:00:00",
-                        },
-                      ],
-                    },
-                    {
-                      id: 43,
-                      name: "Implement role based access",
-                      percentDone: 0,
-                      duration: 4,
-                      startDate: "2019-02-04",
-                      endDate: "2019-02-08",
-                      cost: 5800,
-                      baselines: [
-                        {
-                          startDate: "2019-02-03T23:00:00",
-                          endDate: "2019-02-07T23:00:00",
-                        },
-                        {
-                          startDate: "2019-02-03T23:00:00",
-                          endDate: "2019-02-07T23:00:00",
-                        },
-                        {
-                          startDate: "2019-02-03T23:00:00",
-                          endDate: "2019-02-07T23:00:00",
-                        },
-                      ],
-                    },
-                    {
-                      id: 44,
-                      name: "Basic test coverage",
-                      showInTimeline: true,
-                      percentDone: 0,
-                      duration: 3,
-                      startDate: "2019-02-04",
-                      endDate: "2019-02-07",
-                      cost: 7000,
-                      baselines: [
-                        {
-                          startDate: "2019-02-03T23:00:00",
-                          endDate: "2019-02-06T23:00:00",
-                        },
-                        {
-                          startDate: "2019-02-03T23:00:00",
-                          endDate: "2019-02-06T23:00:00",
-                        },
-                        {
-                          startDate: "2019-02-03T23:00:00",
-                          endDate: "2019-02-06T23:00:00",
-                        },
-                      ],
-                    },
-                    {
-                      id: 45,
-                      name: "Verify high test coverage",
-                      percentDone: 0,
-                      duration: 2,
-                      startDate: "2019-02-11",
-                      endDate: "2019-02-13",
-                      cost: 16000,
-                      baselines: [
-                        {
-                          startDate: "2019-02-11",
-                          endDate: "2019-02-13",
-                        },
-                        {
-                          startDate: "2019-02-11",
-                          endDate: "2019-02-13",
-                        },
-                        {
-                          startDate: "2019-02-11",
-                          endDate: "2019-02-13",
-                        },
-                      ],
-                    },
-                    {
-                      id: 46,
-                      name: "Make backup",
-                      percentDone: 0,
-                      duration: 0,
-                      startDate: "2019-02-13",
-                      endDate: "2019-02-13",
-                      showInTimeline: true,
-                      rollup: true,
-                      cost: 500,
-                      baselines: [
-                        {
-                          startDate: "2019-02-11",
-                          endDate: "2019-02-11",
-                        },
-                        {
-                          startDate: "2019-02-12",
-                          endDate: "2019-02-12",
-                        },
-                        {
-                          startDate: "2019-02-13",
-                          endDate: "2019-02-13",
-                        },
-                      ],
-                    },
-                  ],
-                  startDate: "2019-02-04",
-                  endDate: "2019-02-09",
-                  baselines: [
-                    {
-                      startDate: "2019-02-03T23:00:00",
-                      endDate: "2019-02-08T23:00:00",
-                    },
-                    {
-                      startDate: "2019-02-03T23:00:00",
-                      endDate: "2019-02-08T23:00:00",
-                    },
-                    {
-                      startDate: "2019-02-03T23:00:00",
-                      endDate: "2019-02-08T23:00:00",
-                    },
-                  ],
-                },
-                {
-                  id: 401,
-                  name: "Phase #2",
-                  expanded: true,
-                  children: [
-                    {
-                      id: 4011,
-                      name: "Authentication module",
-                      percentDone: 70,
-                      duration: 15,
-                      startDate: "2019-02-11",
-                      endDate: "2019-03-02",
-                      cost: 1200,
-                      baselines: [
-                        {
-                          startDate: "2019-02-10T23:00:00",
-                          endDate: "2019-03-01T23:00:00",
-                        },
-                        {
-                          startDate: "2019-02-10T23:00:00",
-                          endDate: "2019-03-01T23:00:00",
-                        },
-                        {
-                          startDate: "2019-02-10T23:00:00",
-                          endDate: "2019-03-01T23:00:00",
-                        },
-                      ],
-                    },
-                    {
-                      id: 4012,
-                      name: "Single sign on",
-                      percentDone: 60,
-                      duration: 5,
-                      startDate: "2019-02-11",
-                      endDate: "2019-02-16",
-                      cost: 2500,
-                      baselines: [
-                        {
-                          startDate: "2019-02-10T23:00:00",
-                          endDate: "2019-02-15T23:00:00",
-                        },
-                        {
-                          startDate: "2019-02-10T23:00:00",
-                          endDate: "2019-02-15T23:00:00",
-                        },
-                        {
-                          startDate: "2019-02-10T23:00:00",
-                          endDate: "2019-02-15T23:00:00",
-                        },
-                      ],
-                    },
-                    {
-                      id: 4013,
-                      name: "Implement role based access",
-                      percentDone: 50,
-                      duration: 21,
-                      startDate: "2019-02-11",
-                      endDate: "2019-03-12",
-                      cost: 4100,
-                      baselines: [
-                        {
-                          startDate: "2019-02-10T23:00:00",
-                          endDate: "2019-03-11T23:00:00",
-                        },
-                        {
-                          startDate: "2019-02-10T23:00:00",
-                          endDate: "2019-03-11T23:00:00",
-                        },
-                        {
-                          startDate: "2019-02-10T23:00:00",
-                          endDate: "2019-03-11T23:00:00",
-                        },
-                      ],
-                    },
-                    {
-                      id: 4014,
-                      name: "Basic test coverage",
-                      percentDone: 0,
-                      duration: 20,
-                      startDate: "2019-02-11",
-                      endDate: "2019-03-09",
-                      cost: 1100,
-                      baselines: [
-                        {
-                          startDate: "2019-02-10T23:00:00",
-                          endDate: "2019-03-08T23:00:00",
-                        },
-                        {
-                          startDate: "2019-02-10T23:00:00",
-                          endDate: "2019-03-08T23:00:00",
-                        },
-                        {
-                          startDate: "2019-02-10T23:00:00",
-                          endDate: "2019-03-08T23:00:00",
-                        },
-                      ],
-                    },
-                    {
-                      id: 4015,
-                      name: "Verify high test coverage",
-                      percentDone: 0,
-                      duration: 4,
-                      startDate: "2019-02-11",
-                      endDate: "2019-02-15",
-                      cost: 3000,
-                      baselines: [
-                        {
-                          startDate: "2019-02-10T23:00:00",
-                          endDate: "2019-02-14T23:00:00",
-                        },
-                        {
-                          startDate: "2019-02-10T23:00:00",
-                          endDate: "2019-02-14T23:00:00",
-                        },
-                        {
-                          startDate: "2019-02-10T23:00:00",
-                          endDate: "2019-02-14T23:00:00",
-                        },
-                      ],
-                    },
-                  ],
-                  startDate: "2019-02-11",
-                  endDate: "2019-03-12",
-                  baselines: [
-                    {
-                      startDate: "2019-02-10T23:00:00",
-                      endDate: "2019-03-11T23:00:00",
-                    },
-                    {
-                      startDate: "2019-02-10T23:00:00",
-                      endDate: "2019-03-11T23:00:00",
-                    },
-                    {
-                      startDate: "2019-02-10T23:00:00",
-                      endDate: "2019-03-11T23:00:00",
-                    },
-                  ],
-                },
-                {
-                  id: 402,
-                  name: "Acceptance phase",
-                  expanded: true,
-                  children: [
-                    {
-                      id: 4031,
-                      name: "Company bug bash",
-                      percentDone: 70,
-                      duration: 3,
-                      startDate: "2019-03-12",
-                      endDate: "2019-03-15",
-                      cost: 10000,
-                      baselines: [
-                        {
-                          startDate: "2019-03-11T23:00:00",
-                          endDate: "2019-03-14T23:00:00",
-                        },
-                        {
-                          startDate: "2019-03-11T23:00:00",
-                          endDate: "2019-03-14T23:00:00",
-                        },
-                        {
-                          startDate: "2019-03-11T23:00:00",
-                          endDate: "2019-03-14T23:00:00",
-                        },
-                      ],
-                    },
-                    {
-                      id: 4032,
-                      name: "Test all web pages",
-                      percentDone: 60,
-                      duration: 2,
-                      startDate: "2019-03-12",
-                      endDate: "2019-03-14",
-                      cost: 5000,
-                      baselines: [
-                        {
-                          startDate: "2019-03-11T23:00:00",
-                          endDate: "2019-03-13T23:00:00",
-                        },
-                        {
-                          startDate: "2019-03-11T23:00:00",
-                          endDate: "2019-03-13T23:00:00",
-                        },
-                        {
-                          startDate: "2019-03-11T23:00:00",
-                          endDate: "2019-03-13T23:00:00",
-                        },
-                      ],
-                    },
-                    {
-                      id: 4033,
-                      name: "Verify no broken links",
-                      percentDone: 50,
-                      duration: 4,
-                      startDate: "2019-03-12",
-                      endDate: "2019-03-16",
-                      cost: 1000,
-                      baselines: [
-                        {
-                          startDate: "2019-03-11T23:00:00",
-                          endDate: "2019-03-15T23:00:00",
-                        },
-                        {
-                          startDate: "2019-03-11T23:00:00",
-                          endDate: "2019-03-15T23:00:00",
-                        },
-                        {
-                          startDate: "2019-03-11T23:00:00",
-                          endDate: "2019-03-15T23:00:00",
-                        },
-                      ],
-                    },
-                    {
-                      id: 4034,
-                      name: "Make test release",
-                      percentDone: 0,
-                      duration: 3,
-                      startDate: "2019-03-12",
-                      endDate: "2019-03-15",
-                      cost: 1200,
-                      baselines: [
-                        {
-                          startDate: "2019-03-11T23:00:00",
-                          endDate: "2019-03-14T23:00:00",
-                        },
-                        {
-                          startDate: "2019-03-11T23:00:00",
-                          endDate: "2019-03-14T23:00:00",
-                        },
-                        {
-                          startDate: "2019-03-11T23:00:00",
-                          endDate: "2019-03-14T23:00:00",
-                        },
-                      ],
-                    },
-                    {
-                      id: 4035,
-                      name: "Send invitation email",
-                      percentDone: 0,
-                      duration: 0,
-                      startDate: "2019-03-15",
-                      endDate: "2019-03-16",
-                      cost: 250,
-                      baselines: [
-                        {
-                          startDate: "2019-03-14T23:00:00",
-                          endDate: "2019-03-14T23:00:00",
-                        },
-                        {
-                          startDate: "2019-03-13T00:00:00",
-                          endDate: "2019-03-13T00:00:00",
-                        },
-                        {
-                          startDate: "2019-03-12T00:00:00",
-                          endDate: "2019-03-12T00:00:00",
-                        },
-                      ],
-                    },
-                    {
-                      id: 4036,
-                      name: "Celebrate launch",
-                      iconCls: "b-fa b-fa-glass-cheers",
-                      percentDone: 0,
-                      duration: 1,
-                      startDate: "2019-03-12",
-                      endDate: "2019-03-13",
-                      cost: 2500,
-                      baselines: [
-                        {
-                          startDate: "2019-03-11T23:00:00",
-                          endDate: "2019-03-12T23:00:00",
-                        },
-                        {
-                          startDate: "2019-03-11T23:00:00",
-                          endDate: "2019-03-12T23:00:00",
-                        },
-                        {
-                          startDate: "2019-03-11T23:00:00",
-                          endDate: "2019-03-12T23:00:00",
-                        },
-                      ],
-                    },
-                  ],
-                  startDate: "2019-03-12",
-                  endDate: "2019-03-16",
-                  baselines: [
-                    {
-                      startDate: "2019-03-11T23:00:00",
-                      endDate: "2019-03-15T23:00:00",
-                    },
-                    {
-                      startDate: "2019-03-11T23:00:00",
-                      endDate: "2019-03-15T23:00:00",
-                    },
-                    {
-                      startDate: "2019-03-11T23:00:00",
-                      endDate: "2019-03-15T23:00:00",
-                    },
-                  ],
-                },
-              ],
-              endDate: "2019-03-16",
-              baselines: [
-                {
-                  startDate: "2019-02-03T23:00:00",
-                  endDate: "2019-03-15T23:00:00",
-                },
-                {
-                  startDate: "2019-02-03T23:00:00",
-                  endDate: "2019-03-15T23:00:00",
-                },
-                {
-                  startDate: "2019-02-03T23:00:00",
-                  endDate: "2019-03-15T23:00:00",
-                },
-              ],
-            },
-          ],
-          endDate: "2019-03-16",
-          baselines: [
-            {
-              startDate: "2019-01-13T23:00:00",
-              endDate: "2019-03-15T23:00:00",
-            },
-            {
-              startDate: "2019-01-13T23:00:00",
-              endDate: "2019-03-15T23:00:00",
-            },
-            {
-              startDate: "2019-01-13T23:00:00",
-              endDate: "2019-03-15T23:00:00",
-            },
-          ],
-        },
-        {
-          id: "Input",
-          name: "Input",
-          percentDone: 50,
-          startDate: "2019-01-14",
-          expanded: true,
-          task: "123",
-          children: [
-            {
-              id: "design-1",
-              name: "Setup web server",
-              percentDone: 50,
-              duration: 10,
-              startDate: "2019-01-14",
-              rollup: true,
-              endDate: "2019-01-23",
-              expanded: true,
-              children: [
-                {
-                  id: "design-1-1",
-                  name: "Install Apache",
-                  percentDone: 50,
-                  startDate: "2019-01-14",
-                  rollup: true,
-                  duration: 3,
-                  color: "teal",
-                  endDate: "2019-01-17",
-                  task: "345",
-                  cost: 200,
-                  baselines: [
-                    {
-                      startDate: "2019-01-13T23:00:00",
-                      endDate: "2019-01-16T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-13T23:00:00",
-                      endDate: "2019-01-16T23:00:00",
-                    },
-                    {
-                      startDate: "2019-01-13T23:00:00",
-                      endDate: "2019-01-16T23:00:00",
-                    },
-                  ],
-                },
-              ],
-              baselines: [
-                {
-                  startDate: "2019-01-13T23:00:00",
-                  endDate: "2019-01-22T23:00:00",
-                },
-                {
-                  startDate: "2019-01-13T23:00:00",
-                  endDate: "2019-01-22T23:00:00",
-                },
-                {
-                  startDate: "2019-01-13T23:00:00",
-                  endDate: "2019-01-22T23:00:00",
-                },
-              ],
-            },
-          ],
-          endDate: "2019-03-16",
-          baselines: [
-            {
-              startDate: "2019-01-13T23:00:00",
-              endDate: "2019-03-15T23:00:00",
-            },
-            {
-              startDate: "2019-01-13T23:00:00",
-              endDate: "2019-03-15T23:00:00",
-            },
-            {
-              startDate: "2019-01-13T23:00:00",
-              endDate: "2019-03-15T23:00:00",
-            },
-          ],
-        },
-      ],
-    },
-  
-    dependencies: {
-      rows: [
-        {
-          id: 1,
-          fromTask: 11,
-          toTask: 15,
-          lag: 2,
-        },
-        {
-          id: 2,
-          fromTask: 12,
-          toTask: 15,
-        },
-        {
-          id: 3,
-          fromTask: 13,
-          toTask: 15,
-        },
-        {
-          id: 4,
-          fromTask: 14,
-          toTask: 15,
-        },
-        {
-          id: 5,
-          fromTask: 15,
-          toTask: 21,
-        },
-        {
-          id: 7,
-          fromTask: 21,
-          toTask: 22,
-        },
-        {
-          id: 8,
-          fromTask: 22,
-          toTask: 23,
-        },
-        {
-          id: 9,
-          fromTask: 23,
-          toTask: 24,
-        },
-        {
-          id: 10,
-          fromTask: 24,
-          toTask: 25,
-        },
-        {
-          id: 11,
-          fromTask: 31,
-          toTask: 331,
-        },
-        {
-          id: 111,
-          fromTask: 31,
-          toTask: 332,
-        },
-        {
-          id: 112,
-          fromTask: 31,
-          toTask: 333,
-        },
-        {
-          id: 113,
-          fromTask: 31,
-          toTask: 334,
-        },
-        {
-          id: 12,
-          fromTask: 400,
-          toTask: 401,
-        },
-        {
-          id: 13,
-          fromTask: 401,
-          toTask: 402,
-        },
-        {
-          id: 15,
-          fromTask: 3,
-          toTask: 4,
-        },
-        {
-          id: 16,
-          fromTask: 41,
-          toTask: 45,
-        },
-        {
-          id: 17,
-          fromTask: 42,
-          toTask: 45,
-        },
-        {
-          id: 18,
-          fromTask: 43,
-          toTask: 45,
-        },
-        {
-          id: 19,
-          fromTask: 44,
-          toTask: 45,
-        },
-        {
-          id: 20,
-          fromTask: 4034,
-          toTask: 4035,
-        },
-      ],
-    },
-  
-    resources: {
-      rows: [
-        {
-          id: 1,
-          name: "Celia",
-          city: "Barcelona",
-          calendar: null,
-          image: "celia.jpg",
-        },
-        { id: 2, name: "Lee", city: "London", calendar: null, image: "lee.jpg" },
-        {
-          id: 3,
-          name: "Macy",
-          city: "New York",
-          calendar: null,
-          image: "macy.jpg",
-        },
-        {
-          id: 4,
-          name: "Madison",
-          city: "Barcelona",
-          calendar: null,
-          image: "madison.jpg",
-        },
-        {
-          id: 5,
-          name: "Rob",
-          city: "Rome",
-          calendar: "business",
-          image: "rob.jpg",
-        },
-        {
-          id: 6,
-          name: "Dave",
-          city: "Barcelona",
-          calendar: "night",
-          image: "dave.jpg",
-        },
-        {
-          id: 7,
-          name: "Dan",
-          city: "London",
-          calendar: "night",
-          image: "dan.jpg",
-        },
-        {
-          id: 8,
-          name: "George",
-          city: "New York",
-          calendar: null,
-          image: "george.jpg",
-        },
-        {
-          id: 9,
-          name: "Gloria",
-          city: "Rome",
-          calendar: null,
-          image: "gloria.jpg",
-        },
-        {
-          id: 10,
-          name: "Henrik",
-          city: "London",
-          calendar: null,
-          image: "henrik.jpg",
-        },
-      ],
-    },
-  
-    assignments: {
-      rows: [
-        { id: 1, event: 11, resource: 1 },
-        { id: 2, event: 4033, resource: 1 },
-        { id: 3, event: 12, resource: 9 },
-        { id: 4, event: 13, resource: 2 },
-        { id: 5, event: 13, resource: 3 },
-        { id: 6, event: 13, resource: 6 },
-        { id: 7, event: 13, resource: 7 },
-        { id: 8, event: 13, resource: 8 },
-        { id: 9, event: 21, resource: 5 },
-        { id: 10, event: 21, resource: 9 },
-        { id: 11, event: 22, resource: 8 },
-        { id: 12, event: 25, resource: 3 },
-      ],
-    },
-  
-    timeRanges: {
-      rows: [
-        {
-          id: 1,
-          name: "Important date",
-          startDate: "2019-01-30",
-          duration: 0,
-          durationUnit: "d",
-          cls: "b-fa b-fa-diamond",
-        },
-      ],
-    },
-  };
+  success: true,
+
+  project: {
+    calendar: "general",
+    startDate: "2023-08-14",
+    hoursPerDay: 24,
+    daysPerWeek: 5,
+    daysPerMonth: 20,
+  },
+
+  calendars: {
+    rows: [
+      {
+        id: "general",
+        name: "General",
+        intervals: [
+          {
+            recurrentStartDate: "on Sat at 0:00",
+            recurrentEndDate: "on Mon at 0:00",
+            isWorking: false,
+          },
+        ],
+        expanded: true,
+        children: [
+          {
+            id: "business",
+            name: "Business",
+            intervals: [
+              {
+                recurrentStartDate: "every weekday at 12:00",
+                recurrentEndDate: "every weekday at 13:00",
+                isWorking: false,
+              },
+              {
+                recurrentStartDate: "every weekday at 17:00",
+                recurrentEndDate: "every weekday at 08:00",
+                isWorking: false,
+              },
+            ],
+          },
+          {
+            id: "night",
+            name: "Night shift",
+            intervals: [
+              {
+                recurrentStartDate: "every weekday at 6:00",
+                recurrentEndDate: "every weekday at 22:00",
+                isWorking: false,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  tasks: {
+    rows: [
+      {
+        id: 1000,
+        name: "Design",
+        percentDone: 80,
+        startDate: "2023-08-11",
+        expanded: true,
+        state: "In-Progress",
+        children: [
+          {
+            id: "DDI_Task-1440",
+            name: "Define Design Intent",
+            startDate: "2023-08-14",
+            duration: 5,
+            state: "Complete",
+            percentDone: 100,
+            rollup: true,
+            expanded: true,
+          },
+          {
+            id: "UADI",
+            name: "Upload Approved Design Intent",
+            percentDone: 60,
+            // startDate: "2023-08-18",
+
+            // rollup: true,
+            expanded: true,
+            children: [
+              {
+                id: "UADI_Task-2728",
+                name: "DI_agencyref1_Comet Professional_Category_testGantt_designCluster1_addinfo",
+                percentDone: 100,
+                startDate: "2023-08-16",
+
+                // rollup: true,
+                duration: 5,
+                state: "Complete",
+                // cost: 500,
+              },
+              {
+                id: "UADI_Task-2729",
+                name: "DI_agencyref2_Comet Professional_Category_testGantt_designCluster2_addInfo",
+                percentDone: 100,
+                startDate: "2023-08-21",
+                // rollup: true,
+                duration: 5,
+                state: "Complete",
+                // cost: 1000,
+              },
+            ],
+          },
+          {
+            id: "DDT_Task-1289",
+            name: "Define Regional Design Template",
+            percentDone: 20,
+            startDate: "2023-08-14",
+            duration: 5,
+            state: "Complete",
+            expanded: true,
+          },
+          {
+            id: "URDT",
+            name: "Upload Regional Design Template",
+            percentDone: 60,
+            startDate: "2023-09-04",
+            expanded: true,
+            children: [
+              {
+                id: "URDT_Task-2187",
+                name: "DT_defineRDTregional_Comet Professional_Baby Care Adjacencies_testGantt_defineRDTCluster_defineRDTInf.",
+                percentDone: 100,
+                duration: 5,
+                state: "In-Progress",
+                startDate: "2023-09-04",
+                cost: 8000,
+              },
+            ],
+          },
+          {
+            id: "ARDT",
+            name: "Approve Regional Design Template",
+            percentDone: 60,
+            startDate: "2023-09-04",
+            expanded: true,
+            children: [
+              {
+                id: "ARDT_Task-3984",
+                name: "DT_defineRDTregional_Comet Professional_Baby Care Adjacencies_testGantt_defineRDTCluster_defineRDTInf.",
+                percentDone: 100,
+                duration: 5,
+                state: "Awaiting",
+                startDate: "2023-09-04",
+                cost: 8000,
+              },
+            ],
+          },
+          {
+            id: "CPPFA_Task-3033",
+            name: "Confirm Preliminary Print Feasibility Assessment",
+            percentDone: 60,
+            duration: 5,
+            state: "Awaiting",
+            startDate: "2023-09-04",
+            expanded: true,
+          },
+          {
+            id: "DNPF_Task-1298",
+            name: "Define New Print Feasibility Scope",
+            percentDone: 60,
+            startDate: "2023-09-04",
+            expanded: true,
+          },
+          {
+            id: "CCD",
+            name: "Confirm New Print Feasibility Scope",
+            percentDone: 60,
+            startDate: "2023-09-04",
+            expanded: true,
+
+            children: [
+              {
+                id: "CCD_Task-550",
+                name: "CD_ZRP PRINTING KUNSHAN COMPANY~15220431_Silk Screen_Synthetic Materials-Oils_Comet_Baby Care Adjacencies_test azure_info",
+                percentDone: 100,
+                duration: 5,
+                startDate: "2023-09-04",
+
+                cost: 8000,
+              },
+              {
+                id: "CCD_Task-551",
+                name: "CD_ZHONGYONG PRODUCTS OF PAPER~15024557_Primography_Plastics-Thermoplastics-POM-Acetal_Comet_Baby Care Adjacencies_test azure_info",
+                percentDone: 100,
+                duration: 5,
+                startDate: "2023-09-04",
+
+                cost: 8000,
+              },
+            ],
+          },
+          {
+            id: "CPT",
+            name: "Confirm Print Trial",
+            percentDone: 60,
+            startDate: "2023-09-04",
+            expanded: true,
+
+            children: [
+              {
+                id: "CPT_Task-342",
+                name: "CD_ZRP PRINTING KUNSHAN COMPANY~15220431_Silk Screen_Synthetic Materials-Oils_Comet_Baby Care Adjacencies_test azure_info",
+                percentDone: 100,
+                duration: 5,
+                startDate: "2023-09-04",
+
+                cost: 8000,
+              },
+            ],
+          },
+          {
+            id: "DNIQ_Task-951",
+            name: "Define Ink Qualification",
+            percentDone: 60,
+            startDate: "2023-09-04",
+            duration: 5,
+            expanded: true,
+          },
+          {
+            id: "CNIQ",
+            name: "Confirm New Ink Qualification",
+            percentDone: 60,
+            startDate: "2023-09-04",
+            expanded: true,
+
+            children: [
+              {
+                id: "CNIQ_Task-1050",
+                name: "IQ_pantoneOne_ZRP PRINTING KUNSHAN COMPANY~15220431_Comet Professional_Baby Care Adjacencies_testGantt_InfoOn",
+                percentDone: 100,
+                duration: 5,
+                startDate: "2023-09-04",
+
+                cost: 8000,
+              },
+              {
+                id: "CNIQ_Task-1051",
+                name: "IQ_PantoneTwo_ZOBELE BULGARIA EOOD~15220718_Comet Professional_Baby Care Adjacencies_testGantt_InfoTw",
+                percentDone: 100,
+                duration: 5,
+                startDate: "2023-09-04",
+
+                cost: 8000,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 2000,
+        name: "Input",
+        percentDone: 50,
+        startDate: "2023-08-14",
+        expanded: true,
+        task: "123",
+        children: [
+          {
+            id: "SAA_Task-2422",
+            name: "Start Artwork Alignment",
+            percentDone: 50,
+            duration: 10,
+            startDate: "2023-08-14",
+            rollup: true,
+
+            expanded: true,
+          },
+          {
+            id: "DM_Task-2422",
+            name: "Dependency Mapping",
+            percentDone: 50,
+            duration: 10,
+            startDate: "2023-08-14",
+            rollup: true,
+
+            expanded: true,
+          },
+          {
+            id: "UBD_Task-751",
+            name: "Upload Briefing documents",
+            percentDone: 50,
+            duration: 10,
+            startDate: "2023-08-14",
+            rollup: true,
+
+            expanded: true,
+          },
+          {
+            id: "ACIC_Task-1119",
+            name: "Approve CIC",
+            percentDone: 50,
+            duration: 10,
+            startDate: "2023-08-14",
+            rollup: true,
+
+            expanded: true,
+          },
+          {
+            id: "UCIC_Task-378",
+            name: "Upload CIC",
+            percentDone: 50,
+            duration: 10,
+            startDate: "2023-08-14",
+            rollup: true,
+
+            expanded: true,
+          },
+        ],
+      },
+    ],
+  },
+
+  dependencies: {
+    rows: [
+      {
+        id: 1,
+        fromTask: "DDI_Task-1440",
+        toTask: "UADI_Task-2728",
+        lag: 2,
+      },
+      {
+        id: 2,
+        fromTask: "DDI_Task-1440",
+        toTask: "UADI_Task-2729",
+      },
+      {
+        id: 3,
+        fromTask: "UADI_Task-2728",
+        toTask: "DDT_Task-1289",
+      },
+      {
+        id: 4,
+        fromTask: "UADI_Task-2729",
+        toTask: "DDT_Task-1289",
+      },
+      {
+        id: 5,
+        fromTask: "DDT_Task-1289",
+        toTask: "URDT_Task-2187",
+      },
+      {
+        id: 7,
+        fromTask: "URDT_Task-2187",
+        toTask: "ARDT_Task-3984",
+      },
+      {
+        id: 8,
+        fromTask: "ARDT_Task-3984",
+        toTask: "DNPF_Task-1298",
+      },
+      {
+        id: 9,
+        fromTask: "CPPFA_Task-3033",
+        toTask: "DNPF_Task-1298",
+      },
+      {
+        id: 10,
+        fromTask: "DNPF_Task-1298",
+        toTask: "CCD_Task-550",
+      },
+      {
+        id: 11,
+        fromTask: "DNPF_Task-1298",
+        toTask: "CCD_Task-551",
+      },
+      {
+        id: 12,
+        fromTask: "CCD_Task-550",
+        toTask: "CPT_Task-342",
+      },
+      {
+        id: 13,
+        fromTask: "CPPFA_Task-3033",
+        toTask: "DNIQ_Task-951",
+      },
+      {
+        id: 15,
+        fromTask: "DNIQ_Task-951",
+        toTask: "CNIQ_Task-1050",
+      },
+      {
+        id: 16,
+        fromTask: "DNIQ_Task-951",
+        toTask: "CNIQ_Task-1051",
+      },
+    ],
+  },
+
+  resources: {
+    rows: [
+      {
+        id: 1,
+        name: "Izabela",
+        city: "New York",
+        calendar: null,
+        image: "iza.jpg",
+      },
+      {
+        id: 2,
+        name: "Karol",
+        city: "London",
+        calendar: null,
+        image: "karol.jpg",
+      },
+      {
+        id: 3,
+        name: "Luca",
+        city: "New York",
+        calendar: null,
+        image: "luca.jpg",
+      },
+      {
+        id: 4,
+        name: "Cherry",
+        city: "Barcelona",
+        calendar: null,
+        image: "cherry.jpg",
+      },
+      {
+        id: 5,
+        name: "Nora",
+        city: "Rome",
+        calendar: "business",
+        image: "nora.jpg",
+      },
+      {
+        id: 6,
+        name: "Gabriel",
+        city: "Barcelona",
+        calendar: "night",
+        image: "gabriel.jpg",
+      },
+    ],
+  },
+
+  assignments: {
+    rows: [
+      { id: 1, event: "DDI_Task-1440", resource: 1 },
+      { id: 2, event: "UADI_Task-2728", resource: 2 },
+      { id: 3, event: "UADI_Task-2729", resource: 2 },
+      { id: 4, event: "DDT_Task-1289", resource: 3 },
+      { id: 5, event: "URDT_Task-2187", resource: 4 },
+      { id: 6, event: "ARDT_Task-3984", resource: 5 },
+      { id: 7, event: "DNPF_Task-1298", resource: 6 },
+      { id: 8, event: "CPPFA_Task-3033", resource: 1 },
+      { id: 9, event: "CCD_Task-550", resource: 2 },
+      { id: 10, event: "CCD_Task-551", resource: 2 },
+      { id: 11, event: "CPT_Task-342", resource: 2 },
+      { id: 12, event: "CNIQ_Task-1050", resource: 3 },
+      { id: 13, event: "DNIQ_Task-951", resource: 3 },
+      { id: 14, event: "CNIQ_Task-1051", resource: 3 },
+    ],
+  },
+
+  timeRanges: {
+    rows: [
+      {
+        id: 1,
+        name: "Important date",
+        startDate: "2023-08-30",
+        duration: 0,
+        durationUnit: "d",
+        cls: "b-fa b-fa-diamond",
+      },
+    ],
+  },
+};
