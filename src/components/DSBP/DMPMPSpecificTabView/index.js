@@ -14,6 +14,7 @@ import FooterButtons from "../../AWMJobs/DesignJobs/FooterButtons";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { MultiSelect } from "primereact/multiselect";
+import CustomHeader from "./CustomHeader";
 
 const DMPMPSpecificTabView = () => {
   const dispatch = useDispatch();
@@ -740,22 +741,24 @@ const DMPMPSpecificTabView = () => {
       return navigateToDSBP();
     }
   };
+
   const renderTabs = () => {
-    return filteredDataList.map((obj, index) => (
-      <TabPanel
-        key={index}
-        header={
-          <CustomTabHeader
-            tabHeader={index === 0 ? "Dependency Mapping" : obj.tabHeader}
-            index={index}
-          />
-        }
-        scrollable
-      >
-        {/* <>{loader ? <Loading /> : index !== 0 && alert(JSON.stringify(obj))}</> */}
-        <>{loader ? <Loading /> : index !== 0 && tabsCompo(obj)}</>
-      </TabPanel>
-    ));
+    return (
+      filteredDataList.map((obj, index) => (
+        <TabPanel
+          key={index}
+          header={
+              <CustomHeader
+                tabHeaderDetails={obj}
+                index={index}
+                handleDelete={handleDelete}
+              />
+          }
+          scrollable
+        >
+          <>{loader ? <Loading /> : index !== 0 && tabsCompo(obj)}</>
+        </TabPanel>
+      )))
   };
 
   let isSubmitEnabled =
@@ -781,6 +784,7 @@ const DMPMPSpecificTabView = () => {
         onSubmit={onSubmit}
         formValid={isSubmitEnabled}
         checkReadWriteAccess={!false}
+        submitAndSave="Save"
       />
     </>
   );

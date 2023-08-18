@@ -213,7 +213,6 @@ const DependencyMappingList = ({
           src={filter}
           key={field}
           alt="Column Filter"
-          style={{ height: 14, paddingLeft: 5, paddingRight: 5 }}
           onClick={(e) => projectNameOnClick(e, field)}
           className={
             isFilterActivated

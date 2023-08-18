@@ -535,6 +535,7 @@ const value = e.value;
             onSubmit={onSubmit}
             formValid={!isSubmitEnable || !isSubmitEnabled}
             checkReadWriteAccess={!false}
+            submitAndSave="Save"
           />
         </>
       )}
