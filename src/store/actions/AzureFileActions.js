@@ -33,15 +33,42 @@ export const uploadFileFailure = (error) => ({
 });
 
 // Define your Redux async action creator
-export const uploadFileAzure = (file, subFolder) => {
+export const uploadFileAzure = (file, ProjectID, BU, subFolder) => {
   console.log(file.type, "test");
   return async (dispatch) => {
     try {
       dispatch(uploadFileRequest());
+      const url = window.location.href;
+      const domainRegex = /https?:\/\/([^/]+)\//; // Regular expression to match the domain part of the URL
 
+      const match = url.match(domainRegex);
+      let domain = "";
+
+      if (match && match.length > 1) {
+        domain = match[1]; // Extract the matched part
+      }
+
+      let env;
+
+      switch (domain) {
+        case "awflowdev.pg.com":
+          env = "DEV";
+          break;
+        case "awflowqa.pg.com":
+          env = "QA";
+          break;
+        case "awflowsit.pg.com":
+          env = "SIT";
+          break;
+        case "awflow.pg.com":
+          env = "";
+          break;
+        default:
+          env = "localEnv";
+      }
       // Create a BlobClient for the file and set the content type
       const blobClient = containerClient.getBlockBlobClient(
-        `${subFolder}/${file.name}`
+        `${domain}/${ProjectID}/${BU}/${subFolder}/${file.name}`
       );
 
       const options = {
@@ -66,7 +93,7 @@ export const uploadFileAzure = (file, subFolder) => {
       );
 
       // Construct the public URL for the uploaded file
-      const publicUrl = `https://${storageAccountName}.blob.core.windows.net/pgsource/${containerName}/${file.name}`;
+      const publicUrl = `https://${storageAccountName}.blob.core.windows.net/pgsource/${containerName}/${domain}/${ProjectID}/${BU}/${subFolder}/${file.name}`;
 
       // Dispatch the success action with the public URL
       dispatch(uploadFileSuccess(publicUrl));
