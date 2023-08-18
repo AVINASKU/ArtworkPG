@@ -29,9 +29,10 @@ const CPPFA = ({
   const locationPath = location?.pathname;
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
+  const BU = selectedProjectDetails?.BU;
+  const projectName = selectedProjectDetails?.Project_Name;
   const url = locationPath?.split("/");
   const [loader, setLoader] = useState(false);
-  const BU = selectedProjectDetails?.BU;
 
   const [visible, setVisible] = useState(showTaskDialog);
   const [taskDetailsDataObj, setTaskDetailsDataObj] = useState(null);
@@ -149,8 +150,8 @@ const CPPFA = ({
   useEffect(() => {
     pegadata.forEach((obj) => {
       if (
-        obj.data.Task === "Define New Print Feasibility Scope" ||
-        obj.data.Task === "Define Color Development & Print Trial"
+        obj.data?.Task === "Define New Print Feasibility Scope" ||
+        obj.data?.Task === "Define Color Development & Print Trial"
       ) {
         setFlag(true);
       }
@@ -207,12 +208,13 @@ const CPPFA = ({
       }
     } else {
       azureFile &&
-        (await dispatch(uploadFileAzure(azureFile, ProjectID, BU, "CPPFA")));
+        (await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "CPPFA")));
       await submitCPPFA(
         formData,
         `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`,
         headers
       );
+      setFileName(null);
       hideDialog();
       if (url[2] === "projectPlan") {
         getProjectPlanApi();
@@ -224,7 +226,7 @@ const CPPFA = ({
   };
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
-    dispatch(AzureFileDownloadJobs(fileUrl, ProjectID, BU, "CPPFA"));
+    dispatch(AzureFileDownloadJobs(fileUrl, ProjectID + projectName, BU, "CPPFA"));
   };
   return (
     <Dialog
@@ -381,11 +383,11 @@ const CPPFA = ({
                     }
                     onValidationFail={(e) => onValidationFail(e)}
                   />
-                  <p className="m-0">
+                  <p className="uploadImage">
                     {taskDetailsDataObj?.FileMetaDataList &&
                     taskDetailsDataObj?.FileMetaDataList.length > 0 ? (
                       taskDetailsDataObj?.FileMetaDataList[0].File_Name ===
-                      "" ? (
+                      "" && !fileName ? (
                         <>
                           <span>Drop or Browse file here</span> <br />
                           <span className="fileSupportedData">

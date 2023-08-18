@@ -35,7 +35,7 @@ export const downloadFileFailure = (error) => ({
 
 // ... (import statements and variable definitions)
 
-export const AzureFileDownloadJobs = (filePath, ProjectID, BU, subFolder) => {
+export const AzureFileDownloadJobs = (filePath, ProjectIdAndName, BU, subFolder) => {
   return async (dispatch) => {
     try {
       const url = window.location.href;
@@ -66,7 +66,7 @@ export const AzureFileDownloadJobs = (filePath, ProjectID, BU, subFolder) => {
         default:
           env = "localEnv";
       }
-      const downloadUrl = `${baseUrl}/${containerName}/${domain}/${ProjectID}/${BU}/${subFolder}/${filePath}?${sasToken}`;
+      const downloadUrl = `${baseUrl}/${containerName}/${domain}/${ProjectIdAndName}/${BU}/${subFolder}/${filePath}?${sasToken}`;
 
       const response = await axios.get(downloadUrl, {
         responseType: "blob",

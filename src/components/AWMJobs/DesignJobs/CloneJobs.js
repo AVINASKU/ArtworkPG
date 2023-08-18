@@ -792,6 +792,7 @@ const CloneJobs = ({
             date={date}
             version={version}
             disabled={!checkReadWriteAccess || data.Task_Status === "Complete"}
+            azureSubFolder={showPage}
             // ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
             // version={version}
           />

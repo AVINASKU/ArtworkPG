@@ -3,7 +3,8 @@ import { FileUpload } from "primereact/fileupload";
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
 import ToolTip from "./ToolTip";
 import { AzureFileDownloadJobs } from "../../../store/actions/AzureFileDownloadJobs";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 const UploadFile = ({
   azureSubFolder,
@@ -30,6 +31,11 @@ const UploadFile = ({
   const [azureErrMsg, setAzureErrMsg] = useState("");
   const [fileUploadWarning, setFileUploadWarning] = useState(false);
   const fileUploadRef = useRef(null);
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
+  const BU = selectedProjectDetails?.BU;
+  const projectName = selectedProjectDetails?.Project_Name;
+  let { ProjectID } = useParams();
   const dispatch = useDispatch();
   const viewProofScopeFile = useProofScopeURL();
   const handleViewProofScopeClick = (event, fileUrl) => {
@@ -129,7 +135,7 @@ const UploadFile = ({
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
     const response = await dispatch(
-      AzureFileDownloadJobs(fileUrl, azureSubFolder)
+      AzureFileDownloadJobs(fileUrl, ProjectID + projectName, BU, azureSubFolder)
     );
     if (response?.includes("404")) {
       setFileNotFound(true);
