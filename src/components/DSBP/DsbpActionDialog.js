@@ -101,22 +101,24 @@ const DsbpActionDialog = ({
     setActionDialog(false);
     headerName === "Dependency Mapping" && setSubmittedData([]);
   };
-
-  if(updatedData && updatedData[0]?.value === "Add to Project"){
-    selected = selected.filter(
-      (item) => item.AWM_AddedToProject !== "Yes"
-    );
-  } else if(updatedData && updatedData[0]?.value === "Create POAA"){
-    selected = selected.filter(
-      (item) =>
-        item.AWM_AddedToProject === "Yes" &&
-        item.DSBP_PMP_AWReadinessGateStatus === "LOCKED"
-    );
-  } else {
-    selected = selected.filter(
-      (item) => item.AWM_AddedToProject === "Yes"
-    );
+  if(headerName !== "Dependency Mapping"){
+    if(updatedData && updatedData[0]?.value === "Add to Project"){
+      selected = selected.filter(
+        (item) => item.AWM_AddedToProject !== "Yes"
+      );
+    } else if(updatedData && updatedData[0]?.value === "Create POAA"){
+      selected = selected.filter(
+        (item) =>
+          item.AWM_AddedToProject === "Yes" &&
+          item.DSBP_PMP_AWReadinessGateStatus === "LOCKED"
+      );
+    } else {
+      selected = selected.filter(
+        (item) => item.AWM_AddedToProject === "Yes"
+      );
+    }
   }
+  
   const addedToProjectRows = selected.filter(
     (item) => item.AWM_AddedToProject === "Yes"
   );
@@ -188,45 +190,24 @@ const DsbpActionDialog = ({
               </Col>
             ) : (
               <>
-                <Col sm={7} style={{ height: "100%" }}>
-                  {headerName !== "Dependency Mapping" && (
-                    <div className="card" style={{ height: "100%" }}>
-                      <DataTable
-                        value={selected}
-                        dataKey="id"
-                        emptyMessage="Please add the PMP to project before you can update."
-                        scrollable
-                      >
-                        <Column
-                          field="DSBP_PMP_PIMaterialNumber"
-                          header="PMP "
-                        ></Column>
-                        <Column
-                          field="DSBP_PMP_PIMaterialDescription"
-                          header="PMP Description"
-                        ></Column>
-                      </DataTable>
-                    </div>
-                  )}
-                  {headerName === "Dependency Mapping" && (
-                    <div className="card" style={{ height: "100%" }}>
-                      <DataTable
-                        value={selected}
-                        dataKey="id"
-                        emptyMessage="Please add the PMP to project before you can update."
-                        scrollable
-                      >
-                        <Column
-                          field="DSBP_PMP_PIMaterialNumber"
-                          header="PMP "
-                        ></Column>
-                        <Column
-                          field="DSBP_PMP_PIMaterialDescription"
-                          header="PMP Description"
-                        ></Column>
-                      </DataTable>
-                    </div>
-                  )}
+                <Col sm={7} style={{ height: "100%" }}>                  
+                  <div className="card" style={{ height: "100%" }}>
+                    <DataTable
+                      value={selected}
+                      dataKey="id"
+                      emptyMessage="Please add the PMP to project before you can update."
+                      scrollable
+                    >
+                      <Column
+                        field="DSBP_PMP_PIMaterialNumber"
+                        header="PMP "
+                      ></Column>
+                      <Column
+                        field="DSBP_PMP_PIMaterialDescription"
+                        header="PMP Description"
+                      ></Column>
+                    </DataTable>
+                  </div>                  
                 </Col>
                 <Col sm={5}>
                   {updatedData &&
