@@ -45,7 +45,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test:coverage": "react-scripts test --coverage"
   },
   "eslintConfig": {
     "extends": [
@@ -76,10 +76,6 @@
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/src/$1",
       "\\.(css|scss)$": "identity-obj-proxy"
-    },
-    "scripts": {
-      "test": "react-scripts test",
-      "test:coverage": "react-scripts test --coverage"
     }
   },
   "devDependencies": {

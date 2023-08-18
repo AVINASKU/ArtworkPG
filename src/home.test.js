@@ -105,7 +105,7 @@ console.log(accessMatrix);
     await act(async () => {
       await Promise.resolve();
     });
-console.log(mockUpdateUser);
+console.log("mockUpdateUser " + mockUpdateUser);
     // expect(mockUpdateUser).toHaveBeenCalledWith(mockFirstName, ["Role", "MockBU", "MockRegion", mockFirstName]);
     // expect(mockUseNavigate).toHaveBeenCalledWith("/myProjects");
   });
