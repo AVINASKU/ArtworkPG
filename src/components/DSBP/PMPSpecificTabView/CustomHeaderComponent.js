@@ -5,6 +5,7 @@ import { TabHeaderWrapper } from './PMPSpecificTabView.styled';
 function CustomHeaderComponent({ tabHeaderDetails, index, handleDelete }) {
 
     const isPOApresernt = () => {
+        console.log("tabHeaderDetails", tabHeaderDetails)
         if (typeof (tabHeaderDetails.description) === "object") {
             if (tabHeaderDetails.description.POA_POANumber != "" && tabHeaderDetails.description.RTA_POADescription != "") {
                 return true
