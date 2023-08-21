@@ -208,7 +208,7 @@ const CPPFA = ({
       }
     } else {
       azureFile &&
-        (await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "CPPFA")));
+        (await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "Print Feasibility Documents")));
       await submitCPPFA(
         formData,
         `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`,
@@ -226,7 +226,7 @@ const CPPFA = ({
   };
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
-    dispatch(AzureFileDownloadJobs(fileUrl, ProjectID + projectName, BU, "CPPFA"));
+    dispatch(AzureFileDownloadJobs(fileUrl, ProjectID + projectName, BU, "Print Feasibility Documents"));
   };
   return (
     <Dialog

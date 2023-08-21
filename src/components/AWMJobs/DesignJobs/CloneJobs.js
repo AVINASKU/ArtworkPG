@@ -792,7 +792,11 @@ const CloneJobs = ({
             date={date}
             version={version}
             disabled={!checkReadWriteAccess || data.Task_Status === "Complete"}
-            azureSubFolder={showPage}
+            azureSubFolder={
+              showPage === "CNIQ" || showPage === "CCD"
+                ? "Print Feasibility Documents"
+                : "CPT"
+            }
             // ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
             // version={version}
           />

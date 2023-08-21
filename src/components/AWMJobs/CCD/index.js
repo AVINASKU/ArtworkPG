@@ -189,7 +189,7 @@ function CCD() {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-    await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "CCD"));
+    await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "Print Feasibility Documents"));
     await submitConfirmColorDevelopment(formData, id, headers);
     setLoader(false);
     navigate(`/MyTasks`);
@@ -218,7 +218,7 @@ function CCD() {
       DesignIntentList: submitOnlySelectedData,
     };
     console.log("full draft data --->", submitOnlySelectedData);
-    await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "CCD"));
+    await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "Print Feasibility Documents"));
     await saveDesignIntent(formData);
   };
 

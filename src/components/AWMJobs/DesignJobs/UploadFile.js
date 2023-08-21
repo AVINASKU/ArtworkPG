@@ -112,7 +112,7 @@ const UploadFile = ({
         fileUrl,
         ProjectID + projectName,
         BU,
-        "Print Feasibility Documents-" + azureSubFolder
+        azureSubFolder
       )
     );
   };

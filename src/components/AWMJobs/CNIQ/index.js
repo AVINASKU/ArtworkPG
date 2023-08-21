@@ -185,7 +185,7 @@ function CNIQ() {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-    await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "CNIQ"));
+    await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "Print Feasibility Documents"));
     await submitConfirmInkQualification(formData, id, headers);
     setLoader(false);
     navigate("/MyTasks");
@@ -225,7 +225,7 @@ function CNIQ() {
       IQList: submitOnlySelectedData,
     };
     console.log("full draft data --->", formData);
-    await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "CNIQ"));
+    await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "Print Feasibility Documents"));
     await saveInkQualification(formData);
     setLoader(false);
     navigate("/MyTasks");
