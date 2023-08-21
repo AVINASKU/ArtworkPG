@@ -61,6 +61,13 @@ function DNPF() {
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
     }
   }, [TaskDetailsData]);
+
+  useEffect(()=>{
+    if(CD.length< 1){
+      addNewEmptyDesign();
+    }
+  },[CD])
+
   const handleCancel = () => {
     return navigate(`/MyTasks`);
   };
