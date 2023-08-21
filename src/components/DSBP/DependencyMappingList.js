@@ -43,7 +43,7 @@ const DependencyMappingList = ({
   selectAllChecked,
   isSearch,
   columnNames,
-  handleNewGaBrief
+  handleNewGaBrief,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -64,7 +64,7 @@ const DependencyMappingList = ({
   useEffect(() => {
     setCustomizeViewFields(customizeViewFields);
   }, [customizeViewFields]);
-  
+
   const projectNameOnClick = (e, options) => {
     op.current.toggle(e);
     setSelectedColumnName(options);
@@ -74,6 +74,7 @@ const DependencyMappingList = ({
     let dependencyColumnNames = JSON.parse(
       localStorage.getItem("setDependencyMappingColumnNames")
     );
+    console.log("options111", options.AWM_RDT_Page);
     const attributesData = {
       DMColumnNames: dependencyColumnNames,
       DMMappingData: dependencyMappingData,
@@ -180,7 +181,15 @@ const DependencyMappingList = ({
   );
 
   const renderHeader = (field, col) => {
-    let splittedCol = field.split("_").join(" ");
+    let field1 = field;
+    if (
+      field === "AWM_Supporting_PMP_Design" ||
+      field === "AWM_Other_Reference"
+    ) {
+      field1 = field + "_" + "(optional)";
+    }
+
+    let splittedCol = field1.split("_").join(" ");
     let isFilterActivated =
       col?.freeze === true || col?.sortAtoZ === true || col?.sortZtoA === true;
 
@@ -192,18 +201,18 @@ const DependencyMappingList = ({
             className="p-checkbox-box p-highlight"
             checked={selectAllChecked}
             onChange={handleSelectAll}
-            disabled = {dependencyMappingData === null}
+            disabled={dependencyMappingData === null}
           />
         </div>
       );
     }
+
     return (
       <span key={field}>
         <img
           src={filter}
           key={field}
           alt="Column Filter"
-          style={{ height: 14, paddingLeft: 5, paddingRight: 5 }}
           onClick={(e) => projectNameOnClick(e, field)}
           className={
             isFilterActivated
@@ -239,26 +248,26 @@ const DependencyMappingList = ({
               <Form.Select
                 placeholder="Select"
                 value={options[field]}
-                onChange={(e) =>
-                  updateDropDownData(
-                    e.target.value,
-                    "AWM_GA_Brief",
-                    options.DSBP_PMP_PIMaterialID
-                  )
-                }
+                onChange={(e) => {
+                  const selectedValue = e.target.value;
+                    updateDropDownData(
+                      e.target.value,
+                      "AWM_GA_Brief",
+                      options.DSBP_PMP_PIMaterialID
+                    );
+                }}
                 style={{ width: "80%", fontSize: 12 }}
               >
                 <option value="">Select</option>
 
                 {GABriefData?.map((data, index) =>
                   data.File_Name === "New" ? (
-                    <option key={`${data.File_Name}_${index}`} value={data.File_Name}>
-                      <a
-                        className="flex flex-column text-left ml-3"
-                        onClick={(event) => handleNewGaBrief(event)}
-                      >
-                        {data.File_Name} newww
-                      </a>
+                    <option
+                      key={data.File_Name}
+                      value={data.File_Name}
+                      style={{ color: "blue" }}
+                    >
+                      {data.File_Name}
                     </option>
                   ) : (
                     <option key={data.File_Name} value={data.File_Name}>
@@ -271,7 +280,7 @@ const DependencyMappingList = ({
           </div>
         )}
 
-        {field === "AWM_CDPT_Page" && (
+        {field === "AWM_CDPT_Page" && CDPTPageData?.length > 1 && (
           <div>
             <MultiSelect
               value={options[field]}
@@ -288,13 +297,13 @@ const DependencyMappingList = ({
                       label: obj.AWM_Design_Job_Name,
                       value: obj.AWM_Design_Job_ID,
                       disabled:
-                        (options[field].length &&
-                          options[field].includes("NPF_DJobN/A") &&
+                        (options[field]?.length &&
+                          options[field]?.includes("NPF_DJobN/A") &&
                           obj.AWM_Design_Job_ID !== "NPF_DJobN/A") ||
-                        (options[field].length &&
-                          !options[field].includes("NPF_DJobN/A") &&
+                        (options[field]?.length &&
+                          !options[field]?.includes("NPF_DJobN/A") &&
                           obj.AWM_Design_Job_ID === "NPF_DJobN/A"),
-                    }))
+                    })).filter((option) => option.label !== "")
                   : []
               }
               filter
@@ -322,13 +331,13 @@ const DependencyMappingList = ({
                       label: obj.AWM_Design_Job_Name,
                       value: obj.AWM_Design_Job_ID,
                       disabled:
-                        (options[field].length &&
-                          options[field].includes("DT_DJobN/A") &&
+                        (options[field]?.length &&
+                          options[field]?.includes("DT_DJobN/A") &&
                           obj.AWM_Design_Job_ID !== "DT_DJobN/A") ||
-                        (options[field].length &&
-                          !options[field].includes("DT_DJobN/A") &&
+                        (options[field]?.length &&
+                          !options[field]?.includes("DT_DJobN/A") &&
                           obj.AWM_Design_Job_ID === "DT_DJobN/A"),
-                    }))
+                    })).filter((option) => option.label !== "")
                   : []
               }
               filter
@@ -338,7 +347,7 @@ const DependencyMappingList = ({
             />
           </div>
         )}
-        {field === "AWM_CIC_Matrix" &&
+        {/* {field === "AWM_CIC_Matrix" &&
           (options.AWM_CIC_Needed === "" ||
           !options.AWM_CIC_Needed ||
           options.AWM_CIC_Needed === "No" ||
@@ -377,7 +386,7 @@ const DependencyMappingList = ({
                 CIC Matrix & CIC's
               </span>
             </div>
-          ))}
+          ))} */}
 
         {field === "AWM_IQ_Page" && (
           <div>
@@ -396,13 +405,13 @@ const DependencyMappingList = ({
                       label: obj.AWM_Design_Job_Name,
                       value: obj.AWM_Design_Job_ID,
                       disabled:
-                        (options[field].length &&
-                          options[field].includes("IQ_DJobN/A") &&
+                        (options[field]?.length &&
+                          options[field]?.includes("IQ_DJobN/A") &&
                           obj.AWM_Design_Job_ID !== "IQ_DJobN/A") ||
-                        (options[field].length &&
-                          !options[field].includes("IQ_DJobN/A") &&
+                        (options[field]?.length &&
+                          !options[field]?.includes("IQ_DJobN/A") &&
                           obj.AWM_Design_Job_ID === "IQ_DJobN/A"),
-                    }))
+                    })).filter((option) => option.label !== "")
                   : []
               }
               filter
@@ -450,21 +459,21 @@ const DependencyMappingList = ({
               style={{ textAlign: "-webkit-center" }}
             >
               <Form.Control
-                type="number"
+                type="text"
                 maxLength={8}
                 value={options[field]}
-                onChange={(e) =>
-                  updateDropDownData(
-                    e.target.value,
-                    "AWM_Other_Reference",
-                    options.DSBP_PMP_PIMaterialID
-                  )
-                }
-                // disabled={
-                //   options.AWM_CIC_Needed === "Yes" ||
-                //   options.AWM_CIC_Needed === "No"
-                // }
-                style={{ width: "80%", fontSize: 12 }}
+                onChange={(e) => {
+                  const inputValue = e.target.value.replace(/[^0-9]/g, "");
+                  // Limit the input to 8 characters
+                  if (inputValue.length <= 8) {
+                    updateDropDownData(
+                      inputValue,
+                      "AWM_Other_Reference",
+                      options.DSBP_PMP_PIMaterialID
+                    );
+                  }
+                }}
+                style={{ width: "80%", fontSize: 12, height: "50%" }}
               ></Form.Control>
             </Form.Group>
           ))}
@@ -564,72 +573,98 @@ const DependencyMappingList = ({
   };
 
   const dynamicColumns = () => {
-    let dependencyColumnNames = JSON.parse(
+    let dependencyColumnNames1 = JSON.parse(
       localStorage.getItem("setDependencyMappingColumnNames")
     );
-    if(!dependencyColumnNames) return null;
+
+    const dependencyColumnNames2 =
+      CDPTPageData?.length === 1
+        ? dependencyColumnNames1.filter(
+            (item) => item.field !== "AWM_CDPT_Page"
+          )
+        : dependencyColumnNames1;
+    const dependencyColumnNames3 =
+      RDTData?.length === 1
+        ? dependencyColumnNames2.filter((item) => item.field !== "AWM_RDT_Page")
+        : dependencyColumnNames2;
+    const dependencyColumnNames =
+      IQData?.length === 1
+        ? dependencyColumnNames3.filter((item) => item.field !== "AWM_IQ_Page")
+        : dependencyColumnNames3;
+
+    if (!dependencyColumnNames) return null;
 
     let jsonValue = customizeViewFields
       ? JSON.parse(customizeViewFields)
       : null;
-      if (jsonValue && Object.keys(jsonValue).length !== 0){
-        let selectedData = jsonValue?.selectedFields?.fieldsData || [];
-        let freezedData = jsonValue?.freezedColumns?.fieldsData || [];
-        const filteredColumns = [];
-        // Add freezedData columns in the specified order
-        freezedData?.forEach((fieldName) => {
-          const column = dependencyColumnNames?.find((col) => col.field === fieldName);
-          if (column) {
-            column.freeze = true;
-            filteredColumns.push(column);
-          }
-        });
-        // Add selectedData columns in the specified order
-        selectedData?.forEach((fieldName) => {
-          const column = dependencyColumnNames?.find((col) => col.field === fieldName);
-          if (column) {
-            filteredColumns.push(column);
-          }
-        });
-        if (filteredColumns && filteredColumns.length) {
-          return [
-            <Column
-              key="checkbox"
-              body={renderMappingBody}
-              frozen={true}
-              columnKey="checkbox"
-              header={() => renderHeader("checkbox")}
-              style={{ width: "40px" }}
-            />,
-            ...filteredColumns.map((col, index) => {
-              // console.log("field col-----", col);
-              return (
-                <Column
-                  field={col.field}
-                  header={renderHeader(col.field, col)}
-                  frozen={col.freeze}
-                  className={col.freeze ? "font-bold" : ""}
-                  // bodyClassName={"change-bg-color"}
-                  headerClassName={
-                    col.group === 2 ? "pink-bg-color" : "blue-bg-color"
-                  }
-                  body={renderMappingBody}
-                  key={col.field}
-                  columnKey={col.field}
-                  showFilterMenu={false}
-                  alignFrozen="left"
-                  filterField={col.field}
-                  style={{
-                    // width: col.width,
-                    width: 200,
-                    height: 30,
-                  }}
-                />
-              );
-            }),
-          ];
+    if (jsonValue && Object.keys(jsonValue).length !== 0) {
+      let selectedData = jsonValue?.selectedFields?.fieldsData || [];
+      let freezedData = jsonValue?.freezedColumns?.fieldsData || [];
+      const filteredColumns = [];
+      // Add freezedData columns in the specified order
+      freezedData?.forEach((fieldName) => {
+        const column = dependencyColumnNames?.find(
+          (col) => col.field === fieldName
+        );
+        if (column) {
+          column.freeze = true;
+          filteredColumns.push(column);
         }
-      } else {
+      });
+      // Add selectedData columns in the specified order
+      selectedData?.forEach((fieldName) => {
+        const column = dependencyColumnNames?.find(
+          (col) => col.field === fieldName
+        );
+        if (column) {
+          filteredColumns.push(column);
+        }
+      });
+      console.log("filteredColumns", filteredColumns);
+      if (filteredColumns && filteredColumns.length) {
+        return [
+          <Column
+            key="checkbox"
+            body={renderMappingBody}
+            frozen={true}
+            columnKey="checkbox"
+            header={() => renderHeader("checkbox")}
+            style={{ width: "40px" }}
+          />,
+          ...filteredColumns.map((col, index) => {
+            // console.log("field col-----", col);
+            return (
+              <Column
+                field={col.field}
+                header={renderHeader(
+                  col.field,
+                  col,
+                  CDPTPageData,
+                  IQData,
+                  RDTData
+                )}
+                frozen={col.freeze}
+                className={col.freeze ? "font-bold" : ""}
+                // bodyClassName={"change-bg-color"}
+                headerClassName={
+                  col.group === 2 ? "pink-bg-color" : "blue-bg-color"
+                }
+                body={renderMappingBody}
+                key={col.field}
+                columnKey={col.field}
+                showFilterMenu={false}
+                alignFrozen="left"
+                filterField={col.field}
+                style={{
+                  width: col.width,
+                  height: 30,
+                }}
+              />
+            );
+          }),
+        ];
+      }
+    } else {
       return [
         <Column
           key="checkbox"
@@ -644,7 +679,13 @@ const DependencyMappingList = ({
           return (
             <Column
               field={col.field}
-              header={renderHeader(col.field, col)}
+              header={renderHeader(
+                col.field,
+                col,
+                CDPTPageData,
+                IQData,
+                RDTData
+              )}
               frozen={col.freeze}
               className={col.freeze ? "font-bold" : ""}
               // bodyClassName={"change-bg-color"}
