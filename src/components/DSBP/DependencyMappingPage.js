@@ -7,9 +7,11 @@ import { useSelector } from "react-redux";
 import {
   getDependencyMappingDetails,
   onSubmitDependencyMappingAction,
+  createNewGaBriefTask,
 } from "../../apis/dsbpApi";
 import DependencyMappingList from "./DependencyMappingList";
 import "./index.scss";
+import { cloneDeep } from "lodash";
 
 const headerName = "Dependency Mapping";
 const DependencyMapping = () => {
@@ -25,6 +27,7 @@ const DependencyMapping = () => {
   const [selectedFields, setSelectedFields] = useState([]);
   const [tableRender, setTableRender] = useState(false);
   const [isSearch, isSearchSet] = useState(false);
+  const [isSubmitEnabled,setIsSubmitEnabled] = useState(false);
   const [filteredDependencyMappingData, setFiltersDependencyMappingData] =
     useState([]);
   const [dropdownDataForLayoutAndDesign, setDropdownDataForLayoutAndDesign] =
@@ -35,13 +38,13 @@ const DependencyMapping = () => {
   const [loader, setLoader] = useState(false);
   const [tableLoader, setTableLoader] = useState(false);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
-  const [customizeViewFields, setCustomizeViewFields] = useState(localStorage.getItem("customizeViewDependancyFields"));
+  const [customizeViewFields, setCustomizeViewFields] = useState(
+    localStorage.getItem("customizeViewDependancyFields")
+  );
   const selectedProjectDetails = projectSetup.selectedProject;
   const ProjectID = selectedProjectDetails?.Project_ID;
   const navigate = useNavigate();
   const userHasAccess = !hasAllAccess();
-
-  //  setCDPTPageData, setIQData, setRDTData
 
   const handleCancel = () => {
     return navigate(`/myProjects`);
@@ -81,14 +84,21 @@ const DependencyMapping = () => {
     const filteredDataToSubmit = updatedData.filter(item => item.updated === true);
     const data = updatedData.filter(data => data?.AWM_CIC_Needed === "Yes" && data);
     const dropdownDataForLayoutAndDesign1 = data.map(item => item.DSBP_PMP_PIMaterialID);
+
+   let filteredData =  filteredDataToSubmit.filter((ele)=>ele?.AWM_CIC_Needed === "No" && ele?.AWM_Supporting_PMP_Layout === "")
+    let setSubmitEnable = filteredData.length ? false : true;
+    console.log("filteredDataToSubmit", setSubmitEnable, filteredData);
+setIsSubmitEnabled(setSubmitEnable);
   
     setDropdownDataForLayoutAndDesign(dropdownDataForLayoutAndDesign1);
     setDependencyMappingData(updatedData);
     setSubmittedData(filteredDataToSubmit);
     setDataUpdated(!dataUpdated);
+    
   };
 
   useEffect(() => {
+  setLoader(true);
     fetchData();
   }, [ProjectID]);
 
@@ -135,6 +145,8 @@ const DependencyMapping = () => {
       isGABrifData,
     } = await getDependencyMappingDetails(ProjectID);
 
+    setLoader(false);
+
     if (dependencyTableData && dependencyTableData.length) {
       let data = dependencyTableData.filter(
         (data) =>
@@ -156,27 +168,21 @@ const DependencyMapping = () => {
           DSBP_PMP_PIMaterialNumber: item.DSBP_PMP_PIMaterialNumber,
         };
 
-        if (isRDTData && isRDTData.length > 1) {
           transformedItem.AWM_RDT_Page =
             item?.Preselected_AWM_RDT_Page?.map(
               (item) => item.AWM_Design_Job_ID
             ) || [];
-        }
 
-        if (isCDPTData && isCDPTData.length > 1) {
           transformedItem.AWM_CDPT_Page =
             item?.Preselected_AWM_CDPT_Page?.map(
               (item) => item.AWM_Design_Job_ID
             ) || [];
-        }
-        if (isIQData && isIQData.length > 1) {
+        
           transformedItem.AWM_IQ_Page =
             item?.Preselected_AWM_IQ_Page?.map(
               (item) => item.AWM_Design_Job_ID
             ) || [];
-        }
-        console.log("transform item");
-
+        
         transformedItem = {
           ...transformedItem,
           AWM_CIC_Needed: item?.AWM_CIC_Page?.[0]?.AWM_CIC_Needed || "",
@@ -217,6 +223,7 @@ const DependencyMapping = () => {
       let columnInLocal = JSON.parse(
         localStorage.getItem("setDependencyMappingColumnNames")
       );
+
       if (!columnInLocal || !columnInLocal.length) {
         let groupedColumnNames = [];
 
@@ -239,6 +246,7 @@ const DependencyMapping = () => {
           groupedColumnNames.push(groupedObject);
           return groupedColumnNames;
         });
+        
         localStorage.setItem(
           "setDependencyMappingColumnNames",
           JSON.stringify(groupedColumnNames)
@@ -249,8 +257,6 @@ const DependencyMapping = () => {
       setIQData(isIQData);
       setRDTData(isRDTData);
       setGABriefData(isGABrifData);
-
-      // setDependencyColumnNames(groupedColumnNames);
       setDependencyMappingData(transformedData);
     }
     setTableLoader(false)
@@ -289,10 +295,9 @@ const DependencyMapping = () => {
           });
           DSBP_RDT_Page_data = DSBP_RDT_Page.map((item) => ({
             Design_Job_Name: item.AWM_Design_Job_Name,
-            Design_Job_ID:item.AWM_Design_Job_ID ,
+            Design_Job_ID: item.AWM_Design_Job_ID,
           }));
         }
-        
         submittedObject.DSBP_RDT_Page = DSBP_RDT_Page_data;
 
         //IQ
@@ -305,7 +310,7 @@ const DependencyMapping = () => {
           });
           DSBP_IQ_Page_data = DSBP_IQ_Page.map((item) => ({
             Design_Job_Name: item.AWM_Design_Job_Name,
-            Design_Job_ID:item.AWM_Design_Job_ID,
+            Design_Job_ID: item.AWM_Design_Job_ID,
           }));
         }
         submittedObject.DSBP_IQ_Page = DSBP_IQ_Page_data;
@@ -323,16 +328,26 @@ const DependencyMapping = () => {
           ? ele.AWM_Other_Reference
           : "";
         submittedObject["AWM_GABrief"] = ele?.AWM_GA_Brief?.length
-          ? ele.AWM_GA_Brief
+          ? ele.AWM_GA_Brief === "New"
+            ? ""
+            : ele.AWM_GA_Brief
           : "";
 
         submittedJson.push(submittedObject);
       });
     }
-    console.log("submitted json", submittedJson);
+    const newAWMGAItemsCount = submittedData.filter(item => item.AWM_GA_Brief === "New").length;
+    console.log("submitted json", submittedJson, submittedData, newAWMGAItemsCount);
+    
     let formData = {
       DSBPValues: submittedJson,
     };
+
+    // Call the API based on the count
+    for (let i = 0; i < newAWMGAItemsCount; i++) {
+      handleNewGaBrief(); // Replace this with your API call function
+    }
+
     let resp = await onSubmitDependencyMappingAction(formData, ProjectID);
     if (resp.status === 200 || resp.status === 201) {
       setSubmittedData([]);
@@ -366,11 +381,23 @@ const DependencyMapping = () => {
     setDependencyMappingData(dependencyMappingData);
     setFiltersDependencyMappingData([]);
     setTableRender(!tableRender);
+    setSelectedFields([]);
   };
 
   const onGlobalFilterChange = (e, colName) => {
-    const value = e.value;
-    setSelectedFields(value);
+
+const value = e.value;
+    let temp = cloneDeep(selectedFields);
+    temp[colName] = value;
+    setSelectedFields(temp);
+    // setSelectedFields(value);
+
+    let allValues=[];
+    let keys = Object.keys(temp);
+    keys.forEach((key)=>{
+      allValues = [...allValues, ...temp[key]]
+    })
+
     const artworkValues = value;
 
     if (artworkValues.length) {
@@ -387,7 +414,6 @@ const DependencyMapping = () => {
         }
       });
       setFiltersDependencyMappingData(filteredDsbpData);
-      // setDependencyMappingData(filteredDsbpData);
     } else setFiltersDependencyMappingData([]);
   };
 
@@ -419,12 +445,20 @@ const DependencyMapping = () => {
     });
   }
 
-  const handleNewGaBrief = (event) =>{
-  console.log("handleNewGaBrief", event, event.value);
-  }
+  const handleNewGaBrief = async () => {
+    let formData = {
+      NewGABTask: "Yes",
+      AWM_Project_ID: ProjectID,
+      AWM_Task_ID: "",
+      Project_Name: selectedProjectDetails?.Project_Name,
+      BU: selectedProjectDetails?.BU,
+      Region: selectedProjectDetails?.Project_region,
+    };
+    let res = await createNewGaBriefTask(formData);
+    console.log("res", res);
+  };
 
   return (
-    console.log("isSubmitEnable", isSubmitEnable),
     <div className="artwork-dsbp myProjectAnddAllProjectList dependency-mapping">
       {loader ? (
         <Loading />
@@ -459,8 +493,9 @@ const DependencyMapping = () => {
             isSubmitEnable={isSubmitEnable}
             setSubmittedData={setSubmittedData}
             submittedData={submittedData}
+            dsbpPmpData={dependencyMappingData}
           />
-          {tableLoader ? (
+          {loader ? (
             <Loading />
           ) : (
             <DependencyMappingList
@@ -498,8 +533,9 @@ const DependencyMapping = () => {
             handleCancel={handleCancel}
             hideSaveButton={true}
             onSubmit={onSubmit}
-            formValid={!isSubmitEnable}
+            formValid={!isSubmitEnable || !isSubmitEnabled}
             checkReadWriteAccess={!false}
+            submitAndSave="Save"
           />
         </>
       )}
