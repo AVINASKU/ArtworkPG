@@ -6,38 +6,24 @@ import { Accordion } from "react-bootstrap";
 import { Loading } from "../../../utils";
 import { DMTabValuesAction } from "../../../store/actions/DMTabValuesActions";
 import {
-  onSubmitDsbpAction,
-  getDsbpPMPDetails,
   onSubmitDependencyMappingAction,
   getDependencyMappingDetails,
+  createNewGaBriefTask,
 } from "../../../apis/dsbpApi";
-import DsbpCommonPopup from "../DsbpCommonPopup";
-import DsbpRejectDialog from "../RejectDialog";
-import DsbpActionDialog from "../DsbpActionDialog";
 import FooterButtons from "../../AWMJobs/DesignJobs/FooterButtons";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { MultiSelect } from "primereact/multiselect";
-import { cloneDeep } from "lodash";
+import CustomHeader from "./CustomHeader";
 
 const DMPMPSpecificTabView = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { dmTabValuesData } = useSelector((state) => state.DMTabValuesReducer);
   const { selectedProject } = useSelector((state) => state.ProjectSetupReducer);
-  const { DropDownValuesData } = useSelector(
-    (state) => state.DropDownValuesReducer
-  );
   const [storesTabList, setStoresTabDataList] = useState(dmTabValuesData);
   const [filteredDataList, setFilteredDataList] = useState(dmTabValuesData);
-  const [actionDropDownValues, setActionDropDownValues] = useState([]);
   const [tabPanelList, setTabPanelList] = useState(1);
-  const [onChangeData, setOnChangeData] = useState(false);
-  const [rejectDialog, setRejectDialog] = useState(false);
-  const [rejectFormData, setRejectFormData] = useState({});
-  const [handleYesAddToPRoject, setHandleYesAddToPRoject] = useState(false);
-  const [aiseList, setAISEList] = useState([]);
-  const [assemblyMechanismList, setAssemblyMechanismList] = useState([]);
   const [cdpt, setCDPT] = useState("");
   const [rdt, setRDT] = useState("");
   const [iq, setIQ] = useState("");
@@ -46,85 +32,19 @@ const DMPMPSpecificTabView = () => {
   const [pmpLayout, setPMPLayout] = useState("");
   const [otherRef, setOtherRef] = useState("");
   const [gaBrief, setGaBrief] = useState("");
-
-  const [sellable, setSellable] = useState("");
   const [formData, setFormData] = useState({});
   const [selectedTab, setSelectedTabData] = useState({});
   const [loader, setLoader] = useState(false);
-  const [awmOtherReference, setAwmOtherReference] = useState("");
   const { dmTabAttributesData } = useSelector(
     (state) => state.DMTabValuesReducer
   );
 
-  // const dmTabData = cloneDeep(dmTabAttributesData);
   const [dmTabData, setDmTabData] = useState(dmTabAttributesData);
   console.log("dmTabData", dmTabData);
 
   const navigateToDSBP = () => {
-    navigate(`/myProjects/mapping/${selectedProject?.Project_ID}`);
+    navigate(`/myProjects/dependencyMapping/${selectedProject?.Project_ID}`);
   };
-
-  const BU = selectedProject?.BU;
-  // check whether project is from home care or baby care////
-  let isBUHomeCare = false;
-  if (BU === "Home Care") {
-    isBUHomeCare = true;
-  }
-
-  const addToProjectList = [
-    { name: "Yes", code: "Yes" },
-    { name: "No", code: "No" },
-    { name: "Reject", code: "Reject" },
-  ];
-
-  const addToProjectListYes = [{ name: "Yes", code: "Yes" }];
-
-  const addToProjectListNo = [
-    { name: "Yes", code: "Yes" },
-    { name: "No", code: "No" },
-  ];
-
-  const addToProjectListReject = [
-    { name: "Yes", code: "Yes" },
-    { name: "Reject", code: "Reject" },
-  ];
-
-  const updateMappingData = (value, columnName, id) => {
-    const tempData = cloneDeep(dmTabData);
-    console.log("value", value, columnName);
-    tempData.DMMappingData.forEach((data) => {
-      if (data.DSBP_PMP_PIMaterialID === id) {
-        data[columnName] = value;
-        if (columnName === "AWM_CIC_Needed") {
-          if (value !== "No") {
-            data["AWM_Supporting_PMP_Design"] = "";
-            data["AWM_Supporting_PMP_Layout"] = "";
-          }
-        }
-      }
-    });
-    setDmTabData(tempData);
-    console.log("dmTabData.DMMappingData", dmTabData.DMMappingData);
-    console.log("tempData.DMMappingData", tempData.DMMappingData);
-  };
-
-  //   useEffect(() => {
-  //     if (DropDownValuesData) {
-  //       setActionDropDownValues(
-  //         DropDownValuesData?.ArtworkAgilityTasksPage.Artwork_Alignment || []
-  //       );
-  //     }
-  //   }, [DropDownValuesData]);
-
-  //   useEffect(() => {
-  //     if (
-  //       actionDropDownValues !== undefined &&
-  //       actionDropDownValues.length !== 0
-  //     ) {
-  //       setAISEList(actionDropDownValues.AISE);
-  //       setAssemblyMechanismList(actionDropDownValues.Assembly_Mechanism);
-  //     }
-  //   }, [actionDropDownValues]);
 
   useEffect(() => {
     setFilteredDataList(dmTabValuesData);
@@ -132,7 +52,6 @@ const DMPMPSpecificTabView = () => {
 
   useEffect(() => {
     setTabPanelList(dmTabValuesData?.length - 1);
-    console.log("###insideDMPMPSpecificTabView: ", dmTabValuesData);
     dispatch(DMTabValuesAction(dmTabValuesData));
   }, []);
 
@@ -140,28 +59,15 @@ const DMPMPSpecificTabView = () => {
     if (tabPanelList >= storesTabList?.length) {
       setTabPanelList(storesTabList.length - 1);
     }
-    console.log("###insideDMPMPSpecificTabView: ", storesTabList);
     storesTabList !== undefined && dispatch(DMTabValuesAction(storesTabList));
     setSelectedTabData(dmTabValuesData[tabPanelList]);
     if (dmTabValuesData[tabPanelList]) {
       const selectedTabData = dmTabValuesData[tabPanelList];
-      console.log("selectedTabData1: ", selectedTabData);
       if (selectedTabData?.description !== undefined) {
-        setCDPT(
-          selectedTabData?.description?.AWM_CDPT_Page?.map(
-            (obj) => obj.AWM_Design_Job_ID
-          )
-        );
-        setRDT(
-          selectedTabData?.description?.AWM_RDT_Page?.map(
-            (obj) => obj.AWM_Design_Job_ID
-          )
-        );
-        setIQ(
-          selectedTabData?.description?.AWM_IQ_Page?.map(
-            (obj) => obj.AWM_Design_Job_ID
-          )
-        );
+        console.log("selected tab data", selectedTabData?.description);
+        setCDPT(selectedTabData?.description?.AWM_CDPT_Page);
+        setRDT(selectedTabData?.description?.AWM_RDT_Page);
+        setIQ(selectedTabData?.description?.AWM_IQ_Page);
         setCICNeeded(selectedTabData?.description?.AWM_CIC_Needed);
         setPMPDesign(selectedTabData?.description?.AWM_Supporting_PMP_Design);
         setPMPLayout(selectedTabData?.description?.AWM_Supporting_PMP_Layout);
@@ -178,7 +84,7 @@ const DMPMPSpecificTabView = () => {
           AWM_SupportingPMPDesign:
             selectedTabData?.description?.AWM_Supporting_PMP_Design,
           AWM_OtherReference: selectedTabData?.description?.AWM_Other_Reference,
-          AWM_GABrief: selectedTabData?.description?.AWM_GA_Brief,
+          AWM_GABrief: selectedTabData?.description?.AWM_GA_Brief || " ",
           DSBP_RDT_Page: selectedTabData?.description?.AWM_RDT_Page,
           DSBP_CDPT_Page: selectedTabData?.description?.AWM_CDPT_Page,
           DSBP_IQ_Page: selectedTabData?.description?.AWM_IQ_Page,
@@ -192,23 +98,10 @@ const DMPMPSpecificTabView = () => {
     setSelectedTabData(dmTabValuesData[tabPanelList]);
     if (dmTabValuesData[tabPanelList]) {
       const selectedTabData = dmTabValuesData[tabPanelList];
-      console.log("selectedTabData2: ", selectedTabData);
       if (selectedTabData?.description !== undefined) {
-        setCDPT(
-          selectedTabData?.description?.AWM_CDPT_Page?.map(
-            (obj) => obj.AWM_Design_Job_ID
-          )
-        );
-        setRDT(
-          selectedTabData?.description?.AWM_RDT_Page?.map(
-            (obj) => obj.AWM_Design_Job_ID
-          )
-        );
-        setIQ(
-          selectedTabData?.description?.AWM_IQ_Page?.map(
-            (obj) => obj.AWM_Design_Job_ID
-          )
-        );
+        setCDPT(selectedTabData?.description?.AWM_CDPT_Page);
+        setRDT(selectedTabData?.description?.AWM_RDT_Page);
+        setIQ(selectedTabData?.description?.AWM_IQ_Page);
         setCICNeeded(selectedTabData?.description?.AWM_CIC_Needed);
         setPMPDesign(selectedTabData?.description?.AWM_Supporting_PMP_Design);
         setPMPLayout(selectedTabData?.description?.AWM_Supporting_PMP_Layout);
@@ -225,7 +118,7 @@ const DMPMPSpecificTabView = () => {
           AWM_SupportingPMPDesign:
             selectedTabData?.description?.AWM_Supporting_PMP_Design,
           AWM_OtherReference: selectedTabData?.description?.AWM_Other_Reference,
-          AWM_GABrief: selectedTabData?.description?.AWM_GA_Brief,
+          AWM_GABrief: selectedTabData?.description?.AWM_GA_Brief || " ",
           DSBP_RDT_Page: selectedTabData?.description?.AWM_RDT_Page,
           DSBP_CDPT_Page: selectedTabData?.description?.AWM_CDPT_Page,
           DSBP_IQ_Page: selectedTabData?.description?.AWM_IQ_Page,
@@ -241,66 +134,43 @@ const DMPMPSpecificTabView = () => {
     }
   }, [dmTabValuesData]);
 
+    const handleNewGaBrief = async () => {
+    let formData = {
+      NewGABTask: "Yes",
+      AWM_Project_ID: selectedProject?.Project_ID,
+      AWM_Task_ID: "",
+      Project_Name: selectedProject?.Project_Name,
+      BU: selectedProject?.BU,
+      Region: selectedProject?.Project_region,
+    };
+    let res = await createNewGaBriefTask(formData);
+    console.log("res", res);
+  };
+
   const handleCDPTChange = (e) => {
     console.log("e.target.value", e.target.value);
     setCDPT(e.target.value);
 
-    const DSBP_CDPT_Page = [];
-    dmTabData.CDPTPageData.find((data) => {
-      e.target.value.forEach((val) => {
-        if (data.AWM_Design_Job_ID === val) {
-          DSBP_CDPT_Page.push({
-            Design_Job_Name: data.AWM_Design_Job_Name,
-            Design_Job_ID: data.AWM_Design_Job_ID,
-          });
-        }
-      });
-    });
-    console.log("DSBP_CDPT_Page: ", DSBP_CDPT_Page);
     setFormData({
       ...formData,
-      DSBP_CDPT_Page,
+      DSBP_CDPT_Page: e.target.value,
     });
   };
   const handleRDTchange = (e) => {
     setRDT(e.target.value);
 
-    const DSBP_RDT_Page = [];
-    dmTabData.RDTData.forEach((data) => {
-      e.target.value.forEach((val) => {
-        if (data.AWM_Design_Job_ID === val) {
-          DSBP_RDT_Page.push({
-            Design_Job_Name: data.AWM_Design_Job_Name,
-            Design_Job_ID: data.AWM_Design_Job_ID,
-          });
-        }
-      });
-    });
-    console.log("DSBP_RDT_Page: ", DSBP_RDT_Page);
     setFormData({
       ...formData,
-      DSBP_RDT_Page,
+      rdt,
     });
   };
 
   const handleIQChange = (e) => {
     setIQ(e.target.value);
 
-    const DSBP_IQ_Page = [];
-    dmTabData.IQData.forEach((data) => {
-      e.target.value.forEach((val) => {
-        if (data.AWM_Design_Job_ID === val) {
-          DSBP_IQ_Page.push({
-            Design_Job_Name: data.AWM_Design_Job_Name,
-            Design_Job_ID: data.AWM_Design_Job_ID,
-          });
-        }
-      });
-    });
-    console.log("DSBP_IQ_Page: ", DSBP_IQ_Page);
     setFormData({
       ...formData,
-      DSBP_IQ_Page,
+      DSBP_IQ_Page: e.target.value,
     });
   };
 
@@ -333,15 +203,20 @@ const DMPMPSpecificTabView = () => {
     });
   };
   const handleOtherRefChange = (e) => {
-    setOtherRef(e.target.value);
-    setFormData({
-      ...formData,
-      AWM_OtherReference: e.target.value,
-    });
+    const inputValue = e.target.value.replace(/[^0-9]/g, "");
+    // Limit the input to 8 characters
+    if (inputValue.length <= 8) {
+      setOtherRef(inputValue);
+      setFormData({
+        ...formData,
+        AWM_OtherReference: inputValue,
+      });
+    }
   };
 
-  const handleGABriefChange = (e) => {
+  const handleGABriefChange = async (e) => {
     setGaBrief(e.target.value);
+
     setFormData({
       ...formData,
       AWM_GABrief: e.target.value,
@@ -353,18 +228,14 @@ const DMPMPSpecificTabView = () => {
   };
 
   const updateMappingTabValuesData = (updatedNewData) => {
-    console.log("updateMappingTabValuesData updatedNewData", updatedNewData);
-    console.log("updateMappingTabValuesData selectedTab", selectedTab);
     let submittionData = {};
     submittionData = {
       tabHeader: selectedTab.tabHeader,
       description: updatedNewData && updatedNewData[0],
     };
-    console.log("updateMappingTabValuesData submittionData", submittionData);
     const indexToUpdate = dmTabValuesData.findIndex(
       (tab) => tab.tabHeader === submittionData.tabHeader
     );
-    console.log("updateMappingTabValuesData indexToUpdate", indexToUpdate);
     if (indexToUpdate !== -1) {
       // Create a copy of the dmTabValuesData array
       const updateMappingTabValuesData = [...dmTabValuesData];
@@ -383,14 +254,65 @@ const DMPMPSpecificTabView = () => {
 
   const onSubmit = async () => {
     setLoader(true);
-    const updatedPmpDetails = { DSBPValues: [formData] };
-    console.log("updatedPmpDetails", updatedPmpDetails);
+    formData.AWM_GABrief = formData?.AWM_GABrief?.length
+      ? formData?.AWM_GABrief
+      : "";
+    setFormData(formData);
 
+    const DSBP_RDT_Page = [];
+    dmTabData.RDTData.forEach((data) => {
+      rdt?.forEach((val) => {
+        if (data.AWM_Design_Job_ID === val) {
+          DSBP_RDT_Page.push({
+            Design_Job_Name: data.AWM_Design_Job_Name,
+            Design_Job_ID: data.AWM_Design_Job_ID,
+          });
+        }
+      });
+    });
+    formData["DSBP_RDT_Page"] = DSBP_RDT_Page;
+
+    const DSBP_CDPT_Page = [];
+    dmTabData.CDPTPageData.find((data) => {
+      cdpt.forEach((val) => {
+        if (data.AWM_Design_Job_ID === val) {
+          DSBP_CDPT_Page.push({
+            Design_Job_Name: data.AWM_Design_Job_Name,
+            Design_Job_ID: data.AWM_Design_Job_ID,
+          });
+        }
+      });
+    });
+    formData["DSBP_CDPT_Page"] = DSBP_CDPT_Page;
+
+    const DSBP_IQ_Page = [];
+    dmTabData.IQData.forEach((data) => {
+      iq.forEach((val) => {
+        if (data.AWM_Design_Job_ID === val) {
+          DSBP_IQ_Page.push({
+            Design_Job_Name: data.AWM_Design_Job_Name,
+            Design_Job_ID: data.AWM_Design_Job_ID,
+          });
+        }
+      });
+    });
+
+    formData["DSBP_IQ_Page"] = DSBP_IQ_Page;
+    const updatedPmpDetails = { DSBPValues: [formData] };
+    console.log("updatedPmpDetails", formData);
+
+    // Call POST API of create new GA Brief
+    if(formData?.AWM_GABrief === "New"){
+     handleNewGaBrief();
+    }
+
+    // Call POST API to save tab data
     await onSubmitDependencyMappingAction(
       updatedPmpDetails,
       selectedProject?.Project_ID
     );
 
+    // Call GET API of dependency mapping
     const {
       dependencyTableData,
       isRDTData,
@@ -398,6 +320,7 @@ const DMPMPSpecificTabView = () => {
       isCDPTData,
       isGABrifData,
     } = await getDependencyMappingDetails(selectedProject?.Project_ID);
+
     const tableData = fetchData(
       dependencyTableData,
       isRDTData,
@@ -405,19 +328,13 @@ const DMPMPSpecificTabView = () => {
       isCDPTData,
       isGABrifData
     );
-    console.log("tableData: ", tableData);
-    // const resp = await getDsbpPMPDetails(selectedProject.Project_ID);
 
     let updatedNewTabData = tableData?.filter(
       (data) =>
         data.DSBP_PMP_PIMaterialID ===
         selectedTab.description.DSBP_PMP_PIMaterialID
     );
-    // updatedNewTabData = updatedNewTabData.map((data) => ({
-    //   DSBP_InitiativeID: resp && resp[0].DSBP_InitiativeID,
-    //   ...data,
-    // }));
-    console.log("updatedNewTabData: ", updatedNewTabData);
+        
     updateMappingTabValuesData(updatedNewTabData);
     // setFormData({});
     setLoader(false);
@@ -437,25 +354,36 @@ const DMPMPSpecificTabView = () => {
           DSBP_PMP_PIMaterialID: item.DSBP_PMP_PIMaterialID,
           DSBP_PMP_PIMaterialNumber: item.DSBP_PMP_PIMaterialNumber,
         };
-        if (isRDTData && isRDTData.length) {
-          transformedItem.AWM_RDT_Page = item.Preselected_AWM_RDT_Page || [];
-        }
 
-        if (isCDPTData && isCDPTData.length) {
-          transformedItem.AWM_CDPT_Page = item.Preselected_AWM_CDPT_Page || [];
-        }
-        if (isIQData && isIQData.length) {
-          transformedItem.AWM_IQ_Page = item.Preselected_AWM_IQ_Page || [];
-        }
+        transformedItem.AWM_RDT_Page =
+          item?.Preselected_AWM_RDT_Page?.map(
+            (item) => item.AWM_Design_Job_ID
+          ) || [];
+
+        transformedItem.AWM_CDPT_Page =
+          item?.Preselected_AWM_CDPT_Page?.map(
+            (item) => item.AWM_Design_Job_ID
+          ) || [];
+
+        transformedItem.AWM_IQ_Page =
+          item?.Preselected_AWM_IQ_Page?.map(
+            (item) => item.AWM_Design_Job_ID
+          ) || [];
 
         transformedItem = {
           ...transformedItem,
-          ...item?.AWM_CIC_Page?.[0],
+          AWM_CIC_Needed: item?.AWM_CIC_Page?.[0]?.AWM_CIC_Needed || "",
+          AWM_Supporting_PMP_Layout:
+            item?.AWM_CIC_Page?.[0]?.AWM_Supporting_PMP_Layout || "",
+          AWM_Supporting_PMP_Design:
+            item?.AWM_CIC_Page?.[0]?.AWM_Supporting_PMP_Design || "",
+          AWM_Other_Reference:
+            item?.AWM_CIC_Page?.[0]?.AWM_Other_Reference || "",
+          AWM_CIC_Matrix: item?.AWM_CIC_Page?.[0]?.AWM_CIC_Matrix || "",
+          AWM_GA_Brief: item?.Preselected_DSBP_GA_Brief || [],
+          AWM_CIC_Matrix_Requested:
+            item?.AWM_CIC_Page?.[0]?.AWM_CIC_Matrix_Requested || "",
         };
-
-        if (isGABrifData && isGABrifData.length) {
-          transformedItem.AWM_GA_Brief = item.Preselected_DSBP_GA_Brief || "";
-        }
 
         transformedItem = {
           ...transformedItem,
@@ -476,45 +404,31 @@ const DMPMPSpecificTabView = () => {
         return transformedItem;
       });
       // console.log("AWM_CIC_Page", isRDTData, isIQData, isCDPTData);
-      let columnNames = Object.keys(transformedData[2]);
-      const filteredColumnNames = columnNames.filter(
-        (property) => property !== "FPCStagingPage"
-      );
+      let columnNames = Object.keys(transformedData[0]);
 
-      let groupedColumnNames = [];
-
-      filteredColumnNames.map((colName) => {
-        let groupedObject = {};
-        let splittedCol = colName.split("_");
-        groupedObject["field"] = colName;
-        groupedObject["width"] = 250;
-        groupedObject["freeze"] = false;
-        if (splittedCol[0] === "DSBP") {
-          groupedObject["group"] = 1;
-        }
-        if (splittedCol[0] === "AWM") {
-          groupedObject["group"] = 2;
-        }
-        if (splittedCol[0] === "DSM") {
-          groupedObject["group"] = 3;
-        }
-        groupedColumnNames.push(groupedObject);
-        return groupedColumnNames;
-      });
-
-      // setCDPTPageData(isCDPTData);
-      // setIQData(isIQData);
-      // setRDTData(isRDTData);
-      // setGABriefData(isGABrifData);
-      // setDependencyColumnNames(groupedColumnNames);
-      // setDependencyMappingData(transformedData);
       console.log("transformedData:", transformedData);
       return transformedData;
     }
   };
 
   const renderData = (tabData, group) => {
-    let allColumns = dmTabData.DMColumnNames;
+    let dependencyColumnNames1 = dmTabData.DMColumnNames;
+
+    const dependencyColumnNames2 =
+      dmTabData?.CDPTPageData?.length === 1
+        ? dependencyColumnNames1.filter(
+            (item) => item.field !== "AWM_CDPT_Page"
+          )
+        : dependencyColumnNames1;
+    const dependencyColumnNames3 =
+      dmTabData?.RDTData?.length === 1
+        ? dependencyColumnNames2.filter((item) => item.field !== "AWM_RDT_Page")
+        : dependencyColumnNames2;
+    const allColumns =
+      dmTabData?.IQData?.length === 1
+        ? dependencyColumnNames3.filter((item) => item.field !== "AWM_IQ_Page")
+        : dependencyColumnNames3;
+
     const groupOneCols = allColumns.filter((col) => col.group === 1);
     const groupTwoCols = allColumns.filter((col) => col.group === 2);
     const groupThreeCols = allColumns.filter((col) => col.group === 3);
@@ -545,10 +459,20 @@ const DMPMPSpecificTabView = () => {
         // const filteredItems = convertedInObject?.filter(
         //   (item) => item && item[value] !== undefined
         // );
+        let field1 = field?.field;
+
+        if (
+          value === "AWM_Supporting_PMP_Design" ||
+          value === "AWM_Other_Reference"
+        ) {
+          field1 = value + "_" + "(optional)";
+        }
+
+        let splittedCol = field1.split("_").join(" ");
 
         return convertedInObject.map((item) => (
           <tr key={item[value]}>
-            <td className="columnWidth">{field.field}</td>
+            <td className="columnWidth">{splittedCol}</td>
             <td>
               {field.field === "AWM_CDPT_Page" && (
                 <div>
@@ -560,7 +484,14 @@ const DMPMPSpecificTabView = () => {
                         ? dmTabData.CDPTPageData.map((obj) => ({
                             label: obj.AWM_Design_Job_Name,
                             value: obj.AWM_Design_Job_ID,
-                          }))
+                            disabled:
+                              (cdpt?.length &&
+                                cdpt?.includes("NPF_DJobN/A") &&
+                                obj.AWM_Design_Job_ID !== "NPF_DJobN/A") ||
+                              (cdpt?.length &&
+                                !cdpt?.includes("NPF_DJobN/A") &&
+                                obj.AWM_Design_Job_ID === "NPF_DJobN/A"),
+                          })).filter((option) => option.label !== "")
                         : []
                     }
                     filter
@@ -580,7 +511,14 @@ const DMPMPSpecificTabView = () => {
                         ? dmTabData.RDTData.map((obj) => ({
                             label: obj.AWM_Design_Job_Name,
                             value: obj.AWM_Design_Job_ID,
-                          }))
+                            disabled:
+                              (rdt.length &&
+                                rdt.includes("DT_DJobN/A") &&
+                                obj.AWM_Design_Job_ID !== "DT_DJobN/A") ||
+                              (rdt.length &&
+                                !rdt.includes("DT_DJobN/A") &&
+                                obj.AWM_Design_Job_ID === "DT_DJobN/A"),
+                          })).filter((option) => option.label !== "")
                         : []
                     }
                     filter
@@ -600,7 +538,14 @@ const DMPMPSpecificTabView = () => {
                         ? dmTabData.IQData.map((obj) => ({
                             label: obj.AWM_Design_Job_Name,
                             value: obj.AWM_Design_Job_ID,
-                          }))
+                            disabled:
+                              (iq?.length &&
+                                iq?.includes("IQ_DJobN/A") &&
+                                obj.AWM_Design_Job_ID !== "IQ_DJobN/A") ||
+                              (iq?.length &&
+                                !iq?.includes("IQ_DJobN/A") &&
+                                obj.AWM_Design_Job_ID === "IQ_DJobN/A"),
+                          })).filter((option) => option.label !== "")
                         : []
                     }
                     filter
@@ -647,7 +592,7 @@ const DMPMPSpecificTabView = () => {
                       <option value="">Select</option>
                       {dmTabData.SPMPDesignData?.map((data) => (
                         <option key={data.code} value={data.name}>
-                          {data.name}
+                          {data}
                         </option>
                       ))}
                     </Form.Select>
@@ -670,7 +615,7 @@ const DMPMPSpecificTabView = () => {
                       <option value="">Select</option>
                       {dmTabData.SPMPLayoutData?.map((data) => (
                         <option key={data.code} value={data.name}>
-                          {data.name}
+                          {data}
                         </option>
                       ))}
                     </Form.Select>
@@ -685,12 +630,11 @@ const DMPMPSpecificTabView = () => {
                 ) : (
                   <Form.Group controlId="groupName.ControlInput1">
                     <Form.Control
-                      placeholder="Enter Reference No."
-                      type="number"
+                      type="text"
                       maxLength={8}
                       value={otherRef}
                       onChange={handleOtherRefChange}
-                      style={{ width: "80%", fontSize: 12 }}
+                      style={{ width: "80%", fontSize: 12, height: "50%" }}
                     ></Form.Control>
                   </Form.Group>
                 ))}
@@ -797,48 +741,52 @@ const DMPMPSpecificTabView = () => {
       return navigateToDSBP();
     }
   };
+
   const renderTabs = () => {
-    return filteredDataList.map((obj, index) => (
-      <TabPanel
-        key={index}
-        header={
-          <CustomTabHeader
-            tabHeader={index === 0 ? "Dependency Mapping" : obj.tabHeader}
-            index={index}
-          />
-        }
-        scrollable
-      >
-        {/* <>{loader ? <Loading /> : index !== 0 && alert(JSON.stringify(obj))}</> */}
-        <>{loader ? <Loading /> : index !== 0 && tabsCompo(obj)}</>
-      </TabPanel>
-    ));
+    return (
+      filteredDataList.map((obj, index) => (
+        <TabPanel
+          key={index}
+          header={
+              <CustomHeader
+                tabHeaderDetails={obj}
+                index={index}
+                handleDelete={handleDelete}
+              />
+          }
+          scrollable
+        >
+          <>{loader ? <Loading /> : index !== 0 && tabsCompo(obj)}</>
+        </TabPanel>
+      )))
   };
 
-  return (
-    console.log("dmTabValuesData filteredDataList", filteredDataList),
-    (
-      <>
-        {dmTabValuesData?.length > 1 && tabPanelList !== 0 ? (
-          <TabView
-            activeIndex={tabPanelList}
-            onTabChange={(e) => onTabChange(e.index)}
-          >
-            {renderTabs()}
-          </TabView>
-        ) : (
-          navigateToDSBP()
-        )}
+  let isSubmitEnabled =
+    formData?.AWM_CICNeeded === "No" &&
+    formData?.AWM_SupportingPMPLayout === "";
 
-        <FooterButtons
-          handleCancel={handleCancel}
-          hideSaveButton={true}
-          onSubmit={onSubmit}
-          formValid={Object.keys(formData).length === 0}
-          checkReadWriteAccess={!false}
-        />
-      </>
-    )
+  return (
+    <>
+      {dmTabValuesData?.length > 1 && tabPanelList !== 0 ? (
+        <TabView
+          activeIndex={tabPanelList}
+          onTabChange={(e) => onTabChange(e.index)}
+        >
+          {renderTabs()}
+        </TabView>
+      ) : (
+        navigateToDSBP()
+      )}
+
+      <FooterButtons
+        handleCancel={handleCancel}
+        hideSaveButton={true}
+        onSubmit={onSubmit}
+        formValid={isSubmitEnabled}
+        checkReadWriteAccess={!false}
+        submitAndSave="Save"
+      />
+    </>
   );
 };
 

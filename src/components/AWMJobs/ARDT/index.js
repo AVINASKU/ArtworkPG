@@ -58,7 +58,7 @@ const ARDT = () => {
         checkReadWriteAccess={checkReadWriteAccess}
       />
 
-      {<AddNewDesign {...data} />}
+      {<AddNewDesign {...data} TaskDetailsData={TaskDetailsData}/>}
 
       <ApproveDesignIntentContent
         {...taskData}

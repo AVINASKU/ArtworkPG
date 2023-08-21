@@ -75,6 +75,10 @@ const ArtworkHeader = ({
   }
   let actionNameObject = []
 
+  console.log(
+    "isFilterActivatedInDependencyMapping",
+    filteredDependencyMappingData
+  );
 
   headerName !== "Dependency Mapping" ?
     actionNameObject = [
@@ -253,7 +257,7 @@ const ArtworkHeader = ({
           )}
           {isDependencyMapping ? (
             <>
-              {isFilterActivatedInDependencyMapping?.length ? (
+              {isFilterActivatedInDependencyMapping?.length || filteredDependencyMappingData?.length  ? (
                 <img
                   src={BlueFilterIcon}
                   alt="filter logo"

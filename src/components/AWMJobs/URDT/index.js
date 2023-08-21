@@ -143,7 +143,7 @@ const URDT = () => {
         taskName="Regional Design Intent"
       />
       <div className="task-details">
-        {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
+        {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} TaskDetailsData={TaskDetailsData}/>}
         {loading || loader || designIntent === null ? (
           <Loading />
         ) : (

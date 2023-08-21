@@ -254,7 +254,7 @@ function DDT() {
         checkTaskISComplete={checkTaskISComplete}
       />
       <div className="task-details">
-        {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
+        {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} TaskDetailsData={TaskDetailsData}/>}
         {checkTaskISComplete && (
           <div className="task-completion">This task is already submitted</div>
         )}
