@@ -26,8 +26,8 @@ export const useProofScopeURL = () => {
       whitepaper_name: "awm_approval",
       input_name: "begin_approval",
       variables: {
-        cf_art_path:
-          "cloudflow://PP_FILE_STORE/CIC_20169540_POA-00454657_Bounty_NA_Paper_Towel_Essentials_Select-a-Size_Double_Roll_2CT_White_SHIPPER.pdf",
+        cf_art_path: fileUrl,
+        // "cloudflow://PP_FILE_STORE/CIC_20169540_POA-00454657_Bounty_NA_Paper_Towel_Essentials_Select-a-Size_Double_Roll_2CT_White_SHIPPER.pdf",
         approver: userid,
         params: { customer_name: username, task_id: TaskID },
       },
