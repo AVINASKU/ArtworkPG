@@ -1,5 +1,5 @@
 import Api from ".";
-import { AZUREURL } from "./envUrl";
+import { DEVURL, AZUREURL } from "./envUrl";
 
 export const uploadtoAzurefileShare = async (file, subfolder, headers = {}) => {
   const api = new Api();
