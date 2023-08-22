@@ -17,6 +17,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getTasks, getAllTasks } from "../../../store/actions/TaskActions";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import ProjectListFilter from "../../Projects/ProjectListFilter";
+import { cloneDeep } from "lodash";
+
 
 const TaskList = ({ myTasks, loading, flag, userInformation }) => {
   const dispatch = useDispatch();
@@ -151,16 +153,17 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
   };
 
   const onGlobalFilterChange = (e, colName) => {
-      const value = e.value;
-
-      console.log("value and e.value", value,e.value, selectedColumnName);
-
-        setselectedFields(value);
+     const value = e.value;
+    let temp = cloneDeep(selectedFields);
+    temp[colName] = value;
+    setselectedFields(temp);
+    let allValues = [];
+    let keys = Object.keys(temp);
+    keys.forEach((key) => {
+      allValues = [...allValues, ...temp[key]];
+    });
 
     const artworkCategories = value;
-    // [
-    //   ...new Set(e?.value.map((item) => item[selectedColumnName])),
-    // ];
 
     console.log("artwork", artworkCategories);
 
@@ -182,7 +185,6 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
       // localStorage.setItem("columnWiseFilterData", JSON.stringify(filterProjectState));
     } else {
     // localStorage.removeItem("columnWiseFilterData");
-    setSelectedFields([]);
     setFilters([]);
     }
   };
