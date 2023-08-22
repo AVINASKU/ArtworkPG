@@ -44,17 +44,11 @@ const DsbpActionDialog = ({
   ];
 
   const { selectedProject } = useSelector((state) => state.ProjectSetupReducer);
-  if (rowData) {
-    selected = [rowData];
-  }
 
   let updatedData = actionNameObject?.filter(
     (data) => data.header === actionHeader
   );
 
-  // if((updatedData && updatedData[0]?.value === "Add to Project") || rowData){
-  //   setFormData("AddToProject")
-  // }
   const handleAiseChange = (e) => {
     setAISEName(e.target.value);
     setFormData({
@@ -112,6 +106,8 @@ const DsbpActionDialog = ({
           item.AWM_AddedToProject === "Yes" &&
           item.DSBP_PMP_AWReadinessGateStatus === "LOCKED"
       );
+    } else if (rowData) {
+      selected = [rowData];
     } else {
       selected = selected.filter(
         (item) => item.AWM_AddedToProject === "Yes"
