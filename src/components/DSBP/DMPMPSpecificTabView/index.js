@@ -72,6 +72,7 @@ const DMPMPSpecificTabView = () => {
         setPMPDesign(selectedTabData?.description?.AWM_Supporting_PMP_Design);
         setPMPLayout(selectedTabData?.description?.AWM_Supporting_PMP_Layout);
         setOtherRef(selectedTabData?.description?.AWM_Other_Reference);
+        setGaBrief(selectedTabData?.description?.AWM_GA_Brief);
         setFormData({
           DSBP_InitiativeID: selectedTabData?.description?.DSBP_InitiativeID,
           DSBP_PMP_PIMaterialID:
@@ -671,6 +672,7 @@ const DMPMPSpecificTabView = () => {
                 field.field !== "AWM_Supporting_PMP_Design" &&
                 field.field !== "AWM_Supporting_PMP_Layout" &&
                 field.field !== "AWM_Other_Reference" &&
+                field.field !== "AWM_GA_Brief" &&
                 item[value]}
             </td>
           </tr>
