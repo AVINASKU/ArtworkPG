@@ -25,8 +25,7 @@ const PMPSpecificTabView = () => {
     (state) => state.DropDownValuesReducer
   );
   const [storesTabList, setStoresTabDataList] = useState(artWorkTabValuesData);
-  const [filteredDataList, setFilteredDataList] =
-    useState(artWorkTabValuesData);
+  const [filteredDataList, setFilteredDataList] = useState(artWorkTabValuesData);
   const [actionDropDownValues, setActionDropDownValues] = useState([]);
   const [tabPanelList, setTabPanelList] = useState(1);
   const [onChangeData, setOnChangeData] = useState(false);
@@ -60,7 +59,7 @@ const PMPSpecificTabView = () => {
 
   const optionsList = [
     { name: "Yes", code: "Yes" },
-    { name: "No", code: "No" },
+    { name: "No", code: "No" }
   ];
 
   const addToProjectList = [
@@ -265,16 +264,12 @@ const PMPSpecificTabView = () => {
       const filteredIds = Array.from(
         new Set(
           updatedNewData
-            .filter(
-              (item) =>
-                item.DSBP_PMP_PIMaterialNumber ===
-                selectedTab.description.DSBP_PMP_PIMaterialNumber
-            )
+            .filter((item) => item.DSBP_PMP_PIMaterialNumber === selectedTab.description.DSBP_PMP_PIMaterialNumber)
             .map((item) => item)
         )
       );
 
-      console.log("updatedNewData filteredIds", filteredIds);
+      console.log("updatedNewData filteredIds", filteredIds)
       updateArtWorkTabValuesData(filteredIds);
     }
     setFormData({});
@@ -293,11 +288,10 @@ const PMPSpecificTabView = () => {
     if (allColumns && allColumns.length) {
       return allColumns.map((field, index) => {
         const value = field?.Field_Name;
-
+       
         return convertedInObject.map((item) => {
           const fieldEditable = item && item["AWM_AddedToProject"] === "Yes";
-          const addToProjectEditable =
-            item && item["DSBP_PMP_AWReadinessGateStatus"] === "LOCKED";
+          const addToProjectEditable = item && item["DSBP_PMP_AWReadinessGateStatus"] === "LOCKED";
           console.log("tab fieldEditable", fieldEditable);
           return (
             <tr key={item[value]}>
@@ -310,31 +304,35 @@ const PMPSpecificTabView = () => {
                       placeholder="Select"
                       onChange={(e) => onchangeAddToProject(tabData, e, field)}
                       style={{ fontSize: 12 }}
-                      disabled={!addToProjectEditable}>
+                      disabled={!addToProjectEditable}
+                    >
                       <option value="">Select</option>
-                      {item["AWM_POARequested"] === "Yes"
-                        ? addToProjectListYes?.map((data) => (
+                      {item["AWM_POARequested"] === "Yes" ?
+                          addToProjectListYes?.map((data) => (
                             <option key={data.code} value={data.name}>
                               {data.name}
                             </option>
-                          ))
-                        : addToProjectList?.map((data) => (
-                            <option key={data.code} value={data.name}>
-                              {data.name}
-                            </option>
-                          ))}
+                          )) :
+                        addToProjectList?.map((data) => (
+                          <option key={data.code} value={data.name}>
+                            {data.name}
+                          </option>
+                        ))
+                      }
                     </Form.Select>
                   </Form.Group>
                 )}
                 {field.Field_Name === "AWM_AISE" && (
                   <Form.Group
                     className={`mb-2`}
-                    controlId="groupName.ControlInput1">
+                    controlId="groupName.ControlInput1"
+                  >
                     <Form.Select
                       value={aiseName}
                       placeholder="Select AISE"
                       onChange={handleAiseChange}
-                      disabled={!fieldEditable}>
+                      disabled={!fieldEditable}
+                    >
                       <option value="">Select AISE</option>
                       {aiseList.map((aise) => (
                         <option key={aise.code} value={aise.AWM_AISE}>
@@ -347,18 +345,21 @@ const PMPSpecificTabView = () => {
                 {field.Field_Name === "AWM_AssemblyMechanism" && (
                   <Form.Group
                     className={`mb-2`}
-                    controlId="groupName.ControlInput1">
+                    controlId="groupName.ControlInput1"
+                  >
                     <div>
                       <Form.Select
                         value={assemblyMechanismChange}
                         placeholder="Select Assembly Mechanism"
                         onChange={handleAssemblyMechanismChange}
-                        disabled={!fieldEditable}>
+                        disabled={!fieldEditable}
+                      >
                         <option value="">Select Assembly Mechanism</option>
                         {assemblyMechanismList.map((aise) => (
                           <option
                             key={aise.code}
-                            value={aise.AWM_AssemblyMechanism}>
+                            value={aise.AWM_AssemblyMechanism}
+                          >
                             {aise.AWM_AssemblyMechanism}
                           </option>
                         ))}
@@ -369,24 +370,27 @@ const PMPSpecificTabView = () => {
                 {field.Field_Name === "AWM_Biocide" && (
                   <Form.Group
                     className={`mb-2`}
-                    controlId="groupName.ControlInput1">
+                    controlId="groupName.ControlInput1"
+                  >
                     <div>
                       <Form.Group
                         className={`mb-2`}
-                        controlId="groupName.ControlInput1">
+                        controlId="groupName.ControlInput1"
+                      >
                         <div>
                           <Form.Select
                             value={bioside}
                             placeholder="Select Bioside"
                             onChange={handleBiosideChange}
-                            disabled={!fieldEditable}>
-                            <option value="">Select Bioside</option>
-                            {optionsList.map((data) => (
-                              <option key={data.code} value={data.name}>
-                                {data.name}
-                              </option>
-                            ))}
-                          </Form.Select>
+                              disabled={!fieldEditable}
+                        >
+                          <option value="">Select Bioside</option>
+                          {optionsList.map((data) => (
+                            <option key={data.code} value={data.name}>
+                            {data.name}
+                          </option>
+                          ))}
+                        </Form.Select>
                         </div>
                       </Form.Group>
                     </div>
@@ -395,7 +399,8 @@ const PMPSpecificTabView = () => {
                 {field.Field_Name === "AWM_GroupPMP" && (
                   <Form.Group
                     className={`mb-2`}
-                    controlId="groupName.ControlInput1">
+                    controlId="groupName.ControlInput1"
+                  >
                     <input
                       type="text"
                       className="form-control"
@@ -409,20 +414,22 @@ const PMPSpecificTabView = () => {
                 {field.Field_Name === "AWM_Sellable" && (
                   <Form.Group
                     className={`mb-2`}
-                    controlId="groupName.ControlInput1">
+                    controlId="groupName.ControlInput1"
+                  >
                     <div>
                       <Form.Select
                         value={sellable}
                         placeholder="Select Sellable"
                         onChange={handleSellableChange}
-                        disabled={!fieldEditable}>
-                        <option value="">Select Sellable</option>
-                        {optionsList.map((data) => (
-                          <option key={data.code} value={data.name}>
-                            {data.name}
-                          </option>
-                        ))}
-                      </Form.Select>
+                          disabled={!fieldEditable}
+                    >
+                      <option value="">Select Sellable</option>
+                      {optionsList.map((data) => (
+                        <option key={data.code} value={data.name}>
+                        {data.name}
+                      </option>
+                      ))}
+                    </Form.Select>
                     </div>
                   </Form.Group>
                 )}
@@ -435,7 +442,8 @@ const PMPSpecificTabView = () => {
                   item[value]}
               </td>
             </tr>
-          );
+          )
+
         });
       });
     }
@@ -459,92 +467,103 @@ const PMPSpecificTabView = () => {
     </div>
   );
 
+
+
   const handleDelete = (index) => {
     const updatedDataList = [...storesTabList];
     updatedDataList.splice(index, 1);
     setStoresTabDataList(updatedDataList);
     if (tabPanelList >= storesTabList.length) {
-      setTabPanelList(storesTabList.length - 1);
+      setTabPanelList(storesTabList.length - 1); 
     }
   };
 
-
+  
   const onTabChange = (index) => {
     setTabPanelList(index);
     if (index === 0) {
       return navigateToDSBP();
     }
   };
-
+  
   const renderTabs = () => {
-    return filteredDataList.map((obj, index) => (
-      <TabPanel
-        key={index}
-        header={
-          <CustomHeaderComponent
-            tabHeaderDetails={obj}
-            index={index}
-            handleDelete={handleDelete}
-          />
-        }
-        scrollable>
-        <>{loader ? <Loading /> : index !== 0 && tabsCompo(obj)}</>
-      </TabPanel>
-    ));
+    return (
+      filteredDataList.map((obj, index) => (
+        <TabPanel
+          key={index}
+          header={
+              <CustomHeaderComponent
+                tabHeaderDetails={obj}
+                index={index}
+                handleDelete={handleDelete}
+              />
+          }
+          scrollable
+        >
+          <>{loader ? <Loading /> : index !== 0 && tabsCompo(obj)}</>
+        </TabPanel>
+      )))
   };
 
+
   return (
-    <>
-      {artWorkTabValuesData?.length > 1 && tabPanelList !== 0 ? (
-       
+    (
+      <>
+        {artWorkTabValuesData?.length > 1 && tabPanelList !== 0 ? (
           <TabView
-            scrollable ={artWorkTabValuesData?.length > 3 ? true : false}
             activeIndex={tabPanelList}
-            onTabChange={(e) => onTabChange(e.index)}>
+            scrollable ={artWorkTabValuesData?.length > 3 ? true : false}
+            onTabChange={(e) => onTabChange(e.index)}
+          >
             {renderTabs()} tabHeader
           </TabView>
-       
-      ) : (
-        navigateToDSBP()
-      )}
-      {rejectDialog && (
-        <DsbpCommonPopup
-          actionHeader="Are you sure you want to reject this PMP?"
-          dasbpDialog={rejectDialog}
-          setDasbpDialog={setRejectDialog}
-          rejectFormData={rejectFormData}
-          onSubmit={() => onSubmit(rejectFormData)}
-          okButtonShow={false}
-          deleteButtonShow={false}
-          submitButtonShow={true}
-          yesButtonShow={true}
-          disconnectButtonShow={true}>
-          <DsbpRejectDialog
-            onChangeData={onChangeData}
+        ) : (
+          navigateToDSBP()
+        )}
+        {rejectDialog && (
+          <DsbpCommonPopup
+            actionHeader="Are you sure you want to reject this PMP?"
+            dasbpDialog={rejectDialog}
+            setDasbpDialog={setRejectDialog}
             rejectFormData={rejectFormData}
-            setRejectFormData={setRejectFormData}
+            onSubmit={() => onSubmit(rejectFormData)}
+
+            okButtonShow={false}          
+            deleteButtonShow={false}
+            submitButtonShow={false}
+            yesButtonShow={true}
+            disconnectButtonShow={true}
+            selectedReason={selectedReason}
+            setSelectedReason={setSelectedReason}
+          >
+            <DsbpRejectDialog
+              onChangeData={onChangeData}
+              rejectFormData={rejectFormData}
+              setRejectFormData={setRejectFormData}
+              setSelectedReason={setSelectedReason}
+            />
+          </DsbpCommonPopup>
+        )}
+        {handleYesAddToPRoject && (
+          <DsbpActionDialog
+            actionHeader="Are you sure you want to add these PMP to Project ?"
+            actionDialog={handleYesAddToPRoject}
+            setActionDialog={setHandleYesAddToPRoject}
+            onChangeData={onChangeData}
+            rowData={onChangeData}
+            onActionSubmit={onSubmit}
           />
-        </DsbpCommonPopup>
-      )}
-      {handleYesAddToPRoject && (
-        <DsbpActionDialog
-          actionHeader="Are you sure you want to add these PMP to Project ?"
-          actionDialog={handleYesAddToPRoject}
-          setActionDialog={setHandleYesAddToPRoject}
-          onChangeData={onChangeData}
-          rowData={onChangeData}
-          onActionSubmit={onSubmit}
+        )}
+        <FooterButtons
+          handleCancel={handleCancel}
+          hideSaveButton={true}
+          onSubmit={onSubmit}
+          formValid={Object.keys(formData).length === 0}
+          checkReadWriteAccess={!false}
+          submitAndSave="Save"
         />
-      )}
-      <FooterButtons
-        handleCancel={handleCancel}
-        hideSaveButton={true}
-        onSubmit={onSubmit}
-        formValid={Object.keys(formData).length === 0}
-        checkReadWriteAccess={!false}
-        submitAndSave="Save"
-      />
-    </>
+      </>
+    )
   );
 };
 
