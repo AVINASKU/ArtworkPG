@@ -505,7 +505,6 @@ const PMPSpecificTabView = () => {
       )))
   };
 
-
   return (
     (
       <>
