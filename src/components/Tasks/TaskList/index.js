@@ -25,7 +25,7 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
   const [selectAllChecked, setSelectAllChecked] = useState(false);
   const [selected, setSelected] = useState([]);
   const [isSearch, isSearchSet] = useState(false);
-  const [selectedProdSrchList, setSelectedProdSrchList] = useState([]);
+  const [selectedProdSrchList, setSelectedProdSrchList] = useState(null);
   const [showTaskDialog, setShowTaskDialog] = useState(false);
   const [selectedTask, setSelectedTask] = useState([]);
   const [setflag, setFlag] = useState("");
@@ -520,7 +520,7 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
   console.log("selected", selected);
   return (
       <>
-      {loading || loader  ? (
+      {loader || loading || selectedProdSrchList === null  ? (
       <Loading />
     ): (
       <>
