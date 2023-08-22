@@ -24,6 +24,10 @@ function initDiagram() {
       text: "new node",
       color: "lightblue",
     },
+    "LinkDrawn": maybeChangeLinkCategory,     // these two DiagramEvents call a
+    "LinkRelinked": maybeChangeLinkCategory,  // function that is defined below
+    "undoManager.isEnabled": true,
+    
     model: new go.GraphLinksModel({
       linkKeyProperty: "key", // IMPORTANT! must be defined for merges and data sync when using GraphLinksModel
     }),
