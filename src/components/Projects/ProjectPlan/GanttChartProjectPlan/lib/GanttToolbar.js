@@ -459,6 +459,7 @@ export default class GanttToolbar extends Toolbar {
   }
 
   onCriticalPathsClick({ source }) {
+    console.log("onCriticalPathsClick", this.gantt.features);
     this.gantt.features.criticalPaths.disabled = !source.pressed;
   }
 

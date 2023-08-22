@@ -6,7 +6,7 @@ import { TaskModel } from "@bryntum/gantt";
 // here you can extend our default Task class with your additional fields, methods and logic
 export default class Task extends TaskModel {
   static get fields() {
-    return [{ name: "deadline", type: "date" }];
+    return [{ name: "deadline", type: "date" }, "taskColor", "pColor"];
   }
 
   get isLate() {
@@ -14,14 +14,14 @@ export default class Task extends TaskModel {
   }
 
   get status() {
-    let status = "Not started";
+    let status = "Awaiting";
 
     if (this.isCompleted) {
-      status = "Completed";
+      status = "Complete";
     } else if (this.endDate < Date.now()) {
-      status = "Late";
+      status = "Awaiting";
     } else if (this.isStarted) {
-      status = "Started";
+      status = "In-Progress";
     }
 
     return status;

@@ -7,6 +7,7 @@ import { ganttConfig } from "./config";
 import { projectData } from "../../../../Utils/data/projectData";
 import { useSelector } from "react-redux";
 import moment from "moment";
+import "./index.scss";
 
 const GanttChart = (props) => {
   const designTasks = [
