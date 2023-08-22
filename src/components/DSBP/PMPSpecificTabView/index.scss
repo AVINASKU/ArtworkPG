@@ -64,6 +64,9 @@
 }
 .p-tabview{
   height: 100%;
+  .p-tabview-nav-content{
+    width: 97%;
+  }
   .p-tabview-panel{
     height: 100%;
     .tabsCompo{
@@ -73,7 +76,6 @@
         max-width: 208px;
         font-size: 12px;
       }
-
     }
   }
   .p-tabview-panels {
@@ -96,6 +98,7 @@
       border-radius: 8px;
       border: 0;
       margin: 0;
+      text-decoration: none;
       .p-tabview-title{
         font-size: 12px;
         line-height: 14px;
@@ -140,7 +143,9 @@
   &.p-dialog.actionDialog .p-dialog-content{
     padding-left: 64px !important;
     padding-top: 6px;
+   
   }
+  
   .p-dialog-footer{
     text-align: center;
   }
