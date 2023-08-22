@@ -72,6 +72,7 @@ const DMPMPSpecificTabView = () => {
         setPMPDesign(selectedTabData?.description?.AWM_Supporting_PMP_Design);
         setPMPLayout(selectedTabData?.description?.AWM_Supporting_PMP_Layout);
         setOtherRef(selectedTabData?.description?.AWM_Other_Reference);
+        setGaBrief(selectedTabData?.description?.AWM_GA_Brief);
         setFormData({
           DSBP_InitiativeID: selectedTabData?.description?.DSBP_InitiativeID,
           DSBP_PMP_PIMaterialID:
@@ -134,7 +135,7 @@ const DMPMPSpecificTabView = () => {
     }
   }, [dmTabValuesData]);
 
-    const handleNewGaBrief = async () => {
+  const handleNewGaBrief = async () => {
     let formData = {
       NewGABTask: "Yes",
       AWM_Project_ID: selectedProject?.Project_ID,
@@ -302,8 +303,8 @@ const DMPMPSpecificTabView = () => {
     console.log("updatedPmpDetails", formData);
 
     // Call POST API of create new GA Brief
-    if(formData?.AWM_GABrief === "New"){
-     handleNewGaBrief();
+    if (formData?.AWM_GABrief === "New") {
+      handleNewGaBrief();
     }
 
     // Call POST API to save tab data
@@ -334,7 +335,7 @@ const DMPMPSpecificTabView = () => {
         data.DSBP_PMP_PIMaterialID ===
         selectedTab.description.DSBP_PMP_PIMaterialID
     );
-        
+
     updateMappingTabValuesData(updatedNewTabData);
     // setFormData({});
     setLoader(false);
@@ -370,6 +371,9 @@ const DMPMPSpecificTabView = () => {
             (item) => item.AWM_Design_Job_ID
           ) || [];
 
+        transformedItem.AWM_GA_Brief =
+          item?.Preselected_GABrief_Page?.[0]?.AWM_GABrief || " ";
+
         transformedItem = {
           ...transformedItem,
           AWM_CIC_Needed: item?.AWM_CIC_Page?.[0]?.AWM_CIC_Needed || "",
@@ -380,7 +384,7 @@ const DMPMPSpecificTabView = () => {
           AWM_Other_Reference:
             item?.AWM_CIC_Page?.[0]?.AWM_Other_Reference || "",
           AWM_CIC_Matrix: item?.AWM_CIC_Page?.[0]?.AWM_CIC_Matrix || "",
-          AWM_GA_Brief: item?.Preselected_DSBP_GA_Brief || [],
+          // AWM_GA_Brief: item?.Preselected_DSBP_GA_Brief || [],
           AWM_CIC_Matrix_Requested:
             item?.AWM_CIC_Page?.[0]?.AWM_CIC_Matrix_Requested || "",
         };
@@ -668,6 +672,7 @@ const DMPMPSpecificTabView = () => {
                 field.field !== "AWM_Supporting_PMP_Design" &&
                 field.field !== "AWM_Supporting_PMP_Layout" &&
                 field.field !== "AWM_Other_Reference" &&
+                field.field !== "AWM_GA_Brief" &&
                 item[value]}
             </td>
           </tr>
@@ -743,22 +748,21 @@ const DMPMPSpecificTabView = () => {
   };
 
   const renderTabs = () => {
-    return (
-      filteredDataList.map((obj, index) => (
-        <TabPanel
-          key={index}
-          header={
-              <CustomHeader
-                tabHeaderDetails={obj}
-                index={index}
-                handleDelete={handleDelete}
-              />
-          }
-          scrollable
-        >
-          <>{loader ? <Loading /> : index !== 0 && tabsCompo(obj)}</>
-        </TabPanel>
-      )))
+    return filteredDataList.map((obj, index) => (
+      <TabPanel
+        key={index}
+        header={
+          <CustomHeader
+            tabHeaderDetails={obj}
+            index={index}
+            handleDelete={handleDelete}
+          />
+        }
+        scrollable
+      >
+        <>{loader ? <Loading /> : index !== 0 && tabsCompo(obj)}</>
+      </TabPanel>
+    ));
   };
 
   let isSubmitEnabled =
