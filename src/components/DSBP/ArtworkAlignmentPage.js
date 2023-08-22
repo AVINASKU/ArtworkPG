@@ -4,6 +4,7 @@ import { cloneDeep, isArray } from "lodash";
 import ArtworkHeader from "./ArtworkHeader";
 import SelectDsbpId from "./SelectDsbpId";
 import ProjectNameHeader from "./ProjectNameHeader";
+import DsbpCommonPopup from "./DsbpCommonPopup";
 import AgilityList from "./AgilityList";
 import { getDSBPDropdownData } from "../../store/actions/DSBPActions";
 import {
@@ -42,6 +43,8 @@ const ArtworkAlignment = () => {
   const [addSavedData, setSavedData] = useState([]);
   const [handleYesAddToPRoject, setHandleYesAddToPRoject] = useState(false);
   const [rejectDialog, setRejectDialog] = useState(false);
+  const [poaaAcknowledgDialog, setPoaaAcknowledgDialog] = useState(true);
+  const [poaaResponse, setPoaaResponse] = useState({});
   const [tableRender, setTableRender] = useState(false);
   const [selectedReason, setSelectedReason] = useState(false);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
@@ -427,7 +430,10 @@ const ArtworkAlignment = () => {
         },
         ArtworkAgilityPMPs: updatedDataList,
       };
-      await onSubmitCreatePOAA(updatedPmpDetails);
+      // await onSubmitCreatePOAA(updatedPmpDetails);
+      let res = await onSubmitCreatePOAA(updatedPmpDetails);
+      console.log("res create", res);
+     
     } else{
       updatedPmpDetails = { ArtworkAgilityPMPs: updatedDataList };
       await onSubmitDsbpAction(updatedPmpDetails);
@@ -607,6 +613,21 @@ const ArtworkAlignment = () => {
           />
         </>
       )}
+      {poaaAcknowledgDialog && (
+          <DsbpCommonPopup
+            actionHeader="POAA Acknowledgment"
+            dasbpDialog={poaaAcknowledgDialog}
+            setDasbpDialog={setPoaaAcknowledgDialog}
+            okButtonShow={true}          
+            deleteButtonShow={false}
+            showCancel={true}
+            submitButtonShow={false}
+            yesButtonShow={true}
+            disconnectButtonShow={true}
+          >
+            <>new popup</>
+          </DsbpCommonPopup>
+        )}
     </div>
   );
 };

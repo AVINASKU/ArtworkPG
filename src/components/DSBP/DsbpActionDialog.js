@@ -34,6 +34,7 @@ const DsbpActionDialog = ({
   const [bioside, setBioside] = useState("");
   const [sellable, setSellable] = useState("");
   const [formData, setFormData] = useState({});
+  const [errorMessage, setErrorMessage] = useState("");
   const [CDPT, setCDPT] = useState([]);
   const [IQ, setIQ] = useState([]);
   const [RDT, setRDT] = useState([]);
