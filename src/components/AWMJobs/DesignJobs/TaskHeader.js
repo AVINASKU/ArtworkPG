@@ -41,12 +41,22 @@ function TaskHeader({
                 // navigate(
                 //   `/myProjects/projectPlan/${TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID}`
                 // );
-                if (page2 && page2 === "projectPlan") {
+                if (page2 && page2.toLowerCase() === "projectplan") {
                   return navigate(
                     `/${page1}/${page2}/${TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID}`
                   );
                 } else if (pageType) {
-                  return navigate(`/${pageType}`);
+                  // return navigate(`/${pageType}`);
+                  if(pageType.toLowerCase() === "mytasks"){
+                    navigate(
+                      `/myProjects/projectPlan/${TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID}`
+                    );
+                  } else if(pageType.toLowerCase() === "alltasks"){
+                    navigate(
+                      `/allProjects/projectPlan/${TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID}`
+                    );
+                  }
+                  
                 }
               // }
             }}

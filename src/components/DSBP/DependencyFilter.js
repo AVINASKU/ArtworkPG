@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect, useState} from "react";
 import { OverlayPanel } from "primereact/overlaypanel";
 import filter from "../../assets/images/filter.svg";
 import BlueFilterIcon from "../../assets/images/BlueFilterIcon.svg";
@@ -21,10 +21,17 @@ const DependencyFilter = ({
   setSelectedFields
 }) => {
   const optionList1 = optionList(dsbpPmpData, selectedColumnName);
+  const [columnWiseSelectedFields, setColumnWiseSelectedFields] = useState([]);
   // let jsonColumnWidth = localStorage.getItem("columnWidthDSBPArtwork");
   let jsonColumnWidth = localStorage.getItem("setDependencyMappingColumnNames");
 
   let allColumns = JSON.parse(jsonColumnWidth);
+
+    useEffect(()=>{
+    if(selectedFields && selectedColumnName){
+      setColumnWiseSelectedFields(selectedFields[selectedColumnName]);
+    }
+  },[selectedFields, selectedColumnName]) 
 
   let checkSelectedColumnIsFreeze = false;
   let checkSelectedColumnIsSortAtoZ = false;
@@ -174,7 +181,7 @@ const DependencyFilter = ({
         </div>
         <div className="multiSelect">
           <MultiSelect
-            value={selectedFields}
+            value={columnWiseSelectedFields}
             onChange={(e) => onGlobalFilterChange(e, selectedColumnName)}
             options={optionList1}
             filter

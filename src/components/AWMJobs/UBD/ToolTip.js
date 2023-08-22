@@ -28,7 +28,7 @@ const ToolTip = () => {
               </li>
               <li>
                 Do not use the following characters: ...{" "}
-                {`(  ) {  }  [  ] \  / < > @ $ % &`} # ? : , * ” ˜ # â € œ =
+                {`(  ) {  }  [  ] \\  / < > @ $ % & # ? : , * ” ˜ - # â € œ =`}
               </li>
               <li>
                 Always ensure that file extensions are used and in lower case

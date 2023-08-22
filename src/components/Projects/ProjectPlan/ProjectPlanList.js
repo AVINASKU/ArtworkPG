@@ -332,9 +332,9 @@ const ProjectPlanList = ({
                     `/${currentUrlBasePage}/artworkAlignment/${selectedProject?.Project_ID}`
                   );
                 } else if (optionsData[field] === "Dependency Mapping") {
-                  setTabName("mapping");
+                  setTabName("dependencyMapping");
                   navigate(
-                    `/${currentUrlBasePage}/mapping/${selectedProject?.Project_ID}`
+                    `/${currentUrlBasePage}/dependencyMapping/${selectedProject?.Project_ID}`
                   );
                 } else if (optionsData[field] === "Upload Briefing documents") {
                   navigate(

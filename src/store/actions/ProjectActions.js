@@ -45,7 +45,7 @@ export const getAllProject = (userInformation) => async (dispatch) => {
   let bu = userInformation?.bu;
   try {
     //here need to add url and pass PM name
-    const res = await axios.get(`${DEVURL}/allprojects/${bu}/${region}`);
+    const res = await axios.get(`${DEVURL}/allprojects/Baby Care/Europe`);
 
     if (res?.data === null) {
       dispatch({
