@@ -25,6 +25,7 @@ const ArtworkAlignment = () => {
   const [selected, setSelected] = useState([]);
   const DropDownData = useSelector((state) => state.DSBPDropdownReducer);
   const [dsbpPmpData, setDsbpPmpData] = useState(null);
+  const [originalDsbpPmpData, setOriginalDsbpPmpData] = useState(null);
   const [selectedFields, setSelectedFields] = useState({});
   const [filteredDsbpData, setFilteredDsbpData] = useState(null);
   const [totalNoOfDsbpId, setTotalNoOfDsbpId] = useState(0);
@@ -42,6 +43,7 @@ const ArtworkAlignment = () => {
   const [handleYesAddToPRoject, setHandleYesAddToPRoject] = useState(false);
   const [rejectDialog, setRejectDialog] = useState(false);
   const [tableRender, setTableRender] = useState(false);
+  const [selectedReason, setSelectedReason] = useState(false);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const [mappedPOAS, setMappedPOAS] = useState([]);
@@ -75,6 +77,12 @@ const ArtworkAlignment = () => {
   useEffect(() => {
     findAndSortBuWiseColumnNames();
   }, []);
+  useEffect(() => {
+    // Initialize originalDsbpPmpData when dsbpPmpData changes
+    if (dsbpPmpData) {
+      setOriginalDsbpPmpData(cloneDeep(dsbpPmpData));
+    }
+  }, [dsbpPmpData]);
 
   const findAndSortBuWiseColumnNames = () => {
     if (BU === "Baby Care") {
@@ -179,6 +187,7 @@ const ArtworkAlignment = () => {
     const resp = await getDsbpPMPDetails(ProjectID);
     if (!resp) {
       setDsbpPmpData(null);
+      setOriginalDsbpPmpData(null)
     }
     if (resp && resp?.length !== 0) {
       const transformedArray = resp?.flatMap((item) =>
@@ -198,6 +207,7 @@ const ArtworkAlignment = () => {
 
       setMappedPOAS(filteredIds);
       setDsbpPmpData(transformedArray);
+      setOriginalDsbpPmpData(cloneDeep(transformedArray));
       setTotalNoOfPMP(transformedArray.length);
 
       const initiativeIDs = transformedArray.map(
@@ -402,6 +412,7 @@ const ArtworkAlignment = () => {
           updatedData.AWM_Sellable = formData?.AWM_Sellable;
         }
         setRejectDialog(false);
+        setSelectedReason(false);
         setSelectAllChecked(false);
         return updatedData;
       });
@@ -428,8 +439,16 @@ const ArtworkAlignment = () => {
     setLoader(false);
   };
 
+  const resetTableData = () => {
+    if (originalDsbpPmpData) {
+      setDsbpPmpData([...originalDsbpPmpData]);
+    }
+  };
+
   const handleCancel = () => {
-    return navigate(`/myProjects`);
+    setLoader(true);
+    resetTableData();
+    setLoader(false);
   };
 
   // const onSubmit = () => {
@@ -515,6 +534,7 @@ const ArtworkAlignment = () => {
             selected={selected}
             onActionSubmit={onActionSubmit}
             label="Artwork Scope Alignment"
+            hyperLink = "/projectPlan"
             actionDialog={actionDialog}
             setActionDialog={setActionDialog}
             setFieldUpdated={setFieldUpdated}
@@ -574,6 +594,8 @@ const ArtworkAlignment = () => {
               setTableRender={setTableRender}
               customizeViewFields={customizeViewFields}
               setCustomizeViewFields={setCustomizeViewFields}
+              selectedReason={selectedReason}
+              setSelectedReason={setSelectedReason}
             />
           )}
           <FooterButtons

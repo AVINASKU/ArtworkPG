@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
-import { Button } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
@@ -51,6 +50,7 @@ const ArtworkHeader = ({
   submittedData,
   setSubmittedData,
   filteredDsbpData,
+  hyperLink,
 }) => {
   const navigate = useNavigate();
   let { ProjectID } = useParams();
@@ -73,53 +73,54 @@ const ArtworkHeader = ({
   if (BU === "Home Care") {
     isBUHomeCare = true;
   }
-  let actionNameObject = []
+  let actionNameObject = [];
 
   console.log(
     "isFilterActivatedInDependencyMapping",
     filteredDependencyMappingData
   );
 
-  headerName !== "Dependency Mapping" ?
-    actionNameObject = [
-    {
-      value: "Mass Update",
-      key: "option-1",
-      header: "Mass Update",
-    },
-    {
-      value: "Create POAA",
-      key: "option-2",
-      header: "Are you sure you want to create POAs for below PMPs in RTA ?",
-    },
-    {
-      value: "Group PMPs",
-      key: "option-3",
-      header: "Are you sure you want to group these PMPs ?",
-    },
-    {
-      value: "Add to Project",
-      key: "option-4",
-      header: "Are you sure you want to add these PMP to Project ?",
-    },
-  ] : 
-  actionNameObject = [
-    {
-      value: "Mass Update",
-      key: "option-1",
-      header: "Mass Update",
-    },
-    {
-      value: "CIC Matrix",
-      key: "option-2",
-      header: "Request CIC/CIC Matrix",
-    },
-    {
-      value: "Request CIC/CIC Matrix",
-      key: "option-3",
-      header: "Request CIC/CIC Matrix",
-    },
-  ];
+  headerName !== "Dependency Mapping"
+    ? (actionNameObject = [
+        {
+          value: "Mass Update",
+          key: "option-1",
+          header: "Mass Update",
+        },
+        {
+          value: "Create POAA",
+          key: "option-2",
+          header:
+            "Are you sure you want to create POAs for below PMPs in RTA ?",
+        },
+        {
+          value: "Group PMPs",
+          key: "option-3",
+          header: "Are you sure you want to group these PMPs ?",
+        },
+        {
+          value: "Add to Project",
+          key: "option-4",
+          header: "Are you sure you want to add these PMP to Project ?",
+        },
+      ])
+    : (actionNameObject = [
+        {
+          value: "Mass Update",
+          key: "option-1",
+          header: "Mass Update",
+        },
+        {
+          value: "CIC Matrix",
+          key: "option-2",
+          header: "Request CIC/CIC Matrix",
+        },
+        {
+          value: "Request CIC/CIC Matrix",
+          key: "option-3",
+          header: "Request CIC/CIC Matrix",
+        },
+      ]);
 
   const handleAction = (e) => {
     setActionHeader(e);
@@ -177,9 +178,11 @@ const ArtworkHeader = ({
             </a>
           </li>
           <li>
-            <div className="project-name">
-              {selectedProjectDetails.Project_Name}
-            </div>
+            <NavLink to={hyperLink}>
+              <div className="project-name">
+                {selectedProjectDetails.Project_Name}
+              </div>
+            </NavLink>
           </li>
         </ul>
       </nav>
@@ -222,7 +225,6 @@ const ArtworkHeader = ({
 
   return (
     <div>
-      
       {showApproveDialogCPPFA && (
         <CustomizeView
           onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
@@ -257,7 +259,8 @@ const ArtworkHeader = ({
           )}
           {isDependencyMapping ? (
             <>
-              {isFilterActivatedInDependencyMapping?.length || filteredDependencyMappingData?.length  ? (
+              {isFilterActivatedInDependencyMapping?.length ||
+              filteredDependencyMappingData?.length ? (
                 <img
                   src={BlueFilterIcon}
                   alt="filter logo"
@@ -272,15 +275,15 @@ const ArtworkHeader = ({
                   className="header-icons"
                 />
               )}
-              <div style={{marginLeft:10}}>
-              <img
-                src={searchMyProjects}
-                alt="search field"
-                onClick={onSearchClick}
-                className="header-icons"
-              />
+              <div style={{ marginLeft: 10 }}>
+                <img
+                  src={searchMyProjects}
+                  alt="search field"
+                  onClick={onSearchClick}
+                  className="header-icons"
+                />
               </div>
-              <div style={{marginLeft:10}}>
+              <div style={{ marginLeft: 10 }}>
                 <ExportSelectedRows
                   allData={dsbpPmpData}
                   selectedRows={filteredDependencyMappingData}
@@ -353,7 +356,9 @@ const ArtworkHeader = ({
           setActionDialog={setActionDialog}
           selected={selected}
           actionNameObject={actionNameObject}
-          onActionSubmit={headerName !== "Dependency Mapping" ? onActionSubmit : onSubmit}
+          onActionSubmit={
+            headerName !== "Dependency Mapping" ? onActionSubmit : onSubmit
+          }
           aiseList={aiseList}
           assemblyMechanismList={assemblyMechanismList}
           headerName={headerName}

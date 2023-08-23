@@ -43,6 +43,7 @@ const PMPSpecificTabView = () => {
   const [formData, setFormData] = useState({});
   const [selectedTab, setSelectedTabData] = useState({});
   const [loader, setLoader] = useState(false);
+  const [selectedReason, setSelectedReason] = useState(false);
 
   const navigateToDSBP = () => {
     navigate(`/myProjects/artworkAlignment/${selectedProject?.Project_ID}`);
@@ -504,14 +505,13 @@ const PMPSpecificTabView = () => {
       )))
   };
 
-
   return (
     (
       <>
         {artWorkTabValuesData?.length > 1 && tabPanelList !== 0 ? (
           <TabView
             activeIndex={tabPanelList}
-            scrollable
+            scrollable ={artWorkTabValuesData?.length > 3 ? true : false}
             onTabChange={(e) => onTabChange(e.index)}
           >
             {renderTabs()} tabHeader
@@ -529,14 +529,17 @@ const PMPSpecificTabView = () => {
 
             okButtonShow={false}          
             deleteButtonShow={false}
-            submitButtonShow={true}
+            submitButtonShow={false}
             yesButtonShow={true}
             disconnectButtonShow={true}
+            selectedReason={selectedReason}
+            setSelectedReason={setSelectedReason}
           >
             <DsbpRejectDialog
               onChangeData={onChangeData}
               rejectFormData={rejectFormData}
               setRejectFormData={setRejectFormData}
+              setSelectedReason={setSelectedReason}
             />
           </DsbpCommonPopup>
         )}

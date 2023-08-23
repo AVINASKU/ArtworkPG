@@ -5,6 +5,7 @@ import { TabHeaderWrapper } from './PMPSpecificTabView.styled';
 function CustomHeaderComponent({ tabHeaderDetails, index, handleDelete }) {
 
     const isPOApresernt = () => {
+        console.log("tabHeaderDetails", tabHeaderDetails)
         if (typeof (tabHeaderDetails.description) === "object") {
             if (tabHeaderDetails.description.POA_POANumber != "" && tabHeaderDetails.description.RTA_POADescription != "") {
                 return true
@@ -20,13 +21,13 @@ function CustomHeaderComponent({ tabHeaderDetails, index, handleDelete }) {
                 <TabHeaderWrapper className="p-tabview-title">
                     {!isPOApresernt() ? (
                         <>
-                            <span>{index === 0 ? "Artwork Allignment" : tabHeaderDetails.tabHeader} </span>
+                            <span>{index === 0 ? "Artwork Alignment" : tabHeaderDetails.tabHeader} </span>
                             <span className="pmpDes">
                                 {typeof (tabHeaderDetails.description) === "object" ? `| ${tabHeaderDetails.description.DSBP_PMP_PIMaterialDescription}` : ""}
                             </span>
                         </>
                     ) : <>
-                        <span>{index === 0 ? "Artwork Allignment" : tabHeaderDetails.description.POA_POANumber} </span>
+                        <span>{index === 0 ? "Artwork Alignment" : tabHeaderDetails.description.POA_POANumber} </span>
                         <span className="pmpDes">
                             {typeof (tabHeaderDetails.description) === "object" ? `| ${tabHeaderDetails.description.RTA_POADescription}` : ""}
                         </span>

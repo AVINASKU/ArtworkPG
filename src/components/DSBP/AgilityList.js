@@ -44,6 +44,8 @@ const AgilityList = ({
   customizeViewFields,
   setCustomizeViewFields,
   clearColumnWiseFilter,
+  selectedReason, 
+  setSelectedReason
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -57,6 +59,7 @@ const AgilityList = ({
   const [rejectFormData, setRejectFormData] = useState({});
   const [frozenUpdated, setFrozenUpdated] = useState(false);
   const [addedDataForSave, setAddedDataForSave] = useState([]);
+  
   const [tabsList, setTabsList] = useState([
     { tabHeader: "Header 1", decription: "Header 1 data" },
   ]);
@@ -108,8 +111,6 @@ const AgilityList = ({
     setRejectFormData({});
     if (e.target.value === "Yes") setHandleYesAddToPRoject(true);
     if (e.target.value === "No") {
-      rowData[ele] = e.target.value;
-      setDsbpPmpData([...dsbpPmpData]);
       onChangeSelectField(rowData, e, ele);
     }
   };
@@ -260,7 +261,7 @@ const AgilityList = ({
               disabled={!addToProjectEditable}
             >
               <option value="">Select</option>
-              {options["AWM_POARequested"] === "Yes" ?
+              {options["AWM_POARequested"] === "Yes" && options["AWM_AWJStatus"] === "Active" ?
                   addToProjectListYes?.map((data) => (
                     <option key={data.code} value={data.name}>
                       {data.name}
@@ -647,11 +648,14 @@ const AgilityList = ({
             submitButtonShow={false}
             yesButtonShow={true}
             disconnectButtonShow={true}
+            selectedReason={selectedReason}
+            setSelectedReason={setSelectedReason}
           >
             <DsbpRejectDialog
               onChangeData={onChangeData}
               rejectFormData={rejectFormData}
               setRejectFormData={setRejectFormData}
+              setSelectedReason={setSelectedReason}
             />
           </DsbpCommonPopup>
         )}

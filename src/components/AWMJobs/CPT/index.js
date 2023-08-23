@@ -46,7 +46,7 @@ function CPT() {
   const [loader, setLoader] = useState(false);
   const [version, setVersion] = useState("V0");
   const [date, setDate] = useState("");
-  let { TaskID, ProjectID } = useParams();
+  let { page1, page2, pageType, TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   // const checkReadWriteAccess = CheckReadOnlyAccess();
   const checkReadWriteAccess = true;
@@ -79,7 +79,17 @@ function CPT() {
     }
   }, [TaskDetailsData]);
   const handleCancel = () => {
-    return navigate(`/MyTasks`);
+    // return navigate(`/MyTasks`);
+    const handleCancel = () => {
+      // return navigate(`/${currentUrl?.split("/")[1]}`);
+      if (page2 && page2 === "projectPlan") {
+        return navigate(
+          `/${page1}/${page2}/${TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID}`
+        );
+      } else if (pageType) {
+        return navigate(`/${pageType}`);
+      }
+    };
   };
 
   const addNewEmptyDesign = () => {
@@ -212,7 +222,14 @@ function CPT() {
     await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "CPT"));
     await submitConfirmPrintTrial(formData, id, headers);
     setLoader(false);
-    navigate(`/MyTasks`);
+    // navigate(`/MyTasks`);
+    if (page2 && page2 === "projectPlan") {
+      navigate(
+        `/${page1}/${page2}/${TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID}`
+      );
+    } else if (pageType) {
+      navigate(`/${pageType}`);
+    }
   };
 
   const onSaveAsDraft = async () => {
