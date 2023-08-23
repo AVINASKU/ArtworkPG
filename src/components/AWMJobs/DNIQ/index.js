@@ -40,7 +40,7 @@ function DNIQ() {
   const [loader, setLoader] = useState(false);
   const [selectAllCheckbox, setSelectAllCheckbox] = useState(false);
 
-  let { TaskID, ProjectID } = useParams();
+  let { page1, page2, pageType, TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   // const checkReadWriteAccess = CheckReadOnlyAccess();
   const checkReadWriteAccess = true;
@@ -63,7 +63,14 @@ function DNIQ() {
   }, [TaskDetailsData]);
 
   const handleCancel = () => {
-    return navigate(`/MyTasks`);
+    // return navigate(`/MyTasks`);
+    if (page2 && page2 === "projectPlan") {
+      navigate(
+        `/${page1}/${page2}/${TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID}`
+      );
+    } else if (pageType) {
+      navigate(`/${pageType}`);
+    }
   };
 
   // useEffect(() => {
@@ -194,7 +201,14 @@ function DNIQ() {
     console.log("Submit Data", formData, id, headers);
     await submitInkQualification(formData, id, headers);
     setLoader(false);
-    navigate("/MyTasks");
+    // navigate("/MyTasks");
+    if (page2 && page2 === "projectPlan") {
+      navigate(
+        `/${page1}/${page2}/${TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID}`
+      );
+    } else if (pageType) {
+      navigate(`/${pageType}`);
+    }
   };
 
   const onSaveAsDraft = async () => {
