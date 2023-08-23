@@ -1,3 +1,4 @@
+import { Scale } from "@bryntum/gantt";
 import React from "react";
 import { CSVLink } from "react-csv";
 import export2excel from "../../assets/images/export2excel.svg";
@@ -5,12 +6,20 @@ import { changeDateFormat, onSortData } from "../../utils";
 
 export const ExportSelectedRows = ({ allData, selectedRows, headers }) => {
   // Format date fields in allData and selectedRows
+
+  console.log("all data", allData, selectedRows);
+
   const formattedAllData = allData?.map((data) => ({
     ...data,
     Estimated_SOP: changeDateFormat(data["Estimated_SOP"]),
     Estimated_SOS: changeDateFormat(data["Estimated_SOS"]),
     Estimated_AW_Printer: changeDateFormat(data["Estimated_AW_Printer"]),
     Estimated_AW_Readiness: changeDateFormat(data["Estimated_AW_Readiness"]),
+    Category: data["Artwork_Category"],
+    Brand: data["Artwork_Brand"],
+    SMO: data["Artwork_SMO"],
+    region: data["Project_region"],
+    Scale: data["Project_Scale"],
   }));
 
   const formattedSelectedRows = selectedRows?.map((data) => ({
@@ -19,6 +28,11 @@ export const ExportSelectedRows = ({ allData, selectedRows, headers }) => {
     Estimated_SOS: changeDateFormat(data["Estimated_SOS"]),
     Estimated_AW_Printer: changeDateFormat(data["Estimated_AW_Printer"]),
     Estimated_AW_Readiness: changeDateFormat(data["Estimated_AW_Readiness"]),
+    Category: data["Artwork_Category"],
+    Brand: data["Artwork_Brand"],
+    SMO: data["Artwork_SMO"],
+    region: data["Project_region"],
+    Scale: data["Project_Scale"],
   }));
 
   const modifiedHeaders = headers?.map((str) => {
