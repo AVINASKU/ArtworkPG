@@ -45,7 +45,7 @@ const ProjectPlanList = ({
   test,
   tabNameForPP,
   setTabName,
-  activeFlag
+  activeFlag,
 }) => {
   const [ProjectFrozen, setProjectFrozen] = useState(false);
   const [frozenCoulmns, setFrozenColumn] = useState([]);
@@ -60,6 +60,7 @@ const ProjectPlanList = ({
   const [selectedTaskApproveDialog, setSelectedTaskApproveDialog] = useState(
     []
   );
+  const [designTabPegaData, setDesignTabPegaData] = useState([]);
   const dispatch = useDispatch();
   const [flag, setFlag] = useState("");
   const [loader, setLoader] = useState(false);
@@ -67,15 +68,12 @@ const ProjectPlanList = ({
   const [roleOptionsData, setRoleOptionsData] = useState([]);
   const [ownerData, setOwnerData] = useState([]);
   let { ProjectID } = useParams();
-  const { myProject } = useSelector(
-    (state) => state.myProject
-  );
-  let projectData = isArray(myProject) && myProject.find(
-    (project) => project.Project_ID === ProjectID
-  );
+  const { myProject } = useSelector((state) => state.myProject);
+  let projectData =
+    isArray(myProject) &&
+    myProject.find((project) => project.Project_ID === ProjectID);
   //projectPlanDesign
   const navigate = useNavigate();
-  
 
   const op = useRef(null);
 
@@ -167,7 +165,10 @@ const ProjectPlanList = ({
         frozenCoulmns.includes(options)) ||
       (sortData && sortData.length && sortData[0] === options);
 
-    const optionsCode = options === "Duration" ? `${options} (Days)` : options?.split("_").join(" ");
+    const optionsCode =
+      options === "Duration"
+        ? `${options} (Days)`
+        : options?.split("_").join(" ");
     return (
       <div>
         {isFilterActivated ? (
@@ -195,7 +196,9 @@ const ProjectPlanList = ({
               }}
               className="columnFilterIcon"
             />
-            <span className="columnHeader">{optionsCode === "Duration" ? "Duration (Days)" : optionsCode}</span>
+            <span className="columnHeader">
+              {optionsCode === "Duration" ? "Duration (Days)" : optionsCode}
+            </span>
           </>
         )}
       </div>
@@ -322,17 +325,22 @@ const ProjectPlanList = ({
               } else if (field && field.length && keyCode[0] === "CPPFA") {
                 handleApproveDialogCPPFA(options);
               } else {
-                if(optionsData[field] !== "Dependency Mapping"){
+                if (optionsData[field] === "Start Artwork Alignment") {
                   dispatch(ArtWorkTabValuesAction([]));
                   setTabName("artworkAlignment");
                   navigate(
                     `/${currentUrlBasePage}/artworkAlignment/${selectedProject?.Project_ID}`
                   );
-                } else{
-                  setTabName("mapping");
+                } else if (optionsData[field] === "Dependency Mapping") {
+                  setTabName("dependencyMapping");
                   navigate(
-                    `/${currentUrlBasePage}/mapping/${selectedProject?.Project_ID}`
+                    `/${currentUrlBasePage}/dependencyMapping/${selectedProject?.Project_ID}`
                   );
+                } else if (optionsData[field] === "Upload Briefing documents") {
+                  navigate(
+                    `/${currentUrlBasePage}/projectPlan/UBD/${options.key}/${selectedProject?.Project_ID}`
+                  );
+                  // navigate(`/${currentUrlBasePage}/UBD/UBD_Task-31/A-2648`);
                 }
               }
             }}
@@ -374,7 +382,9 @@ const ProjectPlanList = ({
                     field === "Role"
                       ? optionsData["RoleOptions"]
                       : field === "Owner"
-                      ? optionsData["RoleOptions"]?.find((obj) => optionsData["Role"] === obj.Name)?.OwnerOptionsNew
+                      ? optionsData["RoleOptions"]?.find(
+                          (obj) => optionsData["Role"] === obj.Name
+                        )?.OwnerOptionsNew
                       : []
                   }
                   optionLabel="Name"
@@ -538,9 +548,15 @@ const ProjectPlanList = ({
   }, [pegadata]);
 
   useEffect(() => {
-    if(pegadata !== undefined && pegadata !== null){
-      const tasksToFilter = ["Start Artwork Alignment", "Dependency Mapping", "Upload Briefing documents", "Approve CIC", "Upload CIC"];
-      
+    if (pegadata !== undefined && pegadata !== null) {
+      const tasksToFilter = [
+        "Start Artwork Alignment",
+        "Dependency Mapping",
+        "Upload Briefing documents",
+        "Approve CIC",
+        "Upload CIC",
+      ];
+
       const filteredTasks = [];
       const remainingTasks = [];
       // Iterate through the original data to filter the tasks
@@ -551,26 +567,27 @@ const ProjectPlanList = ({
           remainingTasks.push(task);
         }
       });
+      setDesignTabPegaData(remainingTasks);
+      // console.log("filteredTasks:", filteredTasks, "remainingTasks:", remainingTasks);
       const filteredData = {
         filteredTasks: filteredTasks,
-        otherTasks: remainingTasks
+        otherTasks: remainingTasks,
       };
-      
-      if(tabNameForPP !== "Design"){
-        setUpdatedData(filteredData?.filteredTasks)
-      } else{
-        setUpdatedData(filteredData?.otherTasks)
+
+      if (tabNameForPP !== "Design") {
+        setUpdatedData(filteredData?.filteredTasks);
+      } else {
+        setUpdatedData(filteredData?.otherTasks);
       }
     }
-    
   }, [pegadata, tabNameForPP]);
 
   const onDropdownChange = (rowData, { value }, ele) => {
     if (ele === "Role") {
-      //console.log("value", value.Name);
-      if(rowData.data["Role"] !== value?.Name){
-        rowData.data["Assignee"] = ""
-      }      
+      console.log("value", value.Name);
+      if (rowData.data["Role"] !== value?.Name) {
+        rowData.data["Assignee"] = "";
+      }
     }
     rowData.data[ele] = value.Name;
     //console.log("Pegadata: ", pegadata);
@@ -587,7 +604,7 @@ const ProjectPlanList = ({
       }
       return data;
     });
-   // Set the state with the updated array
+    // Set the state with the updated array
     setPegaData(updatedPegadata);
 
     if (!isAccessEmpty) {
@@ -752,7 +769,7 @@ const ProjectPlanList = ({
           onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
           showTaskDialog={showApproveDialogCPPFA}
           selectedTaskData={selectedTaskApproveDialogCPPFA}
-          pegadata={pegadata2}
+          pegadata={designTabPegaData}
           getProjectPlanApi={getProjectPlanApi}
           TaskDetailsData={TaskDetailsData}
         />

@@ -73,7 +73,7 @@ const APRA = () => {
         label="Approve Production Ready Art"
         checkReadWriteAccess={checkReadWriteAccess}
       />
-      {<AddNewDesign {...data} />}
+      {<AddNewDesign {...data} TaskDetailsData={TaskDetailsData}/>}
       {loading ? (
         <div className="align-item-center">
           <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>

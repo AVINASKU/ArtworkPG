@@ -1,6 +1,6 @@
 import React from "react";
 import { changeDateFormat } from "../../../utils";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 
 function TaskHeader({
   Project_Name,
@@ -9,31 +9,56 @@ function TaskHeader({
   Duration,
   Consumed_Buffer,
   TaskDetailsData,
+  actionButtonsFlag,
 }) {
+  let { page1, page2, pageType, TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const intentName = () => {
     const locationPath = location?.pathname;
     const url = locationPath?.split("/");
-    const pathName = url[2];
+    let pathName;
+    if(page2 === "projectPlan"){
+      pathName=url[3]
+    }else{
+      pathName=url[2]
+    }
     return (
-      <div className="actions">
+      <div className={`actions ${actionButtonsFlag ? "actionsPaddingForUBD": ""}`}>
         <div className="project-content">
           <label className="project-header-spacing">Project Name</label>
           <div
-            className="font-color"
+            className="font-color task-header-project-name"
             onClick={() => {
-              if (
-                pathName === "DNIQ" ||
-                pathName === "CNIQ" ||
-                pathName === "DNPF" ||
-                pathName === "CCD" ||
-                pathName === "CPT"
-              ) {
-                navigate(
-                  `/myProjects/projectPlan/${TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID}`
-                );
-              }
+              // if (
+              //   pathName === "DNIQ" ||
+              //   pathName === "CNIQ" ||
+              //   pathName === "DNPF" ||
+              //   pathName === "CCD" ||
+              //   pathName === "CPT" ||
+              //   pathName === "UBD"
+              // ) {
+                // navigate(
+                //   `/myProjects/projectPlan/${TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID}`
+                // );
+                if (page2 && page2.toLowerCase() === "projectplan") {
+                  return navigate(
+                    `/${page1}/${page2}/${TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID}`
+                  );
+                } else if (pageType) {
+                  // return navigate(`/${pageType}`);
+                  if(pageType.toLowerCase() === "mytasks"){
+                    navigate(
+                      `/myProjects/projectPlan/${TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID}`
+                    );
+                  } else if(pageType.toLowerCase() === "alltasks"){
+                    navigate(
+                      `/allProjects/projectPlan/${TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID}`
+                    );
+                  }
+                  
+                }
+              // }
             }}
           >
             {Project_Name}

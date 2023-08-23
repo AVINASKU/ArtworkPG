@@ -7,6 +7,15 @@ import { Button } from "react-bootstrap";
 
 const getTasks = (entities, columnId) => entities?.columns[columnId]?.fieldsData.map((taskId) => entities.tasks[taskId]);
 
+// .sort((a, b) => {
+//   if (a.Field_Name < b.Field_Name) {
+//     return -1;
+//   } if (a.Field_Name > b.Field_Name) {
+//     return 1;
+//   }
+//   return 0;
+// });
+
 const DragAndDrop = (props) => {
   const [entities, setEntities] = useState(props?.availableFields && entities1(props?.availableFields, props?.headerName));
   const [selectedTaskIds, setSelectedTaskIds] = useState([]);
@@ -14,15 +23,15 @@ const DragAndDrop = (props) => {
   const [localDestination, setLocalDestination] = useState(null);
 
   useEffect(() => {
-    if(props?.customizeViewFields && props?.customizeViewFields !== "[]" && props?.customizeViewFields !== null){
+    if (props?.customizeViewFields && props?.customizeViewFields !== "[]" && props?.customizeViewFields !== null) {
       const updatedData = {
         ...entities,
         columns: JSON.parse(props?.customizeViewFields)
       };
-      if(updatedData !== undefined)
+      if (updatedData !== undefined)
         setEntities(updatedData)
     } else {
-      setEntities(props?.availableFields && props?.headerName && entities1(props?.availableFields, props?.headerName))      
+      setEntities(props?.availableFields && props?.headerName && entities1(props?.availableFields, props?.headerName))
     }
   }, [props.customizeViewFields])
 
@@ -169,20 +178,21 @@ const DragAndDrop = (props) => {
           fieldsData: [
             ...data,
             ...freezeData,
-            ...entities.columns.availableFields.fieldsData            
+            ...entities.columns.availableFields.fieldsData
           ]
         }
       }
     };
     setEntities(updatedData);
     localStorage.setItem("customizeViewFields", JSON.stringify([]));
+    localStorage.setItem("customizeViewDependancyFields", JSON.stringify([]));
     props.setCustomizeViewFields(JSON.stringify([]));
     props.hideDialog();
   };
 
   const handleSubmit = async () => {
     props.setCustomizeViewFields(JSON.stringify([]));
-    if(props?.headerName === "Dependency Mapping"){
+    if (props?.headerName === "Dependency Mapping") {
       localStorage.setItem(
         "customizeViewDependancyFields",
         JSON.stringify(entities.columns)
@@ -193,14 +203,27 @@ const DragAndDrop = (props) => {
         JSON.stringify(entities.columns)
       );
     }
-    
+
     props.setCustomizeViewFields(JSON.stringify(entities.columns));
     props.hideDialog();
   };
   const selected = selectedTaskIds;
+  // Shiva
+  // const alphabeticalSort = (tasks)=>{
+  //   const sortedList = tasks.sort((a,b)=>{
+  //      if(a.Field_Name < b.Field_Name){
+  //        return -1;
+  //      }if(a.Field_Name > b.Field_Name){
+  //        return 1;
+  //      }
+  //      return 0;
+  //    })
+  //    return sortedList;
+  //  }
 
   return (
     <>
+      {/* {JSON.stringify(entities)} */}
       <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
         <div style={{ display: "flex" }}>
           {entities?.columnOrder.map((columnId) => (
@@ -241,7 +264,7 @@ const DragAndDrop = (props) => {
           variant="primary"
           onClick={handleSubmit}
         >
-          Update
+          Save
         </Button>
       </div>
     </>

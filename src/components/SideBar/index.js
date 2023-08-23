@@ -57,7 +57,7 @@ const SideBar = () => {
     //   setExpandedIndex(null);
     // }
   };
-  const sidebarWidth = isToggle ? "100px" : "25px";
+  const sidebarWidth = isToggle ? "100px" : "68px";
   function toggleSubMenu(index) {
     setIsToggle(true);
 
@@ -359,7 +359,7 @@ const SideBar = () => {
                           className="tooltip"
                           style={{ marginLeft: "-0.5%" }}
                         >
-                          <div className="toolname">Log out</div>
+                          <div className="toolname">Log Out</div>
                         </Tooltip>
                       }
                     >
@@ -378,7 +378,7 @@ const SideBar = () => {
                         <img src={LogoutImg} alt="logout" />
                         <div className={`${!isNoAccess ? "logoutColor" : ""}`}>
                           {" "}
-                          Log out{" "}
+                          Log Out{" "}
                         </div>
                       </>
                     )}

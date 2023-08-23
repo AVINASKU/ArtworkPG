@@ -211,7 +211,7 @@ function Role() {
             </ol>
           ))}
 
-        <h6 className="project-title">Click yes to continue</h6>
+        <h6 className="roles-title">Click yes to continue</h6>
       </Dialog>
     </>
   );

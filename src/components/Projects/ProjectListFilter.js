@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { MultiSelect } from "primereact/multiselect";
 import filter from "../../assets/images/filter.svg";
@@ -22,6 +22,7 @@ const ProjectListFilter = ({
   clearColumnWiseFilter,
 }) => {
   const optionList1 = optionList(projectData, selectedColumnName);
+  const [columnWiseSelectedFields, setColumnWiseSelectedFields] = useState([]);
 
   const isFilterActivated =
     (frozenCoulmns &&
@@ -36,6 +37,12 @@ const ProjectListFilter = ({
     "Estimated_AW_Readiness",
     "Estimated_SOS",
   ];
+
+      useEffect(()=>{
+    if(selectedFields && selectedColumnName){
+      setColumnWiseSelectedFields(selectedFields[selectedColumnName]);
+    }
+  },[selectedFields, selectedColumnName]) 
 
   const mutilSelectTemplate = (option) => {
     return (
@@ -128,7 +135,7 @@ const ProjectListFilter = ({
         </div>
         <div className="multiSelect">
           <MultiSelect
-            value={selectedFields}
+            value={columnWiseSelectedFields}
             onChange={(e) => onGlobalFilterChange(e, selectedColumnName)}
             options={optionList1}
             itemTemplate={mutilSelectTemplate}

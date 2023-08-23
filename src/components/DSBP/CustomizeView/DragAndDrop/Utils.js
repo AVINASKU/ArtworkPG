@@ -235,3 +235,16 @@ export const multiSelectTo = (entities, selectedTaskIds, newTaskId) => {
   const combined = [...selectedTaskIds, ...sorted];
   return combined;
 };
+
+// Shivu
+
+export const alphabeticalSort =((data)=>{
+ return data.sort((a, b) => {
+    if (a.Field_Name < b.Field_Name) {
+      return -1;
+    } if (a.Field_Name > b.Field_Name) {
+      return 1;
+    }
+    return 0;
+  })
+})

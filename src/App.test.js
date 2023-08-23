@@ -35,7 +35,7 @@ describe("App Component", () => {
 
     // Access store state
     const store_State = store.getState();
-    console.log("store_State" + JSON.stringify(store_State));
+    //console.log("store_State" + JSON.stringify(store_State));
 
     // You can add more assertions related to store actions if needed
   });

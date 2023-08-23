@@ -41,7 +41,7 @@ function DNPF() {
   const [loader, setLoader] = useState(false);
   const [selectAllCheckbox, setSelectAllCheckbox] = useState(false);
 
-  let { TaskID, ProjectID } = useParams();
+  let { page1, page2, pageType, TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   // const checkReadWriteAccess = CheckReadOnlyAccess();
   const checkReadWriteAccess = true;
@@ -61,8 +61,22 @@ function DNPF() {
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
     }
   }, [TaskDetailsData]);
+
+  useEffect(() => {
+    if (CD.length < 1) {
+      addNewEmptyDesign();
+    }
+  }, [CD]);
+
   const handleCancel = () => {
-    return navigate(`/MyTasks`);
+    // return navigate(`/MyTasks`);
+    if (page2 && page2 === "projectPlan") {
+      navigate(
+        `/${page1}/${page2}/${TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID}`
+      );
+    } else if (pageType) {
+      navigate(`/${pageType}`);
+    }
   };
 
   // useEffect(() => {
@@ -230,7 +244,14 @@ function DNPF() {
     //console.log("Submit Data for CD", formData, id, headers);
     await submitColorDevelopment(formData, id, headers);
     setLoader(false);
-    navigate(`/MyTasks`);
+    // navigate(`/MyTasks`);
+    if (page2 && page2 === "projectPlan") {
+      navigate(
+        `/${page1}/${page2}/${TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID}`
+      );
+    } else if (pageType) {
+      navigate(`/${pageType}`);
+    }
   };
 
   const onSaveAsDraft = async () => {

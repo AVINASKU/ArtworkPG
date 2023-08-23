@@ -2,7 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import { FileUpload } from "primereact/fileupload";
 import { Image } from "primereact/image";
 import { Tag } from "primereact/tag";
-import { useProofScopeURL } from "../../ProofScope/ViewFiles";
+import { AzureFileDownloadJobs } from "../../../store/actions/AzureFileDownloadJobs";
+import { deleteAzureFile } from "../../../store/actions/AzureFileDeletion.js";
+import { useDispatch } from "react-redux";
 
 const ApproveDesignIntentContent = ({
   designIntent,
@@ -20,16 +22,12 @@ const ApproveDesignIntentContent = ({
   ArtworkAgilityPage,
   version,
   date,
+  subFolder,
 }) => {
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
-  const viewProofScopeFile = useProofScopeURL();
-
-  const handleViewProofScopeClick = (event, fileUrl) => {
-    event.preventDefault();
-    viewProofScopeFile(`cloudflow://PP_FILE_STORE/aacdata/${fileUrl}`);
-  };
-
+  const dispatch = useDispatch();
+  let viewFileName = designIntent[0]?.FileMetaDataList[0]?.File_Name;
   let di_name = "";
   if (!approve) {
     di_name =
@@ -49,25 +47,41 @@ const ApproveDesignIntentContent = ({
   };
 
   const itemTemplate = (file) => {
+    // console.log("file here 1", file);
+    // const fileNameParts = file.name.split(".");
+    // const fileExtension = fileNameParts.pop().toLowerCase();
+
+    // // Update the state with the extracted file extension
+    // setFileExtension(fileExtension);
     setformattedValue(file.size);
+
     return (
       <div className="upload-row">
         <img role="presentation" src={file.objectURL} width={50} />
-        <div className="flex flex-column text-left ml-3">{di_name}</div>
+
+        <div className="flex flex-column text-left ml-3">{file.name}</div>
       </div>
     );
   };
+
   const onTemplateSelect = (e) => {
-    const renamedFile = {
-      objectURL: e.files[0].objectURL,
-      lastModified: e.files[0].lastModified,
-      lastModifiedDate: e.files[0].lastModifiedDate,
-      name: di_name,
-      size: e.files[0].size,
-      type: e.files[0].type,
-      webkitRelativePath: e.files[0].webkitRelativePath,
-    };
-    setAzureFile(renamedFile);
+    // let f_name = di_name + fileExtension;
+
+    // const fileNameParts = e.files[0].name.split(".");
+    // const ff = fileNameParts.pop().toLowerCase();
+    // console.log("file here 1", e.files[0].name.split(".").pop().toLowerCase());
+
+    // const renamedFile = {
+    //   objectURL: e.files[0].objectURL,
+    //   lastModified: e.files[0].lastModified,
+    //   lastModifiedDate: e.files[0].lastModifiedDate,
+    //   // name: di_name + "." + e.files[0].name.split(".").pop().toLowerCase(),
+    //   name: e.files[0].name,
+    //   size: e.files[0].size,
+    //   type: e.files[0].type,
+    //   webkitRelativePath: e.files[0].webkitRelativePath,
+    // };
+    setAzureFile(e.files[0]);
     let _totalSize = totalSize;
     let files = e.files;
     Object.keys(files).forEach((key) => {
@@ -75,8 +89,17 @@ const ApproveDesignIntentContent = ({
     });
 
     setTotalSize(_totalSize);
-    setAzureFile(renamedFile);
-    setFileName(di_name);
+    // setAzureFile(renamedFile);
+    // setFileName(di_name + "."+e.files[0].name.split(".").pop().toLowerCase());
+    setFileName(e.files[0].name);
+  };
+  const downloadAzure = async (event, fileUrl) => {
+    event.preventDefault();
+    dispatch(AzureFileDownloadJobs(fileUrl, subFolder));
+  };
+  const deleteAzure = async (event, fileUrl) => {
+    event.preventDefault();
+    dispatch(deleteAzureFile(fileUrl, subFolder));
   };
 
   const DesignHeader = (di_name) => {
@@ -131,13 +154,31 @@ const ApproveDesignIntentContent = ({
               itemTemplate={itemTemplate}
             />
             <div>
-              {designIntent[0]?.FileMetaDataList[0]?.File_Name === ""
-                ? fileName === ""
-                  ? `No files uploaded yet please upload file!`
-                  : ``
-                : fileName === ""
-                ? di_name
-                : ""}
+              {viewFileName === "" ? (
+                fileName === "" ? (
+                  `No files uploaded yet please upload file!`
+                ) : (
+                  ``
+                )
+              ) : fileName === "" ? (
+                <>
+                  <a
+                    className="flex flex-column text-left ml-3"
+                    onClick={(event) => downloadAzure(event, `${viewFileName}`)}
+                  >
+                    {viewFileName}
+                  </a>
+                  <br />
+                  <a
+                    className="flex flex-column text-left ml-3"
+                    onClick={(event) => deleteAzure(event, `${viewFileName}`)}
+                  >
+                    remove from azure
+                  </a>
+                </>
+              ) : (
+                ""
+              )}
             </div>
           </div>
         )}
@@ -162,7 +203,12 @@ const ApproveDesignIntentContent = ({
                 cursor: "pointer",
               }}
             >
-              {/* {file_name} */}
+              <a
+                className="flex flex-column text-left ml-3"
+                onClick={(event) => downloadAzure(event, `${viewFileName}`)}
+              >
+                {viewFileName}
+              </a>
             </div>
           </div>
         )}

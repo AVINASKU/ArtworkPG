@@ -68,7 +68,7 @@
 .highRiskData {
   border: 0.5px solid #acacac;
   min-width: 200px;
-  height: 114.5px;
+  // height: 114.5px;
   border-radius: 8px;
   padding: 0;
   margin-left: 10.5px;
@@ -91,27 +91,33 @@
   justify-content: right;
   padding-top: 2px;
   margin-bottom: 10px;
+  .btn.btn-secondary {
+    color: #595959 !important;
+  }
+  .highRiskButton {
+    // color: #595959 !important;
+    width: 33px;
+    height: 20px;
+    border: 0.5px solid #acacac !important;
+    border-radius: 4px;
+    margin-right: 10px;
+    font-size: 10px;
+    line-height: 12px;
+    &.btn:disabled {
+      color: #ffffff !important;
+      width: 33px;
+      height: 20px;
+      border: 0.5px solid #acacac !important;
+      border-radius: 4px;
+      margin-right: 10px;
+      font-size: 10px;
+      line-height: 12px;
+    }
+  }
 }
 
-.highRiskButton {
-  color: #595959 !important;
-  width: 33px;
-  height: 20px;
-  border: 0.5px solid #acacac !important;
-  border-radius: 4px;
-  margin-right: 10px;
-  font-size: 10px;
-  line-height: 12px;
-}
-.highRiskButton.btn:disabled {
-  color: #595959 !important;
-  width: 33px;
-  height: 20px;
-  border: 0.5px solid #acacac !important;
-  border-radius: 4px;
-  margin-right: 10px;
-  font-size: 10px;
-  line-height: 12px;
+.yesOrNoButtonsColor.btn:disabled {
+  background-color: #003da5 !important;
 }
 
 .highRiskErrorBorderColor {
@@ -131,7 +137,7 @@
 }
 
 .yesOrNoButtonsColor:hover {
-  background-color: #003da5;
+  background-color: #003da5 !important;
   color: black !important;
 }
 

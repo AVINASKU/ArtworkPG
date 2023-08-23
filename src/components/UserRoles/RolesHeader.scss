@@ -2,8 +2,33 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 5px 0;
+  padding: 5px 10px;
   align-items: center;
+  .icon-items {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 5px 0;
+    align-items: center;
+    // width: 20%;
+    span {
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      font-size: 12px;
+      line-height: 1;
+      img {
+        width: 100% !important;
+        margin: 3px !important;
+      }
+    }
+  }
+}
+.roles {
+  .accordion {
+    padding: 20px !important;
+  }
 }
 .disabled {
   background-color: #ddd !important;
@@ -27,26 +52,6 @@
     margin: 3px !important;
     width: 15px !important;
     height: 12px !important;
-  }
-}
-.icon-items {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 5px 0;
-  align-items: center;
-  width: 20%;
-  span {
-    align-items: center;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    font-size: 12px;
-    line-height: 1;
-    img {
-      width: 100% !important;
-      margin: 3px !important;
-    }
   }
 }
 
