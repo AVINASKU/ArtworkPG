@@ -427,7 +427,8 @@ div.flex.align-items-center.gap-2 {
 .dropdown-menu,
 .p-autocomplete-panel,
 .p-overlaypanel,
-.p-multiselect-panel, .p-dialog-mask {
+.p-multiselect-panel,
+.p-dialog-mask {
   z-index: 100000 !important;
 }
 .dropdown-menu {
@@ -451,7 +452,7 @@ div.flex.align-items-center.gap-2 {
   top: 0;
   left: 0;
   overflow: auto;
-  width: 15.5%;
+  // width: 15.5%;
   padding: 0;
   box-shadow: none !important;
   border: 1px solid #acacac;

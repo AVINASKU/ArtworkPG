@@ -88,7 +88,7 @@ const CloneJobs = ({
   // const url = locationPath?.split("/");
   // const pathName = url[2];
   // alert(pathName)
-  let {TaskID} = useParams();
+  let { TaskID } = useParams();
   const pathName = TaskID.split("_")[0];
 
   let Art_Brand = [];
@@ -508,21 +508,23 @@ const CloneJobs = ({
           <Col sm={2}>
             <div>
               <label htmlFor="agency">Pantone</label>
-              <InputText
-                id="pantone"
-                value={pantone}
-                placeholder="Enter Pantone"
-                onChange={(e) => {
-                  addData("Pantone", index, e.target.value, di_name);
-                  setPantone(e.target.value);
-                }}
-                aria-describedby="pantone-help"
-                disabled={
-                  !checkReadWriteAccess ||
-                  (showPage === "CNIQ" && true) ||
-                  data.Task_Status === "Complete"
-                }
-              />
+              <div>
+                <InputText
+                  id="pantone"
+                  value={pantone}
+                  placeholder="Enter Pantone"
+                  onChange={(e) => {
+                    addData("Pantone", index, e.target.value, di_name);
+                    setPantone(e.target.value);
+                  }}
+                  aria-describedby="pantone-help"
+                  disabled={
+                    !checkReadWriteAccess ||
+                    (showPage === "CNIQ" && true) ||
+                    data.Task_Status === "Complete"
+                  }
+                />
+              </div>
             </div>
           </Col>
         )}
@@ -597,7 +599,7 @@ const CloneJobs = ({
                       "disabled-text"
                     }
                   >
-                    Print Trail Needed
+                    Print Trial Needed
                   </label>
                 </div>
               )}
