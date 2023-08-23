@@ -7,4 +7,5 @@ const url = "https://awflowsit.pg.com";
 export const DEVURL = `${url}/optaplanner/optimize`;
 export const SITURL = `${SIT}/prweb/api/ArtworkAgilityFile`;
 export const PRODURL = `${PROD}/prweb/api/ArtworkAgilityFile`;
+export const AZUREURL = `${url}/optaplanner/azurefile`;
 //export const GETURL = `${getUrl}/optaplanner/optimize`;

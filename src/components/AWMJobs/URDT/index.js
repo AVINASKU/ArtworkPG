@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { CheckReadOnlyAccess, Loading } from "../../../utils";
 import UploadDesignIntentProofscope from "../DesignJobs/UploadDesignIntentProofscope";
 import { uploadProofscopeFileAzure } from "../../../store/actions/AzureFileProofscopeAction";
-
+import { uploadtoAzurefileShare } from "../../../apis/uploadAzureFileShareApi";
 const breadcrumb = [
   { label: "My Tasks", url: "/tasks" },
   { label: "Upload Regional Design Template" },
@@ -85,6 +85,8 @@ const URDT = () => {
       Filename: fileName,
     };
     await postSaveDesignIntent(formData);
+
+    await uploadtoAzurefileShare(azureFile, "test1");
     setLoader(false);
   };
 
@@ -121,11 +123,12 @@ const URDT = () => {
         },
       ],
     };
-    dispatch(
-      uploadProofscopeFileAzure(selectedProjectDetails?.BU, azureFile, "RDT")
-    );
-    // //console.log('formData', formData, "id", id);
+    // dispatch(
+    //   uploadProofscopeFileAzure(selectedProjectDetails?.BU, azureFile, "RDT")
+    // );
+    // console.log('formData', formData, "id", id);
     await submitUploadRegionalDesignIntent(formData, id, headers);
+    await uploadtoAzurefileShare(azureFile, "test1");
     setLoader(false);
     navigate(`/${currentUrl?.split("/")[1]}`);
   };
@@ -140,7 +143,7 @@ const URDT = () => {
         taskName="Regional Design Intent"
       />
       <div className="task-details">
-        {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
+        {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} TaskDetailsData={TaskDetailsData}/>}
         {loading || loader || designIntent === null ? (
           <Loading />
         ) : (

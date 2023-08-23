@@ -98,6 +98,7 @@ import UADI from "./components/AWMJobs/UADI";
 import AllTasksPage from "./AllTaksPage.js";
 import MyTasksPage from "./MyTaskPage.js";
 import DDT from "./components/AWMJobs/DDT/index.js";
+import UBD from "./components/AWMJobs/UBD/index.js";
 import DPRA from "./components/AWMJobs/DPRA/index.js";
 import CCD from "./components/AWMJobs/CCD/index.js";
 import DCD from "./components/AWMJobs/DCD/index.js";
@@ -215,14 +216,14 @@ const RoutesNav = () => {
         {/* artworkAlignment */}
 
         {/* mapping */}
-        <Route path="/mapping" element={<ProjectCreation key="mapping" />} />
+        <Route path="/dependencyMapping" element={<ProjectCreation key="mapping" />} />
         <Route
-          path="/myProjects/mapping/:ProjectID"
-          element={<ProjectCreation key={`mapping-${params.ProjectID}`} />}
+          path="/myProjects/dependencyMapping/:ProjectID"
+          element={<ProjectCreation key={`dependencyMapping-${params.ProjectID}`} />}
         />
         <Route
-          path="/allProjects/mapping/:ProjectID"
-          element={<ProjectCreation key={`mapping-${params.ProjectID}`} />}
+          path="/allProjects/dependencyMapping/:ProjectID"
+          element={<ProjectCreation key={`dependencyMapping-${params.ProjectID}`} />}
         />
         {/* mapping */}
         {/* readinessPerPMP */}
@@ -252,6 +253,8 @@ const RoutesNav = () => {
         <Route path="/:pageType/UADI/:TaskID/:ProjectID" element={<UADI />} />
         <Route path="/:page1/:page2/DDT/:TaskID/:ProjectID" element={<DDT />} />
         <Route path="/:pageType/DDT/:TaskID/:ProjectID" element={<DDT />} />
+        <Route path="/:page1/:page2/UBD/:TaskID/:ProjectID" element={<UBD />} />
+        <Route path="/:pageType/UBD/:TaskID/:ProjectID" element={<UBD />} />
 
         <Route
           path="/:page1/:page2/ARDT/:TaskID/:ProjectID"

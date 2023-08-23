@@ -128,7 +128,7 @@ const UPRA = () => {
         taskName="Production Ready Art"
       />
       <div className="task-details">
-        {<AddNewDesign {...data} />}
+        {<AddNewDesign {...data} TaskDetailsData={TaskDetailsData}/>}
         {loading ? (
           <div className="align-item-center">
             <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>

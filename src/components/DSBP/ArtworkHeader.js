@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
-import { Button } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
@@ -8,12 +7,12 @@ import DsbpActionDialog from "./DsbpActionDialog";
 import CustomizeView from "./CustomizeView";
 import filter from "../../assets/images/filter.svg";
 import BlueFilterIcon from "../../assets/images/BlueFilterIcon.svg";
-import {
-  handleConfirmFullScopeIn
-} from "../../apis/dsbpApi";
+import searchMyProjects from "../../assets/images/searchMyProjects.svg";
+import { handleConfirmFullScopeIn } from "../../apis/dsbpApi";
 import { getMyProject } from "../../store/actions/ProjectActions";
 import "primeicons/primeicons.css";
 import { isArray } from "lodash";
+import { ExportSelectedRows } from "../ExportCSV";
 
 const ArtworkHeader = ({
   label,
@@ -32,10 +31,26 @@ const ArtworkHeader = ({
   tableRender,
   customizeViewFields,
   setCustomizeViewFields,
-  userHasAccess,
   isDependencyMapping,
   setLoader,
-  dependencyMappingData
+  dependencyMappingData,
+  CDPTPageData,
+  IQData,
+  RDTData,
+  GABriefData,
+  columnNames,
+  filteredDependencyMappingData,
+  onSearchClick,
+  onClickClearFilter,
+  isFilterActivatedInDependencyMapping,
+  updateDropDownData,
+  onSubmit,
+  handleNewGaBrief,
+  isSubmitEnable,
+  submittedData,
+  setSubmittedData,
+  filteredDsbpData,
+  hyperLink,
 }) => {
   const navigate = useNavigate();
   let { ProjectID } = useParams();
@@ -51,36 +66,61 @@ const ArtworkHeader = ({
     (state) => state.DropDownValuesReducer
   );
   const { userInformation } = useSelector((state) => state.UserReducer);
-  const { myProject} = useSelector((state) => state.myProject);
+  const { myProject } = useSelector((state) => state.myProject);
   const BU = selectedProjectDetails?.BU;
   // check whether project is from home care or baby care
   let isBUHomeCare = false;
   if (BU === "Home Care") {
     isBUHomeCare = true;
   }
+  let actionNameObject = [];
 
-  const actionNameObject = [
-    {
-      value: "Mass Update",
-      key: "option-1",
-      header: "Mass Update",
-    },
-    {
-      value: "Create POAA",
-      key: "option-2",
-      header: "Are you sure you want to create POAs for below PMPs in RTA ?",
-    },
-    {
-      value: "Group PMPs",
-      key: "option-3",
-      header: "Are you sure you want to group these PMPs ?",
-    },
-    {
-      value: "Add to Project",
-      key: "option-4",
-      header: "Are you sure you want to add these PMP to Project ?",
-    },
-  ];
+  console.log(
+    "isFilterActivatedInDependencyMapping",
+    filteredDependencyMappingData
+  );
+
+  headerName !== "Dependency Mapping"
+    ? (actionNameObject = [
+        {
+          value: "Mass Update",
+          key: "option-1",
+          header: "Mass Update",
+        },
+        {
+          value: "Create POAA",
+          key: "option-2",
+          header:
+            "Are you sure you want to create POAs for below PMPs in RTA ?",
+        },
+        {
+          value: "Group PMPs",
+          key: "option-3",
+          header: "Are you sure you want to group these PMPs ?",
+        },
+        {
+          value: "Add to Project",
+          key: "option-4",
+          header: "Are you sure you want to add these PMP to Project ?",
+        },
+      ])
+    : (actionNameObject = [
+        {
+          value: "Mass Update",
+          key: "option-1",
+          header: "Mass Update",
+        },
+        {
+          value: "CIC Matrix",
+          key: "option-2",
+          header: "Request CIC/CIC Matrix",
+        },
+        {
+          value: "Request CIC/CIC Matrix",
+          key: "option-3",
+          header: "Request CIC/CIC Matrix",
+        },
+      ]);
 
   const handleAction = (e) => {
     setActionHeader(e);
@@ -118,7 +158,7 @@ const ArtworkHeader = ({
   }
 
   const breadcrumb = (
-    <div style={{ marginLeft: 10 }}>
+    <div>
       <nav
         className="p-breadcrumb p-component ProjectPlanBreadCrum"
         aria-label="Breadcrumb"
@@ -138,9 +178,11 @@ const ArtworkHeader = ({
             </a>
           </li>
           <li>
-            <div className="project-name">
-              {selectedProjectDetails.Project_Name}
-            </div>
+            <NavLink to={hyperLink}>
+              <div className="project-name">
+                {selectedProjectDetails.Project_Name}
+              </div>
+            </NavLink>
           </li>
         </ul>
       </nav>
@@ -149,10 +191,10 @@ const ArtworkHeader = ({
 
   useEffect(() => {
     if (myProject) {
-      let projectData = isArray(myProject) && myProject.find(
-        (project) => project.Project_ID === ProjectID
-      );
-      setConfirmFullScopeEnable(projectData?.Estimated_No_Of_POAs > 1)
+      let projectData =
+        isArray(myProject) &&
+        myProject.find((project) => project.Project_ID === ProjectID);
+      setConfirmFullScopeEnable(projectData?.Estimated_No_Of_POAs > 1);
     }
   }, [myProject]);
 
@@ -175,10 +217,10 @@ const ArtworkHeader = ({
   }, [actionDropDownValues]);
 
   const onConfirmFullScopeIn = async () => {
-    setLoader(true)
+    setLoader(true);
     await handleConfirmFullScopeIn(ProjectID);
     await dispatch(getMyProject(userInformation));
-    setLoader(false)
+    setLoader(false);
   };
 
   return (
@@ -196,79 +238,87 @@ const ArtworkHeader = ({
       <div className="actions">
         <div>{breadcrumb}</div>
         <div className="header-buttons">
-          <div style={{ top: 30 }}>
-            {isFilterActivated.length ? (
-              <img
-                src={BlueFilterIcon}
-                alt="filter logo"
-                onClick={() => {
-                  buWiseSortedColumnNames.map((ele) => {
-                    if (ele) {
-                      ele["sortZtoA"] = false;
-                      ele["sortAtoZ"] = false;
-                      ele["freeze"] = false;
-                      ele["width"] = 250;
-                      ele["reorder"] = false;
-                    }
-                  });
-                  isBUHomeCare
-                    ? localStorage.setItem(
-                        "columnWidthDSBPArtworkHomeCare",
-                        JSON.stringify(buWiseSortedColumnNames)
-                      )
-                    : localStorage.setItem(
-                        "columnWidthDSBPArtworkBabyCare",
-                        JSON.stringify(buWiseSortedColumnNames)
-                      );
-                  setFieldUpdated(!fieldUpdated);
-                  setBuWiseSortedColumnNames(buWiseSortedColumnNames);
-                  setDsbpPmpData(dsbpPmpData);
-                  setTableRender(!tableRender);
-                }}
-                className="header-icons"
-              />
-            ) : (
-              <img
-                src={filter}
-                alt="filter logo"
-                disabled={userHasAccess}
-                // onClick={() => clearColumnWiseFilter()}
-                className="header-icons"
-              />
-            )}
-          </div>
+          {!isDependencyMapping && (
+            <div style={{ top: 30 }}>
+              {isFilterActivated.length || filteredDsbpData ? (
+                <img
+                  src={BlueFilterIcon}
+                  alt="filter logo"
+                  onClick={() => onClickClearFilter()}
+                  className="header-icons"
+                />
+              ) : (
+                <img
+                  src={filter}
+                  alt="filter logo"
+                  // onClick={() => clearColumnWiseFilter()}
+                  className="header-icons"
+                />
+              )}
+            </div>
+          )}
           {isDependencyMapping ? (
-            <div
-                  className="btn-group btn-group-toggle"
-                  data-toggle="buttons"
-                >
-                  <div className="col projectPlanButtons">
-                    <label
-                      className={` btn border border-secondary ${
-                        toggleButtons === "Tabular"
-                          ? "ganttChartTabular active"
-                          : ""
-                      }`}
-                      onClick={() => setToggleButtons("Tabular")}
-                    >
-                      Tabular
-                    </label>
-                    <label
-                      className={` btn border border-secondary ${
-                        toggleButtons === "Visual"
-                          ? "ganttChartTabular active"
-                          : ""
-                      }`}
-                      onClick={() => setToggleButtons("Visual")}
-                    >
-                      Visual
-                    </label>
-                  </div>
+            <>
+              {isFilterActivatedInDependencyMapping?.length ||
+              filteredDependencyMappingData?.length ? (
+                <img
+                  src={BlueFilterIcon}
+                  alt="filter logo"
+                  onClick={() => onClickClearFilter()}
+                  className="header-icons"
+                />
+              ) : (
+                <img
+                  src={filter}
+                  alt="filter logo"
+                  // onClick={() => clearColumnWiseFilter()}
+                  className="header-icons"
+                />
+              )}
+              <div style={{ marginLeft: 10 }}>
+                <img
+                  src={searchMyProjects}
+                  alt="search field"
+                  onClick={onSearchClick}
+                  className="header-icons"
+                />
+              </div>
+              <div style={{ marginLeft: 10 }}>
+                <ExportSelectedRows
+                  allData={dsbpPmpData}
+                  selectedRows={filteredDependencyMappingData}
+                  headers={columnNames}
+                />
+              </div>
+              <div className="btn-group btn-group-toggle" data-toggle="buttons">
+                <div className="col projectPlanButtons">
+                  <label
+                    className={` btn border border-secondary ${
+                      toggleButtons === "Tabular"
+                        ? "ganttChartTabular active"
+                        : ""
+                    }`}
+                    onClick={() => setToggleButtons("Tabular")}
+                  >
+                    Tabular
+                  </label>
+                  <label
+                    className={` btn border border-secondary ${
+                      toggleButtons === "Visual"
+                        ? "ganttChartTabular active"
+                        : ""
+                    }`}
+                    onClick={() => setToggleButtons("Visual")}
+                  >
+                    Visual
+                  </label>
                 </div>
+              </div>
+            </>
           ) : (
             <button
               type="button"
-              disabled={confirmFullScopeEnable || userHasAccess}
+              disabled={confirmFullScopeEnable}
               className="btn btn-secondary"
               onClick={onConfirmFullScopeIn}
             >
@@ -278,7 +328,6 @@ const ArtworkHeader = ({
           <button
             type="button"
             className="btn btn-secondary"
-            disabled={userHasAccess}
             onClick={() => setShowApproveDialogCPPFA(true)}
           >
             Customize View
@@ -288,7 +337,7 @@ const ArtworkHeader = ({
             align="end"
             variant="secondary"
             onSelect={handleAction}
-            disabled={selected?.length === 0 || userHasAccess}
+            disabled={selected?.length === 0}
           >
             {actionNameObject?.map((item) => {
               return (
@@ -307,9 +356,21 @@ const ArtworkHeader = ({
           setActionDialog={setActionDialog}
           selected={selected}
           actionNameObject={actionNameObject}
-          onActionSubmit={onActionSubmit}
+          onActionSubmit={
+            headerName !== "Dependency Mapping" ? onActionSubmit : onSubmit
+          }
           aiseList={aiseList}
           assemblyMechanismList={assemblyMechanismList}
+          headerName={headerName}
+          CDPTPageData={CDPTPageData}
+          IQData={IQData}
+          RDTData={RDTData}
+          GABriefData={GABriefData}
+          updateDropDownData={updateDropDownData}
+          handleNewGaBrief={handleNewGaBrief}
+          isSubmitEnable={isSubmitEnable}
+          setSubmittedData={setSubmittedData}
+          submittedData={submittedData}
         />
       )}
     </div>

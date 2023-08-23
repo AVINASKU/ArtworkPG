@@ -679,13 +679,13 @@ function ProjectSetup(props) {
     },
     {
       name: "artworkAlignment",
-      tabNameForDisplay: "Artwork Alignment",
+      tabNameForDisplay: "Artwork Scope Alignment",
       component: tabName === "artworkAlignment" && <ArtworkAlignment />,
     },
     {
-      name: "mapping",
-      tabNameForDisplay: "Mapping",
-      component: tabName === "mapping" && (
+      name: "dependencyMapping",
+      tabNameForDisplay: "Dependency Mapping",
+      component: tabName === "dependencyMapping" && (
         <Suspense fallback={<div>Loading Component</div>}>
           <DependencyMapping />
         </Suspense>
@@ -748,6 +748,7 @@ function ProjectSetup(props) {
       )}
 
       <div className="tabular-view">
+        
         <TabsComponent
           tabName={tabName}
           items={itemsData}

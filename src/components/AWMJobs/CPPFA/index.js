@@ -4,16 +4,17 @@ import React, { useState, useEffect } from "react";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Col, Row } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
 import { submitCPPFA } from "../../../store/actions/taskDetailAction";
-import { changeDateFormat, hasAllAccess } from "../../../utils";
+import { changeDateFormat, hasAllAccess, Loading } from "../../../utils";
 import { FileUpload } from "primereact/fileupload";
 import { NavLink, useLocation } from "react-router-dom";
 import upload1 from "../../../assets/images/upload1.svg";
 import { getTasks } from "../../../store/actions/TaskActions";
 import "./index.scss";
-
+import { AzureFileDownloadJobs } from "../../../store/actions/AzureFileDownloadJobs";
+import { Image } from "primereact/image";
 const CPPFA = ({
   showTaskDialog,
   selectedTaskData,
@@ -23,16 +24,22 @@ const CPPFA = ({
   userInformation,
   getProjectPlanApi,
 }) => {
+  console.log(TaskDetailsData);
   const location = useLocation();
   const locationPath = location?.pathname;
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
   const url = locationPath?.split("/");
+  const [loader, setLoader] = useState(false);
+  const BU = selectedProjectDetails?.BU;
 
   const [visible, setVisible] = useState(showTaskDialog);
-  const [designIntent, setDesignIntent] = useState({});
+  const [taskDetailsDataObj, setTaskDetailsDataObj] = useState(null);
+  const [newPrintFeasibilityFlag, setNewPrintFeasibilityFlag] = useState(null);
   const [version, setVersion] = useState("V0");
   // let allAccess = hasAllAccess();
   const allAccess = true;
-  let isAccessEmpty = allAccess;
+  let isAccessEmpty = !allAccess;
 
   // if (url[1] === "AllTasks") {
   //   isAccessEmpty = true;
@@ -41,46 +48,36 @@ const CPPFA = ({
   // }
   const dispatch = useDispatch();
 
-  //console.log("pranali check is access", isAccessEmpty, url[1]);
-
-  const { TaskID, ProjectID } = selectedTaskData;
+  const { ProjectID } = selectedTaskData;
   const [cppfaDialogFlag, setCppfaDialogFlag] = useState(false);
 
   useEffect(() => {
-    setVisible(showTaskDialog);
-  }, [showTaskDialog]);
-
-  // useEffect(() => {
-  //   dispatch(getProjectPlanApi(TaskID, ProjectID));
-  // }, [dispatch, TaskID, ProjectID]);
-
-  useEffect(() => {
+    setLoader(true);
     if (TaskDetailsData) {
-      setDesignIntent(TaskDetailsData?.ArtworkAgilityTasks[0] || {});
+      setTaskDetailsDataObj(TaskDetailsData?.ArtworkAgilityTasks[0] || {});
+      setNewPrintFeasibilityFlag(
+        TaskDetailsData?.ArtworkAgilityPage?.New_Print_Feasibility || false
+      );
     }
-    if (designIntent) {
-      designIntent.FileMetaDataList?.find((el) => {
+    if (taskDetailsDataObj) {
+      taskDetailsDataObj?.FileMetaDataList?.find((el) => {
         if (el.Version !== "" && el.Version !== null) {
           setVersion(el.Version);
         }
       });
-      if (
-        designIntent.RiskLevel !== undefined &&
-        designIntent.RiskLevel !== ""
-      ) {
-        setRiskLevel(designIntent.RiskLevel);
-      }
       pegadata.find((el) => {
         if (
           (el.AWM_Project_ID === ProjectID &&
             el.Task === "Define Color Development & Print Trial") ||
           (el.AWM_Project_ID === ProjectID &&
-            el.Task_Name === "Define New Print Feasibility scope")
+            (el.Task_Name === "Define New Print Feasibility scope" ||
+              el.Task_Name ===
+                "Confirm Preliminary Print Feasibility Assessment"))
         ) {
           setCppfaDialogFlag(true);
         }
       });
-      //console.log("TaskDetailsData:", TaskDetailsData);
+      setLoader(false);
     }
   }, [TaskDetailsData]);
 
@@ -88,19 +85,17 @@ const CPPFA = ({
     setVisible(false);
     onClose();
   };
-  const [riskLevel, setRiskLevel] = useState("Low");
+  const [riskLevel, setRiskLevel] = useState("");
   const [highRiskYesOrNo, setHighRiskYesOrNo] = useState("");
   const [yesOrNo, setYesOrNo] = useState("");
 
   const setRiskLevelFunc = (level) => {
     setRiskLevel(level);
-    const data = { ...designIntent };
+    const data = { ...taskDetailsDataObj };
     data.RiskLevel = level;
-    setDesignIntent(data);
-    if (level === "Low") {
-      setHighRiskYesOrNo("");
-      setYesOrNo("");
-    }
+    setTaskDetailsDataObj(data);
+    setHighRiskYesOrNo("");
+    setYesOrNo("");
   };
 
   const [fileName, setFileName] = useState(null);
@@ -113,52 +108,28 @@ const CPPFA = ({
     setAzureFile(file);
     return (
       <div className="upload-row">
-        <img
-          alt={file.name}
-          role="presentation"
-          src={file.objectURL}
-          width={50}
-        />
-        <div className="flex flex-column text-left ml-3">{file.name}</div>
+        <div className="card flex justify-content-center">
+          <Image
+            src={file.objectURL}
+            zoomSrc={file.objectURL}
+            alt="Image"
+            width="60"
+            height="60"
+            preview
+          />
+        </div>
+        <div
+          className="flex flex-column text-left ml-3"
+          hidden={
+            file.name.includes(".pdf") ||
+            file.name.includes(".zip") ||
+            file.name.includes(".csv")
+          }
+        >
+          {file.name}
+        </div>
       </div>
     );
-  };
-
-  const handleSubmit = async () => {
-    const headers = {
-      key: "If-Match",
-      value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
-    };
-    const fileSize = Math.round(formattedValue / 1000000);
-    const formData = {
-      caseTypeID: "PG-AAS-Work-ConfirmPreliminaryPrintFeasibilityAssessment",
-      content: {
-        RiskLevel: riskLevel,
-        NPFNeeded: cppfaDialogFlag ? String(false) : String(yesOrNo === "yes"),
-        AWMTaskID: selectedTaskData.TaskID,
-        AWMProjectID: ProjectID,
-        Size: fileSize === 0 ? "1" : fileSize,
-        Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
-        Filename: fileName ? fileName.split(".").slice(0, -1).join(".") : null,
-      },
-    };
-
-    if (riskLevel !== "Low" && !cppfaDialogFlag && yesOrNo === "") {
-      setHighRiskYesOrNo("selectYesOrNo");
-    } else {
-      await dispatch(uploadFileAzure(azureFile));
-      await submitCPPFA(
-        formData,
-        `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`,
-        headers
-      );
-      hideDialog();
-      if (url[2] === "projectPlan") {
-        getProjectPlanApi();
-      } else if (url[1] === "MyTasks") {
-        await dispatch(getTasks(userInformation));
-      }
-    }
   };
 
   const chooseOptions = {
@@ -174,6 +145,87 @@ const CPPFA = ({
     }
   };
 
+  const [flag, setFlag] = useState(false);
+  useEffect(() => {
+    pegadata.forEach((obj) => {
+      if (
+        obj.data.Task === "Define New Print Feasibility Scope" ||
+        obj.data.Task === "Define Color Development & Print Trial"
+      ) {
+        setFlag(true);
+      }
+    });
+  }, [pegadata]);
+
+  const [hideFlag, setHideFlag] = useState(false);
+  useEffect(() => {
+    if (taskDetailsDataObj?.RiskLevel !== undefined) {
+      setRiskLevel(taskDetailsDataObj?.RiskLevel?.toLowerCase());
+    }
+    if (
+      taskDetailsDataObj?.RiskLevel?.toLowerCase() === "low" ||
+      taskDetailsDataObj?.RiskLevel === ""
+    ) {
+      setHideFlag(true);
+    } else if (newPrintFeasibilityFlag) {
+      setHideFlag(true);
+      // } else if (flag && taskDetailsDataObj?.Task_Status !== "Complete" && newPrintFeasibilityFlag) {
+      //   setHideFlag(true);
+      // } else if (!flag && taskDetailsDataObj?.Task_Status === "Complete" && !newPrintFeasibilityFlag) {
+      //   setHideFlag(false);
+    } else {
+      setHideFlag(false);
+    }
+  }, [taskDetailsDataObj, flag, showTaskDialog]);
+
+  const handleSubmit = async () => {
+    setLoader(true);
+    const headers = {
+      key: "If-Match",
+      value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
+    };
+    const fileSize = Math.round(formattedValue / 1000000);
+
+    const formData = {
+      caseTypeID: "PG-AAS-Work-ConfirmPreliminaryPrintFeasibilityAssessment",
+      content: {
+        RiskLevel: riskLevel.charAt(0).toUpperCase() + riskLevel.slice(1),
+        NPFNeeded: cppfaDialogFlag ? String(false) : String(yesOrNo === "yes"),
+        AWMTaskID: selectedTaskData.TaskID,
+        AWMProjectID: ProjectID,
+        Size: fileName ? (fileSize === 0 ? "1" : fileSize) : null,
+        Version: fileName
+          ? version.substring(0, 1) + (parseInt(version.substring(1)) + 1)
+          : null,
+        Filename: fileName ? fileName : null,
+      },
+    };
+
+    if (!hideFlag && yesOrNo === "") {
+      if (riskLevel !== "low" && !cppfaDialogFlag) {
+        setHighRiskYesOrNo("selectYesOrNo");
+      }
+    } else {
+      azureFile &&
+        (await dispatch(uploadFileAzure(azureFile, ProjectID, BU, "CPPFA")));
+      await submitCPPFA(
+        formData,
+        `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`,
+        headers
+      );
+      hideDialog();
+      if (url[2] === "projectPlan") {
+        getProjectPlanApi();
+      } else if (url[1] === "MyTasks") {
+        await dispatch(getTasks(userInformation));
+      }
+    }
+    setLoader(false);
+  };
+  const downloadAzure = async (event, fileUrl) => {
+    event.preventDefault();
+    dispatch(AzureFileDownloadJobs(fileUrl, ProjectID, BU, "CPPFA"));
+  };
   return (
     <Dialog
       visible={visible}
@@ -228,95 +280,112 @@ const CPPFA = ({
               </ul>
             </nav>
           </div>
-          <div className="p-dialog-header1">{designIntent.Project_Name}</div>
+          <div className="p-dialog-header1">
+            {taskDetailsDataObj?.Project_Name}
+          </div>
         </div>
       }
     >
-      <div className="p-fluid popup-details ppfaDialogBorder">
-        <div className="p-field">
-          <Row>
-            <Col>Duration (Days)</Col>
-            <Col>Start Date</Col>
-            <Col>End Date</Col>
-            <Col>Consumed Buffer</Col>
-          </Row>
-          <Row>
-            <Col>{designIntent.Duration}</Col>
-            <Col>{changeDateFormat(designIntent.Start_Date)}</Col>
-            <Col>{changeDateFormat(designIntent.End_Date)}</Col>
-            <Col className="ppfaDialogTextColor">
-              {designIntent.Consumed_Buffer}
-            </Col>
-          </Row>
+      {loader || taskDetailsDataObj === null ? (
+        <div className="p-fluid popup-details ppfaDialogBorder">
           <br />
-          <Row>
-            <Col>Risk Level*</Col>
-            {/* <Col>Upload (optional)</Col> */}
-            <Col></Col>
-            <Col></Col>
-          </Row>
-          <Row>
-            <Col>
-              <div>
-                <input
-                  type="radio"
-                  id="html"
-                  name="fav_language"
-                  value="Low"
-                  checked={
-                    designIntent.RiskLevel === "Low" ||
-                    designIntent.RiskLevel === ""
-                  }
-                  onChange={(e) => setRiskLevelFunc(e.target.value)}
-                  disabled={
-                    isAccessEmpty || designIntent.Task_Status === "Complete"
-                  }
-                />
-                <label className="radioLabel">Low Risk</label>
-              </div>
-              <div>
-                <input
-                  type="radio"
-                  id="html"
-                  name="fav_language"
-                  value="Medium"
-                  checked={designIntent.RiskLevel === "Medium"}
-                  onChange={(e) => setRiskLevelFunc(e.target.value)}
-                  disabled={
-                    isAccessEmpty || designIntent.Task_Status === "Complete"
-                  }
-                />
-                <label className="radioLabel">Medium Risk</label>
-              </div>
-              <div>
-                <input
-                  type="radio"
-                  id="html"
-                  name="fav_language"
-                  value="High"
-                  checked={designIntent.RiskLevel === "High"}
-                  onChange={(e) => setRiskLevelFunc(e.target.value)}
-                  disabled={
-                    isAccessEmpty || designIntent.Task_Status === "Complete"
-                  }
-                />
-                <label className="radioLabel">High Risk</label>
-              </div>
-            </Col>
-            <Col>
-              <FileUpload
-                name="demo[]"
-                url={"/api/upload"}
-                // multiple
-                accept="image/*"
-                maxFileSize={1000000}
-                chooseOptions={chooseOptions}
-                itemTemplate={itemTemplate}
-                emptyTemplate={
+          <br />
+          <br />
+          <br />
+          <Loading />
+        </div>
+      ) : (
+        <>
+          <div className="p-fluid popup-details ppfaDialogBorder">
+            <div className="p-field">
+              <Row>
+                <Col>Duration (Days)</Col>
+                <Col>Start Date</Col>
+                <Col>End Date</Col>
+                <Col>Consumed Buffer</Col>
+              </Row>
+              <Row>
+                <Col>{taskDetailsDataObj?.Duration}</Col>
+                <Col>{changeDateFormat(taskDetailsDataObj?.Start_Date)}</Col>
+                <Col>{changeDateFormat(taskDetailsDataObj?.End_Date)}</Col>
+                <Col className="ppfaDialogTextColor">
+                  {taskDetailsDataObj?.Consumed_Buffer}
+                </Col>
+              </Row>
+              <br />
+              <Row>
+                <Col>Risk Level*</Col>
+                <Col></Col>
+                <Col></Col>
+              </Row>
+              <Row>
+                <Col>
+                  <div>
+                    <input
+                      type="radio"
+                      id="html"
+                      name="fav_language"
+                      value="low"
+                      checked={riskLevel === "low"}
+                      onChange={(e) => setRiskLevelFunc(e.target.value)}
+                      disabled={
+                        isAccessEmpty ||
+                        taskDetailsDataObj?.Task_Status === "Complete"
+                      }
+                    />
+                    <label className="radioLabel">Low Risk</label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      id="html"
+                      name="fav_language"
+                      value="medium"
+                      checked={riskLevel === "medium"}
+                      onChange={(e) => setRiskLevelFunc(e.target.value)}
+                      disabled={
+                        isAccessEmpty ||
+                        taskDetailsDataObj?.Task_Status === "Complete"
+                      }
+                    />
+                    <label className="radioLabel">Medium Risk</label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      id="html"
+                      name="fav_language"
+                      value="high"
+                      checked={riskLevel === "high"}
+                      onChange={(e) => setRiskLevelFunc(e.target.value)}
+                      disabled={
+                        isAccessEmpty ||
+                        taskDetailsDataObj?.Task_Status === "Complete"
+                      }
+                    />
+                    <label className="radioLabel">High Risk</label>
+                  </div>
+                </Col>
+                <Col>
+                  <FileUpload
+                    name="demo[]"
+                    url={"/api/upload"}
+                    // multiple
+                    accept="image/*"
+                    maxFileSize={1000000}
+                    chooseOptions={chooseOptions}
+                    itemTemplate={itemTemplate}
+                    disabled={
+                      isAccessEmpty ||
+                      taskDetailsDataObj?.Task_Status === "Complete"
+                    }
+                    onValidationFail={(e) => onValidationFail(e)}
+                  />
                   <p className="m-0">
-                    {designIntent.FileMetaDataList &&
-                    designIntent.FileMetaDataList.length > 0 ? (
-                      designIntent.FileMetaDataList[0].File_Name === "" ? (
+                    {taskDetailsDataObj?.FileMetaDataList &&
+                    taskDetailsDataObj?.FileMetaDataList.length > 0 ? (
+                      taskDetailsDataObj?.FileMetaDataList[0].File_Name ===
+                      "" ? (
                         <>
                           <span>Drop or Browse file here</span> <br />
                           <span className="fileSupportedData">
@@ -324,7 +393,17 @@ const CPPFA = ({
                           </span>
                         </>
                       ) : (
-                        designIntent.FileMetaDataList[0].File_Name
+                        <a
+                          className="flex flex-column text-left ml-3"
+                          onClick={(event) =>
+                            downloadAzure(
+                              event,
+                              `${taskDetailsDataObj?.FileMetaDataList[0].File_Name}`
+                            )
+                          }
+                        >
+                          {taskDetailsDataObj?.FileMetaDataList[0].File_Name}
+                        </a>
                       )
                     ) : (
                       <>
@@ -335,98 +414,110 @@ const CPPFA = ({
                       </>
                     )}
                   </p>
+                </Col>
+                <Col></Col>
+              </Row>
+              <Row
+                hidden={
+                  // riskLevel === "" || riskLevel === "low" || cppfaDialogFlag
+                  hideFlag
                 }
+                className={
+                  (riskLevel !== "low" && highRiskYesOrNo === "") ||
+                  yesOrNo !== ""
+                    ? "highRiskDataPaddingBottom"
+                    : ""
+                }
+              >
+                <Col
+                  className={`highRiskData ${
+                    yesOrNo === "" && highRiskYesOrNo !== ""
+                      ? "highRiskErrorBorderColor"
+                      : ""
+                  }`}
+                >
+                  <div className="highRiskDataColor">
+                    Print Feasibility Assessment is{" "}
+                    {riskLevel.charAt(0).toUpperCase() + riskLevel.slice(1)}{" "}
+                    Risk whereas there is no Color Development in scope of this
+                    project. Do you want to add Color Development to the project
+                    scope?
+                  </div>
+                  <div className="highRiskButtons">
+                    <button
+                      type="button"
+                      className={`btn highRiskButton ${
+                        yesOrNo === "yes" ||
+                        (flag && taskDetailsDataObj?.Task_Status === "Complete")
+                          ? "yesOrNoButtonsColor"
+                          : "btn-secondary"
+                      }`}
+                      onClick={() => setYesOrNo("yes")}
+                      disabled={
+                        isAccessEmpty ||
+                        cppfaDialogFlag ||
+                        taskDetailsDataObj?.Task_Status === "Complete"
+                      }
+                    >
+                      Yes
+                    </button>
+                    <button
+                      type="button"
+                      className={`btn highRiskButton ${
+                        yesOrNo === "no" ||
+                        (!flag &&
+                          taskDetailsDataObj?.Task_Status === "Complete")
+                          ? "yesOrNoButtonsColor"
+                          : "btn-secondary"
+                      }`}
+                      onClick={() => setYesOrNo("no")}
+                      disabled={
+                        isAccessEmpty ||
+                        cppfaDialogFlag ||
+                        taskDetailsDataObj?.Task_Status === "Complete"
+                      }
+                    >
+                      No
+                    </button>
+                  </div>
+                </Col>
+                <Col></Col>
+                <Col></Col>
+                <Col></Col>
+              </Row>
+              <Row
+                hidden={hideFlag || yesOrNo !== "" || highRiskYesOrNo === ""}
+              >
+                <Col className="highRiskError">
+                  *Please select Yes/No in order to proceed further.
+                </Col>
+              </Row>
+            </div>
+          </div>
+          <div className="p-dialog-footer confirmPPFA">
+            {taskDetailsDataObj?.Task_Status === "Complete" ? (
+              <Button label="Confirm PPFA" onClick={handleSubmit} disabled />
+            ) : (
+              <Button
+                label="Confirm PPFA"
+                onClick={handleSubmit}
                 disabled={
-                  isAccessEmpty || designIntent.Task_Status === "Complete"
+                  isAccessEmpty ||
+                  riskLevel === "" ||
+                  (riskLevel === "low" ? false : yesOrNo === "" ? false : false)
+                  // isAccessEmpty || (flag && riskLevel !== "")
+                  //   ? !flag
+                  //   : riskLevel !== "low"
+                  //   ? cppfaDialogFlag
+                  //     ? false
+                  //     : yesOrNo === ""
+                  //   : false
                 }
-                onValidationFail={(e) => onValidationFail(e)}
               />
-            </Col>
-            <Col></Col>
-          </Row>
-          <Row
-            hidden={riskLevel === "Low" || cppfaDialogFlag}
-            className={
-              (riskLevel !== "Low" && highRiskYesOrNo === "") || yesOrNo !== ""
-                ? "highRiskDataPaddingBottom"
-                : ""
-            }
-          >
-            <Col
-              className={`highRiskData ${
-                yesOrNo === "" && highRiskYesOrNo !== ""
-                  ? "highRiskErrorBorderColor"
-                  : ""
-              }`}
-            >
-              <div className="highRiskDataColor">
-                Print Feasibility Assessment is High Risk whereas there is no
-                Color Development in scope of this project. Do you want to add
-                Color Development to the project scope?
-              </div>
-              <div className="highRiskButtons">
-                <button
-                  type="button"
-                  className={`btn highRiskButton ${
-                    yesOrNo === "yes" ? "yesOrNoButtonsColor" : "btn-secondary"
-                  }`}
-                  onClick={() => setYesOrNo("yes")}
-                  disabled={
-                    isAccessEmpty ||
-                    cppfaDialogFlag ||
-                    designIntent.Task_Status === "Complete"
-                  }
-                >
-                  Yes
-                </button>
-                <button
-                  type="button"
-                  className={`btn highRiskButton ${
-                    yesOrNo === "no" ? "yesOrNoButtonsColor" : "btn-secondary"
-                  }`}
-                  onClick={() => setYesOrNo("no")}
-                  disabled={
-                    isAccessEmpty ||
-                    cppfaDialogFlag ||
-                    designIntent.Task_Status === "Complete"
-                  }
-                >
-                  No
-                </button>
-              </div>
-            </Col>
-            <Col></Col>
-            <Col></Col>
-            <Col></Col>
-          </Row>
-          <Row
-            hidden={
-              riskLevel === "Low" || yesOrNo !== "" || highRiskYesOrNo === ""
-            }
-          >
-            <Col className="highRiskError">
-              *Please select Yes/No in order to proceed further.
-            </Col>
-          </Row>
-        </div>
-      </div>
-      <div className="p-dialog-footer confirmPPFA">
-        {designIntent.Task_Status === "Complete" ? (
-          <Button label="Confirm PPFA" onClick={handleSubmit} disabled />
-        ) : (
-          <Button
-            label="Confirm PPFA"
-            onClick={handleSubmit}
-            disabled={
-              isAccessEmpty || riskLevel !== "Low"
-                ? cppfaDialogFlag
-                  ? false
-                  : yesOrNo === ""
-                : false
-            }
-          />
-        )}
-      </div>
+            )}
+          </div>
+        </>
+      )}
     </Dialog>
   );
 };

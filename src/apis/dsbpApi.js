@@ -77,6 +77,19 @@ export const onSubmitDsbpAction = async (formData, headers = {}) => {
   return addResponse;
 };
 
+export const onSubmitCreatePOAA = async (formData, headers = {}) => {
+  const api = new Api();
+  const axiosInstance = await api.init({ headers });
+  let apiURL = `${DEVURL}/createPOA`;
+  const addResponse = await axiosInstance({
+    url: apiURL,
+    method: "POST",
+    data: formData,
+  });
+  console.log("Hello hello ----->", addResponse);
+  return addResponse;
+};
+
 export const getDependencyMappingDetails = async (projectId, headers = {}) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
@@ -91,7 +104,7 @@ export const getDependencyMappingDetails = async (projectId, headers = {}) => {
     response?.DSBP_InitiativeIDPage?.[0]?.DSBP_PMP_PIMaterialIDPage;
 
   // const isRDTData = response?.AWM_RDT_Page;
-const isRDTData=[];
+  const isRDTData = response?.AWM_RDT_Page;
   const isIQData = response?.AWM_IQ_Page;
   const isCDPTData = response?.AWM_CDPT_Page;
   const isGABrifData = response?.DSBP_GABrief_Page;
@@ -125,5 +138,18 @@ export const handleConfirmFullScopeIn = async (projectId, headers = {}) => {
     method: "POST",
   });
   //console.log("Hello hello ----->", addResponse);
+  return addResponse;
+};
+
+export const createNewGaBriefTask = async (formData, headers = {}) => {
+  const api = new Api();
+  const axiosInstance = await api.init({ headers });
+  let apiURL = `${DEVURL}/createGABriefTask`;
+  const addResponse = await axiosInstance({
+    url: apiURL,
+    method: "POST",
+    data: formData,
+  });
+  console.log("Add response ----->", addResponse);
   return addResponse;
 };

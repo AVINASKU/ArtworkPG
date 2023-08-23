@@ -3,7 +3,7 @@ import { FileUpload } from "primereact/fileupload";
 import { Image } from "primereact/image";
 import { Tag } from "primereact/tag";
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
-import { downloadFileAzure } from "../../../store/actions/AzureFileDownload";
+import { downloadFileAzure } from "../../../store/actions/AzureFileDownloadProofscope";
 import { useDispatch, useSelector } from "react-redux";
 
 const UploadDesignIntentProofscope = ({
@@ -70,11 +70,8 @@ const UploadDesignIntentProofscope = ({
   }
   const handleViewProofScopeClick = async (event, fileUrl) => {
     event.preventDefault();
-    dispatch(downloadFileAzure(`${env}${buName}/${taskFolder}/${fileUrl}`));
-    viewProofScopeFile(
-      TaskID,
-      `cloudflow://PP_FILE_STORE/${env}${buName}/${taskFolder}/${fileUrl}`
-    );
+    // dispatch(downloadFileAzure(`${env}${buName}/${taskFolder}/${fileUrl}`));
+    viewProofScopeFile(TaskID, `cloudflow://awm/${fileUrl}`);
   };
   let di_name;
   if (!approve) {
@@ -104,33 +101,21 @@ const UploadDesignIntentProofscope = ({
     // Update the state with the extracted file extension
     setFileExtension(fileExtension);
     setformattedValue(file.size);
-    setFileName(di_name);
-    setAzureFile(di_name);
+
     //   seFileData(file);
     return (
       <div className="upload-row">
         <img role="presentation" src={file.objectURL} width={50} />
         <a
           className="flex flex-column text-left ml-3"
-          onClick={(event) => handleViewProofScopeClick(event, `${di_name}`)}
+          onClick={(event) => handleViewProofScopeClick(event, `${file.name}`)}
         >
-          {di_name}
+          {file.name}
         </a>
       </div>
     );
   };
   const onTemplateSelect = (e) => {
-    const uploadedFile = e.files[0];
-
-    const renamedFile = {
-      ...uploadedFile,
-      name: di_name,
-      size: uploadedFile.size,
-      type: uploadedFile.type,
-      lastModified: uploadedFile.lastModified,
-      lastModifiedDate: uploadedFile.lastModifiedDate,
-      webkitRelativePath: uploadedFile.webkitRelativePath,
-    };
     let _totalSize = totalSize;
     let files = e.files;
 
@@ -139,8 +124,8 @@ const UploadDesignIntentProofscope = ({
     });
 
     setTotalSize(_totalSize);
-    setAzureFile(renamedFile);
-    setFileName(di_name);
+    setAzureFile(e.files[0]);
+    setFileName(e.files[0].name);
   };
 
   const DesignHeader = (di_name) => {
@@ -206,10 +191,13 @@ const UploadDesignIntentProofscope = ({
               <a
                 className="flex flex-column text-left ml-3"
                 onClick={(event) =>
-                  handleViewProofScopeClick(event, updatedImg)
+                  handleViewProofScopeClick(
+                    event,
+                    item?.DesignJobDetails[0]?.FileMetaDataList[0]?.File_Name
+                  )
                 }
               >
-                {di_name}
+                {item?.DesignJobDetails[0]?.FileMetaDataList[0]?.File_Name}
               </a>
             )
           : ""}

@@ -255,7 +255,7 @@ function DPRA() {
         taskName="Production Ready Art"
       />
       <div className="task-details">
-        {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} />}
+        {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} TaskDetailsData={TaskDetailsData}/>}
         {loading || loader || designIntent === null ? (
           <Loading />
         ) : (
