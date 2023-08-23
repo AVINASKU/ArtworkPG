@@ -534,6 +534,7 @@ const ArtworkAlignment = () => {
             selected={selected}
             onActionSubmit={onActionSubmit}
             label="Artwork Scope Alignment"
+            hyperLink = "/projectPlan"
             actionDialog={actionDialog}
             setActionDialog={setActionDialog}
             setFieldUpdated={setFieldUpdated}

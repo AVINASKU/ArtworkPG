@@ -505,14 +505,13 @@ const PMPSpecificTabView = () => {
       )))
   };
 
-
   return (
     (
       <>
         {artWorkTabValuesData?.length > 1 && tabPanelList !== 0 ? (
           <TabView
             activeIndex={tabPanelList}
-            scrollable
+            scrollable ={artWorkTabValuesData?.length > 3 ? true : false}
             onTabChange={(e) => onTabChange(e.index)}
           >
             {renderTabs()} tabHeader
