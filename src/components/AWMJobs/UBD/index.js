@@ -55,11 +55,16 @@ function UBD() {
   const location = useLocation();
   const currentUrl = location.pathname;
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
-  const AzureSubFolder = "GA Briefs";
+  const AzureSubFolder = "UBD";
   console.log("TaskDetailsData:",TaskDetailsData);
   let breadcrumb = AddNavigation(headerName);
   // const checkReadWriteAccess = CheckReadOnlyAccess();
   const checkReadWriteAccess = true;
+
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
+  const BU = selectedProjectDetails?.BU;
+  const projectName = selectedProjectDetails?.Project_Name;
 
   const hideDialog = () => {
     setFileNotFound(false);
@@ -426,11 +431,27 @@ function UBD() {
     }
   }, [TaskDetailsData]);
 
+  const [groupNameFlag, setGroupNameFlag] = useState(false);
+
   const updateData = () => {
     setIsEditMode(!isEditMode);
-    if (graphicInputRef.current.value) {
+    // if (graphicInputRef.current.value) {
       setGraphicData(graphicInputRef.current.value);
-    }
+      if (
+        // (TaskDetailsData?.ArtworkAgilityTasks &&
+        //   TaskDetailsData?.ArtworkAgilityTasks[0]?.GABriefList &&
+        //   TaskDetailsData?.ArtworkAgilityTasks[0]?.GABriefList[0]
+        //     ?.GroupName) === undefined ||
+        (TaskDetailsData?.ArtworkAgilityTasks &&
+          TaskDetailsData?.ArtworkAgilityTasks[0]?.GABriefList &&
+          TaskDetailsData?.ArtworkAgilityTasks[0]?.GABriefList[0]?.GroupName !==
+            graphicInputRef.current.value)
+      ) {
+        setGroupNameFlag(true);
+      } else {
+        setGroupNameFlag(false);
+      }
+    // }
   };
 
   const getDataSaveAsDraft = (fileInfo, uploadType, sequence, version) => {
@@ -441,7 +462,7 @@ function UBD() {
       Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
       Size: fileSize === 0 ? "1" : `${fileSize}`,
       Sequence: `${sequence}`,
-      Action: "add",
+      // Action: "add",
     };
     let submitObj = {};
     if (
@@ -449,7 +470,7 @@ function UBD() {
       uploadType === graphicAdaptionBrief + fileUploadType.upVersion
     ) {
       // saveAsDraftObj.GroupName = "GA Brief Adaptation 1";
-      saveAsDraftObj.GroupName = graphicData;
+      // saveAsDraftObj.GroupName = graphicData;
       // saveAsDraftObj.GroupName = graphicData;
       setSaveAsDraftGABriefList([...saveAsDraftGABriefList, saveAsDraftObj]);
       submitObj = {
@@ -457,9 +478,9 @@ function UBD() {
         target: "GABriefList",
         content: {
           // GroupName: "GA Brief Adaptation 1",
-          GroupName: graphicData,
+          // GroupName: graphicData,
           Sequence: `${sequence}`,
-          Action: "add",
+          // Action: "add",
           File_Name: fileInfo.files[0].name,
           Size: fileSize === 0 ? "1" : `${fileSize}`,
           Version:
@@ -492,20 +513,19 @@ function UBD() {
   };
 
   const getGABriefListObj = (type) => {
-    console.log("getGABriefListObj", gABriefAdaptationForUI);
     let GABriefList = [];
     gABriefAdaptationForUI.map((obj) => {
       if (obj.Info) {
         const fileSize = Math.round(obj.Info.fileInfo.files[0].size / 1000000);
         const temp = {
           // GroupName: "GA Brief Adaptation 1",
-          GroupName: graphicData,
+          // GroupName: graphicData,
           Version:
             obj.Info.version.substring(0, 1) +
             (parseInt(obj.Info.version.substring(1)) + 1),
           Size: fileSize === 0 ? "1" : `${fileSize}`,
           Sequence: `${obj.Info.sequence}`,
-          Action: "add",
+          // Action: "add",
         };
         if (type === "save") {
           temp["File_Name"] = obj.Info.fileInfo.files[0].name;
@@ -515,7 +535,7 @@ function UBD() {
         }
 
         GABriefList.push(temp);
-        dispatch(uploadFileAzure(obj.AzureFile, AzureSubFolder));
+        dispatch(uploadFileAzure(obj.AzureFile, ProjectID + projectName, BU, AzureSubFolder));
       }
     });
     return GABriefList;
@@ -532,7 +552,7 @@ function UBD() {
             (parseInt(obj.Info.version.substring(1)) + 1),
           Size: fileSize === 0 ? "1" : `${fileSize}`,
           Sequence: `${obj.Info.sequence}`,
-          Action: "add",
+          // Action: "add",
         };
         if (type === "save") {
           temp["File_Name"] = obj.Info.fileInfo.files[0].name;
@@ -541,21 +561,59 @@ function UBD() {
           temp["Filename"] = obj.Info.fileInfo.files[0].name;
         }
         OtherReferenceDoc.push(temp);
-        dispatch(uploadFileAzure(obj.AzureFile, AzureSubFolder));
+        dispatch(uploadFileAzure(obj.AzureFile, ProjectID + projectName, BU, AzureSubFolder));
       }
     });
     return OtherReferenceDoc;
   };
+
+  const fileNameFlag = (gaBriefData, othersRefData) => {
+    let falg = false;
+    if (gaBriefData.length > 0) {
+      gaBriefData.filter((obj) => {
+        if (obj.File_Name !== "") {
+          falg = true;
+        } else {
+          falg = false;
+        }
+      });
+    } else if (othersRefData.length > 0) {
+      othersRefData.filter((obj) => {
+        if (obj.File_Name !== "") {
+          falg = true;
+        } else {
+          falg = false;
+        }
+      });
+    } else {
+      falg = false;
+    }
+    return falg;
+  };
+
   const onSaveAsDraft = async () => {
     setLoader(true);
     const saveAsDraftObjGABriefList = getGABriefListObj("save");
     const saveAsDraftObjOtherReferenceDoc = getOtherReferenceDocObj("save");
 
+    const flag = fileNameFlag(
+      saveAsDraftObjGABriefList,
+      saveAsDraftObjOtherReferenceDoc
+    );
     const formData = {
       AWM_Project_ID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
       AWM_Task_ID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
       // GABriefList: saveAsDraftGABriefList,
       // OtherReferenceDoc: saveAsDraftOtherReferenceDoc,
+      Action:
+        flag || (flag && groupNameFlag)
+          ? "add"
+          : !flag
+          ? groupNameFlag
+            ? "update"
+            : "NA"
+          : "NA",
+      GroupName: graphicData,
       GABriefList: saveAsDraftObjGABriefList,
       OtherReferenceDoc: saveAsDraftObjOtherReferenceDoc,
     };
@@ -594,12 +652,21 @@ function UBD() {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-    // TaskDetailsData?.ArtworkAgilityTasks[0]?.
+    const flag = fileNameFlag(submitObjGABriefList, submitObjOtherReferenceDoc);
     let formData = {
       caseTypeID: "PG-AAS-Work-UploadBriefingDocuments",
       content: {
         AWMTaskID: TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_ID,
         AWMProjectID: TaskDetailsData?.ArtworkAgilityPage?.AWM_Project_ID,
+        Action:
+          flag || (flag && groupNameFlag)
+            ? "add"
+            : !flag
+            ? groupNameFlag
+              ? "update"
+              : "NA"
+            : "NA",
+        GroupName: graphicData,
         // Project_Name: TaskDetailsData?.ArtworkAgilityTasks[0]?.Project_Name,
       },
       pageInstructions: pageInstructions,
@@ -618,6 +685,44 @@ function UBD() {
     // navigate(`/${currentUrl?.split("/")[1]}`);
   };
 
+  const flag1 = fileNameFlag(
+    getGABriefListObj("save"),
+    getOtherReferenceDocObj("save")
+  );
+
+  // console.log(
+  //   "edddd:",
+  //   groupNameFlag,
+  //   // flag1 || (flag1 && groupNameFlag) ? "add" : groupNameFlag ? "update" : "NA"
+  //   (
+  //     (TaskDetailsData?.ArtworkAgilityTasks[0]?.GABriefList &&
+  //       TaskDetailsData?.ArtworkAgilityTasks[0]?.GABriefList[0]) ||
+  //     []
+  //   ).length === 0 &&
+  //     (
+  //       (TaskDetailsData?.ArtworkAgilityTasks[0]?.OtherReferenceDoc &&
+  //         TaskDetailsData?.ArtworkAgilityTasks[0]?.OtherReferenceDoc[0]) ||
+  //       []
+  //     ).length === 0
+  //     ? groupNameFlag
+  //       ? "Hello"
+  //       : flag1 || (flag1 && groupNameFlag)
+  //       ? "add"
+  //       : groupNameFlag
+  //       ? "update"
+  //       : "NA"
+  //     : "Test"
+  // );
+
+  console.log(
+    "edddd:",
+    getGABriefListObj("save").length > 0
+      ? true
+      : gABriefAdaptationForUI[0]?.Info === undefined &&
+          otherRefernceDocsForUI[0]?.Info === undefined &&
+          groupNameFlag,
+    // gABriefAdaptationForUI[0]?.Info === undefined
+  );
   return (
     <PageLayout>
       <Dialog
@@ -785,7 +890,21 @@ function UBD() {
         onSubmit={onSubmit1}
         checkReadWriteAccess={checkReadWriteAccess}
         bottomFixed={true}
-        formValid={!formValid}
+        formValid={
+          // flag1 || (flag1 && groupNameFlag)
+          //   ? true
+          //   : !flag1
+          //   ? groupNameFlag
+          //     ? true
+          //     : false
+          //   : false
+          // !formValid ||
+          !(getGABriefListObj("save").length > 0
+            ? true
+            : gABriefAdaptationForUI[0]?.Info === undefined &&
+              otherRefernceDocsForUI[0]?.Info === undefined &&
+              groupNameFlag) || wrongFileName
+        }
         checkTaskISComplete={false}
         // submitAllowed={
         //   TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Status ===
@@ -795,9 +914,21 @@ function UBD() {
         //     formValid)
         // }
         submitAllowed={
-          TaskDetailsData?.ArtworkAgilityTasks[0]?.GABriefList ||
+          (getGABriefListObj("save").length > 0
+            ? false
+            : gABriefAdaptationForUI[0]?.Info === undefined &&
+              otherRefernceDocsForUI[0]?.Info === undefined &&
+              groupNameFlag) || wrongFileName
+          // !(flag1 || (flag1 && groupNameFlag)
+          //   ? true
+          //   : !flag1
+          //   ? groupNameFlag
+          //     ? true
+          //     : false
+          //   : false)
+          // TaskDetailsData?.ArtworkAgilityTasks[0]?.GABriefList ||
           // TaskDetailsData?.ArtworkAgilityTasks[0]?.OtherReferenceDoc ||
-          formValid
+          // formValid
         }
       />
     </PageLayout>
