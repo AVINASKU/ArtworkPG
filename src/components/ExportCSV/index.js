@@ -1,4 +1,4 @@
-import { Scale } from "@bryntum/gantt";
+
 import React from "react";
 import { CSVLink } from "react-csv";
 import export2excel from "../../assets/images/export2excel.svg";
