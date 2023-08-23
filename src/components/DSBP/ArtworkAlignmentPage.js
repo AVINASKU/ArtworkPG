@@ -43,8 +43,8 @@ const ArtworkAlignment = () => {
   const [addSavedData, setSavedData] = useState([]);
   const [handleYesAddToPRoject, setHandleYesAddToPRoject] = useState(false);
   const [rejectDialog, setRejectDialog] = useState(false);
-  const [poaaAcknowledgDialog, setPoaaAcknowledgDialog] = useState(true);
-  const [poaaResponse, setPoaaResponse] = useState({});
+  const [poaaAcknowledgDialog, setPoaaAcknowledgDialog] = useState(false);
+  const [poaaResponse, setPoaaResponse] = useState(false);
   const [tableRender, setTableRender] = useState(false);
   const [selectedReason, setSelectedReason] = useState(false);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
@@ -433,6 +433,7 @@ const ArtworkAlignment = () => {
       // await onSubmitCreatePOAA(updatedPmpDetails);
       let res = await onSubmitCreatePOAA(updatedPmpDetails);
       console.log("res create", res);
+      setPoaaResponse(res?.some(item => item.POACreationStatus.includes("Failed")));
      
     } else{
       updatedPmpDetails = { ArtworkAgilityPMPs: updatedDataList };
@@ -452,9 +453,10 @@ const ArtworkAlignment = () => {
   };
 
   const handleCancel = () => {
-    setLoader(true);
-    resetTableData();
-    setLoader(false);
+    // setLoader(true);
+    // resetTableData();
+    // setLoader(false);
+    setPoaaAcknowledgDialog(true)
   };
 
   // const onSubmit = () => {
@@ -614,20 +616,28 @@ const ArtworkAlignment = () => {
         </>
       )}
       {poaaAcknowledgDialog && (
-          <DsbpCommonPopup
-            actionHeader="POAA Acknowledgment"
-            dasbpDialog={poaaAcknowledgDialog}
-            setDasbpDialog={setPoaaAcknowledgDialog}
-            okButtonShow={true}          
-            deleteButtonShow={false}
-            showCancel={true}
-            submitButtonShow={false}
-            yesButtonShow={true}
-            disconnectButtonShow={true}
-          >
-            <>new popup</>
-          </DsbpCommonPopup>
-        )}
+        <DsbpCommonPopup
+          actionHeader="POAA Acknowledgment"
+          dasbpDialog={poaaAcknowledgDialog}
+          setDasbpDialog={setPoaaAcknowledgDialog}
+          okButtonShow={true}
+          deleteButtonShow={false}
+          showCancel={true}
+          submitButtonShow={false}
+          yesButtonShow={true}
+          disconnectButtonShow={true}
+        >
+          {poaaResponse ? (
+            <>POA Creation request submitted to Enovia.</>
+          ) : (
+            <>
+              POA Creation failed, your request was not received by Enovia and
+              POA will not be created. Please try again, if problem persists,
+              please open a ticket.
+            </>
+          )}
+        </DsbpCommonPopup>
+      )}
     </div>
   );
 };

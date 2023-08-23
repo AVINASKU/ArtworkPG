@@ -512,10 +512,9 @@ fieldset:disabled .btn {
     }
     .p-dialog-content {
       overflow-y: hidden;
-      height: 400px;
     }
     .p-datatable > .p-datatable-wrapper {
-      height: 100%;
+      max-height: 400px;
     }
     &.dsbpCommonPopup {
       .p-dialog-content {

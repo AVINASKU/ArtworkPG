@@ -527,9 +527,9 @@ const PMPSpecificTabView = () => {
             setDasbpDialog={setRejectDialog}
             rejectFormData={rejectFormData}
             onSubmit={() => onSubmit(rejectFormData)}
-
             okButtonShow={false}          
             deleteButtonShow={false}
+            showCancel={true}
             submitButtonShow={false}
             yesButtonShow={true}
             disconnectButtonShow={true}
