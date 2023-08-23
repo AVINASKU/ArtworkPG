@@ -76,7 +76,7 @@ export const saveDesignIntent = async (formData, headers = {}) => {
     data: formData,
   });
 
-  console.log("response", designIntent, formData);
+  //console.log("response", designIntent, formData);
 
   return true;
 };

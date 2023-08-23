@@ -12,14 +12,14 @@ export const postSaveDesignIntent = async (
   const api = new Api();
   const axiosInstance = await api.init({ headers });
   let apiURL = `${DEVURL}/saveuploadtask`;
-  console.log("api url", apiURL);
+  //console.log("api url", apiURL);
   const designIntent = await axiosInstance({
     url: apiURL,
     method: "POST",
     data: formData,
   });
 
-  console.log("response", designIntent, formData);
+  //console.log("response", designIntent, formData);
 
   return true;
 };

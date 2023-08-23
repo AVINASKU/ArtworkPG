@@ -14,7 +14,7 @@ const RejectDialog = ({
 
     const handleRejectReasonChange = (e) => {
       setRejectReason(e.target.value)
-      console.log("data", e.target.value)
+      //console.log("data", e.target.value)
       setRejectFormData({
           ...rejectFormData,
           ReasonforRejection: e.target.value,
@@ -23,7 +23,7 @@ const RejectDialog = ({
 
     const handleRejectCommentChange = (e) => {
       setRejectionComment(e.target.value)
-      console.log("data", e.target.value)
+      //console.log("data", e.target.value)
       setRejectFormData({
           ...rejectFormData,
           RejectionComment: e.target.value,
@@ -31,7 +31,7 @@ const RejectDialog = ({
     };
 
   return (
-    console.log("onChangeData", onChangeData),
+    //console.log("onChangeData", onChangeData),
     <div>
       <Row>
         <Col sm={4} className="mb-3">

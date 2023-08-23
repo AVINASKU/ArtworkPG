@@ -61,7 +61,7 @@ const ProjectListHeader = ({
   // let splittedHeader = headers.map((ele) => ele.split("_").join(" "));
 
   // let newObj = allData.map((data) => {
-  //   console.log("artwork brand", data, data.Artwork_Brand);
+  //   //console.log("artwork brand", data, data.Artwork_Brand);
   //   let obj = {};
   //   obj["Brand"] = data.Artwork_Brand;
   //   obj["Category"] = data.Artwork_Category;
@@ -118,7 +118,7 @@ const ProjectListHeader = ({
   //   return obj;
   // });
 
-  // console.log("new obj", newObj);
+  // //console.log("new obj", newObj);
 
   return (
     <div className="actions">

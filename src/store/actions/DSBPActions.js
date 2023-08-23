@@ -13,7 +13,7 @@ export const getDSBPDropdownData = (BU, Region, ProjectID) => async (dispatch) =
       });
     } else {
       if (res.status === 200) {
-        console.log("res.data", res.data.ArtworkAgilityTasks);
+        //console.log("res.data", res.data.ArtworkAgilityTasks);
         dispatch({
           type: types.GET_ALL_DSBP_DATA,
           payload: res.data.ArtworkAgilityTasks,

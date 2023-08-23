@@ -636,7 +636,7 @@ function AddProject(props) {
   //   };
   // });
   const handleSubCategoryChange = (e) => {
-    console.log("categoriesAlert", e.value);
+    //console.log("categoriesAlert", e.value);
     e.value.length === 0 ? setCategoriesAlert(true) : setCategoriesAlert(false);
     setSubCategories(e.value);
   };
@@ -937,7 +937,7 @@ function AddProject(props) {
       });
       selectedSmoOptions.push(temp);
     });
-    console.log("smo: ", selectedSmoOptions);
+    //console.log("smo: ", selectedSmoOptions);
     return selectedSmoOptions;
   };
 
@@ -953,7 +953,7 @@ function AddProject(props) {
       temp.code = obj.code;
       selectedCategoriesOptions.push(temp);
     });
-    console.log("Categories: ", selectedCategoriesOptions);
+    //console.log("Categories: ", selectedCategoriesOptions);
     return selectedCategoriesOptions;
   };
   const collectForm2Data = (action, mode) => {
@@ -1043,7 +1043,7 @@ function AddProject(props) {
     setLoader(true);
     if (mode === "create") {
       const formData = collectFormData("Active", mode);
-      console.log("formData collectFormData: ", mode, formData);
+      //console.log("formData collectFormData: ", mode, formData);
       setFormData(formData);
       const response = await createNewProject(formData);
       if (response?.data?.ID) {
@@ -1061,7 +1061,7 @@ function AddProject(props) {
       selectedProjectDetails.Action !== "Active"
     ) {
       const formData = collectFormData("Active", mode);
-      console.log("formData collectFormData: ", mode, formData);
+      //console.log("formData collectFormData: ", mode, formData);
       setFormData(formData);
       let id = `PG-AAS-WORK ${awmProjectId}`;
       let method = "PATCH";
@@ -1079,7 +1079,7 @@ function AddProject(props) {
       selectedProjectDetails.Action === "Active"
     ) {
       const formData = collectForm2Data("", mode);
-      console.log("formData collectForm2Data: ", mode, formData);
+      //console.log("formData collectForm2Data: ", mode, formData);
       setFormData(formData);
       let method = "POST";
       const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
@@ -1114,7 +1114,7 @@ function AddProject(props) {
 
     if (mode === "create") {
       let draftFormData = collectFormData("Draft", mode);
-      console.log("draftFormData collectFormData: ", mode, draftFormData);
+      //console.log("draftFormData collectFormData: ", mode, draftFormData);
       localStorage.setItem("formDraft", JSON.stringify(draftFormData));
       await createNewProject(draftFormData);
       // if (response?.data?.ID) {
@@ -1131,7 +1131,7 @@ function AddProject(props) {
       // }
     } else if (mode === "edit" || mode === "design") {
       let draftFormData = collectForm2Data("saveasdraft", mode);
-      console.log("draftFormData collectForm2Data: ", mode, draftFormData);
+      //console.log("draftFormData collectForm2Data: ", mode, draftFormData);
       localStorage.setItem("formDraft", JSON.stringify(draftFormData));
       const method = "POST";
       const headers = { key: "If-Match", value: selectedProjectDetails?.Etag };
@@ -1163,16 +1163,16 @@ function AddProject(props) {
   };
   const handleTierChange = (e) => {
     const selectedTier = tierList.find((r) => r.Label_Name === e.target.value);
-    console.log("selectedTier", e.target.value);
-    console.log("tierList", tierList);
+    //console.log("selectedTier", e.target.value);
+    //console.log("tierList", tierList);
     setTier(selectedTier);
   };
   const handlePsChange = (e) => {
     const selectedPs = productionStrategyList.find(
       (r) => r.Label_Name === e.target.value
     );
-    console.log("selectedPs", e.target.value);
-    console.log("setProductionStrategyList", setProductionStrategyList);
+    //console.log("selectedPs", e.target.value);
+    //console.log("setProductionStrategyList", setProductionStrategyList);
     setPs(selectedPs);
   };
   const handlePM = (e) => {

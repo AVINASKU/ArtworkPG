@@ -95,15 +95,15 @@ export const getUnAuthoirzedAccess = (role, accessMatrix, pathname) => {
 export const CheckReadOnlyAccess = () => {
   const dispatch1 = useDispatch();
   const { accessMatrix } = useSelector((state) => state?.accessMatrixReducer);
-  const User = useSelector((state) => state.UserReducer);
-  const userInformation = User.userInformation;
+  const User = useSelector((state) => state?.UserReducer);
+  const userInformation = User?.userInformation;
   const location = useLocation();
   // if read only access then returns true otherwise return false
   useEffect(() => {
     dispatch1(fetchAccessMatrix());
   }, [dispatch1]);
 
-  const accessDetails = getAccessDetails(userInformation.role, accessMatrix);
+  const accessDetails = getAccessDetails(userInformation?.role, accessMatrix);
   const currentUrl = location.pathname;
   let url;
   if (currentUrl.includes("projectPlan")) {
@@ -114,7 +114,7 @@ export const CheckReadOnlyAccess = () => {
   let checkReadOnlyAccess = true;
   accessDetails.pages.forEach((page, index) => {
     if (page.name === url) {
-      console.log("page", page);
+      //("page", page);
       let checkAccess = page?.access;
       if (
         checkAccess &&
@@ -178,7 +178,8 @@ export const Regions = JSON.parse(localStorage.getItem("roles"))
 //get this data from training mode json
 const GetPageRoles = () => {
   const url = window.location.pathname;
-  const { accessRoles } = useSelector((state) => state?.accessMatrixReducer);
+  // const { accessRoles } = useSelector((state) => state?.accessMatrixReducer);
+  const accessRoles  = useSelector((state) => state?.accessMatrixReducer);
   const UserProfile = useSelector((state) => state.UserReducer);
   const Role = UserProfile?.userProfile;
   const roles = Role?.role || [];
@@ -284,7 +285,7 @@ export function hasAllAccess() {
 // const hasReadAccessForMyProjects = hasReadAccess(
 //   pageRoles.filter((pageRole) => pageRole.page === urls?.split("/")[1])
 // );
-// // console.log(hasReadAccessForMyProjects); // true
+// // //console.log(hasReadAccessForMyProjects); // true
 export const generateUniqueKey = (fieldName) => {
   const timestamp = new Date().getTime();
   return `${fieldName}_${timestamp}`;

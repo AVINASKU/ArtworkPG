@@ -16,7 +16,7 @@ const MyProjects = (props) => {
           setPegaData(ProjectData);
         }
       } catch (err) {
-        console.log("error", err);
+        //console.log("error", err);
       }
       setLoading(false);
     })();

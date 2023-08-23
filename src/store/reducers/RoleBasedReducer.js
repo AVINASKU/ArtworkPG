@@ -34,7 +34,7 @@ const accessMatrixReducer = (state = initialState, action) => {
         error: null,
       };
     case "FETCH_ACCESS_ROLES_SUCCESS":
-      console.log(action?.payload);
+      //console.log(action?.payload);
       return {
         ...state,
         accessRoles: action?.payload,

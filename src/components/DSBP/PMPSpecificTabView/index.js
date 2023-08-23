@@ -201,18 +201,18 @@ const PMPSpecificTabView = () => {
   };
 
   const updateArtWorkTabValuesData = (updatedNewData) => {
-    console.log("updatedArtWorkTabValuesData updatedNewData", updatedNewData);
-    console.log("updatedArtWorkTabValuesData selectedTab", selectedTab);
+    //console.log("updatedArtWorkTabValuesData updatedNewData", updatedNewData);
+    //console.log("updatedArtWorkTabValuesData selectedTab", selectedTab);
     let submittionData = {};
     submittionData = {
       tabHeader: selectedTab.tabHeader,
       description: updatedNewData && updatedNewData[0],
     };
-    console.log("updatedArtWorkTabValuesData submittionData", submittionData);
+    //console.log("updatedArtWorkTabValuesData submittionData", submittionData);
     const indexToUpdate = artWorkTabValuesData.findIndex(
       (tab) => tab.tabHeader === submittionData.tabHeader
     );
-    console.log("updatedArtWorkTabValuesData indexToUpdate", indexToUpdate);
+    //console.log("updatedArtWorkTabValuesData indexToUpdate", indexToUpdate);
     if (indexToUpdate !== -1) {
       // Create a copy of the artWorkTabValuesData array
       const updatedArtWorkTabValuesData = [...artWorkTabValuesData];
@@ -222,10 +222,10 @@ const PMPSpecificTabView = () => {
 
       // Update the state with the updated array
       setStoresTabDataList(updatedArtWorkTabValuesData);
-      console.log(
-        "updatedArtWorkTabValuesData updatedArtWorkTabValuesData",
-        updatedArtWorkTabValuesData
-      );
+      // console.log(
+      //   "updatedArtWorkTabValuesData updatedArtWorkTabValuesData",
+      //   updatedArtWorkTabValuesData
+      // );
     }
   };
 
@@ -272,7 +272,7 @@ const PMPSpecificTabView = () => {
         )
       );
 
-      console.log("updatedNewData filteredIds", filteredIds)
+      //console.log("updatedNewData filteredIds", filteredIds)
       updateArtWorkTabValuesData(filteredIds);
     }
     setFormData({});
@@ -296,7 +296,7 @@ const PMPSpecificTabView = () => {
         // );
         return convertedInObject.map((item) => {
           const fieldEditable = item && item["AWM_AddedToProject"] === "Yes";
-          console.log("tab fieldEditable", fieldEditable);
+          //console.log("tab fieldEditable", fieldEditable);
           return(
             <tr key={item[value]}>
             <td className="columnWidth">{field.Field_Name}</td>
@@ -513,7 +513,7 @@ const PMPSpecificTabView = () => {
   };
 
   return (
-    console.log("artWorkTabValuesData filteredDataList", filteredDataList),
+    //console.log("artWorkTabValuesData filteredDataList", filteredDataList),
     (
       <>
         {artWorkTabValuesData?.length > 1 && tabPanelList !== 0 ? (

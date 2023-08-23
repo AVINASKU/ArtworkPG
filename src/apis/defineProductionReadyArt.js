@@ -12,14 +12,14 @@ export const saveDefineProductionReadyArt = async (
   const api = new Api();
   const axiosInstance = await api.init({ headers });
   let apiURL = `${DEVURL}/updateProductionReadyArtJob`;
-  console.log("api url", apiURL);
+  //console.log("api url", apiURL);
   const DefineProductionReadyArt = await axiosInstance({
     url: apiURL,
     method: "POST",
     data: formData,
   });
 
-  console.log("response", DefineProductionReadyArt, formData);
+  //console.log("response", DefineProductionReadyArt, formData);
 
   return true;
 };

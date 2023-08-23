@@ -241,11 +241,11 @@ const ArtworkAlignment = () => {
     setTableLoader(true);
     if (operation === "add") {
       let checkRes = await addDsbpToProject(ProjectID, InitiativeID);
-      console.log("checkRes", checkRes);
+      //console.log("checkRes", checkRes);
     }
     if (operation === "delete") {
       let checkRes = await deleteDsbpFromProject(ProjectID, InitiativeID);
-      console.log("check delete Res", checkRes);
+      //console.log("check delete Res", checkRes);
     }
     // fetch dsbp project data after delete / add
     await fetchData();

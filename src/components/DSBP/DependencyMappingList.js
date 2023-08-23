@@ -74,7 +74,7 @@ const DependencyMappingList = ({
   };
 
   const onHandlePmpTabView = (options, field) => {
-    // console.log("column names: ", dependencyColumnNames, dependencyMappingData);
+    // //console.log("column names: ", dependencyColumnNames, dependencyMappingData);
     let dependencyColumnNames = JSON.parse(
       localStorage.getItem("setDependencyMappingColumnNames")
     );
@@ -113,7 +113,7 @@ const DependencyMappingList = ({
       new Set(newArray.map((obj) => JSON.stringify(obj)))
     ).map(JSON.parse);
 
-    console.log("###insideDependencyMappingList: ", uniqueArray);
+    //console.log("###insideDependencyMappingList: ", uniqueArray);
     dispatch(DMTabValuesAction(uniqueArray));
     dispatch(DMTabAttributesAction(attributesData));
     navigate("/DSBP/tab/dependencyMapping", { replace: true });
@@ -520,8 +520,8 @@ const DependencyMappingList = ({
     let dependencyColumnNames = JSON.parse(
       localStorage.getItem("setDependencyMappingColumnNames")
     );
-    console.log("dependencyColumnNames", dependencyColumnNames);
-    console.log("customizeViewFields", customizeViewFields);
+    //console.log("dependencyColumnNames", dependencyColumnNames);
+    //console.log("customizeViewFields", customizeViewFields);
     let jsonValue = customizeViewFields
       ? JSON.parse(customizeViewFields)
       : null;
@@ -544,7 +544,7 @@ const DependencyMappingList = ({
             filteredColumns.push(column);
           }
         });
-        console.log("filteredColumns", filteredColumns);
+        //console.log("filteredColumns", filteredColumns);
         if (filteredColumns && filteredColumns.length) {
           return [
             <Column
@@ -556,7 +556,7 @@ const DependencyMappingList = ({
               style={{ width: "40px" }}
             />,
             ...filteredColumns.map((col, index) => {
-              // console.log("field col-----", col);
+              // //console.log("field col-----", col);
               return (
                 <Column
                   field={col.field}
@@ -594,7 +594,7 @@ const DependencyMappingList = ({
           style={{ width: "40px" }}
         />,
         ...dependencyColumnNames.map((col, index) => {
-          // console.log("field col-----", col);
+          // //console.log("field col-----", col);
           return (
             <Column
               field={col.field}

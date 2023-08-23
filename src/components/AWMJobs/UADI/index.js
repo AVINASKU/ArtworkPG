@@ -92,7 +92,7 @@ const UADI = () => {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-    console.log("azureFile", azureFile);
+    //console.log("azureFile", azureFile);
     const formData = {
       caseTypeID: "PG-AAS-Work-UploadApprovedDesignIntent",
       content: {
@@ -104,7 +104,7 @@ const UADI = () => {
       },
     };
     await dispatch(uploadFileAzure(azureFile));
-    // console.log('formData', formData, "id", id);
+    // //console.log('formData', formData, "id", id);
     await submitUploadApproveDesignIntent(formData, id, headers);
     setLoader(false);
     navigate(`/${currentUrl?.split("/")[1]}`);

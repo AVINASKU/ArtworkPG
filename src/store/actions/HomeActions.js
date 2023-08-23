@@ -11,7 +11,7 @@ export const getConfig = () => {
             .then(res => {
                 dispatch(setConfig(res.data));
             }).catch(err => {
-                console.log(err);
+                //console.log(err);
             })
     }
 }

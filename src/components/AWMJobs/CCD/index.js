@@ -116,11 +116,11 @@ function CCD() {
   }, [data]);
 
   const checkFormValidity = () => {
-    console.log(CD);
+    //console.log(CD);
     const validTasks = CD?.filter((task) => {
       return task?.Printing_Process && task?.Substrate && task?.CD_Approved;
     });
-    console.log(validTasks.length);
+    //console.log(validTasks.length);
     if (validTasks.length > 0) {
       setFormValid(true);
     } else {
@@ -144,7 +144,7 @@ function CCD() {
   //   submitOnlySelectedData.map((task) => {
   //     task.Event = "submit";
   //   });
-  //   console.log("full submit data --->", submitOnlySelectedData);
+  //   //console.log("full submit data --->", submitOnlySelectedData);
   //   await dispatch(uploadFileAzure());
   // };
 
@@ -159,7 +159,7 @@ function CCD() {
     //   // Version = task?.Version;
     //   // Size = task?.Size;
     // });
-    // console.log(CD);
+    // //console.log(CD);
 
     // CD?.forEach((task) => {
     //   let taskDesignJobID = task?.Design_Job_ID;
@@ -181,7 +181,7 @@ function CCD() {
         PrintTrialDone: CD[0].Print_Trial_Done,
       },
     };
-    console.log("full submit data --->", formData);
+    //console.log("full submit data --->", formData);
     let id = data.Task_Key;
     const headers = {
       key: "If-Match",
@@ -215,7 +215,7 @@ function CCD() {
     let formData = {
       DesignIntentList: submitOnlySelectedData,
     };
-    console.log("full draft data --->", submitOnlySelectedData);
+    //console.log("full draft data --->", submitOnlySelectedData);
     await dispatch(uploadFileAzure(azureFile));
     await saveDesignIntent(formData);
   };

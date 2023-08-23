@@ -23,7 +23,7 @@ function ProjectPlanCompo(props) {
     (state) => state.ProjectSetupReducer
   );
   return (
-    console.log("projectPlan", projectPlan),
+    //console.log("projectPlan", projectPlan),
     (
       <>
         <Toast ref={toast} />

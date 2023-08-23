@@ -80,7 +80,7 @@ const ProjectPlanList = ({
   const op = useRef(null);
 
   const handleHelpNeededClick = (options) => {
-    console.log("handleHelpNeededClick rowData: ", options);
+    //console.log("handleHelpNeededClick rowData: ", options);
     setShowTaskDialog(true);
     setFlag("help");
     let task = [{ TaskID: options.key, TaskName: options.data.Task }];
@@ -229,7 +229,7 @@ const ProjectPlanList = ({
   const clearColumnWiseFilter = () => {
     let jsonFrozenItem = localStorage.getItem("frozenDataProjectPlan");
     const frozenItem = JSON.parse(jsonFrozenItem);
-    console.log("test", frozenItem, selectedColumnName);
+    //console.log("test", frozenItem, selectedColumnName);
     if (
       frozenItem &&
       frozenItem.length &&
@@ -567,13 +567,13 @@ const ProjectPlanList = ({
 
   const onDropdownChange = (rowData, { value }, ele) => {
     if (ele === "Role") {
-      console.log("value", value.Name);
+      //console.log("value", value.Name);
       if(rowData.data["Role"] !== value?.Name){
         rowData.data["Assignee"] = ""
       }      
     }
     rowData.data[ele] = value.Name;
-    console.log("Pegadata: ", pegadata);
+    //console.log("Pegadata: ", pegadata);
     // Create a new array with the updated data
     const updatedPegadata = pegadata.map((data) => {
       if (data.key === rowData.key) {
@@ -602,7 +602,7 @@ const ProjectPlanList = ({
 
   const onDurationChange = (rowData, { value }, ele) => {
     rowData.data[ele] = value < 1 ? "0" : value?.toString();
-    console.log("Pegadata: ", pegadata);
+    //console.log("Pegadata: ", pegadata);
     setPegaData([...pegadata]);
 
     if (!isAccessEmpty) {

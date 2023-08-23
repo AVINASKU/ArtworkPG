@@ -45,7 +45,7 @@ const SelectDsbpId = ({
       option.IL +
       "_" +
       option.Scope;
-    // console.log("here here", initiativeName, option);
+    // //console.log("here here", initiativeName, option);
     return (
       <div className="city-option">
         <div className="city-name" onClick={(e) => e.stopPropagation()}>
@@ -93,7 +93,7 @@ const SelectDsbpId = ({
   };
 
   const onChangeSelect = (option, operation) => {
-    console.log("option", option, mappedPOAS);
+    //console.log("option", option, mappedPOAS);
 
     if (operation === "delete" && mappedPOAS.includes(option.InitiativeID)) {
       setOperation("poaCreated");
@@ -104,7 +104,7 @@ const SelectDsbpId = ({
     setSelectedDsbpData(option);
   };
   const handleOptionSelection = (option, operation) => {
-    console.log("operation", operation);
+    //console.log("operation", operation);
     const updatedSelectedCities = [...selectedCities];
     const index = updatedSelectedCities.indexOf(option.InitiativeID);
     if (index > -1) {

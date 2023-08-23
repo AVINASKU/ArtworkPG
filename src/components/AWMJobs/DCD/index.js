@@ -32,7 +32,7 @@ function DCD() {
 
   const handleDelete = (index) => {
     const sub = designIntent.filter((item, i) => i !== index);
-    // console.log("index here", sub1);
+    // //console.log("index here", sub1);
     // const sub = subProject.splice(index,1);
 
     setDesignIntent(sub);
@@ -77,7 +77,7 @@ function DCD() {
     submitOnlySelectedData.map((task) => {
       task.event = "submit";
     });
-    console.log("full submit data --->", submitOnlySelectedData);
+    //console.log("full submit data --->", submitOnlySelectedData);
   };
 
   const onSaveAsDraft = () => {
@@ -88,7 +88,7 @@ function DCD() {
       task?.DesignJobid ? (task.action = "update") : (task.action = "add");
       task.event = "draft";
     });
-    console.log("full draft data --->", submitOnlySelectedData);
+    //console.log("full draft data --->", submitOnlySelectedData);
   };
 
   return (

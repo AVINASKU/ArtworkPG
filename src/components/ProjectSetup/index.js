@@ -355,7 +355,7 @@ function ProjectSetup(props) {
   };
 
   const reject = () => {
-    console.log("reject");
+    //console.log("reject");
   };
 
   let items = "";
@@ -452,7 +452,7 @@ function ProjectSetup(props) {
           return false;
         })
     );
-    console.log("updatedData function", updatedData);
+    //console.log("updatedData function", updatedData);
     return updatedData;
   };
 

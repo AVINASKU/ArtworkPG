@@ -28,10 +28,12 @@ const SideBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { accessMatrix } = useSelector((state) => state?.accessMatrixReducer);
-  const { accessRoles } = useSelector((state) => state?.accessMatrixReducer);
-  const User = useSelector((state) => state.UserReducer);
-  const userInformation = User.userInformation;
+   const { accessMatrix } = useSelector((state) => state?.accessMatrixReducer);
+   const { accessRoles } = useSelector((state) => state?.accessMatrixReducer);
+  //const accessMatrix  = useSelector((state) => state?.accessMatrixReducer);
+  //const accessRoles  = useSelector((state) => state?.accessMatrixReducer);
+  const User = useSelector((state) => state?.UserReducer);
+  const userInformation = User?.userInformation;
   const Role = User?.userProfile;
   const roles = Role?.role || [];
   const [isToggle, setIsToggle] = useState(
@@ -95,7 +97,7 @@ const SideBar = () => {
     navigate("/");
   };
   // Replace with the actual location path
-  const accessDetails = getAccessDetails(userInformation.role, accessMatrix);
+  const accessDetails = getAccessDetails(userInformation?.role, accessMatrix);
 
   const rolesWithAccess = Array.isArray(accessRoles)
     ? accessRoles.filter((accessRole) => {
@@ -103,7 +105,7 @@ const SideBar = () => {
         return roleNames?.some((roleName) => roles?.includes(roleName));
       })
     : [];
-  // console.log(hasEmptyAccessForMyProjects);
+  // //console.log(hasEmptyAccessForMyProjects);
   const navItems = {
     data: [
       {

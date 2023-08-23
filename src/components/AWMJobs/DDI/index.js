@@ -73,16 +73,16 @@ function DDI() {
   };
 
   const handleDelete = (index) => {
-    console.log("index", index);
+    //console.log("index", index);
     const sub = designIntent.map((item, i) => {
       if (i === index) {
         item.Action = "delete";
       }
       return item;
     });
-    // console.log("index here", sub1);
+    // //console.log("index here", sub1);
     // const sub = subProject.splice(index,1);
-    console.log("sub", sub);
+    //console.log("sub", sub);
     setDesignIntent(sub);
   };
 
@@ -111,12 +111,12 @@ function DDI() {
       if (item.Select) {
         values = item.Agency_Reference !== "" && item.Cluster !== "";
       } else {
-        console.log("designIntent else", designIntent);
+        //console.log("designIntent else", designIntent);
         let data = designIntent.filter(
           (item) =>
             item.Select && item.Agency_Reference !== "" && item.Cluster !== ""
         );
-        console.log("value else", data);
+        //console.log("value else", data);
         if (data.length !== 0) {
           values = true;
         } else {
@@ -154,7 +154,7 @@ function DDI() {
     );
     submitOnlySelectedData.map((task) => {
       updatedData = {};
-      console.log("Design_Job_ID", task.Design_Job_ID);
+      //console.log("Design_Job_ID", task.Design_Job_ID);
       if (task?.isNew) {
         task.Design_Job_ID = "";
       }
@@ -178,7 +178,7 @@ function DDI() {
         target: "DesignIntentList",
         content: updatedData,
       });
-      return console.log("updatedDataList", updatedDataList);
+      return //console.log("updatedDataList", updatedDataList);
     });
 
     let formData = {
@@ -221,7 +221,7 @@ function DDI() {
         Select: task.Select ? task.Select : false,
         Action: task.Action,
       });
-      return console.log("updatedData", updatedData);
+      return //console.log("updatedData", updatedData);
     });
 
     let formData = {

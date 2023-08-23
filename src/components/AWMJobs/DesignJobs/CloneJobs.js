@@ -400,7 +400,7 @@ const CloneJobs = ({
               id="printers"
               value={printers}
               onChange={(e) => {
-                console.log(e.value);
+                //console.log(e.value);
                 let selectedPrinter = [];
                 e.value.forEach((val) => {
                   PrinterList.forEach((pl) => {
@@ -409,7 +409,7 @@ const CloneJobs = ({
                     }
                   });
                 });
-                console.log("selectedPrinter: ", selectedPrinter);
+                //console.log("selectedPrinter: ", selectedPrinter);
                 addData("Printer", index, selectedPrinter, di_name);
                 setPrinters(e.value);
               }}

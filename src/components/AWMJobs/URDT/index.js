@@ -95,7 +95,7 @@ const URDT = () => {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-    console.log("azureFile", azureFile);
+    //console.log("azureFile", azureFile);
     const formData = {
       caseTypeID: "PG-AAS-Work-UploadRegionalDesignTemplate",
       content: {
@@ -124,7 +124,7 @@ const URDT = () => {
     dispatch(
       uploadProofscopeFileAzure(selectedProjectDetails?.BU, azureFile, "RDT")
     );
-    // console.log('formData', formData, "id", id);
+    // //console.log('formData', formData, "id", id);
     await submitUploadRegionalDesignIntent(formData, id, headers);
     setLoader(false);
     navigate(`/${currentUrl?.split("/")[1]}`);

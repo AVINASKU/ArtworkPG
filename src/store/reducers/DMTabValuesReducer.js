@@ -8,7 +8,7 @@ const initialState = {
 };
 
 const DMTabValuesReducer = (state = initialState, action) => {
-  // console.log("projectPlanReducer.action.payload: ", action);
+  // //console.log("projectPlanReducer.action.payload: ", action);
   switch (action.type) {
     case types.UPDATE_DM_TAB_VALUES:
       return {

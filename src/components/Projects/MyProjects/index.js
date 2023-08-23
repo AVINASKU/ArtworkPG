@@ -10,13 +10,13 @@ const MyProjects = (props) => {
   const [pegadata, setPegaData] = useState(null);
   const [loading, setLoading] = useState(false);
   const User = useSelector((state) => state.UserReducer);
-  const userInformation = User.userInformation;
-  const { accessMatrix } = useSelector((state) => state?.accessMatrixReducer);
+  const userInformation  = User?.userInformation;
+  //const {accessMatrix}  = useSelector((state) => state?.accessMatrixReducer);
   // const accessDetails = getUnAuthoirzedAccess(
   //   userInformation.role,
   //   accessMatrix,
   //   window?.location?.pathname
-  // );
+  // );a
   // // Check if access is empty for the user's role and page
   // const isAccessEmpty = accessDetails === null || accessDetails.length === 0;
 
@@ -29,7 +29,7 @@ const MyProjects = (props) => {
           setPegaData(ProjectData);
         }
       } catch (err) {
-        console.log("error", err);
+        //console.log("error", err);
       }
       setLoading(false);
     })();

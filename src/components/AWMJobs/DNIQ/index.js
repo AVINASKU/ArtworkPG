@@ -56,7 +56,7 @@ function DNIQ() {
 
   useEffect(() => {
     if (TaskDetailsData) {
-      console.log("TaskDetailsData: ", TaskDetailsData);
+      //console.log("TaskDetailsData: ", TaskDetailsData);
       setIQ(TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []);
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
     }
@@ -77,8 +77,8 @@ function DNIQ() {
       }
       return item;
     });
-    console.log("DNIQ Handle delete: ", IQ);
-    // console.log("index here", sub1);
+    //console.log("DNIQ Handle delete: ", IQ);
+    // //console.log("index here", sub1);
     // const sub = subProject.splice(index,1);
 
     setIQ(sub);
@@ -109,7 +109,7 @@ function DNIQ() {
   const addData = (fieldName, index, value, Design_Intent_Name) => {
     let IQdata = cloneDeep(IQ);
     let data = IQdata[index];
-    console.log("addData:", data);
+    //console.log("addData:", data);
     data[fieldName] = value;
     data["Design_Job_Name"] = Design_Intent_Name;
     setIQ(IQdata);
@@ -185,13 +185,13 @@ function DNIQ() {
       },
       pageInstructions: pageInstructions,
     };
-    console.log("full submit data --->", formData);
+    //console.log("full submit data --->", formData);
     let id = data.Task_Key;
     const headers = {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-    console.log("Submit Data", formData, id, headers);
+    //console.log("Submit Data", formData, id, headers);
     await submitInkQualification(formData, id, headers);
     setLoader(false);
     navigate("/MyTasks");
@@ -232,21 +232,21 @@ function DNIQ() {
       Region: selectedProjectDetails.Project_region,
       IQList: submitOnlySelectedData,
     };
-    console.log("full draft data --->", formData);
+    //console.log("full draft data --->", formData);
     await saveInkQualification(formData);
     setLoader(false);
     // navigate("/MyTasks");
   };
 
   const checkFormValidity = (IQdata) => {
-    // console.log("IQ data Valid and selected: ", IQdata);
+    // //console.log("IQ data Valid and selected: ", IQdata);
     const validTasks = IQdata?.filter((task) => {
       return task?.Printer?.length > 0 && task?.Select;
     });
     const selectedTasks = IQdata?.filter((task) => {
       return task?.Select;
     });
-    // console.log(
+    // //console.log(
     //   "Valid and selected: ",
     //   validTasks.length,
     //   selectedTasks.length

@@ -34,7 +34,7 @@ export const uploadFileFailure = (error) => ({
 
 // Define your Redux async action creator
 export const uploadFileAzure = (file) => {
-  console.log(file);
+  //console.log(file);
   return async (dispatch) => {
     try {
       dispatch(uploadFileRequest());

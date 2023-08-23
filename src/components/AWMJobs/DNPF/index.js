@@ -76,7 +76,7 @@ function DNPF() {
       }
       return item;
     });
-    // console.log("index here", sub1);
+    // //console.log("index here", sub1);
     // const sub = subProject.splice(index,1);
 
     setCD(sub);
@@ -143,7 +143,7 @@ function DNPF() {
       return task?.Select;
     });
 
-    // console.log(
+    // //console.log(
     //   "Valid and selected: ",
     //   validTasks.length,
     //   selectedTasks.length
@@ -175,7 +175,7 @@ function DNPF() {
   //   // submitOnlySelectedData.map((task) => {
   //   //   task.Event = "submit";
   //   // });
-  //   console.log("full submit data --->", submitOnlySelectedData);
+  //   //console.log("full submit data --->", submitOnlySelectedData);
   // };
   const onSubmit = async () => {
     setLoader(true);
@@ -221,13 +221,13 @@ function DNPF() {
       },
       pageInstructions: pageInstructions,
     };
-    console.log("full submit data --->", formData);
+    //console.log("full submit data --->", formData);
     let id = data.Task_Key;
     const headers = {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-    console.log("Submit Data for CD", formData, id, headers);
+    //console.log("Submit Data for CD", formData, id, headers);
     await submitColorDevelopment(formData, id, headers);
     setLoader(false);
     navigate(`/MyTasks`);
@@ -265,7 +265,7 @@ function DNPF() {
       Region: selectedProjectDetails.Project_region,
       NewPrintFeasibilityList: submitOnlySelectedData,
     };
-    console.log("full draft data --->", formData);
+    //console.log("full draft data --->", formData);
     await saveColorDevelopment(formData);
     setLoader(false);
     // navigate(`/MyTasks`);

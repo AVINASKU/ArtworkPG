@@ -16,7 +16,7 @@ const CustomizeViewDialog = ({ showTaskDialog, onClose, availableFields, setCust
   };
 
   return (
-    console.log("dependencyMappingData availableFields", availableFields),
+    //console.log("dependencyMappingData availableFields", availableFields),
     <Dialog
       visible={visible}
       className="customize-view-dialog"

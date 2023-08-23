@@ -26,7 +26,7 @@ const MyTask = () => {
   useEffect(() => {
     dispatch(getTasks(userInformation));
   }, [dispatch]);
-  console.log(hasAllAccess());
+  //console.log(hasAllAccess());
   return (
     <>
       {!hasAllAccess() && (
