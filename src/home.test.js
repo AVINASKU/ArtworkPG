@@ -1,111 +1,86 @@
 import React from "react";
 import { render, screen, waitFor, fireEvent,act } from "@testing-library/react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation,MemoryRouter } from "react-router-dom";
 import Home from "./home";
 import { getSSOUser } from "./store/actions/SSOUserAction";
 import { Provider } from "react-redux";
-import configureStore from "redux-mock-store"; // If you're using Redux
 import {accessMatrix} from "./accessMatrix"
 import { updateUser } from "./apis/userApi";
 import { roles } from "./utils";
-//import {mockDispatch,mockSelector,mockNavigate} from "./unitTest/MockLogin"
-jest.mock("react-redux");
-jest.mock("react-router-dom");
+import { store } from "./store/store";
+import axios from "axios";
+jest.mock("axios");
+
+// jest.mock("react-redux");
+// Mock react-router-dom
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+  useLocation: () => ({
+    pathname: "localhost:3000/example/path"
+  }),
+  useNavigate: () => jest.fn(),
+}));
+
+// Mock localStorage.getItem
+const localStorageMock = {
+  getItem: jest.fn(),
+  setItem: jest.fn(),
+};
+global.localStorage = localStorageMock;
 
 describe("Home Component", () => {
-console.log(accessMatrix);
-  const mockDispatch = jest.fn();
-    const mockUseSelector = jest.fn();
-    const mockUseNavigate = jest.fn();
+    // Access store state
+    const store_State = store.getState();
+    //useLocation.mockReturnValue({pathname: "/custom-path", });
 
-    useDispatch.mockReturnValue(mockDispatch);
-    useSelector.mockReturnValue(mockUseSelector);
-    useNavigate.mockReturnValue(mockUseNavigate);
 
-    // Mock User data from useSelector
-    mockUseSelector.mockReturnValue({
-      ssoReducer: {
-        ssoUser: {
-          userDetails: {
-            AccessGroup: [{ AccessGroupNames: "Role:AccessGroup" }],
-            UserGroup: [{ UserBU: [{ BU_Name: "MockBU" }], UserRegion: [{ Region_Name: "MockRegion" }] }],
-          },
-        },
-      },
-      UserReducer: {
-        userInformation: {
-          role: "ProjectManager", // Set the role here as needed
-        },
-      },
-      accessMatrixReducer: {
-        accessMatrix: [
-          {
-            role: "ProjectManager",
-            pages: [
-              {
-                name: "myProjects",
-                path: "/myProjects",
-                access: ["Read", "Write", "Edit", "Delete"],
-              },
-              {
-                name: "allProjects",
-                path: "/allProjects",
-                access: ["Read", "Write", "Edit", "Delete"],
-              },]
-            }],
-      },
-    });
+  it("updates user data and navigates to 'myProjects' for ProjectManager role", async () => {
+    const mockUsername = "urban.ik@pg.com";
+    const mockFirstName = "Izabela";
+    const operatorId = mockUsername.split("@")[0];
 
-    const mockUpdateUser = jest.fn();
-    jest.mock("./apis/userApi", () => ({
-      updateUser: mockUpdateUser,
-    }));
-  
-  
+    localStorageMock.getItem.mockReturnValue(JSON.stringify({roles: [
+      {
+        name: "ProjectManager",
+        access: ["Read", "Write", "Edit", "Delete"],
+      },
+      {
+        name: "CapacityManager",
+        access: [],
+      }]}));
+
     const mockRoles = ["ProjectManager"];
     jest.mock("./utils", () => ({
       roles: mockRoles,
     }));
 
-    // Set up a mock Redux store if you're using Redux
-  const mockStore = configureStore([]);
+    // await store.dispatch(getSSOUser(operatorId));
+    // const store_State = store.getState();
+    // console.log("store_State_home" + JSON.stringify(store_State));
+    const mockUserDetails = {AccessGroup:[{AccessGroupNames:"AAS:ProjectManager"}],UserGroup:[{GroupName:"BC default Iza",UserRegion:[{Region_Name:"Europe"}],UserRole:[{Name:"Project Manager,Design Delivery,Print Production Manager,Capacity Manager,Brand Visual Executor,User Agent"}],UserBU:[{U_Name:"Baby Care"}]},{GroupName:"BCHC default Iza",UserRegion:[{Region_Name:"Europe"}],UserRole:[{Name:"Design Manager,Design Agency"}],UserBU:[{BU_Name:"Baby Care"},{BU_Name:"Home Care"}]},{GroupName:"HC default Iza",UserRegion:[{Region_Name:"Europe"}],UserRole:[{Name:"Artwork Copy Expert,Global Product Stewardship,Brand,Initiative Leader,Print Quality Manager"}],UserBU:[{BU_Name:"Baby Care"}]}]}
+    // Mock the Axios get method
+    await axios.get.mockResolvedValue({ data: { ArtworkAgilityPage: mockUserDetails } });
 
-  it("updates user data and navigates to 'myProjects' for ProjectManager role", async () => {
-    const mockUsername = "mockUser@example.com";
-    const mockFirstName = "MockFirstName";
-    const store = mockStore({
-            UserReducer: {
-              userInformation: {
-                role: "ProjectManager", // Set the role here as needed
-              },userProfile:{},userRole:[]
-            },
-            accessMatrixReducer: {
-              accessMatrix: [
-                {
-                  role: "ProjectManager",
-                  pages: [
-                    {
-                      name: "myProjects",
-                      path: "/myProjects",
-                      access: ["Read", "Write", "Edit", "Delete"],
-                    },
-                    {
-                      name: "allProjects",
-                      path: "/allProjects",
-                      access: ["Read", "Write", "Edit", "Delete"],
-                    },]
-                  }]
-            }, accessRoles :[],isLoading : false
-      });
+    const expectedActions = [
+      { type: "FETCH_USER_DETAILS_REQUEST" },
+      { type: "FETCH_USER_DETAILS_SUCCESS", payload: { userDetails: mockUserDetails } },
+    ];
+
+    // Dispatch the action and await its resolution
+    await store.dispatch(getSSOUser(operatorId));
+    // Assert the dispatched actions
+    //expect(store.getActions()).toEqual(expectedActions);
   
-    const { rerender } = render(<Provider store={store}><Home username={mockUsername} firstName={mockFirstName} /></Provider>);
 
-    // Since we are simulating asynchronous updates, we need to use `act` to wait for updates to complete
+    //const { container } = render(<MemoryRouter><Provider store={store}><Home username={mockUsername} firstName={mockFirstName} /></Provider></MemoryRouter>);
+    
+// Since we are simulating asynchronous updates, we need to use `act` to wait for updates to complete
     await act(async () => {
       await Promise.resolve();
+      render(<MemoryRouter><Provider store={store}><Home username={mockUsername} firstName={mockFirstName} /></Provider></MemoryRouter>);
     });
-console.log("mockUpdateUser " + mockUpdateUser);
+    screen.debug();
     // expect(mockUpdateUser).toHaveBeenCalledWith(mockFirstName, ["Role", "MockBU", "MockRegion", mockFirstName]);
     // expect(mockUseNavigate).toHaveBeenCalledWith("/myProjects");
   });

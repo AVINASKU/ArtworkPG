@@ -41,7 +41,7 @@ function Home(props) {
     const fetchData = async () => {
       if (combinedData.length > 0) {
         await updateUser(props.firstName, combinedData);
-        if (roles.some((role) => role === "ProjectManager")) {
+        if (roles?.some((role) => role === "ProjectManager")) {
           navigate("/myProjects");
         } else {
           // Set the redirect URL to AllProjects page for other roles or if the user doesn't have access to the "myProjects" page
