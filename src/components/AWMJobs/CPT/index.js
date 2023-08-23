@@ -219,7 +219,7 @@ function CPT() {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-    await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "CPT"));
+    await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "Print Feasibility Documents"));
     await submitConfirmPrintTrial(formData, id, headers);
     setLoader(false);
     // navigate(`/MyTasks`);
@@ -255,7 +255,7 @@ function CPT() {
       DesignIntentList: submitOnlySelectedData,
     };
     console.log("full draft data --->", submitOnlySelectedData);
-    await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "CPT"));
+    await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "Print Feasibility Documents"));
     await saveDesignIntent(formData);
   };
 
