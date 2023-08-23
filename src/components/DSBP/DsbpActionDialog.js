@@ -102,7 +102,6 @@ const DsbpActionDialog = ({
         (item) => item.AWM_AddedToProject !== "Yes" && item.DSBP_PMP_AWReadinessGateStatus === "LOCKED"
       );
     } else if(updatedData && updatedData[0]?.value === "Create POAA"){
-      // setEmptyMessage("Either POA-A is already triggered for the selected PMP or PMP is not added to project");
       selected = selected.filter(
         (item) =>
           item.AWM_AddedToProject === "Yes" &&
@@ -111,15 +110,14 @@ const DsbpActionDialog = ({
     } else if (rowData) {
       selected = [rowData];
     } else {
-      // setEmptyMessage("Either POA-A is already triggered for the selected PMP or PMP is not added to project");
       selected = selected.filter(
-        (item) => item.AWM_AddedToProject === "Yes"
+        (item) => item.AWM_AddedToProject === "Yes" && item.AWM_AWJStatus !== "Complete"
       );
     }
   }
-  // (item.AWM_AddedToProject === "Yes" && item.AWM_AWJStatus === "Complete") for POAA created
+  
   const addedToProjectRows = selected.filter(
-    (item) => (item.AWM_AddedToProject === "Yes")
+    (item) => (item.AWM_AddedToProject === "Yes" && item.AWM_AWJStatus !== "Complete")
   );
 
   const footerContent = (

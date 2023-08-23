@@ -430,11 +430,9 @@ const ArtworkAlignment = () => {
         },
         ArtworkAgilityPMPs: updatedDataList,
       };
-      // await onSubmitCreatePOAA(updatedPmpDetails);
       let res = await onSubmitCreatePOAA(updatedPmpDetails);
-      console.log("res create", res);
-      setPoaaResponse(res?.some(item => item.POACreationStatus.includes("Failed")));
-     
+      setPoaaResponse(res?.some(item => item.POACreationStatus?.includes("Failed")));
+      await setPoaaAcknowledgDialog(true)
     } else{
       updatedPmpDetails = { ArtworkAgilityPMPs: updatedDataList };
       await onSubmitDsbpAction(updatedPmpDetails);
@@ -453,15 +451,10 @@ const ArtworkAlignment = () => {
   };
 
   const handleCancel = () => {
-    // setLoader(true);
-    // resetTableData();
-    // setLoader(false);
-    setPoaaAcknowledgDialog(true)
+    setLoader(true);
+    resetTableData();
+    setLoader(false);
   };
-
-  // const onSubmit = () => {
-  //   return navigate(`/myProjects`);
-  // };
 
   const onGlobalFilterChange = (e, colName) => {
     const value = e.value;
@@ -628,12 +621,14 @@ const ArtworkAlignment = () => {
           disconnectButtonShow={true}
         >
           {poaaResponse ? (
-            <>POA Creation request submitted to Enovia.</>
-          ) : (
             <>
               POA Creation failed, your request was not received by Enovia and
               POA will not be created. Please try again, if problem persists,
               please open a ticket.
+            </>
+          ) : (
+            <>
+              POA Creation request submitted to Enovia.              
             </>
           )}
         </DsbpCommonPopup>
