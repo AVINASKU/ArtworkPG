@@ -60,6 +60,7 @@ describe("Home Component", () => {
     // console.log("store_State_home" + JSON.stringify(store_State));
     const mockUserDetails = {AccessGroup:[{AccessGroupNames:"AAS:ProjectManager"}],UserGroup:[{GroupName:"BC default Iza",UserRegion:[{Region_Name:"Europe"}],UserRole:[{Name:"Project Manager,Design Delivery,Print Production Manager,Capacity Manager,Brand Visual Executor,User Agent"}],UserBU:[{U_Name:"Baby Care"}]},{GroupName:"BCHC default Iza",UserRegion:[{Region_Name:"Europe"}],UserRole:[{Name:"Design Manager,Design Agency"}],UserBU:[{BU_Name:"Baby Care"},{BU_Name:"Home Care"}]},{GroupName:"HC default Iza",UserRegion:[{Region_Name:"Europe"}],UserRole:[{Name:"Artwork Copy Expert,Global Product Stewardship,Brand,Initiative Leader,Print Quality Manager"}],UserBU:[{BU_Name:"Baby Care"}]}]}
     // Mock the Axios get method
+    // Mock the Axios get method
     await axios.get.mockResolvedValue({ data: { ArtworkAgilityPage: mockUserDetails } });
 
     const expectedActions = [
