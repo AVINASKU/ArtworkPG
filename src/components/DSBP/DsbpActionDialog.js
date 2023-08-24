@@ -129,11 +129,10 @@ const DsbpActionDialog = ({
       </Button>
       <Button
         disabled={
-          (updatedData && updatedData[0]?.value === "Add to Project") ||
           rowData ||
           (isSubmitEnable !== undefined && !isSubmitEnable)
             ? false
-            : Object.keys(formData).length === 0
+            : updatedData && updatedData[0]?.value === "Add to Project" ? selected.length === 0 : Object.keys(formData).length === 0
         }
         onClick={() =>
           (updatedData && updatedData[0]?.value === "Add to Project") || rowData

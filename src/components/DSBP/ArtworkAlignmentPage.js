@@ -362,6 +362,7 @@ const ArtworkAlignment = () => {
     if (addSavedData && addSavedData.length) {
       const updatedPmpDetails = { ArtworkAgilityPMPs: addSavedData };
       await onSubmitDsbpAction(updatedPmpDetails);
+      await fetchData();
     }
     setSavedData([]);
     setLoader(false);
