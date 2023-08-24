@@ -200,7 +200,7 @@ const ArtworkAlignment = () => {
       const filteredIds = Array.from(
         new Set(
           transformedArray
-            .filter((item) => item.DSBP_PO_PMP_poPoa !== "")
+            .filter((item) => item.RTA_POANumber !== "")
             .map((item) => item.DSBP_InitiativeID)
         )
       );
@@ -218,7 +218,7 @@ const ArtworkAlignment = () => {
       setListOfInitiativeId(uniqueIDs);
 
       const count = transformedArray.reduce((acc, obj) => {
-        if (obj?.DSBP_PO_PMP_poPoa !== "") {
+        if (obj?.RTA_POANumber !== "") {
           return acc + 1;
         }
         return acc;
@@ -234,7 +234,7 @@ const ArtworkAlignment = () => {
       setTotalNoOfAddedProject(noOfAddedProject);
 
       const notOfPMPLocked = transformedArray.reduce((acc, obj) => {
-        if (obj?.DSBP_PMP_AWReadinessGateStatus === "TRUE") {
+        if (obj?.DSBP_PMP_AWReadinessGateStatus === "LOCKED") {
           return acc + 1;
         }
         return acc;
