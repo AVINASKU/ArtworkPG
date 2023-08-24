@@ -87,7 +87,7 @@ export const onSubmitCreatePOAA = async (formData, headers = {}) => {
     data: formData,
   });
   console.log("Hello hello ----->", addResponse);
-  return addResponse;
+  return addResponse?.data?.PMPList;
 };
 
 export const getDependencyMappingDetails = async (projectId, headers = {}) => {

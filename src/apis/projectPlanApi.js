@@ -13,21 +13,27 @@ export const getProjectPlan = async (
 ) => {
   const api = new Api();
   const axiosInstance = await api.init({ headers });
-  // let apiURL = `${baseURL}/V1/ProjectPlan/PG-AAS-WORK A-544`;
   let apiURL = `${DEVURL}/projectplan/${projectId}`;
-  const { data: projectPlanData } = await axiosInstance({
-    url: apiURL,
-    method: "GET",
-  });
-  // if (projectPlanData?.ArtworkAgilityProjects) {
-  //   alert(true);
-  //   sessionStorage.setItem("ProjectSubmitted", true);
-  // } else {
-  //   alert(false);
-  //   sessionStorage.setItem("ProjectSubmitted", false);
-  // }
-
-  return projectPlanData?.ArtworkAgilityProjects;
+  try {
+    const response = await axiosInstance({
+      url: apiURL,
+      method: "GET",
+    });
+    // Check for successful response status, e.g., 200 OK
+    if (response?.status === 200) {
+      const projectPlanData = response?.data?.ArtworkAgilityProjects;
+      return projectPlanData;
+    }
+  } catch (error) {
+    if (error.message.includes('net::ERR_CONNECTION_TIMED_OUT')) {
+      // Handle the server being down
+      return { error: 'The server is currently unavailable. Please try again later.' };
+    } else {
+      console.error("Error fetching project plan:", error);
+      throw error; // Rethrow the error for other types of errors
+    }
+  }
+  
 };
 
 export const activateProjectPlan = async (formData, projectId, headers = {}) => {
