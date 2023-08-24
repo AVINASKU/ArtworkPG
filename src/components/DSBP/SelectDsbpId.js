@@ -45,7 +45,6 @@ const SelectDsbpId = ({
       option.IL +
       "_" +
       option.Scope;
-    console.log("here here", option.sequence);
     return (
       <div
         className="city-option"
@@ -209,7 +208,8 @@ const SelectDsbpId = ({
           dasbpDialog={selectDialog}
           setDasbpDialog={setSelectDialog}
           onSubmit={() => handleOptionSelection(selectedDsbpData, operation)}
-          okButtonShow={operation === "poaCreated" ? true : false}          
+          okButtonShow={operation === "poaCreated" ? true : false}
+          poaCreated={operation === "poaCreated"}
           deleteButtonShow={false}
           submitButtonShow={true}
           // yesButtonShow={false}

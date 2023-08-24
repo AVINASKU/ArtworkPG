@@ -18,7 +18,9 @@ const DsbpCommonPopup = ({
   cancelButtonShow,
   showCancel,
   selectedReason,
-  setSelectedReason
+  setSelectedReason,
+  poaCreated,
+  poaaResponse
 }) => {
   const footerContent = (
     <div>
@@ -93,8 +95,8 @@ const DsbpCommonPopup = ({
         onHide={() => {setDasbpDialog(false); rejectFormData && setSelectedReason(false)}}
         footer={footerContent}
         className={`actionDialog dsbpCommonPopup ${
-          okButtonShow && !actionHeader.includes("Acknowledgment") ? "headerIcon" : ""
-        }`}
+          (poaaResponse || poaCreated) ? "headerIcon" : ""
+        } ${okButtonShow && "bottomSinglebutton"}`}
       >
         {children}
       </Dialog>

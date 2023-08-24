@@ -417,7 +417,6 @@ const ArtworkAlignment = () => {
         }
         setRejectDialog(false);
         setSelectedReason(false);
-        setSelectAllChecked(false);
         return updatedData;
       });
     }
@@ -442,6 +441,7 @@ const ArtworkAlignment = () => {
     dispatch(getDSBPDropdownData(BU, Region, ProjectID));
     await fetchData();
     setSelected([]);
+    setSelectAllChecked(false);
     setLoader(false);
   };
 
@@ -612,9 +612,10 @@ const ArtworkAlignment = () => {
       )}
       {poaaAcknowledgDialog && (
         <DsbpCommonPopup
-          actionHeader="POAA Acknowledgment"
+          actionHeader="POAA Acknowledgement"
           dasbpDialog={poaaAcknowledgDialog}
           setDasbpDialog={setPoaaAcknowledgDialog}
+          poaaResponse={poaaResponse}
           okButtonShow={true}
           deleteButtonShow={false}
           showCancel={true}
