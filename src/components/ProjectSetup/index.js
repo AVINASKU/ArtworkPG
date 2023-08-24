@@ -457,6 +457,7 @@ function ProjectSetup(props) {
   };
 
   const onSave = async () => {
+    setLoader(true);
     let updatedData = [];
     const updatedSaveData = saveData(updatedData);
     if (updatedData.length !== 0) {
@@ -465,8 +466,10 @@ function ProjectSetup(props) {
       };
       dispatch(updateProjectPlanDesignAction(updatedProjectPlanDesignData));
       await saveProjectPlanAction(formData, selectedProjectDetails.Project_ID);
+      await dispatch(getMyProject(userInformation));
+      getProjectPlanApi();
       setActiveSave(true);
-      setActiveFlag(true)
+      setActiveFlag(true);
     }
   };
 
