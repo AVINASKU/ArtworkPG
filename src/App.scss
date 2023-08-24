@@ -455,7 +455,6 @@ fieldset:disabled .btn {
 }
 .p-dialog {
   border-radius: 20px;
-
   .p-dialog-header {
     border-top-right-radius: 20px;
     border-top-left-radius: 20px;
@@ -497,6 +496,7 @@ fieldset:disabled .btn {
     .p-dialog-header {
       border-top-right-radius: 20px;
       border-top-left-radius: 20px;
+      gap:3px;
     }
     label.form-label {
       font-size: 14px;
@@ -512,10 +512,9 @@ fieldset:disabled .btn {
     }
     .p-dialog-content {
       overflow-y: hidden;
-      height: 400px;
     }
     .p-datatable > .p-datatable-wrapper {
-      height: 100%;
+      max-height: 400px;
     }
     &.dsbpCommonPopup {
       .p-dialog-content {

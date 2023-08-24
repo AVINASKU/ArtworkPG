@@ -28,13 +28,13 @@ $fontWeight400: 400;
     line-height: 15px;
   }
 
-  .p-column-title {
-    font-weight: $fontWeight500;
-  }
+  // .p-column-title {
+  //   font-weight: $fontWeight500;
+  // }
 
-  .p-column-title > div {
-    display: flex;
-  }
+  // .p-column-title > div {
+  //   display: flex;
+  // }
 
   .p-datatable-tbody {
     font-weight: $fontWeight400;
@@ -170,7 +170,6 @@ img[disabled] {
 }
 
 .multiSelect {
-  padding: 0 22px 22px 2px;
   cursor: pointer;
   line-height: 10px;
 

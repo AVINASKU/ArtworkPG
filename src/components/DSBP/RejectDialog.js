@@ -5,7 +5,8 @@ import { useSelector } from "react-redux";
 const RejectDialog = ({
   onChangeData,
   rejectFormData,
-  setRejectFormData
+  setRejectFormData,
+  setSelectedReason
 }) => {
     const [rejectReason, setRejectReason] = useState("");
     const [rejectionComment, setRejectionComment] = useState("");
@@ -16,8 +17,12 @@ const RejectDialog = ({
     const rejectReasonList = DropDownValuesData?.ArtworkAgilityTasksPage?.Artwork_Alignment?.PMPRejectionReason;
 
     const handleRejectReasonChange = (e) => {
-      setRejectReason(e.target.value)
-      console.log("data", e.target.value)
+      setRejectReason(e.target.value);
+      if(e.target.value === ""){
+        setSelectedReason(false);
+      } else{
+        setSelectedReason(true);
+      }      
       setRejectFormData({
           ...rejectFormData,
           ReasonforRejection: e.target.value,
@@ -25,8 +30,7 @@ const RejectDialog = ({
     };
 
     const handleRejectCommentChange = (e) => {
-      setRejectionComment(e.target.value)
-      console.log("data", e.target.value)
+      setRejectionComment(e.target.value);
       setRejectFormData({
           ...rejectFormData,
           RejectionComment: e.target.value,
@@ -81,7 +85,7 @@ const RejectDialog = ({
         <Col sm={12} className="mb-3">
           <div>
             <Form.Group className="" controlId="groupName.ControlInput1">
-              <Form.Label>Add Comment: :</Form.Label>
+              <Form.Label>Add Comment: </Form.Label>
               <textarea
                 class="form-control text-area"
                 placeholder="Start typing here...."

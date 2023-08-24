@@ -15,6 +15,7 @@
     "crypto-js": "^4.1.1",
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
+    "memoize-one": "^6.0.0",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.43",
     "primeicons": "^6.0.1",

@@ -4,6 +4,7 @@ import { cloneDeep, isArray } from "lodash";
 import ArtworkHeader from "./ArtworkHeader";
 import SelectDsbpId from "./SelectDsbpId";
 import ProjectNameHeader from "./ProjectNameHeader";
+import DsbpCommonPopup from "./DsbpCommonPopup";
 import AgilityList from "./AgilityList";
 import { getDSBPDropdownData } from "../../store/actions/DSBPActions";
 import {
@@ -25,6 +26,7 @@ const ArtworkAlignment = () => {
   const [selected, setSelected] = useState([]);
   const DropDownData = useSelector((state) => state.DSBPDropdownReducer);
   const [dsbpPmpData, setDsbpPmpData] = useState(null);
+  const [originalDsbpPmpData, setOriginalDsbpPmpData] = useState(null);
   const [selectedFields, setSelectedFields] = useState({});
   const [filteredDsbpData, setFilteredDsbpData] = useState(null);
   const [totalNoOfDsbpId, setTotalNoOfDsbpId] = useState(0);
@@ -41,7 +43,10 @@ const ArtworkAlignment = () => {
   const [addSavedData, setSavedData] = useState([]);
   const [handleYesAddToPRoject, setHandleYesAddToPRoject] = useState(false);
   const [rejectDialog, setRejectDialog] = useState(false);
+  const [poaaAcknowledgDialog, setPoaaAcknowledgDialog] = useState(false);
+  const [poaaResponse, setPoaaResponse] = useState(false);
   const [tableRender, setTableRender] = useState(false);
+  const [selectedReason, setSelectedReason] = useState(false);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const [mappedPOAS, setMappedPOAS] = useState([]);
@@ -75,6 +80,12 @@ const ArtworkAlignment = () => {
   useEffect(() => {
     findAndSortBuWiseColumnNames();
   }, []);
+  useEffect(() => {
+    // Initialize originalDsbpPmpData when dsbpPmpData changes
+    if (dsbpPmpData) {
+      setOriginalDsbpPmpData(cloneDeep(dsbpPmpData));
+    }
+  }, [dsbpPmpData]);
 
   const findAndSortBuWiseColumnNames = () => {
     if (BU === "Baby Care") {
@@ -179,6 +190,7 @@ const ArtworkAlignment = () => {
     const resp = await getDsbpPMPDetails(ProjectID);
     if (!resp) {
       setDsbpPmpData(null);
+      setOriginalDsbpPmpData(null)
     }
     if (resp && resp?.length !== 0) {
       const transformedArray = resp?.flatMap((item) =>
@@ -191,13 +203,14 @@ const ArtworkAlignment = () => {
       const filteredIds = Array.from(
         new Set(
           transformedArray
-            .filter((item) => item.DSBP_PO_PMP_poPoa !== "")
+            .filter((item) => item.RTA_POANumber !== "")
             .map((item) => item.DSBP_InitiativeID)
         )
       );
 
       setMappedPOAS(filteredIds);
       setDsbpPmpData(transformedArray);
+      setOriginalDsbpPmpData(cloneDeep(transformedArray));
       setTotalNoOfPMP(transformedArray.length);
 
       const initiativeIDs = transformedArray.map(
@@ -208,7 +221,7 @@ const ArtworkAlignment = () => {
       setListOfInitiativeId(uniqueIDs);
 
       const count = transformedArray.reduce((acc, obj) => {
-        if (obj?.DSBP_PO_PMP_poPoa !== "") {
+        if (obj?.RTA_POANumber !== "") {
           return acc + 1;
         }
         return acc;
@@ -224,7 +237,7 @@ const ArtworkAlignment = () => {
       setTotalNoOfAddedProject(noOfAddedProject);
 
       const notOfPMPLocked = transformedArray.reduce((acc, obj) => {
-        if (obj?.DSBP_PMP_AWReadinessGateStatus === "TRUE") {
+        if (obj?.DSBP_PMP_AWReadinessGateStatus === "LOCKED") {
           return acc + 1;
         }
         return acc;
@@ -349,6 +362,7 @@ const ArtworkAlignment = () => {
     if (addSavedData && addSavedData.length) {
       const updatedPmpDetails = { ArtworkAgilityPMPs: addSavedData };
       await onSubmitDsbpAction(updatedPmpDetails);
+      await fetchData();
     }
     setSavedData([]);
     setLoader(false);
@@ -402,7 +416,7 @@ const ArtworkAlignment = () => {
           updatedData.AWM_Sellable = formData?.AWM_Sellable;
         }
         setRejectDialog(false);
-        setSelectAllChecked(false);
+        setSelectedReason(false);
         return updatedData;
       });
     }
@@ -416,7 +430,9 @@ const ArtworkAlignment = () => {
         },
         ArtworkAgilityPMPs: updatedDataList,
       };
-      await onSubmitCreatePOAA(updatedPmpDetails);
+      let res = await onSubmitCreatePOAA(updatedPmpDetails);
+      setPoaaResponse(res?.some(item => item.POACreationStatus?.includes("Failed")));
+      await setPoaaAcknowledgDialog(true)
     } else{
       updatedPmpDetails = { ArtworkAgilityPMPs: updatedDataList };
       await onSubmitDsbpAction(updatedPmpDetails);
@@ -425,16 +441,21 @@ const ArtworkAlignment = () => {
     dispatch(getDSBPDropdownData(BU, Region, ProjectID));
     await fetchData();
     setSelected([]);
+    setSelectAllChecked(false);
     setLoader(false);
   };
 
-  const handleCancel = () => {
-    return navigate(`/myProjects`);
+  const resetTableData = () => {
+    if (originalDsbpPmpData) {
+      setDsbpPmpData([...originalDsbpPmpData]);
+    }
   };
 
-  // const onSubmit = () => {
-  //   return navigate(`/myProjects`);
-  // };
+  const handleCancel = () => {
+    setLoader(true);
+    resetTableData();
+    setLoader(false);
+  };
 
   const onGlobalFilterChange = (e, colName) => {
     const value = e.value;
@@ -515,6 +536,7 @@ const ArtworkAlignment = () => {
             selected={selected}
             onActionSubmit={onActionSubmit}
             label="Artwork Scope Alignment"
+            hyperLink = "/projectPlan"
             actionDialog={actionDialog}
             setActionDialog={setActionDialog}
             setFieldUpdated={setFieldUpdated}
@@ -574,6 +596,8 @@ const ArtworkAlignment = () => {
               setTableRender={setTableRender}
               customizeViewFields={customizeViewFields}
               setCustomizeViewFields={setCustomizeViewFields}
+              selectedReason={selectedReason}
+              setSelectedReason={setSelectedReason}
             />
           )}
           <FooterButtons
@@ -585,6 +609,32 @@ const ArtworkAlignment = () => {
             submitAndSave="Save"
           />
         </>
+      )}
+      {poaaAcknowledgDialog && (
+        <DsbpCommonPopup
+          actionHeader="POAA Acknowledgement"
+          dasbpDialog={poaaAcknowledgDialog}
+          setDasbpDialog={setPoaaAcknowledgDialog}
+          poaaResponse={poaaResponse}
+          okButtonShow={true}
+          deleteButtonShow={false}
+          showCancel={true}
+          submitButtonShow={false}
+          yesButtonShow={true}
+          disconnectButtonShow={true}
+        >
+          {poaaResponse ? (
+            <>
+              POA Creation failed, your request was not received by Enovia and
+              POA will not be created. Please try again, if problem persists,
+              please open a ticket.
+            </>
+          ) : (
+            <>
+              POA Creation request submitted to Enovia.              
+            </>
+          )}
+        </DsbpCommonPopup>
       )}
     </div>
   );
