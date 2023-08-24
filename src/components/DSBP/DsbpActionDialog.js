@@ -34,6 +34,7 @@ const DsbpActionDialog = ({
   const [bioside, setBioside] = useState("");
   const [sellable, setSellable] = useState("");
   const [formData, setFormData] = useState({});
+  const [emptyMessage, setEmptyMessage] = useState("");
   const [CDPT, setCDPT] = useState([]);
   const [IQ, setIQ] = useState([]);
   const [RDT, setRDT] = useState([]);
@@ -98,7 +99,7 @@ const DsbpActionDialog = ({
   if(headerName !== "Dependency Mapping"){
     if(updatedData && updatedData[0]?.value === "Add to Project"){
       selected = selected.filter(
-        (item) => item.AWM_AddedToProject !== "Yes"
+        (item) => item.AWM_AddedToProject !== "Yes" && item.DSBP_PMP_AWReadinessGateStatus === "LOCKED"
       );
     } else if(updatedData && updatedData[0]?.value === "Create POAA"){
       selected = selected.filter(
@@ -110,13 +111,13 @@ const DsbpActionDialog = ({
       selected = [rowData];
     } else {
       selected = selected.filter(
-        (item) => item.AWM_AddedToProject === "Yes"
+        (item) => item.AWM_AddedToProject === "Yes" && item.AWM_AWJStatus !== "Complete"
       );
     }
   }
   
   const addedToProjectRows = selected.filter(
-    (item) => item.AWM_AddedToProject === "Yes"
+    (item) => (item.AWM_AddedToProject === "Yes" && item.AWM_AWJStatus !== "Complete")
   );
 
   const footerContent = (
@@ -128,11 +129,10 @@ const DsbpActionDialog = ({
       </Button>
       <Button
         disabled={
-          (updatedData && updatedData[0]?.value === "Add to Project") ||
           rowData ||
           (isSubmitEnable !== undefined && !isSubmitEnable)
             ? false
-            : Object.keys(formData).length === 0
+            : updatedData && updatedData[0]?.value === "Add to Project" ? selected.length === 0 : Object.keys(formData).length === 0
         }
         onClick={() =>
           (updatedData && updatedData[0]?.value === "Add to Project") || rowData
@@ -171,6 +171,7 @@ const DsbpActionDialog = ({
                     value={selected}
                     dataKey="id"
                     className="addToProjectTable"
+                    emptyMessage={"No PMPs are available for add to Project"}
                     scrollable
                   >
                     <Column
@@ -191,7 +192,7 @@ const DsbpActionDialog = ({
                     <DataTable
                       value={selected}
                       dataKey="id"
-                      emptyMessage="Please add the PMP to project before you can update."
+                      emptyMessage={updatedData && updatedData[0]?.value !== "Add to Project" && "Either POA-A is already triggered for the selected PMP or PMP is not added to project"}
                       scrollable
                     >
                       <Column
@@ -511,6 +512,7 @@ const DsbpActionDialog = ({
                         placeholder="Enter Package Name"
                         onChange={handlePackageName}
                         value={packageName}
+                        disabled={selected.length === 0}
                       />
                     </Form.Group>
                   )}
