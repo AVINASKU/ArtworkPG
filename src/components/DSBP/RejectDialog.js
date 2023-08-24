@@ -18,7 +18,11 @@ const RejectDialog = ({
 
     const handleRejectReasonChange = (e) => {
       setRejectReason(e.target.value);
-      setSelectedReason(true);
+      if(e.target.value === ""){
+        setSelectedReason(false);
+      } else{
+        setSelectedReason(true);
+      }      
       setRejectFormData({
           ...rejectFormData,
           ReasonforRejection: e.target.value,
