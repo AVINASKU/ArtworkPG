@@ -248,6 +248,7 @@ function DNIQ() {
     };
     console.log("full draft data --->", formData);
     await saveInkQualification(formData);
+    dispatch(getTaskDetails(TaskID, ProjectID));
     setLoader(false);
     // navigate("/MyTasks");
   };
