@@ -561,7 +561,9 @@ const ProjectPlanList = ({
       const remainingTasks = [];
       // Iterate through the original data to filter the tasks
       pegadata.forEach((task) => {
-        if (tasksToFilter.includes(task.data.Task)) {
+        // Check if any of the task names in tasksToFilter partially matches the current task's name
+        const matchedTask = tasksToFilter.find((filterName) => task.data.Task.includes(filterName));
+        if (matchedTask) {
           filteredTasks.push(task);
         } else {
           remainingTasks.push(task);

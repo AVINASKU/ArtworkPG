@@ -242,7 +242,6 @@ function ProjectSetup(props) {
           task.data[0]?.AWM_Task_ID.includes("DNPF_") ||
           task.data[0]?.AWM_Task_ID.includes("DNIQ_") ||
           task.data[0]?.AWM_Task_ID.includes("SAA_") ||
-          task.data[0]?.AWM_Task_ID.includes("UBD_") ||
           task.data[0]?.AWM_Task_ID.includes("DM_") ||
           task.data[0]?.AWM_Task_ID.includes("ACIC_") ||
           task.data[0]?.AWM_Task_ID.includes("UCIC_")
