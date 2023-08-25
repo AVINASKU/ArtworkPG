@@ -4,6 +4,7 @@ import { cloneDeep, isArray } from "lodash";
 import ArtworkHeader from "./ArtworkHeader";
 import SelectDsbpId from "./SelectDsbpId";
 import ProjectNameHeader from "./ProjectNameHeader";
+import DsbpCommonPopup from "./DsbpCommonPopup";
 import AgilityList from "./AgilityList";
 import { getDSBPDropdownData } from "../../store/actions/DSBPActions";
 import {
@@ -42,6 +43,8 @@ const ArtworkAlignment = () => {
   const [addSavedData, setSavedData] = useState([]);
   const [handleYesAddToPRoject, setHandleYesAddToPRoject] = useState(false);
   const [rejectDialog, setRejectDialog] = useState(false);
+  const [poaaAcknowledgDialog, setPoaaAcknowledgDialog] = useState(false);
+  const [poaaResponse, setPoaaResponse] = useState(false);
   const [tableRender, setTableRender] = useState(false);
   const [selectedReason, setSelectedReason] = useState(false);
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
@@ -200,7 +203,7 @@ const ArtworkAlignment = () => {
       const filteredIds = Array.from(
         new Set(
           transformedArray
-            .filter((item) => item.DSBP_PO_PMP_poPoa !== "")
+            .filter((item) => item.RTA_POANumber !== "")
             .map((item) => item.DSBP_InitiativeID)
         )
       );
@@ -218,7 +221,7 @@ const ArtworkAlignment = () => {
       setListOfInitiativeId(uniqueIDs);
 
       const count = transformedArray.reduce((acc, obj) => {
-        if (obj?.DSBP_PO_PMP_poPoa !== "") {
+        if (obj?.RTA_POANumber !== "") {
           return acc + 1;
         }
         return acc;
@@ -234,7 +237,7 @@ const ArtworkAlignment = () => {
       setTotalNoOfAddedProject(noOfAddedProject);
 
       const notOfPMPLocked = transformedArray.reduce((acc, obj) => {
-        if (obj?.DSBP_PMP_AWReadinessGateStatus === "TRUE") {
+        if (obj?.DSBP_PMP_AWReadinessGateStatus === "LOCKED") {
           return acc + 1;
         }
         return acc;
@@ -359,6 +362,7 @@ const ArtworkAlignment = () => {
     if (addSavedData && addSavedData.length) {
       const updatedPmpDetails = { ArtworkAgilityPMPs: addSavedData };
       await onSubmitDsbpAction(updatedPmpDetails);
+      await fetchData();
     }
     setSavedData([]);
     setLoader(false);
@@ -413,7 +417,6 @@ const ArtworkAlignment = () => {
         }
         setRejectDialog(false);
         setSelectedReason(false);
-        setSelectAllChecked(false);
         return updatedData;
       });
     }
@@ -427,7 +430,9 @@ const ArtworkAlignment = () => {
         },
         ArtworkAgilityPMPs: updatedDataList,
       };
-      await onSubmitCreatePOAA(updatedPmpDetails);
+      let res = await onSubmitCreatePOAA(updatedPmpDetails);
+      setPoaaResponse(res?.some(item => item.POACreationStatus?.includes("Failed")));
+      await setPoaaAcknowledgDialog(true)
     } else{
       updatedPmpDetails = { ArtworkAgilityPMPs: updatedDataList };
       await onSubmitDsbpAction(updatedPmpDetails);
@@ -436,6 +441,7 @@ const ArtworkAlignment = () => {
     dispatch(getDSBPDropdownData(BU, Region, ProjectID));
     await fetchData();
     setSelected([]);
+    setSelectAllChecked(false);
     setLoader(false);
   };
 
@@ -450,10 +456,6 @@ const ArtworkAlignment = () => {
     resetTableData();
     setLoader(false);
   };
-
-  // const onSubmit = () => {
-  //   return navigate(`/myProjects`);
-  // };
 
   const onGlobalFilterChange = (e, colName) => {
     const value = e.value;
@@ -607,6 +609,32 @@ const ArtworkAlignment = () => {
             submitAndSave="Save"
           />
         </>
+      )}
+      {poaaAcknowledgDialog && (
+        <DsbpCommonPopup
+          actionHeader="POAA Acknowledgement"
+          dasbpDialog={poaaAcknowledgDialog}
+          setDasbpDialog={setPoaaAcknowledgDialog}
+          poaaResponse={poaaResponse}
+          okButtonShow={true}
+          deleteButtonShow={false}
+          showCancel={true}
+          submitButtonShow={false}
+          yesButtonShow={true}
+          disconnectButtonShow={true}
+        >
+          {poaaResponse ? (
+            <>
+              POA Creation failed, your request was not received by Enovia and
+              POA will not be created. Please try again, if problem persists,
+              please open a ticket.
+            </>
+          ) : (
+            <>
+              POA Creation request submitted to Enovia.              
+            </>
+          )}
+        </DsbpCommonPopup>
       )}
     </div>
   );

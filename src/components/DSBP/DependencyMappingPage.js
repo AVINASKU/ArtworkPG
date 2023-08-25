@@ -85,10 +85,10 @@ const DependencyMapping = () => {
     const filteredDataToSubmit = updatedData.filter(
       (item) => item.updated === true
     );
-    const data = updatedData.filter(
-      (data) => data?.AWM_CIC_Needed === "Yes" && data
+    const dataForNo = updatedData.filter(
+      (data) => data?.AWM_CIC_Needed === "No" && data
     );
-    const dropdownDataForLayoutAndDesign1 = data.map(
+    const dropdownDataForLayoutAndDesign1 = dataForNo.map(
       (item) => item.DSBP_PMP_PIMaterialID
     );
 

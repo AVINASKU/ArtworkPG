@@ -288,6 +288,7 @@ function DNPF() {
     };
     console.log("full draft data --->", formData);
     await saveColorDevelopment(formData);
+    dispatch(getTaskDetails(TaskID, ProjectID));
     setLoader(false);
     // navigate(`/MyTasks`);
   };
