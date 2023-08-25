@@ -280,7 +280,7 @@ const DependencyMappingList = ({
           </div>
         )}
 
-        {field === "AWM_CDPT_Page" && CDPTPageData?.length > 1 && (
+        {field === "AWM_CDPT_Page" && CDPTPageData?.length && (
           <div>
             <MultiSelect
               value={options[field]}
@@ -577,21 +577,22 @@ const DependencyMappingList = ({
       localStorage.getItem("setDependencyMappingColumnNames")
     );
 
+    console.log("cdpt page data", CDPTPageData?.length, RDTData?.length,IQData?.length);
+
     const dependencyColumnNames2 =
-      CDPTPageData?.length === 1
-        ? dependencyColumnNames1.filter(
+      CDPTPageData?.length 
+        ? dependencyColumnNames1:
+         dependencyColumnNames1.filter(
             (item) => item.field !== "AWM_CDPT_Page"
           )
-        : dependencyColumnNames1;
+        ;
     const dependencyColumnNames3 =
-      RDTData?.length === 1
-        ? dependencyColumnNames2.filter((item) => item.field !== "AWM_RDT_Page")
-        : dependencyColumnNames2;
+      RDTData?.length 
+        ? dependencyColumnNames2: dependencyColumnNames2.filter((item) => item.field !== "AWM_RDT_Page");
     const dependencyColumnNames =
-      IQData?.length === 1
-        ? dependencyColumnNames3.filter((item) => item.field !== "AWM_IQ_Page")
-        : dependencyColumnNames3;
-
+      IQData?.length 
+        ? dependencyColumnNames3: dependencyColumnNames3.filter((item) => item.field !== "AWM_IQ_Page");
+        
     if (!dependencyColumnNames) return null;
 
     let jsonValue = customizeViewFields
