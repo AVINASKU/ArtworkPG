@@ -105,7 +105,8 @@ const DsbpActionDialog = ({
       selected = selected.filter(
         (item) =>
           item.AWM_AddedToProject === "Yes" &&
-          item.DSBP_PMP_AWReadinessGateStatus === "LOCKED"
+          item.DSBP_PMP_AWReadinessGateStatus === "LOCKED" &&
+          item.AWM_POARequested !== "Yes"
       );
     } else if (rowData) {
       selected = [rowData];
@@ -171,7 +172,7 @@ const DsbpActionDialog = ({
                     value={selected}
                     dataKey="id"
                     className="addToProjectTable"
-                    emptyMessage={"No PMPs are available for add to Project"}
+                    emptyMessage={"No PMPs are Locked in DSBP"}
                     scrollable
                   >
                     <Column

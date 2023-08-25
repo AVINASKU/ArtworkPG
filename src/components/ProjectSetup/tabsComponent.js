@@ -32,14 +32,7 @@ const TabsComponent = ({ items, tabName, actionButton, setTabName, basePage }) =
               </li>
             ))}
           </ul>
-        </div>
-        {tabName === "projectPlan" && 
-          <div
-            className="actionButtonsForTabComponent"
-          >
-            {actionButton}
-          </div>
-        }        
+        </div>       
       </div>
       <div className="tab-content">
         {items.map((obj, index) => (
