@@ -338,12 +338,12 @@ const DependencyMapping = () => {
         // cdpt
         let DSBP_CDPT_Page = [];
         let DSBP_CDPT_Page_data = [];
-        if (ele.AWM_CDPT_Page) {
-          DSBP_CDPT_Page = CDPTPageData.filter(
+        if (ele?.AWM_CDPT_Page) {
+          DSBP_CDPT_Page = CDPTPageData?.length && CDPTPageData.filter(
             (cdptData) =>
               ele.AWM_CDPT_Page.includes(cdptData.AWM_Design_Job_ID) && cdptData
           );
-          DSBP_CDPT_Page_data = DSBP_CDPT_Page.map((item) => ({
+          DSBP_CDPT_Page_data = DSBP_CDPT_Page?.length && DSBP_CDPT_Page.map((item) => ({
             Design_Job_Name: item.AWM_Design_Job_Name,
             Design_Job_ID: item.AWM_Design_Job_ID,
           }));
@@ -353,11 +353,11 @@ const DependencyMapping = () => {
         let DSBP_RDT_Page = [];
         let DSBP_RDT_Page_data = [];
         if (ele.AWM_RDT_Page) {
-          DSBP_RDT_Page = RDTData.filter((rdtData) => {
+          DSBP_RDT_Page = RDTData?.length && RDTData.filter((rdtData) => {
             if (ele.AWM_RDT_Page.includes(rdtData.AWM_Design_Job_ID))
               return rdtData;
           });
-          DSBP_RDT_Page_data = DSBP_RDT_Page.map((item) => ({
+          DSBP_RDT_Page_data = DSBP_RDT_Page?.length && DSBP_RDT_Page.map((item) => ({
             Design_Job_Name: item.AWM_Design_Job_Name,
             Design_Job_ID: item.AWM_Design_Job_ID,
           }));
@@ -368,11 +368,11 @@ const DependencyMapping = () => {
         let DSBP_IQ_Page = [];
         let DSBP_IQ_Page_data = [];
         if (ele.AWM_IQ_Page) {
-          DSBP_IQ_Page = IQData.filter((iqData) => {
+          DSBP_IQ_Page = IQData?.length && IQData.filter((iqData) => {
             if (ele.AWM_IQ_Page.includes(iqData.AWM_Design_Job_ID))
               return iqData;
           });
-          DSBP_IQ_Page_data = DSBP_IQ_Page.map((item) => ({
+          DSBP_IQ_Page_data = DSBP_IQ_Page?.length && DSBP_IQ_Page.map((item) => ({
             Design_Job_Name: item.AWM_Design_Job_Name,
             Design_Job_ID: item.AWM_Design_Job_ID,
           }));
@@ -392,7 +392,7 @@ const DependencyMapping = () => {
           ? ele.AWM_Other_Reference
           : "";
         submittedObject["AWM_GABrief"] = ele?.AWM_GA_Brief?.length
-          ? ele.AWM_GA_Brief === "New"
+          ? ele.AWM_GA_Brief === "Add GA Brief"
             ? ""
             : ele.AWM_GA_Brief
           : "";
@@ -401,7 +401,7 @@ const DependencyMapping = () => {
       });
     }
     const newAWMGAItemsCount = submittedData.filter(
-      (item) => item.AWM_GA_Brief === "New"
+      (item) => item.AWM_GA_Brief === "Add GA Brief"
     ).length;
     console.log(
       "submitted json",

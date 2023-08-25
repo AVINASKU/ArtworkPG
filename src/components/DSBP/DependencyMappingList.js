@@ -261,7 +261,7 @@ const DependencyMappingList = ({
                 <option value="">Select</option>
 
                 {GABriefData?.map((data, index) =>
-                  data.File_Name === "New" ? (
+                  data.File_Name === "Add GA Brief" ? (
                     <option
                       key={data.File_Name}
                       value={data.File_Name}
@@ -592,7 +592,7 @@ const DependencyMappingList = ({
     const dependencyColumnNames =
       IQData?.length 
         ? dependencyColumnNames3: dependencyColumnNames3.filter((item) => item.field !== "AWM_IQ_Page");
-        
+
     if (!dependencyColumnNames) return null;
 
     let jsonValue = customizeViewFields
