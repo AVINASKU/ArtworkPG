@@ -338,7 +338,7 @@ const DependencyMapping = () => {
         // cdpt
         let DSBP_CDPT_Page = [];
         let DSBP_CDPT_Page_data = [];
-        if (ele?.AWM_CDPT_Page) {
+        if (ele.AWM_CDPT_Page) {
           DSBP_CDPT_Page = CDPTPageData?.length && CDPTPageData.filter(
             (cdptData) =>
               ele.AWM_CDPT_Page.includes(cdptData.AWM_Design_Job_ID) && cdptData
@@ -348,7 +348,7 @@ const DependencyMapping = () => {
             Design_Job_ID: item.AWM_Design_Job_ID,
           }));
         }
-        submittedObject.DSBP_CDPT_Page = DSBP_CDPT_Page_data;
+        submittedObject.DSBP_CDPT_Page = DSBP_CDPT_Page_data || [];
         //rdt
         let DSBP_RDT_Page = [];
         let DSBP_RDT_Page_data = [];
@@ -362,7 +362,7 @@ const DependencyMapping = () => {
             Design_Job_ID: item.AWM_Design_Job_ID,
           }));
         }
-        submittedObject.DSBP_RDT_Page = DSBP_RDT_Page_data;
+        submittedObject.DSBP_RDT_Page = DSBP_RDT_Page_data || [];
 
         //IQ
         let DSBP_IQ_Page = [];
@@ -377,7 +377,7 @@ const DependencyMapping = () => {
             Design_Job_ID: item.AWM_Design_Job_ID,
           }));
         }
-        submittedObject.DSBP_IQ_Page = DSBP_IQ_Page_data;
+        submittedObject.DSBP_IQ_Page = DSBP_IQ_Page_data || [];
 
         submittedObject.DSBP_InitiativeID = ele.DSBP_InitiativeID;
         submittedObject.DSBP_PMP_PIMaterialID = ele.DSBP_PMP_PIMaterialID;
