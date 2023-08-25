@@ -51,6 +51,56 @@ const DependencyMapping = () => {
   };
   console.log("selected outside", selected);
 
+    const updateDropDownDataTableView = (value, columnName, id) => {
+
+    const updatedData = dependencyMappingData.map((data) => {
+      if (data.DSBP_PMP_PIMaterialID === id) {
+        if (!data[columnName] && columnName === "AWM_CIC_Needed")
+          data["AWM_CIC_Needed"] = value;
+        if (!data[columnName] && columnName === "AWM_Supporting_PMP_Design")
+          data["AWM_Supporting_PMP_Design"] = value;
+        if (!data[columnName] && columnName === "AWM_Supporting_PMP_Layout")
+          data["AWM_Supporting_PMP_Layout"] = value;
+        if (!data[columnName] && columnName === "AWM_Other_Reference")
+          data["AWM_Other_Reference"] = value;
+        if (!data[columnName] && columnName === "AWM_RDT_Page")
+          data["AWM_RDT_Page"] = value;
+        if (!data[columnName] && columnName === "AWM_CDPT_Page")
+          data["AWM_CDPT_Page"] = value;
+         if (!data[columnName] && columnName === "AWM_IQ_Page")
+          data["AWM_IQ_Page"] = value;
+        else data[columnName] = value;
+        data["updated"] = true;
+      }
+
+      return data;
+    });
+    const filteredDataToSubmit = updatedData.filter(
+      (item) => item.updated === true
+    );
+    const dataForNo = updatedData.filter(
+      (data) => data?.AWM_CIC_Needed === "No" && data
+    );
+    const dropdownDataForLayoutAndDesign1 = dataForNo.map(
+      (item) => item.DSBP_PMP_PIMaterialID
+    );
+
+    let filteredData = filteredDataToSubmit.filter(
+      (ele) =>
+        ele?.AWM_CIC_Needed === "No" && ele?.AWM_Supporting_PMP_Layout === ""
+    );
+    let setSubmitEnable = filteredDataToSubmit?.length || filteredData?.length ? true : false;
+
+    console.log("filteredDataToSubmit 1", filteredData, filteredDataToSubmit);
+
+    setIsSubmitEnabled(setSubmitEnable);
+
+    setDropdownDataForLayoutAndDesign(dropdownDataForLayoutAndDesign1);
+    setDependencyMappingData(updatedData);
+    setSubmittedData(filteredDataToSubmit);
+    setDataUpdated(!dataUpdated);
+  };
+
   const updateDropDownData = (value, columnName, id) => {
     const updatedData = dependencyMappingData.map((data) => {
       const isMatchingId = selected.some(
@@ -97,7 +147,9 @@ const DependencyMapping = () => {
         ele?.AWM_CIC_Needed === "No" && ele?.AWM_Supporting_PMP_Layout === ""
     );
     let setSubmitEnable = filteredData.length ? false : true;
-    console.log("filteredDataToSubmit", setSubmitEnable, filteredData);
+
+    console.log("filteredDataToSubmit", updatedData, filteredData);
+
     setIsSubmitEnabled(setSubmitEnable);
 
     setDropdownDataForLayoutAndDesign(dropdownDataForLayoutAndDesign1);
@@ -206,7 +258,6 @@ const DependencyMapping = () => {
           AWM_Other_Reference:
             item?.AWM_CIC_Page?.[0]?.AWM_Other_Reference || "",
           AWM_CIC_Matrix: item?.AWM_CIC_Page?.[0]?.AWM_CIC_Matrix || "",
-          // AWM_GA_Brief: item?.Preselected_DSBP_GA_Brief || [],
           AWM_CIC_Matrix_Requested:
             item?.AWM_CIC_Page?.[0]?.AWM_CIC_Matrix_Requested || "",
         };
@@ -525,7 +576,7 @@ const DependencyMapping = () => {
               RDTData={RDTData}
               GABriefData={GABriefData}
               dropdownDataForLayoutAndDesign={dropdownDataForLayoutAndDesign}
-              updateDropDownData={updateDropDownData}
+              updateDropDownData={updateDropDownDataTableView}
               userHasAccess={userHasAccess}
               customizeViewFields={customizeViewFields}
               setCustomizeViewFields={setCustomizeViewFields}
