@@ -27,8 +27,9 @@ const UploadBriefingDocuments = ({
   // setAzureFile,
 }) => {
   const [fileName, setFileName] = useState("");
+  const [selectedReason, setSelectedReason] = useState(false);
 
-  console.log("item121:", index, item);
+  // console.log("item121:", index, item);
   const [selectDialog, setSelectDialog] = useState(false);
   const [uploadedWrongFilename, setUploadedWrongFilename] = useState(false);
   useEffect(() => {
@@ -56,6 +57,7 @@ const UploadBriefingDocuments = ({
           submitButtonShow={true}
           disconnectButtonShow={true}
           showCancel={true}
+          setSelectedReason={setSelectedReason}
         >
           <>{item.File_Name !== "" ? item.File_Name : fileName}</>
         </DsbpCommonPopup>
@@ -123,7 +125,7 @@ const UploadBriefingDocuments = ({
             <div style={{ marginTop: 13 }}>
               <img
                 src={disableDelete ? disabledDelete : enabledDelete}
-                alt="filter logo"
+                alt="delete logo"
                 onClick={() =>
                   checkReadWriteAccess &&
                   !disableDelete &&
