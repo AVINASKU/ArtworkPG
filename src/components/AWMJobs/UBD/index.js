@@ -25,10 +25,11 @@ import "./index.scss";
 import { cloneDeep } from "lodash";
 import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
 import { deleteAzureFile } from "../../../store/actions/AzureFileDeletion.js";
+import { deleteAzureFolder } from "../../../store/actions/AzureDeleteFolder";
 import { Dialog } from "primereact/dialog";
 
 const headerName = "Upload Graphic Adaptation Brief Document";
-const graphicAdaptionBrief = "Graphic Adaptation Brief*";
+const graphicAdaptionBrief = "Graphic Adaptation Brief *";
 const otherReferenceDocs = "Other Reference Documents & Assets";
 const fileUploadType = { uploadFile: "Upload File", upVersion: "Up-Version" };
 const roleName = "UBD_";
@@ -69,7 +70,7 @@ function UBD() {
   const currentUrl = location.pathname;
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
   const AzureSubFolder = "GA Briefs";
-  console.log("TaskDetailsData:",TaskDetailsData);
+  console.log("TaskDetailsData:", TaskDetailsData);
   let breadcrumb = AddNavigation(headerName);
   // const checkReadWriteAccess = CheckReadOnlyAccess();
   const checkReadWriteAccess = true;
@@ -212,7 +213,15 @@ function UBD() {
     if (version !== "V0") {
       deleteUploadBrefingDocs(formData);
       const response = await dispatch(
-        deleteAzureFile(fileUrl, ProjectID, BU, AzureSubFolder)
+        deleteAzureFile(
+          fileUrl,
+          ProjectID + projectName,
+          BU,
+          AzureSubFolder,
+          sectionType === graphicAdaptionBrief
+            ? "GA Brief-" + formData.Sequence
+            : "Other Reference Document-" + formData.Sequence
+        )
       );
       if (response?.includes("404")) {
         setFileNotFound(true);
@@ -367,7 +376,7 @@ function UBD() {
     if (
       (gABriefAdaptationForUI.length &&
         gABriefAdaptationForUI[0].Version !== "V0") ||
-      getGABriefListObj("submit").length
+      getGABriefListObjForSubmitCheck("submit").length
     ) {
       setSubmitAllowed(true);
     } else {
@@ -534,6 +543,32 @@ function UBD() {
     setPageInstructionsData([...pageInstructionsData, submitObj]);
   };
 
+  const getGABriefListObjForSubmitCheck = (type) => {
+    // console.log("getGABriefListObj", gABriefAdaptationForUI);
+    let GABriefList = [];
+    gABriefAdaptationForUI.map((obj) => {
+      if (obj.Info) {
+        const fileSize = Math.round(obj.Info.fileInfo.files[0].size / 1000000);
+        const temp = {
+          Version:
+            obj.Info.version.substring(0, 1) +
+            (parseInt(obj.Info.version.substring(1)) + 1),
+          Size: fileSize === 0 ? "1" : `${fileSize}`,
+          Sequence: `${obj.Info.sequence}`,
+        };
+        if (type === "save") {
+          temp["File_Name"] = obj.Info.fileInfo.files[0].name;
+        }
+        if (type === "submit") {
+          temp["Filename"] = obj.Info.fileInfo.files[0].name;
+        }
+
+        GABriefList.push(temp);
+      }
+    });
+    return GABriefList;
+  };
+
   const getGABriefListObj = (type) => {
     // console.log("getGABriefListObj", gABriefAdaptationForUI);
     let GABriefList = [];
@@ -555,7 +590,15 @@ function UBD() {
         }
 
         GABriefList.push(temp);
-        dispatch(uploadFileAzure(obj.AzureFile, AzureSubFolder));
+        dispatch(
+          uploadFileAzure(
+            obj.AzureFile,
+            ProjectID + projectName,
+            BU,
+            AzureSubFolder,
+            "GA Brief-" + temp.Sequence
+          )
+        );
       }
     });
     return GABriefList;
@@ -580,7 +623,15 @@ function UBD() {
           temp["Filename"] = obj.Info.fileInfo.files[0].name;
         }
         OtherReferenceDoc.push(temp);
-        dispatch(uploadFileAzure(obj.AzureFile, AzureSubFolder));
+        dispatch(
+          uploadFileAzure(
+            obj.AzureFile,
+            ProjectID + projectName,
+            BU,
+            AzureSubFolder,
+            "Other Reference Document-" + temp.Sequence
+          )
+        );
       }
     });
     return OtherReferenceDoc;
