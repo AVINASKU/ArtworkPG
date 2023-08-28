@@ -105,7 +105,8 @@ const DsbpActionDialog = ({
       selected = selected.filter(
         (item) =>
           item.AWM_AddedToProject === "Yes" &&
-          item.DSBP_PMP_AWReadinessGateStatus === "LOCKED"
+          item.DSBP_PMP_AWReadinessGateStatus === "LOCKED" &&
+          item.AWM_POARequested !== "Yes"
       );
     } else if (rowData) {
       selected = [rowData];
@@ -171,7 +172,7 @@ const DsbpActionDialog = ({
                     value={selected}
                     dataKey="id"
                     className="addToProjectTable"
-                    emptyMessage={"No PMPs are available for add to Project"}
+                    emptyMessage={"No PMPs are Locked in DSBP"}
                     scrollable
                   >
                     <Column
@@ -316,7 +317,7 @@ const DsbpActionDialog = ({
                       </Row>
                     ) : (
                       <Row>
-                        {RDTData.length > 1 && (
+                        { RDTData && RDTData?.length && (
                           <Col sm={12}>
                             <Form.Group
                               className={`mb-2`}
@@ -356,7 +357,7 @@ const DsbpActionDialog = ({
                             </Form.Group>
                           </Col>
                         )}
-                        {CDPTPageData.length > 1 && (
+                        { CDPTPageData && CDPTPageData?.length && (
                           <Col sm={12}>
                             <Form.Group
                               className={`mb-2`}
@@ -401,7 +402,7 @@ const DsbpActionDialog = ({
                             </Form.Group>
                           </Col>
                         )}
-                        {IQData.length > 1 && (
+                        {IQData?.length && (
                           <Col sm={12}>
                             <Form.Group
                               className={`mb-2`}
@@ -464,7 +465,7 @@ const DsbpActionDialog = ({
 
                                   {GABriefData?.map(
                                     (data, index) =>
-                                      data.File_Name !== "New" && (
+                                      data.File_Name !== "Add GA Brief" && (
                                         <option
                                           key={`${data.File_Name}_${index}`}
                                           value={data.File_Name}

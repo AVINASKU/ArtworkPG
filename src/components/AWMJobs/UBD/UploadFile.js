@@ -3,8 +3,9 @@ import { FileUpload } from "primereact/fileupload";
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
 import ToolTip from "./ToolTip";
 import { AzureFileDownloadJobs } from "../../../store/actions/AzureFileDownloadJobs";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useParams } from "react-router";
+import { useSelector } from "react-redux";
 
 const UploadFile = ({
   azureSubFolder,
@@ -42,6 +43,10 @@ const UploadFile = ({
     event.preventDefault();
     viewProofScopeFile(`cloudflow://PP_FILE_STORE/aacdata/${fileUrl}`);
   };
+  let { page1, page2, pageType, TaskID, ProjectID } = useParams();
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
+  const BU = selectedProjectDetails?.BU;
 
   let di_name;
   di_name =
@@ -89,7 +94,7 @@ const UploadFile = ({
     const uploadFileName = e.files[0].name;
     const filePathLength = e.files[0].webkitRelativePath.length;
     setFileName(e.files[0].name);
-    console.log("onTemplateSelect:", e.files[0]);
+    // console.log("onTemplateSelect:", e.files[0]);
     if (
       fileLength > MAX_FILENAME_LENGTH ||
       filePathLength > MAX_PATH_LENGTH ||
@@ -145,7 +150,7 @@ const UploadFile = ({
   const customUploader = () => {};
 
   const onImageClose = () => {
-    console.log("onImageClose:", fileUploadRef.current.getFiles());
+    // console.log("onImageClose:", fileUploadRef.current.getFiles());
     setFileUploadWarning(false);
     setUploadedWrongFilename(false);
     setFileName("");
