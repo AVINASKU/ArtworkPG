@@ -41,6 +41,10 @@ const DMPMPSpecificTabView = () => {
 
   const [dmTabData, setDmTabData] = useState(dmTabAttributesData);
   console.log("dmTabData", dmTabData);
+  
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
+  const CICs = selectedProjectDetails?.CICs;
 
   const navigateToDSBP = () => {
     navigate(`/myProjects/dependencyMapping/${selectedProject?.Project_ID}`);
@@ -428,9 +432,26 @@ const DMPMPSpecificTabView = () => {
       dmTabData?.RDTData?.length 
         ? dependencyColumnNames2 : dependencyColumnNames2.filter((item) => item.field !== "AWM_RDT_Page")
 
-    const allColumns =
+    const dependencyColumnNames4 =
       dmTabData?.IQData?.length 
         ? dependencyColumnNames3: dependencyColumnNames3.filter((item) => item.field !== "AWM_IQ_Page")
+    
+        let allColumns = dependencyColumnNames4;
+
+    if (CICs === false) {
+      // console.log("hello hello 1");
+      allColumns = dependencyColumnNames4.filter(
+        (item) =>
+          item.field !== "AWM_CIC_Needed" &&
+          item.field !== "AWM_GA_Brief" &&
+          item.field !== "AWM_Supporting_PMP_Layout" &&
+          item.field !== "AWM_Supporting_PMP_Design" &&
+          item.field !== "AWM_Other_Reference" &&
+          item.field !== "AWM_CIC_Matrix" &&
+          item.field !== "AWM_CIC_Matrix_Requested"
+      );
+      console.log("hello hello 1", allColumns);
+    }
 
     const groupOneCols = allColumns.filter((col) => col.group === 1);
     const groupTwoCols = allColumns.filter((col) => col.group === 2);
