@@ -303,8 +303,10 @@ const DependencyMappingList = ({
                         (options[field]?.length &&
                           !options[field]?.includes("NPF_DJobN/A") &&
                           obj.AWM_Design_Job_ID === "NPF_DJobN/A"),
+                           className: "custom-option-class", 
                     })).filter((option) => option.label !== "")
                   : []
+                 
               }
               filter
               placeholder={`Select AWM CDPT Page`}

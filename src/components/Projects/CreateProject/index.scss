@@ -62,9 +62,12 @@
   padding: 0px;
 }
 
-.p-multiselect-panel .p-multiselect-items .p-multiselect-item.p-highlight {
+ .p-multiselect-panel .p-multiselect-items .p-multiselect-item.p-highlight {
   color: #003da5;
   background: #fff;
+  min-width: 300px;
+    word-wrap: break-word;
+    white-space: normal;
 }
 .p-multiselect-panel .p-multiselect-items .p-multiselect-item:focus {
   outline: 0 none;
