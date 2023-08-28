@@ -148,14 +148,16 @@ const CPPFA = ({
 
   const [flag, setFlag] = useState(false);
   useEffect(() => {
-    pegadata.forEach((obj) => {
+    if(pegadata !== undefined){
+    pegadata?.forEach((obj) => {
       if (
-        obj.data?.Task === "Define New Print Feasibility Scope" ||
-        obj.data?.Task === "Define Color Development & Print Trial"
+        obj?.data?.Task === "Define New Print Feasibility Scope" ||
+        obj?.data?.Task === "Define Color Development & Print Trial"
       ) {
         setFlag(true);
       }
     });
+    } else return;
   }, [pegadata]);
 
   const [hideFlag, setHideFlag] = useState(false);
