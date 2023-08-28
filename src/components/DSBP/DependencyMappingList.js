@@ -596,20 +596,20 @@ const DependencyMappingList = ({
 
     let dependencyColumnNames = dependencyColumnNames4;
 
-    if (CICs === false) {
-      // console.log("hello hello 1");
-      dependencyColumnNames = dependencyColumnNames4.filter(
-        (item) =>
-          item.field !== "AWM_CIC_Needed" &&
-          item.field !== "AWM_GA_Brief" &&
-          item.field !== "AWM_Supporting_PMP_Layout" &&
-          item.field !== "AWM_Supporting_PMP_Design" &&
-          item.field !== "AWM_Other_Reference" &&
-          item.field !== "AWM_CIC_Matrix" &&
-          item.field !== "AWM_CIC_Matrix_Requested"
-      );
-      console.log("hello hello 1", dependencyColumnNames);
-    }
+    // if (CICs === false) {
+    //   // console.log("hello hello 1");
+    //   dependencyColumnNames = dependencyColumnNames4.filter(
+    //     (item) =>
+    //       item.field !== "AWM_CIC_Needed" &&
+    //       item.field !== "AWM_GA_Brief" &&
+    //       item.field !== "AWM_Supporting_PMP_Layout" &&
+    //       item.field !== "AWM_Supporting_PMP_Design" &&
+    //       item.field !== "AWM_Other_Reference" &&
+    //       item.field !== "AWM_CIC_Matrix" &&
+    //       item.field !== "AWM_CIC_Matrix_Requested"
+    //   );
+    //   console.log("hello hello 1", dependencyColumnNames);
+    // }
 
     if (!dependencyColumnNames) return null;
 
