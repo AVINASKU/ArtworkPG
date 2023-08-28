@@ -33,7 +33,7 @@ export const uploadFileFailure = (error) => ({
 });
 
 // Define your Redux async action creator
-export const uploadFileAzure = (file, ProjectID, BU, subFolder) => {
+export const uploadFileAzure = (file, ProjectIdAndName, BU, subFolder) => {
   console.log(file.type, "test");
   return async (dispatch) => {
     try {
@@ -68,7 +68,7 @@ export const uploadFileAzure = (file, ProjectID, BU, subFolder) => {
       }
       // Create a BlobClient for the file and set the content type
       const blobClient = containerClient.getBlockBlobClient(
-        `${domain}/${ProjectID}/${BU}/${subFolder}/${file.name}`
+        `${domain}/${ProjectIdAndName}/${BU}/${subFolder}/${file.name}`
       );
 
       const options = {
@@ -93,7 +93,7 @@ export const uploadFileAzure = (file, ProjectID, BU, subFolder) => {
       );
 
       // Construct the public URL for the uploaded file
-      const publicUrl = `https://${storageAccountName}.blob.core.windows.net/pgsource/${containerName}/${domain}/${ProjectID}/${BU}/${subFolder}/${file.name}`;
+      const publicUrl = `https://${storageAccountName}.blob.core.windows.net/pgsource/${containerName}/${domain}/${ProjectIdAndName}/${BU}/${subFolder}/${file.name}`;
 
       // Dispatch the success action with the public URL
       dispatch(uploadFileSuccess(publicUrl));

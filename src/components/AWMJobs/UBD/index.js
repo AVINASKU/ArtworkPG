@@ -68,14 +68,16 @@ function UBD() {
   const location = useLocation();
   const currentUrl = location.pathname;
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
-  const AzureSubFolder = "UBD";
-  // console.log("TaskDetailsData:", TaskDetailsData);
+  const AzureSubFolder = "GA Briefs";
+  console.log("TaskDetailsData:",TaskDetailsData);
   let breadcrumb = AddNavigation(headerName);
   // const checkReadWriteAccess = CheckReadOnlyAccess();
   const checkReadWriteAccess = true;
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const BU = selectedProjectDetails?.BU;
+
+  const projectName = selectedProjectDetails?.Project_Name;
 
   const hideDialog = () => {
     setFileNotFound(false);
@@ -553,7 +555,7 @@ function UBD() {
         }
 
         GABriefList.push(temp);
-        dispatch(uploadFileAzure(obj.AzureFile, ProjectID, BU, AzureSubFolder));
+        dispatch(uploadFileAzure(obj.AzureFile, AzureSubFolder));
       }
     });
     return GABriefList;
@@ -578,7 +580,7 @@ function UBD() {
           temp["Filename"] = obj.Info.fileInfo.files[0].name;
         }
         OtherReferenceDoc.push(temp);
-        dispatch(uploadFileAzure(obj.AzureFile, ProjectID, BU, AzureSubFolder));
+        dispatch(uploadFileAzure(obj.AzureFile, AzureSubFolder));
       }
     });
     return OtherReferenceDoc;

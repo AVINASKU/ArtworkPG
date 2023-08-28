@@ -32,6 +32,10 @@ const UploadFile = ({
   const [azureErrMsg, setAzureErrMsg] = useState("");
   const [fileUploadWarning, setFileUploadWarning] = useState(false);
   const fileUploadRef = useRef(null);
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
+  const BU = selectedProjectDetails?.BU;
+  const projectName = selectedProjectDetails?.Project_Name;
   const dispatch = useDispatch();
   const viewProofScopeFile = useProofScopeURL();
   const handleViewProofScopeClick = (event, fileUrl) => {
@@ -39,9 +43,6 @@ const UploadFile = ({
     viewProofScopeFile(`cloudflow://PP_FILE_STORE/aacdata/${fileUrl}`);
   };
   let { page1, page2, pageType, TaskID, ProjectID } = useParams();
-  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
-  const selectedProjectDetails = projectSetup.selectedProject;
-  const BU = selectedProjectDetails?.BU;
 
   let di_name;
   di_name =
@@ -135,7 +136,7 @@ const UploadFile = ({
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
     const response = await dispatch(
-      AzureFileDownloadJobs(fileUrl, ProjectID, BU, azureSubFolder)
+      AzureFileDownloadJobs(fileUrl, ProjectID + projectName, BU, azureSubFolder)
     );
     if (response?.includes("404")) {
       setFileNotFound(true);

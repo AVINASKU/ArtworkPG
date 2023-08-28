@@ -49,6 +49,7 @@ const DependencyMappingList = ({
   const dispatch = useDispatch();
   const op = useRef(null);
   const { dmTabValuesData } = useSelector((state) => state.DMTabValuesReducer);
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const [selectedColumnName, setSelectedColumnName] = useState(null);
   const [frozenUpdated, setFrozenUpdated] = useState(false);
   const [tabsList, setTabsList] = useState([
@@ -60,6 +61,9 @@ const DependencyMappingList = ({
     { name: "No", code: "No" },
     { name: "N/A", code: "N/A" },
   ];
+
+  const selectedProjectDetails = projectSetup.selectedProject;
+  const CICs = selectedProjectDetails?.CICs;
 
   useEffect(() => {
     setCustomizeViewFields(customizeViewFields);
@@ -250,18 +254,18 @@ const DependencyMappingList = ({
                 value={options[field]}
                 onChange={(e) => {
                   const selectedValue = e.target.value;
-                    updateDropDownData(
-                      e.target.value,
-                      "AWM_GA_Brief",
-                      options.DSBP_PMP_PIMaterialID
-                    );
+                  updateDropDownData(
+                    e.target.value,
+                    "AWM_GA_Brief",
+                    options.DSBP_PMP_PIMaterialID
+                  );
                 }}
                 style={{ width: "80%", fontSize: 12 }}
               >
                 <option value="">Select</option>
 
                 {GABriefData?.map((data, index) =>
-                  data.File_Name === "New" ? (
+                  data.File_Name === "Add GA Brief" ? (
                     <option
                       key={data.File_Name}
                       value={data.File_Name}
@@ -280,7 +284,7 @@ const DependencyMappingList = ({
           </div>
         )}
 
-        {field === "AWM_CDPT_Page" && CDPTPageData?.length > 1 && (
+        {field === "AWM_CDPT_Page" && CDPTPageData?.length && (
           <div>
             <MultiSelect
               value={options[field]}
@@ -303,6 +307,7 @@ const DependencyMappingList = ({
                         (options[field]?.length &&
                           !options[field]?.includes("NPF_DJobN/A") &&
                           obj.AWM_Design_Job_ID === "NPF_DJobN/A"),
+                      className: "custom-option-class",
                     })).filter((option) => option.label !== "")
                   : []
               }
@@ -577,20 +582,34 @@ const DependencyMappingList = ({
       localStorage.getItem("setDependencyMappingColumnNames")
     );
 
-    const dependencyColumnNames2 =
-      CDPTPageData?.length === 1
-        ? dependencyColumnNames1.filter(
-            (item) => item.field !== "AWM_CDPT_Page"
-          )
-        : dependencyColumnNames1;
-    const dependencyColumnNames3 =
-      RDTData?.length === 1
-        ? dependencyColumnNames2.filter((item) => item.field !== "AWM_RDT_Page")
-        : dependencyColumnNames2;
-    const dependencyColumnNames =
-      IQData?.length === 1
-        ? dependencyColumnNames3.filter((item) => item.field !== "AWM_IQ_Page")
-        : dependencyColumnNames3;
+    console.log("cdpt page data", dependencyColumnNames1);
+
+    const dependencyColumnNames2 = CDPTPageData?.length
+      ? dependencyColumnNames1
+      : dependencyColumnNames1.filter((item) => item.field !== "AWM_CDPT_Page");
+    const dependencyColumnNames3 = RDTData?.length
+      ? dependencyColumnNames2
+      : dependencyColumnNames2.filter((item) => item.field !== "AWM_RDT_Page");
+    let dependencyColumnNames4 = IQData?.length
+      ? dependencyColumnNames3
+      : dependencyColumnNames3.filter((item) => item.field !== "AWM_IQ_Page");
+
+    let dependencyColumnNames = dependencyColumnNames4;
+
+    if (CICs === false) {
+      // console.log("hello hello 1");
+      dependencyColumnNames = dependencyColumnNames4.filter(
+        (item) =>
+          item.field !== "AWM_CIC_Needed" &&
+          item.field !== "AWM_GA_Brief" &&
+          item.field !== "AWM_Supporting_PMP_Layout" &&
+          item.field !== "AWM_Supporting_PMP_Design" &&
+          item.field !== "AWM_Other_Reference" &&
+          item.field !== "AWM_CIC_Matrix" &&
+          item.field !== "AWM_CIC_Matrix_Requested"
+      );
+      console.log("hello hello 1", dependencyColumnNames);
+    }
 
     if (!dependencyColumnNames) return null;
 

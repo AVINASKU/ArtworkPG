@@ -32,6 +32,8 @@ function CPT() {
   );
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
+  const BU = selectedProjectDetails?.BU;
+  const projectName = selectedProjectDetails?.Project_Name;
   const [data, setData] = useState(null);
   const [CD, setCD] = useState([]);
   const [formValid, setFormValid] = useState(true);
@@ -217,7 +219,7 @@ function CPT() {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-    await dispatch(uploadFileAzure(azureFile));
+    await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "Print Feasibility Documents"));
     await submitConfirmPrintTrial(formData, id, headers);
     setLoader(false);
     // navigate(`/MyTasks`);
@@ -253,7 +255,7 @@ function CPT() {
       DesignIntentList: submitOnlySelectedData,
     };
     console.log("full draft data --->", submitOnlySelectedData);
-    await dispatch(uploadFileAzure(azureFile));
+    await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "Print Feasibility Documents"));
     await saveDesignIntent(formData);
   };
 

@@ -37,6 +37,8 @@ function CNIQ() {
   );
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
+  const BU = selectedProjectDetails?.BU;
+  const projectName = selectedProjectDetails?.Project_Name;
   const [data, setData] = useState(null);
   const [IQ, setIQ] = useState([]);
   const [formValid, setFormValid] = useState(false);
@@ -190,7 +192,7 @@ function CNIQ() {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-    await dispatch(uploadFileAzure(azureFile));
+    await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "Print Feasibility Documents"));
     await submitConfirmInkQualification(formData, id, headers);
     setLoader(false);
     // navigate("/MyTasks");.
@@ -237,7 +239,7 @@ function CNIQ() {
       IQList: submitOnlySelectedData,
     };
     console.log("full draft data --->", formData);
-    await dispatch(uploadFileAzure(azureFile));
+    await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "Print Feasibility Documents"));
     await saveInkQualification(formData);
     setLoader(false);
     navigate("/MyTasks");
