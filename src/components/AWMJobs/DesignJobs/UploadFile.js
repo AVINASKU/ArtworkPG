@@ -6,7 +6,8 @@ import { Row, Col } from "react-bootstrap";
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
 import "./UploadFile.scss";
 import { AzureFileDownloadJobs } from "../../../store/actions/AzureFileDownloadJobs";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 const UploadFile = ({
   Design_Intent_Name,
@@ -25,12 +26,18 @@ const UploadFile = ({
   date,
   version,
   disabled,
+  azureSubFolder,
 }) => {
   console.log("data", data);
   console.log("item here here", item);
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
   const [updatedImg, setUpdatedImg] = useState("");
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
+  const BU = selectedProjectDetails?.BU;
+  const projectName = selectedProjectDetails?.Project_Name;
+  let { ProjectID } = useParams();
   const dispatch = useDispatch();
   let viewFileName = designData[0]?.FileMetaDataList[0]?.File_Name;
   useEffect(() => {
@@ -100,7 +107,14 @@ const UploadFile = ({
   };
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
-    dispatch(AzureFileDownloadJobs(fileUrl));
+    dispatch(
+      AzureFileDownloadJobs(
+        fileUrl,
+        ProjectID + projectName,
+        BU,
+        azureSubFolder
+      )
+    );
   };
 
   return (
