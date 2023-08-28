@@ -22,16 +22,6 @@ jest.mock("../../../utils", () => ({
 
 describe("MyProjects Component", () => {
   it("renders unauthorized message for users without all access", () => {
-    useSelector.mockReturnValueOnce({
-      UserReducer: {
-        userInformation: {
-          role: "user", // Set the role here as needed
-        },
-      },
-      accessMatrixReducer: {
-        accessMatrix: {},
-      },
-    });
 
     const { getByText } = render(<MyProjects />);
 
