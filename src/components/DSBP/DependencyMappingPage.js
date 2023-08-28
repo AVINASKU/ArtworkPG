@@ -87,13 +87,15 @@ const DependencyMapping = () => {
 
     let filteredData = filteredDataToSubmit.filter(
       (ele) =>
-        ele?.AWM_CIC_Needed === "No" && ele?.AWM_Supporting_PMP_Layout === ""
+        (ele?.AWM_CIC_Needed === "No" && ele?.AWM_Supporting_PMP_Layout === "" ) || 
+        (ele?.AWM_Other_Reference !== "" && ele?.AWM_CIC_Needed === "N/A" && ele?.AWM_Other_Reference?.length !== 8 ) || 
+        (ele?.AWM_CIC_Needed === "Yes" && ele?.AWM_GA_Brief === " ")
     );
-    let setSubmitEnable = filteredDataToSubmit?.length || filteredData?.length ? true : false;
+    let setSubmitEnable = filteredData?.length ? true : false;
 
     console.log("filteredDataToSubmit 1", filteredData, filteredDataToSubmit);
 
-    setIsSubmitEnabled(setSubmitEnable);
+    setIsSubmitEnabled(!setSubmitEnable);
 
     setDropdownDataForLayoutAndDesign(dropdownDataForLayoutAndDesign1);
     setDependencyMappingData(updatedData);
