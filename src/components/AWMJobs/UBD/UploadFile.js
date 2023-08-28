@@ -36,7 +36,6 @@ const UploadFile = ({
   const selectedProjectDetails = projectSetup.selectedProject;
   const BU = selectedProjectDetails?.BU;
   const projectName = selectedProjectDetails?.Project_Name;
-  let { ProjectID } = useParams();
   const dispatch = useDispatch();
   const viewProofScopeFile = useProofScopeURL();
   const handleViewProofScopeClick = (event, fileUrl) => {
@@ -44,9 +43,6 @@ const UploadFile = ({
     viewProofScopeFile(`cloudflow://PP_FILE_STORE/aacdata/${fileUrl}`);
   };
   let { page1, page2, pageType, TaskID, ProjectID } = useParams();
-  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
-  const selectedProjectDetails = projectSetup.selectedProject;
-  const BU = selectedProjectDetails?.BU;
 
   let di_name;
   di_name =

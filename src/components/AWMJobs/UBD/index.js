@@ -77,9 +77,6 @@ function UBD() {
   const selectedProjectDetails = projectSetup.selectedProject;
   const BU = selectedProjectDetails?.BU;
 
-  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
-  const selectedProjectDetails = projectSetup.selectedProject;
-  const BU = selectedProjectDetails?.BU;
   const projectName = selectedProjectDetails?.Project_Name;
 
   const hideDialog = () => {
