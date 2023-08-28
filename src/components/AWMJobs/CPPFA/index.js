@@ -13,7 +13,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import upload1 from "../../../assets/images/upload1.svg";
 import { getTasks } from "../../../store/actions/TaskActions";
 import "./index.scss";
-import { AzureFileDownloadJobs } from "../../../store/actions/AzureFileDownloadJobs";
+import { downloadFileAzure } from "../../../store/actions/AzureFileDownload";
 import { Image } from "primereact/image";
 const CPPFA = ({
   showTaskDialog,
@@ -224,7 +224,7 @@ const CPPFA = ({
   };
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
-    dispatch(AzureFileDownloadJobs(fileUrl, ProjectID, BU, "CPPFA"));
+    dispatch(downloadFileAzure(fileUrl, ProjectID, BU, "CPPFA"));
   };
   return (
     <Dialog
