@@ -198,7 +198,7 @@ function CCD() {
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
     await dispatch(
-      uploadFileAzure(azureFile, ProjectID + projectName, BU, AzureSubFolder)
+      uploadFileAzure(azureFile, ProjectID + " " + projectName, BU, AzureSubFolder)
     );
     await submitConfirmColorDevelopment(formData, id, headers);
     setLoader(false);
@@ -237,7 +237,7 @@ function CCD() {
     console.log("full draft data --->", submitOnlySelectedData);
 
     await dispatch(
-      uploadFileAzure(azureFile, ProjectID + projectName, BU, AzureSubFolder)
+      uploadFileAzure(azureFile, ProjectID + " " + projectName, BU, AzureSubFolder)
     );
     await saveDesignIntent(formData);
   };

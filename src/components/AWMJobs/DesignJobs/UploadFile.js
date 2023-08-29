@@ -103,7 +103,7 @@ const UploadFile = ({
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
     dispatch(
-      downloadFileAzure(fileUrl, ProjectID + projectName, BU, azureSubFolder)
+      downloadFileAzure(fileUrl, ProjectID + " " + projectName, BU, azureSubFolder)
     );
   };
 

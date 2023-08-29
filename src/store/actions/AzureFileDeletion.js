@@ -68,7 +68,7 @@ export const deleteAzureFile = (
 
       let deleteUrl = `${baseUrl}/${containerName}/${domain}/${ProjectID}/${BU}/${subFolder}/${filePath}?${sasToken}`;
       if (subFolder === "GA Briefs") {
-        deleteUrl = `${baseUrl}/${containerName}/${domain}/${ProjectID}/${BU}/${subFolder}/${sequence}?${sasToken}`;
+        deleteUrl = `${baseUrl}/${containerName}/${domain}/${ProjectID}/${BU}/${subFolder}/${sequence}/${filePath}?${sasToken}`;
       }
       const response = await axios.delete(deleteUrl);
 

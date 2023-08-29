@@ -225,7 +225,7 @@ function CPT() {
     };
 
     await dispatch(
-      uploadFileAzure(azureFile, ProjectID + projectName, BU, AzureSubFolder)
+      uploadFileAzure(azureFile, ProjectID + " " + projectName, BU, AzureSubFolder)
     );
     await submitConfirmPrintTrial(formData, id, headers);
     setLoader(false);
@@ -264,7 +264,7 @@ function CPT() {
     console.log("full draft data --->", submitOnlySelectedData);
 
     await dispatch(
-      uploadFileAzure(azureFile, ProjectID + projectName, BU, AzureSubFolder)
+      uploadFileAzure(azureFile, ProjectID + " " + projectName, BU, AzureSubFolder)
     );
     await saveDesignIntent(formData);
   };
