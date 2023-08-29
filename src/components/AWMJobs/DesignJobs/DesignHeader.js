@@ -17,10 +17,12 @@ const DesignHeader = ({
   taskName,
   checkTaskISComplete,
   closeFlag,
-  actionButtonsFlag
+  actionButtonsFlag,
+  checked, 
+  setChecked, 
+  enableCheckBox
 }) => {
   const navigate = useNavigate();
-  const [checked, setChecked] = useState(false);
   const location = useLocation();
   const locationPath = location?.pathname;
 
@@ -88,7 +90,7 @@ const DesignHeader = ({
               }}
               checked={checked}
               className="margin-right"
-              disabled={((!onSelectAll && true) || !checkReadWriteAccess) || checkTaskISComplete }
+              disabled={((!onSelectAll && true) || !checkReadWriteAccess) || checkTaskISComplete || !enableCheckBox }
             ></Checkbox>
             <div className="icon-label">
               <label
