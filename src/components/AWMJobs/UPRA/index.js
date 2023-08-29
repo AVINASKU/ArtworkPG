@@ -29,8 +29,7 @@ const UPRA = () => {
   const [date, setDate] = useState("");
   const [version, setVersion] = useState("V0");
   const location = useLocation();
-  const locationPath = location?.pathname;
-  const url = locationPath?.split("/");
+  const currentUrl = location.pathname;
 
   const { TaskDetailsData, loading } = useSelector(
     (state) => state.TaskDetailsReducer
@@ -85,7 +84,9 @@ const UPRA = () => {
   };
 
   const handleCancel = () => {
-    return navigate(url[0] === "myTasks" ? `/myTasks` : "/allTasks");
+    return navigate(
+      `/${currentUrl?.split("/")[1]}/${currentUrl?.split("/")[2]}/${ProjectID}`
+    );
   };
 
   const onSubmit = async () => {
@@ -113,8 +114,10 @@ const UPRA = () => {
       }],
     };
     await dispatch(UploadFileToServer(azureFile, filePath));
-    console.log("formData", formData, "id", id);
     await submitUploadProductionReadyArt(formData, id, headers);
+    navigate(
+      `/${currentUrl?.split("/")[1]}/${currentUrl?.split("/")[2]}/${ProjectID}`
+    );
   };
 
   return (
@@ -126,6 +129,7 @@ const UPRA = () => {
         label="Upload Production Ready Art"
         checkReadWriteAccess={checkReadWriteAccess}
         taskName="Production Ready Art"
+        actionButtonsFlag={true}
       />
       <div className="task-details">
         {<AddNewDesign {...data} TaskDetailsData={TaskDetailsData}/>}

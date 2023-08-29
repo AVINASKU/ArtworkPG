@@ -9,7 +9,7 @@ import { HelpNeededAction } from "../../store/actions/HelpNeededAction";
 import "./index.scss";
 import { useDispatch } from "react-redux";
 import { getTasks, getAllTasks } from "../../store/actions/TaskActions";
-const helpOptions = ["Others", "Risk", "High"];
+const helpOptions = ["Others"];
 
 const TaskDialog = (props) => {
   const dispatch = useDispatch();
