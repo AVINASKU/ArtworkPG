@@ -260,7 +260,7 @@ function DDT() {
         headerName={headerName}
         label="Define Regional Design Template"
         checkReadWriteAccess={checkReadWriteAccess}
-        taskName="Regional Design Intent"
+        taskName="Regional Design Template"
         checkTaskISComplete={checkTaskISComplete}
         checked={checked}
         setChecked={setChecked}
@@ -292,7 +292,7 @@ function DDT() {
                   Brand={Brand}
                   Category={Category}
                   checkReadWriteAccess={checkReadWriteAccess}
-                  taskName="Regional Design Intent"
+                  taskName="Regional Design Template"
                 />
               );
             }
