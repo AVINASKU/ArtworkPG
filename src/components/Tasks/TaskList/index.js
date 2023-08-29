@@ -432,7 +432,6 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
   const dynamicColumns = () => {
     if (flag === "myTasks" && TaskService.getMyTaskColumnNames().length) {
       return TaskService.getMyTaskColumnNames()
-        .slice(0, 5)
         .map((ele, i) => {
           const checkBoxAdded = ele === "Task_Name" ? "checkbox-added" : "";
           return (
@@ -450,7 +449,8 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
                 (ele === "Task_Name" && taskBodyTemplate) ||
                 (ele === "Task_Type" && taskTemplate) ||
                 (ele === "Help_Needed" && helpNeededBodyTemplate) ||
-                (ele === "Status" && statusTemplate)
+                (ele === "Status" && statusTemplate) ||
+                (ele === "PM" && assigneeTemplate)
               }
               style={{
               width: "200px"
