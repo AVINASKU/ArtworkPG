@@ -50,6 +50,8 @@ const DsbpActionDialog = ({
     (data) => data.header === actionHeader
   );
 
+  let CICs = selectedProject?.CICs;
+
   const handleAiseChange = (e) => {
     setAISEName(e.target.value);
     setFormData({
@@ -442,7 +444,7 @@ const DsbpActionDialog = ({
                             </Form.Group>
                           </Col>
                         )}
-                        {GABriefData && (
+                        {GABriefData && CICs && (
                           <Col sm={12}>
                             <Form.Group
                               className={`mb-2`}
