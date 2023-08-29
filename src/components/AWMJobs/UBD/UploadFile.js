@@ -2,8 +2,10 @@ import React, { useState, useRef } from "react";
 import { FileUpload } from "primereact/fileupload";
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
 import ToolTip from "./ToolTip";
-import { AzureFileDownloadJobs } from "../../../store/actions/AzureFileDownloadJobs";
+import { downloadFileAzure } from "../../../store/actions/AzureFileDownload";
 import { useDispatch } from "react-redux";
+import { useParams } from "react-router";
+import { useSelector } from "react-redux";
 
 const UploadFile = ({
   azureSubFolder,
@@ -30,12 +32,17 @@ const UploadFile = ({
   const [azureErrMsg, setAzureErrMsg] = useState("");
   const [fileUploadWarning, setFileUploadWarning] = useState(false);
   const fileUploadRef = useRef(null);
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
+  const BU = selectedProjectDetails?.BU;
+  const projectName = selectedProjectDetails?.Project_Name;
   const dispatch = useDispatch();
   const viewProofScopeFile = useProofScopeURL();
   const handleViewProofScopeClick = (event, fileUrl) => {
     event.preventDefault();
     viewProofScopeFile(`cloudflow://PP_FILE_STORE/aacdata/${fileUrl}`);
   };
+  let { page1, page2, pageType, TaskID, ProjectID } = useParams();
 
   let di_name;
   di_name =
@@ -83,7 +90,7 @@ const UploadFile = ({
     const uploadFileName = e.files[0].name;
     const filePathLength = e.files[0].webkitRelativePath.length;
     setFileName(e.files[0].name);
-    console.log("onTemplateSelect:", e.files[0]);
+    // console.log("onTemplateSelect:", e.files[0]);
     if (
       fileLength > MAX_FILENAME_LENGTH ||
       filePathLength > MAX_PATH_LENGTH ||
@@ -129,7 +136,15 @@ const UploadFile = ({
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
     const response = await dispatch(
-      AzureFileDownloadJobs(fileUrl, azureSubFolder)
+      downloadFileAzure(
+        fileUrl,
+        ProjectID + projectName,
+        BU,
+        azureSubFolder,
+        fileUploadSection === "Graphic Adaptation Brief *"
+          ? "GA Brief-" + sequence
+          : "Other Reference Document-" + sequence
+      )
     );
     if (response?.includes("404")) {
       setFileNotFound(true);
@@ -139,7 +154,7 @@ const UploadFile = ({
   const customUploader = () => {};
 
   const onImageClose = () => {
-    console.log("onImageClose:", fileUploadRef.current.getFiles());
+    // console.log("onImageClose:", fileUploadRef.current.getFiles());
     setFileUploadWarning(false);
     setUploadedWrongFilename(false);
     setFileName("");

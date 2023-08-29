@@ -17,6 +17,7 @@ import { isArray, isString } from "lodash";
 import UploadFile from "./UploadFile";
 import { useSelector } from "react-redux";
 const CloneJobs = ({
+  azureSubFolder,
   index,
   Artwork_Brand,
   Artwork_Category,
@@ -794,6 +795,7 @@ const CloneJobs = ({
             date={date}
             version={version}
             disabled={!checkReadWriteAccess || data.Task_Status === "Complete"}
+            azureSubFolder={azureSubFolder}
             // ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
             // version={version}
           />

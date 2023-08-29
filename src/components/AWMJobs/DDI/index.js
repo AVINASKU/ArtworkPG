@@ -39,6 +39,7 @@ function DDI() {
     (state) => state.TaskDetailsReducer
   );
   const myProjectList = useSelector((state) => state.myProject);
+
   const location = useLocation();
   const currentUrl = location.pathname;  
   let checkTaskISComplete =

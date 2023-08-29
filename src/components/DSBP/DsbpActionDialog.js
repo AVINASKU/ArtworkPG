@@ -50,6 +50,8 @@ const DsbpActionDialog = ({
     (data) => data.header === actionHeader
   );
 
+  let CICs = selectedProject?.CICs;
+
   const handleAiseChange = (e) => {
     setAISEName(e.target.value);
     setFormData({
@@ -317,7 +319,7 @@ const DsbpActionDialog = ({
                       </Row>
                     ) : (
                       <Row>
-                        {RDTData.length > 1 && (
+                        { RDTData && RDTData?.length && (
                           <Col sm={12}>
                             <Form.Group
                               className={`mb-2`}
@@ -357,7 +359,7 @@ const DsbpActionDialog = ({
                             </Form.Group>
                           </Col>
                         )}
-                        {CDPTPageData.length > 1 && (
+                        { CDPTPageData && CDPTPageData?.length && (
                           <Col sm={12}>
                             <Form.Group
                               className={`mb-2`}
@@ -402,7 +404,7 @@ const DsbpActionDialog = ({
                             </Form.Group>
                           </Col>
                         )}
-                        {IQData.length > 1 && (
+                        {IQData?.length && (
                           <Col sm={12}>
                             <Form.Group
                               className={`mb-2`}
@@ -442,7 +444,7 @@ const DsbpActionDialog = ({
                             </Form.Group>
                           </Col>
                         )}
-                        {GABriefData && (
+                        {GABriefData && CICs && (
                           <Col sm={12}>
                             <Form.Group
                               className={`mb-2`}
@@ -465,7 +467,7 @@ const DsbpActionDialog = ({
 
                                   {GABriefData?.map(
                                     (data, index) =>
-                                      data.File_Name !== "New" && (
+                                      data.File_Name !== "Add GA Brief" && (
                                         <option
                                           key={`${data.File_Name}_${index}`}
                                           value={data.File_Name}

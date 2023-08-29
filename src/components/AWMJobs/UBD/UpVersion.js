@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { FileUpload } from "primereact/fileupload";
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
-import { AzureFileDownloadJobs } from "../../../store/actions/AzureFileDownloadJobs";
+import { downloadFileAzure } from "../../../store/actions/AzureFileDownload";
 import { useDispatch } from "react-redux";
 
 const UpVersion = ({
@@ -120,7 +120,7 @@ const UpVersion = ({
   };
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
-    dispatch(AzureFileDownloadJobs(fileUrl));
+    dispatch(downloadFileAzure(fileUrl));
   };
 
   const customUploader = () => {};

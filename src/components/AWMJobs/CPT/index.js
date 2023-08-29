@@ -32,6 +32,8 @@ function CPT() {
   );
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
+  const BU = selectedProjectDetails?.BU;
+  const projectName = selectedProjectDetails?.Project_Name;
   const [data, setData] = useState(null);
   const [CD, setCD] = useState([]);
   const [formValid, setFormValid] = useState(true);
@@ -48,6 +50,7 @@ function CPT() {
   const navigate = useNavigate();
   // const checkReadWriteAccess = CheckReadOnlyAccess();
   const checkReadWriteAccess = true;
+  const AzureSubFolder = "Print Feasibility Documents";
 
   useEffect(() => {
     // const data1 = ProjectService.getDIData();
@@ -120,6 +123,9 @@ function CPT() {
     submittedDI.push(data);
     setSubmittedDI(submittedDI);
     checkFormValidity();
+    if (fieldName === "Print_Trial_Done") {
+      checkCPTFormValidity();
+    }
   };
 
   useEffect(() => {
@@ -130,7 +136,7 @@ function CPT() {
   const checkCPTFormValidity = () => {
     console.log(CD);
     const validTasks = CD?.filter((task) => {
-      return task?.Print_Trial_Needed && task?.CD_Approved;
+      return task?.Print_Trial_Done && task?.CD_Approved;
     });
     console.log(validTasks.length);
     if (validTasks.length > 0) {
@@ -217,7 +223,10 @@ function CPT() {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-    await dispatch(uploadFileAzure(azureFile));
+
+    await dispatch(
+      uploadFileAzure(azureFile, ProjectID + projectName, BU, AzureSubFolder)
+    );
     await submitConfirmPrintTrial(formData, id, headers);
     setLoader(false);
     // navigate(`/MyTasks`);
@@ -253,7 +262,10 @@ function CPT() {
       DesignIntentList: submitOnlySelectedData,
     };
     console.log("full draft data --->", submitOnlySelectedData);
-    await dispatch(uploadFileAzure(azureFile));
+
+    await dispatch(
+      uploadFileAzure(azureFile, ProjectID + projectName, BU, AzureSubFolder)
+    );
     await saveDesignIntent(formData);
   };
 
@@ -315,6 +327,7 @@ function CPT() {
                     Artwork_Category={
                       TaskDetailsData?.ArtworkAgilityPage?.Artwork_Category
                     }
+                    azureSubFolder={AzureSubFolder}
                   />
                 );
               }

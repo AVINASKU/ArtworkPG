@@ -5,8 +5,9 @@ import { Tag } from "primereact/tag";
 import { Row, Col } from "react-bootstrap";
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
 import "./UploadFile.scss";
-import { AzureFileDownloadJobs } from "../../../store/actions/AzureFileDownloadJobs";
-import { useDispatch } from "react-redux";
+import { downloadFileAzure } from "../../../store/actions/AzureFileDownload";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 const UploadFile = ({
   Design_Intent_Name,
@@ -25,14 +26,21 @@ const UploadFile = ({
   date,
   version,
   disabled,
+  azureSubFolder,
 }) => {
   console.log("data", data);
   console.log("item here here", item);
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
   const [updatedImg, setUpdatedImg] = useState("");
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
+  const BU = selectedProjectDetails?.BU;
+  const projectName = selectedProjectDetails?.Project_Name;
+  let { ProjectID } = useParams();
   const dispatch = useDispatch();
   let viewFileName = designData[0]?.FileMetaDataList[0]?.File_Name;
+
   useEffect(() => {
     console.log("item ----", item);
     if (item?.FileMetaDataList[0]) {
@@ -50,13 +58,6 @@ const UploadFile = ({
       ? `${data?.Task_Name}_${version}_${date}`
       : `${data?.Task_Name}`;
 
-  // let di_name;
-  // di_name =
-  //   version !== "V0" &&
-  //   item?.DesignJobDetails[0]?.FileMetaDataList[0]?.Timestamp !== ""
-  //     ? `${item?.Task_Name}_${version}_${date}`
-  //     : `${item?.Task_Name}`;
-
   const onTemplateUpload = (e) => {
     let _totalSize = 0;
 
@@ -72,7 +73,8 @@ const UploadFile = ({
     return (
       <div className="upload-row">
         <img role="presentation" src={file.objectURL} width={50} />
-        <div className="flex flex-column text-left ml-3">{di_name}</div>
+        {/* <div className="flex flex-column text-left ml-3">{di_name}</div> */}
+        <div className="flex flex-column text-left ml-3">{file.name}</div>
       </div>
     );
   };
@@ -100,7 +102,9 @@ const UploadFile = ({
   };
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
-    dispatch(AzureFileDownloadJobs(fileUrl));
+    dispatch(
+      downloadFileAzure(fileUrl, ProjectID + projectName, BU, azureSubFolder)
+    );
   };
 
   return (

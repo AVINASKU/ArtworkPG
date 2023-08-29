@@ -336,7 +336,9 @@ const ProjectPlanList = ({
                   navigate(
                     `/${currentUrlBasePage}/dependencyMapping/${selectedProject?.Project_ID}`
                   );
-                } else if (optionsData[field] === "Upload Briefing documents") {
+                } else if (
+                  optionsData[field].includes("Upload Briefing documents")
+                ) {
                   navigate(
                     `/${currentUrlBasePage}/projectPlan/UBD/${options.key}/${selectedProject?.Project_ID}`
                   );
@@ -562,7 +564,9 @@ const ProjectPlanList = ({
       // Iterate through the original data to filter the tasks
       pegadata.forEach((task) => {
         // Check if any of the task names in tasksToFilter partially matches the current task's name
-        const matchedTask = tasksToFilter.find((filterName) => task.data.Task.includes(filterName));
+        const matchedTask = tasksToFilter.find((filterName) =>
+          task.data.Task.includes(filterName)
+        );
         if (matchedTask) {
           filteredTasks.push(task);
         } else {

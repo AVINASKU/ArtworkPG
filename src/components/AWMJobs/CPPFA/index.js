@@ -13,7 +13,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import upload1 from "../../../assets/images/upload1.svg";
 import { getTasks } from "../../../store/actions/TaskActions";
 import "./index.scss";
-import { AzureFileDownloadJobs } from "../../../store/actions/AzureFileDownloadJobs";
+import { downloadFileAzure } from "../../../store/actions/AzureFileDownload";
 import { Image } from "primereact/image";
 const CPPFA = ({
   showTaskDialog,
@@ -29,9 +29,10 @@ const CPPFA = ({
   const locationPath = location?.pathname;
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
+  const BU = selectedProjectDetails?.BU;
+  const projectName = selectedProjectDetails?.Project_Name;
   const url = locationPath?.split("/");
   const [loader, setLoader] = useState(false);
-  const BU = selectedProjectDetails?.BU;
 
   const [visible, setVisible] = useState(showTaskDialog);
   const [taskDetailsDataObj, setTaskDetailsDataObj] = useState(null);
@@ -147,14 +148,16 @@ const CPPFA = ({
 
   const [flag, setFlag] = useState(false);
   useEffect(() => {
-    pegadata.forEach((obj) => {
+    if(pegadata !== undefined){
+    pegadata?.forEach((obj) => {
       if (
-        obj.data.Task === "Define New Print Feasibility Scope" ||
-        obj.data.Task === "Define Color Development & Print Trial"
+        obj?.data?.Task === "Define New Print Feasibility Scope" ||
+        obj?.data?.Task === "Define Color Development & Print Trial"
       ) {
         setFlag(true);
       }
     });
+    } else return;
   }, [pegadata]);
 
   const [hideFlag, setHideFlag] = useState(false);
@@ -207,12 +210,13 @@ const CPPFA = ({
       }
     } else {
       azureFile &&
-        (await dispatch(uploadFileAzure(azureFile, ProjectID, BU, "CPPFA")));
+        (await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "Print Feasibility Documents")));
       await submitCPPFA(
         formData,
         `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`,
         headers
       );
+      setFileName(null);
       hideDialog();
       if (url[2] === "projectPlan") {
         getProjectPlanApi();
@@ -224,7 +228,7 @@ const CPPFA = ({
   };
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
-    dispatch(AzureFileDownloadJobs(fileUrl, ProjectID, BU, "CPPFA"));
+    dispatch(downloadFileAzure(fileUrl, ProjectID + projectName, BU, "Print Feasibility Documents"));
   };
   return (
     <Dialog
@@ -381,11 +385,11 @@ const CPPFA = ({
                     }
                     onValidationFail={(e) => onValidationFail(e)}
                   />
-                  <p className="m-0">
+                  <p className="uploadImage">
                     {taskDetailsDataObj?.FileMetaDataList &&
                     taskDetailsDataObj?.FileMetaDataList.length > 0 ? (
                       taskDetailsDataObj?.FileMetaDataList[0].File_Name ===
-                      "" ? (
+                      "" && !fileName ? (
                         <>
                           <span>Drop or Browse file here</span> <br />
                           <span className="fileSupportedData">
