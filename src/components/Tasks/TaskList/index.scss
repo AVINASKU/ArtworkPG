@@ -434,6 +434,9 @@ div.flex.align-items-center.gap-2 {
 .p-dialog-mask {
   z-index: 100000 !important;
 }
+.p-multiselect-panel, .p-multiselect-items-wrapper > ul > li > span > div {
+  white-space: break-spaces;
+  }
 .dropdown-menu {
   width: 175px;
   border-color: #003da5;
