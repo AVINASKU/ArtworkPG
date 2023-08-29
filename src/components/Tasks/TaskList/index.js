@@ -524,7 +524,7 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
       <Loading />
     ): (
       <>
-        <div className="my-task-project">
+        <div className="my-task-project myProjectAnddAllProjectList">
           {showApproveDialogCPPFA && (
             <CPPFA
               onClose={() => setShowApproveDialogCPPFA(!showApproveDialogCPPFA)}
