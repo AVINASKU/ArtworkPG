@@ -151,7 +151,7 @@ const ApproveDesignIntentContent = ({
               ref={fileUploadRef}
               name="demo[]"
               url="/api/upload"
-              accept="image/*"
+              accept= '.pdf'
               customUpload
               onUpload={onTemplateUpload}
               onSelect={onTemplateSelect}

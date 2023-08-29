@@ -298,3 +298,29 @@ export const addEllipsis = (text, maxLength) => {
   const trimmedText = text.substring(0, maxLength);
   return trimmedText + "...";
 };
+
+export const selectedDesignItems = (getData, setEnableSubmit) => {
+  let allSelectedItemsValid = false;
+  const selectedValues = getData.every((item) => {
+    if (item.Select) {
+      const isValid = item.Agency_Reference !== "" && item.Cluster !== "";
+      // If any selected item is invalid, set allSelectedItemsValid to false.
+      if (!isValid) {
+        allSelectedItemsValid = false;
+      }
+      return isValid;
+    } else {
+      // Filter selected items and check if any of them are valid.
+      const selectedItems = getData.filter(
+        (selectedItem) =>
+          selectedItem.Select && selectedItem.Agency_Reference !== "" && selectedItem.Cluster !== ""
+      );
+      const isValid = selectedItems.length > 0;
+      allSelectedItemsValid = isValid;
+      return isValid;
+    }
+  });
+  setEnableSubmit(allSelectedItemsValid);
+  return selectedValues;
+};
+

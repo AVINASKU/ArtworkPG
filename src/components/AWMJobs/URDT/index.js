@@ -71,7 +71,9 @@ const URDT = () => {
   }, [TaskDetailsData]);
 
   const handleCancel = () => {
-    navigate(`/${currentUrl?.split("/")[1]}`);
+    return navigate(
+      `/${currentUrl?.split("/")[1]}/${currentUrl?.split("/")[2]}/${ProjectID}`
+    );
   };
 
   const onSaveAsDraft = async () => {
@@ -130,7 +132,9 @@ const URDT = () => {
     await submitUploadRegionalDesignIntent(formData, id, headers);
     await uploadtoAzurefileShare(azureFile, "test1");
     setLoader(false);
-    navigate(`/${currentUrl?.split("/")[1]}`);
+    navigate(
+      `/${currentUrl?.split("/")[1]}/${currentUrl?.split("/")[2]}/${ProjectID}`
+    );
   };
   return (
     <PageLayout>
@@ -141,6 +145,7 @@ const URDT = () => {
         label="Upload Regional Design Template"
         checkReadWriteAccess={checkReadWriteAccess}
         taskName="Regional Design Intent"
+        actionButtonsFlag={true}
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} TaskDetailsData={TaskDetailsData}/>}
