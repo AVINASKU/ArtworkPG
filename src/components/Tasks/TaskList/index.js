@@ -315,7 +315,7 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
             src={filter}
             alt="Column filter"
             className="filter-icon"
-            style={{ margin: "10px" }}
+            style={{ margin: "10px", cursor: "pointer" }}
             onClick={(e) => {
               op.current.toggle(e);
               setSelectedColumnName(options);
