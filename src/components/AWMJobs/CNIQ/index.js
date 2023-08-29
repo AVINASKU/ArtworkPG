@@ -195,7 +195,7 @@ function CNIQ() {
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
     await dispatch(
-      uploadFileAzure(azureFile, ProjectID + projectName, BU, AzureSubFolder)
+      uploadFileAzure(azureFile, ProjectID + " " + projectName, BU, AzureSubFolder)
     );
     await submitConfirmInkQualification(formData, id, headers);
     setLoader(false);
@@ -245,7 +245,7 @@ function CNIQ() {
     console.log("full draft data --->", formData);
 
     await dispatch(
-      uploadFileAzure(azureFile, ProjectID + projectName, BU, AzureSubFolder)
+      uploadFileAzure(azureFile, ProjectID + " " + projectName, BU, AzureSubFolder)
     );
     await saveInkQualification(formData);
     setLoader(false);

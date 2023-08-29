@@ -215,7 +215,7 @@ function UBD() {
       const response = await dispatch(
         deleteAzureFile(
           fileUrl,
-          ProjectID + projectName,
+          ProjectID + " " + projectName,
           BU,
           AzureSubFolder,
           sectionType === graphicAdaptionBrief
@@ -403,7 +403,7 @@ function UBD() {
         }}
         className="ubd-accordion-header"
       >
-        Graphic Adaptation Brief *
+        Graphic Adaptation Brief <sup><b>*</b></sup>
       </div>
       <div
         className="add-file-ubd"
@@ -593,7 +593,7 @@ function UBD() {
         dispatch(
           uploadFileAzure(
             obj.AzureFile,
-            ProjectID + projectName,
+            ProjectID + " " + projectName,
             BU,
             AzureSubFolder,
             "GA Brief-" + temp.Sequence
@@ -626,7 +626,7 @@ function UBD() {
         dispatch(
           uploadFileAzure(
             obj.AzureFile,
-            ProjectID + projectName,
+            ProjectID + " " + projectName,
             BU,
             AzureSubFolder,
             "Other Reference Document-" + temp.Sequence

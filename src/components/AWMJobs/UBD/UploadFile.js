@@ -65,18 +65,14 @@ const UploadFile = ({
   const itemTemplate = (file) => (
     <div className="upload-row">
       <img role="presentation" src={file.objectURL} width={50} />
-      {file.name.length > 22 ? (
-        <div
-          className="flex flex-column text-left fileName"
-          data-toggle="tooltip"
-          data-placement="top"
-          title={file.name}
-        >
-          {file.name}
-        </div>
-      ) : (
-        <div className="flex flex-column text-left fileName">{file.name}</div>
-      )}
+      <div
+        className="flex flex-column text-left fileName"
+        data-toggle="tooltip"
+        data-placement="top"
+        title={file.name}
+      >
+        {file.name}
+      </div>
     </div>
   );
 
@@ -138,7 +134,7 @@ const UploadFile = ({
     const response = await dispatch(
       downloadFileAzure(
         fileUrl,
-        ProjectID + projectName,
+        ProjectID + " " + projectName,
         BU,
         azureSubFolder,
         fileUploadSection === "Graphic Adaptation Brief *"
@@ -201,24 +197,15 @@ const UploadFile = ({
           disabled={item.isNew !== true}
         />
         <div hidden={fileName} className="File_NameFromAPIPadding">
-          {File_NameFromAPI?.length > 22 ? (
-            <div
-              className="File_NameFromAPI"
-              data-toggle="tooltip"
-              data-placement="top"
-              title={File_NameFromAPI}
-              onClick={(event) => downloadAzure(event, `${File_NameFromAPI}`)}
-            >
-              {File_NameFromAPI}
-            </div>
-          ) : (
-            <div
-              className="File_NameFromAPI"
-              onClick={(event) => downloadAzure(event, `${File_NameFromAPI}`)}
-            >
-              {File_NameFromAPI}
-            </div>
-          )}
+          <div
+            className="File_NameFromAPI"
+            data-toggle="tooltip"
+            data-placement="top"
+            title={File_NameFromAPI}
+            onClick={(event) => downloadAzure(event, `${File_NameFromAPI}`)}
+          >
+            {File_NameFromAPI}
+          </div>
         </div>
       </div>
       {/* <a href="#">{item.File_Name}</a> */}

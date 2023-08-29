@@ -99,7 +99,7 @@ const ApproveDesignIntentContent = ({
   };
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
-    dispatch(AzureFileDownloadJobs(fileUrl, ProjectID + projectName, BU, subFolder));
+    dispatch(AzureFileDownloadJobs(fileUrl, ProjectID + " " + projectName, BU, subFolder));
   };
   const deleteAzure = async (event, fileUrl) => {
     event.preventDefault();
