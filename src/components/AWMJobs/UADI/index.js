@@ -69,7 +69,9 @@ const UADI = () => {
   }, [TaskDetailsData]);
 
   const handleCancel = () => {
-    return navigate(`/${currentUrl?.split("/")[1]}`);
+    return navigate(
+      `/${currentUrl?.split("/")[1]}/${currentUrl?.split("/")[2]}/${ProjectID}`
+    );
   };
 
   const onSaveAsDraft = async () => {
@@ -110,7 +112,9 @@ const UADI = () => {
     // console.log('formData', formData, "id", id);
     await submitUploadApproveDesignIntent(formData, id, headers);
     setLoader(false);
-    navigate(`/${currentUrl?.split("/")[1]}`);
+    navigate(
+      `/${currentUrl?.split("/")[1]}/${currentUrl?.split("/")[2]}/${ProjectID}`
+    );
   };
   return (
     <PageLayout>
@@ -121,6 +125,7 @@ const UADI = () => {
         label="Upload Approved Design Intent"
         checkReadWriteAccess={checkReadWriteAccess}
         taskName="Design Intent"
+        actionButtonsFlag={true}
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} TaskDetailsData={TaskDetailsData}/>}
