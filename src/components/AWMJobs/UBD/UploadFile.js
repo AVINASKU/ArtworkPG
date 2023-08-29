@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { FileUpload } from "primereact/fileupload";
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
 import ToolTip from "./ToolTip";
-import { AzureFileDownloadJobs } from "../../../store/actions/AzureFileDownloadJobs";
+import { downloadFileAzure } from "../../../store/actions/AzureFileDownload";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
@@ -136,7 +136,15 @@ const UploadFile = ({
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
     const response = await dispatch(
-      AzureFileDownloadJobs(fileUrl, ProjectID + projectName, BU, azureSubFolder)
+      downloadFileAzure(
+        fileUrl,
+        ProjectID + projectName,
+        BU,
+        azureSubFolder,
+        fileUploadSection === "Graphic Adaptation Brief *"
+          ? "GA Brief-" + sequence
+          : "Other Reference Document-" + sequence
+      )
     );
     if (response?.includes("404")) {
       setFileNotFound(true);
