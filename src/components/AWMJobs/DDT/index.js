@@ -18,7 +18,7 @@ import { CheckReadOnlyAccess, selectedDesignItems } from "../../../utils";
 import "../DesignJobs/index.scss";
 
 const headerName = "Define Regional Design Template";
-const roleName = "DT";
+const roleName = "RDT";
 
 function DDT() {
   const [data, setData] = useState(null);
