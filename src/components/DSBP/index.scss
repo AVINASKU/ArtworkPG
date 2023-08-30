@@ -354,6 +354,20 @@ a.tabView {
     .p-inputtext {
       border-radius: 50px;
     }
+
+    .p-multiselect {
+    width: 100%;
+    max-width: 100%;
+    }
+
+    .p-multiselect .p-multiselect-label{
+    width: 100%;
+    word-wrap: break-word;
+    white-space: normal;
+    overflow: hidden;
+    line-height: 15px;
+    }
+
   }
 
   .cic-matrix-text-on {
