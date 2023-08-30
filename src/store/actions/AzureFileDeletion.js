@@ -29,7 +29,7 @@ export const deleteFileFailure = (error) => ({
 // Define your Redux async action creator
 export const deleteAzureFile = (
   filePath,
-  ProjectID,
+  ProjectIdAndName,
   BU,
   subFolder,
   sequence
@@ -66,9 +66,9 @@ export const deleteAzureFile = (
       }
       dispatch(deleteFileRequest());
 
-      let deleteUrl = `${baseUrl}/${containerName}/${domain}/${ProjectID}/${BU}/${subFolder}/${filePath}?${sasToken}`;
+      let deleteUrl = `${baseUrl}/${containerName}/${env}/${BU}/${ProjectIdAndName}/${subFolder}/${filePath}?${sasToken}`;
       if (subFolder === "GA Briefs") {
-        deleteUrl = `${baseUrl}/${containerName}/${domain}/${ProjectID}/${BU}/${subFolder}/${sequence}/${filePath}?${sasToken}`;
+        deleteUrl = `${baseUrl}/${containerName}/${env}/${BU}/${ProjectIdAndName}/${subFolder}/${sequence}/${filePath}?${sasToken}`;
       }
       const response = await axios.delete(deleteUrl);
 
