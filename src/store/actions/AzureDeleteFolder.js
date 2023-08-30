@@ -79,7 +79,7 @@
 
 //       // Specify the path of the folder to delete, including container name and any subfolders
 //       //   if (subFolder === "GA Briefs") {
-//       const folderPath = `${domain}/${ProjectIdAndName}/${BU}/${subFolder}/${sequence}`;
+//       const folderPath = `${env}/${BU}/${ProjectIdAndName}/${subFolder}/${sequence}`;
 //       // }
 //       // Get a reference to the container
 //       const containerClient =
