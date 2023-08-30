@@ -246,6 +246,10 @@ const ArtworkAlignment = () => {
       setTotalNoOfPMPLocked(notOfPMPLocked);
     } else {
       setDsbpPmpData([])
+      setTotalNoOfPOA(0);
+      setTotalNoOfPMP(0);
+      setTotalNoOfPMPLocked(0);
+      setTotalNoOfAddedProject(0);
     }
     setTotalNoOfDsbpId(resp?.length || 0);
     setTableLoader(false);
