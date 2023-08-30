@@ -65,9 +65,6 @@
  .p-multiselect-panel .p-multiselect-items .p-multiselect-item.p-highlight {
   color: #003da5;
   background: #fff;
-  min-width: 300px;
-    word-wrap: break-word;
-    white-space: normal;
 }
 .p-multiselect-panel .p-multiselect-items .p-multiselect-item:focus {
   outline: 0 none;
@@ -81,8 +78,6 @@
   border-radius: 8px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   margin-top: 5px;
-  width: fit-content;
-  max-width: 32%;
 }
 .p-multiselect-panel .p-multiselect-header {
   padding: 0.75rem 1.25rem !important;

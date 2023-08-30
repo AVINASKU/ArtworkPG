@@ -582,6 +582,8 @@ const DependencyMappingList = ({
       localStorage.getItem("setDependencyMappingColumnNames")
     );
 
+    if (!dependencyColumnNames1) return null;
+
     console.log("cdpt page data", dependencyColumnNames1);
 
     const dependencyColumnNames2 = CDPTPageData?.length
