@@ -219,8 +219,8 @@ function UBD() {
           BU,
           AzureSubFolder,
           sectionType === graphicAdaptionBrief
-            ? "GA Brief-" + formData.Sequence
-            : "Other Reference Document-" + formData.Sequence
+            ? "File " + formData.Sequence
+            : "Other Ref File " + formData.Sequence
         )
       );
       if (response?.includes("404")) {
@@ -596,7 +596,7 @@ function UBD() {
             ProjectID + " " + projectName,
             BU,
             AzureSubFolder,
-            "GA Brief-" + temp.Sequence
+            "File " + temp.Sequence
           )
         );
       }
@@ -629,7 +629,7 @@ function UBD() {
             ProjectID + " " + projectName,
             BU,
             AzureSubFolder,
-            "Other Reference Document-" + temp.Sequence
+            "Other Ref File " + temp.Sequence
           )
         );
       }

@@ -74,11 +74,11 @@ export const uploadFileAzure = (
       }
       // Create a BlobClient for the file and set the content type
       let blobClient = containerClient.getBlockBlobClient(
-        `${domain}/${ProjectIdAndName}/${BU}/${subFolder}/${file.name}`
+        `${env}/${BU}/${ProjectIdAndName}/${subFolder}/${file.name}`
       );
       if (subFolder === "GA Briefs") {
         blobClient = containerClient.getBlockBlobClient(
-          `${domain}/${ProjectIdAndName}/${BU}/${subFolder}/${sequence}/${file.name}`
+          `${env}/${BU}/${ProjectIdAndName}/${subFolder}/${sequence}/${file.name}`
         );
       }
 
@@ -104,9 +104,9 @@ export const uploadFileAzure = (
       );
 
       // Construct the public URL for the uploaded file
-      let publicUrl = `https://${storageAccountName}.blob.core.windows.net/pgsource/${containerName}/${domain}/${ProjectIdAndName}/${BU}/${subFolder}/${file.name}`;
+      let publicUrl = `https://${storageAccountName}.blob.core.windows.net/pgsource/${containerName}/${env}/${BU}/${ProjectIdAndName}/${subFolder}/${file.name}`;
       if (subFolder === "GA Briefs") {
-        publicUrl = `https://${storageAccountName}.blob.core.windows.net/pgsource/${containerName}/${domain}/${ProjectIdAndName}/${BU}/${subFolder}/${sequence}/${file.name}`;
+        publicUrl = `https://${storageAccountName}.blob.core.windows.net/pgsource/${containerName}/${env}/${BU}/${ProjectIdAndName}/${subFolder}/${sequence}/${file.name}`;
       }
 
       // Dispatch the success action with the public URL.

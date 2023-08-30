@@ -138,8 +138,8 @@ const UploadFile = ({
         BU,
         azureSubFolder,
         fileUploadSection === "Graphic Adaptation Brief *"
-          ? "GA Brief-" + sequence
-          : "Other Reference Document-" + sequence
+          ? "File " + sequence
+          : "Other Ref File " + sequence
       )
     );
     if (response?.includes("404")) {
