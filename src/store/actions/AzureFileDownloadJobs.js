@@ -72,9 +72,9 @@ export const AzureFileDownloadJobs = (
         default:
           env = "localEnv";
       }
-      let downloadUrl = `${baseUrl}/${containerName}/${domain}/${ProjectIdAndName}/${BU}/${subFolder}/${filePath}?${sasToken}`;
+      let downloadUrl = `${baseUrl}/${containerName}/${env}/${BU}/${ProjectIdAndName}/${subFolder}/${filePath}?${sasToken}`;
       if (subFolder === "GA Briefs") {
-        downloadUrl = `${baseUrl}/${containerName}/${domain}/${ProjectIdAndName}/${BU}/${subFolder}/${sequence}/${filePath}?${sasToken}`;
+        downloadUrl = `${baseUrl}/${containerName}/${env}/${BU}/${ProjectIdAndName}/${subFolder}/${sequence}/${filePath}?${sasToken}`;
       }
 
       const response = await axios.get(downloadUrl, {
