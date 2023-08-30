@@ -531,7 +531,7 @@ const DependencyMapping = () => {
   };
 
   return (
-    <div className="artwork-dsbp myProjectAnddAllProjectList dependency-mapping">
+    <div className="artwork-dsbp dependency-mapping">
       {loader ? (
         <Loading />
       ) : (
