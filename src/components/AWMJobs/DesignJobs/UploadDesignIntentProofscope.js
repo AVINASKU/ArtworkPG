@@ -5,6 +5,7 @@ import { Tag } from "primereact/tag";
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
 import { downloadFileAzure } from "../../../store/actions/AzureFileDownloadProofscope";
 import { useDispatch, useSelector } from "react-redux";
+import { getEnvironmentFromURL } from "../../../utils";
 
 const UploadDesignIntentProofscope = ({
   Design_Intent_Name,
@@ -24,6 +25,8 @@ const UploadDesignIntentProofscope = ({
   buName,
   taskFolder,
   TaskID,
+  projectName,
+  ProjectID,
 }) => {
   console.log("item here here", item);
   const dispatch = useDispatch();
@@ -43,36 +46,53 @@ const UploadDesignIntentProofscope = ({
       setUpdatedImg(uploadedFileName);
     }
   });
-  const url = window.location.href;
-  const domainRegex = /https?:\/\/([^/]+)\//; // Regular expression to match the domain part of the URL
 
-  const match = url.match(domainRegex);
-  let domain = "";
+  function sanitizeFileName(fileName) {
+    // Split the fileName into the name and extension parts
+    const parts = fileName?.split(".");
 
-  if (match && match.length > 1) {
-    domain = match[1]; // Extract the matched part
+    if (parts?.length > 1) {
+      // Process the name part (parts[0]) to replace special characters and spaces
+      const sanitizedName = parts[0].replace(
+        /[!@#$%^&*()_+={}\[\]:;"'<>,.?/\\| ]/g,
+        (match) => {
+          const charCode = match.charCodeAt(0);
+          return "%" + charCode.toString(16).toUpperCase();
+        }
+      );
+
+      // Reconstruct the sanitized fileName by combining the sanitized name and the original extension
+      return sanitizedName + "." + parts.slice(1).join(".");
+    } else {
+      // If there is no extension, process the whole fileName
+      return fileName?.replace(
+        /[!@#$%^&*()_+={}\[\]:;"'<>,.?/\\| ]/g,
+        (match) => {
+          const charCode = match.charCodeAt(0);
+          return "%" + charCode.toString(16).toUpperCase();
+        }
+      );
+    }
   }
 
-  let env;
-
-  switch (domain) {
-    case "awflowdev.pg.com":
-      env = "DEV/";
-      break;
-    case "awflowqa.pg.com":
-      env = "QA/";
-      break;
-    case "awflowsit.pg.com":
-      env = "SIT/";
-      break;
-    default:
-      env = "";
-  }
   const handleViewProofScopeClick = async (event, fileUrl) => {
     event.preventDefault();
-    // dispatch(downloadFileAzure(`${env}${buName}/${taskFolder}/${fileUrl}`));
-    viewProofScopeFile(TaskID, `cloudflow://awm/${fileUrl}`);
+
+    // Sanitize various variables including fileUrl
+    const sanitizedProjectName = sanitizeFileName(projectName);
+    const sanitizedBuName = sanitizeFileName(buName);
+    const sanitizedTaskFolder = sanitizeFileName(taskFolder);
+    const sanitizedprojectId = sanitizeFileName(ProjectID);
+    const sanitizedFileUrl = sanitizeFileName(fileUrl);
+
+    const env = getEnvironmentFromURL();
+
+    viewProofScopeFile(
+      TaskID,
+      `cloudflow://awm/${env}/${sanitizedprojectId}${sanitizedProjectName}/${sanitizedBuName}/${sanitizedTaskFolder}/${sanitizedFileUrl}`
+    );
   };
+
   let di_name;
   if (!approve) {
     di_name =

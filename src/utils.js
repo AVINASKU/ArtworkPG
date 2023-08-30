@@ -323,4 +323,36 @@ export const selectedDesignItems = (getData, setEnableSubmit) => {
   setEnableSubmit(allSelectedItemsValid);
   return selectedValues;
 };
+export const getEnvironmentFromURL = () => {
+  const url = window.location.href;
+  const domainRegex = /https?:\/\/([^/]+)\//; // Regular expression to match the domain part of the URL
+
+  const match = url.match(domainRegex);
+  let domain = "";
+
+  if (match && match.length > 1) {
+    domain = match[1]; // Extract the matched part
+  }
+
+  let env;
+
+  switch (domain) {
+    case "awflowdev.pg.com":
+      env = "DEV";
+      break;
+    case "awflowqa.pg.com":
+      env = "QA";
+      break;
+    case "awflowsit.pg.com":
+      env = "SIT";
+      break;
+    case "awflow.pg.com":
+      env = "";
+      break;
+    default:
+      env = "localEnv";
+  }
+
+  return env;
+};
 
