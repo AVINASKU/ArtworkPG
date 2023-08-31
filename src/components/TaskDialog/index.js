@@ -38,7 +38,11 @@ const TaskDialog = (props) => {
 
     for (let i = 0; i < userOptions.length; i++) {
       let item = userOptions[i];
-      if (item.label.toLowerCase().indexOf(query.toLowerCase()) === 0) {
+      if (
+        item.label.toLowerCase().indexOf(query.toLowerCase()) === 0 &&
+        item.label.toLowerCase() !==
+          props?.userInformation?.username?.toLowerCase()
+      ) {
         _filteredItems.push(item);
       }
     }
