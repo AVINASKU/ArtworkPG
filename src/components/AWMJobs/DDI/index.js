@@ -41,7 +41,10 @@ function DDI() {
   const myProjectList = useSelector((state) => state.myProject);
 
   const location = useLocation();
-  const currentUrl = location.pathname;  
+    const locationPath = location?.pathname;
+  const url = locationPath?.split("/");
+  const pathName = url[url?.length - 4];
+
   let checkTaskISComplete =
     TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Status === "Complete";
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
@@ -71,7 +74,7 @@ function DDI() {
 
   const handleCancel = () => {
     return navigate(
-      `/${currentUrl?.split("/")[1]}/${currentUrl?.split("/")[2]}/${ProjectID}`
+      `/${pathName}`
     );
   };
 
@@ -183,7 +186,7 @@ function DDI() {
     await submitDesignIntent(formData, id, headers);
     setLoader(false);    
     navigate(
-      `/${currentUrl?.split("/")[1]}/${currentUrl?.split("/")[2]}/${ProjectID}`
+      `/${pathName}`
     );
   };
 
