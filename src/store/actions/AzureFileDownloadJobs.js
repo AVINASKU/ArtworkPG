@@ -40,6 +40,7 @@ export const AzureFileDownloadJobs = (
   ProjectIdAndName,
   BU,
   subFolder,
+  groupName,
   sequence
 ) => {
   return async (dispatch) => {
@@ -74,7 +75,7 @@ export const AzureFileDownloadJobs = (
       }
       let downloadUrl = `${baseUrl}/${containerName}/${env}/${BU}/${ProjectIdAndName}/${subFolder}/${filePath}?${sasToken}`;
       if (subFolder === "GA Briefs") {
-        downloadUrl = `${baseUrl}/${containerName}/${env}/${BU}/${ProjectIdAndName}/${subFolder}/${sequence}/${filePath}?${sasToken}`;
+        downloadUrl = `${baseUrl}/${containerName}/${env}/${BU}/${ProjectIdAndName}/${subFolder}/${groupName}/${sequence}/${filePath}?${sasToken}`;
       }
 
       const response = await axios.get(downloadUrl, {

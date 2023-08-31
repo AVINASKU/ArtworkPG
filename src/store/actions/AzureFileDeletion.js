@@ -32,6 +32,7 @@ export const deleteAzureFile = (
   ProjectIdAndName,
   BU,
   subFolder,
+  groupName,
   sequence
 ) => {
   return async (dispatch) => {
@@ -68,7 +69,7 @@ export const deleteAzureFile = (
 
       let deleteUrl = `${baseUrl}/${containerName}/${env}/${BU}/${ProjectIdAndName}/${subFolder}/${filePath}?${sasToken}`;
       if (subFolder === "GA Briefs") {
-        deleteUrl = `${baseUrl}/${containerName}/${env}/${BU}/${ProjectIdAndName}/${subFolder}/${sequence}/${filePath}?${sasToken}`;
+        deleteUrl = `${baseUrl}/${containerName}/${env}/${BU}/${ProjectIdAndName}/${subFolder}/${groupName}/${sequence}/${filePath}?${sasToken}`;
       }
       const response = await axios.delete(deleteUrl);
 
