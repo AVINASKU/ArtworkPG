@@ -297,7 +297,7 @@ const DependencyMapping = () => {
           let groupedObject = {};
           let splittedCol = colName.split("_");
           groupedObject["field"] = colName;
-          groupedObject["width"] = 250;
+          groupedObject["width"] = 150;
           groupedObject["freeze"] = false;
           groupedObject["Sequence"] = index;
           if (splittedCol[0] === "DSBP") {
@@ -442,7 +442,7 @@ const DependencyMapping = () => {
         ele["sortZtoA"] = false;
         ele["sortAtoZ"] = false;
         ele["freeze"] = false;
-        ele["width"] = 250;
+        ele["width"] = 150;
         ele["reorder"] = false;
       }
     });
@@ -509,7 +509,7 @@ const DependencyMapping = () => {
         ele.freeze === true ||
         ele.sortAtoZ === true ||
         ele.sortZtoA === true ||
-        ele.width !== 250 ||
+        ele.width !== 150 ||
         ele?.reorder === true
       ) {
         return ele;
@@ -531,7 +531,7 @@ const DependencyMapping = () => {
   };
 
   return (
-    <div className="artwork-dsbp dependency-mapping">
+    <div className="dependency-mapping">
       {loader ? (
         <Loading />
       ) : (
