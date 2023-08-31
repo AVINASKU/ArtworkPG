@@ -1,4 +1,7 @@
 import { rest } from "msw";
+import {AllProjectsListMockData, MyProjectListMockData} from "./mockData"
+import { DEVURL } from "../apis/envUrl";
+import _ from "lodash";
 
 function getSSO_User() {
     return rest.get(`https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/GetUserDetails/:operatorId`, (req, res, ctx) => {
@@ -11,4 +14,35 @@ function getSSO_User() {
     });
 }
 
-export const handlers = [getSSO_User()];
+function getAllProjects(userInformation){
+    return rest.get(`${DEVURL}/allprojects/Baby Care/Europe`,(req,res,ctx) =>{
+          const orderByData = _.orderBy(AllProjectsListMockData?.ArtworkAgilityProjects,
+            ["Timestamp"],
+            ["desc"]
+          );
+        return res(
+            ctx.status(200),
+            ctx.json({
+                orderByData
+            })
+        );
+    })
+}
+
+function getMyProjects(userInformation){
+    let PM = userInformation?.username;
+    return rest.get(`${DEVURL}/myprojects/${PM}`,(req,res,ctx) =>{
+          const orderByData = _.orderBy(MyProjectListMockData?.ArtworkAgilityProjects,
+            ["Timestamp"],
+            ["desc"]
+          );
+        return res(
+            ctx.status(200),
+            ctx.json({
+                orderByData
+            })
+        );
+    })
+}
+
+export const handlers = [getSSO_User(),getAllProjects(),getMyProjects()];

@@ -9,7 +9,8 @@ import { accessMatrix } from "./accessMatrix"
 import { updateUser } from "./apis/userApi";
 import { roles } from "./utils";
 import { store } from "./store/store";
-import { userUpdateAction } from "../src/store/actions/userActions"
+import { userProfileAction, userUpdateAction } from "../src/store/actions/userActions"
+import {userInformationMockData,userProfileMockData} from "../src/mocks/mockData"
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
   useLocation: () => ({
@@ -49,12 +50,11 @@ describe("Home Component", () => {
     }));
 
     await store.dispatch(getSSOUser(operatorId));
-    const userInformation = {
-      username: operatorId,
-      userid: "iza123",
-      loginTime: new Date().toUTCString()
-    }
+    const userInformation = userInformationMockData;
      await store.dispatch(userUpdateAction(userInformation));
+     const userProfile = userProfileMockData;
+     console.log("userProfile:" + JSON.stringify(userProfile))
+     await store.dispatch(userProfileAction(userProfile));
 
     // Wait for the action to complete and update the store
     await waitFor(() => {

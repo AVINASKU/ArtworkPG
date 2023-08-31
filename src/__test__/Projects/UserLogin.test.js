@@ -1,13 +1,13 @@
 import React from "react";
 import { MemoryRouter,useNavigate} from "react-router-dom";
-import { updateUser } from "../../apis/userApi";
+import { updateUser, updateUserProfile } from "../../apis/userApi";
 import "./index.scss";
 import UserLogin from "../../components/UserLogin"
 import { fireEvent, render, screen, act, waitFor } from "@testing-library/react";
 import { store } from "../../store/store"
 import { Provider } from "react-redux"
 import { userUpdateAction } from "../../store/actions/userActions";
-
+import {userProfileMockData,usernameMock,passwordMock} from "../../mocks/mockData"
 jest.mock("react-router-dom", () => ({
     ...jest.requireActual("react-router-dom"),
     useNavigate: () => jest.fn(),
@@ -31,6 +31,7 @@ describe("UserLogin Component", () => {
         expect(screen.getByRole("button")).toBeInTheDocument();
         expect(screen.getByRole("textbox", { name: /username/i })).toBeInTheDocument();
         expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
+        expect(screen.getByRole("button",{name : /Login/i})).toBeInTheDocument();
 
 
     });
@@ -71,8 +72,8 @@ describe("UserLogin Component", () => {
         expect(screen.getByRole("button", { name: /login/i })).toBeInTheDocument();
 
         //mock value
-        const username = "Izabela";
-        const password = "iza123";
+        const username = usernameMock;
+        const password = passwordMock;
 
         fireEvent.change(screen.getByLabelText(/username/i), { target: { value: username } })
         fireEvent.change(screen.getByLabelText(/username/i), { target: { value: password } })
@@ -81,6 +82,7 @@ describe("UserLogin Component", () => {
         await act(async () => {
             const infoUpdated = await updateUser(username, password);
             console.log(infoUpdated);
+            await updateUserProfile(["ProjectManager"],["Baby Care"],["Europe"]);
         });
 
         await waitFor(() => {
