@@ -40,7 +40,7 @@ const ProjectListHeader = ({
   const location = useLocation();
   // const [downloadCSV, setDownloadCSV] = useState(false);
   // const [showCSV, setShowCSV] = useState(true);
-  const isReadOnly = CheckReadOnlyAccess();
+  const isReadOnly = false;
   const shouldShowResetButton =
     location.pathname.includes("/AllTasks") ||
     location.pathname.includes("/MyTasks");
