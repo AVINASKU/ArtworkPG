@@ -1,5 +1,5 @@
 import { rest } from "msw";
-import {AllProjectsListMockData, MyProjectListMockData} from "./mockData"
+import {AllProjectsListMockData, MyProjectListMockData,DropDownValuesMockData} from "./mockData"
 import { DEVURL } from "../apis/envUrl";
 import _ from "lodash";
 
@@ -15,17 +15,12 @@ function getSSO_User() {
 }
 
 function getAllProjects(userInformation){
-    return rest.get(`${DEVURL}/allprojects/Baby Care/Europe`,(req,res,ctx) =>{
-          const orderByData = _.orderBy(AllProjectsListMockData?.ArtworkAgilityProjects,
-            ["Timestamp"],
-            ["desc"]
-          );
+    return rest.get(`https://awflowsit.pg.com/optaplanner/optimize/allprojects/:bu/:region`,(req,res,ctx) =>{
         return res(
             ctx.status(200),
-            ctx.json({
-                orderByData
-            })
+            ctx.json({ArtworkAgilityProjects :AllProjectsListMockData.ArtworkAgilityProjects}),
         );
+        
     })
 }
 
@@ -39,10 +34,22 @@ function getMyProjects(userInformation){
         return res(
             ctx.status(200),
             ctx.json({
-                orderByData
+                MyProjectListMockData
             })
         );
     })
 }
 
-export const handlers = [getSSO_User(),getAllProjects(),getMyProjects()];
+
+function getDropDownValuesMock(){
+    return rest.get(`https://awflowsit.pg.com/optaplanner/optimize/fetchdropdownvalues`,(req,res,ctx) =>{
+        return res(
+            ctx.status(200),
+            ctx.json(DropDownValuesMockData),
+            ctx.delay(500)
+        );
+        
+    })
+}
+
+export const handlers = [getSSO_User(),getAllProjects(),getMyProjects(),getDropDownValuesMock()];

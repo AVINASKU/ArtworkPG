@@ -7,7 +7,7 @@ import { changeDateFormat, onSortData } from "../../utils";
 export const ExportSelectedRows = ({ allData, selectedRows, headers }) => {
   // Format date fields in allData and selectedRows
 
-  console.log("all data", allData, selectedRows);
+  //console.log("all data", allData, selectedRows);
 
   const formattedAllData = allData?.map((data) => ({
     ...data,

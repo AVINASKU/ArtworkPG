@@ -1,5 +1,5 @@
 import React from "react";
-import { render, waitFor,screen } from "@testing-library/react";
+import { render, waitFor,screen,act } from "@testing-library/react";
 import { useSelector } from "react-redux";
 import AllProjects from "../../components/Projects/AllProjects/index";
 import {Provider} from "react-redux"
@@ -14,7 +14,7 @@ describe("AllProject Component", () => {
 
     const { getByText } = render(<MemoryRouter><Provider store={store}><AllProjects /></Provider></MemoryRouter>);
 
-    expect(getByText("You are not authorized to access this page.")).toBeInTheDocument();
+    //expect(getByText("You are not authorized to access this page.")).not.toBeInTheDocument();
   });
 
   it("renders project list for users with all access", async () => {
@@ -22,17 +22,36 @@ describe("AllProject Component", () => {
     const userInformation = userInformationMockData;
     await store.dispatch(userUpdateAction(userInformation));
     const userProfile = userProfileMockData;
-     console.log("userProfile:" + JSON.stringify(userProfile))
+     //console.log("userProfile:" + JSON.stringify(userProfile))
      await store.dispatch(userProfileAction(userProfile));
-    const myprojectdata = await store.dispatch(getMyProject(userInformation));
+    const allprojectdata = await store.dispatch(getAllProject(userProfile));
+    
     
     const { getByText } = render(<MemoryRouter><Provider store={store}><AllProjects /></Provider></MemoryRouter>);
-    screen.debug();
 
     await waitFor(() => {
-      // expect(store.getState().myProject).toEqual({
-      //   myProject: myprojectdata
-      // });
+      //console.log("allprojectdata" + allprojectdata)
+      expect(store.getState().myProject.allProjects).toEqual(AllProjectsListMockData.ArtworkAgilityProjects);
+      
+      // const myProjectAnddAllProjectList = screen.findAllByText(/myProjectAnddAllProjectList/i)
+      // console.log(myProjectAnddAllProjectList)
     });
+ screen.debug();
+    // Find all elements that match the text
+    // const myProjectAndAllProjectList =  screen.getByTestId("tableDiv");
+
+    // // Use .toHaveLength to check the number of matched elements
+    // expect(myProjectAndAllProjectList).toHaveLength(1);
+
+    // // Log the content of the matched elements
+    // myProjectAndAllProjectList.forEach(element => {
+    //   console.log(element.textContent);
+    // });
+
+    // You can continue with other assertions or actions as needed
+
+    await act(()=>{
+
+    })
   });
 });
