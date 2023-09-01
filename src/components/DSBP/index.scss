@@ -61,12 +61,6 @@ $fontWeight400: 400;
   .margin-right {
     margin-right: 20px;
   }
-  .p-datatable {
-    height: calc(100% - 140px);
-    .p-datatable-wrapper {
-      height: 100%;
-    }
-  }
   .p-multiselect .p-multiselect-label.p-placeholder {
     color: #595959;
     font-size: 12px;
@@ -200,6 +194,28 @@ a.tabView {
 .dependency-mapping {
   height: 100%;
   overflow: hidden;
+
+  .actions {
+    padding: 0 20px;
+}
+
+  .p-datatable {
+      height: calc(100% - 120px);
+      .p-datatable-wrapper {
+        height: 100%;
+      }
+    }
+
+    .form-buttons {
+      padding: 0 10px;
+      position: absolute;
+      background: white;
+      text-align: right;
+      width: 100%;
+      left: 0;
+      bottom: 50px;
+    }
+  
   table {
     // border-collapse: separate !important;
     // border-spacing: 0 5px !important;
@@ -354,6 +370,45 @@ a.tabView {
     .p-inputtext {
       border-radius: 50px;
     }
+
+    .p-multiselect {
+    width: 100%;
+    max-width: 100%;
+    }
+
+    .p-multiselect .p-multiselect-label{
+    width: 100%;
+    word-wrap: break-word;
+    white-space: normal;
+    overflow: hidden;
+    line-height: 15px;
+    }
+
+    .p-multiselect .p-multiselect-label{
+    padding: 5px 3px 5px 5px;
+    text-align: initial;
+    font-size: 12px;
+    }
+
+    
+.p-multiselect .p-multiselect-trigger{
+width: 2rem;
+}
+
+    .p-column-title {
+    font-weight: 400;
+  }
+  .p-column-title img {
+    width: 10px;
+}
+
+.p-datatable {
+      height: calc(100% - 170px);
+      .p-datatable-wrapper {
+        height: 100%;
+      }
+    }
+
   }
 
   .cic-matrix-text-on {
