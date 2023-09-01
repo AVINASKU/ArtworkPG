@@ -31,7 +31,7 @@ const ApproveDesignIntentContent = ({
   let { ProjectID } = useParams();
   const fileUploadRef = useRef(null);
   const dispatch = useDispatch();
-  let viewFileName = designIntent[0]?.FileMetaDataList[0]?.File_Name;
+  let viewFileName = designIntent ? designIntent[0]?.FileMetaDataList[0]?.File_Name : "";
   let di_name = "";
   if (!approve) {
     di_name =
