@@ -1,81 +1,81 @@
 {
-    "ArtworkAgilityTasks": [
-        {
-         "Project_Name": "SUD IWBG Tornado",
-         "Task" :  "Define DI",  
-         "Status" :   "In Progress", 
-         "help_needed":  "No",  
-         "Remaining Buffer" : "04 Days"    
-        },
-        {
-            "Project_Name": "SUD IWBG Tornado",
-            "Task" :  "Define DI",  
-            "Status" :   "In Progress", 
-            "help_needed":  "No",  
-            "Remaining Buffer" : "04 Days"    
-           },
-           {
-            "Project_Name": "SUD IWBG Tornado",
-            "Task" :  "Define DI",  
-            "Status" :   "In Progress", 
-            "help_needed":  "No",  
-            "Remaining Buffer" : "04 Days"    
-           },
-           {
-            "Project_Name": "SUD IWBG Tornado",
-            "Task" :  "Define DI",  
-            "Status" :   "In Progress", 
-            "help_needed":  "No",  
-            "Remaining Buffer" : "04 Days"    
-           },
-           {
-            "Project_Name": "SUD IWBG Tornado",
-            "Task" :  "Define DI",  
-            "Status" :   "In Progress", 
-            "help_needed":  "No",  
-            "Remaining Buffer" : "04 Days"    
-           },
-           {
-            "Project_Name": "SUD IWBG Tornado",
-            "Task" :  "Define DI",  
-            "Status" :   "In Progress", 
-            "help_needed":  "No",  
-            "Remaining Buffer" : "04 Days"    
-           },
-           {
-            "Project_Name": "SUD IWBG Tornado",
-            "Task" :  "Define DI",  
-            "Status" :   "In Progress", 
-            "help_needed":  "No",  
-            "Remaining Buffer" : "04 Days"    
-           },
-           {
-            "Project_Name": "SUD IWBG Tornado",
-            "Task" :  "Define DI",  
-            "Status" :   "In Progress", 
-            "help_needed":  "No",  
-            "Remaining Buffer" : "04 Days"    
-           },
-           {
-            "Project_Name": "SUD IWBG Tornado",
-            "Task" :  "Define DI",  
-            "Status" :   "In Progress", 
-            "help_needed":  "No",  
-            "Remaining Buffer" : "04 Days"    
-           },
-           {
-            "Project_Name": "SUD IWBG Tornado",
-            "Task" :  "Define DI",  
-            "Status" :   "In Progress", 
-            "help_needed":  "No",  
-            "Remaining Buffer" : "04 Days"    
-           },
-           {
-            "Project_Name": "SUD IWBG Tornado",
-            "Task" :  "Define DI",  
-            "Status" :   "In Progress", 
-            "help_needed":  "No",  
-            "Remaining Buffer" : "04 Days"    
-           }
-    ]
+  "ArtworkAgilityTasks": [
+    {
+      "Project_Name": "SUD IWBG Tornado",
+      "Task": "Define DI",
+      "Status": "In Progress",
+      "help_needed": "No",
+      "Remaining Buffer": "04 Days"
+    },
+    {
+      "Project_Name": "SUD IWBG Tornado",
+      "Task": "Define DI",
+      "Status": "In Progress",
+      "help_needed": "No",
+      "Remaining Buffer": "04 Days"
+    },
+    {
+      "Project_Name": "SUD IWBG Tornado",
+      "Task": "Define DI",
+      "Status": "In Progress",
+      "help_needed": "No",
+      "Remaining Buffer": "04 Days"
+    },
+    {
+      "Project_Name": "SUD IWBG Tornado",
+      "Task": "Define DI",
+      "Status": "In Progress",
+      "help_needed": "No",
+      "Remaining Buffer": "04 Days"
+    },
+    {
+      "Project_Name": "SUD IWBG Tornado",
+      "Task": "Define DI",
+      "Status": "In Progress",
+      "help_needed": "No",
+      "Remaining Buffer": "04 Days"
+    },
+    {
+      "Project_Name": "SUD IWBG Tornado",
+      "Task": "Define DI",
+      "Status": "In Progress",
+      "help_needed": "No",
+      "Remaining Buffer": "04 Days"
+    },
+    {
+      "Project_Name": "SUD IWBG Tornado",
+      "Task": "Define DI",
+      "Status": "In Progress",
+      "help_needed": "No",
+      "Remaining Buffer": "04 Days"
+    },
+    {
+      "Project_Name": "SUD IWBG Tornado",
+      "Task": "Define DI",
+      "Status": "In Progress",
+      "help_needed": "No",
+      "Remaining Buffer": "04 Days"
+    },
+    {
+      "Project_Name": "SUD IWBG Tornado",
+      "Task": "Define DI",
+      "Status": "In Progress",
+      "help_needed": "No",
+      "Remaining Buffer": "04 Days"
+    },
+    {
+      "Project_Name": "SUD IWBG Tornado",
+      "Task": "Define DI",
+      "Status": "In Progress",
+      "help_needed": "No",
+      "Remaining Buffer": "04 Days"
+    },
+    {
+      "Project_Name": "SUD IWBG Tornado",
+      "Task": "Define DI",
+      "Status": "In Progress",
+      "help_needed": "No",
+      "Remaining Buffer": "04 Days"
+    }
+  ]
 }

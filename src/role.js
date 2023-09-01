@@ -181,8 +181,7 @@ function Role() {
         visible={displayBasic}
         style={{ width: "50vw" }}
         onHide={onHide}
-        footer={renderFooter}
-      >
+        footer={renderFooter}>
         {userGroups &&
           userGroups.map((group, index) => (
             <ol className="list-roles" key={index}>
@@ -198,8 +197,7 @@ function Role() {
                             roleIndex === buIndex &&
                             buIndex === regionIndex && (
                               <li
-                                key={`${roleIndex}-${buIndex}-${regionIndex}`}
-                              >
+                                key={`${roleIndex}-${buIndex}-${regionIndex}`}>
                                 <div>
                                   {role.Name},{bu.BU_Name},{region.Region_Name}
                                 </div>
