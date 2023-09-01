@@ -40,7 +40,6 @@ const ProjectListHeader = ({
   const location = useLocation();
   // const [downloadCSV, setDownloadCSV] = useState(false);
   // const [showCSV, setShowCSV] = useState(true);
-  const isReadOnly = false;
   const shouldShowResetButton =
     location.pathname.includes("/AllTasks") ||
     location.pathname.includes("/MyTasks");
@@ -151,13 +150,11 @@ const ProjectListHeader = ({
 
         {!shouldShowResetButton && (
           <>
-            {isReadOnly && (
               <ExportSelectedRows
                 allData={modifiedAllData}
                 selectedRows={selected}
                 headers={headers}
               />
-            )}
             <Button
               className="button-layout"
               variant="secondary"
@@ -184,7 +181,6 @@ const ProjectListHeader = ({
             </button>
           </>
         )}
-        {isReadOnly && (
           <>
             {shouldShowResetButton && (
               <>
@@ -213,7 +209,6 @@ const ProjectListHeader = ({
               </>
             )}
           </>
-        )}
       </div>
     </div>
   );
