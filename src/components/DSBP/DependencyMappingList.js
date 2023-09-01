@@ -313,7 +313,6 @@ const DependencyMappingList = ({
               }
               filter
               placeholder={`Select AWM CDPT Page`}
-              maxSelectedLabels={3}
               className="p-column-filter"
             />
           </div>
@@ -347,8 +346,7 @@ const DependencyMappingList = ({
               }
               filter
               placeholder={`Select AWM RDT Page`}
-              maxSelectedLabels={3}
-              className="p-column-filter"
+              className="p-column-filter-multiselect"
             />
           </div>
         )}
@@ -421,7 +419,6 @@ const DependencyMappingList = ({
               }
               filter
               placeholder={`Select AWM IQ Page`}
-              maxSelectedLabels={3}
               className="p-column-filter"
             />
           </div>
