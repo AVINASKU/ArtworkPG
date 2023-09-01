@@ -102,7 +102,7 @@ function DNIQ() {
         Design_Job_ID: IQ.length + 1,
         isNew: true,
         Pantone: "",
-        Printer: "",
+        Printer: [],
         Design_Job_Name: "",
         Additional_Info: "",
         CD_Approved: null,
