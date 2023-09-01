@@ -218,6 +218,7 @@ function UBD() {
           ProjectID + " " + projectName,
           BU,
           AzureSubFolder,
+          graphicData,
           sectionType === graphicAdaptionBrief
             ? "File " + formData.Sequence
             : "Other Ref File " + formData.Sequence
@@ -403,7 +404,10 @@ function UBD() {
         }}
         className="ubd-accordion-header"
       >
-        Graphic Adaptation Brief <sup><b>*</b></sup>
+        Graphic Adaptation Brief{" "}
+        <sup>
+          <b>*</b>
+        </sup>
       </div>
       <div
         className="add-file-ubd"
@@ -446,11 +450,14 @@ function UBD() {
       >
         Other Reference Documents & Assets
       </div>
-      <div className="add-file-ubd">
+      <div
+        className="add-file-ubd"
+        onClick={() => checkReadWriteAccess && otherRDAddNewEmptyDesign()}
+      >
         <img
           src={plusCollapseImg}
           alt="filter logo"
-          onClick={() => checkReadWriteAccess && otherRDAddNewEmptyDesign()}
+          // onClick={() => checkReadWriteAccess && otherRDAddNewEmptyDesign()}
           className="heade-plus-icon"
           disabled={!checkReadWriteAccess}
         />{" "}
@@ -596,6 +603,7 @@ function UBD() {
             ProjectID + " " + projectName,
             BU,
             AzureSubFolder,
+            graphicData,
             "File " + temp.Sequence
           )
         );
@@ -629,6 +637,7 @@ function UBD() {
             ProjectID + " " + projectName,
             BU,
             AzureSubFolder,
+            graphicData,
             "Other Ref File " + temp.Sequence
           )
         );
@@ -663,6 +672,7 @@ function UBD() {
     };
 
     await saveAsDraftUploadBrefingDocs(formData);
+    setGroupnameUpdated(false);
     setLoader(false);
     dispatch(getTaskDetails(TaskID, ProjectID));
   };
@@ -713,6 +723,7 @@ function UBD() {
     };
     // console.log("submitFormData: ", formData);
     await submitUploadBrefingDocs(formData, id, headers);
+    setGroupnameUpdated(false);
     setLoader(false);
     if (page2 && page2 === "projectPlan") {
       navigate(
@@ -762,8 +773,6 @@ function UBD() {
           <Loading />
         ) : (
           <>
-            {/* Graphic Adaptation Brief* */}
-            <div className="design-intent-header">{GABriefHeader}</div>
             <div
               className="graphicAdaptionBrief"
               style={{
@@ -817,6 +826,9 @@ function UBD() {
                 </div>
               )}
             </div>
+            {/* Graphic Adaptation Brief* */}
+            <div className="design-intent-header">{GABriefHeader}</div>
+
             {gABriefAdaptationForUI &&
               gABriefAdaptationForUI.length > 0 &&
               gABriefAdaptationForUI.map((item, index) => {
@@ -843,6 +855,7 @@ function UBD() {
                         gABriefAdaptationForUI.length === 1 && !item.File_Name
                       }
                       setFileNotFound={setFileNotFound}
+                      groupName={graphicData}
                       // setAzureFile={setAzureFile}
                     />
                   );
@@ -875,6 +888,7 @@ function UBD() {
                       disableDelete={
                         otherRefernceDocsForUI.length === 1 && !item.File_Name
                       }
+                      groupName={graphicData}
                       // setAzureFile={setAzureFile}
                     />
                   );
