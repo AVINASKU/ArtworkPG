@@ -39,6 +39,7 @@ export const getAllTasks = (userInformation) => async (dispatch) => {
   try {
     //here need to add url and pass PM name
     const res = await axios.get(`${DEVURL}/alltasks/${bu}/${region}`);
+    // const res = await axios.get(`${DEVURL}/alltasks/Baby Care/Europe`);
 
     if (res?.data === null) {
       dispatch({
