@@ -315,7 +315,8 @@ const DependencyMappingList = ({
                   : []
               }
               filter
-              placeholder={`Select AWM CDPT Page`}
+              display="chip"
+              placeholder={`Select`}
               className="p-column-filter"
             />
           </div>
@@ -348,7 +349,8 @@ const DependencyMappingList = ({
                   : []
               }
               filter
-              placeholder={`Select AWM RDT Page`}
+              display="chip"
+              placeholder={`Select`}
               className="p-column-filter-multiselect"
             />
           </div>
@@ -421,8 +423,9 @@ const DependencyMappingList = ({
                   : []
               }
               filter
-              placeholder={`Select AWM IQ Page`}
+              display="chip"
               className="p-column-filter"
+              placeholder={`Select`}
             />
           </div>
         )}

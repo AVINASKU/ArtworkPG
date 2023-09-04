@@ -215,6 +215,21 @@ a.tabView {
     bottom: 50px;
   }
 
+    .form-buttons {
+      padding: 0 10px;
+      position: absolute;
+      background: white;
+      text-align: right;
+      width: 100%;
+      left: 0;
+      bottom: 50px;
+    }
+    .p-multiselect .p-multiselect-label{
+      padding: 5px 3px 5px 5px;
+      text-align: initial;
+      font-size: 12px;
+      }
+  
   table {
     // border-collapse: separate !important;
     // border-spacing: 0 5px !important;

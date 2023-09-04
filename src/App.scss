@@ -501,6 +501,9 @@ fieldset:disabled .btn {
     .form-select {
       max-width: 251px;
       width: 251px;
+      font-size: 10px;
+      padding: 10px;
+      line-height: 10px;
     }
     .p-dialog-header {
       border-top-right-radius: 20px;
@@ -548,9 +551,24 @@ fieldset:disabled .btn {
 }
 .p-multiselect {
   & .p-multiselect-label {
-    padding: 10px 16px;
+    padding: 10px;
     line-height: 10px;
     font-size: 10px;
+  }
+  &.p-multiselect-chip{
+    .p-multiselect-token{
+      background: #f0f0f0;
+      border-radius: 8px;
+      & + .p-multiselect-token {
+        margin-top: 2px;
+      }
+    & .p-multiselect-token-icon{
+      width: 40px;
+    }
+    .p-multiselect-label{
+      padding: 5px 3px 5px 5px;
+    }
+    }
   }
 }
 input,
