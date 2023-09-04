@@ -102,7 +102,7 @@ function DNIQ() {
         Design_Job_ID: IQ.length + 1,
         isNew: true,
         Pantone: "",
-        Printer: "",
+        Printer: [],
         Design_Job_Name: "",
         Additional_Info: "",
         CD_Approved: null,
@@ -313,7 +313,8 @@ function DNIQ() {
               if (item && item?.Action !== "delete") {
                 return (
                   <CloneJobs
-                    key={item.Design_Job_ID}
+                    // key={item.Design_Job_ID}
+                    key={index}
                     {...data}
                     data={data}
                     item={item}

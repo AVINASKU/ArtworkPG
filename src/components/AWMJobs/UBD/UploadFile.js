@@ -27,6 +27,7 @@ const UploadFile = ({
   fileName,
   updateUbdData,
   setFileNotFound,
+  groupName,
 }) => {
   const [totalSize, setTotalSize] = useState(0);
   const [azureErrMsg, setAzureErrMsg] = useState("");
@@ -137,6 +138,7 @@ const UploadFile = ({
         ProjectID + " " + projectName,
         BU,
         azureSubFolder,
+        groupName,
         fileUploadSection === "Graphic Adaptation Brief *"
           ? "File " + sequence
           : "Other Ref File " + sequence
