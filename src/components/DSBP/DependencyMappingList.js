@@ -261,6 +261,7 @@ const DependencyMappingList = ({
                   );
                 }}
                 style={{ width: "80%", fontSize: 12 }}
+                className={options.AWM_CIC_Needed==="Yes" && (options[field]===" " || options[field]==="") ? "border-color":""}
               >
                 <option value="">Select</option>
 
@@ -537,6 +538,7 @@ const DependencyMappingList = ({
                     options.DSBP_PMP_PIMaterialID
                   )
                 }
+                className={options.AWM_CIC_Needed==="No" && options[field]=="" ? "border-color":""}
                 style={{ width: "80%", fontSize: 12 }}
               >
                 <option value="">Select</option>

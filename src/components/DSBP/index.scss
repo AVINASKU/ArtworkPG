@@ -42,7 +42,6 @@
       left: 0;
       bottom: 30px;
     }
-
   }
 }
 $width100: 100%;
@@ -141,10 +140,10 @@ $fontWeight400: 400;
     padding-bottom: 7px;
     color: black;
   }
-  .dropdown-name-color{
-    color:black;
+  .dropdown-name-color {
+    color: black;
     font-weight: bold;
-    }
+  }
 
   .city-name {
     flex: 1;
@@ -197,25 +196,25 @@ a.tabView {
 
   .actions {
     padding: 0 20px;
-}
+  }
 
   .p-datatable {
-      height: calc(100% - 120px);
-      .p-datatable-wrapper {
-        height: 100%;
-      }
+    height: calc(100% - 120px);
+    .p-datatable-wrapper {
+      height: 100%;
     }
+  }
 
-    .form-buttons {
-      padding: 0 10px;
-      position: absolute;
-      background: white;
-      text-align: right;
-      width: 100%;
-      left: 0;
-      bottom: 50px;
-    }
-  
+  .form-buttons {
+    padding: 0 10px;
+    position: absolute;
+    background: white;
+    text-align: right;
+    width: 100%;
+    left: 0;
+    bottom: 50px;
+  }
+
   table {
     // border-collapse: separate !important;
     // border-spacing: 0 5px !important;
@@ -225,7 +224,7 @@ a.tabView {
         // background-color: #edf4fa !important;
         height: 30px;
         // border: 0 !important;
-        text-align: center !important;
+        text-align: left;
         border-width: 1px 2px 3px 4px;
         border: 0 !important;
         padding: 0 !important;
@@ -323,7 +322,7 @@ a.tabView {
       // background: #ffffff !important;
       padding: 2px !important;
       // border-width: 0.5px;
-      text-align: center !important;
+      text-align: left;
 
       // border: 2px solid gray !important;
       // margin-top: 2px !important;
@@ -372,43 +371,44 @@ a.tabView {
     }
 
     .p-multiselect {
-    width: 100%;
-    max-width: 100%;
+      width: 100%;
+      max-width: 100%;
     }
 
-    .p-multiselect .p-multiselect-label{
-    width: 100%;
-    word-wrap: break-word;
-    white-space: normal;
-    overflow: hidden;
-    line-height: 15px;
+    .p-multiselect .p-multiselect-label {
+      width: 100%;
+      word-wrap: break-word;
+      white-space: normal;
+      overflow: hidden;
+      line-height: 15px;
     }
 
-    .p-multiselect .p-multiselect-label{
-    padding: 5px 3px 5px 5px;
-    text-align: initial;
-    font-size: 12px;
+    .p-multiselect .p-multiselect-label {
+      padding: 5px 3px 5px 5px;
+      text-align: initial;
+      font-size: 12px;
     }
 
-    
-.p-multiselect .p-multiselect-trigger{
-width: 2rem;
-}
+    .p-multiselect .p-multiselect-trigger {
+      width: 2rem;
+    }
 
     .p-column-title {
-    font-weight: 400;
-  }
-  .p-column-title img {
-    width: 10px;
-}
+      font-weight: 400;
+    }
+    .p-column-title img {
+      width: 10px;
+    }
 
-.p-datatable {
+    .p-datatable {
       height: calc(100% - 170px);
       .p-datatable-wrapper {
         height: 100%;
       }
     }
-
+    .border-color {
+      border-color: red;
+    }
   }
 
   .cic-matrix-text-on {
