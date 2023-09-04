@@ -73,21 +73,27 @@ const DependencyMapping = () => {
         data["updated"] = true;
       }
 
+      if (data["AWM_CIC_Needed"] === "Yes") {
+      
+      data["AWM_Supporting_PMP_Design"] = "";
+      data["AWM_Supporting_PMP_Layout"] = "";
+      }
+
       return data;
     });
     const filteredDataToSubmit = updatedData.filter(
       (item) => item.updated === true
     );
     const dataForNo = updatedData.filter(
-      (data) => data?.AWM_CIC_Needed === "No" && data
+      (data) => data?.AWM_CIC_Needed === "Yes" && data
     );
     const dropdownDataForLayoutAndDesign1 = dataForNo.map(
-      (item) => item.DSBP_PMP_PIMaterialID
+      (item) => item.DSBP_PMP_PIMaterialNumber
     );
 
     let filteredData = filteredDataToSubmit.filter(
       (ele) =>
-        (ele?.AWM_CIC_Needed === "No" && ele?.AWM_Supporting_PMP_Layout === "" ) || 
+        (ele?.AWM_CIC_Needed === "No" &&  (ele?.AWM_Supporting_PMP_Layout === "" || ele?.AWM_Supporting_PMP_Layout === " ") ) || 
         (ele?.AWM_Other_Reference !== "" && ele?.AWM_CIC_Needed === "N/A" && ele?.AWM_Other_Reference?.length !== 8 ) || 
         (ele?.AWM_CIC_Needed === "Yes" && ele?.AWM_GA_Brief === " ")
     );
@@ -213,11 +219,11 @@ const DependencyMapping = () => {
     if (dependencyTableData && dependencyTableData.length) {
       let data = dependencyTableData.filter(
         (data) =>
-          data?.AWM_CIC_Page?.[0]?.AWM_CIC_Needed === "No" &&
+          data?.AWM_CIC_Page?.[0]?.AWM_CIC_Needed === "Yes" &&
           data.DSBP_PMP_PIMaterialID
       );
       let dropdownDataForLayoutAndDesign1 = data?.map(
-        (item) => item.DSBP_PMP_PIMaterialID
+        (item) => item.DSBP_PMP_PIMaterialNumber
       );
       setDropdownDataForLayoutAndDesign(dropdownDataForLayoutAndDesign1);
     }
@@ -405,12 +411,6 @@ const DependencyMapping = () => {
     const newAWMGAItemsCount = submittedData.filter(
       (item) => item.AWM_GA_Brief === "Add GA Brief"
     ).length;
-    console.log(
-      "submitted json",
-      submittedJson,
-      submittedData,
-      newAWMGAItemsCount
-    );
 
     let formData = {
       DSBPValues: submittedJson,
