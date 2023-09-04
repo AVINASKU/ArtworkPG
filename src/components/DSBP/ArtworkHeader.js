@@ -233,6 +233,9 @@ const ArtworkHeader = ({
           customizeViewFields={customizeViewFields}
           dependencyMappingData={dependencyMappingData}
           headerName={headerName}
+          CDPTPageData={CDPTPageData}
+          IQData={IQData}
+          RDTData={RDTData}
         />
       )}
       <div className="actions">

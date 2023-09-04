@@ -213,7 +213,7 @@ const DependencyMapping = () => {
     if (dependencyTableData && dependencyTableData.length) {
       let data = dependencyTableData.filter(
         (data) =>
-          data?.AWM_CIC_Page?.[0]?.AWM_CIC_Needed === "Yes" &&
+          data?.AWM_CIC_Page?.[0]?.AWM_CIC_Needed === "No" &&
           data.DSBP_PMP_PIMaterialID
       );
       let dropdownDataForLayoutAndDesign1 = data?.map(
@@ -570,7 +570,7 @@ const DependencyMapping = () => {
           {loader ? (
             <Loading />
           ) : (
-            <DependencyMappingList
+            <DependencyMappingList              
               dependencyMappingData={dependencyMappingData}
               // dependencyColumnNames={dependencyColumnNames}
               CDPTPageData={CDPTPageData}
@@ -599,6 +599,7 @@ const DependencyMapping = () => {
               isSearch={isSearch}
               columnNames={columnNames}
               handleNewGaBrief={handleNewGaBrief}
+              headerName={headerName}
             />
           )}
           <FooterButtons
