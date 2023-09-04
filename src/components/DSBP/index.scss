@@ -215,6 +215,11 @@ a.tabView {
       left: 0;
       bottom: 50px;
     }
+    .p-multiselect .p-multiselect-label{
+      padding: 5px 3px 5px 5px;
+      text-align: initial;
+      font-size: 12px;
+      }
   
   table {
     // border-collapse: separate !important;
@@ -384,11 +389,7 @@ a.tabView {
     line-height: 15px;
     }
 
-    .p-multiselect .p-multiselect-label{
-    padding: 5px 3px 5px 5px;
-    text-align: initial;
-    font-size: 12px;
-    }
+    
 
     
 .p-multiselect .p-multiselect-trigger{
