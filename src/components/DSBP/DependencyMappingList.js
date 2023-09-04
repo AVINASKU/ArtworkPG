@@ -15,6 +15,7 @@ import toggleOff from "../../assets/images/toggleOff.svg";
 import toggleOn from "../../assets/images/toggleOn.svg";
 import DependencyFilter from "./DependencyFilter";
 import { FilterMatchMode } from "primereact/api";
+import { dependancyMappingFields } from "./utils";
 
 const DependencyMappingList = ({
   dependencyMappingData,
@@ -44,6 +45,7 @@ const DependencyMappingList = ({
   isSearch,
   columnNames,
   handleNewGaBrief,
+  headerName
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -586,33 +588,8 @@ const DependencyMappingList = ({
 
     console.log("cdpt page data", dependencyColumnNames1);
 
-    const dependencyColumnNames2 = CDPTPageData?.length
-      ? dependencyColumnNames1
-      : dependencyColumnNames1.filter((item) => item.field !== "AWM_CDPT_Page");
-    const dependencyColumnNames3 = RDTData?.length
-      ? dependencyColumnNames2
-      : dependencyColumnNames2.filter((item) => item.field !== "AWM_RDT_Page");
-    let dependencyColumnNames4 = IQData?.length
-      ? dependencyColumnNames3
-      : dependencyColumnNames3.filter((item) => item.field !== "AWM_IQ_Page");
-
-    let dependencyColumnNames = dependencyColumnNames4;
-
-    if (CICs === false) {
-      // console.log("hello hello 1");
-      dependencyColumnNames = dependencyColumnNames4.filter(
-        (item) =>
-          item.field !== "AWM_CIC_Needed" &&
-          item.field !== "AWM_GA_Brief" &&
-          item.field !== "AWM_Supporting_PMP_Layout" &&
-          item.field !== "AWM_Supporting_PMP_Design" &&
-          item.field !== "AWM_Other_Reference" &&
-          item.field !== "AWM_CIC_Matrix" &&
-          item.field !== "AWM_CIC_Matrix_Requested"
-      );
-      console.log("hello hello 1", dependencyColumnNames);
-    }
-
+    const dependencyColumnNames = dependancyMappingFields(dependencyColumnNames1, CDPTPageData, RDTData, IQData, CICs, headerName)
+      
     if (!dependencyColumnNames) return null;
 
     let jsonValue = customizeViewFields

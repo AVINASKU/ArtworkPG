@@ -570,7 +570,7 @@ const DependencyMapping = () => {
           {loader ? (
             <Loading />
           ) : (
-            <DependencyMappingList
+            <DependencyMappingList              
               dependencyMappingData={dependencyMappingData}
               // dependencyColumnNames={dependencyColumnNames}
               CDPTPageData={CDPTPageData}
@@ -599,6 +599,7 @@ const DependencyMapping = () => {
               isSearch={isSearch}
               columnNames={columnNames}
               handleNewGaBrief={handleNewGaBrief}
+              headerName={headerName}
             />
           )}
           <FooterButtons

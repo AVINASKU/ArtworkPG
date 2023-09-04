@@ -2,27 +2,32 @@
 
 import { alphabeticalSort } from "./Utils";
 
-const entities = (availableFieldsFromAPI, headerName) => {
+
+
+const Entities = (availableFieldsFromAPI, headerName) => {
+    
   const header = headerName === "Dependency Mapping" ? true : false;
 
-  const taskMap = availableFieldsFromAPI.reduce((previous, current) => {
+  if(header && availableFieldsFromAPI){
+    availableFieldsFromAPI = availableFieldsFromAPI?.map((item) => ({
+      Field_Name: item.field,
+      width: item.width,
+      freeze: item.freeze,
+      Sequence: item.Sequence,
+      group: item.group,
+    }));
+    console.log("hello if availableFieldsFromAPI", availableFieldsFromAPI);
+  }
+
+  const taskMap = availableFieldsFromAPI?.reduce((previous, current) => {
     previous[current.Field_Name] = current;
     return previous;
   }, {});
 
-  const propertyKeysArray = availableFieldsFromAPI && Object.keys(availableFieldsFromAPI[0]);
-  const dependancyMappingFields = {};
-  propertyKeysArray.forEach((key) => {
-    dependancyMappingFields[key] = {
-      Field_Name: key
-    };
-  }); 
-
   const availableFields = {
     id: "availableFields",
     title: "Available Fields",
-    fieldsData: header ? propertyKeysArray : 
-    alphabeticalSort(availableFieldsFromAPI)
+    fieldsData: alphabeticalSort(availableFieldsFromAPI)
     .map((task) => task.Field_Name).sort((a,b)=>{
       if(a.Field_Name < b.Field_Name){
         return -1
@@ -51,8 +56,8 @@ const entities = (availableFieldsFromAPI, headerName) => {
       [selectedFields.id]: selectedFields,
       [freezedColumns.id]: freezedColumns,
     },
-    tasks: header ? dependancyMappingFields : taskMap,
+    tasks: taskMap,
   };
 };
 
-export default entities;
+export default Entities;
