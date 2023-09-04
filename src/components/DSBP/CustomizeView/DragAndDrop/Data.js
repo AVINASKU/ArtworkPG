@@ -2,12 +2,8 @@
 
 import { alphabeticalSort } from "./Utils";
 
-
-
 const Entities = (availableFieldsFromAPI, headerName) => {
-    
   const header = headerName === "Dependency Mapping" ? true : false;
-
   if(header && availableFieldsFromAPI){
     availableFieldsFromAPI = availableFieldsFromAPI?.map((item) => ({
       Field_Name: item.field,
@@ -16,7 +12,6 @@ const Entities = (availableFieldsFromAPI, headerName) => {
       Sequence: item.Sequence,
       group: item.group,
     }));
-    console.log("hello if availableFieldsFromAPI", availableFieldsFromAPI);
   }
 
   const taskMap = availableFieldsFromAPI?.reduce((previous, current) => {
