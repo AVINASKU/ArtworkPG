@@ -75,11 +75,6 @@ const ArtworkHeader = ({
   }
   let actionNameObject = [];
 
-  console.log(
-    "isFilterActivatedInDependencyMapping",
-    filteredDependencyMappingData
-  );
-
   headerName !== "Dependency Mapping"
     ? (actionNameObject = [
         {
