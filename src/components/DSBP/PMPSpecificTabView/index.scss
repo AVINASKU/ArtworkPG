@@ -151,3 +151,9 @@
     text-align: center;
   }
 }
+.form-select{
+  &:focus{
+    box-shadow: none;
+    border-color: #003da5;
+  }
+}

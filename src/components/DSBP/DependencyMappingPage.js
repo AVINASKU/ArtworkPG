@@ -16,6 +16,7 @@ import { cloneDeep } from "lodash";
 const headerName = "Dependency Mapping";
 const DependencyMapping = () => {
   const [dependencyMappingData, setDependencyMappingData] = useState([]);
+  const [originalDependencyMappingData, setOriginalDependencyMappingData] = useState([]);
   // const [dependencyColumnNames, setDependencyColumnNames] = useState([]);
   const [updatedDataToSubmit, setUpdatedDataToSubmit] = useState([]);
   const [CDPTPageData, setCDPTPageData] = useState([]);
@@ -46,10 +47,12 @@ const DependencyMapping = () => {
   const navigate = useNavigate();
   const userHasAccess = !hasAllAccess();
 
-  const handleCancel = () => {
-    return navigate(`/myProjects`);
-  };
-  console.log("selected outside", selected);
+  useEffect(() => {
+    // Initialize OriginalDependencyMappingData when DependencyMappingData changes
+    if (dependencyMappingData) {
+      setOriginalDependencyMappingData(cloneDeep(dependencyMappingData));
+    }
+  }, []);
 
     const updateDropDownDataTableView = (value, columnName, id) => {
 
@@ -197,7 +200,12 @@ const DependencyMapping = () => {
   const handleSelectAll = (e) => {
     if (e.target.checked) {
       setSelectAllChecked(true);
-      setSelected(dependencyMappingData);
+      if(filteredDependencyMappingData && filteredDependencyMappingData.length){
+        setSelected(filteredDependencyMappingData);
+      } else{
+        setSelected(dependencyMappingData);
+      }
+      
     } else {
       setSelectAllChecked(false);
       setSelected([]);
@@ -329,11 +337,32 @@ const DependencyMapping = () => {
       setIQData(isIQData);
       setRDTData(isRDTData);
       setGABriefData(isGABrifData);
-      setDependencyMappingData(transformedData);
+      if(filteredDependencyMappingData && filteredDependencyMappingData.length){
+        const uniqueMaterialNumbers = new Set(filteredDependencyMappingData.map(item => item.DSBP_PMP_PIMaterialNumber));
+
+        // Filter transformedArray based on uniqueMaterialNumbers
+        const filteredTransformedArray = transformedData.filter(item =>
+          uniqueMaterialNumbers.has(item.DSBP_PMP_PIMaterialNumber)
+        );
+        setFiltersDependencyMappingData(filteredTransformedArray);
+      } else{
+        setDependencyMappingData(transformedData);
+      }
+      setOriginalDependencyMappingData(cloneDeep(transformedData));
+      
     }
     setTableLoader(false);
   }
   const isSubmitEnable = submittedData.length && !actionDialog ? true : false;
+
+  const resetTableData = () => {
+    if (originalDependencyMappingData) {
+      setDependencyMappingData([...originalDependencyMappingData]);
+    }
+  };
+  const handleCancel = () => {
+    resetTableData();
+  };
 
   const onSubmit = async () => {
     //add your logic here
@@ -428,8 +457,9 @@ const DependencyMapping = () => {
     if (actionDialog) {
       setActionDialog(false);
       await fetchData();
-      setSelected([]);
     }
+    setSelected([]);
+    setSelectAllChecked(false);
     setLoader(false);
   };
 
