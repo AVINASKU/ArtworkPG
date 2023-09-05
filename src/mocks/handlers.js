@@ -14,7 +14,7 @@ function getSSO_User() {
     });
 }
 
-function getAllProjects(userInformation){
+function getAllProjectsMock(userInformation){
     return rest.get(`https://awflowsit.pg.com/optaplanner/optimize/allprojects/:bu/:region`,(req,res,ctx) =>{
         return res(
             ctx.status(200),
@@ -24,17 +24,13 @@ function getAllProjects(userInformation){
     })
 }
 
-function getMyProjects(userInformation){
+function getMyProjectsMock(userInformation){
     let PM = userInformation?.username;
-    return rest.get(`${DEVURL}/myprojects/${PM}`,(req,res,ctx) =>{
-          const orderByData = _.orderBy(MyProjectListMockData?.ArtworkAgilityProjects,
-            ["Timestamp"],
-            ["desc"]
-          );
+    return rest.get(`https://awflowsit.pg.com/optaplanner/optimize/myprojects/:PM`,(req,res,ctx) =>{
         return res(
             ctx.status(200),
             ctx.json({
-                MyProjectListMockData
+                ArtworkAgilityProjects : MyProjectListMockData.ArtworkAgilityProjects
             })
         );
     })
@@ -52,4 +48,4 @@ function getDropDownValuesMock(){
     })
 }
 
-export const handlers = [getSSO_User(),getAllProjects(),getMyProjects(),getDropDownValuesMock()];
+export const handlers = [getSSO_User(),getAllProjectsMock(),getMyProjectsMock(),getDropDownValuesMock()];

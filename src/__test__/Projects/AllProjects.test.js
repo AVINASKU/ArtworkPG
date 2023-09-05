@@ -9,32 +9,44 @@ import {MyProjectListMockData,AllProjectsListMockData, userInformationMockData,u
 import { userUpdateAction ,userProfileAction} from "../../store/actions/userActions";
 import {getAllProject} from "../../store/actions/ProjectActions";
 
+// Mock the ChildComponent and GrandchildComponent
+jest.mock("../../components/Projects/AllProjects/AllProjectList");
+
+// Mock localStorage.getItem
+const localStorageMock = {
+  getItem: jest.fn(),
+  setItem: jest.fn(),
+};
+global.localStorage = localStorageMock;
+
 describe("AllProject Component", () => {
-  it("renders unauthorized message for users without all access", () => {
-
-    const { getByText } = render(<MemoryRouter><Provider store={store}><AllProjects /></Provider></MemoryRouter>);
-
-    //expect(getByText("You are not authorized to access this page.")).not.toBeInTheDocument();
-  });
-
   it("renders project list for users with all access", async () => {
 
     const userInformation = userInformationMockData;
     await store.dispatch(userUpdateAction(userInformation));
     const userProfile = userProfileMockData;
-     //console.log("userProfile:" + JSON.stringify(userProfile))
      await store.dispatch(userProfileAction(userProfile));
     const allprojectdata = await store.dispatch(getAllProject(userProfile));
     
+    await act(()=>{
+      const { getByText } = render(<MemoryRouter><Provider store={store}><AllProjects header="All Projects" /></Provider></MemoryRouter>);
+    })
     
-    const { getByText } = render(<MemoryRouter><Provider store={store}><AllProjects /></Provider></MemoryRouter>);
 
     await waitFor(() => {
-      //console.log("allprojectdata" + allprojectdata)
+      expect(screen.getByText(/Artwork Agility Suite/i)).toBeInTheDocument();
+
+    const link = screen.getAllByRole('link');
+    expect(link[0].href).toContain('/myProjects');
+
+    expect(link[1].href).toContain('/allProjects');
+
+    expect(link[2].href).toContain('/AllTasks');
+
+    expect(link[3].href).toContain('/projectSetup');
+
       expect(store.getState().myProject.allProjects).toEqual(AllProjectsListMockData.ArtworkAgilityProjects);
       
-      // const myProjectAnddAllProjectList = screen.findAllByText(/myProjectAnddAllProjectList/i)
-      // console.log(myProjectAnddAllProjectList)
     });
  screen.debug();
     // Find all elements that match the text
@@ -50,8 +62,6 @@ describe("AllProject Component", () => {
 
     // You can continue with other assertions or actions as needed
 
-    await act(()=>{
-
-    })
+    
   });
 });

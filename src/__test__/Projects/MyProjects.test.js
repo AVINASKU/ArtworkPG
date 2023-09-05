@@ -9,6 +9,7 @@ import {MyProjectListMockData,AllProjectsListMockData, userInformationMockData,u
 import { userUpdateAction ,userProfileAction} from "../../store/actions/userActions";
 import {getMyProject} from "../../store/actions/ProjectActions";
 import { hasAllAccess,getAccessDetails,optionList } from "../../utils";
+import pegaJsonData from "../../pega.json";
 
 // Mock the hasAllAccess function
 jest.mock("../../utils", () => ({
@@ -16,6 +17,14 @@ jest.mock("../../utils", () => ({
   getAccessDetails: jest.fn(),
   optionList:jest.fn(),
 }));
+
+jest.mock("../../service/PegaService", ()=> ({
+  getProjectData: jest.fn(),
+}))
+
+// Mock the ChildComponent and GrandchildComponent
+jest.mock("../../components/Projects/MyProjects/ProjectList");
+
 
 // Mock localStorage.getItem
 const localStorageMock = {
@@ -29,52 +38,13 @@ describe("MyProjects Component", () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
-  // it("renders unauthorized message for users without all access", () => {
-  //   const hasAllAccessMock = require("../../utils").hasAllAccess;
-  //   hasAllAccessMock.mockReturnValue(false);
-  //   const getAccessDetailsMock = require("../../utils").getAccessDetails;
-  //   const result = {
-  //     pages: [
-  //       {
-  //         name: "myProjects",
-  //         path: "/myProjects",
-  //         access: ["Read", "Write", "Edit", "Delete"],
-  //       },
-  //       {
-  //         name: "allProjects",
-  //         path: "/allProjects",
-  //         access: ["Read", "Write", "Edit", "Delete"],
-  //       },
-  //       {
-  //         name: "MyTasks",
-  //         path: "/MyTasks",
-  //         access: ["Read", "Write", "Edit", "Delete"],
-  //       },
-  //       {
-  //         name: "AllTasks",
-  //         path: "/AllTasks",
-  //         access: ["Read", "Write", "Edit", "Delete"],
-  //       },
-  //       {
-  //         name: "projectPlan",
-  //         path: "/projectPlan",
-  //         access: ["Read", "Write", "Edit", "Delete"],
-  //       },
-  //     ]
-  //   };
-  //   getAccessDetailsMock.mockReturnValue(result);
-
-  //   const { getByText } = render(<MemoryRouter><Provider store={store}><MyProjects /></Provider></MemoryRouter>);
-
-  //   expect(getByText("You are not authorized to access this page.")).toBeInTheDocument();
-  // });
-
+  
   it("renders project list for users with all access", async () => {
 
     const userInformation = userInformationMockData;
     await store.dispatch(userUpdateAction(userInformation));
     const userProfile = userProfileMockData;
-     console.log("userProfile:" + JSON.stringify(userProfile))
+
      await store.dispatch(userProfileAction(userProfile));
     const myprojectdata = await store.dispatch(getMyProject(userInformation));
     const hasAllAccessMock = require("../../utils").hasAllAccess;
@@ -114,12 +84,21 @@ describe("MyProjects Component", () => {
       ]
     };
     getAccessDetailsMock.mockReturnValue(result);
-
-   // const getAccessDetailsMock = getAccessDetails(userProfile?.role, accessMatrix)
     
-    const { getByText } = render(<MemoryRouter><Provider store={store}><MyProjects /></Provider></MemoryRouter>);
+    const pegadata = require("../../service/PegaService").getProjectData;
+    pegadata.mockReturnValue(pegaJsonData.ArtworkAgilityProjects)
+    
+    await waitFor(() => {
+     
+    });
+    
+
+    await act(async()=>{
+      const { getByText } = render(<MemoryRouter><Provider store={store}><MyProjects></MyProjects></Provider></MemoryRouter>);
+
+    });
     screen.debug();
-    expect(getByText(/Artwork Agility Suite/i)).toBeInTheDocument()
+
     expect(screen.getByText(/Artwork Agility Suite/i)).toBeInTheDocument();
 
     const link = screen.getAllByRole('link');
@@ -131,17 +110,9 @@ describe("MyProjects Component", () => {
 
     expect(link[3].href).toContain('/projectSetup');
 
-    await waitFor(() => {
-      // expect(store.getState().myProject).toEqual({
-      //   myProject: myprojectdata
-      // });
-     
-    });
-    
+    expect(screen.getByTestId("project-list-mock")).toBeInTheDocument();
 
-    await act(async()=>{
-      
+    expect(store.getState().myProject.myProject).toEqual(myprojectdata)
 
-    })
   });
 });
