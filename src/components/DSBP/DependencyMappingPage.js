@@ -16,6 +16,7 @@ import { cloneDeep } from "lodash";
 const headerName = "Dependency Mapping";
 const DependencyMapping = () => {
   const [dependencyMappingData, setDependencyMappingData] = useState([]);
+  const [originalDependencyMappingData, setOriginalDependencyMappingData] = useState([]);
   // const [dependencyColumnNames, setDependencyColumnNames] = useState([]);
   const [updatedDataToSubmit, setUpdatedDataToSubmit] = useState([]);
   const [CDPTPageData, setCDPTPageData] = useState([]);
@@ -46,10 +47,12 @@ const DependencyMapping = () => {
   const navigate = useNavigate();
   const userHasAccess = !hasAllAccess();
 
-  const handleCancel = () => {
-    return navigate(`/myProjects`);
-  };
-  console.log("selected outside", selected);
+  useEffect(() => {
+    // Initialize OriginalDependencyMappingData when DependencyMappingData changes
+    if (dependencyMappingData) {
+      setOriginalDependencyMappingData(cloneDeep(dependencyMappingData));
+    }
+  }, []);
 
     const updateDropDownDataTableView = (value, columnName, id) => {
 
@@ -73,21 +76,27 @@ const DependencyMapping = () => {
         data["updated"] = true;
       }
 
+      if (data["AWM_CIC_Needed"] === "Yes") {
+      
+      data["AWM_Supporting_PMP_Design"] = "";
+      data["AWM_Supporting_PMP_Layout"] = "";
+      }
+
       return data;
     });
     const filteredDataToSubmit = updatedData.filter(
       (item) => item.updated === true
     );
     const dataForNo = updatedData.filter(
-      (data) => data?.AWM_CIC_Needed === "No" && data
+      (data) => data?.AWM_CIC_Needed === "Yes" && data
     );
     const dropdownDataForLayoutAndDesign1 = dataForNo.map(
-      (item) => item.DSBP_PMP_PIMaterialID
+      (item) => item.DSBP_PMP_PIMaterialNumber
     );
 
     let filteredData = filteredDataToSubmit.filter(
       (ele) =>
-        (ele?.AWM_CIC_Needed === "No" && ele?.AWM_Supporting_PMP_Layout === "" ) || 
+        (ele?.AWM_CIC_Needed === "No" &&  (ele?.AWM_Supporting_PMP_Layout === "" || ele?.AWM_Supporting_PMP_Layout === " ") ) || 
         (ele?.AWM_Other_Reference !== "" && ele?.AWM_CIC_Needed === "N/A" && ele?.AWM_Other_Reference?.length !== 8 ) || 
         (ele?.AWM_CIC_Needed === "Yes" && ele?.AWM_GA_Brief === " ")
     );
@@ -191,7 +200,12 @@ const DependencyMapping = () => {
   const handleSelectAll = (e) => {
     if (e.target.checked) {
       setSelectAllChecked(true);
-      setSelected(dependencyMappingData);
+      if(filteredDependencyMappingData && filteredDependencyMappingData.length){
+        setSelected(filteredDependencyMappingData);
+      } else{
+        setSelected(dependencyMappingData);
+      }
+      
     } else {
       setSelectAllChecked(false);
       setSelected([]);
@@ -213,11 +227,11 @@ const DependencyMapping = () => {
     if (dependencyTableData && dependencyTableData.length) {
       let data = dependencyTableData.filter(
         (data) =>
-          data?.AWM_CIC_Page?.[0]?.AWM_CIC_Needed === "No" &&
+          data?.AWM_CIC_Page?.[0]?.AWM_CIC_Needed === "Yes" &&
           data.DSBP_PMP_PIMaterialID
       );
       let dropdownDataForLayoutAndDesign1 = data?.map(
-        (item) => item.DSBP_PMP_PIMaterialID
+        (item) => item.DSBP_PMP_PIMaterialNumber
       );
       setDropdownDataForLayoutAndDesign(dropdownDataForLayoutAndDesign1);
     }
@@ -323,11 +337,32 @@ const DependencyMapping = () => {
       setIQData(isIQData);
       setRDTData(isRDTData);
       setGABriefData(isGABrifData);
-      setDependencyMappingData(transformedData);
+      if(filteredDependencyMappingData && filteredDependencyMappingData.length){
+        const uniqueMaterialNumbers = new Set(filteredDependencyMappingData.map(item => item.DSBP_PMP_PIMaterialNumber));
+
+        // Filter transformedArray based on uniqueMaterialNumbers
+        const filteredTransformedArray = transformedData.filter(item =>
+          uniqueMaterialNumbers.has(item.DSBP_PMP_PIMaterialNumber)
+        );
+        setFiltersDependencyMappingData(filteredTransformedArray);
+      } else{
+        setDependencyMappingData(transformedData);
+      }
+      setOriginalDependencyMappingData(cloneDeep(transformedData));
+      
     }
     setTableLoader(false);
   }
   const isSubmitEnable = submittedData.length && !actionDialog ? true : false;
+
+  const resetTableData = () => {
+    if (originalDependencyMappingData) {
+      setDependencyMappingData([...originalDependencyMappingData]);
+    }
+  };
+  const handleCancel = () => {
+    resetTableData();
+  };
 
   const onSubmit = async () => {
     //add your logic here
@@ -405,12 +440,6 @@ const DependencyMapping = () => {
     const newAWMGAItemsCount = submittedData.filter(
       (item) => item.AWM_GA_Brief === "Add GA Brief"
     ).length;
-    console.log(
-      "submitted json",
-      submittedJson,
-      submittedData,
-      newAWMGAItemsCount
-    );
 
     let formData = {
       DSBPValues: submittedJson,
@@ -428,8 +457,9 @@ const DependencyMapping = () => {
     if (actionDialog) {
       setActionDialog(false);
       await fetchData();
-      setSelected([]);
     }
+    setSelected([]);
+    setSelectAllChecked(false);
     setLoader(false);
   };
 

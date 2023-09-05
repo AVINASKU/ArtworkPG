@@ -315,7 +315,8 @@ const DependencyMappingList = ({
                   : []
               }
               filter
-              placeholder={`Select AWM CDPT Page`}
+              display="chip"
+              placeholder={`Select`}
               className="p-column-filter"
             />
           </div>
@@ -348,7 +349,8 @@ const DependencyMappingList = ({
                   : []
               }
               filter
-              placeholder={`Select AWM RDT Page`}
+              display="chip"
+              placeholder={`Select`}
               className="p-column-filter-multiselect"
             />
           </div>
@@ -421,8 +423,9 @@ const DependencyMappingList = ({
                   : []
               }
               filter
-              placeholder={`Select AWM IQ Page`}
+              display="chip"
               className="p-column-filter"
+              placeholder={`Select`}
             />
           </div>
         )}
@@ -480,6 +483,7 @@ const DependencyMappingList = ({
                 }}
                 style={{ width: "80%", fontSize: 12, height: "50%" }}
               ></Form.Control>
+              {options["AWM_Other_Reference"]?.length < 8 && options["AWM_Other_Reference"]?.length !==0 && <div style={{fontSize:10, color:"red"}}>Valid PMP# is 8 digits</div>}
             </Form.Group>
           ))}
 
@@ -540,7 +544,7 @@ const DependencyMappingList = ({
                     options.DSBP_PMP_PIMaterialID
                   )
                 }
-                className={options.AWM_CIC_Needed==="No" && options[field]=="" ? "border-color":""}
+                className={options.AWM_CIC_Needed==="No" && (options["AWM_Supporting_PMP_Layout"]==" " || options["AWM_Supporting_PMP_Layout"]=="") ? "border-color":""}
                 style={{ width: "80%", fontSize: 12 }}
               >
                 <option value="">Select</option>
