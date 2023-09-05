@@ -1,343 +1,279 @@
-// import React, { useEffect } from "react";
-// import { Route, Routes } from "react-router-dom";
-// import Home from "./home.js";
-// import { Outlet } from "react-router-dom";
-// import AllProjects from "./components/Projects/AllProjects/index";
-// import MyProjects from "./components/Projects/MyProjects/index.js";
-// import ProjectCreation from "./projectCreation.js";
-// import DDI from "./components/AWMJobs/DDI/index.js";
-// import UADI from "./components/AWMJobs/UADI";
-// import AllTasksPage from "./AllTaksPage.js";
-// import MyTasksPage from "./MyTaskPage.js";
-// import DDT from "./components/AWMJobs/DDT/index.js";
-// import DPRA from "./components/AWMJobs/DPRA/index.js";
-// import CCD from "./components/AWMJobs/CCD/index.js";
-// import DCD from "./components/AWMJobs/DCD/index.js";
-// import DNIQ from "./components/AWMJobs/DNIQ/index.js";
-// import CNIQ from "./components/AWMJobs/CNIQ/index.js";
-// import CPT from "./components/AWMJobs/CPT/index.js";
-// import DNPF from "./components/AWMJobs/DNPF/index.js";
-// import ARDT from "./components/AWMJobs/ARDT/index.js";
-// import APRA from "./components/AWMJobs/APRA/index.js";
-// import UPRA from "./components/AWMJobs/UPRA/index.js";
-// import URDT from "./components/AWMJobs/URDT/index.js";
-// import CPPFA from "./components/AWMJobs/CPPFA/index.js";
-
-// import { checkReadOnlyAccess } from "./utils";
-// import { useDispatch, useSelector } from "react-redux";
-// import { fetchAccessMatrix } from "./store/actions/RoleBasedActions";
-// import { useLocation } from "react-router-dom";
-
-// const RoutesNav = (props) => {
-//   return (
-//     <Routes>
-//       <Route path="/" element={<Outlet />}>
-//         {<Route index element={<Home {...props} />} />}
-//         <Route path="/myProjects" element={<MyProjects />} />
-//         <Route path="/allProjects" element={<AllProjects />} />
-//         <Route path="/myTasks" element={<MyTasksPage />} />
-//         <Route path="/AllTasks" element={<AllTasksPage />} />
-//         {/* <Route path="/createProject" element={<AddProject />} /> */}
-//         <Route path="/projectPlan" element={<ProjectCreation />} />
-//         <Route
-//           path="/myProjects/projectPlan/:ProjectID"
-//           element={<ProjectCreation />}
-//         />
-//         <Route
-//           path="/allProjects/projectPlan/:ProjectID"
-//           element={<ProjectCreation />}
-//         />
-//         <Route path="/myTasks/DDI/:TaskID/:ProjectID" element={<DDI />} />
-//         <Route path="/allTasks/DDI/:TaskID/:ProjectID" element={<DDI />} />
-//         <Route path="/myTasks/UADI/:TaskID/:ProjectID" element={<UADI />} />
-//         <Route path="/allTasks/UADI/:TaskID/:ProjectID" element={<UADI />} />
-//         <Route path="/myTasks/DDT/:TaskID/:ProjectID" element={<DDT />} />
-//         <Route path="/allTasks/DDT/:TaskID/:ProjectID" element={<DDT />} />
-//         <Route path="/myTasks/ARDT/:TaskID/:ProjectID" element={<ARDT />} />
-//         <Route path="/allTasks/ARDT/:TaskID/:ProjectID" element={<ARDT />} />
-//         <Route path="/myTasks/DPRA/:TaskID/:ProjectID" element={<DPRA />} />
-//         <Route path="/allTasks/DPRA/:TaskID/:ProjectID" element={<DPRA />} />
-//         <Route path="/myTasks/APRA/:TaskID/:ProjectID" element={<APRA />} />
-//         <Route path="/allTasks/APRA/:TaskID/:ProjectID" element={<APRA />} />
-//         <Route path="/myTasks/URDT/:TaskID/:ProjectID" element={<URDT />} />
-//         <Route path="/allTasks/URDT/:TaskID/:ProjectID" element={<URDT />} />
-//         <Route path="/myTasks/UPRA/:TaskID/:ProjectID" element={<UPRA />} />
-//         <Route path="/allTasks/UPRA/:TaskID/:ProjectID" element={<UPRA />} />
-//         <Route path="/myTasks/CCD/:TaskID/:ProjectID" element={<CCD />} />
-//         <Route path="/allTasks/CCD/:TaskID/:ProjectID" element={<CCD />} />
-//         <Route path="/myTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
-//         <Route path="/allTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
-//         <Route path="/myTasks/CNIQ/:TaskID/:ProjectID" element={<CNIQ />} />
-//         <Route path="/allTasks/CNIQ/:TaskID/:ProjectID" element={<CNIQ />} />
-//         <Route path="/myTasks/DNIQ/:TaskID/:ProjectID" element={<DNIQ />} />
-//         <Route path="/allTasks/DNIQ/:TaskID/:ProjectID" element={<DNIQ />} />
-//         <Route path="/allTasks/CPPFA/:TaskID/:ProjectID" element={<CPPFA />} />
-//         <Route path="/myTasks/CPT/:TaskID/:ProjectID" element={<CPT />} />
-//         <Route path="/allTasks/CPT/:TaskID/:ProjectID" element={<CPT />} />
-//         <Route path="/myTasks/DNPF/:TaskID/:ProjectID" element={<DNPF />} />
-//         <Route path="/allTasks/DNPF/:TaskID/:ProjectID" element={<DNPF />} />
-//         <Route path="/myTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
-//         <Route path="/allTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
-//         {/* <Route path="/reports" element={<Reports />} /> */}
-//       </Route>
-//     </Routes>
-//   );
-// };
-
 // export default RoutesNav;
-import React, { useEffect } from "react";
-import { Route, Routes, useParams } from "react-router-dom";
+import React from "react";
+import loadable from "@loadable/component";
+import {
+  Route,
+  Routes,
+  createBrowserRouter,
+  useParams,
+} from "react-router-dom";
 // import Home from "./home.js";
-import { Outlet } from "react-router-dom";
-import AllProjects from "./components/Projects/AllProjects/index";
-import MyProjects from "./components/Projects/MyProjects/index.js";
-import ProjectCreation from "./projectCreation.js";
-import Login from "./login.js";
-import DDI from "./components/AWMJobs/DDI/index.js";
-import UADI from "./components/AWMJobs/UADI";
-import AllTasksPage from "./AllTaksPage.js";
-import MyTasksPage from "./MyTaskPage.js";
-import DDT from "./components/AWMJobs/DDT/index.js";
-import UBD from "./components/AWMJobs/UBD/index.js";
-import DPRA from "./components/AWMJobs/DPRA/index.js";
-import CCD from "./components/AWMJobs/CCD/index.js";
-import DCD from "./components/AWMJobs/DCD/index.js";
-import DNIQ from "./components/AWMJobs/DNIQ/index.js";
-import CNIQ from "./components/AWMJobs/CNIQ/index.js";
-import CPT from "./components/AWMJobs/CPT/index.js";
-import DNPF from "./components/AWMJobs/DNPF/index.js";
-import ARDT from "./components/AWMJobs/ARDT/index.js";
-import APRA from "./components/AWMJobs/APRA/index.js";
-import UPRA from "./components/AWMJobs/UPRA/index.js";
-import URDT from "./components/AWMJobs/URDT/index.js";
-import CPPFA from "./components/AWMJobs/CPPFA/index.js";
-import DsbpPage from "./DsbpPage";
-import DsbpTabPage from "./DsbpTabPage";
-import DMDsbpTabPage from "./DMDsbpTabPage";
-
 import Role from "./role";
+
+import { Outlet } from "react-router-dom";
+
+const AllProjects = loadable(
+  () => import("./components/Projects/AllProjects/index"),
+  {
+    fallback: <h1>Loading...</h1>,
+  }
+);
+const MyProjects = loadable(
+  () => import("./components/Projects/MyProjects/index.js"),
+  {
+    fallback: <h1>Loading...</h1>,
+  }
+);
+const ProjectCreation = loadable(() => import("./projectCreation.js"), {
+  fallback: <h1>Loading...</h1>,
+});
+const Login = loadable(() => import("./login.js"), {
+  fallback: <h1>Loading...</h1>,
+});
+const DDI = loadable(() => import("./components/AWMJobs/DDI/index.js"), {
+  fallback: <h1>Loading...</h1>,
+});
+const UADI = loadable(() => import("./components/AWMJobs/UADI"), {
+  fallback: <h1>Loading...</h1>,
+});
+const AllTasksPage = loadable(() => import("./AllTaksPage.js"), {
+  fallback: <h1>Loading...</h1>,
+});
+const MyTasksPage = loadable(() => import("./MyTaskPage.js"), {
+  fallback: <h1>Loading...</h1>,
+});
+const DDT = loadable(() => import("./components/AWMJobs/DDT/index.js"), {
+  fallback: <h1>Loading...</h1>,
+});
+const UBD = loadable(() => import("./components/AWMJobs/UBD/index.js"), {
+  fallback: <h1>Loading...</h1>,
+});
+const DPRA = loadable(() => import("./components/AWMJobs/DPRA/index.js"), {
+  fallback: <h1>Loading...</h1>,
+});
+const CCD = loadable(() => import("./components/AWMJobs/CCD/index.js"), {
+  fallback: <h1>Loading...</h1>,
+});
+const DCD = loadable(() => import("./components/AWMJobs/DCD/index.js"), {
+  fallback: <h1>Loading...</h1>,
+});
+const DNIQ = loadable(() => import("./components/AWMJobs/DNIQ/index.js"), {
+  fallback: <h1>Loading...</h1>,
+});
+const CPT = loadable(() => import("./components/AWMJobs/CPT/index.js"), {
+  fallback: <h1>Loading...</h1>,
+});
+const DNPF = loadable(() => import("./components/AWMJobs/DNPF/index.js"), {
+  fallback: <h1>Loading...</h1>,
+});
+const ARDT = loadable(() => import("./components/AWMJobs/ARDT/index.js"), {
+  fallback: <h1>Loading...</h1>,
+});
+const APRA = loadable(() => import("./components/AWMJobs/APRA/index.js"), {
+  fallback: <h1>Loading...</h1>,
+});
+const UPRA = loadable(() => import("./components/AWMJobs/UPRA/index.js"), {
+  fallback: <h1>Loading...</h1>,
+});
+const CPPFA = loadable(() => import("./components/AWMJobs/CPPFA/index.js"), {
+  fallback: <h1>Loading...</h1>,
+});
+const DsbpPage = loadable(() => import("./DsbpPage"), {
+  fallback: <h1>Loading...</h1>,
+});
+const DsbpTabPage = loadable(() => import("./DsbpTabPage"), {
+  fallback: <h1>Loading...</h1>,
+});
+const DMDsbpTabPage = loadable(() => import("./DMDsbpTabPage"), {
+  fallback: <h1>Loading...</h1>,
+});
+const URDT = loadable(() => import("./components/AWMJobs/URDT/index.js"), {
+  fallback: <h1>Loading...</h1>,
+});
+const CNIQ = loadable(() => import("./components/AWMJobs/CNIQ/index.js"), {
+  fallback: <h1>Loading...</h1>,
+});
 
 const RoutesNav = () => {
   const params = useParams();
   return (
     <Routes>
-      <Route path="/" element={<Outlet />}>
-        <Route index element={<Login />} />
-        {/* <Route index element={<Home />} /> */}
-        <Route path="/myProjects" element={<MyProjects />} />
-        <Route path="/roles" element={<Role />} />
-        <Route path="/allProjects" element={<AllProjects />} />
-        <Route path="/myTasks" element={<MyTasksPage />} />
-        <Route path="/AllTasks" element={<AllTasksPage />} />
-        {/* <Route path="/createProject" element={<AddProject />} /> */}
-        {/* projectPlan */}
-        <Route path="/projectPlan" element={<ProjectCreation />} />
+      <Route exact path="/" element={<Outlet />} />
+      <Route index element={<Login />} />
+      {/* <Route index element={<Home />} /> */}
+      <Route path="/myProjects" element={<MyProjects />}>
         <Route
-          path="/myProjects/projectPlan/:ProjectID"
+          path="projectPlan/:ProjectID"
           element={<ProjectCreation key={`projectPlan-${params.ProjectID}`} />}
         />
         <Route
-          path="/allProjects/projectPlan/:ProjectID"
-          element={<ProjectCreation key={`projectPlan-${params.ProjectID}`} />}
-        />
-        {/* projectPlan */}
-        {/* projectSetup */}
-        <Route
-          path="/projectSetup"
-          element={<ProjectCreation key="projectSetup" />}
-        />
-        <Route
-          path="/myProjects/projectSetup/:ProjectID"
+          path="projectSetup/:ProjectID"
           element={<ProjectCreation key={`projectSetup-${params.ProjectID}`} />}
         />
         <Route
-          path="/allProjects/projectSetup/:ProjectID"
-          element={<ProjectCreation key={`projectSetup-${params.ProjectID}`} />}
-        />
-        {/* projectSetup */}
-        {/* artworkAlignment */}
-        <Route
-          path="/artworkAlignment"
-          element={<ProjectCreation key="artworkAlignment" />}
-        />
-        <Route
-          path="/myProjects/artworkAlignment/:ProjectID"
+          path="artworkAlignment/:ProjectID"
           element={
             <ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />
           }
         />
         <Route
-          path="/allProjects/artworkAlignment/:ProjectID"
+          path="artworkAlignment/:ProjectID"
           element={
             <ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />
           }
         />
         <Route
-          path="/myTasks/artworkAlignment/:ProjectID"
+          path="dependencyMapping/:ProjectID"
           element={
-            <ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />
+            <ProjectCreation key={`dependencyMapping-${params.ProjectID}`} />
           }
         />
         <Route
-          path="/allTasks/artworkAlignment/:ProjectID"
-          element={
-            <ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />
-          }
-        />
-        {/* artworkAlignment */}
-        <Route
-          path="/artworkAlignment"
-          element={<ProjectCreation key="artworkAlignment" />}
-        />
-        <Route
-          path="/myProjects/artworkAlignment/:ProjectID"
-          element={
-            <ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />
-          }
-        />
-        <Route
-          path="/allProjects/artworkAlignment/:ProjectID"
-          element={
-            <ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />
-          }
-        />
-        <Route
-          path="/myTasks/artworkAlignment/:ProjectID"
-          element={
-            <ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />
-          }
-        />
-        <Route
-          path="/allTasks/artworkAlignment/:ProjectID"
-          element={
-            <ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />
-          }
-        />
-        {/* artworkAlignment */}
-
-        {/* mapping */}
-        <Route path="/dependencyMapping" element={<ProjectCreation key="mapping" />} />
-        <Route
-          path="/myProjects/dependencyMapping/:ProjectID"
-          element={<ProjectCreation key={`dependencyMapping-${params.ProjectID}`} />}
-        />
-        <Route
-          path="/allProjects/dependencyMapping/:ProjectID"
-          element={<ProjectCreation key={`dependencyMapping-${params.ProjectID}`} />}
-        />
-        {/* mapping */}
-        {/* readinessPerPMP */}
-        <Route
-          path="/readinessPerPMP"
-          element={<ProjectCreation key="readinessPerPMP" />}
-        />
-        <Route
-          path="/myProjects/readinessPerPMP/:ProjectID"
+          path="readinessPerPMP/:ProjectID"
           element={
             <ProjectCreation key={`readinessPerPMP-${params.ProjectID}`} />
           }
         />
-        <Route
-          path="/allProjects/readinessPerPMP/:ProjectID"
-          element={
-            <ProjectCreation key={`readinessPerPMP-${params.ProjectID}`} />
-          }
-        />
-        {/* readinessPerPMP */}
-        <Route path="/:page1/:page2/DDI/:TaskID/:ProjectID" element={<DDI />} />
-        <Route path="/:pageType/DDI/:TaskID/:ProjectID" element={<DDI />} />
-        <Route
-          path="/:page1/:page2/UADI/:TaskID/:ProjectID"
-          element={<UADI />}
-        />
-        <Route path="/:pageType/UADI/:TaskID/:ProjectID" element={<UADI />} />
-        <Route path="/:page1/:page2/DDT/:TaskID/:ProjectID" element={<DDT />} />
-        <Route path="/:pageType/DDT/:TaskID/:ProjectID" element={<DDT />} />
-        <Route path="/:page1/:page2/UBD/:TaskID/:ProjectID" element={<UBD />} />
-        <Route path="/:pageType/UBD/:TaskID/:ProjectID" element={<UBD />} />
-
-        <Route
-          path="/:page1/:page2/ARDT/:TaskID/:ProjectID"
-          element={<ARDT />}
-        />
-        <Route path="/:pageType/ARDT/:TaskID/:ProjectID" element={<ARDT />} />
-
-        <Route
-          path="/:page1/:page2/DPRA/:TaskID/:ProjectID"
-          element={<DPRA />}
-        />
-        <Route path="/:pageType/DPRA/:TaskID/:ProjectID" element={<DPRA />} />
-
-        <Route
-          path="/:page1/:page2/APRA/:TaskID/:ProjectID"
-          element={<APRA />}
-        />
-        <Route path="/:pageType/APRA/:TaskID/:ProjectID" element={<APRA />} />
-
-        <Route
-          path="/:page1/:page2/URDT/:TaskID/:ProjectID"
-          element={<URDT />}
-        />
-        <Route path="/:pageType/URDT/:TaskID/:ProjectID" element={<URDT />} />
-
-        <Route
-          path="/:page1/:page2/UPRA/:TaskID/:ProjectID"
-          element={<UPRA />}
-        />
-        <Route path="/:pageType/UPRA/:TaskID/:ProjectID" element={<UPRA />} />
-
-        {/* <Route path="/myTasks/CCD/:TaskID/:ProjectID" element={<CCD />} />
-        <Route path="/allTasks/CCD/:TaskID/:ProjectID" element={<CCD />} /> */}
-
-        <Route path="/:page1/:page2/CCD/:TaskID/:ProjectID" element={<CCD />} />
-        <Route path="/:pageType/CCD/:TaskID/:ProjectID" element={<CCD />} />
-
-        {/* <Route path="/myTasks/CNIQ/:TaskID/:ProjectID" element={<CNIQ />} />
-        <Route path="/allTasks/CNIQ/:TaskID/:ProjectID" element={<CNIQ />} /> */}
-
-        <Route
-          path="/:page1/:page2/CNIQ/:TaskID/:ProjectID"
-          element={<CNIQ />}
-        />
-        <Route path="/:pageType/CNIQ/:TaskID/:ProjectID" element={<CNIQ />} />
-
-        <Route
-          path="/:page1/:page2/DNIQ/:TaskID/:ProjectID"
-          element={<DNIQ />}
-        />
-        <Route path="/:pageType/DNIQ/:TaskID/:ProjectID" element={<DNIQ />} />
-        {/* 
-        <Route path="/myTasks/DNIQ/:TaskID/:ProjectID" element={<DNIQ />} />
-        <Route path="/allTasks/DNIQ/:TaskID/:ProjectID" element={<DNIQ />} /> */}
-
-        <Route path="/allTasks/CPPFA/:TaskID/:ProjectID" element={<CPPFA />} />
-
-        <Route path="/:page1/:page2/CPT/:TaskID/:ProjectID" element={<CPT />} />
-        <Route path="/:pageType/CPT/:TaskID/:ProjectID" element={<CPT />} />
-        {/* 
-        <Route path="/myTasks/CPT/:TaskID/:ProjectID" element={<CPT />} />
-        <Route path="/allTasks/CPT/:TaskID/:ProjectID" element={<CPT />} /> */}
-
-        {/* <Route path="/myTasks/DNPF/:TaskID/:ProjectID" element={<DNPF />} />
-        <Route path="/allTasks/DNPF/:TaskID/:ProjectID" element={<DNPF />} /> */}
-
-        <Route
-          path="/:page1/:page2/DNPF/:TaskID/:ProjectID"
-          element={<DNPF />}
-        />
-        <Route path="/:pageType/DNPF/:TaskID/:ProjectID" element={<DNPF />} />
-
-        <Route path="/:page1/:page2/DCD/:TaskID/:ProjectID" element={<DCD />} />
-        <Route path="/:pageType/DCD/:TaskID/:ProjectID" element={<DCD />} />
-
-        {/* <Route path="/myTasks/DCD/:TaskID/:ProjectID" element={<DCD />} />
-        <Route path="/allTasks/DCD/:TaskID/:ProjectID" element={<DCD />} /> */}
-
-        <Route path="/DSBP/:ProjectID" element={<DsbpPage />} />
-        <Route path="/DSBP/tab/artworkAlignment" element={<DsbpTabPage />} />
-        <Route path="/DSBP/tab/dependencyMapping" element={<DMDsbpTabPage />} />
-        {/* <Route path="/reports" element={<Reports />} /> */}
       </Route>
+      <Route path="/roles" element={<Role />}></Route>
+
+      <Route path="/allProjects" element={<AllProjects />}>
+        <Route
+          path="projectPlan/:ProjectID"
+          element={<ProjectCreation key={`projectPlan-${params.ProjectID}`} />}
+        />
+        <Route
+          path="projectSetup/:ProjectID"
+          element={<ProjectCreation key={`projectSetup-${params.ProjectID}`} />}
+        />
+        <Route
+          path="artworkAlignment/:ProjectID"
+          element={
+            <ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />
+          }
+        />
+
+        <Route
+          path="dependencyMapping/:ProjectID"
+          element={
+            <ProjectCreation key={`dependencyMapping-${params.ProjectID}`} />
+          }
+        />
+        <Route
+          path="readinessPerPMP/:ProjectID"
+          element={
+            <ProjectCreation key={`readinessPerPMP-${params.ProjectID}`} />
+          }
+        />
+      </Route>
+
+      <Route path="/myTasks" element={<MyTasksPage />}>
+        <Route
+          path="artworkAlignment/:ProjectID"
+          element={
+            <ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />
+          }
+        />
+      </Route>
+
+      <Route path="/AllTasks" element={<AllTasksPage />} />
+      <Route path="/projectPlan" element={<ProjectCreation />} />
+
+      {/* projectPlan */}
+      {/* projectSetup */}
+      <Route
+        path="/projectSetup"
+        element={<ProjectCreation key="projectSetup" />}
+      />
+
+      {/* projectSetup */}
+      {/* artworkAlignment */}
+      <Route
+        path="/artworkAlignment"
+        element={<ProjectCreation key="artworkAlignment" />}
+      />
+
+      <Route
+        path="/allTasks/artworkAlignment/:ProjectID"
+        element={
+          <ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />
+        }
+      />
+      {/* artworkAlignment */}
+      <Route
+        path="/artworkAlignment"
+        element={<ProjectCreation key="artworkAlignment" />}
+      />
+
+      <Route
+        path="/allTasks/artworkAlignment/:ProjectID"
+        element={
+          <ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />
+        }
+      />
+      {/* artworkAlignment */}
+
+      {/* mapping */}
+      <Route
+        path="/dependencyMapping"
+        element={<ProjectCreation key="mapping" />}
+      />
+
+      {/* mapping */}
+      {/* readinessPerPMP */}
+      <Route
+        path="/readinessPerPMP"
+        element={<ProjectCreation key="readinessPerPMP" />}
+      />
+
+      {/* readinessPerPMP */}
+      <Route path="/:page1/:page2/DDI/:TaskID/:ProjectID" element={<DDI />} />
+      <Route path="/:pageType/DDI/:TaskID/:ProjectID" element={<DDI />} />
+      <Route path="/:page1/:page2/UADI/:TaskID/:ProjectID" element={<UADI />} />
+      <Route path="/:pageType/UADI/:TaskID/:ProjectID" element={<UADI />} />
+      <Route path="/:page1/:page2/DDT/:TaskID/:ProjectID" element={<DDT />} />
+      <Route path="/:pageType/DDT/:TaskID/:ProjectID" element={<DDT />} />
+      <Route path="/:page1/:page2/UBD/:TaskID/:ProjectID" element={<UBD />} />
+      <Route path="/:pageType/UBD/:TaskID/:ProjectID" element={<UBD />} />
+
+      <Route path="/:page1/:page2/ARDT/:TaskID/:ProjectID" element={<ARDT />} />
+      <Route path="/:pageType/ARDT/:TaskID/:ProjectID" element={<ARDT />} />
+
+      <Route path="/:page1/:page2/DPRA/:TaskID/:ProjectID" element={<DPRA />} />
+      <Route path="/:pageType/DPRA/:TaskID/:ProjectID" element={<DPRA />} />
+
+      <Route path="/:page1/:page2/APRA/:TaskID/:ProjectID" element={<APRA />} />
+      <Route path="/:pageType/APRA/:TaskID/:ProjectID" element={<APRA />} />
+
+      <Route path="/:page1/:page2/URDT/:TaskID/:ProjectID" element={<URDT />} />
+      <Route path="/:pageType/URDT/:TaskID/:ProjectID" element={<URDT />} />
+
+      <Route path="/:page1/:page2/UPRA/:TaskID/:ProjectID" element={<UPRA />} />
+      <Route path="/:pageType/UPRA/:TaskID/:ProjectID" element={<UPRA />} />
+
+      <Route path="/:page1/:page2/CCD/:TaskID/:ProjectID" element={<CCD />} />
+      <Route path="/:pageType/CCD/:TaskID/:ProjectID" element={<CCD />} />
+
+      <Route path="/:page1/:page2/CNIQ/:TaskID/:ProjectID" element={<CNIQ />} />
+      <Route path="/:pageType/CNIQ/:TaskID/:ProjectID" element={<CNIQ />} />
+
+      <Route path="/:page1/:page2/DNIQ/:TaskID/:ProjectID" element={<DNIQ />} />
+      <Route path="/:pageType/DNIQ/:TaskID/:ProjectID" element={<DNIQ />} />
+
+      <Route path="/allTasks/CPPFA/:TaskID/:ProjectID" element={<CPPFA />} />
+
+      <Route path="/:page1/:page2/CPT/:TaskID/:ProjectID" element={<CPT />} />
+      <Route path="/:pageType/CPT/:TaskID/:ProjectID" element={<CPT />} />
+
+      <Route path="/:page1/:page2/DNPF/:TaskID/:ProjectID" element={<DNPF />} />
+      <Route path="/:pageType/DNPF/:TaskID/:ProjectID" element={<DNPF />} />
+
+      <Route path="/:page1/:page2/DCD/:TaskID/:ProjectID" element={<DCD />} />
+      <Route path="/:pageType/DCD/:TaskID/:ProjectID" element={<DCD />} />
+
+      <Route path="/DSBP/:ProjectID" element={<DsbpPage />} />
+      <Route path="/DSBP/tab/artworkAlignment" element={<DsbpTabPage />} />
+      <Route path="/DSBP/tab/dependencyMapping" element={<DMDsbpTabPage />} />
     </Routes>
   );
 };
