@@ -16,7 +16,6 @@ import { cloneDeep } from "lodash";
 const headerName = "Dependency Mapping";
 const DependencyMapping = () => {
   const [dependencyMappingData, setDependencyMappingData] = useState([]);
-  const [originalDependencyMappingData, setOriginalDependencyMappingData] = useState([]);
   // const [dependencyColumnNames, setDependencyColumnNames] = useState([]);
   const [updatedDataToSubmit, setUpdatedDataToSubmit] = useState([]);
   const [CDPTPageData, setCDPTPageData] = useState([]);
@@ -47,16 +46,11 @@ const DependencyMapping = () => {
   const navigate = useNavigate();
   const userHasAccess = !hasAllAccess();
 
-  useEffect(() => {
-    // Initialize OriginalDependencyMappingData when DependencyMappingData changes
-    if (dependencyMappingData) {
-      setOriginalDependencyMappingData(cloneDeep(dependencyMappingData));
-    }
-  }, []);
+ 
 
-    const updateDropDownDataTableView = (value, columnName, id) => {
-
-    const updatedData = dependencyMappingData.map((data) => {
+    const updateDropDownDataTableView = (value, columnName, id) => {      
+      const data = filteredDependencyMappingData && filteredDependencyMappingData.length ? filteredDependencyMappingData : dependencyMappingData;
+      const updatedData = data.map((data) => {
       if (data.DSBP_PMP_PIMaterialID === id) {
         if (!data[columnName] && columnName === "AWM_CIC_Needed")
           data["AWM_CIC_Needed"] = value;
@@ -342,20 +336,15 @@ const DependencyMapping = () => {
       } else{
         setDependencyMappingData(transformedData);
       }
-      setOriginalDependencyMappingData(cloneDeep(transformedData));
       
     }
     setTableLoader(false);
   }
   const isSubmitEnable = submittedData.length && !actionDialog ? true : false;
 
-  const resetTableData = () => {
-    if (originalDependencyMappingData) {
-      setDependencyMappingData([...originalDependencyMappingData]);
-    }
-  };
+  
   const handleCancel = () => {
-    resetTableData();
+    console.log("cancel");
   };
 
   const onSubmit = async () => {
