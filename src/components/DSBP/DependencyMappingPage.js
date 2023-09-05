@@ -16,6 +16,7 @@ import { cloneDeep } from "lodash";
 const headerName = "Dependency Mapping";
 const DependencyMapping = () => {
   const [dependencyMappingData, setDependencyMappingData] = useState([]);
+  const [originalDependencyMappingData, setOriginalDependencyMappingData] = useState([]);
   // const [dependencyColumnNames, setDependencyColumnNames] = useState([]);
   const [updatedDataToSubmit, setUpdatedDataToSubmit] = useState([]);
   const [CDPTPageData, setCDPTPageData] = useState([]);
@@ -46,11 +47,16 @@ const DependencyMapping = () => {
   const navigate = useNavigate();
   const userHasAccess = !hasAllAccess();
 
- 
+  useEffect(() => {
+    // Initialize OriginalDependencyMappingData when DependencyMappingData changes
+    if (dependencyMappingData) {
+      setOriginalDependencyMappingData(cloneDeep(dependencyMappingData));
+    }
+  }, []);
 
-    const updateDropDownDataTableView = (value, columnName, id) => {      
-      const data = filteredDependencyMappingData && filteredDependencyMappingData.length ? filteredDependencyMappingData : dependencyMappingData;
-      const updatedData = data.map((data) => {
+    const updateDropDownDataTableView = (value, columnName, id) => {
+    const data = filteredDependencyMappingData && filteredDependencyMappingData.length ? filteredDependencyMappingData : dependencyMappingData;
+    const updatedData = data.map((data) => {
       if (data.DSBP_PMP_PIMaterialID === id) {
         if (!data[columnName] && columnName === "AWM_CIC_Needed")
           data["AWM_CIC_Needed"] = value;
@@ -70,27 +76,21 @@ const DependencyMapping = () => {
         data["updated"] = true;
       }
 
-      if (data["AWM_CIC_Needed"] === "Yes") {
-      
-      data["AWM_Supporting_PMP_Design"] = "";
-      data["AWM_Supporting_PMP_Layout"] = "";
-      }
-
       return data;
     });
     const filteredDataToSubmit = updatedData.filter(
       (item) => item.updated === true
     );
     const dataForNo = updatedData.filter(
-      (data) => data?.AWM_CIC_Needed === "Yes" && data
+      (data) => data?.AWM_CIC_Needed === "No" && data
     );
     const dropdownDataForLayoutAndDesign1 = dataForNo.map(
-      (item) => item.DSBP_PMP_PIMaterialNumber
+      (item) => item.DSBP_PMP_PIMaterialID
     );
 
     let filteredData = filteredDataToSubmit.filter(
       (ele) =>
-        (ele?.AWM_CIC_Needed === "No" &&  (ele?.AWM_Supporting_PMP_Layout === "" || ele?.AWM_Supporting_PMP_Layout === " ") ) || 
+        (ele?.AWM_CIC_Needed === "No" && ele?.AWM_Supporting_PMP_Layout === "" ) || 
         (ele?.AWM_Other_Reference !== "" && ele?.AWM_CIC_Needed === "N/A" && ele?.AWM_Other_Reference?.length !== 8 ) || 
         (ele?.AWM_CIC_Needed === "Yes" && ele?.AWM_GA_Brief === " ")
     );
@@ -225,7 +225,7 @@ const DependencyMapping = () => {
           data.DSBP_PMP_PIMaterialID
       );
       let dropdownDataForLayoutAndDesign1 = data?.map(
-        (item) => item.DSBP_PMP_PIMaterialNumber
+        (item) => item.DSBP_PMP_PIMaterialID
       );
       setDropdownDataForLayoutAndDesign(dropdownDataForLayoutAndDesign1);
     }
@@ -342,15 +342,20 @@ const DependencyMapping = () => {
       } else{
         setDependencyMappingData(transformedData);
       }
+      setOriginalDependencyMappingData(cloneDeep(transformedData));
       
     }
     setTableLoader(false);
   }
   const isSubmitEnable = submittedData.length && !actionDialog ? true : false;
 
-  
+  const resetTableData = () => {
+    if (originalDependencyMappingData) {
+      setDependencyMappingData([...originalDependencyMappingData]);
+    }
+  };
   const handleCancel = () => {
-    console.log("cancel");
+    resetTableData();
   };
 
   const onSubmit = async () => {
@@ -429,6 +434,12 @@ const DependencyMapping = () => {
     const newAWMGAItemsCount = submittedData.filter(
       (item) => item.AWM_GA_Brief === "Add GA Brief"
     ).length;
+    console.log(
+      "submitted json",
+      submittedJson,
+      submittedData,
+      newAWMGAItemsCount
+    );
 
     let formData = {
       DSBPValues: submittedJson,
