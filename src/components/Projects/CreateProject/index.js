@@ -55,7 +55,7 @@ function AddProject(props) {
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const { myProject } = useSelector((state) => state.myProject);
-  // const [projectData, setProjectData] = useState([]);
+  const { pmList } = useSelector((state) => state?.pmList);
   const mode = projectSetup.mode;
   // const id = `PG-AAS-WORK ${selectedProjectDetails.Project_ID}`;
   let awmProjectId = selectedProjectDetails.Project_ID;
@@ -131,22 +131,6 @@ function AddProject(props) {
       (project) => project.Project_ID === selectedProjectDetails.Project_ID
     );
 
-  // useEffect(() => {
-  //   let data =
-  //     isArray(myProject) &&
-  //     myProject.find(
-  //       (project) => project.Project_ID === selectedProjectDetails.Project_ID
-  //     );
-  //   setProjectData(data);
-  // }, [myProject]);
-
-  useEffect(() => {
-    RoleUser.users.map((role) => {
-      if (role.username === userInformation.username) {
-        setPm(role.username);
-      }
-    });
-  });
   // useEffect(() => {
   //   if (
   //     projectName &&
@@ -365,7 +349,7 @@ function AddProject(props) {
           ""
       );
       setIl(selectedProjectDetails?.IL);
-      setPm(selectedProjectDetails?.PM || userInformation.username);
+      setPm(selectedProjectDetails?.PM || userInformation.userid);
       setComments(selectedProjectDetails?.Comments || "");
       setProjectType(selectedProjectDetails?.Project_Type || "");
 
@@ -459,7 +443,7 @@ function AddProject(props) {
       setPrinterDate("");
       setReadinessDate("");
       setIl("");
-      setPm(pm);
+      setPm(userInformation?.userid);
       setComments("");
       setProjectType("");
 
@@ -1717,11 +1701,24 @@ function AddProject(props) {
                         disabled={mode === "create" && true}
                       >
                         <option value="">Select PM</option>
-                        {RoleUser.users.map((r) => (
-                          <option key={r.username} value={r.username}>
-                            {r.username}
+
+                        {mode === "create" ? (
+                          <option
+                            key={userInformation?.userid}
+                            value={userInformation?.userid}
+                          >
+                            {userInformation?.userid}
                           </option>
-                        ))}
+                        ) : (
+                          pmList?.OwnersList?.map((owner) => (
+                            <option
+                              key={owner.Owner_Name}
+                              value={owner?.Owner_Name}
+                            >
+                              {owner?.Owner_Name}
+                            </option>
+                          ))
+                        )}
                       </Form.Select>
                     </div>
                   </Form.Group>

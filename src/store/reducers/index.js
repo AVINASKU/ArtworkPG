@@ -19,6 +19,7 @@ import azureDownloadFileReducer from "./AzureDownlodReducer";
 
 export default combineReducers({
   myProject: ProjectReducer,
+  pmList: ProjectReducer,
   ProjectPlanReducer,
   ProjectSetupReducer,
   TaskReducer,

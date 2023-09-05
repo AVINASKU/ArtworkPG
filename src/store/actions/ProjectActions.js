@@ -26,6 +26,10 @@ export const getMyProject = (userInformation) => async (dispatch) => {
           type: types.GET_PROJECT_DETAILS_SUCCESS,
           payload: orderByData,
         });
+        dispatch({
+          type: types.GET_OWNER_DETAILS_SUCCESS,
+          payload: res?.data,
+        });
         return orderByData;
       } else {
         dispatch({
@@ -63,6 +67,11 @@ export const getAllProject = (userInformation) => async (dispatch) => {
           type: types.GET_ALL_PROJECT_DETAILS_SUCCESS,
           payload: orderByData,
         });
+        dispatch({
+          type: types.GET_OWNER_DETAILS_SUCCESS,
+          payload: res?.data,
+        });
+        return orderByData;
       } else {
         dispatch({
           type: types.GET_ALL_PROJECT_DETAILS_ERROR,
