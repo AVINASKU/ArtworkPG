@@ -113,7 +113,6 @@ function DDT() {
   };
 
   const addData = (fieldName, index, value, Design_Intent_Name) => {
-    if (checkTaskISComplete) return setEnableSubmit(true);
     let data = designIntent[index];
     data[fieldName] = value;
     data["Design_Job_Name"] = Design_Intent_Name;
@@ -243,8 +242,6 @@ function DDT() {
 
   let Brand = [];
   let Category = [];
-  let checkTaskISComplete =
-    TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Status === "Complete";
 
   if (TaskDetailsData?.ArtworkAgilityPage) {
     Brand = TaskDetailsData.ArtworkAgilityPage.Artwork_Brand;
@@ -252,6 +249,7 @@ function DDT() {
   }
 
   return (
+    console.log("DT designIntent", designIntent),
     <PageLayout>
       <DesignHeader
         setAddNewDesign={addNewEmptyDesign}
@@ -261,17 +259,13 @@ function DDT() {
         label="Define Regional Design Template"
         checkReadWriteAccess={checkReadWriteAccess}
         taskName="Regional Design Template"
-        checkTaskISComplete={checkTaskISComplete}
         checked={checked}
         setChecked={setChecked}
         enableCheckBox={enableCheckBox}
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} TaskDetailsData={TaskDetailsData}/>}
-        {checkTaskISComplete && (
-          <div className="task-completion">This task is already submitted</div>
-        )}
-
+       
         {loading || loader || designIntent === null ? (
           <Loading />
         ) : (
@@ -306,7 +300,6 @@ function DDT() {
         checkReadWriteAccess={checkReadWriteAccess}
         bottomFixed={true}
         formValid={enableSubmit}
-        checkTaskISComplete={checkTaskISComplete}
       />
     </PageLayout>
   );
