@@ -12,14 +12,7 @@ const MyProjects = (props) => {
   const User = useSelector((state) => state.UserReducer);
   const userInformation = User.userInformation;
   const { accessMatrix } = useSelector((state) => state?.accessMatrixReducer);
-  // const accessDetails = getUnAuthoirzedAccess(
-  //   userInformation.role,
-  //   accessMatrix,
-  //   window?.location?.pathname
-  // );
-  // // Check if access is empty for the user's role and page
-  // const isAccessEmpty = accessDetails === null || accessDetails.length === 0;
-
+ 
   useEffect(() => {
     setLoading(true);
     (async () => {

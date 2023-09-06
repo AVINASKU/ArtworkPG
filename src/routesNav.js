@@ -11,6 +11,9 @@ import {
 import Role from "./role";
 
 import { Outlet } from "react-router-dom";
+import AllProjectRoute from "./components/Projects/AllProjects/AllProjectRoute";
+import ProtectedRoute from "./ProtectedRoute";
+// import { allComponent } from "./Routes";
 
 const AllProjects = loadable(
   () => import("./components/Projects/AllProjects/index"),
@@ -93,14 +96,17 @@ const URDT = loadable(() => import("./components/AWMJobs/URDT/index.js"), {
 const CNIQ = loadable(() => import("./components/AWMJobs/CNIQ/index.js"), {
   fallback: <h1>Loading...</h1>,
 });
+// console.log("allComponent",allComponent)
 
 const RoutesNav = () => {
   const params = useParams();
   return (
     <Routes>
-      <Route exact path="/" element={<Outlet />} />
-      <Route index element={<Login />} />
+      {/* <Route exact path="/" element={<Outlet />} /> */}
+      {/* <Route index element={<Login />} /> */}
       {/* <Route index element={<Home />} /> */}
+      
+      <Route exact path="/" element={<Login/>} />
       <Route path="/myProjects" element={<MyProjects />}>
         <Route
           path="projectPlan/:ProjectID"
@@ -137,35 +143,43 @@ const RoutesNav = () => {
       </Route>
       <Route path="/roles" element={<Role />}></Route>
 
-      <Route path="/allProjects" element={<AllProjects />}>
-        <Route
-          path="projectPlan/:ProjectID"
-          element={<ProjectCreation key={`projectPlan-${params.ProjectID}`} />}
-        />
-        <Route
-          path="projectSetup/:ProjectID"
-          element={<ProjectCreation key={`projectSetup-${params.ProjectID}`} />}
-        />
-        <Route
-          path="artworkAlignment/:ProjectID"
-          element={
-            <ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />
-          }
-        />
+      {/* <ProtectedRoute auth={true}> */}
+        <Route path="/allProjects" element={<AllProjects />}>
+          <Route
+            path="projectPlan/:ProjectID"
+            element={
+              <ProjectCreation key={`projectPlan-${params.ProjectID}`} />
+            }
+          />
+          <Route
+            path="projectSetup/:ProjectID"
+            element={
+              <ProjectCreation key={`projectSetup-${params.ProjectID}`} />
+            }
+          />
+          <Route
+            path="artworkAlignment/:ProjectID"
+            element={
+              <ProjectCreation key={`artworkAlignment-${params.ProjectID}`} />
+            }
+          />
 
-        <Route
-          path="dependencyMapping/:ProjectID"
-          element={
-            <ProjectCreation key={`dependencyMapping-${params.ProjectID}`} />
-          }
-        />
-        <Route
-          path="readinessPerPMP/:ProjectID"
-          element={
-            <ProjectCreation key={`readinessPerPMP-${params.ProjectID}`} />
-          }
-        />
-      </Route>
+          <Route
+            path="dependencyMapping/:ProjectID"
+            element={
+              <ProjectCreation key={`dependencyMapping-${params.ProjectID}`} />
+            }
+          />
+          <Route
+            path="readinessPerPMP/:ProjectID"
+            element={
+              <ProjectCreation key={`readinessPerPMP-${params.ProjectID}`} />
+            }
+          />
+        </Route>
+      {/* </ProtectedRoute> */}
+
+      {/* <Route path='/allProjects' component={AllProjects} /> */}
 
       <Route path="/myTasks" element={<MyTasksPage />}>
         <Route
