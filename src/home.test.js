@@ -49,6 +49,20 @@ describe("Home Component", () => {
       roles: mockRoles,
     }));
 
+    // await store.dispatch(getSSOUser(operatorId));
+    // const store_State = store.getState();
+    // console.log("store_State_home" + JSON.stringify(store_State));
+    const mockUserDetail = {AccessGroup:[{AccessGroupNames:"AAS:ProjectManager"}],UserGroup:[{GroupName:"BC default Iza",UserRegion:[{Region_Name:"Europe"}],UserRole:[{Name:"Project Manager,Design Delivery,Print Production Manager,Capacity Manager,Brand Visual Executor,User Agent"}],UserBU:[{U_Name:"Baby Care"}]},{GroupName:"BCHC default Iza",UserRegion:[{Region_Name:"Europe"}],UserRole:[{Name:"Design Manager,Design Agency"}],UserBU:[{BU_Name:"Baby Care"},{BU_Name:"Home Care"}]},{GroupName:"HC default Iza",UserRegion:[{Region_Name:"Europe"}],UserRole:[{Name:"Artwork Copy Expert,Global Product Stewardship,Brand,Initiative Leader,Print Quality Manager"}],UserBU:[{BU_Name:"Baby Care"}]}]}
+    // Mock the Axios get method
+    // Mock the Axios get method
+    await axios.get.mockResolvedValue({ data: { ArtworkAgilityPage: mockUserDetail } });
+
+    const expectedActions = [
+      { type: "FETCH_USER_DETAILS_REQUEST" },
+      { type: "FETCH_USER_DETAILS_SUCCESS", payload: { userDetails: mockUserDetails } },
+    ];
+
+    // Dispatch the action and await its resolution
     await store.dispatch(getSSOUser(operatorId));
     const userInformation = userInformationMockData;
      await store.dispatch(userUpdateAction(userInformation));
