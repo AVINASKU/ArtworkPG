@@ -11,7 +11,7 @@ describe("App Component", () => {
           <App />
       </Provider>
     );
-    //screen.debug();
+    screen.debug();
 
     expect(screen.getByRole('heading')).toHaveTextContent('Welcome!');
     expect(document.getElementById('formUsername')).toBeInTheDocument();

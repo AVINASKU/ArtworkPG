@@ -177,7 +177,7 @@ export const Regions = JSON.parse(localStorage.getItem("roles"))
 
 //get this data from training mode json
 const GetPageRoles = () => {
-  const url = window.location.pathname;
+  const url = window.location.pathname; 
   // const { accessRoles } = useSelector((state) => state?.accessMatrixReducer);
   const accessRoles  = useSelector((state) => state?.accessMatrixReducer);
   const UserProfile = useSelector((state) => state.UserReducer);
