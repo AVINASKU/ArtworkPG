@@ -5,6 +5,7 @@ import { Tag } from "primereact/tag";
 import { AzureFileDownloadJobs } from "../../../store/actions/AzureFileDownloadJobs";
 import { deleteAzureFile } from "../../../store/actions/AzureFileDeletion.js";
 import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 
 const ApproveDesignIntentContent = ({
   designIntent,
@@ -23,11 +24,14 @@ const ApproveDesignIntentContent = ({
   version,
   date,
   subFolder,
+  BU,
+  projectName,
 }) => {
   const [totalSize, setTotalSize] = useState(0);
+  let { ProjectID } = useParams();
   const fileUploadRef = useRef(null);
   const dispatch = useDispatch();
-  let viewFileName = designIntent[0]?.FileMetaDataList[0]?.File_Name;
+  let viewFileName = designIntent ? designIntent[0]?.FileMetaDataList[0]?.File_Name : "";
   let di_name = "";
   if (!approve) {
     di_name =
@@ -95,7 +99,7 @@ const ApproveDesignIntentContent = ({
   };
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
-    dispatch(AzureFileDownloadJobs(fileUrl, subFolder));
+    dispatch(AzureFileDownloadJobs(fileUrl, ProjectID + " " + projectName, BU, subFolder));
   };
   const deleteAzure = async (event, fileUrl) => {
     event.preventDefault();
@@ -147,7 +151,7 @@ const ApproveDesignIntentContent = ({
               ref={fileUploadRef}
               name="demo[]"
               url="/api/upload"
-              accept="image/*"
+              accept= '.pdf'
               customUpload
               onUpload={onTemplateUpload}
               onSelect={onTemplateSelect}

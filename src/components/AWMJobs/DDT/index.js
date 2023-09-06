@@ -14,11 +14,11 @@ import { AddNavigation, Loading } from "../../../utils";
 import { toLower } from "lodash";
 import _ from "lodash";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
-import { CheckReadOnlyAccess } from "../../../utils";
+import { CheckReadOnlyAccess, selectedDesignItems } from "../../../utils";
 import "../DesignJobs/index.scss";
 
 const headerName = "Define Regional Design Template";
-const roleName = "DT_";
+const roleName = "RDT";
 
 function DDT() {
   const [data, setData] = useState(null);
@@ -27,6 +27,8 @@ function DDT() {
   const [submittedDI, setSubmittedDI] = useState([]);
   const [projectData, setProjectData] = useState([]);
   const [enableSubmit, setEnableSubmit] = useState(true);
+  const [enableCheckBox, setEnableCheckBox] = useState(true);
+  const [checked, setChecked] = useState(false);
   const [loader, setLoader] = useState(false);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
@@ -71,16 +73,25 @@ function DDT() {
   }, [TaskDetailsData]);
 
   const handleCancel = () => {
-    return navigate(`/${currentUrl?.split("/")[1]}`);
+    return navigate(
+      `/${currentUrl?.split("/")[1]}/${currentUrl?.split("/")[2]}/${ProjectID}`
+    );
   };
+
   const handleDelete = (index) => {
-    const sub = designIntent.map((item, i) => {
-      if (i === index) {
-        item.Action = "delete";
-      }
-      return item;
-    });
-    setDesignIntent(sub);
+    const updatedDesignIntent = [...designIntent]; // Create a copy of the original array
+    updatedDesignIntent[index].Action = "delete"; // Set the Action property to "delete" for the specified item
+  
+    // Check if all items have "Action" set to "delete"
+    const allItemsDeleted = updatedDesignIntent.every((item) => item.Action === "delete");
+  
+    // If all items are marked for deletion, reset the selectAll flag
+    if (allItemsDeleted) {
+      setChecked(false);
+      setEnableCheckBox(false);
+    }
+    // Update the state with the modified array
+    setDesignIntent(updatedDesignIntent);
   };
 
   const addNewEmptyDesign = () => {
@@ -92,6 +103,11 @@ function DDT() {
       Additional_Info: "",
       Select: false,
     });
+    const checkBoxUnselected = designIntent.find((item) => !item.Select);
+    if (checkBoxUnselected) {
+      setChecked(false);
+    } 
+    setEnableCheckBox(true);
     setDesignIntent(designIntent);
     setUpdated(!updated);
   };
@@ -102,28 +118,18 @@ function DDT() {
     data[fieldName] = value;
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
-    let values = false;
-    const hasValues = designIntent.every((item) => {
-      setEnableSubmit(true);
-      if (item.Select) {
-        values = item.Agency_Reference !== "" && item.Cluster !== "";
-      } else {
-        //console.log("designIntent else", designIntent);
-        let data = designIntent.filter(
-          (item) =>
-            item.Select && item.Agency_Reference !== "" && item.Cluster !== ""
-        );
-        //console.log("value else", data);
-        if (data.length !== 0) {
-          values = true;
-        } else {
-          values = false;
-        }
-      }
-      return values;
-    });
+    const hasValues = selectedDesignItems(designIntent, setEnableSubmit);
     setEnableSubmit(!hasValues);
     setSubmittedDI(submittedDI);
+
+    const allItemsSelected = designIntent.every((item) => item.Select);
+    const checkBoxUnselected = designIntent.find((item) => !item.Select);
+    
+    if (allItemsSelected) {
+      setChecked(true);
+    } else if (checkBoxUnselected) {
+      setChecked(false);
+    } 
   };
 
   const onSelectAll = (checked) => {
@@ -133,6 +139,8 @@ function DDT() {
       }
       return task;
     });
+    const hasValues = selectedDesignItems(designIntent, setEnableSubmit)
+    setEnableSubmit(!hasValues);
     setDesignIntent(designIntent);
     setUpdated(!updated);
   };
@@ -188,7 +196,9 @@ function DDT() {
     };
     await submitDefineRegionalDesignTemplate(formData, id, headers);
     setLoader(false);
-    navigate(`/${currentUrl?.split("/")[1]}`);
+    navigate(
+      `/${currentUrl?.split("/")[1]}/${currentUrl?.split("/")[2]}/${ProjectID}`
+    );
   };
 
   const onSaveAsDraft = async () => {
@@ -250,8 +260,11 @@ function DDT() {
         headerName={headerName}
         label="Define Regional Design Template"
         checkReadWriteAccess={checkReadWriteAccess}
-        taskName="Regional Design Intent"
+        taskName="Regional Design Template"
         checkTaskISComplete={checkTaskISComplete}
+        checked={checked}
+        setChecked={setChecked}
+        enableCheckBox={enableCheckBox}
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} TaskDetailsData={TaskDetailsData}/>}
@@ -279,7 +292,7 @@ function DDT() {
                   Brand={Brand}
                   Category={Category}
                   checkReadWriteAccess={checkReadWriteAccess}
-                  taskName="Regional Design Intent"
+                  taskName="Regional Design Template"
                 />
               );
             }

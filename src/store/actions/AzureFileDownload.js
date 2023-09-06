@@ -1,10 +1,10 @@
 import axios from "axios";
 
 // Define your Azure Blob Storage configuration variables here
-const containerName = "awm";
+const containerName = "pgsource/ArtworkFolder";
 const sasToken =
-  "sp=racwdl&st=2023-07-25T13:01:05Z&se=2030-05-10T21:01:05Z&spr=https&sv=2022-11-02&sr=c&sig=%2BwjkJ%2Blc5a5xof7yezFyBnd6SPiB%2Bw9aXwhHl7Qwi18%3D";
-const storageAccountName = "aacstrdev";
+  "sp=racwdlmeop&st=2023-07-12T07:02:49Z&se=2027-12-31T15:02:49Z&spr=https&sv=2022-11-02&sr=c&sig=aXX8yIkC7CdAuw65IeG8IcT7wb37BDtXu5CkcZyYc10%3D";
+const storageAccountName = "artworkagilityadlsdev";
 const baseUrl = `https://${storageAccountName}.blob.core.windows.net`;
 
 // Define your Redux action types
@@ -27,13 +27,50 @@ export const downloadFileFailure = (error) => ({
 });
 
 // Define your Redux async action creator
-export const downloadFileAzure = (filePath) => {
+export const downloadFileAzure = (
+  filePath,
+  ProjectIdAndName,
+  BU,
+  subFolder,
+  groupName,
+  sequence
+) => {
   return async (dispatch) => {
     try {
+      const urlPath = window.location.href;
+      const domainRegex = /https?:\/\/([^/]+)\//; // Regular expression to match the domain part of the URL
+
+      const match = urlPath.match(domainRegex);
+      let domain = "";
+
+      if (match && match.length > 1) {
+        domain = match[1]; // Extract the matched part
+      }
+
+      let env;
+
+      switch (domain) {
+        case "awflowdev.pg.com":
+          env = "DEV";
+          break;
+        case "awflowqa.pg.com":
+          env = "QA";
+          break;
+        case "awflowsit.pg.com":
+          env = "SIT";
+          break;
+        case "awflow.pg.com":
+          env = "";
+          break;
+        default:
+          env = "localEnv";
+      }
+
       dispatch(downloadFileRequest());
-
-      const downloadUrl = `${baseUrl}/${containerName}/${filePath}?${sasToken}`;
-
+      let downloadUrl = `${baseUrl}/${containerName}/${env}/${BU}/${ProjectIdAndName}/${subFolder}/${filePath}?${sasToken}`;
+      if (subFolder === "GA Briefs") {
+        downloadUrl = `${baseUrl}/${containerName}/${env}/${BU}/${ProjectIdAndName}/${subFolder}/${groupName}/${sequence}/${filePath}?${sasToken}`;
+      }
       const response = await axios.get(downloadUrl, {
         responseType: "blob",
       });

@@ -18,7 +18,9 @@ const DsbpCommonPopup = ({
   cancelButtonShow,
   showCancel,
   selectedReason,
-  setSelectedReason
+  setSelectedReason,
+  poaCreated,
+  poaaResponse
 }) => {
   const footerContent = (
     <div>
@@ -35,7 +37,7 @@ const DsbpCommonPopup = ({
         <>
           <Button
             variant="secondary"
-            onClick={() => {setDasbpDialog(false); setSelectedReason(false)}}
+            onClick={() => {setDasbpDialog(false); rejectFormData && setSelectedReason(false)}}
             hidden={cancelButtonShow === false}
           >
             {showCancel ? "Cancel" : "No"}
@@ -90,11 +92,11 @@ const DsbpCommonPopup = ({
         header={actionHeader}
         visible={dasbpDialog}
         style={{ width: "500px" }}
-        onHide={() => {setDasbpDialog(false); setSelectedReason(false)}}
+        onHide={() => {setDasbpDialog(false); rejectFormData && setSelectedReason(false)}}
         footer={footerContent}
         className={`actionDialog dsbpCommonPopup ${
-          okButtonShow !== false ? "headerIcon" : ""
-        }`}
+          (poaaResponse || poaCreated) ? "headerIcon" : ""
+        } ${okButtonShow && "bottomSinglebutton"}`}
       >
         {children}
       </Dialog>

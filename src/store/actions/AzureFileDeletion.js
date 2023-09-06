@@ -27,13 +27,50 @@ export const deleteFileFailure = (error) => ({
 });
 
 // Define your Redux async action creator
-export const deleteAzureFile = (filePath, subFolder) => {
+export const deleteAzureFile = (
+  filePath,
+  ProjectIdAndName,
+  BU,
+  subFolder,
+  groupName,
+  sequence
+) => {
   return async (dispatch) => {
     try {
+      const url = window.location.href;
+      const domainRegex = /https?:\/\/([^/]+)\//; // Regular expression to match the domain part of the URL
+
+      const match = url.match(domainRegex);
+      let domain = "";
+
+      if (match && match.length > 1) {
+        domain = match[1]; // Extract the matched part
+      }
+
+      let env;
+
+      switch (domain) {
+        case "awflowdev.pg.com":
+          env = "DEV";
+          break;
+        case "awflowqa.pg.com":
+          env = "QA";
+          break;
+        case "awflowsit.pg.com":
+          env = "SIT";
+          break;
+        case "awflow.pg.com":
+          env = "";
+          break;
+        default:
+          env = "localEnv";
+      }
       dispatch(deleteFileRequest());
 
-      const deleteUrl = `${baseUrl}/${containerName}/${subFolder}/${filePath}?${sasToken}`;
-
+      let deleteUrl = `${baseUrl}/${containerName}/${env}/${BU}/${ProjectIdAndName}/${subFolder}/${filePath}?${sasToken}`;
+      if (subFolder === "GA Briefs") {
+        deleteUrl = `${baseUrl}/${containerName}/${env}/${BU}/${ProjectIdAndName}/${subFolder}/${groupName}/${sequence}/${filePath}?${sasToken}`;
+      }
       const response = await axios.delete(deleteUrl);
 
       if (response.status === 202) {

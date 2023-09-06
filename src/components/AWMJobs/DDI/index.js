@@ -12,7 +12,7 @@ import "../DesignJobs/index.scss";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { hasAllAccess, Loading } from "../../../utils";
+import { hasAllAccess, Loading, selectedDesignItems } from "../../../utils";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
@@ -20,7 +20,7 @@ const breadcrumb = [
 ];
 
 const headerName = "Define Design Intent";
-const roleName = "DI_";
+const roleName = "DI";
 
 function DDI() {
   const [data, setData] = useState(null);
@@ -29,6 +29,8 @@ function DDI() {
   const [submittedDI, setSubmittedDI] = useState([]);
   const [projectData, setProjectData] = useState([]);
   const [enableSubmit, setEnableSubmit] = useState(true);
+  const [enableCheckBox, setEnableCheckBox] = useState(true);
+  const [checked, setChecked] = useState(false);
   const [loader, setLoader] = useState(false);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
@@ -37,8 +39,12 @@ function DDI() {
     (state) => state.TaskDetailsReducer
   );
   const myProjectList = useSelector((state) => state.myProject);
+
   const location = useLocation();
-  const currentUrl = location.pathname;
+    const locationPath = location?.pathname;
+  const url = locationPath?.split("/");
+  const pathName = url[url?.length - 4];
+
   let checkTaskISComplete =
     TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Status === "Complete";
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
@@ -68,22 +74,24 @@ function DDI() {
 
   const handleCancel = () => {
     return navigate(
-      `/${currentUrl?.split("/")[1]}/${currentUrl?.split("/")[2]}/${ProjectID}`
+      `/${pathName}`
     );
   };
 
   const handleDelete = (index) => {
-    //console.log("index", index);
-    const sub = designIntent.map((item, i) => {
-      if (i === index) {
-        item.Action = "delete";
-      }
-      return item;
-    });
-    // //console.log("index here", sub1);
-    // const sub = subProject.splice(index,1);
-    //console.log("sub", sub);
-    setDesignIntent(sub);
+    const updatedDesignIntent = [...designIntent]; // Create a copy of the original array
+    updatedDesignIntent[index].Action = "delete"; // Set the Action property to "delete" for the specified item
+  
+    // Check if all items have "Action" set to "delete"
+    const allItemsDeleted = updatedDesignIntent.every((item) => item.Action === "delete");
+  
+    // If all items are marked for deletion, reset the selectAll flag
+    if (allItemsDeleted) {
+      setChecked(false);
+      setEnableCheckBox(false);
+    }
+    // Update the state with the modified array
+    setDesignIntent(updatedDesignIntent);
   };
 
   const addNewEmptyDesign = () => {
@@ -95,9 +103,11 @@ function DDI() {
       Additional_Info: "",
       Select: false,
     });
+    setEnableCheckBox(true);
     setDesignIntent(designIntent);
     setUpdated(!updated);
   };
+
 
   const addData = (fieldName, index, value, Design_Intent_Name) => {
     if (checkTaskISComplete) return setEnableSubmit(true);
@@ -105,26 +115,7 @@ function DDI() {
     data[fieldName] = value;
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
-    let values = false;
-    const hasValues = designIntent.every((item) => {
-      setEnableSubmit(true);
-      if (item.Select) {
-        values = item.Agency_Reference !== "" && item.Cluster !== "";
-      } else {
-        //console.log("designIntent else", designIntent);
-        let data = designIntent.filter(
-          (item) =>
-            item.Select && item.Agency_Reference !== "" && item.Cluster !== ""
-        );
-        //console.log("value else", data);
-        if (data.length !== 0) {
-          values = true;
-        } else {
-          values = false;
-        }
-      }
-      return values;
-    });
+    const hasValues = selectedDesignItems(designIntent, setEnableSubmit);
     setEnableSubmit(!hasValues);
     setSubmittedDI(submittedDI);
   };
@@ -136,6 +127,8 @@ function DDI() {
       }
       return task;
     });
+    const hasValues = selectedDesignItems(designIntent, setEnableSubmit)
+    setEnableSubmit(!hasValues);
     setDesignIntent(designIntent);
     setUpdated(!updated);
   };
@@ -193,7 +186,7 @@ function DDI() {
     await submitDesignIntent(formData, id, headers);
     setLoader(false);    
     navigate(
-      `/${currentUrl?.split("/")[1]}/${currentUrl?.split("/")[2]}/${ProjectID}`
+      `/${pathName}`
     );
   };
 
@@ -255,6 +248,9 @@ function DDI() {
         checkReadWriteAccess={checkReadWriteAccess}
         taskName="Design Intent"
         checkTaskISComplete={checkTaskISComplete}
+        checked={checked}
+        setChecked={setChecked}
+        enableCheckBox={enableCheckBox}
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} TaskDetailsData={TaskDetailsData}/>}
@@ -292,7 +288,6 @@ function DDI() {
         onSaveAsDraft={onSaveAsDraft}
         onSubmit={onSubmit}
         formValid={enableSubmit}
-        // formValid={submitActive}
         checkReadWriteAccess={checkReadWriteAccess}
         bottomFixed={true}
         checkTaskISComplete={checkTaskISComplete}

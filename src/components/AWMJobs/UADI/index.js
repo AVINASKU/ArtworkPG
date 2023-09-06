@@ -42,6 +42,11 @@ const UADI = () => {
   const currentUrl = location.pathname;
   // const checkReadWriteAccess = CheckReadOnlyAccess();
   const checkReadWriteAccess = true;
+  
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
+  const BU = selectedProjectDetails?.BU;
+  const projectName = selectedProjectDetails?.Project_Name;
 
   useEffect(() => {
     dispatch(getTaskDetails(TaskID, ProjectID));
@@ -69,7 +74,9 @@ const UADI = () => {
   }, [TaskDetailsData]);
 
   const handleCancel = () => {
-    return navigate(`/${currentUrl?.split("/")[1]}`);
+    return navigate(
+      `/${currentUrl?.split("/")[1]}/${currentUrl?.split("/")[2]}/${ProjectID}`
+    );
   };
 
   const onSaveAsDraft = async () => {
@@ -82,7 +89,7 @@ const UADI = () => {
       Version: version.substring(0, 1) + (parseInt(version.substring(1)) + 1),
       Filename: fileName,
     };
-    await dispatch(uploadFileAzure(azureFile, "Design Intents"));
+    await dispatch(uploadFileAzure(azureFile, ProjectID + " " + projectName, BU, "DI"));
     // await dispatch(uploadFileToAzureShare(azureFile));
     await postSaveDesignIntent(formData);
     // setLoader(false);
@@ -106,11 +113,13 @@ const UADI = () => {
         Filename: fileName,
       },
     };
-    await dispatch(uploadFileAzure(azureFile));
-    // //console.log('formData', formData, "id", id);
+    await dispatch(uploadFileAzure(azureFile, ProjectID + " " + projectName, BU, "DI"));
+    // console.log('formData', formData, "id", id);
     await submitUploadApproveDesignIntent(formData, id, headers);
     setLoader(false);
-    navigate(`/${currentUrl?.split("/")[1]}`);
+    navigate(
+      `/${currentUrl?.split("/")[1]}/${currentUrl?.split("/")[2]}/${ProjectID}`
+    );
   };
   return (
     <PageLayout>
@@ -121,6 +130,7 @@ const UADI = () => {
         label="Upload Approved Design Intent"
         checkReadWriteAccess={checkReadWriteAccess}
         taskName="Design Intent"
+        actionButtonsFlag={true}
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} TaskDetailsData={TaskDetailsData}/>}
@@ -148,7 +158,9 @@ const UADI = () => {
               version={version}
               date={date}
               checkReadWriteAccess={checkReadWriteAccess}
-              subFolder="Design Intents"
+              subFolder="DI"
+              BU={BU}
+              projectName={projectName}
             />
           )
         )}

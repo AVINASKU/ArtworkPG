@@ -10,7 +10,7 @@ export const saveAsDraftUploadBrefingDocs = async (
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
   }
 ) => {
-  console.log("formData SaveAsDraft:", formData);
+  // console.log("formData SaveAsDraft:", formData);
   const api = new Api();
   const axiosInstance = await api.init({ headers });
   let apiURL;
@@ -33,7 +33,7 @@ export const deleteUploadBrefingDocs = async (
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
   }
 ) => {
-  console.log("formData Delete:", formData);
+  // console.log("formData Delete:", formData);
   const api = new Api();
   const axiosInstance = await api.init({ headers });
   let apiURL;
@@ -57,7 +57,7 @@ export const submitUploadBrefingDocs = async (
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
   }
 ) => {
-  console.log("formData Submit:", formData);
+  // console.log("formData Submit:", formData);
   const api = new Api();
   const axiosInstance = await api.init({ headers });
   // let apiURL = `https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v2/assignments/ASSIGN-WORKLIST ${id}!UPLOADBRIEFINGDOCUMENTS_FLOW/actions/UploadBriefingDocuments`;

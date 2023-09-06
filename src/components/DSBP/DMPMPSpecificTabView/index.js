@@ -40,7 +40,11 @@ const DMPMPSpecificTabView = () => {
   );
 
   const [dmTabData, setDmTabData] = useState(dmTabAttributesData);
-  //console.log("dmTabData", dmTabData);
+  console.log("dmTabData", dmTabData);
+  
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
+  const CICs = selectedProjectDetails?.CICs;
 
   const navigateToDSBP = () => {
     navigate(`/myProjects/dependencyMapping/${selectedProject?.Project_ID}`);
@@ -261,7 +265,7 @@ const DMPMPSpecificTabView = () => {
     setFormData(formData);
 
     const DSBP_RDT_Page = [];
-    dmTabData.RDTData.forEach((data) => {
+    dmTabData?.RDTData?.forEach((data) => {
       rdt?.forEach((val) => {
         if (data.AWM_Design_Job_ID === val) {
           DSBP_RDT_Page.push({
@@ -274,7 +278,7 @@ const DMPMPSpecificTabView = () => {
     formData["DSBP_RDT_Page"] = DSBP_RDT_Page;
 
     const DSBP_CDPT_Page = [];
-    dmTabData.CDPTPageData.find((data) => {
+    dmTabData?.CDPTPageData?.find((data) => {
       cdpt.forEach((val) => {
         if (data.AWM_Design_Job_ID === val) {
           DSBP_CDPT_Page.push({
@@ -287,7 +291,7 @@ const DMPMPSpecificTabView = () => {
     formData["DSBP_CDPT_Page"] = DSBP_CDPT_Page;
 
     const DSBP_IQ_Page = [];
-    dmTabData.IQData.forEach((data) => {
+    dmTabData?.IQData?.forEach((data) => {
       iq.forEach((val) => {
         if (data.AWM_Design_Job_ID === val) {
           DSBP_IQ_Page.push({
@@ -418,19 +422,35 @@ const DMPMPSpecificTabView = () => {
     let dependencyColumnNames1 = dmTabData.DMColumnNames;
 
     const dependencyColumnNames2 =
-      dmTabData?.CDPTPageData?.length === 1
-        ? dependencyColumnNames1.filter(
+      dmTabData?.CDPTPageData?.length 
+        ? dependencyColumnNames1 : dependencyColumnNames1.filter(
             (item) => item.field !== "AWM_CDPT_Page"
           )
-        : dependencyColumnNames1;
+
     const dependencyColumnNames3 =
-      dmTabData?.RDTData?.length === 1
-        ? dependencyColumnNames2.filter((item) => item.field !== "AWM_RDT_Page")
-        : dependencyColumnNames2;
-    const allColumns =
-      dmTabData?.IQData?.length === 1
-        ? dependencyColumnNames3.filter((item) => item.field !== "AWM_IQ_Page")
-        : dependencyColumnNames3;
+      dmTabData?.RDTData?.length 
+        ? dependencyColumnNames2 : dependencyColumnNames2.filter((item) => item.field !== "AWM_RDT_Page")
+
+    const dependencyColumnNames4 =
+      dmTabData?.IQData?.length 
+        ? dependencyColumnNames3: dependencyColumnNames3.filter((item) => item.field !== "AWM_IQ_Page")
+    
+        let allColumns = dependencyColumnNames4;
+
+    if (CICs === false) {
+      // console.log("hello hello 1");
+      allColumns = dependencyColumnNames4.filter(
+        (item) =>
+          item.field !== "AWM_CIC_Needed" &&
+          item.field !== "AWM_GA_Brief" &&
+          item.field !== "AWM_Supporting_PMP_Layout" &&
+          item.field !== "AWM_Supporting_PMP_Design" &&
+          item.field !== "AWM_Other_Reference" &&
+          item.field !== "AWM_CIC_Matrix" &&
+          item.field !== "AWM_CIC_Matrix_Requested"
+      );
+      console.log("hello hello 1", allColumns);
+    }
 
     const groupOneCols = allColumns.filter((col) => col.group === 1);
     const groupTwoCols = allColumns.filter((col) => col.group === 2);

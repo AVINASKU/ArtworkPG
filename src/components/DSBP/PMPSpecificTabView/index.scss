@@ -145,8 +145,15 @@
     padding-top: 6px;
    
   }
-  
+}
+.bottomSinglebutton{
   .p-dialog-footer{
     text-align: center;
+  }
+}
+.form-select{
+  &:focus{
+    box-shadow: none;
+    border-color: #003da5;
   }
 }
