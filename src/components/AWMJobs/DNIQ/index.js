@@ -313,7 +313,8 @@ function DNIQ() {
               if (item && item?.Action !== "delete") {
                 return (
                   <CloneJobs
-                    key={item.Design_Job_ID}
+                    // key={item.Design_Job_ID}
+                    key={index}
                     {...data}
                     data={data}
                     item={item}

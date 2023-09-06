@@ -209,7 +209,18 @@ const ArtworkAlignment = () => {
       );
 
       setMappedPOAS(filteredIds);
-      setDsbpPmpData(transformedArray);
+      if(filteredDsbpData && filteredDsbpData.length){
+        const uniqueMaterialNumbers = new Set(filteredDsbpData.map(item => item.DSBP_PMP_PIMaterialNumber));
+
+        // Filter transformedArray based on uniqueMaterialNumbers
+        const filteredTransformedArray = transformedArray.filter(item =>
+          uniqueMaterialNumbers.has(item.DSBP_PMP_PIMaterialNumber)
+        );
+        setFilteredDsbpData(filteredTransformedArray);
+      } else{
+        setDsbpPmpData(transformedArray);
+      }
+      
       setOriginalDsbpPmpData(cloneDeep(transformedArray));
       setTotalNoOfPMP(transformedArray.length);
 
@@ -254,10 +265,6 @@ const ArtworkAlignment = () => {
     setTotalNoOfDsbpId(resp?.length || 0);
     setTableLoader(false);
   }
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
 
   useEffect(() => {
     const fetchDataAndDispatch = async () => {
@@ -310,9 +317,6 @@ const ArtworkAlignment = () => {
       ...unMappedListOfDSBPId,
       ...alreadyAssignedListOfDSBPId,
     ];
-
-    console.log("data ---", mappedListOfDSBPId, unMappedListOfDSBPId, alreadyAssignedListOfDSBPId);
-
     setDropdownList(fullDropDownData);
     setFieldUpdated(!fieldUpdated);
   };
@@ -354,7 +358,11 @@ const ArtworkAlignment = () => {
   const handleSelectAll = (e) => {
     if (e.target.checked) {
       setSelectAllChecked(true);
-      setSelected(dsbpPmpData);
+      if(filteredDsbpData && filteredDsbpData.length){
+        setSelected(filteredDsbpData);
+      } else{
+        setSelected(dsbpPmpData);
+      }
     } else {
       setSelectAllChecked(false);
       setSelected([]);

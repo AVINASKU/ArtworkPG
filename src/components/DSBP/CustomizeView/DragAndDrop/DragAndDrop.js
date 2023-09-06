@@ -4,23 +4,28 @@ import entities1 from "./Data";
 import { mutliDragAwareReorder, multiSelectTo as multiSelect } from "./Utils";
 import { DragDropContext } from "react-beautiful-dnd";
 import { Button } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { dependancyMappingFields } from "../../utils";
 
 const getTasks = (entities, columnId) => entities?.columns[columnId]?.fieldsData.map((taskId) => entities.tasks[taskId]);
 
-// .sort((a, b) => {
-//   if (a.Field_Name < b.Field_Name) {
-//     return -1;
-//   } if (a.Field_Name > b.Field_Name) {
-//     return 1;
-//   }
-//   return 0;
-// });
-
 const DragAndDrop = (props) => {
-  const [entities, setEntities] = useState(props?.availableFields && entities1(props?.availableFields, props?.headerName));
+  const header = props?.headerName === "Dependency Mapping" ? true : false;
+  
   const [selectedTaskIds, setSelectedTaskIds] = useState([]);
   const [draggingTaskId, setDraggingTaskId] = useState(null);
   const [localDestination, setLocalDestination] = useState(null);
+  const { selectedProject } = useSelector(
+    (state) => state.ProjectSetupReducer
+  );
+  const CICs = selectedProject?.CICs;
+  let dependencyColumnNames1 = JSON.parse(
+    localStorage.getItem("setDependencyMappingColumnNames")
+  );
+  
+  const dependencyColumnNames = dependancyMappingFields(dependencyColumnNames1, props.CDPTPageData, props.RDTData, props.IQData, CICs, props?.headerName)
+
+  const [entities, setEntities] = useState(props?.availableFields && entities1(header ? dependencyColumnNames : props?.availableFields, props?.headerName));
 
   useEffect(() => {
     if (props?.customizeViewFields && props?.customizeViewFields !== "[]" && props?.customizeViewFields !== null) {
@@ -31,7 +36,7 @@ const DragAndDrop = (props) => {
       if (updatedData !== undefined)
         setEntities(updatedData)
     } else {
-      setEntities(props?.availableFields && props?.headerName && entities1(props?.availableFields, props?.headerName))
+      setEntities(props?.availableFields && props?.headerName && entities1(header ? dependencyColumnNames : props?.availableFields, props?.headerName))
     }
   }, [props.customizeViewFields])
 
@@ -208,22 +213,8 @@ const DragAndDrop = (props) => {
     props.hideDialog();
   };
   const selected = selectedTaskIds;
-  // Shiva
-  // const alphabeticalSort = (tasks)=>{
-  //   const sortedList = tasks.sort((a,b)=>{
-  //      if(a.Field_Name < b.Field_Name){
-  //        return -1;
-  //      }if(a.Field_Name > b.Field_Name){
-  //        return 1;
-  //      }
-  //      return 0;
-  //    })
-  //    return sortedList;
-  //  }
-
   return (
     <>
-      {/* {JSON.stringify(entities)} */}
       <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
         <div style={{ display: "flex" }}>
           {entities?.columnOrder.map((columnId) => (

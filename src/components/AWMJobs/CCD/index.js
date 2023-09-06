@@ -99,7 +99,7 @@ function CCD() {
         Tier: "",
         Cluster: "",
         Agency_Reference: "",
-        Printer: "",
+        Printer: [],
         Printing_Process: "",
         Design_Job_Name: "",
         Substrate: "",
@@ -277,7 +277,8 @@ function CCD() {
               if (item && item?.Action !== "delete") {
                 return (
                   <CloneJobs
-                    key={item.Design_Job_ID}
+                    // key={item.Design_Job_ID}
+                    key={index}
                     {...data}
                     CD={CD}
                     data={data}
