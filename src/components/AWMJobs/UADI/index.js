@@ -40,6 +40,7 @@ const UADI = () => {
   const roleName = "DI_";
   const location = useLocation();
   const currentUrl = location.pathname;
+  console.log("new url", `${currentUrl}${currentUrl?.split("/")[1]}/${currentUrl?.split("/")[2]}/${ProjectID}`);
   // const checkReadWriteAccess = CheckReadOnlyAccess();
   const checkReadWriteAccess = true;
   
