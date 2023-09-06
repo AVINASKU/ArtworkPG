@@ -242,7 +242,6 @@ function ProjectSetup(props) {
           task.data[0]?.AWM_Task_ID.includes("DNPF_") ||
           task.data[0]?.AWM_Task_ID.includes("DNIQ_") ||
           task.data[0]?.AWM_Task_ID.includes("SAA_") ||
-          task.data[0]?.AWM_Task_ID.includes("UBD_") ||
           task.data[0]?.AWM_Task_ID.includes("DM_") ||
           task.data[0]?.AWM_Task_ID.includes("ACIC_") ||
           task.data[0]?.AWM_Task_ID.includes("UCIC_")
@@ -457,6 +456,7 @@ function ProjectSetup(props) {
   };
 
   const onSave = async () => {
+    setLoader(true);
     let updatedData = [];
     const updatedSaveData = saveData(updatedData);
     if (updatedData.length !== 0) {
@@ -465,8 +465,10 @@ function ProjectSetup(props) {
       };
       dispatch(updateProjectPlanDesignAction(updatedProjectPlanDesignData));
       await saveProjectPlanAction(formData, selectedProjectDetails.Project_ID);
+      await dispatch(getMyProject(userInformation));
+      getProjectPlanApi();
       setActiveSave(true);
-      setActiveFlag(true)
+      setActiveFlag(true);
     }
   };
 

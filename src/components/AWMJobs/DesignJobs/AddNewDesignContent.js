@@ -85,17 +85,7 @@ const AddNewDesignContent = ({
   if (clubCategory === "" || Category === undefined) clubCategory = "Category";
 
   if (agencyRef || clusters || additionalInformation) {
-    di_name =
-      roleName +
-      (agencyRef && agencyRef + "_") +
-      clubBrandName +
-      "_" +
-      clubCategory +
-      "_" +
-      Project_Name +
-      "_" +
-      (clusters && clusters + "_") +
-      (additionalInformation && additionalInformation);
+    di_name = `${roleName}${agencyRef ? '_' + agencyRef : ''}${clubBrandName ? '_' + clubBrandName : ''}${clubCategory ? '_' + clubCategory : ''}_${Project_Name}${clusters ? '_' + clusters : ''}${additionalInformation ? '_' + additionalInformation : ''}`;
   }
 
   return (
@@ -116,7 +106,6 @@ const AddNewDesignContent = ({
               onChange={(e) => {
                 addData("Select", index, e.checked, di_name);
                 setChecked(e.checked);
-                // setSubmitActive(e.checked ? false : true);
               }}
               checked={event === "submit" ? true : checked}
               disabled={!checkReadWriteAccess}

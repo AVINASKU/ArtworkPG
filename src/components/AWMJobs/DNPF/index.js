@@ -110,7 +110,7 @@ function DNPF() {
         Tier: "",
         Cluster: "",
         Agency_Reference: "",
-        Printer: "",
+        Printer: [],
         Printing_Process: "",
         Design_Job_Name: "",
         Substrate: "",
@@ -288,6 +288,7 @@ function DNPF() {
     };
     //console.log("full draft data --->", formData);
     await saveColorDevelopment(formData);
+    dispatch(getTaskDetails(TaskID, ProjectID));
     setLoader(false);
     // navigate(`/MyTasks`);
   };
@@ -327,7 +328,8 @@ function DNPF() {
               if (item && item?.Action !== "delete") {
                 return (
                   <CloneJobs
-                    key={item.Design_Job_ID}
+                    // key={item.Design_Job_ID}
+                    key={index}
                     {...data}
                     data={data}
                     item={item}

@@ -636,7 +636,8 @@ function AddProject(props) {
   //   };
   // });
   const handleSubCategoryChange = (e) => {
-    //console.log("categoriesAlert", e.value);
+    e.stopPropagation();
+    console.log("categoriesAlert", e.value);
     e.value.length === 0 ? setCategoriesAlert(true) : setCategoriesAlert(false);
     setSubCategories(e.value);
   };
@@ -1327,6 +1328,7 @@ function AddProject(props) {
                       <MultiSelect
                         value={brand}
                         onChange={(e) => {
+                          e.stopPropagation();
                           e.target.value.length === 0
                             ? setBrandAlert(true)
                             : setBrandAlert(false);
@@ -1393,6 +1395,7 @@ function AddProject(props) {
                       <MultiSelect
                         value={smo}
                         onChange={(e) => {
+                          e.stopPropagation();
                           e.target.value.length === 0
                             ? setSMOAlert(true)
                             : setSMOAlert(false);

@@ -34,6 +34,7 @@ const DsbpActionDialog = ({
   const [bioside, setBioside] = useState("");
   const [sellable, setSellable] = useState("");
   const [formData, setFormData] = useState({});
+  const [emptyMessage, setEmptyMessage] = useState("");
   const [CDPT, setCDPT] = useState([]);
   const [IQ, setIQ] = useState([]);
   const [RDT, setRDT] = useState([]);
@@ -48,6 +49,8 @@ const DsbpActionDialog = ({
   let updatedData = actionNameObject?.filter(
     (data) => data.header === actionHeader
   );
+
+  let CICs = selectedProject?.CICs;
 
   const handleAiseChange = (e) => {
     setAISEName(e.target.value);
@@ -98,25 +101,26 @@ const DsbpActionDialog = ({
   if(headerName !== "Dependency Mapping"){
     if(updatedData && updatedData[0]?.value === "Add to Project"){
       selected = selected.filter(
-        (item) => item.AWM_AddedToProject !== "Yes"
+        (item) => item.AWM_AddedToProject !== "Yes" && item.DSBP_PMP_AWReadinessGateStatus === "LOCKED"
       );
     } else if(updatedData && updatedData[0]?.value === "Create POAA"){
       selected = selected.filter(
         (item) =>
           item.AWM_AddedToProject === "Yes" &&
-          item.DSBP_PMP_AWReadinessGateStatus === "LOCKED"
+          item.DSBP_PMP_AWReadinessGateStatus === "LOCKED" &&
+          item.AWM_POARequested !== "Yes"
       );
     } else if (rowData) {
       selected = [rowData];
     } else {
       selected = selected.filter(
-        (item) => item.AWM_AddedToProject === "Yes"
+        (item) => item.AWM_AddedToProject === "Yes" && item.AWM_AWJStatus !== "Complete"
       );
     }
   }
   
   const addedToProjectRows = selected.filter(
-    (item) => item.AWM_AddedToProject === "Yes"
+    (item) => (item.AWM_AddedToProject === "Yes" && item.AWM_AWJStatus !== "Complete")
   );
 
   const footerContent = (
@@ -128,11 +132,10 @@ const DsbpActionDialog = ({
       </Button>
       <Button
         disabled={
-          (updatedData && updatedData[0]?.value === "Add to Project") ||
           rowData ||
           (isSubmitEnable !== undefined && !isSubmitEnable)
             ? false
-            : Object.keys(formData).length === 0
+            : updatedData && updatedData[0]?.value === "Add to Project" ? selected.length === 0 : Object.keys(formData).length === 0
         }
         onClick={() =>
           (updatedData && updatedData[0]?.value === "Add to Project") || rowData
@@ -171,6 +174,7 @@ const DsbpActionDialog = ({
                     value={selected}
                     dataKey="id"
                     className="addToProjectTable"
+                    emptyMessage={"No PMPs are Locked in DSBP"}
                     scrollable
                   >
                     <Column
@@ -191,7 +195,7 @@ const DsbpActionDialog = ({
                     <DataTable
                       value={selected}
                       dataKey="id"
-                      emptyMessage="Please add the PMP to project before you can update."
+                      emptyMessage={updatedData && updatedData[0]?.value !== "Add to Project" && "Either POA-A is already triggered for the selected PMP or PMP is not added to project"}
                       scrollable
                     >
                       <Column
@@ -212,7 +216,7 @@ const DsbpActionDialog = ({
                       <Row>
                         <Col sm={12}>
                           <Form.Group
-                            className={`mb-2`}
+                            className={`mb-4`}
                             controlId="groupName.ControlInput1"
                           >
                             <Form.Label>Assembly Mechanism</Form.Label>
@@ -242,7 +246,7 @@ const DsbpActionDialog = ({
                           <>
                             <Col sm={12}>
                               <Form.Group
-                                className={`mb-2`}
+                                className={`mb-4`}
                                 controlId="groupName.ControlInput1"
                               >
                                 <Form.Label>AISE</Form.Label>
@@ -266,7 +270,7 @@ const DsbpActionDialog = ({
                             </Col>
                             <Col sm={12}>
                               <Form.Group
-                                className={`mb-2`}
+                                className={`mb-4`}
                                 controlId="groupName.ControlInput1"
                               >
                                 <Form.Label>Bioside</Form.Label>
@@ -289,7 +293,7 @@ const DsbpActionDialog = ({
                             </Col>
                             <Col sm={12}>
                               <Form.Group
-                                className={`mb-2`}
+                                className={`mb-4`}
                                 controlId="groupName.ControlInput1"
                               >
                                 <Form.Label>Sellable</Form.Label>
@@ -315,13 +319,13 @@ const DsbpActionDialog = ({
                       </Row>
                     ) : (
                       <Row>
-                        {RDTData.length > 1 && (
+                        { RDTData && RDTData?.length && (
                           <Col sm={12}>
                             <Form.Group
-                              className={`mb-2`}
+                              className={`mb-4`}
                               controlId="groupName.ControlInput1"
                             >
-                              <Form.Label>RDT</Form.Label>
+                              <Form.Label>Regional Design Template</Form.Label>
                               <div>
                                 <MultiSelect
                                   value={RDT}
@@ -347,6 +351,7 @@ const DsbpActionDialog = ({
                                       : []
                                   }
                                   filter
+                                  display="chip"
                                   placeholder={`Select`}
                                   maxSelectedLabels={3}
                                   className="p-column-filter"
@@ -355,13 +360,13 @@ const DsbpActionDialog = ({
                             </Form.Group>
                           </Col>
                         )}
-                        {CDPTPageData.length > 1 && (
+                        { CDPTPageData && CDPTPageData?.length && (
                           <Col sm={12}>
                             <Form.Group
-                              className={`mb-2`}
+                              className={`mb-4`}
                               controlId="groupName.ControlInput1"
                             >
-                              <Form.Label>CD/PT</Form.Label>
+                              <Form.Label>Color Development and Print Trial</Form.Label>
                               <div>
                                 <MultiSelect
                                   value={CDPT}
@@ -392,6 +397,7 @@ const DsbpActionDialog = ({
                                       : []
                                   }
                                   filter
+                                  display="chip"
                                   placeholder={`Select`}
                                   maxSelectedLabels={3}
                                   className="p-column-filter"
@@ -400,13 +406,13 @@ const DsbpActionDialog = ({
                             </Form.Group>
                           </Col>
                         )}
-                        {IQData.length > 1 && (
+                        {IQData?.length && (
                           <Col sm={12}>
                             <Form.Group
-                              className={`mb-2`}
+                              className={`mb-4`}
                               controlId="groupName.ControlInput1"
                             >
-                              <Form.Label>IQ</Form.Label>
+                              <Form.Label>Ink Qualification</Form.Label>
                               <div>
                                 <MultiSelect
                                   value={IQ}
@@ -432,6 +438,7 @@ const DsbpActionDialog = ({
                                       : []
                                   }
                                   filter
+                                  display="chip"
                                   placeholder={`Select`}
                                   maxSelectedLabels={3}
                                   className="p-column-filter"
@@ -440,10 +447,10 @@ const DsbpActionDialog = ({
                             </Form.Group>
                           </Col>
                         )}
-                        {GABriefData && (
+                        {GABriefData && CICs && (
                           <Col sm={12}>
                             <Form.Group
-                              className={`mb-2`}
+                              className={`mb-4`}
                               controlId="groupName.ControlInput1"
                             >
                               <Form.Label>GA Brief</Form.Label>
@@ -463,7 +470,7 @@ const DsbpActionDialog = ({
 
                                   {GABriefData?.map(
                                     (data, index) =>
-                                      data.File_Name !== "New" && (
+                                      data.File_Name !== "Add GA Brief" && (
                                         <option
                                           key={`${data.File_Name}_${index}`}
                                           value={data.File_Name}
@@ -481,7 +488,7 @@ const DsbpActionDialog = ({
                     ))}
                   {updatedData && updatedData[0]?.value === "Group PMPs" && (
                     <Form.Group
-                      className={`mb-2`}
+                      className={`mb-4`}
                       controlId="groupName.ControlInput1"
                     >
                       <Form.Label>
@@ -499,7 +506,7 @@ const DsbpActionDialog = ({
                   )}
                   {updatedData && updatedData[0]?.value === "Create POAA" && (
                     <Form.Group
-                      className={`mb-2`}
+                      className={`mb-4`}
                       controlId="groupName.ControlInput1"
                     >
                       <Form.Label>
@@ -511,6 +518,7 @@ const DsbpActionDialog = ({
                         placeholder="Enter Package Name"
                         onChange={handlePackageName}
                         value={packageName}
+                        disabled={selected.length === 0}
                       />
                     </Form.Group>
                   )}

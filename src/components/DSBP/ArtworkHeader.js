@@ -75,11 +75,6 @@ const ArtworkHeader = ({
   }
   let actionNameObject = [];
 
-  console.log(
-    "isFilterActivatedInDependencyMapping",
-    filteredDependencyMappingData
-  );
-
   headerName !== "Dependency Mapping"
     ? (actionNameObject = [
         {
@@ -233,6 +228,9 @@ const ArtworkHeader = ({
           customizeViewFields={customizeViewFields}
           dependencyMappingData={dependencyMappingData}
           headerName={headerName}
+          CDPTPageData={CDPTPageData}
+          IQData={IQData}
+          RDTData={RDTData}
         />
       )}
       <div className="actions">

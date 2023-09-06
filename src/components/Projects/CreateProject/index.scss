@@ -62,7 +62,7 @@
   padding: 0px;
 }
 
-.p-multiselect-panel .p-multiselect-items .p-multiselect-item.p-highlight {
+ .p-multiselect-panel .p-multiselect-items .p-multiselect-item.p-highlight {
   color: #003da5;
   background: #fff;
 }
@@ -454,6 +454,12 @@ sup {
   font-size: 10px;
   font-weight: 500;
   line-height: 10px;
+}
+.actionDialog{
+  .p-multiselect .p-multiselect-label.p-placeholder {
+    font-size: 12px;
+    line-height: 12px;
+  }
 }
 .css-e7nvmg-LoadingOverlayWrapperBase{
   position: initial;

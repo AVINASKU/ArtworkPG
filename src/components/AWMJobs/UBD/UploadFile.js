@@ -2,8 +2,10 @@ import React, { useState, useRef } from "react";
 import { FileUpload } from "primereact/fileupload";
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
 import ToolTip from "./ToolTip";
-import { AzureFileDownloadJobs } from "../../../store/actions/AzureFileDownloadJobs";
+import { downloadFileAzure } from "../../../store/actions/AzureFileDownload";
 import { useDispatch } from "react-redux";
+import { useParams } from "react-router";
+import { useSelector } from "react-redux";
 
 const UploadFile = ({
   azureSubFolder,
@@ -25,17 +27,23 @@ const UploadFile = ({
   fileName,
   updateUbdData,
   setFileNotFound,
+  groupName,
 }) => {
   const [totalSize, setTotalSize] = useState(0);
   const [azureErrMsg, setAzureErrMsg] = useState("");
   const [fileUploadWarning, setFileUploadWarning] = useState(false);
   const fileUploadRef = useRef(null);
+  const projectSetup = useSelector((state) => state.ProjectSetupReducer);
+  const selectedProjectDetails = projectSetup.selectedProject;
+  const BU = selectedProjectDetails?.BU;
+  const projectName = selectedProjectDetails?.Project_Name;
   const dispatch = useDispatch();
   const viewProofScopeFile = useProofScopeURL();
   const handleViewProofScopeClick = (event, fileUrl) => {
     event.preventDefault();
     viewProofScopeFile(`cloudflow://PP_FILE_STORE/aacdata/${fileUrl}`);
   };
+  let { page1, page2, pageType, TaskID, ProjectID } = useParams();
 
   let di_name;
   di_name =
@@ -58,18 +66,14 @@ const UploadFile = ({
   const itemTemplate = (file) => (
     <div className="upload-row">
       <img role="presentation" src={file.objectURL} width={50} />
-      {file.name.length > 22 ? (
-        <div
-          className="flex flex-column text-left fileName"
-          data-toggle="tooltip"
-          data-placement="top"
-          title={file.name}
-        >
-          {file.name}
-        </div>
-      ) : (
-        <div className="flex flex-column text-left fileName">{file.name}</div>
-      )}
+      <div
+        className="flex flex-column text-left fileName"
+        data-toggle="tooltip"
+        data-placement="top"
+        title={file.name}
+      >
+        {file.name}
+      </div>
     </div>
   );
 
@@ -83,7 +87,7 @@ const UploadFile = ({
     const uploadFileName = e.files[0].name;
     const filePathLength = e.files[0].webkitRelativePath.length;
     setFileName(e.files[0].name);
-    console.log("onTemplateSelect:", e.files[0]);
+    // console.log("onTemplateSelect:", e.files[0]);
     if (
       fileLength > MAX_FILENAME_LENGTH ||
       filePathLength > MAX_PATH_LENGTH ||
@@ -129,7 +133,16 @@ const UploadFile = ({
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
     const response = await dispatch(
-      AzureFileDownloadJobs(fileUrl, azureSubFolder)
+      downloadFileAzure(
+        fileUrl,
+        ProjectID + " " + projectName,
+        BU,
+        azureSubFolder,
+        groupName,
+        fileUploadSection === "Graphic Adaptation Brief *"
+          ? "File " + sequence
+          : "Other Ref File " + sequence
+      )
     );
     if (response?.includes("404")) {
       setFileNotFound(true);
@@ -139,7 +152,7 @@ const UploadFile = ({
   const customUploader = () => {};
 
   const onImageClose = () => {
-    console.log("onImageClose:", fileUploadRef.current.getFiles());
+    // console.log("onImageClose:", fileUploadRef.current.getFiles());
     setFileUploadWarning(false);
     setUploadedWrongFilename(false);
     setFileName("");
@@ -186,24 +199,15 @@ const UploadFile = ({
           disabled={item.isNew !== true}
         />
         <div hidden={fileName} className="File_NameFromAPIPadding">
-          {File_NameFromAPI?.length > 22 ? (
-            <div
-              className="File_NameFromAPI"
-              data-toggle="tooltip"
-              data-placement="top"
-              title={File_NameFromAPI}
-              onClick={(event) => downloadAzure(event, `${File_NameFromAPI}`)}
-            >
-              {File_NameFromAPI}
-            </div>
-          ) : (
-            <div
-              className="File_NameFromAPI"
-              onClick={(event) => downloadAzure(event, `${File_NameFromAPI}`)}
-            >
-              {File_NameFromAPI}
-            </div>
-          )}
+          <div
+            className="File_NameFromAPI"
+            data-toggle="tooltip"
+            data-placement="top"
+            title={File_NameFromAPI}
+            onClick={(event) => downloadAzure(event, `${File_NameFromAPI}`)}
+          >
+            {File_NameFromAPI}
+          </div>
         </div>
       </div>
       {/* <a href="#">{item.File_Name}</a> */}

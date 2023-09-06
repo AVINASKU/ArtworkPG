@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import CustomizeViewDialog from "./CustomizeViewDialog";
 
-const CustomizeView = ({ showTaskDialog, onClose, setCustomizeViewFields, customizeViewFields, dependencyMappingData, headerName }) => {
+const CustomizeView = ({ showTaskDialog, onClose, setCustomizeViewFields, customizeViewFields, dependencyMappingData, headerName, CDPTPageData, IQData, RDTData }) => {
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const BU = selectedProjectDetails?.BU;
@@ -21,18 +21,13 @@ const CustomizeView = ({ showTaskDialog, onClose, setCustomizeViewFields, custom
   }
 
   let availableFields = [];
-  if(dependencyMappingData){
-    //console.log("dependencyMappingData", dependencyMappingData);
-    availableFields = dependencyMappingData;
-  } else if (attributeList && attributeList.length) {
+  if (attributeList && attributeList.length) {
     availableFields = [...attributeList].sort((a, b) => {
       return parseInt(a.Sequence) - parseInt(b.Sequence);
     });
   }
 
   return (
-    //console.log("dependencyMappingData availableFields index", availableFields),
-    //console.log("dependencyMappingData dependencyMappingData", dependencyMappingData),
     <>
       <CustomizeViewDialog
         onClose={onClose}
@@ -41,6 +36,9 @@ const CustomizeView = ({ showTaskDialog, onClose, setCustomizeViewFields, custom
         setCustomizeViewFields={setCustomizeViewFields}
         customizeViewFields={customizeViewFields}
         headerName={headerName}
+        CDPTPageData={CDPTPageData}
+        IQData={IQData}
+        RDTData={RDTData}
       />
     </>
   );

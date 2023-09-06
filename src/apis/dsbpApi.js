@@ -53,12 +53,6 @@ export const getDsbpPMPDetails = async (projectId, headers = {}) => {
       (ele) => ele.DSBP_InitiativeID && ele.DSBP_PMP_PIMaterialIDPage
     );
   }
-  // console.log(
-  //   "response get dsbp pmp ----->",
-  //   addResponse?.data?.DSBPDetails?.DSBP_InitiativeIDPage,
-  //   "filter----",
-  //   filteredResp
-  // );
 
   return filteredResp;
 };
@@ -73,7 +67,6 @@ export const onSubmitDsbpAction = async (formData, headers = {}) => {
     method: "POST",
     data: formData,
   });
-  //console.log("Hello hello ----->", addResponse);
   return addResponse;
 };
 
@@ -87,7 +80,7 @@ export const onSubmitCreatePOAA = async (formData, headers = {}) => {
     data: formData,
   });
   console.log("Hello hello ----->", addResponse);
-  return addResponse;
+  return addResponse?.data?.PMPList;
 };
 
 export const getDependencyMappingDetails = async (projectId, headers = {}) => {

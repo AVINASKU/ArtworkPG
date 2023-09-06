@@ -13,12 +13,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { toLower } from "lodash";
 import { AddNavigation, Loading } from "../../../utils";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
-import { CheckReadOnlyAccess } from "../../../utils";
+import { CheckReadOnlyAccess, selectedDesignItems } from "../../../utils";
 import { useLocation } from "react-router-dom";
 import "../DesignJobs/index.scss";
 
 const headerName = "Define Production Ready Art";
-const roleName = "PRA_";
+const roleName = "PRA";
 
 function DPRA() {
   const [data, setData] = useState(null);
@@ -28,6 +28,8 @@ function DPRA() {
   const [enableSubmit, setEnableSubmit] = useState(true);
   const [projectData, setProjectData] = useState([]);
   const [loader, setLoader] = useState(false);
+  const [enableCheckBox, setEnableCheckBox] = useState(true);
+  const [checked, setChecked] = useState(false);
   let { TaskID, ProjectID } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -72,18 +74,25 @@ function DPRA() {
   }, [projectData]);
 
   const handleCancel = () => {
-    return navigate(`/${currentUrl?.split("/")[1]}`);
+    return navigate(
+      `/${currentUrl?.split("/")[1]}/${currentUrl?.split("/")[2]}/${ProjectID}`
+    );
   };
 
   const handleDelete = (index) => {
-    //console.log("index", index);
-    const sub = designIntent.map((item, i) => {
-      if (i === index) {
-        item.Action = "delete";
-      }
-      return item;
-    });
-    setDesignIntent(sub);
+    const updatedDesignIntent = [...designIntent]; // Create a copy of the original array
+    updatedDesignIntent[index].Action = "delete"; // Set the Action property to "delete" for the specified item
+  
+    // Check if all items have "Action" set to "delete"
+    const allItemsDeleted = updatedDesignIntent.every((item) => item.Action === "delete");
+  
+    // If all items are marked for deletion, reset the selectAll flag
+    if (allItemsDeleted) {
+      setChecked(false);
+      setEnableCheckBox(false);
+    }
+    // Update the state with the modified array
+    setDesignIntent(updatedDesignIntent);
   };
 
   const addNewEmptyDesign = () => {
@@ -95,6 +104,7 @@ function DPRA() {
       Additional_Info: "",
       Select: false,
     });
+    setEnableCheckBox(true);
     setDesignIntent(designIntent);
     setUpdated(!updated);
   };
@@ -105,26 +115,7 @@ function DPRA() {
     // add here design job name here check it out from API.
     data["Design_Job_Name"] = Design_Intent_Name;
     submittedDI.push(data);
-    let values = false;
-    const hasValues = designIntent.every(
-      (item) => {        
-        setEnableSubmit(true);
-       if(item.Select){
-          values = item.Agency_Reference !== "" && item.Cluster !== "";
-      } 
-        else{
-          //console.log("designIntent else", designIntent);
-          let data = designIntent.filter(item => item.Select && item.Agency_Reference !== "" && item.Cluster !== "");
-          //console.log("value else", data);
-          if (data.length !== 0) {
-            values = true;
-          } else {
-            values = false;
-          }
-        }
-        return values
-      }
-    );
+    const hasValues = selectedDesignItems(designIntent, setEnableSubmit);
     setEnableSubmit(!hasValues);  
     setSubmittedDI(submittedDI);
   };
@@ -136,6 +127,8 @@ function DPRA() {
       }
       return task;
     });
+    const hasValues = selectedDesignItems(designIntent, setEnableSubmit);
+    setEnableSubmit(!hasValues);
     setDesignIntent(designIntent);
     setUpdated(!updated);
   };
@@ -193,7 +186,9 @@ function DPRA() {
     //console.log("formData", formData);
     await submitDefineProductionReadyArt(formData, id, headers);
     setLoader(false);
-    navigate(`/${currentUrl?.split("/")[1]}`);
+    navigate(
+      `/${currentUrl?.split("/")[1]}/${currentUrl?.split("/")[2]}/${ProjectID}`
+    );
   };
 
   const onSaveAsDraft = async () => {
@@ -253,6 +248,9 @@ function DPRA() {
         label="Define Production Ready Art"
         checkReadWriteAccess={checkReadWriteAccess}
         taskName="Production Ready Art"
+        checked={checked}
+        setChecked={setChecked}
+        enableCheckBox={enableCheckBox}
       />
       <div className="task-details">
         {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} TaskDetailsData={TaskDetailsData}/>}

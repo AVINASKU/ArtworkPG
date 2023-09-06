@@ -17,7 +17,7 @@ const IQCDFooterButtons = ({
   // const locationPath = location?.pathname;
   // const url = locationPath?.split("/");
   // const pathName = url[2];
-  let {TaskID} = useParams();
+  let { TaskID } = useParams();
   const pathName = TaskID.split("_")[0];
   //console.log("checkReadWriteAccess in footer", checkReadWriteAccess);
   //console.log("data", data);
@@ -55,7 +55,7 @@ const IQCDFooterButtons = ({
             type="submit"
             onClick={() => onSubmit()}
             disabled={
-              formValid ||
+              (pathName === "CPT" ? !cptFormValid : formValid) ||
               !checkReadWriteAccess ||
               data?.Task_Status === "Complete"
             }

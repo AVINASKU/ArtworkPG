@@ -725,7 +725,7 @@ const AllProjectList = (props) => {
           <DataTable
             resizableColumns
             dataKey="Project_ID"
-            key={tableRender ? `"Project_ID" + timestamp` : ""}
+            key={generateUniqueKey()}
             reorderableColumns
             onColReorder={storeReorderedColumns}
             onResize={(e) => console.log("resize", e)}

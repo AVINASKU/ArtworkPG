@@ -299,3 +299,61 @@ export const addEllipsis = (text, maxLength) => {
   const trimmedText = text.substring(0, maxLength);
   return trimmedText + "...";
 };
+
+export const selectedDesignItems = (getData, setEnableSubmit) => {
+  let allSelectedItemsValid = false;
+  const selectedValues = getData.every((item) => {
+    if (item.Select) {
+      const isValid = item.Agency_Reference !== "" && item.Cluster !== "";
+      // If any selected item is invalid, set allSelectedItemsValid to false.
+      if (!isValid) {
+        allSelectedItemsValid = false;
+      }
+      return isValid;
+    } else {
+      // Filter selected items and check if any of them are valid.
+      const selectedItems = getData.filter(
+        (selectedItem) =>
+          selectedItem.Select && selectedItem.Agency_Reference !== "" && selectedItem.Cluster !== ""
+      );
+      const isValid = selectedItems.length > 0;
+      allSelectedItemsValid = isValid;
+      return isValid;
+    }
+  });
+  setEnableSubmit(allSelectedItemsValid);
+  return selectedValues;
+};
+export const getEnvironmentFromURL = () => {
+  const url = window.location.href;
+  const domainRegex = /https?:\/\/([^/]+)\//; // Regular expression to match the domain part of the URL
+
+  const match = url.match(domainRegex);
+  let domain = "";
+
+  if (match && match.length > 1) {
+    domain = match[1]; // Extract the matched part
+  }
+
+  let env;
+
+  switch (domain) {
+    case "awflowdev.pg.com":
+      env = "DEV";
+      break;
+    case "awflowqa.pg.com":
+      env = "QA";
+      break;
+    case "awflowsit.pg.com":
+      env = "SIT";
+      break;
+    case "awflow.pg.com":
+      env = "";
+      break;
+    default:
+      env = "localEnv";
+  }
+
+  return env;
+};
+

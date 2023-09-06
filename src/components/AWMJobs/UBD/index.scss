@@ -11,7 +11,7 @@
     .p-button {
       color: black;
       margin-left: 18px !important;
-      margin-bottom: 10px !important;
+      margin-bottom: 12px !important;
       // .p-disabled {
       //   display: none;
       // }
@@ -33,6 +33,7 @@
         margin-top: 15px !important;
         img {
           height: 45px;
+          display: none;
         }
       }
 
@@ -105,6 +106,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     // text-decoration: underline;
+    cursor: pointer;
   }
   .File_NameFromAPI {
     width: 87px;

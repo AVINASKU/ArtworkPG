@@ -3,7 +3,8 @@ $width: 100%;
 .project-name {
   font-size: 15px;
   font-weight: 900;
-  line-height: 29px;
+  line-height: 1;
+  // line-height: 29px;
   color: #003da5;
   // padding: 0 15px 22px 15px;
   // padding: 0 15px 10px 15px;
@@ -388,6 +389,16 @@ span.right {
   }
   .actionButtonsForTabComponent {
     margin-right: 10px;
+  }
+}
+.filterPopoverWidth {
+  width: fit-content;
+  max-width: 32%;
+}
+
+.filterPopoverWidth {
+  .p-multiselect-header .p-checkbox {
+    margin-right: 14px;
   }
 }
 // TabsComponent Styles End

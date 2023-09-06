@@ -17,6 +17,7 @@ import { isArray, isString } from "lodash";
 import UploadFile from "./UploadFile";
 import { useSelector } from "react-redux";
 const CloneJobs = ({
+  azureSubFolder,
   index,
   Artwork_Brand,
   Artwork_Category,
@@ -400,7 +401,8 @@ const CloneJobs = ({
               id="printers"
               value={printers}
               onChange={(e) => {
-                //console.log(e.value);
+                e.stopPropagation();
+                console.log(e.value);
                 let selectedPrinter = [];
                 e.value.forEach((val) => {
                   PrinterList.forEach((pl) => {
@@ -794,6 +796,7 @@ const CloneJobs = ({
             date={date}
             version={version}
             disabled={!checkReadWriteAccess || data.Task_Status === "Complete"}
+            azureSubFolder={azureSubFolder}
             // ArtworkAgilityPage={TaskDetailsData?.ArtworkAgilityPage}
             // version={version}
           />
