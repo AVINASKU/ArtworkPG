@@ -27,11 +27,9 @@ function App() {
             <ThemeProvider
               breakpoints={["xxxl", "xxl", "xl", "lg", "md", "sm", "xs", "xxs"]}
               minBreakpoint="xxs">
-              {/* <Login /> */}
               {/* <RoutesNav /> */}
+              {/* <Login /> */}
               <PageLayout />
-             
-              {/* <Outlet /> */}
             </ThemeProvider>
           </AuthProvider>
         </BrowserRouter>

@@ -5,11 +5,7 @@ import PgLogo from "../../assets/images/logo.svg";
 import LogoutImg from "../../assets/images/logout.svg";
 import plusCollapseImg from "../../assets/images/plusCollapse.svg";
 import ExpandImg from "../../assets/images/expand.svg";
-import ArrowDownImg from "../../assets/images/sort.svg";
-import AllProjects1 from "../../assets/images/AllProjects1.svg";
-import AllTask from "../../assets/images/AllTask.svg";
-import MyTaskMP from "../../assets/images/MyTaskMP.svg";
-import MyProject from "../../assets/images/MyProject.svg";
+
 import "./index.scss";
 import { Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
@@ -312,7 +308,7 @@ const SideBar = () => {
           </Nav>
         </div>
       </Col>
-      <Outlet context={<><h1>adsfagfdg</h1></>}/>
+    
     </>
   );
 };

@@ -1,3 +1,4 @@
+//  not used yet planned use in future or redux
 import { createContext, useState } from "react";
 
 const AuthContext = createContext({});

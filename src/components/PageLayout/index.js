@@ -13,7 +13,6 @@ const PageLayout = (props) => {
   const className = `wrapper ${isPath ? "tab-wrapper" : ""}`;
   return (
     <>
-    
       <Container fluid>
         <Row className="row-fluid">
           <SideBar />
@@ -22,8 +21,8 @@ const PageLayout = (props) => {
               <Header />
             </div>
             <div className="main-container">
-              {/* <div className={className}>{props.children}</div> */}
               <RoutesNav />
+              {/* <div className={className}>{props.children}</div> */}
               {/* Minim sint enim cillum voluptate proident ut ex eu. */}
               <Outlet  />
             </div>

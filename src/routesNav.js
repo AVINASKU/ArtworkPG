@@ -12,7 +12,7 @@ import Role from "./role";
 
 import { Outlet } from "react-router-dom";
 import AllProjectRoute from "./components/Projects/AllProjects/AllProjectRoute";
-import ProtectedRoute from "./ProtectedRoute";
+
 import {
   AllProjects,
   MyProjects,
@@ -41,13 +41,14 @@ import {
   CNIQ,
 } from "./Routes/index.js";
 import PageLayout from "./components/PageLayout";
+import ProtectedRoute from './Routes/ProtectedRoute';
 
 const RoutesNav = () => {
   const params = useParams();
   return (
     <Routes>
       <Route path="/" element={<Login />} />
-      {/* <Route index  element={<PageLayout />} > */}
+      {/* <Route element={<PageLayout />}> */}
         <Route path="/roles" element={<Role />} />
         <Route path="/allProjects">
           <Route index element={<AllProjects />} />
