@@ -735,7 +735,7 @@ function UBD() {
   };
 
   return (
-    <PageLayout>
+   <>
       <Dialog
         visible={fileNotFound}
         className="ubd-dialog"
@@ -918,7 +918,7 @@ function UBD() {
         // }
         submitAllowed={submitAllowed}
       />
-    </PageLayout>
+   </>
   );
 }
 

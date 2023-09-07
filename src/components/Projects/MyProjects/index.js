@@ -12,7 +12,7 @@ const MyProjects = (props) => {
   const User = useSelector((state) => state.UserReducer);
   const userInformation = User.userInformation;
   const { accessMatrix } = useSelector((state) => state?.accessMatrixReducer);
- 
+
   useEffect(() => {
     setLoading(true);
     (async () => {
@@ -29,20 +29,18 @@ const MyProjects = (props) => {
   }, []);
 
   return (
-    <PageLayout>
-      <div className="content-layout" id="tableDiv">
-        <div className="tabular-view">
-          {!hasAllAccess() && (
-            <div className="unauthorized-user">
-              You are not authorized to access this page.
-            </div>
-          )}
-          {hasAllAccess() && !loading && (
-            <ProjectList pegadata={pegadata} header="My Projects" />
-          )}
-        </div>
+    <div className="content-layout" id="tableDiv">
+      <div className="tabular-view">
+        {!hasAllAccess() && (
+          <div className="unauthorized-user">
+            You are not authorized to access this page.
+          </div>
+        )}
+        {hasAllAccess() && !loading && (
+          <ProjectList pegadata={pegadata} header="My Projects" />
+        )}
       </div>
-    </PageLayout>
+    </div>
   );
 };
 export default MyProjects;

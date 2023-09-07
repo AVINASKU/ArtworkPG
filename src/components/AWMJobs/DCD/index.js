@@ -96,7 +96,7 @@ function DCD() {
   };
 
   return (
-    <PageLayout>
+   <>
       <DesignHeader
         setAddNewDesign={addNewEmptyDesign}
         onSelectAll={onSelectAll}
@@ -129,7 +129,7 @@ function DCD() {
           })}
         <FooterButtons onSaveAsDraft={onSaveAsDraft} onSubmit={onSubmit} />
       </div>
-    </PageLayout>
+      </>
   );
 }
 

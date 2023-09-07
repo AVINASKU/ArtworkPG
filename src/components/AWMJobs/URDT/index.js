@@ -136,7 +136,7 @@ const URDT = () => {
     );
   };
   return (
-    <PageLayout>
+   <>
       <DesignHeader
         breadcrumb={breadcrumb}
         headerName={headerName}
@@ -190,7 +190,7 @@ const URDT = () => {
         checkReadWriteAccess={checkReadWriteAccess}
         bottomFixed={true}
       />
-    </PageLayout>
+   </>
   );
 };
 export default URDT;

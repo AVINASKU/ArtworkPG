@@ -30,7 +30,6 @@ const ARDT = () => {
   // const checkReadWriteAccess = CheckReadOnlyAccess();
   const checkReadWriteAccess = true;
 
-
   const handleCancel = () => {
     navigate(`/${currentUrl?.split("/")[1]}`);
   };
@@ -49,7 +48,7 @@ const ARDT = () => {
   }, [TaskDetailsData]);
 
   return (
-    <PageLayout>
+    <>
       <DesignHeader
         breadcrumb={breadcrumb}
         headerName={headerName}
@@ -58,7 +57,7 @@ const ARDT = () => {
         checkReadWriteAccess={checkReadWriteAccess}
       />
 
-      {<AddNewDesign {...data} TaskDetailsData={TaskDetailsData}/>}
+      {<AddNewDesign {...data} TaskDetailsData={TaskDetailsData} />}
 
       <ApproveDesignIntentContent
         {...taskData}
@@ -72,7 +71,7 @@ const ARDT = () => {
         approve={true}
         checkReadWriteAccess={checkReadWriteAccess}
       />
-    </PageLayout>
+    </>
   );
 };
 export default ARDT;

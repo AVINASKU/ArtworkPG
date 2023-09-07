@@ -250,7 +250,7 @@ function DDT() {
 
   return (
     console.log("DT designIntent", designIntent),
-    <PageLayout>
+    <>
       <DesignHeader
         setAddNewDesign={addNewEmptyDesign}
         onSelectAll={onSelectAll}
@@ -301,7 +301,7 @@ function DDT() {
         bottomFixed={true}
         formValid={enableSubmit}
       />
-    </PageLayout>
+    </>
   );
 }
 

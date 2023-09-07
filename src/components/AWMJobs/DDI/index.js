@@ -233,7 +233,7 @@ function DDI() {
   }
 
   return (
-    <PageLayout>
+    <>
       <DesignHeader
         setAddNewDesign={addNewEmptyDesign}
         onSelectAll={onSelectAll}
@@ -282,7 +282,7 @@ function DDI() {
         checkReadWriteAccess={checkReadWriteAccess}
         bottomFixed={true}
       />
-    </PageLayout>
+   </>
   );
 }
 

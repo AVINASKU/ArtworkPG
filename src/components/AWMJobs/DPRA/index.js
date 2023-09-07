@@ -239,7 +239,7 @@ function DPRA() {
   }
 
   return (
-    <PageLayout>
+   <>
       <DesignHeader
         setAddNewDesign={addNewEmptyDesign}
         onSelectAll={onSelectAll}
@@ -289,7 +289,7 @@ function DPRA() {
         checkReadWriteAccess={checkReadWriteAccess}
         formValid={enableSubmit}
       />
-    </PageLayout>
+   </>
   );
 }
 

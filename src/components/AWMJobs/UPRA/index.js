@@ -121,7 +121,7 @@ const UPRA = () => {
   };
 
   return (
-    <PageLayout>
+    <>
       <DesignHeader
         breadcrumb={breadcrumb}
         headerName={headerName}
@@ -164,7 +164,7 @@ const UPRA = () => {
         checkReadWriteAccess={checkReadWriteAccess}
         bottomFixed={true}
       />
-    </PageLayout>
+   </>
   );
 };
 export default UPRA;

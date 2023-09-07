@@ -10,9 +10,6 @@ import {
 // import Home from "./home.js";
 import Role from "./role";
 
-import { Outlet } from "react-router-dom";
-import AllProjectRoute from "./components/Projects/AllProjects/AllProjectRoute";
-
 import {
   AllProjects,
   MyProjects,
@@ -41,15 +38,15 @@ import {
   CNIQ,
 } from "./Routes/index.js";
 import PageLayout from "./components/PageLayout";
-import ProtectedRoute from './Routes/ProtectedRoute';
+import ProtectedRoute from "./Routes/ProtectedRoute";
 
 const RoutesNav = () => {
   const params = useParams();
   return (
     <Routes>
       <Route path="/" element={<Login />} />
-      {/* <Route element={<PageLayout />}> */}
-        <Route path="/roles" element={<Role />} />
+      <Route path="/roles" element={<Role />} />
+      <Route element={<PageLayout />}>
         <Route path="/allProjects">
           <Route index element={<AllProjects />} />
           <Route
@@ -84,6 +81,7 @@ const RoutesNav = () => {
             }
           />
         </Route>
+
         <Route path="/myProjects">
           <Route index element={<MyProjects />} />
           <Route
@@ -123,7 +121,6 @@ const RoutesNav = () => {
             }
           />
         </Route>
-        <Route path="/roles" element={<Role />}></Route>
 
         {/* <ProtectedRoute auth={true}> */}
         <Route path="/allProjects">
@@ -299,8 +296,8 @@ const RoutesNav = () => {
         <Route path="/DSBP/:ProjectID" element={<DsbpPage />} />
         <Route path="/DSBP/tab/artworkAlignment" element={<DsbpTabPage />} />
         <Route path="/DSBP/tab/dependencyMapping" element={<DMDsbpTabPage />} />
-      {/* </Route> */}
-
+        {/* </Route> */}
+      </Route>
       <Route
         path="*"
         element={

@@ -279,7 +279,7 @@ function DNIQ() {
 
   return (
     <LoadingOverlay active={loader || loading || IQ === null} spinner text="">
-      <PageLayout>
+    
         <IQHeader
           setAddNewDesign={addNewEmptyDesign}
           onSelectAll={onSelectAll}
@@ -344,7 +344,7 @@ function DNIQ() {
           bottomFixed={true}
           data={data}
         />
-      </PageLayout>
+      
     </LoadingOverlay>
   );
 }

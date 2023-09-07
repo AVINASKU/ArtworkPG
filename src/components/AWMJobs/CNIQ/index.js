@@ -276,7 +276,7 @@ function CNIQ() {
 
   return (
     <LoadingOverlay active={loader || loading || IQ === null} spinner text="">
-      <PageLayout>
+   
         <IQHeader
           setAddNewDesign={addNewEmptyDesign}
           onSelectAll={onSelectAll}
@@ -350,7 +350,7 @@ function CNIQ() {
           bottomFixed={true}
           data={data}
         />
-      </PageLayout>
+    
     </LoadingOverlay>
   );
 }

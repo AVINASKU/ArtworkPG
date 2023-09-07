@@ -4,13 +4,11 @@ import PageLayout from "./components/PageLayout";
 
 const AllTasksPage = (props) => {
   return (
-    // // <PageLayout>
-      <div className="content-layout" id="tableDiv">
-        <div className="tabular-view">
-          <AllTasks />
-        </div>
+    <div className="content-layout" id="tableDiv">
+      <div className="tabular-view">
+        <AllTasks />
       </div>
-     // <PageLayout> 
+    </div>
   );
 };
 export default AllTasksPage;

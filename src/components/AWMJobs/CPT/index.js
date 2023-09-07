@@ -225,7 +225,12 @@ function CPT() {
     };
 
     await dispatch(
-      uploadFileAzure(azureFile, ProjectID + " " + projectName, BU, AzureSubFolder)
+      uploadFileAzure(
+        azureFile,
+        ProjectID + " " + projectName,
+        BU,
+        AzureSubFolder
+      )
     );
     await submitConfirmPrintTrial(formData, id, headers);
     setLoader(false);
@@ -264,87 +269,87 @@ function CPT() {
     console.log("full draft data --->", submitOnlySelectedData);
 
     await dispatch(
-      uploadFileAzure(azureFile, ProjectID + " " + projectName, BU, AzureSubFolder)
+      uploadFileAzure(
+        azureFile,
+        ProjectID + " " + projectName,
+        BU,
+        AzureSubFolder
+      )
     );
     await saveDesignIntent(formData);
   };
 
   return (
     <LoadingOverlay active={loader || loading || CD === null} spinner text="">
-      <PageLayout>
-        <CDHeader
-          setAddNewDesign={addNewEmptyDesign}
-          onSelectAll={onSelectAll}
-          breadcrumb={breadcrumb}
-          headerName={headerName}
-          label="Confirm Color Development & Print Trial"
-          disabled={true}
-          checkReadWriteAccess={checkReadWriteAccess}
-          data={data}
-        />
-        <div
-          className="task-details"
-          style={{
-            overflowY: "scroll",
-            overflowX: "hidden",
-            width: "100%",
-            height: "400px",
-            // display: "grid",
-          }}
-        >
-          {<TaskHeader {...data} TaskDetailsData={TaskDetailsData} />}
-          {data?.Task_Status === "Complete" && (
-            <div className="task-completion">
-              This task is already submitted
-            </div>
-          )}
-          {CD &&
-            CD.length > 0 &&
-            CD.map((item, index) => {
-              if (item && item?.Action !== "delete") {
-                return (
-                  <CloneJobs
-                    // key={item.Design_Job_ID}
-                    key={index}
-                    {...data}
-                    CD={CD}
-                    data={data}
-                    item={item}
-                    index={index}
-                    addData={addData}
-                    jobName={jobName}
-                    formValid={formValid}
-                    setFormValid={setFormValid}
-                    setformattedValue={setformattedValue}
-                    setAzureFile={setAzureFile}
-                    setFileName={setFileName}
-                    fileName={fileName}
-                    version={version}
-                    date={date}
-                    checkReadWriteAccess={checkReadWriteAccess}
-                    Artwork_Brand={
-                      TaskDetailsData?.ArtworkAgilityPage?.Artwork_Brand
-                    }
-                    Artwork_Category={
-                      TaskDetailsData?.ArtworkAgilityPage?.Artwork_Category
-                    }
-                    azureSubFolder={AzureSubFolder}
-                  />
-                );
-              }
-            })}
-        </div>
-        <IQCDFooterButtons
-          handleCancel={handleCancel}
-          onSaveAsDraft={onSaveAsDraft}
-          onSubmit={onSubmit}
-          formValid={!formValid}
-          cptFormValid={cptFormValid}
-          checkReadWriteAccess={checkReadWriteAccess}
-          bottomFixed={true}
-          data={data}
-        />
-      </PageLayout>
+      <CDHeader
+        setAddNewDesign={addNewEmptyDesign}
+        onSelectAll={onSelectAll}
+        breadcrumb={breadcrumb}
+        headerName={headerName}
+        label="Confirm Color Development & Print Trial"
+        disabled={true}
+        checkReadWriteAccess={checkReadWriteAccess}
+        data={data}
+      />
+      <div
+        className="task-details"
+        style={{
+          overflowY: "scroll",
+          overflowX: "hidden",
+          width: "100%",
+          height: "400px",
+          // display: "grid",
+        }}>
+        {<TaskHeader {...data} TaskDetailsData={TaskDetailsData} />}
+        {data?.Task_Status === "Complete" && (
+          <div className="task-completion">This task is already submitted</div>
+        )}
+        {CD &&
+          CD.length > 0 &&
+          CD.map((item, index) => {
+            if (item && item?.Action !== "delete") {
+              return (
+                <CloneJobs
+                  // key={item.Design_Job_ID}
+                  key={index}
+                  {...data}
+                  CD={CD}
+                  data={data}
+                  item={item}
+                  index={index}
+                  addData={addData}
+                  jobName={jobName}
+                  formValid={formValid}
+                  setFormValid={setFormValid}
+                  setformattedValue={setformattedValue}
+                  setAzureFile={setAzureFile}
+                  setFileName={setFileName}
+                  fileName={fileName}
+                  version={version}
+                  date={date}
+                  checkReadWriteAccess={checkReadWriteAccess}
+                  Artwork_Brand={
+                    TaskDetailsData?.ArtworkAgilityPage?.Artwork_Brand
+                  }
+                  Artwork_Category={
+                    TaskDetailsData?.ArtworkAgilityPage?.Artwork_Category
+                  }
+                  azureSubFolder={AzureSubFolder}
+                />
+              );
+            }
+          })}
+      </div>
+      <IQCDFooterButtons
+        handleCancel={handleCancel}
+        onSaveAsDraft={onSaveAsDraft}
+        onSubmit={onSubmit}
+        formValid={!formValid}
+        cptFormValid={cptFormValid}
+        checkReadWriteAccess={checkReadWriteAccess}
+        bottomFixed={true}
+        data={data}
+      />
     </LoadingOverlay>
   );
 }

@@ -123,7 +123,7 @@ const UADI = () => {
     );
   };
   return (
-    <PageLayout>
+<>
       <DesignHeader
         breadcrumb={breadcrumb}
         headerName={headerName}
@@ -174,7 +174,7 @@ const UADI = () => {
         checkReadWriteAccess={checkReadWriteAccess}
         bottomFixed={true}
       />
-    </PageLayout>
+  </>
   );
 };
 export default UADI;

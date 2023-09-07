@@ -21,9 +21,6 @@ const PageLayout = (props) => {
               <Header />
             </div>
             <div className="main-container">
-              <RoutesNav />
-              {/* <div className={className}>{props.children}</div> */}
-              {/* Minim sint enim cillum voluptate proident ut ex eu. */}
               <Outlet  />
             </div>
           </Col>
