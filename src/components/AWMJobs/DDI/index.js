@@ -41,9 +41,8 @@ function DDI() {
   const myProjectList = useSelector((state) => state.myProject);
 
   const location = useLocation();
-  const currentUrl = location.pathname;  
-  let checkTaskISComplete =
-    TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Status === "Complete";
+  const currentUrl = location.pathname;
+
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
 
   // const checkReadWriteAccess = hasAllAccess();
@@ -107,7 +106,6 @@ function DDI() {
 
 
   const addData = (fieldName, index, value, Design_Intent_Name) => {
-    if (checkTaskISComplete) return setEnableSubmit(true);
     let data = designIntent[index];
     data[fieldName] = value;
     data["Design_Job_Name"] = Design_Intent_Name;
@@ -244,16 +242,12 @@ function DDI() {
         label="Define Design Intent"
         checkReadWriteAccess={checkReadWriteAccess}
         taskName="Design Intent"
-        checkTaskISComplete={checkTaskISComplete}
         checked={checked}
         setChecked={setChecked}
         enableCheckBox={enableCheckBox}
       />
       <div className="task-details">
-        {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} TaskDetailsData={TaskDetailsData}/>}
-        {checkTaskISComplete && (
-          <div className="task-completion">This task is already submitted</div>
-        )}
+        {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} TaskDetailsData={TaskDetailsData}/>} 
         {loading || loader || designIntent === null ? (
           <Loading />
         ) : (
@@ -287,7 +281,6 @@ function DDI() {
         formValid={enableSubmit}
         checkReadWriteAccess={checkReadWriteAccess}
         bottomFixed={true}
-        checkTaskISComplete={checkTaskISComplete}
       />
     </PageLayout>
   );

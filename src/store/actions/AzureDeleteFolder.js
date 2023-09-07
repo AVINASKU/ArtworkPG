@@ -1,24 +1,20 @@
 // import axios from "axios";
 // import {
 //   BlobServiceClient,
-//     StorageSharedKeyCredential,
+//     // StorageSharedKeyCredential,
+//     Credential
 // } from "@azure/storage-blob";
 
 // // Define your Azure Blob Storage configuration variables here
 // const containerName = "pgsource/ArtworkFolder";
+// const sasToken =
+//   "sp=racwdlmeop&st=2023-07-12T07:02:49Z&se=2027-12-31T15:02:49Z&spr=https&sv=2022-11-02&sr=c&sig=aXX8yIkC7CdAuw65IeG8IcT7wb37BDtXu5CkcZyYc10%3D";
 // const storageAccountName = "artworkagilityadlsdev";
-// const accountKey =
-//   "7tkNRuehy0HLQ+Xi3UObCCsBYgw8tXuIQCC1KZhYiilMKRYi2IK8boZ6tc0C2wE4CaVgAAzehNXY+ASt6u+0rQ=="; // Replace with your actual storage account key
-
-// // Create a StorageSharedKeyCredential with your account name and account key
-// const sharedKeyCredential = new StorageSharedKeyCredential(
-//   storageAccountName,
-//   accountKey
-// );
+// const baseUrl = `https://${storageAccountName}.blob.core.windows.net${sasToken}`;
 
 // // Create a BlobServiceClient instance using the shared key credential
 // const blobServiceClient = new BlobServiceClient(
-//   `https://${storageAccountName}.blob.core.windows.net`,
+//   `https://${storageAccountName}.blob.core.windows.net/pgsource`,
 //   sharedKeyCredential
 // );
 
@@ -44,7 +40,7 @@
 // // Define your Redux async action creator
 // export const deleteAzureFolder = (
 //   filePath,
-//   ProjectID,
+//   ProjectIdAndName,
 //   BU,
 //   subFolder,
 //   sequence
@@ -83,18 +79,19 @@
 
 //       // Specify the path of the folder to delete, including container name and any subfolders
 //       //   if (subFolder === "GA Briefs") {
-//       const folderPath = `${domain}/${ProjectID}/${BU}/${subFolder}/${sequence}`;
+//       const folderPath = `${env}/${BU}/${ProjectIdAndName}/${subFolder}/${sequence}`;
 //       // }
 //       // Get a reference to the container
 //       const containerClient =
 //         blobServiceClient.getContainerClient(containerName);
-
+//       console.log("containerClient:",blobServiceClient,containerClient);
 //       // List all the blobs (files and subfolders) in the folder
 //       for await (const blob of containerClient.listBlobsByHierarchy(
-//         folderPath
+//         decodeURIComponent(folderPath)
 //       )) {
+//         console.log("blob:",blob);
 //         // Delete each blob (file or subfolder) in the folder
-//         await containerClient.getBlockBlobClient(blob.name).delete();
+//         // await containerClient.getBlockBlobClient(blob.name).delete();
 //       }
 
 //       dispatch(deleteFolderSuccess());

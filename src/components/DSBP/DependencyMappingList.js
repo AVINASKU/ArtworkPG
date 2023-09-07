@@ -15,6 +15,7 @@ import toggleOff from "../../assets/images/toggleOff.svg";
 import toggleOn from "../../assets/images/toggleOn.svg";
 import DependencyFilter from "./DependencyFilter";
 import { FilterMatchMode } from "primereact/api";
+import { dependancyMappingFields } from "./utils";
 
 const DependencyMappingList = ({
   dependencyMappingData,
@@ -44,6 +45,7 @@ const DependencyMappingList = ({
   isSearch,
   columnNames,
   handleNewGaBrief,
+  headerName
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -55,6 +57,8 @@ const DependencyMappingList = ({
   const [tabsList, setTabsList] = useState([
     { tabHeader: "Header 1", decription: "Header 1 data" },
   ]);
+
+  console.log("user access", userHasAccess);
 
   const cicNeededOptionList = [
     { name: "Yes", code: "Yes" },
@@ -261,6 +265,7 @@ const DependencyMappingList = ({
                   );
                 }}
                 style={{ width: "80%", fontSize: 12 }}
+                className={options.AWM_CIC_Needed==="Yes" && (options[field]===" " || options[field]==="") ? "border-color":""}
               >
                 <option value="">Select</option>
 
@@ -312,8 +317,8 @@ const DependencyMappingList = ({
                   : []
               }
               filter
-              placeholder={`Select AWM CDPT Page`}
-              maxSelectedLabels={3}
+              display="chip"
+              placeholder={`Select`}
               className="p-column-filter"
             />
           </div>
@@ -346,9 +351,9 @@ const DependencyMappingList = ({
                   : []
               }
               filter
-              placeholder={`Select AWM RDT Page`}
-              maxSelectedLabels={3}
-              className="p-column-filter"
+              display="chip"
+              placeholder={`Select`}
+              className="p-column-filter-multiselect"
             />
           </div>
         )}
@@ -420,9 +425,9 @@ const DependencyMappingList = ({
                   : []
               }
               filter
-              placeholder={`Select AWM IQ Page`}
-              maxSelectedLabels={3}
+              display="chip"
               className="p-column-filter"
+              placeholder={`Select`}
             />
           </div>
         )}
@@ -480,6 +485,7 @@ const DependencyMappingList = ({
                 }}
                 style={{ width: "80%", fontSize: 12, height: "50%" }}
               ></Form.Control>
+              {options["AWM_Other_Reference"]?.length < 8 && options["AWM_Other_Reference"]?.length !==0 && <div style={{fontSize:10, color:"red"}}>Valid PMP# is 8 digits</div>}
             </Form.Group>
           ))}
 
@@ -540,6 +546,7 @@ const DependencyMappingList = ({
                     options.DSBP_PMP_PIMaterialID
                   )
                 }
+                className={options.AWM_CIC_Needed==="No" && (options["AWM_Supporting_PMP_Layout"]==" " || options["AWM_Supporting_PMP_Layout"]=="") ? "border-color":""}
                 style={{ width: "80%", fontSize: 12 }}
               >
                 <option value="">Select</option>
@@ -558,7 +565,7 @@ const DependencyMappingList = ({
           <a
             className="tabView"
             disabled={userHasAccess}
-            onClick={() => !userHasAccess && onHandlePmpTabView(options, field)}
+            onClick={() => onHandlePmpTabView(options, field)}
           >
             {options[field]}
           </a>
@@ -586,33 +593,8 @@ const DependencyMappingList = ({
 
     console.log("cdpt page data", dependencyColumnNames1);
 
-    const dependencyColumnNames2 = CDPTPageData?.length
-      ? dependencyColumnNames1
-      : dependencyColumnNames1.filter((item) => item.field !== "AWM_CDPT_Page");
-    const dependencyColumnNames3 = RDTData?.length
-      ? dependencyColumnNames2
-      : dependencyColumnNames2.filter((item) => item.field !== "AWM_RDT_Page");
-    let dependencyColumnNames4 = IQData?.length
-      ? dependencyColumnNames3
-      : dependencyColumnNames3.filter((item) => item.field !== "AWM_IQ_Page");
-
-    let dependencyColumnNames = dependencyColumnNames4;
-
-    if (CICs === false) {
-      // console.log("hello hello 1");
-      dependencyColumnNames = dependencyColumnNames4.filter(
-        (item) =>
-          item.field !== "AWM_CIC_Needed" &&
-          item.field !== "AWM_GA_Brief" &&
-          item.field !== "AWM_Supporting_PMP_Layout" &&
-          item.field !== "AWM_Supporting_PMP_Design" &&
-          item.field !== "AWM_Other_Reference" &&
-          item.field !== "AWM_CIC_Matrix" &&
-          item.field !== "AWM_CIC_Matrix_Requested"
-      );
-      console.log("hello hello 1", dependencyColumnNames);
-    }
-
+    const dependencyColumnNames = dependancyMappingFields(dependencyColumnNames1, CDPTPageData, RDTData, IQData, CICs, headerName)
+      
     if (!dependencyColumnNames) return null;
 
     let jsonValue = customizeViewFields

@@ -401,6 +401,7 @@ const CloneJobs = ({
               id="printers"
               value={printers}
               onChange={(e) => {
+                e.stopPropagation();
                 console.log(e.value);
                 let selectedPrinter = [];
                 e.value.forEach((val) => {
