@@ -91,7 +91,6 @@ const AddNewDesignContent = ({
   const designDisabled = !isNew && Task_Status === "Complete";
 
   return (
-    console.log("new", (!isNew && Task_Status === "Complete")),
     <div>
       <div className="design-intent-header">{DesignHeader(di_name)}</div>
       <Row
@@ -106,11 +105,11 @@ const AddNewDesignContent = ({
           <label htmlFor="select"> Select</label>
           <div>
             <Checkbox
-              onChange={(e) => {
+              onChange={(e) => { 
                 addData("Select", index, e.checked, di_name);
                 setChecked(e.checked);
               }}
-              checked={event === "submit" ? true : checked}
+              checked={(designDisabled || event === "submit") ? true : checked}
               disabled={!checkReadWriteAccess || designDisabled}
               className="margin-right"
             ></Checkbox>
