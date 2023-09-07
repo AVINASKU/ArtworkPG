@@ -4,13 +4,13 @@ import DsbpTab from "./components/DSBP/PMPSpecificTabView/index";
 
 const DsbpTabPage = (props) => {
   return (
-    <PageLayout>
+    // // <PageLayout>
       <div className="content-layout" id="tableDiv">
         <div className="tabular-view">
           <DsbpTab />
         </div>
       </div>
-    </PageLayout>
+    // // <PageLayout>
   );
 };
 export default DsbpTabPage;

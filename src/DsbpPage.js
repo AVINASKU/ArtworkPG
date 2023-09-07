@@ -4,13 +4,13 @@ import DSBP from "./components/DSBP/index";
 
 const DsbpPage = (props) => {
   return (
-    <PageLayout>
+    // // <PageLayout>
       <div className="content-layout" id="tableDiv">
         <div className="tabular-view">
           <DSBP />
         </div>
       </div>
-    </PageLayout>
+    // // <PageLayout>
   );
 };
 export default DsbpPage;

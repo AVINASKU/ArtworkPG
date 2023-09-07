@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Outlet } from "react-router-dom";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import "./App.scss";
@@ -7,6 +7,7 @@ import RoutesNav from "./routesNav";
 import { AuthProvider } from "./Context/AuthProvider";
 import PageLayout from "./components/PageLayout";
 import ThemeProvider from "react-bootstrap/ThemeProvider";
+import Login from "./login";
 
 function App() {
   App.getStoreState = () => {
@@ -22,14 +23,16 @@ function App() {
       <Provider store={store}>
         {/* <React.StrictMode> */}
         <BrowserRouter>
-          <AuthProvider>
+          <AuthProvider userRole={false}>
             <ThemeProvider
               breakpoints={["xxxl", "xxl", "xl", "lg", "md", "sm", "xs", "xxs"]}
               minBreakpoint="xxs">
+              {/* <Login /> */}
               {/* <RoutesNav /> */}
               <PageLayout />
+             
+              {/* <Outlet /> */}
             </ThemeProvider>
-            {/* <Home /> */}
           </AuthProvider>
         </BrowserRouter>
         {/* </React.StrictMode> */}

@@ -14,6 +14,7 @@ function UserLogin() {
   const [credentialsValid, setCredentialsValid] = useState(true);
   const [userInfoUpdated, setUserInfoUpdated] = useState(false);
   const navigate = useNavigate();
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const infoUpdated = updateUser(username, password);
@@ -33,6 +34,7 @@ function UserLogin() {
       }
     }
   }, [userInfoUpdated, userInformation, navigate]);
+  
   return (
     <div className="login-screen">
       <div className="userList">

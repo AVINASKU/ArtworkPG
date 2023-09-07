@@ -65,7 +65,8 @@ const APRA = () => {
   };
 
   return (
-    <PageLayout>
+   
+      <>
       <DesignHeader
         breadcrumb={breadcrumb}
         headerName={headerName}
@@ -101,7 +102,8 @@ const APRA = () => {
         handleCancel={handleCancel}
         // onSaveAsDraft={onSaveAsDraft}
       />
-    </PageLayout>
+      </>
+  
   );
 };
 export default APRA;

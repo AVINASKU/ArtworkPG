@@ -244,7 +244,7 @@ function CCD() {
 
   return (
     <LoadingOverlay active={loader || loading || CD === null} spinner text="">
-      <PageLayout>
+     
         <CDHeader
           setAddNewDesign={addNewEmptyDesign}
           onSelectAll={onSelectAll}
@@ -315,7 +315,7 @@ function CCD() {
           bottomFixed={true}
           data={data}
         />
-      </PageLayout>
+      
     </LoadingOverlay>
   );
 }

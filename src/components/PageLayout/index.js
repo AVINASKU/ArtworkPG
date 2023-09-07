@@ -12,21 +12,25 @@ const PageLayout = (props) => {
   const isPath = pathname.includes("tab");
   const className = `wrapper ${isPath ? "tab-wrapper" : ""}`;
   return (
-    <Container fluid>
-      <RoutesNav />
-      <Row className="row-fluid">
-        <SideBar />
-        <Col sm={8} className="right-grid">
-          <div className="header-container">
-            <Header />
-          </div>
-          <div className="main-container">
-            {/* <div className={className}>{props.children}</div> */}
-            <Outlet />
-          </div>
-        </Col>
-      </Row>
-    </Container>
+    <>
+    
+      <Container fluid>
+        <Row className="row-fluid">
+          <SideBar />
+          <Col sm={8} className="right-grid">
+            <div className="header-container">
+              <Header />
+            </div>
+            <div className="main-container">
+              {/* <div className={className}>{props.children}</div> */}
+              <RoutesNav />
+              {/* Minim sint enim cillum voluptate proident ut ex eu. */}
+              <Outlet  />
+            </div>
+          </Col>
+        </Row>
+      </Container>
+    </>
   );
 };
 export default PageLayout;

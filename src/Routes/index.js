@@ -81,7 +81,7 @@ const URDT = loadable(() => import("../components/AWMJobs/URDT/index.js"), {
 const CNIQ = loadable(() => import("../components/AWMJobs/CNIQ/index.js"), {
   fallback: <h1>Loading...</h1>,
 });
-export const allComponent = [
+export{
   AllProjects,
   MyProjects,
   ProjectCreation,
@@ -107,4 +107,4 @@ export const allComponent = [
   DMDsbpTabPage,
   URDT,
   CNIQ,
-];
+}

@@ -1,12 +1,10 @@
-
-import Api from ".";
-import App from "../App";
 import {
   userUpdateAction,
   userProfileAction,
 } from "../store/actions/userActions.js";
 import { store } from "../store/store";
 import { RoleUser } from "../userRole";
+
 export const updateUser = async (username, password) => {
   const userInformation = getUserInformation(username, password);
   if (userInformation && Object.keys(userInformation).length > 0) {
