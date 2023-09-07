@@ -3,7 +3,7 @@ import { FileUpload } from "primereact/fileupload";
 import { Image } from "primereact/image";
 import { Tag } from "primereact/tag";
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
-import { downloadFileAzure } from "../../../store/actions/AzureFileDownloadProofscope";
+// import { downloadFileAzure } from "../../../store/actions/AzureFileDownloadProofscope";
 import { useDispatch, useSelector } from "react-redux";
 import { getEnvironmentFromURL } from "../../../utils";
 

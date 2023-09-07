@@ -229,7 +229,7 @@ function DDI() {
 
   if (TaskDetailsData?.ArtworkAgilityPage) {
     Brand = TaskDetailsData.ArtworkAgilityPage.Artwork_Brand;
-    Category = TaskDetailsData.ArtworkAgilityPage.Artwork_SMO;
+    Category = TaskDetailsData.ArtworkAgilityPage.Artwork_Category;
   }
 
   return (
