@@ -9,6 +9,7 @@ import { CheckReadOnlyAccess } from "../../../utils";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getTaskDetails } from "../../../store/actions/taskDetailAction";
+import moment from "moment";
 
 const breadcrumb = [
   { label: "My Tasks", url: "/myTasks" },
@@ -18,6 +19,9 @@ const headerName = "Approve Regional Design Template";
 
 const ARDT = () => {
   const [data, setData] = useState(null);
+  const [date, setDate] = useState("");
+  const [designIntent, setDesignIntent] = useState(null);
+  const [version, setVersion] = useState("V0");
   const [taskData, setTaskData] = useState(null);
   const location = useLocation();
   let { TaskID, ProjectID } = useParams();
@@ -41,10 +45,22 @@ const ARDT = () => {
 
   useEffect(() => {
     if (TaskDetailsData) {
-      setTaskData(
+      setDesignIntent(
         TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails || []
       );
       setData(TaskDetailsData?.ArtworkAgilityTasks[0] || []);
+      const data =
+        TaskDetailsData?.ArtworkAgilityTasks[0]?.DesignJobDetails[0]
+          ?.FileMetaDataList[0] || [];
+      if (data) {
+        data.Version !== "" && setVersion(data.Version);
+        data.Timestamp !== "" &&
+          setDate(
+            moment(data.Timestamp, "YYYYMMDD[T]HHmmss.SSS [GMT]").format(
+              "DD-MMMM-YYYY"
+            )
+          );
+      }
     }
   }, [TaskDetailsData]);
 
@@ -56,12 +72,18 @@ const ARDT = () => {
         disabled={true}
         label="Approve Regional Design Template"
         checkReadWriteAccess={checkReadWriteAccess}
+        actionButtonsFlag={true}
       />
 
-      {<AddNewDesign {...data} TaskDetailsData={TaskDetailsData}/>}
+     <AddNewDesign
+            {...data}
+            checkReadWriteAccess={checkReadWriteAccess}
+            TaskDetailsData={TaskDetailsData}
+          />
 
       <ApproveDesignIntentContent
         {...taskData}
+        item = {data}
         designIntent={taskData}
         approve={true}
         checkReadWriteAccess={checkReadWriteAccess}

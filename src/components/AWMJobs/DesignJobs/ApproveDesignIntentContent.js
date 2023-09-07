@@ -32,6 +32,7 @@ const ApproveDesignIntentContent = ({
   const fileUploadRef = useRef(null);
   const dispatch = useDispatch();
   let viewFileName = designIntent ? designIntent[0]?.FileMetaDataList[0]?.File_Name : "";
+  console.log("view file name", item, designIntent?.[0]);
   let di_name = "";
   if (!approve) {
     di_name =
@@ -39,6 +40,8 @@ const ApproveDesignIntentContent = ({
         ? `${item?.Task_Name}_${version}_${date}`
         : `${item?.Task_Name}`;
   }
+  if(approve){
+ di_name = item?.Task_Name  }
 
   const onTemplateUpload = (e) => {
     let _totalSize = 0;
@@ -194,11 +197,7 @@ const ApproveDesignIntentContent = ({
             }}
           >
             <div>Approve</div>
-            <Image
-              src="https://primefaces.org/cdn/primereact/images/galleria/galleria7.jpg"
-              alt="Image"
-              width="25"
-            />
+            
             <div
               style={{
                 color: "#003DA5",
@@ -211,7 +210,7 @@ const ApproveDesignIntentContent = ({
                 className="flex flex-column text-left ml-3"
                 onClick={(event) => downloadAzure(event, `${viewFileName}`)}
               >
-                {viewFileName}
+                {item?.DesignJobDetails[0]?.FileMetaDataList[0]?.File_Name}
               </a>
             </div>
           </div>
