@@ -5,11 +5,6 @@ import PgLogo from "../../assets/images/logo.svg";
 import LogoutImg from "../../assets/images/logout.svg";
 import plusCollapseImg from "../../assets/images/plusCollapse.svg";
 import ExpandImg from "../../assets/images/expand.svg";
-import ArrowDownImg from "../../assets/images/sort.svg";
-import AllProjects1 from "../../assets/images/AllProjects1.svg";
-import AllTask from "../../assets/images/AllTask.svg";
-import MyTaskMP from "../../assets/images/MyTaskMP.svg";
-import MyProject from "../../assets/images/MyProject.svg";
 import "./index.scss";
 import { Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
@@ -23,6 +18,7 @@ import { updateMode } from "../../store/actions/ProjectSetupActions";
 import { updateUser } from "../../apis/userApi";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import { useCookies } from "react-cookie";
+import { navItems } from "./NavItems";
 
 const SideBar = () => {
   const location = useLocation();
@@ -104,38 +100,7 @@ const SideBar = () => {
       })
     : [];
   // console.log(hasEmptyAccessForMyProjects);
-  const navItems = {
-    data: [
-      {
-        name: "My Projects",
-        img: MyProject,
-        arrowUp: ArrowDownImg,
-        url: "/myProjects",
-        items: [{ name: "My Projects", url: "/myProjects" }],
-      },
-      {
-        name: "All Projects",
-        img: AllProjects1,
-        arrowUp: ArrowDownImg,
-        url: "/allProjects",
-        items: [{ name: "All Projects", url: "/allProjects" }],
-      },
-      {
-        name: "My Tasks",
-        img: MyTaskMP,
-        arrowUp: ArrowDownImg,
-        url: "/MyTasks",
-        items: [{ name: "My Tasks", url: "Mytasks" }],
-      },
-      {
-        name: "All Tasks",
-        img: AllTask,
-        arrowUp: ArrowDownImg,
-        url: "/AllTasks",
-        items: [{ name: "All Tasks", url: "AllTasks" }],
-      },
-    ],
-  };
+
   const projectPlanPage = accessDetails.pages.find(
     (page) => page.path === "/projectPlan"
   );
@@ -172,59 +137,14 @@ const SideBar = () => {
           <Nav
             style={{
               paddingTop: !isToggle && "15px",
+              maxHeight: "470px",
+              overflowX: "hidden",
+              overflowY: "auto",
             }}
           >
             {pathName !== "/roles" &&
-              navItems?.data?.map((item, index) => {
+              navItems?.map((item, index) => {
                 if (item.items) {
-                  //single user access
-                  // const pageAccess = accessDetails.pages.find(
-                  //   (page) => page.path === item.url
-                  // );
-                  // if (pageAccess && pageAccess.access.length > 0) {
-                  //   return (
-                  //     <NavItem
-                  //       key={index}
-                  //       className={
-                  //         item.items?.some(
-                  //           (subItem) => location.pathname === subItem.url
-                  //         ) || expandedItems.includes(index)
-                  //           ? "active"
-                  //           : ""
-                  //       }
-                  //     >
-                  //       <NavLink
-                  //         className={`nav-link ${isToggle && "parent-link"}`}
-                  //         to={item.url}
-                  //       >
-                  //         {isToggle ? (
-                  //           <>
-                  //             <div>
-                  //               <img src={item.img} alt="logos" />
-                  //             </div>
-                  //             <div>{isToggle ? item.name : ""}</div>
-                  //           </>
-                  //         ) : (
-                  //           <OverlayTrigger
-                  //             placement="right"
-                  //             overlay={
-                  //               <Tooltip className="tooltip">
-                  //                 <div className="toolname">{item.name}</div>
-                  //               </Tooltip>
-                  //             }
-                  //           >
-                  //             <div>
-                  //               <img src={item.img} alt="logos" />
-                  //             </div>
-                  //           </OverlayTrigger>
-                  //         )}
-                  //       </NavLink>
-                  //     </NavItem>
-                  //   );
-                  // } else {
-                  //   return null; // Hide the link if access is empty
-                  // }
-
                   const hasAccess = rolesWithAccess?.some((roleWithAccess) => {
                     return (
                       roleWithAccess.path === item.url &&

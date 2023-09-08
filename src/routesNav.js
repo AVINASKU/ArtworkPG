@@ -85,12 +85,13 @@
 // };
 
 // export default RoutesNav;
-import React, { useEffect } from "react";
+import React from "react";
 import { Route, Routes, useParams } from "react-router-dom";
 // import Home from "./home.js";
 import { Outlet } from "react-router-dom";
 import AllProjects from "./components/Projects/AllProjects/index";
 import MyProjects from "./components/Projects/MyProjects/index.js";
+import ACP from "./components/ACP/index.js";
 import ProjectCreation from "./projectCreation.js";
 import Login from "./login.js";
 import DDI from "./components/AWMJobs/DDI/index.js";
@@ -119,6 +120,7 @@ import Role from "./role";
 
 const RoutesNav = () => {
   const params = useParams();
+
   return (
     <Routes>
       <Route path="/" element={<Outlet />}>
@@ -126,6 +128,13 @@ const RoutesNav = () => {
         {/* <Route index element={<Home />} /> */}
         <Route path="/myProjects" element={<MyProjects />} />
         <Route path="/roles" element={<Role />} />
+        <Route path={`/capacityManagement`} element={<ACP />}>
+          <Route path={`dashboard`} element={<ACP />} />
+          <Route path={`planning`} element={<ACP />} />
+          <Route path={`booking`} element={<ACP />} />
+          <Route path={`bveLoop`} element={<ACP />} />
+          <Route path={`reports`} element={<ACP />} />
+        </Route>
         <Route path="/allProjects" element={<AllProjects />} />
         <Route path="/myTasks" element={<MyTasksPage />} />
         <Route path="/AllTasks" element={<AllTasksPage />} />

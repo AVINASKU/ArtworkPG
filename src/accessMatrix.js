@@ -13,6 +13,11 @@ export const accessMatrix = [
         access: ["Read", "Write", "Edit", "Delete"],
       },
       {
+        name: "capacityManagement",
+        path: "/capacityManagement",
+        access: ["Read", "Write", "Edit", "Delete"],
+      },
+      {
         name: "MyTasks",
         path: "/MyTasks",
         access: ["Read", "Write", "Edit", "Delete"],
@@ -40,6 +45,11 @@ export const accessMatrix = [
       {
         name: "allProjects",
         path: "/allProjects",
+        access: ["Read", "Write", "Edit", "Delete"],
+      },
+      {
+        name: "capacityManagement",
+        path: "/capacityManagement",
         access: ["Read", "Write", "Edit", "Delete"],
       },
       {
@@ -73,6 +83,11 @@ export const accessMatrix = [
         access: ["Read"],
       },
       {
+        name: "capacityManagement",
+        path: "/capacityManagement",
+        access: [],
+      },
+      {
         name: "MyTasks",
         path: "/MyTasks",
         access: ["Read", "Write", "Edit", "Delete"],
@@ -100,6 +115,11 @@ export const accessMatrix = [
       {
         name: "allProjects",
         path: "/allProjects",
+        access: ["Read", "Write", "Edit", "Delete"],
+      },
+      {
+        name: "capacityManagement",
+        path: "/capacityManagement",
         access: ["Read", "Write", "Edit", "Delete"],
       },
       {

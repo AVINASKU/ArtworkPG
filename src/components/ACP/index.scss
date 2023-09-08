@@ -1,0 +1,340 @@
+$width: 100%;
+
+.project-name {
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 29px;
+  color: #003da5;
+  // padding: 0 15px 22px 15px;
+  // padding: 0 15px 10px 15px;
+  padding: 0 15px 0px 13px;
+}
+
+.ProjectPlanBreadCrum {
+  ul {
+    padding: 0;
+  }
+}
+
+.subNav {
+  .nav {
+    padding-left: 13px;
+    border-color: #003da5;
+  }
+
+  .nav-link {
+    color: rgba(172, 172, 172, 1);
+    // border-color: #ffffff;
+  }
+
+  .nav-link.active {
+    color: rgba(0, 61, 165, 1);
+    border-width: 1px 1px 0 1px;
+    border-color: #003da5 #003da5 #ffffff #003da5;
+  }
+}
+
+.tabular-add-project {
+  // padding: 8px 0 0 0;
+  padding: 8px 0 0 15px;
+  overflow-y: scroll;
+  height: 72vh;
+}
+
+.p-breadcrumb ul .pi-chevron-right:nth-child(3) {
+  color: #003da5;
+}
+
+.p-breadcrumb ul li .p-menuitem-link {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.projectPlanButtons {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 11px;
+  margin-left: 28px;
+
+  & label {
+    padding: 8px 18px;
+
+    &:first-child {
+      border-radius: 20px 0 0 20px;
+    }
+
+    &:last-child {
+      border-radius: 0 20px 20px 0;
+    }
+  }
+
+  .btn {
+    background-color: #ffffff;
+    color: #003da5;
+    border-color: #003da5 !important;
+  }
+
+  .btn:hover {
+    background-color: #003da5;
+    color: #ffffff;
+  }
+}
+
+.ganttChartTabular {
+  background-color: #003da5 !important;
+  color: #ffffff !important;
+}
+
+.ActionsDropdown {
+  background-color: #003da5;
+}
+
+#projectActions {
+  height: 32px;
+  width: 98.4px;
+  border-radius: 20px !important;
+  padding: 10px 18px 10px 18px;
+  margin-right: 11px;
+  background-color: #ffffff !important;
+  color: #003da5;
+  line-height: 12px;
+}
+
+#projectActions:hover {
+  background-color: #003da5 !important;
+  color: #ffffff;
+}
+
+.projectSetupParent {
+  height: 100%;
+  background: rgb(255, 255, 255);
+  border-radius: 24px;
+  margin-left: 2px;
+  padding-bottom: 5px;
+  position: relative;
+
+  &.project-setup-wrapper {
+    // height: 100%;
+    position: relative;
+
+    .tabular-add-project {
+      overflow: hidden;
+
+      form {
+        height: 100%;
+        overflow: hidden auto;
+        padding-bottom: 90px;
+      }
+    }
+  }
+
+  &.project-plan-wrapper {
+    padding-bottom: 25px;
+
+    .tab-content {
+      // height: auto;
+      overflow: initial;
+      padding: 0;
+    }
+  }
+
+  .form-buttons {
+    padding: 0 10px;
+    position: absolute;
+    background: white;
+    text-align: right;
+    width: 100%;
+    left: 0;
+    bottom: 30px;
+  }
+}
+
+.breadCrumbParent {
+  padding-top: 8px;
+  padding-left: 23px;
+
+  // padding-left: 16px;
+  // border-radius: 24px
+  // width: $width;
+  nav {
+    margin-left: 5px;
+  }
+}
+
+.breadCrumbParent {
+  .dropdown-menu.show {
+    border: 0.5px solid #003da5 !important;
+    border-radius: 8px;
+    margin-top: 8px !important;
+    box-shadow: 0 6px 16px 0 rgba(89, 89, 89, 0.24);
+  }
+
+  .show {
+    .dropdown-toggle::after {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.projectPlanName {
+  padding-bottom: 5px;
+}
+
+.dropdownItemPaddingLeft {
+  padding-left: 8px;
+  border-bottom: none;
+}
+
+.dropdownItemColor {
+  color: #d37302;
+}
+
+.dropdownItemColor1 {
+  color: #ff0000;
+}
+
+.dropdownItemColor2 {
+  color: #003da5;
+}
+
+.content-layout .actionsPaddingForUBD {
+  padding: 0;
+
+  .p-breadcrumb ul {
+    padding: 8px 0;
+  }
+}
+
+.projectPlanButtonsParent {
+  text-align: right;
+}
+
+.displayFlex {
+  display: flex;
+  line-height: 15px;
+}
+
+// TabsComponent Styles Start
+.tab-content {
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  padding-bottom: 20px;
+
+  .nav-link {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+  }
+}
+
+.tab-content>.active {
+  padding: 10px 20px;
+  display: contents !important;
+}
+
+.nav-tabs a {
+  border: 0 !important;
+  background-color: transparent !important;
+}
+
+.nav-tabs li.active {
+  border-bottom: 2px solid #5453d2;
+}
+
+.nav-tabs li {
+  border-bottom: 2px solid transparent;
+}
+
+.nav-tabs li a {
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+}
+
+ul.nav.nav-tabs {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow: hidden;
+}
+
+.nav-tabs li {
+  // flex-basis: 90px;
+  min-width: 150px;
+  display: flex;
+  align-items: flex-start;
+  margin: 0 !important;
+}
+
+.tabs-wrapper {
+  flex: 1;
+
+  .nav-tabs li.active {
+    border-bottom: 2.5px solid rgba(0, 61, 165, 1);
+  }
+
+  .nav-tabs li>a {
+    color: rgba(172, 172, 172, 1);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17.07px;
+  }
+
+  .nav-tabs li.active>a {
+    color: rgba(0, 61, 165, 1);
+  }
+}
+
+span.left,
+span.right {
+  position: absolute;
+  height: 30px;
+  width: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #5453d2;
+  border-radius: 50%;
+  left: -50px;
+  top: 8px;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+span.right {
+  right: -50px;
+  left: unset;
+}
+
+.scroller-btn.inactive {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.piChevronRightMargin {
+  margin-left: 9.5px;
+  margin-right: 9.81px;
+}
+
+.pi-chevron-right {
+  margin-left: 9.5px;
+  margin-right: 9.81px;
+}
+
+.tabComponent {
+  display: flex;
+  align-items: center;
+
+  li {
+    a {
+      cursor: pointer;
+    }
+  }
+
+  .actionButtonsForTabComponent {
+    margin-right: 10px;
+  }
+}
+
+// TabsComponent Styles End

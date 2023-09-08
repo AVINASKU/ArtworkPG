@@ -88,6 +88,28 @@ export const accessRoles = [
     ],
   },
   {
+    page: "capacityManagement",
+    path: "/capacityManagement/dashboard",
+    roles: [
+      {
+        name: "ProjectManager",
+        access: ["Read", "Write", "Edit", "Delete"],
+      },
+      {
+        name: "CapacityManager",
+        access: [],
+      },
+      {
+        name: "TaskOwner",
+        access: [],
+      },
+      {
+        name: "ExternalTaskOwner",
+        access: [],
+      },
+    ],
+  },
+  {
     page: "MyTasks",
     path: "/MyTasks",
     roles: [
