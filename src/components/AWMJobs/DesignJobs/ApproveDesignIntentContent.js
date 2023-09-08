@@ -156,6 +156,7 @@ const ApproveDesignIntentContent = ({
               onUpload={onTemplateUpload}
               onSelect={onTemplateSelect}
               itemTemplate={itemTemplate}
+              disabled={viewFileName !== ""}
             />
             <div>
               {viewFileName === "" ? (
@@ -173,12 +174,12 @@ const ApproveDesignIntentContent = ({
                     {viewFileName}
                   </a>
                   <br />
-                  <a
+                  {/* <a
                     className="flex flex-column text-left ml-3"
                     onClick={(event) => deleteAzure(event, `${viewFileName}`)}
                   >
                     remove from azure
-                  </a>
+                  </a> */}
                 </>
               ) : (
                 ""

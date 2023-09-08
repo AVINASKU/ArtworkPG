@@ -173,6 +173,8 @@ const UADI = () => {
         onSubmit={onSubmit}
         checkReadWriteAccess={checkReadWriteAccess}
         bottomFixed={true}
+        formValid={fileName === ""}
+        saveAsDraftEnable={fileName === ""}
       />
     </PageLayout>
   );
