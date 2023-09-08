@@ -488,7 +488,7 @@ fieldset:disabled .btn {
   }
   &.actionDialog {
     .form-control {
-      max-width: 251px;
+      max-width: 232px;
       &.text-area {
         border-radius: 14px;
         height: 91px;
@@ -496,11 +496,11 @@ fieldset:disabled .btn {
       }
     }
     .p-multiselect {
-      max-width: 251px;
+      max-width: 232px;      
     }
     .form-select {
-      max-width: 251px;
-      width: 251px;
+      max-width: 232px;
+      width: 232px;
       font-size: 12px;
       padding: 10px;
       line-height: 12px;
@@ -541,6 +541,9 @@ fieldset:disabled .btn {
       }
     }
   }
+}
+.p-multiselect-panel .p-multiselect-header .p-multiselect-filter-container .p-inputtext{
+  width: 100%;
 }
 
 .margin-top-24 {

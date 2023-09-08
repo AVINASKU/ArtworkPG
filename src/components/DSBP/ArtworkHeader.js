@@ -108,12 +108,12 @@ const ArtworkHeader = ({
         {
           value: "CIC Matrix",
           key: "option-2",
-          header: "Request CIC/CIC Matrix",
+          header: "Are you sure you want to link these PMPs to CIC Matrix ?",
         },
         {
           value: "Request CIC/CIC Matrix",
           key: "option-3",
-          header: "Request CIC/CIC Matrix",
+          header: "Please confirm you want to request CIC Matrix for following CICs?",
         },
       ]);
 

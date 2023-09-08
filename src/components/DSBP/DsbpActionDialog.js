@@ -167,7 +167,7 @@ const DsbpActionDialog = ({
         >
           <Row style={{ height: "100%" }}>
             {rowData ||
-            (updatedData && updatedData[0]?.value === "Add to Project") ? (
+            (updatedData && (updatedData[0]?.value === "Add to Project" || updatedData[0]?.value === "Request CIC/CIC Matrix")) ? (
               <Col sm={12} style={{ height: "100%" }}>
                 {selected && (
                   <DataTable
@@ -185,6 +185,12 @@ const DsbpActionDialog = ({
                       field="DSBP_PMP_PIMaterialDescription"
                       header="PMP Description"
                     ></Column>
+                    {updatedData[0]?.value === "Request CIC/CIC Matrix" &&
+                      <Column
+                        field="AWM_CIC_Matrix"
+                        header="CIC/CIC Matrix"
+                      ></Column>
+                    }
                   </DataTable>
                 )}
               </Col>
@@ -516,6 +522,24 @@ const DsbpActionDialog = ({
                         type="text"
                         className="form-control"
                         placeholder="Enter Package Name"
+                        onChange={handlePackageName}
+                        value={packageName}
+                        disabled={selected.length === 0}
+                      />
+                    </Form.Group>
+                  )}
+                  {updatedData && updatedData[0]?.value === "CIC Matrix" && (
+                    <Form.Group
+                      className={`mb-4`}
+                      controlId="groupName.ControlInput1"
+                    >
+                      <Form.Label>
+                      CIC Matrix Name<sup>*</sup>
+                      </Form.Label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter CIC Matrix Name"
                         onChange={handlePackageName}
                         value={packageName}
                         disabled={selected.length === 0}
