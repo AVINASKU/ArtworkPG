@@ -49,6 +49,7 @@ function CCD() {
   const navigate = useNavigate();
   // const checkReadWriteAccess = CheckReadOnlyAccess();
   const checkReadWriteAccess = true;
+  const AzureSubFolder = "Print Feasibilty Documents";
 
   useEffect(() => {
     // const data1 = ProjectService.getDIData();
@@ -98,7 +99,7 @@ function CCD() {
         Tier: "",
         Cluster: "",
         Agency_Reference: "",
-        Printer: "",
+        Printer: [],
         Printing_Process: "",
         Design_Job_Name: "",
         Substrate: "",
@@ -196,7 +197,9 @@ function CCD() {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-    await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "Print Feasibility Documents"));
+    await dispatch(
+      uploadFileAzure(azureFile, ProjectID + " " + projectName, BU, AzureSubFolder)
+    );
     await submitConfirmColorDevelopment(formData, id, headers);
     setLoader(false);
     // navigate(`/MyTasks`);
@@ -232,7 +235,10 @@ function CCD() {
       DesignIntentList: submitOnlySelectedData,
     };
     console.log("full draft data --->", submitOnlySelectedData);
-    await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "Print Feasibility Documents"));
+
+    await dispatch(
+      uploadFileAzure(azureFile, ProjectID + " " + projectName, BU, AzureSubFolder)
+    );
     await saveDesignIntent(formData);
   };
 
@@ -271,7 +277,8 @@ function CCD() {
               if (item && item?.Action !== "delete") {
                 return (
                   <CloneJobs
-                    key={item.Design_Job_ID}
+                    // key={item.Design_Job_ID}
+                    key={index}
                     {...data}
                     CD={CD}
                     data={data}
@@ -294,6 +301,7 @@ function CCD() {
                     Artwork_Category={
                       TaskDetailsData?.ArtworkAgilityPage?.Artwork_Category
                     }
+                    azureSubFolder={AzureSubFolder}
                   />
                 );
               }

@@ -17,9 +17,10 @@ const AddNewDesignContent = ({
   checkBU,
   setSubmitActive,
   checkReadWriteAccess,
-  taskName
+  taskName,
+  Task_Status
 }) => {
-  const { Agency_Reference, Additional_Info, event, Select, Cluster } = item;
+  const { Agency_Reference, Additional_Info, event, Select, Cluster, isNew } = item;
 
   const [checked, setChecked] = useState(false);
   const [agencyRef, setAgency] = useState(Agency_Reference);
@@ -65,9 +66,9 @@ const AddNewDesignContent = ({
           <img
             src={deleteIcon}
             alt="filter logo"
-            onClick={() => checkReadWriteAccess && handleDelete(index)}
+            onClick={() => !designDisabled && handleDelete(index)}
             className="header-icons"
-            disabled={!checkReadWriteAccess}
+            disabled={!checkReadWriteAccess || designDisabled}
           />
         </div>
       </>
@@ -85,20 +86,12 @@ const AddNewDesignContent = ({
   if (clubCategory === "" || Category === undefined) clubCategory = "Category";
 
   if (agencyRef || clusters || additionalInformation) {
-    di_name =
-      roleName +
-      (agencyRef && agencyRef + "_") +
-      clubBrandName +
-      "_" +
-      clubCategory +
-      "_" +
-      Project_Name +
-      "_" +
-      (clusters && clusters + "_") +
-      (additionalInformation && additionalInformation);
+    di_name = `${roleName}${agencyRef ? '_' + agencyRef : ''}${clubBrandName ? '_' + clubBrandName : ''}${clubCategory ? '_' + clubCategory : ''}_${Project_Name}${clusters ? '_' + clusters : ''}${additionalInformation ? '_' + additionalInformation : ''}`;
   }
+  const designDisabled = !isNew && Task_Status === "Complete";
 
   return (
+    console.log("new", (!isNew && Task_Status === "Complete")),
     <div>
       <div className="design-intent-header">{DesignHeader(di_name)}</div>
       <Row
@@ -116,10 +109,9 @@ const AddNewDesignContent = ({
               onChange={(e) => {
                 addData("Select", index, e.checked, di_name);
                 setChecked(e.checked);
-                // setSubmitActive(e.checked ? false : true);
               }}
               checked={event === "submit" ? true : checked}
-              disabled={!checkReadWriteAccess}
+              disabled={!checkReadWriteAccess || designDisabled}
               className="margin-right"
             ></Checkbox>
           </div>
@@ -134,7 +126,7 @@ const AddNewDesignContent = ({
                 addData("Agency_Reference", index, e.target.value, di_name);
                 setAgency(e.target.value);
               }}
-              disabled={!checkReadWriteAccess}
+              disabled={!checkReadWriteAccess || designDisabled}
               aria-describedby="agency-help"
             />
           </div>
@@ -152,7 +144,7 @@ const AddNewDesignContent = ({
                 addData("Cluster", index, e.target.value, di_name);
                 setCluster(e.target.value);
               }}
-              disabled={!checkReadWriteAccess}
+              disabled={!checkReadWriteAccess || designDisabled}
               aria-describedby="cluster-help"
             />
           </div>
@@ -170,7 +162,7 @@ const AddNewDesignContent = ({
                 completeMethod={search}
                 onChange={(e) => setTier(e.value)}
                 dropdown
-                disabled={!checkReadWriteAccess}
+                disabled={!checkReadWriteAccess || designDisabled}
               />
             </div>
           </Col>
@@ -186,7 +178,7 @@ const AddNewDesignContent = ({
                 addData("Additional_Info", index, e.target.value, di_name);
                 setAdditionalInfo(e.target.value);
               }}
-              disabled={!checkReadWriteAccess}
+              disabled={!checkReadWriteAccess || designDisabled}
               aria-describedby="info-help"
             />
           </div>

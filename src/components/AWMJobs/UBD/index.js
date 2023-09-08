@@ -25,10 +25,11 @@ import "./index.scss";
 import { cloneDeep } from "lodash";
 import { uploadFileAzure } from "../../../store/actions/AzureFileActions";
 import { deleteAzureFile } from "../../../store/actions/AzureFileDeletion.js";
+import { deleteAzureFolder } from "../../../store/actions/AzureDeleteFolder";
 import { Dialog } from "primereact/dialog";
 
 const headerName = "Upload Graphic Adaptation Brief Document";
-const graphicAdaptionBrief = "Graphic Adaptation Brief*";
+const graphicAdaptionBrief = "Graphic Adaptation Brief *";
 const otherReferenceDocs = "Other Reference Documents & Assets";
 const fileUploadType = { uploadFile: "Upload File", upVersion: "Up-Version" };
 const roleName = "UBD_";
@@ -69,7 +70,7 @@ function UBD() {
   const currentUrl = location.pathname;
   const id = `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`;
   const AzureSubFolder = "GA Briefs";
-  console.log("TaskDetailsData:",TaskDetailsData);
+  console.log("TaskDetailsData:", TaskDetailsData);
   let breadcrumb = AddNavigation(headerName);
   // const checkReadWriteAccess = CheckReadOnlyAccess();
   const checkReadWriteAccess = true;
@@ -212,7 +213,16 @@ function UBD() {
     if (version !== "V0") {
       deleteUploadBrefingDocs(formData);
       const response = await dispatch(
-        deleteAzureFile(fileUrl, ProjectID, BU, AzureSubFolder)
+        deleteAzureFile(
+          fileUrl,
+          ProjectID + " " + projectName,
+          BU,
+          AzureSubFolder,
+          graphicData,
+          sectionType === graphicAdaptionBrief
+            ? "File " + formData.Sequence
+            : "Other Ref File " + formData.Sequence
+        )
       );
       if (response?.includes("404")) {
         setFileNotFound(true);
@@ -367,7 +377,7 @@ function UBD() {
     if (
       (gABriefAdaptationForUI.length &&
         gABriefAdaptationForUI[0].Version !== "V0") ||
-      getGABriefListObj("submit").length
+      getGABriefListObjForSubmitCheck("submit").length
     ) {
       setSubmitAllowed(true);
     } else {
@@ -394,7 +404,10 @@ function UBD() {
         }}
         className="ubd-accordion-header"
       >
-        Graphic Adaptation Brief *
+        Graphic Adaptation Brief{" "}
+        <sup>
+          <b>*</b>
+        </sup>
       </div>
       <div
         className="add-file-ubd"
@@ -437,11 +450,14 @@ function UBD() {
       >
         Other Reference Documents & Assets
       </div>
-      <div className="add-file-ubd">
+      <div
+        className="add-file-ubd"
+        onClick={() => checkReadWriteAccess && otherRDAddNewEmptyDesign()}
+      >
         <img
           src={plusCollapseImg}
           alt="filter logo"
-          onClick={() => checkReadWriteAccess && otherRDAddNewEmptyDesign()}
+          // onClick={() => checkReadWriteAccess && otherRDAddNewEmptyDesign()}
           className="heade-plus-icon"
           disabled={!checkReadWriteAccess}
         />{" "}
@@ -534,6 +550,32 @@ function UBD() {
     setPageInstructionsData([...pageInstructionsData, submitObj]);
   };
 
+  const getGABriefListObjForSubmitCheck = (type) => {
+    // console.log("getGABriefListObj", gABriefAdaptationForUI);
+    let GABriefList = [];
+    gABriefAdaptationForUI.map((obj) => {
+      if (obj.Info) {
+        const fileSize = Math.round(obj.Info.fileInfo.files[0].size / 1000000);
+        const temp = {
+          Version:
+            obj.Info.version.substring(0, 1) +
+            (parseInt(obj.Info.version.substring(1)) + 1),
+          Size: fileSize === 0 ? "1" : `${fileSize}`,
+          Sequence: `${obj.Info.sequence}`,
+        };
+        if (type === "save") {
+          temp["File_Name"] = obj.Info.fileInfo.files[0].name;
+        }
+        if (type === "submit") {
+          temp["Filename"] = obj.Info.fileInfo.files[0].name;
+        }
+
+        GABriefList.push(temp);
+      }
+    });
+    return GABriefList;
+  };
+
   const getGABriefListObj = (type) => {
     // console.log("getGABriefListObj", gABriefAdaptationForUI);
     let GABriefList = [];
@@ -555,7 +597,16 @@ function UBD() {
         }
 
         GABriefList.push(temp);
-        dispatch(uploadFileAzure(obj.AzureFile, AzureSubFolder));
+        dispatch(
+          uploadFileAzure(
+            obj.AzureFile,
+            ProjectID + " " + projectName,
+            BU,
+            AzureSubFolder,
+            graphicData,
+            "File " + temp.Sequence
+          )
+        );
       }
     });
     return GABriefList;
@@ -580,7 +631,16 @@ function UBD() {
           temp["Filename"] = obj.Info.fileInfo.files[0].name;
         }
         OtherReferenceDoc.push(temp);
-        dispatch(uploadFileAzure(obj.AzureFile, AzureSubFolder));
+        dispatch(
+          uploadFileAzure(
+            obj.AzureFile,
+            ProjectID + " " + projectName,
+            BU,
+            AzureSubFolder,
+            graphicData,
+            "Other Ref File " + temp.Sequence
+          )
+        );
       }
     });
     return OtherReferenceDoc;
@@ -612,6 +672,7 @@ function UBD() {
     };
 
     await saveAsDraftUploadBrefingDocs(formData);
+    setGroupnameUpdated(false);
     setLoader(false);
     dispatch(getTaskDetails(TaskID, ProjectID));
   };
@@ -662,6 +723,7 @@ function UBD() {
     };
     // console.log("submitFormData: ", formData);
     await submitUploadBrefingDocs(formData, id, headers);
+    setGroupnameUpdated(false);
     setLoader(false);
     if (page2 && page2 === "projectPlan") {
       navigate(
@@ -711,8 +773,6 @@ function UBD() {
           <Loading />
         ) : (
           <>
-            {/* Graphic Adaptation Brief* */}
-            <div className="design-intent-header">{GABriefHeader}</div>
             <div
               className="graphicAdaptionBrief"
               style={{
@@ -766,6 +826,9 @@ function UBD() {
                 </div>
               )}
             </div>
+            {/* Graphic Adaptation Brief* */}
+            <div className="design-intent-header">{GABriefHeader}</div>
+
             {gABriefAdaptationForUI &&
               gABriefAdaptationForUI.length > 0 &&
               gABriefAdaptationForUI.map((item, index) => {
@@ -792,6 +855,7 @@ function UBD() {
                         gABriefAdaptationForUI.length === 1 && !item.File_Name
                       }
                       setFileNotFound={setFileNotFound}
+                      groupName={graphicData}
                       // setAzureFile={setAzureFile}
                     />
                   );
@@ -824,6 +888,7 @@ function UBD() {
                       disableDelete={
                         otherRefernceDocsForUI.length === 1 && !item.File_Name
                       }
+                      groupName={graphicData}
                       // setAzureFile={setAzureFile}
                     />
                   );

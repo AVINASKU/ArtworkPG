@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { FileUpload } from "primereact/fileupload";
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
-import { AzureFileDownloadJobs } from "../../../store/actions/AzureFileDownloadJobs";
+import { downloadFileAzure } from "../../../store/actions/AzureFileDownload";
 import { useDispatch } from "react-redux";
 
 const UpVersion = ({
@@ -51,18 +51,14 @@ const UpVersion = ({
   const itemTemplate = (file) => (
     <div className="upload-row">
       <img role="presentation" src={file.objectURL} width={50} />
-      {file.name.length > 22 ? (
-        <div
-          className="flex flex-column text-left fileName"
-          data-toggle="tooltip"
-          data-placement="top"
-          title={file.name}
-        >
-          {file.name}
-        </div>
-      ) : (
-        <div className="flex flex-column text-left fileName">{file.name}</div>
-      )}
+      <div
+        className="flex flex-column text-left fileName"
+        data-toggle="tooltip"
+        data-placement="top"
+        title={file.name}
+      >
+        {file.name}
+      </div>
     </div>
   );
 
@@ -120,7 +116,7 @@ const UpVersion = ({
   };
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
-    dispatch(AzureFileDownloadJobs(fileUrl));
+    dispatch(downloadFileAzure(fileUrl));
   };
 
   const customUploader = () => {};

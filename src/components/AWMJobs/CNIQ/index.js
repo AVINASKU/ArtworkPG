@@ -54,6 +54,8 @@ function CNIQ() {
   const navigate = useNavigate();
   // const checkReadWriteAccess = CheckReadOnlyAccess();
   const checkReadWriteAccess = true;
+  const AzureSubFolder = "Print Feasibility Documents";
+
   useEffect(() => {
     // const data1 = ProjectService.getDIData();
     let taskId;
@@ -116,7 +118,7 @@ function CNIQ() {
         Tier: "",
         Cluster: "",
         Agency_Reference: "",
-        Printer: "",
+        Printer: [],
         Printing_Process: "",
         Design_Job_Name: "",
         Substrate: "",
@@ -192,7 +194,9 @@ function CNIQ() {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
-    await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "Print Feasibility Documents"));
+    await dispatch(
+      uploadFileAzure(azureFile, ProjectID + " " + projectName, BU, AzureSubFolder)
+    );
     await submitConfirmInkQualification(formData, id, headers);
     setLoader(false);
     // navigate("/MyTasks");.
@@ -239,7 +243,10 @@ function CNIQ() {
       IQList: submitOnlySelectedData,
     };
     console.log("full draft data --->", formData);
-    await dispatch(uploadFileAzure(azureFile, ProjectID + projectName, BU, "Print Feasibility Documents"));
+
+    await dispatch(
+      uploadFileAzure(azureFile, ProjectID + " " + projectName, BU, AzureSubFolder)
+    );
     await saveInkQualification(formData);
     setLoader(false);
     navigate("/MyTasks");
@@ -301,7 +308,8 @@ function CNIQ() {
               if (item && item?.Action !== "delete") {
                 return (
                   <CloneJobs
-                    key={item.Design_Job_ID}
+                    // key={item.Design_Job_ID}
+                    key={index}
                     {...IQ}
                     IQ={IQ}
                     {...data}
@@ -327,6 +335,7 @@ function CNIQ() {
                     Artwork_Category={
                       TaskDetailsData?.ArtworkAgilityPage?.Artwork_Category
                     }
+                    azureSubFolder={AzureSubFolder}
                   />
                 );
               }

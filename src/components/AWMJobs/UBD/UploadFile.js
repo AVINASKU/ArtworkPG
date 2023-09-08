@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { FileUpload } from "primereact/fileupload";
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
 import ToolTip from "./ToolTip";
-import { AzureFileDownloadJobs } from "../../../store/actions/AzureFileDownloadJobs";
+import { downloadFileAzure } from "../../../store/actions/AzureFileDownload";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
@@ -27,6 +27,7 @@ const UploadFile = ({
   fileName,
   updateUbdData,
   setFileNotFound,
+  groupName,
 }) => {
   const [totalSize, setTotalSize] = useState(0);
   const [azureErrMsg, setAzureErrMsg] = useState("");
@@ -65,18 +66,14 @@ const UploadFile = ({
   const itemTemplate = (file) => (
     <div className="upload-row">
       <img role="presentation" src={file.objectURL} width={50} />
-      {file.name.length > 22 ? (
-        <div
-          className="flex flex-column text-left fileName"
-          data-toggle="tooltip"
-          data-placement="top"
-          title={file.name}
-        >
-          {file.name}
-        </div>
-      ) : (
-        <div className="flex flex-column text-left fileName">{file.name}</div>
-      )}
+      <div
+        className="flex flex-column text-left fileName"
+        data-toggle="tooltip"
+        data-placement="top"
+        title={file.name}
+      >
+        {file.name}
+      </div>
     </div>
   );
 
@@ -136,7 +133,16 @@ const UploadFile = ({
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
     const response = await dispatch(
-      AzureFileDownloadJobs(fileUrl, ProjectID + projectName, BU, azureSubFolder)
+      downloadFileAzure(
+        fileUrl,
+        ProjectID + " " + projectName,
+        BU,
+        azureSubFolder,
+        groupName,
+        fileUploadSection === "Graphic Adaptation Brief *"
+          ? "File " + sequence
+          : "Other Ref File " + sequence
+      )
     );
     if (response?.includes("404")) {
       setFileNotFound(true);
@@ -193,24 +199,15 @@ const UploadFile = ({
           disabled={item.isNew !== true}
         />
         <div hidden={fileName} className="File_NameFromAPIPadding">
-          {File_NameFromAPI?.length > 22 ? (
-            <div
-              className="File_NameFromAPI"
-              data-toggle="tooltip"
-              data-placement="top"
-              title={File_NameFromAPI}
-              onClick={(event) => downloadAzure(event, `${File_NameFromAPI}`)}
-            >
-              {File_NameFromAPI}
-            </div>
-          ) : (
-            <div
-              className="File_NameFromAPI"
-              onClick={(event) => downloadAzure(event, `${File_NameFromAPI}`)}
-            >
-              {File_NameFromAPI}
-            </div>
-          )}
+          <div
+            className="File_NameFromAPI"
+            data-toggle="tooltip"
+            data-placement="top"
+            title={File_NameFromAPI}
+            onClick={(event) => downloadAzure(event, `${File_NameFromAPI}`)}
+          >
+            {File_NameFromAPI}
+          </div>
         </div>
       </div>
       {/* <a href="#">{item.File_Name}</a> */}

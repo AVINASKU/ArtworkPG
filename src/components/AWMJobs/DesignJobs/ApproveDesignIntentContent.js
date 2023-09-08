@@ -31,7 +31,7 @@ const ApproveDesignIntentContent = ({
   let { ProjectID } = useParams();
   const fileUploadRef = useRef(null);
   const dispatch = useDispatch();
-  let viewFileName = designIntent[0]?.FileMetaDataList[0]?.File_Name;
+  let viewFileName = designIntent ? designIntent[0]?.FileMetaDataList[0]?.File_Name : "";
   let di_name = "";
   if (!approve) {
     di_name =
@@ -99,7 +99,7 @@ const ApproveDesignIntentContent = ({
   };
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
-    dispatch(AzureFileDownloadJobs(fileUrl, ProjectID + projectName, BU, subFolder));
+    dispatch(AzureFileDownloadJobs(fileUrl, ProjectID + " " + projectName, BU, subFolder));
   };
   const deleteAzure = async (event, fileUrl) => {
     event.preventDefault();
@@ -151,7 +151,7 @@ const ApproveDesignIntentContent = ({
               ref={fileUploadRef}
               name="demo[]"
               url="/api/upload"
-              accept="image/*"
+              accept= '.pdf'
               customUpload
               onUpload={onTemplateUpload}
               onSelect={onTemplateSelect}

@@ -391,4 +391,14 @@ span.right {
     margin-right: 10px;
   }
 }
+.filterPopoverWidth {
+  width: fit-content;
+  max-width: 32%;
+}
+
+.filterPopoverWidth {
+  .p-multiselect-header .p-checkbox {
+    margin-right: 14px;
+  }
+}
 // TabsComponent Styles End

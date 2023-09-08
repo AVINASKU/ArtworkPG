@@ -27,7 +27,14 @@ export const downloadFileFailure = (error) => ({
 });
 
 // Define your Redux async action creator
-export const downloadFileAzure = (filePath, ProjectID, BU, subFolder) => {
+export const downloadFileAzure = (
+  filePath,
+  ProjectIdAndName,
+  BU,
+  subFolder,
+  groupName,
+  sequence
+) => {
   return async (dispatch) => {
     try {
       const urlPath = window.location.href;
@@ -60,8 +67,10 @@ export const downloadFileAzure = (filePath, ProjectID, BU, subFolder) => {
       }
 
       dispatch(downloadFileRequest());
-      const downloadUrl = `${baseUrl}/${containerName}/${domain}/${ProjectID}/${BU}/${subFolder}/${filePath}?${sasToken}`;
-
+      let downloadUrl = `${baseUrl}/${containerName}/${env}/${BU}/${ProjectIdAndName}/${subFolder}/${filePath}?${sasToken}`;
+      if (subFolder === "GA Briefs") {
+        downloadUrl = `${baseUrl}/${containerName}/${env}/${BU}/${ProjectIdAndName}/${subFolder}/${groupName}/${sequence}/${filePath}?${sasToken}`;
+      }
       const response = await axios.get(downloadUrl, {
         responseType: "blob",
       });

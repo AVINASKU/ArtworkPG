@@ -71,8 +71,12 @@ const URDT = () => {
   }, [TaskDetailsData]);
 
   const handleCancel = () => {
-    navigate(`/${currentUrl?.split("/")[1]}`);
+    return navigate(
+      `/${currentUrl?.split("/")[1]}/${currentUrl?.split("/")[2]}/${ProjectID}`
+    );
   };
+  const BU = selectedProjectDetails?.BU;
+  const projectName = selectedProjectDetails?.Project_Name;
 
   const onSaveAsDraft = async () => {
     setLoader(true);
@@ -86,7 +90,7 @@ const URDT = () => {
     };
     await postSaveDesignIntent(formData);
 
-    await uploadtoAzurefileShare(azureFile, "test1");
+    await uploadtoAzurefileShare(azureFile, ProjectID + projectName, BU, "RDT");
     setLoader(false);
   };
 
@@ -123,14 +127,13 @@ const URDT = () => {
         },
       ],
     };
-    // dispatch(
-    //   uploadProofscopeFileAzure(selectedProjectDetails?.BU, azureFile, "RDT")
-    // );
     // console.log('formData', formData, "id", id);
     await submitUploadRegionalDesignIntent(formData, id, headers);
-    await uploadtoAzurefileShare(azureFile, "test1");
+    await uploadtoAzurefileShare(azureFile, ProjectID + projectName, BU, "RDT");
     setLoader(false);
-    navigate(`/${currentUrl?.split("/")[1]}`);
+    navigate(
+      `/${currentUrl?.split("/")[1]}/${currentUrl?.split("/")[2]}/${ProjectID}`
+    );
   };
   return (
     <PageLayout>
@@ -141,9 +144,16 @@ const URDT = () => {
         label="Upload Regional Design Template"
         checkReadWriteAccess={checkReadWriteAccess}
         taskName="Regional Design Intent"
+        actionButtonsFlag={true}
       />
       <div className="task-details">
-        {<AddNewDesign {...data} checkReadWriteAccess={checkReadWriteAccess} TaskDetailsData={TaskDetailsData}/>}
+        {
+          <AddNewDesign
+            {...data}
+            checkReadWriteAccess={checkReadWriteAccess}
+            TaskDetailsData={TaskDetailsData}
+          />
+        }
         {loading || loader || designIntent === null ? (
           <Loading />
         ) : (
@@ -166,6 +176,8 @@ const URDT = () => {
               buName={selectedProjectDetails?.BU}
               taskFolder="RDT"
               TaskID={TaskID}
+              projectName={projectName}
+              ProjectID={ProjectID}
             />
           )
         )}

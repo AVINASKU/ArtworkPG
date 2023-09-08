@@ -33,7 +33,14 @@ export const uploadFileFailure = (error) => ({
 });
 
 // Define your Redux async action creator
-export const uploadFileAzure = (file, ProjectIdAndName, BU, subFolder) => {
+export const uploadFileAzure = (
+  file,
+  ProjectIdAndName,
+  BU,
+  subFolder,
+  groupName,
+  sequence
+) => {
   console.log(file.type, "test");
   return async (dispatch) => {
     try {
@@ -67,9 +74,14 @@ export const uploadFileAzure = (file, ProjectIdAndName, BU, subFolder) => {
           env = "localEnv";
       }
       // Create a BlobClient for the file and set the content type
-      const blobClient = containerClient.getBlockBlobClient(
-        `${domain}/${ProjectIdAndName}/${BU}/${subFolder}/${file.name}`
+      let blobClient = containerClient.getBlockBlobClient(
+        `${env}/${BU}/${ProjectIdAndName}/${subFolder}/${file.name}`
       );
+      if (subFolder === "GA Briefs") {
+        blobClient = containerClient.getBlockBlobClient(
+          `${env}/${BU}/${ProjectIdAndName}/${subFolder}/${groupName}/${sequence}/${file.name}`
+        );
+      }
 
       const options = {
         blobHTTPHeaders: { blobContentType: file.type },
@@ -93,9 +105,12 @@ export const uploadFileAzure = (file, ProjectIdAndName, BU, subFolder) => {
       );
 
       // Construct the public URL for the uploaded file
-      const publicUrl = `https://${storageAccountName}.blob.core.windows.net/pgsource/${containerName}/${domain}/${ProjectIdAndName}/${BU}/${subFolder}/${file.name}`;
+      let publicUrl = `https://${storageAccountName}.blob.core.windows.net/pgsource/${containerName}/${env}/${BU}/${ProjectIdAndName}/${subFolder}/${file.name}`;
+      if (subFolder === "GA Briefs") {
+        publicUrl = `https://${storageAccountName}.blob.core.windows.net/pgsource/${containerName}/${env}/${BU}/${ProjectIdAndName}/${subFolder}/${groupName}/${sequence}/${file.name}`;
+      }
 
-      // Dispatch the success action with the public URL
+      // Dispatch the success action with the public URL.
       dispatch(uploadFileSuccess(publicUrl));
     } catch (error) {
       // Dispatch the failure action with the error message
