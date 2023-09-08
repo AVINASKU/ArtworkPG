@@ -195,15 +195,7 @@ const AllProjectList = (props) => {
           allCol.push("Full Kit Readiness Tracking");
           setAllColumnNames(reorderColumns(allCol));
         }
-        // const columnNames = await ProjectService.getAllColumnNames();
-        // localStorage.setItem("allColumnNames", JSON.stringify(columnNames));
-
-        // const columnNamesAllProjects =
-        //   await ProjectService.getAllColumnNamesAllProjects();
-        // localStorage.setItem(
-        //   "allColumnNamesAllProjects",
-        //   JSON.stringify(columnNamesAllProjects)
-        // );
+       
 
         let filteredPegaDataJson = localStorage.getItem(
           "allProjectColumnWiseFilterData"
@@ -235,11 +227,7 @@ const AllProjectList = (props) => {
           setUpdatedAllColumnNames(columnNames);
         }
 
-        // const jsonSortingData = await ProjectService.getSortingData();
-        //   localStorage.setItem('sortingData', JSON.stringify(jsonSortingData));
-        // const jsonFilterData = await ProjectService.getFrozenData();
-        // localStorage.setItem('frozenData', JSON.stringify(jsonFilterData))
-
+       
         // get sort data from local storage and add in state
         let jsonSortingData1 = localStorage.getItem("allProjectSortingData");
         const sortingData = JSON.parse(jsonSortingData1);
@@ -440,19 +428,7 @@ const AllProjectList = (props) => {
       "Full Kit Readiness Tracking",
     ];
 
-    //     const ProjectData = _.cloneDeep(allProjectList.myProject);
-    // let allCol = [];
-    // if (ProjectData.length) {
-    //   allCol = Object.keys(ProjectData[0]);
-    //   allCol.push("Full Kit Readiness Tracking");
-    // }
-    // let columnWidthMyProject = {};
-    // if (allCol.length) {
-    //   allCol.forEach((column) => {
-    //     columnWidthMyProject[column] = 100;
-    //   });
-    // }
-
+    
     setProjectColumnNames(allColumnNames);
     // const columnNames = ProjectService.getAllColumnNamesAllProjects();
 

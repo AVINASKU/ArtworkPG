@@ -71,9 +71,9 @@ function ProjectSetup(props) {
   const [pegadata, setPegaData] = useState(null);
   const [updatedProjectPlanDesignData, setUpdatedProjectPlanDesignData] =
     useState([]);
-    const [loader, setLoader] = useState(false);
-    const [activeFlag, setActiveFlag] = useState(true);
-  
+  const [loader, setLoader] = useState(false);
+  const [activeFlag, setActiveFlag] = useState(true);
+
   const firstTime = projectPlanDesign.some(
     (item) => item.Assignee !== "" || item.Role !== ""
   );
@@ -89,10 +89,10 @@ function ProjectSetup(props) {
 
   useEffect(() => {
     // setActiveFlag(false);
-    let projectData = isArray(myProject) && myProject.find(
-      (project) => project.Project_ID === ProjectID
-    );
-    
+    let projectData =
+      isArray(myProject) &&
+      myProject.find((project) => project.Project_ID === ProjectID);
+
     if (
       (!firstTime && projectData?.Project_State === "Draft") ||
       projectData?.Project_State === "Active" ||
@@ -380,8 +380,7 @@ function ProjectSetup(props) {
     <div>
       <nav
         className="p-breadcrumb p-component ProjectPlanBreadCrum"
-        aria-label="Breadcrumb"
-      >
+        aria-label="Breadcrumb">
         <ul>
           <li className="">
             <NavLink to={`/${url[1]}`} className="p-menuitem-link">
@@ -492,7 +491,7 @@ function ProjectSetup(props) {
       });
       // setLoader(false);
       setActiveSave(true);
-      setActiveFlag(true)
+      setActiveFlag(true);
     }
   };
 
@@ -545,8 +544,7 @@ function ProjectSetup(props) {
                 )}
                 <div
                   className="btn-group btn-group-toggle"
-                  data-toggle="buttons"
-                >
+                  data-toggle="buttons">
                   <div className="col projectPlanButtons">
                     <label
                       className={` btn border border-secondary ${
@@ -554,8 +552,7 @@ function ProjectSetup(props) {
                           ? "ganttChartTabular active"
                           : ""
                       }`}
-                      onClick={() => setToggleButtons("GanttChart")}
-                    >
+                      onClick={() => setToggleButtons("GanttChart")}>
                       Gantt Chart
                     </label>
                     <label
@@ -564,8 +561,7 @@ function ProjectSetup(props) {
                           ? "ganttChartTabular active"
                           : ""
                       }`}
-                      onClick={() => setToggleButtons("Tabular")}
-                    >
+                      onClick={() => setToggleButtons("Tabular")}>
                       Tabular
                     </label>
                   </div>
@@ -614,25 +610,29 @@ function ProjectSetup(props) {
                   </Accordion.Header>
                   <Accordion.Body>
                     <ProjectPlanCompo
-                    isSearch={isSearch}
-                    setColWidth={setColWidth}
-                    childFunc={childFunc}
-                    test={test}
-                    tabNameForPP={tabNameForPP}
-                    view={toggleButtons}
-                    setTabName={setTabName}
-                    updatedProjectPlanDesignData={updatedProjectPlanDesignData}
-                    setUpdatedProjectPlanDesignData={setUpdatedProjectPlanDesignData}
-                    activeSave={activeSave}
-                    setActiveFlag={setActiveFlag}
-                    setActiveSave={setActiveSave}
-                    getProjectPlanApi={getProjectPlanApi}
-                    loader={loader}
-                    pegadata={pegadata} 
-                    setPegaData={setPegaData}
-                    activeFlag={activeFlag}
-                    isAccessEmpty={isAccessEmpty}
-                  />
+                      isSearch={isSearch}
+                      setColWidth={setColWidth}
+                      childFunc={childFunc}
+                      test={test}
+                      tabNameForPP={tabNameForPP}
+                      view={toggleButtons}
+                      setTabName={setTabName}
+                      updatedProjectPlanDesignData={
+                        updatedProjectPlanDesignData
+                      }
+                      setUpdatedProjectPlanDesignData={
+                        setUpdatedProjectPlanDesignData
+                      }
+                      activeSave={activeSave}
+                      setActiveFlag={setActiveFlag}
+                      setActiveSave={setActiveSave}
+                      getProjectPlanApi={getProjectPlanApi}
+                      loader={loader}
+                      pegadata={pegadata}
+                      setPegaData={setPegaData}
+                      activeFlag={activeFlag}
+                      isAccessEmpty={isAccessEmpty}
+                    />
                   </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="4">
@@ -648,8 +648,7 @@ function ProjectSetup(props) {
                     }
                     variant="secondary"
                     onClick={() => navigate("/myProjects")}
-                    disabled={!isAccessEmpty}
-                  >
+                    disabled={!isAccessEmpty}>
                     Cancel
                   </Button>
 
@@ -659,8 +658,7 @@ function ProjectSetup(props) {
                     }
                     variant="secondary"
                     onClick={onSave}
-                    disabled={activeSave}
-                  >
+                    disabled={activeSave}>
                     Save
                   </Button>
 
@@ -668,8 +666,7 @@ function ProjectSetup(props) {
                     className="button-layout"
                     variant="primary"
                     onClick={activate}
-                    disabled={activeFlag}
-                  >
+                    disabled={activeFlag}>
                     Activate
                   </Button>
                 </div>
@@ -706,24 +703,20 @@ function ProjectSetup(props) {
       disabled={isNoAccess}
       // data-popper-placement="bottom-end"
       // drop="down-end"
-      align="end"
-    >
+      align="end">
       <Dropdown.Item
         onClick={() => getData("On Hold")}
-        className="dropdownItemPaddingLeft dropdownItemColor"
-      >
+        className="dropdownItemPaddingLeft dropdownItemColor">
         On Hold
       </Dropdown.Item>
       <Dropdown.Item
         onClick={() => getData("Cancel")}
-        className="dropdownItemPaddingLeft dropdownItemColor1"
-      >
+        className="dropdownItemPaddingLeft dropdownItemColor1">
         Cancel
       </Dropdown.Item>
       <Dropdown.Item
         onClick={() => getData("Previous State")}
-        className="dropdownItemPaddingLeft dropdownItemColor2"
-      >
+        className="dropdownItemPaddingLeft dropdownItemColor2">
         Previous State
       </Dropdown.Item>
     </DropdownButton>
@@ -750,7 +743,6 @@ function ProjectSetup(props) {
       )}
 
       <div className="tabular-view">
-        
         <TabsComponent
           tabName={tabName}
           items={itemsData}

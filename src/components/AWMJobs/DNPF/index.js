@@ -295,7 +295,7 @@ function DNPF() {
 
   return (
     <LoadingOverlay active={loader || loading || CD === null} spinner text="">
-      <PageLayout>
+    
         <CDHeader
           setAddNewDesign={addNewEmptyDesign}
           onSelectAll={onSelectAll}
@@ -365,7 +365,7 @@ function DNPF() {
           bottomFixed={true}
           data={data}
         />
-      </PageLayout>
+    
     </LoadingOverlay>
   );
 }

@@ -128,10 +128,11 @@ export const CheckReadOnlyAccess = () => {
   return checkReadOnlyAccess;
 };
 
+// spinner-container is not used need to use later 
 export const Loading = () => {
   return (
-    <div className="align-item-center">
-      <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
+    <div className="spinner-container" >
+      <i className="pi pi-spin pi-spinner" style={{display:"flex", justifyContent:"space-around", fontSize: "1.6rem", color:"#003da5",     fontWeight: "bold" }}></i>
     </div>
   );
 };

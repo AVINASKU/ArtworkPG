@@ -7,9 +7,9 @@ const ProjectCreation = () => {
   let location = useLocation();
   return (
     <div className="projectPlanActionsStyle">
-      {/* // <PageLayout> */}
+    
         <ProjectSetup mode={location.state} />
-      {/* // <PageLayout> */}
+     
     </div>
   );
 };

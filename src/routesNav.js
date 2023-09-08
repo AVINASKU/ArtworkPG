@@ -45,8 +45,8 @@ const RoutesNav = () => {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
-      <Route path="/roles" element={<Role />} />
-      <Route element={<PageLayout />}>
+      <Route  element={<PageLayout />}>
+        <Route path="/roles" element={<Role />} />
         <Route path="/allProjects">
           <Route index element={<AllProjects />} />
           <Route
@@ -298,6 +298,7 @@ const RoutesNav = () => {
         <Route path="/DSBP/tab/dependencyMapping" element={<DMDsbpTabPage />} />
         {/* </Route> */}
       </Route>
+
       <Route
         path="*"
         element={

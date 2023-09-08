@@ -138,7 +138,7 @@ function Role() {
 
   return (
     <>
-      {/* <PageLayout> */}
+   
         <div className="content-layout" id="tableDiv">
           <div className="tabular-view">
             <div className="roles">
@@ -175,7 +175,7 @@ function Role() {
             </div>
           </div>
         </div>
-      {/* </PageLayout> */}
+    
       <Dialog
         header="Switched Roles"
         visible={displayBasic}
