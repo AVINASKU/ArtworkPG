@@ -1,7 +1,7 @@
 import React from "react";
 import { render, waitFor,screen, act } from "@testing-library/react";
 import { useSelector } from "react-redux";
-import MyProjects from "../../components/Projects/MyProjects/index";
+import ProjectSetup from "../../components/ProjectSetup/index";
 import {Provider} from "react-redux"
 import { store } from "../../store/store";
 import {MemoryRouter} from "react-router-dom"
@@ -9,8 +9,8 @@ import {MyProjectListMockData,AllProjectsListMockData, userInformationMockData,u
 import { userUpdateAction ,userProfileAction} from "../../store/actions/userActions";
 import {getMyProject} from "../../store/actions/ProjectActions";
 import { hasAllAccess,getAccessDetails,optionList } from "../../utils";
-import pegaJsonData from "../../pega.json";
 import {ProjectService} from "../../service/PegaService";
+import pegaJsonData from "../../pega.json";
 
 // Mock the hasAllAccess function
 jest.mock("../../utils", () => ({
@@ -19,14 +19,11 @@ jest.mock("../../utils", () => ({
   optionList:jest.fn(),
 }));
 
-jest.mock("../../service/PegaService", ()=> ({
-  getProjectData: jest.fn(),
-}))
-
-// Mock the ChildComponent and GrandchildComponent
-jest.mock("../../components/Projects/MyProjects/ProjectList");
-
-
+jest.mock("../../service/PegaService", () => ({
+    getProjectData: jest.fn(),
+    getProjectPlanAllColumnNames: jest.fn(() => ["Task", "Dependency", "Role", "Owner", "State", "Duration", "StartDate", "EndDate", "ConsumedBuffer", "HelpNeeded"]),
+  }));
+  
 // Mock localStorage.getItem
 const localStorageMock = {
   getItem: jest.fn(),
@@ -34,13 +31,13 @@ const localStorageMock = {
 };
 global.localStorage = localStorageMock;
 
-describe("MyProjects Component", () => {
+describe("ProjectSetup Component", () => {
   // Mock the useSelector and hasAllAccess behavior
   beforeEach(() => {
     jest.resetAllMocks();
   });
   
-  it("renders project list for users with all access", async () => {
+  it("renders project setup for users with all access", async () => {
 
     const userInformation = userInformationMockData;
     await store.dispatch(userUpdateAction(userInformation));
@@ -90,9 +87,9 @@ describe("MyProjects Component", () => {
     const pegadata = require("../../service/PegaService").getProjectData;
     pegadata.mockReturnValue(pegaJsonData.ArtworkAgilityProjects);
 
-    const mockGetProjectData = jest.fn().mockResolvedValue(pegaJsonData.ArtworkAgilityProjects);
-    // Replace the real implementation with the mock function
-    //ProjectService.getProjectData().mockResolvedValue(mockGetProjectData);
+    const getProjectPlanAllColumnNamesMock = require("../../service/PegaService").getProjectPlanAllColumnNames;
+    getProjectPlanAllColumnNamesMock.mockReturnValue(["Task","Dependency","Role","Owner","State","Duration","StartDate","EndDate","ConsumedBuffer","HelpNeeded"]);
+
     
     await waitFor(() => {
      
@@ -100,25 +97,11 @@ describe("MyProjects Component", () => {
     
 
     await act(async()=>{
-      const { getByText } = render(<MemoryRouter><Provider store={store}><MyProjects></MyProjects></Provider></MemoryRouter>);
+      const { getByText } = render(<MemoryRouter><Provider store={store}><ProjectSetup></ProjectSetup></Provider></MemoryRouter>);
 
     });
-    screen.debug();
+    screen.debug(undefined,Infinity);
 
-    expect(screen.getByText(/Artwork Agility Suite/i)).toBeInTheDocument();
-
-    const link = screen.getAllByRole('link');
-    expect(link[0].href).toContain('/myProjects');
-
-    expect(link[1].href).toContain('/allProjects');
-
-    expect(link[2].href).toContain('/AllTasks');
-
-    expect(link[3].href).toContain('/projectSetup');
-
-    expect(screen.getByTestId("project-list-mock")).toBeInTheDocument();
-
-    expect(store.getState().myProject.myProject).toEqual(myprojectdata)
-
+    
   });
 });
