@@ -3,8 +3,15 @@ export const NumberConversion = (number) => {
   return convertedNumber;
 };
 
-export const dependancyMappingFields = (dependencyColumnNames1, CDPTPageData, RDTData, IQData, CICs, headerName) => {
-  if(headerName === "Dependency Mapping"){
+export const dependancyMappingFields = (
+  dependencyColumnNames1,
+  CDPTPageData,
+  RDTData,
+  IQData,
+  CICs,
+  headerName
+) => {
+  if (headerName === "Dependency Mapping") {
     const dependencyColumnNames2 = CDPTPageData?.length
       ? dependencyColumnNames1
       : dependencyColumnNames1.filter((item) => item.field !== "AWM_CDPT_Page");
@@ -28,8 +35,31 @@ export const dependancyMappingFields = (dependencyColumnNames1, CDPTPageData, RD
           item.field !== "AWM_CIC_Matrix" &&
           item.field !== "AWM_CIC_Matrix_Requested"
       );
-      return dependencyColumnNames;      
+      return dependencyColumnNames;
     }
     return dependencyColumnNames;
   }
-}
+};
+
+export const setDropdownData = (
+  selectedColumnName,
+  IQData,
+  RDTData,
+  CDPTPageData
+) => {
+  if (selectedColumnName === "AWM_IQ_Page") return IQData;
+  if (selectedColumnName === "AWM_RDT_Page") return RDTData;
+  if (selectedColumnName === "AWM_CDPT_Page") return CDPTPageData;
+
+  return null;
+};
+
+export const filterMultiSelectData = (data, value) => {
+  let filteredIds = [];
+  filteredIds = data
+    .filter(
+      (ele) => value.includes(ele.AWM_Design_Job_Name) && ele.AWM_Design_Job_ID
+    )
+    .map((ele) => ele.AWM_Design_Job_ID);
+  return filteredIds;
+};

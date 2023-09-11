@@ -58,7 +58,6 @@ const DependencyMappingList = ({
     { tabHeader: "Header 1", decription: "Header 1 data" },
   ]);
 
-  console.log("user access", userHasAccess);
 
   const cicNeededOptionList = [
     { name: "Yes", code: "Yes" },
@@ -235,6 +234,7 @@ const DependencyMappingList = ({
 
   const renderMappingBody = (options, rowData) => {
     let field = rowData.field;
+    // console.log("options", options);
     return (
       <span>
         {field === "field_0" && ( // Add this condition to render a checkbox
@@ -591,7 +591,6 @@ const DependencyMappingList = ({
 
     if (!dependencyColumnNames1) return null;
 
-    console.log("cdpt page data", dependencyColumnNames1);
 
     const dependencyColumnNames = dependancyMappingFields(dependencyColumnNames1, CDPTPageData, RDTData, IQData, CICs, headerName)
       
@@ -623,7 +622,6 @@ const DependencyMappingList = ({
           filteredColumns.push(column);
         }
       });
-      console.log("filteredColumns", filteredColumns);
       if (filteredColumns && filteredColumns.length) {
         return [
           <Column
@@ -738,6 +736,9 @@ const DependencyMappingList = ({
         filteredDependencyMappingData={filteredDependencyMappingData.length}
         setFiltersDependencyMappingData={setFiltersDependencyMappingData}
         setSelectedFields={setSelectedFields}
+        IQData ={IQData}
+        CDPTPageData={CDPTPageData}
+        RDTData={RDTData}
       />
       <DataTable
         value={

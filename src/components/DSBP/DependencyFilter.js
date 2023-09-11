@@ -2,8 +2,9 @@ import React,{useEffect, useState} from "react";
 import { OverlayPanel } from "primereact/overlaypanel";
 import filter from "../../assets/images/filter.svg";
 import BlueFilterIcon from "../../assets/images/BlueFilterIcon.svg";
-import { optionList } from "../../utils";
+import { optionListDependencyMapping } from "../../utils";
 import { MultiSelect } from "primereact/multiselect";
+import {setDropdownData} from "./utils";
 
 const DependencyFilter = ({
   op,
@@ -18,9 +19,18 @@ const DependencyFilter = ({
   fieldUpdated,
   filteredDependencyMappingData,
   setFiltersDependencyMappingData,
-  setSelectedFields
+  setSelectedFields,
+  IQData,
+  RDTData,
+  CDPTPageData,
 }) => {
-  const optionList1 = optionList(dsbpPmpData, selectedColumnName);
+
+const dropDownData = setDropdownData(selectedColumnName, IQData, RDTData, CDPTPageData);
+
+  const optionList1 = optionListDependencyMapping(dsbpPmpData, selectedColumnName, dropDownData);
+  // const optionList1 = optionList(dsbpPmpData, selectedColumnName);
+  console.log("option list", RDTData,IQData,CDPTPageData, dropDownData);
+
   const [columnWiseSelectedFields, setColumnWiseSelectedFields] = useState([]);
   // let jsonColumnWidth = localStorage.getItem("columnWidthDSBPArtwork");
   let jsonColumnWidth = localStorage.getItem("setDependencyMappingColumnNames");
@@ -183,7 +193,7 @@ const DependencyFilter = ({
           <MultiSelect
             value={columnWiseSelectedFields}
             onChange={(e) => onGlobalFilterChange(e, selectedColumnName)}
-            options={optionList1}
+            options={dropDownData?.length ? optionList1[0].map(item => item.AWM_Design_Job_Name) :optionList1}
             filter
             placeholder={`Select ${selectedColumnName}`}
             maxSelectedLabels={3}

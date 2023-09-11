@@ -154,6 +154,26 @@ export const optionList = (data, fieldName) => {
   return optionList;
 };
 
+export const optionListDependencyMapping = (data, fieldName, DropDownData) => {
+  const uniqueArray = new Set();
+  if (DropDownData?.length) {
+  uniqueArray.add(DropDownData);
+  } else  if (data && data.length) {
+    data.forEach((item) => {
+      if (item[fieldName] || item[fieldName] === 0) {
+        uniqueArray.add(item[fieldName]);
+      }
+    });
+  }
+
+
+  // Convert the Set to an array
+  const optionList = Array.from(uniqueArray);
+  console.log("unique array", optionList);
+
+  return optionList;
+};
+
 // export const generateUniqueKey = (fieldName) => {
 //   const timestamp = new Date().getTime();
 //   return `${fieldName}_${timestamp}`;

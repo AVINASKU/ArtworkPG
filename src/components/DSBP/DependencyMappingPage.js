@@ -12,11 +12,13 @@ import {
 import DependencyMappingList from "./DependencyMappingList";
 import "./index.scss";
 import { cloneDeep } from "lodash";
+import { filterMultiSelectData } from "./utils";
 
 const headerName = "Dependency Mapping";
 const DependencyMapping = () => {
   const [dependencyMappingData, setDependencyMappingData] = useState([]);
-  const [originalDependencyMappingData, setOriginalDependencyMappingData] = useState([]);
+  const [originalDependencyMappingData, setOriginalDependencyMappingData] =
+    useState([]);
   // const [dependencyColumnNames, setDependencyColumnNames] = useState([]);
   const [updatedDataToSubmit, setUpdatedDataToSubmit] = useState([]);
   const [CDPTPageData, setCDPTPageData] = useState([]);
@@ -54,8 +56,11 @@ const DependencyMapping = () => {
     }
   }, []);
 
-    const updateDropDownDataTableView = (value, columnName, id) => {
-    const data = filteredDependencyMappingData && filteredDependencyMappingData.length ? filteredDependencyMappingData : dependencyMappingData;
+  const updateDropDownDataTableView = (value, columnName, id) => {
+    const data =
+      filteredDependencyMappingData && filteredDependencyMappingData.length
+        ? filteredDependencyMappingData
+        : dependencyMappingData;
     const updatedData = data.map((data) => {
       if (data.DSBP_PMP_PIMaterialID === id) {
         if (!data[columnName] && columnName === "AWM_CIC_Needed")
@@ -70,16 +75,15 @@ const DependencyMapping = () => {
           data["AWM_RDT_Page"] = value;
         if (!data[columnName] && columnName === "AWM_CDPT_Page")
           data["AWM_CDPT_Page"] = value;
-         if (!data[columnName] && columnName === "AWM_IQ_Page")
+        if (!data[columnName] && columnName === "AWM_IQ_Page")
           data["AWM_IQ_Page"] = value;
         else data[columnName] = value;
         data["updated"] = true;
       }
 
       if (data["AWM_CIC_Needed"] === "Yes") {
-      
-      data["AWM_Supporting_PMP_Design"] = "";
-      data["AWM_Supporting_PMP_Layout"] = "";
+        data["AWM_Supporting_PMP_Design"] = "";
+        data["AWM_Supporting_PMP_Layout"] = "";
       }
 
       return data;
@@ -96,8 +100,12 @@ const DependencyMapping = () => {
 
     let filteredData = filteredDataToSubmit.filter(
       (ele) =>
-        (ele?.AWM_CIC_Needed === "No" &&  (ele?.AWM_Supporting_PMP_Layout === "" || ele?.AWM_Supporting_PMP_Layout === " ") ) || 
-        (ele?.AWM_Other_Reference !== "" && ele?.AWM_CIC_Needed === "N/A" && ele?.AWM_Other_Reference?.length !== 8 ) || 
+        (ele?.AWM_CIC_Needed === "No" &&
+          (ele?.AWM_Supporting_PMP_Layout === "" ||
+            ele?.AWM_Supporting_PMP_Layout === " ")) ||
+        (ele?.AWM_Other_Reference !== "" &&
+          ele?.AWM_CIC_Needed === "N/A" &&
+          ele?.AWM_Other_Reference?.length !== 8) ||
         (ele?.AWM_CIC_Needed === "Yes" && ele?.AWM_GA_Brief === " ")
     );
     let setSubmitEnable = filteredData?.length ? true : false;
@@ -200,12 +208,14 @@ const DependencyMapping = () => {
   const handleSelectAll = (e) => {
     if (e.target.checked) {
       setSelectAllChecked(true);
-      if(filteredDependencyMappingData && filteredDependencyMappingData.length){
+      if (
+        filteredDependencyMappingData &&
+        filteredDependencyMappingData.length
+      ) {
         setSelected(filteredDependencyMappingData);
-      } else{
+      } else {
         setSelected(dependencyMappingData);
       }
-      
     } else {
       setSelectAllChecked(false);
       setSelected([]);
@@ -337,19 +347,25 @@ const DependencyMapping = () => {
       setIQData(isIQData);
       setRDTData(isRDTData);
       setGABriefData(isGABrifData);
-      if(filteredDependencyMappingData && filteredDependencyMappingData.length){
-        const uniqueMaterialNumbers = new Set(filteredDependencyMappingData.map(item => item.DSBP_PMP_PIMaterialNumber));
+      if (
+        filteredDependencyMappingData &&
+        filteredDependencyMappingData.length
+      ) {
+        const uniqueMaterialNumbers = new Set(
+          filteredDependencyMappingData.map(
+            (item) => item.DSBP_PMP_PIMaterialNumber
+          )
+        );
 
         // Filter transformedArray based on uniqueMaterialNumbers
-        const filteredTransformedArray = transformedData.filter(item =>
+        const filteredTransformedArray = transformedData.filter((item) =>
           uniqueMaterialNumbers.has(item.DSBP_PMP_PIMaterialNumber)
         );
         setFiltersDependencyMappingData(filteredTransformedArray);
-      } else{
+      } else {
         setDependencyMappingData(transformedData);
       }
       setOriginalDependencyMappingData(cloneDeep(transformedData));
-      
     }
     setTableLoader(false);
   }
@@ -376,28 +392,37 @@ const DependencyMapping = () => {
         let DSBP_CDPT_Page = [];
         let DSBP_CDPT_Page_data = [];
         if (ele.AWM_CDPT_Page) {
-          DSBP_CDPT_Page = CDPTPageData?.length && CDPTPageData.filter(
-            (cdptData) =>
-              ele.AWM_CDPT_Page.includes(cdptData.AWM_Design_Job_ID) && cdptData
-          );
-          DSBP_CDPT_Page_data = DSBP_CDPT_Page?.length && DSBP_CDPT_Page.map((item) => ({
-            Design_Job_Name: item.AWM_Design_Job_Name,
-            Design_Job_ID: item.AWM_Design_Job_ID,
-          }));
+          DSBP_CDPT_Page =
+            CDPTPageData?.length &&
+            CDPTPageData.filter(
+              (cdptData) =>
+                ele.AWM_CDPT_Page.includes(cdptData.AWM_Design_Job_ID) &&
+                cdptData
+            );
+          DSBP_CDPT_Page_data =
+            DSBP_CDPT_Page?.length &&
+            DSBP_CDPT_Page.map((item) => ({
+              Design_Job_Name: item.AWM_Design_Job_Name,
+              Design_Job_ID: item.AWM_Design_Job_ID,
+            }));
         }
         submittedObject.DSBP_CDPT_Page = DSBP_CDPT_Page_data || [];
         //rdt
         let DSBP_RDT_Page = [];
         let DSBP_RDT_Page_data = [];
         if (ele.AWM_RDT_Page) {
-          DSBP_RDT_Page = RDTData?.length && RDTData.filter((rdtData) => {
-            if (ele.AWM_RDT_Page.includes(rdtData.AWM_Design_Job_ID))
-              return rdtData;
-          });
-          DSBP_RDT_Page_data = DSBP_RDT_Page?.length && DSBP_RDT_Page.map((item) => ({
-            Design_Job_Name: item.AWM_Design_Job_Name,
-            Design_Job_ID: item.AWM_Design_Job_ID,
-          }));
+          DSBP_RDT_Page =
+            RDTData?.length &&
+            RDTData.filter((rdtData) => {
+              if (ele.AWM_RDT_Page.includes(rdtData.AWM_Design_Job_ID))
+                return rdtData;
+            });
+          DSBP_RDT_Page_data =
+            DSBP_RDT_Page?.length &&
+            DSBP_RDT_Page.map((item) => ({
+              Design_Job_Name: item.AWM_Design_Job_Name,
+              Design_Job_ID: item.AWM_Design_Job_ID,
+            }));
         }
         submittedObject.DSBP_RDT_Page = DSBP_RDT_Page_data || [];
 
@@ -405,14 +430,18 @@ const DependencyMapping = () => {
         let DSBP_IQ_Page = [];
         let DSBP_IQ_Page_data = [];
         if (ele.AWM_IQ_Page) {
-          DSBP_IQ_Page = IQData?.length && IQData.filter((iqData) => {
-            if (ele.AWM_IQ_Page.includes(iqData.AWM_Design_Job_ID))
-              return iqData;
-          });
-          DSBP_IQ_Page_data = DSBP_IQ_Page?.length && DSBP_IQ_Page.map((item) => ({
-            Design_Job_Name: item.AWM_Design_Job_Name,
-            Design_Job_ID: item.AWM_Design_Job_ID,
-          }));
+          DSBP_IQ_Page =
+            IQData?.length &&
+            IQData.filter((iqData) => {
+              if (ele.AWM_IQ_Page.includes(iqData.AWM_Design_Job_ID))
+                return iqData;
+            });
+          DSBP_IQ_Page_data =
+            DSBP_IQ_Page?.length &&
+            DSBP_IQ_Page.map((item) => ({
+              Design_Job_Name: item.AWM_Design_Job_Name,
+              Design_Job_ID: item.AWM_Design_Job_ID,
+            }));
         }
         submittedObject.DSBP_IQ_Page = DSBP_IQ_Page_data || [];
 
@@ -489,10 +518,24 @@ const DependencyMapping = () => {
 
   const onGlobalFilterChange = (e, colName) => {
     const value = e.value;
+
+    let AWM_IQ_ID,
+      AWM_CDPT_ID,
+      AWM_RDT_ID = [];
+
+    if (colName === "AWM_IQ_Page") {
+      AWM_IQ_ID = filterMultiSelectData(IQData, value);
+    }
+    if (colName === "AWM_CDPT_Page") {
+      AWM_CDPT_ID = filterMultiSelectData(CDPTPageData, value);
+    }
+    if (colName === "AWM_RDT_Page") {
+      AWM_RDT_ID = filterMultiSelectData(RDTData, value);
+    }
+
     let temp = cloneDeep(selectedFields);
     temp[colName] = value;
     setSelectedFields(temp);
-    // setSelectedFields(value);
 
     let allValues = [];
     let keys = Object.keys(temp);
@@ -505,11 +548,30 @@ const DependencyMapping = () => {
     if (artworkValues.length) {
       let filteredDsbpData = dependencyMappingData.filter((item) => {
         if (item && item[colName]) {
-          const hasWords = artworkValues.some((word) =>
+          let hasWords = artworkValues.some((word) =>
             Number.isInteger(word)
               ? item[colName] === word
               : item[colName]?.includes(word)
           );
+          console.log("item", item[colName]);
+          if (Array.isArray(item[colName])) {
+            hasWords =
+              item[colName]?.length !== 0 &&
+              AWM_IQ_ID.every((i) => item[colName].includes(i))
+                ? true
+                : false;
+            hasWords =
+              item[colName]?.length !== 0 &&
+              AWM_CDPT_ID.every((i) => item[colName].includes(i))
+                ? true
+                : false;
+            hasWords =
+              item[colName]?.length !== 0 &&
+              AWM_RDT_ID.every((i) => item[colName].includes(i))
+                ? true
+                : false;
+          }
+          console.log("inside logic item", item[colName]);
           if (hasWords) {
             return item;
           }
@@ -600,7 +662,7 @@ const DependencyMapping = () => {
           {loader ? (
             <Loading />
           ) : (
-            <DependencyMappingList              
+            <DependencyMappingList
               dependencyMappingData={dependencyMappingData}
               // dependencyColumnNames={dependencyColumnNames}
               CDPTPageData={CDPTPageData}
