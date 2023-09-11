@@ -55,8 +55,8 @@ const DependencyMapping = () => {
   }, []);
 
     const updateDropDownDataTableView = (value, columnName, id) => {
-
-    const updatedData = dependencyMappingData.map((data) => {
+    const data = filteredDependencyMappingData && filteredDependencyMappingData.length ? filteredDependencyMappingData : dependencyMappingData;
+    const updatedData = data.map((data) => {
       if (data.DSBP_PMP_PIMaterialID === id) {
         if (!data[columnName] && columnName === "AWM_CIC_Needed")
           data["AWM_CIC_Needed"] = value;

@@ -3,7 +3,7 @@ import { FileUpload } from "primereact/fileupload";
 import { Image } from "primereact/image";
 import { Tag } from "primereact/tag";
 import { useProofScopeURL } from "../../ProofScope/ViewFiles";
-import { downloadFileAzure } from "../../../store/actions/AzureFileDownloadProofscope";
+// import { downloadFileAzure } from "../../../store/actions/AzureFileDownloadProofscope";
 import { useDispatch, useSelector } from "react-redux";
 import { getEnvironmentFromURL } from "../../../utils";
 
@@ -98,8 +98,8 @@ const UploadDesignIntentProofscope = ({
     di_name =
       version !== "V0" &&
       item?.DesignJobDetails[0]?.FileMetaDataList[0]?.Timestamp !== ""
-        ? `${item?.Task_Name}_${version}_${date}.${fileExtension}`
-        : `${item?.Task_Name}.${fileExtension}`;
+        ? `${item?.Task_Name}_${version}_${date}`
+        : `${item?.Task_Name}`;
   }
 
   const onTemplateUpload = (e) => {
@@ -125,7 +125,7 @@ const UploadDesignIntentProofscope = ({
     //   seFileData(file);
     return (
       <div className="upload-row">
-        <img role="presentation" src={file.objectURL} width={50} />
+        {/* <img role="presentation" src={file.objectURL} width={50} /> */}
         <a
           className="flex flex-column text-left ml-3"
           onClick={(event) => handleViewProofScopeClick(event, `${file.name}`)}
@@ -194,7 +194,7 @@ const UploadDesignIntentProofscope = ({
               ref={fileUploadRef}
               name="demo[]"
               url="/api/upload"
-              accept="/*"
+              accept=".pdf"
               customUpload
               onUpload={onTemplateUpload}
               onSelect={onTemplateSelect}

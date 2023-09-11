@@ -11,7 +11,6 @@ const FooterButtons = ({
   checkReadWriteAccess,
   bottomFixed,
   cptFormValid,
-  checkTaskISComplete,
   hideSaveButton,
   submitAndSave,
 }) => {
@@ -37,11 +36,11 @@ const FooterButtons = ({
           {hideSaveButton || (pathName !== "CNIQ" && pathName !== "CCD" && pathName !== "CPT") && (
             <Button
               className={
-                !checkTaskISComplete || checkReadWriteAccess ? "button-layout" : "button-layout btn btn-disabled"
+                checkReadWriteAccess ? "button-layout" : "button-layout btn btn-disabled"
               }
               variant="secondary"
               onClick={() => onSaveAsDraft()}
-              disabled={!checkReadWriteAccess || checkTaskISComplete}
+              disabled={!checkReadWriteAccess}
             >
               Save as Draft
             </Button>
