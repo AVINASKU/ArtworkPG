@@ -13,6 +13,7 @@ import { getMyProject } from "../../store/actions/ProjectActions";
 import "primeicons/primeicons.css";
 import { isArray } from "lodash";
 import { ExportSelectedRows } from "../ExportCSV";
+import { cloneDeep } from "lodash";
 
 const ArtworkHeader = ({
   label,
@@ -74,6 +75,34 @@ const ArtworkHeader = ({
     isBUHomeCare = true;
   }
   let actionNameObject = [];
+  // dsbpPmpData["AWM_IQ_Page"] = IQData;
+
+  // let AWM_IQ_Page = IQData.map((ele) => ele.AWM_Design_Job_Name);
+
+  let dsbpPmpData1 = cloneDeep(dsbpPmpData);
+
+  const mappedDsbpPmpData = dsbpPmpData1.map((ele) => {
+    if (IQData && ele?.AWM_IQ_Page) {
+
+  let filterItem = IQData.filter(item =>  ele?.AWM_IQ_Page.includes(item.AWM_Design_Job_ID));
+    let AWM_IQ_Page = filterItem.map((ele) => ele.AWM_Design_Job_Name);
+
+      ele["AWM_IQ_Page"] = AWM_IQ_Page;
+    }
+    if (RDTData && ele?.AWM_RDT_Page) {
+      let rdtFilterItem = RDTData.filter(item =>  ele?.AWM_RDT_Page.includes(item.AWM_Design_Job_ID));
+    let AWM_RDT_Page = rdtFilterItem.map((ele) => ele.AWM_Design_Job_Name);
+      ele["AWM_RDT_Page"] = AWM_RDT_Page;
+    }
+    if (CDPTPageData && ele?.AWM_CDPT_Page) {
+      let cdptFilterItem = CDPTPageData.filter(item =>  ele?.AWM_CDPT_Page.includes(item.AWM_Design_Job_ID));
+    let AWM_CDPT_Page = cdptFilterItem.map((ele) => ele.AWM_Design_Job_Name);
+      ele["AWM_CDPT_Page"] = AWM_CDPT_Page;
+    }
+    return ele;
+  });
+
+  console.log("pranali", dsbpPmpData, IQData, mappedDsbpPmpData);
 
   headerName !== "Dependency Mapping"
     ? (actionNameObject = [
@@ -283,8 +312,8 @@ const ArtworkHeader = ({
               </div>
               <div style={{ marginLeft: 10 }}>
                 <ExportSelectedRows
-                  allData={dsbpPmpData}
-                  selectedRows={dsbpPmpData}
+                  allData={mappedDsbpPmpData}
+                  selectedRows={mappedDsbpPmpData}
                   headers={columnNames}
                 />
               </div>

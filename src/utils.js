@@ -154,6 +154,8 @@ export const optionList = (data, fieldName) => {
   return optionList;
 };
 
+// In below function peace of code is repeated but keep this function
+// In future we might be change the logic
 export const optionListDependencyMapping = (data, fieldName, DropDownData) => {
   const uniqueArray = new Set();
   if (DropDownData?.length) {
