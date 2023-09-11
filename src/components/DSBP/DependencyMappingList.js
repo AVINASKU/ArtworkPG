@@ -58,6 +58,8 @@ const DependencyMappingList = ({
     { tabHeader: "Header 1", decription: "Header 1 data" },
   ]);
 
+  console.log("user access", userHasAccess);
+
   const cicNeededOptionList = [
     { name: "Yes", code: "Yes" },
     { name: "No", code: "No" },
@@ -563,7 +565,7 @@ const DependencyMappingList = ({
           <a
             className="tabView"
             disabled={userHasAccess}
-            onClick={() => !userHasAccess && onHandlePmpTabView(options, field)}
+            onClick={() => onHandlePmpTabView(options, field)}
           >
             {options[field]}
           </a>
