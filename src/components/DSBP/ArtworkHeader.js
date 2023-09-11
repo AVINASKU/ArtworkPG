@@ -284,7 +284,7 @@ const ArtworkHeader = ({
               <div style={{ marginLeft: 10 }}>
                 <ExportSelectedRows
                   allData={dsbpPmpData}
-                  selectedRows={filteredDependencyMappingData}
+                  selectedRows={dsbpPmpData}
                   headers={columnNames}
                 />
               </div>
