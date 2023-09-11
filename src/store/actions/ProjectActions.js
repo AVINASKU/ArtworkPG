@@ -4,11 +4,12 @@ import { DEVURL } from "../../apis/envUrl";
 import _ from "lodash";
 
 export const getMyProject = (userInformation) => async (dispatch) => {
-  let PM = userInformation?.username;
+  let PM = userInformation?.userid;
   dispatch({ type: "GET_PROJECT_DETAILS_REQUEST" });
   try {
     //here need to add url and pass PM name
     const res = await axios.get(`${DEVURL}/myprojects/${PM}`);
+    // const res = await axios.get(`https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/v1/myprojects/${PM}/Baby Care/EUROPE`);
 
     if (res?.data === null) {
       dispatch({

@@ -22,7 +22,7 @@ import {
 } from "../../../categories";
 import { RoleUser } from "../../../userRole";
 import { useDispatch, useSelector } from "react-redux";
-import { getMyProject } from "../../../store/actions/ProjectActions";
+import { getMyProject, getAllProject } from "../../../store/actions/ProjectActions";
 import { isArray } from "lodash";
 
 const defaultCheckedItems = {
@@ -1072,26 +1072,60 @@ function AddProject(props) {
       await editProject(formData, awmProjectId, method, headers);
     }
     setSpinnerText("");
-
+    let projectsList;
+    let currentProject;
+    //add logic to check if PM name is different from logged in PM and if changed then call allProjects API else myProject Api
+    console.log("userInformation:",userInformation, pm);
+    if(userInformation.userid === pm){
+      projectsList = await dispatch(getMyProject(userInformation));
+      currentProject = projectsList?.find(
+        (project) => project.Project_ID === awmProjectId
+      );
+    }else{
+      projectsList = await dispatch(getAllProject(userInformation));
+      currentProject = projectsList?.find(
+        (project) => project.Project_ID === awmProjectId
+      );
+    }
     // alert(awmProjectId);
-    const projectsList = await dispatch(getMyProject(userInformation));
-    const currentProject = projectsList?.find(
-      (project) => project.Project_ID === awmProjectId
-    );
+    
     // alert(JSON.stringify(currentProject));
 
     if (currentProject) {
-      if (url[1] === "projectSetup" || url[1] === "myProjects") {
+      if (url[1] === "projectSetup") {
         await dispatch(selectedProject(currentProject, "My Projects"));
         awmProjectId = currentProject.Project_ID;
         setLoader(false);
         navigate(`/myProjects/projectPlan/${awmProjectId}`);
-      } else if (url[1] === "allProjects") {
-        await dispatch(selectedProject(currentProject, "All Projects"));
-        awmProjectId = currentProject.Project_ID;
-        setLoader(false);
-        navigate(`/allProjects/projectPlan/${awmProjectId}`);
-      }
+      } 
+      if (url[1] === "myProjects") {
+        if(userInformation.userid === pm){
+          await dispatch(selectedProject(currentProject, "My Projects"));
+          awmProjectId = currentProject.Project_ID;
+          setLoader(false);
+          navigate(`/myProjects/projectPlan/${awmProjectId}`);
+        }else{
+          await dispatch(selectedProject(currentProject, "All Projects"));
+          awmProjectId = currentProject.Project_ID;
+          setLoader(false);
+          navigate(`/allProjects/projectPlan/${awmProjectId}`);
+        }
+        
+      } 
+      if (url[1] === "allProjects") {
+        // if(userInformation.userid === pm){
+        //   await dispatch(selectedProject(currentProject, "My Projects"));
+        //   awmProjectId = currentProject.Project_ID;
+        //   setLoader(false);
+        //   navigate(`/myProjects/projectPlan/${awmProjectId}`);
+        // } else {
+          await dispatch(selectedProject(currentProject, "All Projects"));
+          awmProjectId = currentProject.Project_ID;
+          setLoader(false);
+          navigate(`/allProjects/projectPlan/${awmProjectId}`);
+        // }
+        
+      }      
     }
   };
   const onSaveAsDraft = async () => {
@@ -1834,6 +1868,7 @@ function AddProject(props) {
                     ? "button-layout btn btn-disabled"
                     : "button-layout"
                 }
+                // className="button-layout"
                 variant="secondary"
                 onClick={onSaveAsDraft}
                 disabled={
