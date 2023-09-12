@@ -143,6 +143,7 @@ const ProjectListFilter = ({
             placeholder={`Select ${selectedColumnName}`}
             maxSelectedLabels={3}
             className="p-column-filter"
+            panelClassName="filterPopoverWidth"
           />
         </div>
       </div>

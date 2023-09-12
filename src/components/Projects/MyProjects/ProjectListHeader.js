@@ -40,7 +40,6 @@ const ProjectListHeader = ({
   const location = useLocation();
   // const [downloadCSV, setDownloadCSV] = useState(false);
   // const [showCSV, setShowCSV] = useState(true);
-  const isReadOnly = false;
   const shouldShowResetButton =
     location.pathname.includes("/AllTasks") ||
     location.pathname.includes("/MyTasks");
@@ -151,11 +150,11 @@ const ProjectListHeader = ({
 
         {!shouldShowResetButton && (
           <>
-            <ExportSelectedRows
-              allData={modifiedAllData}
-              selectedRows={selected}
-              headers={headers}
-            />
+              <ExportSelectedRows
+                allData={modifiedAllData}
+                selectedRows={selected}
+                headers={headers}
+              />
             <Button
               className="button-layout"
               variant="secondary"
@@ -182,33 +181,34 @@ const ProjectListHeader = ({
             </button>
           </>
         )}
+          <>
+            {shouldShowResetButton && (
+              <>
+                <ExportSelectedRows
+                  selectedRows={selected}
+                  allData={modifiedAllData}
+                  headers={headers}
+                />
 
-        <>
-          {shouldShowResetButton && (
-            <>
-              <ExportSelectedRows
-                selectedRows={selected}
-                allData={modifiedAllData}
-                headers={headers}
-              />
-
-              <DropdownButton
-                title="Action"
-                disabled={actionFlag || !isReadOnly}
-                id={actionFlag ? "tasksInActive" : "tasksActive"}
-                className="dropdown-button-custom"
-              >
-                <Dropdown.Item onClick={handleDelegate}>Delegate</Dropdown.Item>
-                <Dropdown.Item onClick={handleHelpNeeded}>
-                  Help Needed
-                </Dropdown.Item>
-                <Dropdown.Item onClick={handleHelpProvided}>
-                  Help Provided
-                </Dropdown.Item>
-              </DropdownButton>
-            </>
-          )}
-        </>
+                <DropdownButton
+                  title="Action"
+                  disabled={actionFlag}
+                  id={actionFlag ? "tasksInActive" : "tasksActive"}
+                  className="dropdown-button-custom"
+                >
+                  <Dropdown.Item onClick={handleDelegate}>
+                    Delegate
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={handleHelpNeeded}>
+                    Help Needed
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={handleHelpProvided}>
+                    Help Provided
+                  </Dropdown.Item>
+                </DropdownButton>
+              </>
+            )}
+          </>
       </div>
     </div>
   );

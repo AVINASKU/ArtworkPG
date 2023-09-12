@@ -455,6 +455,12 @@ sup {
   font-weight: 500;
   line-height: 10px;
 }
+.actionDialog{
+  .p-multiselect .p-multiselect-label.p-placeholder {
+    font-size: 12px;
+    line-height: 12px;
+  }
+}
 .css-e7nvmg-LoadingOverlayWrapperBase{
   position: initial;
 }
