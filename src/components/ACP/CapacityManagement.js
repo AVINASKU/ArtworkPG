@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Toast } from "primereact/toast";
 import { DropdownButton, Dropdown } from "react-bootstrap";
 import "primeicons/primeicons.css";
@@ -7,11 +7,12 @@ import "./index.scss";
 import { useSelector } from "react-redux";
 import ConfirmationDialog from "./confirmationDialog";
 import TabsComponent from "./tabsComponent";
-import { hasAllAccess } from "../../utils";
+import { Loading, hasAllAccess } from "../../utils";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import ProjectListHeader from "../Projects/MyProjects/ProjectListHeader";
 import { ProjectService } from "../../service/PegaService";
-import TabCompo from "./TabCompo";
+import CapacityManagementHeader from "./CapacityManagementHeader";
+import { getAcpBookingData } from "../../apis/acpApi";
+import AcpBookingDatatable from "./AcpBookingDatatable";
 
 function CapacityManagement(props) {
   const toast = useRef(null);
@@ -19,9 +20,7 @@ function CapacityManagement(props) {
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
   const selectedProjectDetails = projectSetup.selectedProject;
   const { mode } = projectSetup;
-  const { projectPlan } = useSelector(
-    (state) => state.ProjectPlanReducer
-  );
+  const { projectPlan } = useSelector((state) => state.ProjectPlanReducer);
 
   const columnNames = ProjectService.getProjectPlanAllColumnNames();
 
@@ -30,12 +29,26 @@ function CapacityManagement(props) {
   console.log("location:", location);
   const locationPath = location?.pathname;
   const url = locationPath?.split("/");
-  const [toggleButtons, setToggleButtons] = useState("Tabular");
+  // const [toggleButtons, setToggleButtons] = useState("Tabular");
+  const [loader, setLoader] = useState(false);
   const [option, setOption] = useState("");
   const [visible, setVisible] = useState(false);
   const [tabName, setTabName] = useState(
     url[2] !== undefined ? url[2] : url[1]
   );
+  const [bookingTableData, setBookingTableData] = useState([]);
+
+  async function fetchData() {
+    // setTableLoader(true);
+    let AcpBookingData;
+    if (tabName === "booking") {
+      AcpBookingData = await getAcpBookingData();
+    }
+    // console.log("AcpBookingData:", AcpBookingData);
+    setBookingTableData(AcpBookingData);
+
+    setLoader(false);
+  }
 
   const getData = (option) => {
     setVisible(true);
@@ -62,6 +75,11 @@ function CapacityManagement(props) {
   } else if (tabName === "reports") {
     items = "Reports";
   }
+
+  useEffect(() => {
+    setLoader(true);
+    fetchData();
+  }, [tabName]);
 
   const [isSearch, isSearchSet] = useState(false);
   const onSearchClick = () => {
@@ -105,7 +123,7 @@ function CapacityManagement(props) {
 
   const [isColWidthSet, setColWidth] = useState(null);
 
-  const [isFilterEnabled, setIsFilterEnabled] = useState(true);
+  const [isFilterEnabled, setIsFilterEnabled] = useState(false);
   // frozenCoulmns?.length || filters?.length || sortData?.length;
 
   const isResetEnabled =
@@ -143,7 +161,7 @@ function CapacityManagement(props) {
               <div className="col">{breadcrumb}</div>
               <div className="col" style={{ display: "flex" }}>
                 {selectedProjectDetails !== undefined && (
-                  <ProjectListHeader
+                  <CapacityManagementHeader
                     header=""
                     clearFilters={() => {}}
                     clearFilter={childFunc.current}
@@ -161,33 +179,6 @@ function CapacityManagement(props) {
                     isTreeTableFlag={true}
                   />
                 )}
-                <div
-                  className="btn-group btn-group-toggle"
-                  data-toggle="buttons"
-                >
-                  <div className="col projectPlanButtons">
-                    <label
-                      className={` btn border border-secondary ${
-                        toggleButtons === "GanttChart"
-                          ? "ganttChartTabular active"
-                          : ""
-                      }`}
-                      onClick={() => setToggleButtons("GanttChart")}
-                    >
-                      Gantt Chart
-                    </label>
-                    <label
-                      className={` btn border border-secondary ${
-                        toggleButtons === "Tabular"
-                          ? "ganttChartTabular active"
-                          : ""
-                      }`}
-                      onClick={() => setToggleButtons("Tabular")}
-                    >
-                      Tabular
-                    </label>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -204,58 +195,32 @@ function CapacityManagement(props) {
           <div className="breadCrumbParent">
             <div className="row">
               <div className="col">{breadcrumb}</div>
-              <div className="col" style={{ display: "flex" }}>
-                {selectedProjectDetails !== undefined && (
-                  <ProjectListHeader
-                    header=""
-                    clearFilters={() => {}}
-                    clearFilter={childFunc.current}
-                    setVisible={() => {}}
-                    saveSettings={() => {}}
-                    onSearchClick={onSearchClick}
-                    // exportCSV={exportCSV}
-                    isFilterEnabled={isFilterEnabled}
-                    isResetEnabled={isResetEnabled}
-                    allData={projectPlan}
-                    headers={columnNames}
-                    filterFLag={true}
-                    CustomizeViewFlag={true}
-                    ResetToDefaultFlag={true}
-                    isTreeTableFlag={true}
-                  />
-                )}
-                <div
-                  className="btn-group btn-group-toggle"
-                  data-toggle="buttons"
-                >
-                  <div className="col projectPlanButtons">
-                    <label
-                      className={` btn border border-secondary ${
-                        toggleButtons === "GanttChart"
-                          ? "ganttChartTabular active"
-                          : ""
-                      }`}
-                      onClick={() => setToggleButtons("GanttChart")}
-                    >
-                      Gantt Chart
-                    </label>
-                    <label
-                      className={` btn border border-secondary ${
-                        toggleButtons === "Tabular"
-                          ? "ganttChartTabular active"
-                          : ""
-                      }`}
-                      onClick={() => setToggleButtons("Tabular")}
-                    >
-                      Tabular
-                    </label>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
 
-          <div>Booking</div>
+          <div className="col" style={{ display: "flex" }}>
+            {selectedProjectDetails !== undefined && (
+              <CapacityManagementHeader
+                header=""
+                clearFilters={() => {}}
+                clearFilter={childFunc.current}
+                setVisible={() => {}}
+                saveSettings={() => {}}
+                onSearchClick={onSearchClick}
+                // exportCSV={exportCSV}
+                isFilterEnabled={isFilterEnabled}
+                isResetEnabled={isResetEnabled}
+                allData={projectPlan}
+                headers={columnNames}
+                filterFLag={true}
+                CustomizeViewFlag={true}
+                ResetToDefaultFlag={false}
+                isTreeTableFlag={true}
+                actionFlag={false}
+              />
+            )}
+          </div>
+          {loader ? <Loading /> : <AcpBookingDatatable />}
         </div>
       ),
     },
@@ -269,7 +234,7 @@ function CapacityManagement(props) {
               <div className="col">{breadcrumb}</div>
               <div className="col" style={{ display: "flex" }}>
                 {selectedProjectDetails !== undefined && (
-                  <ProjectListHeader
+                  <CapacityManagementHeader
                     header=""
                     clearFilters={() => {}}
                     clearFilter={childFunc.current}
@@ -287,33 +252,6 @@ function CapacityManagement(props) {
                     isTreeTableFlag={true}
                   />
                 )}
-                <div
-                  className="btn-group btn-group-toggle"
-                  data-toggle="buttons"
-                >
-                  <div className="col projectPlanButtons">
-                    <label
-                      className={` btn border border-secondary ${
-                        toggleButtons === "GanttChart"
-                          ? "ganttChartTabular active"
-                          : ""
-                      }`}
-                      onClick={() => setToggleButtons("GanttChart")}
-                    >
-                      Gantt Chart
-                    </label>
-                    <label
-                      className={` btn border border-secondary ${
-                        toggleButtons === "Tabular"
-                          ? "ganttChartTabular active"
-                          : ""
-                      }`}
-                      onClick={() => setToggleButtons("Tabular")}
-                    >
-                      Tabular
-                    </label>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -332,7 +270,7 @@ function CapacityManagement(props) {
               <div className="col">{breadcrumb}</div>
               <div className="col" style={{ display: "flex" }}>
                 {selectedProjectDetails !== undefined && (
-                  <ProjectListHeader
+                  <CapacityManagementHeader
                     header=""
                     clearFilters={() => {}}
                     clearFilter={childFunc.current}
@@ -350,33 +288,6 @@ function CapacityManagement(props) {
                     isTreeTableFlag={true}
                   />
                 )}
-                <div
-                  className="btn-group btn-group-toggle"
-                  data-toggle="buttons"
-                >
-                  <div className="col projectPlanButtons">
-                    <label
-                      className={` btn border border-secondary ${
-                        toggleButtons === "GanttChart"
-                          ? "ganttChartTabular active"
-                          : ""
-                      }`}
-                      onClick={() => setToggleButtons("GanttChart")}
-                    >
-                      Gantt Chart
-                    </label>
-                    <label
-                      className={` btn border border-secondary ${
-                        toggleButtons === "Tabular"
-                          ? "ganttChartTabular active"
-                          : ""
-                      }`}
-                      onClick={() => setToggleButtons("Tabular")}
-                    >
-                      Tabular
-                    </label>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -419,6 +330,7 @@ function CapacityManagement(props) {
   return (
     <div className="content-layout">
       <Toast ref={toast} />
+
       {visible && (
         <ConfirmationDialog
           visible={visible}
@@ -440,12 +352,12 @@ function CapacityManagement(props) {
         <TabsComponent
           tabName={tabName}
           items={itemsData}
-          actionButton={actionButton}
+          // actionButton={actionButton}
+          // ViewToggleButton={ViewToggleButton}
           setTabName={setTabName}
           basePage={url[1]}
         />
       </div>
-      <TabCompo />
     </div>
   );
 }

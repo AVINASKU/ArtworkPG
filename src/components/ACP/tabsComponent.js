@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./index.scss";
 
@@ -11,6 +11,7 @@ const TabsComponent = ({
 }) => {
   const navigate = useNavigate();
   let { ProjectID } = useParams();
+  const [toggleButtons, setToggleButtons] = useState("Tabular");
 
   const handleClick = (item) => {
     if (ProjectID !== undefined) {
@@ -37,10 +38,30 @@ const TabsComponent = ({
             ))}
           </ul>
         </div>
-        {
+        {/* {
           // tabName === "projectPlan" &&
           <div className="actionButtonsForTabComponent">{actionButton}</div>
-        }
+        } */}
+        <div className="btn-group btn-group-toggle" data-toggle="buttons">
+          <div className="col projectPlanButtons">
+            <label
+              className={` btn border border-secondary ${
+                toggleButtons === "GanttChart" ? "ganttChartTabular active" : ""
+              }`}
+              onClick={() => setToggleButtons("GanttChart")}
+            >
+              Chart View
+            </label>
+            <label
+              className={` btn border border-secondary ${
+                toggleButtons === "Tabular" ? "ganttChartTabular active" : ""
+              }`}
+              onClick={() => setToggleButtons("Tabular")}
+            >
+              Tabular View
+            </label>
+          </div>
+        </div>
       </div>
       <div className="tab-content">
         {items.map((obj, index) => (
