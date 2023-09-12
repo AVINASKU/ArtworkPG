@@ -338,3 +338,17 @@ span.right {
 }
 
 // TabsComponent Styles End
+
+//ACP Booking Table
+.acp-booking-table {
+  .p-datatable > .p-datatable-wrapper {
+    overflow: scroll !important;
+    width: 100% !important;
+    height: calc(100vh - 190px) !important;
+  }
+  .p-datatable-scrollable-table > .p-datatable-tbody > .p-rowgroup-header {
+    background: #f2f7fc;
+    color: var(--Primary-color, #003da5);
+    border-top: 3px solid white;
+  }
+}

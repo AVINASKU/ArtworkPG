@@ -12,7 +12,7 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { ProjectService } from "../../service/PegaService";
 import CapacityManagementHeader from "./CapacityManagementHeader";
 import { getAcpBookingData } from "../../apis/acpApi";
-import AcpBookingDatatable from "./AcpBookingDatatable";
+import AcpBookingDatatable from "./acpBookingDatatable";
 
 function CapacityManagement(props) {
   const toast = useRef(null);
@@ -21,6 +21,7 @@ function CapacityManagement(props) {
   const selectedProjectDetails = projectSetup.selectedProject;
   const { mode } = projectSetup;
   const { projectPlan } = useSelector((state) => state.ProjectPlanReducer);
+  const { acpBookingData } = useSelector((state) => state.AcpBookingReducer);
 
   const columnNames = ProjectService.getProjectPlanAllColumnNames();
 
@@ -37,6 +38,20 @@ function CapacityManagement(props) {
     url[2] !== undefined ? url[2] : url[1]
   );
   const [bookingTableData, setBookingTableData] = useState([]);
+  const [allColumnNames, setAllColumnNames] = useState([]);
+
+  const columns = [
+    { field: "ProjectName", header: "Project Name" },
+    { field: "TaskName", header: "Task Name" },
+    { field: "FullKit", header: "Full Kit" },
+    { field: "FullkitState", header: "Fullkit State" },
+    { field: "EstimatedStartDate", header: "Start Date" },
+    { field: "Duration", header: "Task Duration" },
+    { field: "Supplier", header: "Supplier" },
+    { field: "PlannedRelease", header: "Planned Release" },
+    { field: "PrinterDate", header: "Art@Printer Date" },
+    { field: "Buffer", header: "Buffer:Work" },
+  ];
 
   async function fetchData() {
     // setTableLoader(true);
@@ -44,12 +59,52 @@ function CapacityManagement(props) {
     if (tabName === "booking") {
       AcpBookingData = await getAcpBookingData();
     }
-    // console.log("AcpBookingData:", AcpBookingData);
-    setBookingTableData(AcpBookingData);
 
     setLoader(false);
   }
 
+  useEffect(() => {
+    // console.log("###", acpBookingData);
+    let temp = [];
+    if (acpBookingData?.length) {
+      let groups = Object.keys(acpBookingData[0]);
+      groups.forEach((group) => {
+        acpBookingData[0][group].forEach((obj) => {
+          obj["Group"] = group;
+          temp.push(obj);
+        });
+      });
+
+      // setAllColumnNames(reorderColumns(allCol));
+    }
+    console.log("###", temp);
+    setBookingTableData(temp);
+  }, [acpBookingData]);
+
+  // const reorderColumns = (columns) => {
+  //   const requiredColumnOrderArray = [
+  //     "Project Name",
+  //     "Task Name",
+  //     "Full Kit",
+  //     "Fullkit State",
+  //     "Start Date",
+  //     "Task Duration",
+  //     "Supplier",
+  //     "Planned Release",
+  //     "Art@Printer Date",
+  //     "Buffer Work",
+  //   ];
+
+  //   let reorderedColumns = [];
+  //   requiredColumnOrderArray.forEach((rcl) => {
+  //     columns.forEach((cl) => {
+  //       if (rcl === cl) {
+  //         reorderedColumns.push(cl);
+  //       }
+  //     });
+  //   });
+  //   return reorderedColumns;
+  // };
   const getData = (option) => {
     setVisible(true);
     setOption(option);
@@ -220,7 +275,14 @@ function CapacityManagement(props) {
               />
             )}
           </div>
-          {loader ? <Loading /> : <AcpBookingDatatable />}
+          {loader ? (
+            <Loading />
+          ) : (
+            <AcpBookingDatatable
+              bookingTableData={bookingTableData}
+              columns={columns}
+            />
+          )}
         </div>
       ),
     },

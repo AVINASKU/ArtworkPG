@@ -16,6 +16,7 @@ import ArtWorkTabValuesReducer from "./ArtWorkTabValuesReducer";
 import DMTabValuesReducer from "./DMTabValuesReducer";
 import azureProofscopeFileUpload from "./AzureProofscopeFileReducer";
 import azureDownloadFileReducer from "./AzureDownlodReducer";
+import AcpBookingReducer from "./AcpBookingReducer";
 
 export default combineReducers({
   myProject: ProjectReducer,
@@ -35,4 +36,5 @@ export default combineReducers({
   DMTabValuesReducer,
   proofscope: azureProofscopeFileUpload,
   azureDownloadFileReducer,
+  AcpBookingReducer,
 });

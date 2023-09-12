@@ -1,5 +1,7 @@
 import Api from ".";
+import { store } from "../store/store";
 import { DEVURL } from "./envUrl";
+import { acpBookingData } from "../store/actions/AcpBookingActions";
 
 export const getAcpBookingData = async (
   headers = {
@@ -19,6 +21,9 @@ export const getAcpBookingData = async (
   });
   let AcpBookingResponse = response?.data?.ArtworkAgilityProjects;
   console.log("response acp booking ----->", response, AcpBookingResponse);
+  if (AcpBookingResponse?.length) {
+    store.dispatch(acpBookingData(AcpBookingResponse));
+  }
 
   return AcpBookingResponse;
 };

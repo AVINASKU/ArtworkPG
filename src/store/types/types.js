@@ -34,8 +34,8 @@ export const UPDATE_MODE = "UPDATE_MODE";
 export const UPDATE_USER = "UPDATE_USER";
 export const USER_PROFILE_DATA = "USER_PROFILE_DATA";
 
-//DSBP dropdown 
-export const GET_ALL_DSBP_DATA= "GET_ALL_DSBP_DATA";
+//DSBP dropdown
+export const GET_ALL_DSBP_DATA = "GET_ALL_DSBP_DATA";
 export const GET_ALL_DSBP_DATA_ERROR = "GET_ALL_DSBP_DATA_ERROR";
 
 // ArtWorkTabValues
@@ -45,4 +45,5 @@ export const UPDATE_ARTWORK_TAB_VALUES = "UPDATE_ARTWORK_TAB_VALUES";
 export const UPDATE_DM_TAB_VALUES = "UPDATE_DM_TAB_VALUES";
 export const UPDATE_DM_TAB_ATTRIBUTES = "UPDATE_DM_TAB_ATTRIBUTES";
 
-
+//ACP Booking Table
+export const ACP_BOOKING_DATA = "ACP_BOOKING_DATA";
