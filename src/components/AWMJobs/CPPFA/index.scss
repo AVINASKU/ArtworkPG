@@ -22,9 +22,23 @@
     padding: 0;
   }
 
-  .p-fileupload {
-    padding: 0;
-  }
+    .p-fileupload {
+      padding: 0;
+    }
+  
+    .p-fileupload {
+      .p-fileupload-row {
+        .upload-row {
+          padding: 0;
+          margin-top: 10px;
+          text-align: left;
+        }
+      }
+    }
+  
+    .p-fileupload-content {
+      padding: 0 20px !important;
+    }
 }
 
 .ppfaDialogBorder {
