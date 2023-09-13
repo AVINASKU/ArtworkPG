@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState,useRef} from "react";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { MultiSelect } from "primereact/multiselect";
 import filter from "../../assets/images/filter.svg";
 import BlueFilterIcon from "../../assets/images/BlueFilterIcon.svg";
 import { changeDateFormat, optionList } from "../../utils";
+
 
 const ProjectListFilter = ({
   op,
@@ -23,7 +24,7 @@ const ProjectListFilter = ({
 }) => {
   const optionList1 = optionList(projectData, selectedColumnName);
   const [columnWiseSelectedFields, setColumnWiseSelectedFields] = useState([]);
-
+  op=useRef(op);
   const isFilterActivated =
     (frozenCoulmns &&
       frozenCoulmns.length &&
