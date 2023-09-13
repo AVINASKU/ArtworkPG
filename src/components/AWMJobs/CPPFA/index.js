@@ -230,7 +230,6 @@ console.log("first", pegadata)
   const handleSubmit = async () => {
     setLoader(true);
     if(needCppfa === ""){
-      
       setIsError(true)
       return false;
     }
