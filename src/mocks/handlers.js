@@ -1,7 +1,5 @@
 import { rest } from "msw";
-import {AllProjectsListMockData, MyProjectListMockData,DropDownValuesMockData} from "./mockData"
-import { DEVURL } from "../apis/envUrl";
-import _ from "lodash";
+import {AllProjectsListMockData, MyProjectListMockData,DropDownValuesMockData,ProjectPlanMockData} from "./mockData"
 
 function getSSO_User() {
     return rest.get(`https://pegadev.pg.com/prweb/api/ArtworkAgilityFile/V1/GetUserDetails/:operatorId`, (req, res, ctx) => {
@@ -36,6 +34,17 @@ function getMyProjectsMock(userInformation){
     })
 }
 
+function getProjectPlanMock(formData, projectId, headers){
+    return rest.get(`https://awflowsit.pg.com/optaplanner/optimize/projectplan/:projectId`,(req,res,ctx) =>{
+        return res(
+            ctx.status(200),
+            ctx.json({
+                ArtworkAgilityProjects : ProjectPlanMockData.ArtworkAgilityProjects
+            })
+        );
+    })
+}
+
 
 function getDropDownValuesMock(){
     return rest.get(`https://awflowsit.pg.com/optaplanner/optimize/fetchdropdownvalues`,(req,res,ctx) =>{
@@ -48,4 +57,4 @@ function getDropDownValuesMock(){
     })
 }
 
-export const handlers = [getSSO_User(),getAllProjectsMock(),getMyProjectsMock(),getDropDownValuesMock()];
+export const handlers = [getSSO_User(),getAllProjectsMock(),getMyProjectsMock(),getDropDownValuesMock(),getProjectPlanMock()];

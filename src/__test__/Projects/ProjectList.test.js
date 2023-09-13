@@ -1,7 +1,5 @@
 import React from 'react';
-
 import {render,fireEvent,act,screen,within} from '@testing-library/react'
-
 import {Provider} from 'react-redux'
 
 import {MemoryRouter} from 'react-router-dom'

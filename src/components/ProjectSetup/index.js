@@ -25,7 +25,7 @@ import { getMyProject } from "../../store/actions/ProjectActions";
 import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import ProjectListHeader from "../Projects/MyProjects/ProjectListHeader";
-import { ProjectService } from "../../service/PegaService";
+import ProjectService  from "../../service/PegaService";
 import ArtworkAlignment from "../DSBP/ArtworkAlignmentPage";
 // import DependencyMapping from "../DSBP/DependencyMappingPage";
 
@@ -64,7 +64,7 @@ function ProjectSetup(props) {
   const [visible, setVisible] = useState(false);
   const [activeSave, setActiveSave] = useState(true);
   const [tabName, setTabName] = useState(
-    url[2] !== undefined ? url[2] : url[1]
+    url[2] !== undefined && url[2] !== "" ? url[2] : url[1] !== undefined && url[1] !== "" ? url[1] : "projectSetup"
   );
   const [tabNameForPP, setTabNameForPP] = useState("Design");
   const [projectPlanDesignData, setProjectPlanDesignData] = useState([]);
@@ -369,6 +369,7 @@ function ProjectSetup(props) {
   } else if (tabName === "readinessPerPMP") {
     items = "ReadinessPerPMP";
   }
+  
 
   const [isSearch, isSearchSet] = useState(false);
   const onSearchClick = () => {
@@ -701,7 +702,7 @@ function ProjectSetup(props) {
   ];
   const actionButton = (
     <DropdownButton
-      id={!isNoAccess && "projectActions"}
+      id={String(!isNoAccess) && "projectActions"}
       title="Actions"
       disabled={isNoAccess}
       // data-popper-placement="bottom-end"

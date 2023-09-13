@@ -3,7 +3,7 @@ import PageLayout from "../../PageLayout";
 import DesignHeader from "../DesignJobs/DesignHeader";
 import FooterButtons from "../DesignJobs/FooterButtons";
 import AddNewDesign from "../DesignJobs/TaskHeader";
-import { ProjectService } from "../../../service/PegaService";
+import  ProjectService from "../../../service/PegaService";
 import ApproveDesignIntentContent from "../DesignJobs/ApproveDesignIntentContent";
 import { CheckReadOnlyAccess } from "../../../utils";
 import { useLocation, useNavigate, useParams } from "react-router-dom";

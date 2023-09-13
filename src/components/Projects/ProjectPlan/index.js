@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./index.scss";
 import ProjectPlanList from "./ProjectPlanList";
-import { ProjectService } from "../../../service/PegaService";
+import ProjectService from "../../../service/PegaService";
 
 const MyProjects = (props) => {
   const [pegadata, setPegaData] = useState(null);

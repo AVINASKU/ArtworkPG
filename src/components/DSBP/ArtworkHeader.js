@@ -331,6 +331,7 @@ const ArtworkHeader = ({
             Customize View
           </button>
           <DropdownButton
+          id={selected?.length === 0 ? "tasksInActive" : "tasksActive"}
             title="Actions"
             align="end"
             variant="secondary"

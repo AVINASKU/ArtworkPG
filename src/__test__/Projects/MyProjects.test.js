@@ -10,6 +10,7 @@ import { userUpdateAction ,userProfileAction} from "../../store/actions/userActi
 import {getMyProject} from "../../store/actions/ProjectActions";
 import { hasAllAccess,getAccessDetails,optionList } from "../../utils";
 import pegaJsonData from "../../pega.json";
+import ProjectService from "../../service/PegaService";
 
 // Mock the hasAllAccess function
 jest.mock("../../utils", () => ({
@@ -47,6 +48,7 @@ describe("MyProjects Component", () => {
 
      await store.dispatch(userProfileAction(userProfile));
     const myprojectdata = await store.dispatch(getMyProject(userInformation));
+    
     const hasAllAccessMock = require("../../utils").hasAllAccess;
     hasAllAccessMock.mockReturnValue(true);
 
@@ -86,7 +88,11 @@ describe("MyProjects Component", () => {
     getAccessDetailsMock.mockReturnValue(result);
     
     const pegadata = require("../../service/PegaService").getProjectData;
-    pegadata.mockReturnValue(pegaJsonData.ArtworkAgilityProjects)
+    pegadata.mockReturnValue(pegaJsonData.ArtworkAgilityProjects);
+
+    const mockGetProjectData = jest.fn().mockResolvedValue(pegaJsonData.ArtworkAgilityProjects);
+    // Replace the real implementation with the mock function
+    //ProjectService.getProjectData().mockResolvedValue(mockGetProjectData);
     
     await waitFor(() => {
      

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { ProjectService } from "../../../service/PegaService";
+import ProjectService from "../../../service/PegaService";
 import ProjectListFilter from "../ProjectListFilter";
 import { FilterMatchMode } from "primereact/api";
 import ProjectListHeader from "./ProjectListHeader";
