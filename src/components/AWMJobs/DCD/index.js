@@ -5,7 +5,7 @@ import DesignHeader from "../DesignJobs/DesignHeader";
 import AddNewDesign from "../DesignJobs/TaskHeader";
 import AddNewDesignContent from "../DesignJobs/AddNewDesignContent";
 import FooterButtons from "../DesignJobs/FooterButtons";
-import { ProjectService } from "../../../service/PegaService";
+import  ProjectService from "../../../service/PegaService";
 import { useSelector } from "react-redux";
 
 const breadcrumb = [

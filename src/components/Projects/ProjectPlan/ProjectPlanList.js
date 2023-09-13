@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, Suspense } from "react";
 import { TreeTable } from "primereact/treetable";
 import { Column } from "primereact/column";
 import { isArray } from "lodash";
-import { ProjectService } from "../../../service/PegaService";
+import ProjectService from "../../../service/PegaService";
 import ConfirmationPopUp from "../ConfirmationPopUp";
 import filter from "../../../assets/images/filter.svg";
 import { changeDateFormat } from "../../../utils";

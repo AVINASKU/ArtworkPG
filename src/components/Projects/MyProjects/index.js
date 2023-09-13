@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import PageLayout from "../../PageLayout";
 import "./index.scss";
 import ProjectList from "./ProjectList";
-import { ProjectService } from "../../../service/PegaService";
+import ProjectService from "../../../service/PegaService";
 import { useSelector } from "react-redux";
 import { hasAllAccess } from "../../../utils";
 

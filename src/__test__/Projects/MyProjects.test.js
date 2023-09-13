@@ -10,7 +10,7 @@ import { userUpdateAction ,userProfileAction} from "../../store/actions/userActi
 import {getMyProject} from "../../store/actions/ProjectActions";
 import { hasAllAccess,getAccessDetails,optionList } from "../../utils";
 import pegaJsonData from "../../pega.json";
-import {ProjectService} from "../../service/PegaService";
+import ProjectService from "../../service/PegaService";
 
 // Mock the hasAllAccess function
 jest.mock("../../utils", () => ({
