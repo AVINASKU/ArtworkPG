@@ -156,7 +156,7 @@ console.log("first", pegadata)
     setAzureFile(file);
     return (
       <div className="upload-row">
-        <div className="card flex justify-content-center">
+        {/* <div className="card flex justify-content-center">
           <Image
             src={file.objectURL}
             zoomSrc={file.objectURL}
@@ -165,14 +165,15 @@ console.log("first", pegadata)
             height="60"
             preview
           />
-        </div>
+        </div> */}
         <div
           className="flex flex-column text-left ml-3"
-          hidden={
-            file.name.includes(".pdf") ||
-            file.name.includes(".zip") ||
-            file.name.includes(".csv")
-          }>
+          // hidden={
+            // file.name.includes(".pdf") ||
+            // file.name.includes(".zip") ||
+            // file.name.includes(".csv")
+          // }
+        >
           {file.name}
         </div>
       </div>
@@ -295,6 +296,7 @@ console.log("first", pegadata)
       )
     );
   };
+
   return (
     <Dialog
       visible={visible}
