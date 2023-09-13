@@ -109,7 +109,7 @@ const CPPFA = ({
     setAzureFile(file);
     return (
       <div className="upload-row">
-        <div className="card flex justify-content-center">
+        {/* <div className="card flex justify-content-center">
           <Image
             src={file.objectURL}
             zoomSrc={file.objectURL}
@@ -118,14 +118,14 @@ const CPPFA = ({
             height="60"
             preview
           />
-        </div>
+        </div> */}
         <div
           className="flex flex-column text-left ml-3"
-          hidden={
-            file.name.includes(".pdf") ||
-            file.name.includes(".zip") ||
-            file.name.includes(".csv")
-          }
+          // hidden={
+            // file.name.includes(".pdf") ||
+            // file.name.includes(".zip") ||
+            // file.name.includes(".csv")
+          // }
         >
           {file.name}
         </div>
@@ -148,15 +148,15 @@ const CPPFA = ({
 
   const [flag, setFlag] = useState(false);
   useEffect(() => {
-    if(pegadata !== undefined){
-    pegadata?.forEach((obj) => {
-      if (
-        obj?.data?.Task === "Define New Print Feasibility Scope" ||
-        obj?.data?.Task === "Define Color Development & Print Trial"
-      ) {
-        setFlag(true);
-      }
-    });
+    if (pegadata !== undefined) {
+      pegadata?.forEach((obj) => {
+        if (
+          obj?.data?.Task === "Define New Print Feasibility Scope" ||
+          obj?.data?.Task === "Define Color Development & Print Trial"
+        ) {
+          setFlag(true);
+        }
+      });
     } else return;
   }, [pegadata]);
 
@@ -210,7 +210,14 @@ const CPPFA = ({
       }
     } else {
       azureFile &&
-        (await dispatch(uploadFileAzure(azureFile, ProjectID + " " + projectName, BU, "Print Feasibility Documents")));
+        (await dispatch(
+          uploadFileAzure(
+            azureFile,
+            ProjectID + " " + projectName,
+            BU,
+            "Print Feasibility Documents"
+          )
+        ));
       await submitCPPFA(
         formData,
         `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`,
@@ -228,8 +235,16 @@ const CPPFA = ({
   };
   const downloadAzure = async (event, fileUrl) => {
     event.preventDefault();
-    dispatch(downloadFileAzure(fileUrl, ProjectID + " " + projectName, BU, "Print Feasibility Documents"));
+    dispatch(
+      downloadFileAzure(
+        fileUrl,
+        ProjectID + " " + projectName,
+        BU,
+        "Print Feasibility Documents"
+      )
+    );
   };
+
   return (
     <Dialog
       visible={visible}
@@ -389,7 +404,7 @@ const CPPFA = ({
                     {taskDetailsDataObj?.FileMetaDataList &&
                     taskDetailsDataObj?.FileMetaDataList.length > 0 ? (
                       taskDetailsDataObj?.FileMetaDataList[0].File_Name ===
-                      "" && !fileName ? (
+                        "" && !fileName ? (
                         <>
                           <span>Drop or Browse file here</span> <br />
                           <span className="fileSupportedData">
