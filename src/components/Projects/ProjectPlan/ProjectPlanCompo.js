@@ -31,6 +31,7 @@ function ProjectPlanCompo(props) {
           <Loading />
         ) : (
           <>
+          
             <ProjectPlan
               {...props}
               projectPlan={projectPlan}

@@ -576,6 +576,7 @@ function ProjectSetup(props) {
 
           {toggleButtons === "Tabular" && (
             <div>
+              
               <Accordion className="projectPlanAccordian" defaultActiveKey="2">
                 <Accordion.Item eventKey="2">
                   <Accordion.Header onClick={() => setTabNameForPP("Design")}>

@@ -37,6 +37,7 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
   const [filters, setFilters] = useState([]);
   const [selectedColumnName, setSelectedColumnName] = useState(null);
   const [loader, setLoader] = useState(false);
+  const [fullData, getFullData] = useState({})
 
   const getMyTasks = (myTasksList) => {
     const myTasks = myTasksList?.map((element) => {
@@ -512,7 +513,8 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
   const handleApproveDialogCPPFA = (options) => {
     setShowApproveDialogCPPFA(true);
     let task = { TaskID: options.AWM_Task_ID, ProjectID: options.AWM_Project_ID };
-    dispatch(getTaskDetails(options.AWM_Task_ID, options.AWM_Project_ID));
+    let fullResponse = dispatch(getTaskDetails(options.AWM_Task_ID, options.AWM_Project_ID));
+    getFullData(fullResponse);
     setSelectedTaskApproveDialogCPPFA(task);
   };
   
@@ -524,6 +526,7 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
       <Loading />
     ): (
       <>
+     
         <div className="my-task-project myProjectAnddAllProjectList">
           {showApproveDialogCPPFA && (
             <CPPFA
@@ -533,6 +536,7 @@ const TaskList = ({ myTasks, loading, flag, userInformation }) => {
               pegadata={selectedProdSrchList}
               TaskDetailsData={TaskDetailsData}
               userInformation={userInformation}
+              fullResponse={fullData}
             />
           )}
           <ProjectListHeader

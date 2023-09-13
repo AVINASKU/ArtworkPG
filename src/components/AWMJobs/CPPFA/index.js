@@ -16,6 +16,7 @@ import "./index.scss";
 import { downloadFileAzure } from "../../../store/actions/AzureFileDownload";
 import { Image } from "primereact/image";
 import { CppfaPopOverBtn } from "./CPPFAStyled";
+import TaskDetailsReducer from './../../../store/reducers/TaskDetailsReducer';
 const CPPFA = ({
   showTaskDialog,
   selectedTaskData,
@@ -24,8 +25,9 @@ const CPPFA = ({
   TaskDetailsData,
   userInformation,
   getProjectPlanApi,
+  fullResponse,
 }) => {
-  console.log(TaskDetailsData);
+console.log("first", pegadata)
   const location = useLocation();
   const locationPath = location?.pathname;
   const projectSetup = useSelector((state) => state.ProjectSetupReducer);
@@ -39,6 +41,14 @@ const CPPFA = ({
   const [taskDetailsDataObj, setTaskDetailsDataObj] = useState(null);
   const [newPrintFeasibilityFlag, setNewPrintFeasibilityFlag] = useState(null);
   const [version, setVersion] = useState("V0");
+ 
+ 
+
+  // shivu
+  
+
+  const fullpageInfo = useSelector(state =>state.TaskDetailsReducer.TaskDetailsData)
+
   // let allAccess = hasAllAccess();
   const allAccess = true;
   let isAccessEmpty = !allAccess;
@@ -99,13 +109,16 @@ const CPPFA = ({
   const [formattedValue, setFormattedValue] = useState(null);
   const [azureFile, setAzureFile] = useState(null);
   const [needCppfa, setNeedCppfa] = useState("");
+  const [isError, setIsError] =useState(false)
   // shivu code start
+
+  const scopeCd = TaskDetailsData?.ArtworkAgilityPage.New_Print_Feasibility;
   const toggle = (e) => {
     setNeedCppfa(e.target.innerText);
   };
 
   const getNeedCppfaValue = (param) => {
-    const result = "";
+    let result = "";
     if (param === "") {
       return result;
     } else if (param === "Yes") {
@@ -115,22 +128,28 @@ const CPPFA = ({
     }
   };
 
-  const disabledBlock = {
-    opacity: "0.5",
-    pointerEvents: "none",
-  };
- const getCssClass = (beforeCreate, afterCreate)=>{
-    const finalClass="";
-    if(beforeCreate === ""){
-      return finalClass="btn-secondary"
-    }else if(beforeCreate === "Yes"){
-      return finalClass="btn-secondary"
-    }else if(afterCreate === "false"){
-      return finalClass="btn-primary"
+  const getCssClass = (beforeCreate, afterCreate) => {
+    let finalClass = "";
+    if (beforeCreate === "") {
+      finalClass = "btn-secondary";
+    } else if (afterCreate === "false") {
+      finalClass = "btn-primary";
+    } else if (afterCreate === "false") {
+      finalClass = "btn-secondary";
+    } else {
+      finalClass = "btn-primary";
     }
- }
+    return finalClass;
+  };
   // shivu code End
 
+  const styles = {
+    activeBg: { background: "#003da5", color: "#fff" },
+    disabledBlock: {
+      opacity: "0.5",
+      pointerEvents: "none",
+    },
+  };
   const itemTemplate = (file, props) => {
     setFileName(file.name);
     setFormattedValue(file.size);
@@ -198,7 +217,7 @@ const CPPFA = ({
     ) {
       setHideFlag(true);
     } else if (newPrintFeasibilityFlag) {
-      setHideFlag(true);
+      // setHideFlag(true);
       // } else if (flag && taskDetailsDataObj?.Task_Status !== "Complete" && newPrintFeasibilityFlag) {
       //   setHideFlag(true);
       // } else if (!flag && taskDetailsDataObj?.Task_Status === "Complete" && !newPrintFeasibilityFlag) {
@@ -210,17 +229,22 @@ const CPPFA = ({
 
   const handleSubmit = async () => {
     setLoader(true);
+    if(needCppfa === ""){
+      
+      setIsError(true)
+      return false;
+    }
     const headers = {
       key: "If-Match",
       value: TaskDetailsData?.ArtworkAgilityPage?.Etag,
     };
     const fileSize = Math.round(formattedValue / 1000000);
-
+   
     const formData = {
       caseTypeID: "PG-AAS-Work-ConfirmPreliminaryPrintFeasibilityAssessment",
       content: {
         RiskLevel: riskLevel.charAt(0).toUpperCase() + riskLevel.slice(1),
-        NPFNeeded: getNeedCppfaValue(needCppfa),
+        NPFNeeded: needCppfa,
         // cppfaDialogFlag ? String(false) : String(yesOrNo === "yes"),
         AWMTaskID: selectedTaskData.TaskID,
         AWMProjectID: ProjectID,
@@ -232,33 +256,33 @@ const CPPFA = ({
       },
     };
 
-    if (!hideFlag && yesOrNo === "") {
-      if (riskLevel !== "low" && !cppfaDialogFlag) {
-        setHighRiskYesOrNo("selectYesOrNo");
-      }
-    } else {
-      azureFile &&
-        (await dispatch(
-          uploadFileAzure(
-            azureFile,
-            ProjectID + " " + projectName,
-            BU,
-            "Print Feasibility Documents"
-          )
-        ));
-      await submitCPPFA(
-        formData,
-        `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`,
-        headers
-      );
-      setFileName(null);
-      hideDialog();
-      if (url[2] === "projectPlan") {
-        getProjectPlanApi();
-      } else if (url[1] === "MyTasks") {
-        await dispatch(getTasks(userInformation));
-      }
+    // if (!hideFlag && yesOrNo === "") {
+    //   if (riskLevel !== "low" && !cppfaDialogFlag) {
+    //     setHighRiskYesOrNo("selectYesOrNo");
+    //   }
+    // } else {
+    azureFile &&
+      (await dispatch(
+        uploadFileAzure(
+          azureFile,
+          ProjectID + " " + projectName,
+          BU,
+          "Print Feasibility Documents"
+        )
+      ));
+    await submitCPPFA(
+      formData,
+      `${TaskDetailsData?.ArtworkAgilityTasks[0]?.Task_Key}`,
+      headers
+    );
+    setFileName(null);
+    hideDialog();
+    if (url[2] === "projectPlan") {
+      getProjectPlanApi();
+    } else if (url[1] === "MyTasks") {
+      await dispatch(getTasks(userInformation));
     }
+    // }
     setLoader(false);
   };
   const downloadAzure = async (event, fileUrl) => {
@@ -460,23 +484,15 @@ const CPPFA = ({
                 </Col>
                 <Col></Col>
               </Row>
-              <Row
-                hidden={
-                  // riskLevel === "" || riskLevel === "low" || cppfaDialogFlag
-                  hideFlag
-                }
-                className={
-                  (riskLevel !== "low" && highRiskYesOrNo === "") ||
-                  yesOrNo !== ""
-                    ? "highRiskDataPaddingBottom"
-                    : ""
-                }>
-                <Col
+              <Row >
+
+                <Col 
+                hidden={ riskLevel==="" || riskLevel==="low" || fullpageInfo["ArtworkAgilityPage"].New_Print_Feasibility}
                   className={`highRiskData`}
-                  style={
+                  style={ 
                     taskDetailsDataObj?.Task_Status === "Complete"
-                      ? disabledBlock
-                      : ""
+                      ? styles.disabledBlock
+                      : {}
                   }>
                   <div className="highRiskDataColor">
                     Print Feasibility Assessment is{" "}
@@ -487,39 +503,56 @@ const CPPFA = ({
                   </div>
 
                   <CppfaPopOverBtn>
-                    test{taskDetailsDataObj?.NPFNeeded}
                     <button
                       type="button"
-                      className={`btn btn-sm 
-                      ${getCssClass(needCppfa, taskDetailsDataObj?.NPFNeede)}`}
+                      // className={`btn btn-sm
+                      // ${getCssClass(needCppfa, taskDetailsDataObj?.NPFNeeded)}`}
+                      className={`btn btn-sm ${
+                        needCppfa === ""
+                          ? "btn-secondary"
+                          : needCppfa === "No"
+                          ? "btn-primary"
+                          : "btn-secondary"
+                      } `}
+                      style={
+                        taskDetailsDataObj?.NPFNeeded === "No"
+                          ? styles.activeBg
+                          : {}
+                      }
                       onClick={(event) => toggle(event)}>
                       No
                     </button>
+                    {/* {getCssClass(needCppfa, taskDetailsDataObj?.NPFNeeded)} */}
                     <button
                       type="button"
-                      className={`btn btn-sm 
-                      ${getCssClass(needCppfa, taskDetailsDataObj?.NPFNeede)}`}
-                      // className={`btn btn-sm ${
-                      //   needCppfa === ""
-                      //     ? "btn-secondary"
-                      //     : needCppfa === "No"
-                      //     ? "btn-secondary"
-                      //     : "btn-primary"
-                      // } `}
+                      className={`btn btn-sm ${
+                        needCppfa === ""
+                          ? "btn-secondary"
+                          : needCppfa === "No"
+                          ? "btn-secondary"
+                          : "btn-primary"
+                      } `}
+                      style={
+                        taskDetailsDataObj?.NPFNeeded === "Yes"
+                          ? styles.activeBg
+                          : {}
+                      }
                       onClick={(event) => toggle(event)}>
                       Yes
                     </button>
                   </CppfaPopOverBtn>
                 </Col>
+
                 <Col></Col>
                 <Col></Col>
                 <Col></Col>
               </Row>
-              <Row
-                hidden={hideFlag || yesOrNo !== "" || highRiskYesOrNo === ""}>
-                <Col className="highRiskError">
-                  *Please select Yes/No in order to proceed further.
-                </Col>
+              {/* hidden={hideFlag || yesOrNo !== "" || highRiskYesOrNo === ""} */}
+              <Row>
+              <Col className="highRiskError" hidden={!isError ? true : false}>
+                    *Please select Yes/No in order to proceed further.
+                  </Col>
+                
               </Row>
             </div>
           </div>
