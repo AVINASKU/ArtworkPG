@@ -141,7 +141,7 @@ const Approve_di = {
   },
 };
 
-export const ProjectService = {
+ const ProjectService = {
   getProjectData() {
     return pegaJsonData.ArtworkAgilityProjects;
   },
@@ -177,3 +177,5 @@ export const ProjectService = {
     return allColumnNamesAllProjects;
   },
 };
+
+export default ProjectService;
